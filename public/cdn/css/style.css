@@ -21,29 +21,13 @@
 .nav-pills-custom .nav-link {
     position: relative;
     border-radius: 0;
-}
-
-/* Add indicator arrow for the active tab */
-@media (min-width: 992px) {
-    .nav-pills-custom .nav-link::before {
-        content: '';
-        display: block;
-        border-top: 8px solid transparent;
-        border-left: 10px solid #4e73df;
-        border-bottom: 8px solid transparent;
-        position: absolute;
-        top: 50%;
-        right: -10px;
-        transform: translateY(-50%);
-        opacity: 0;
-    }
-}
-
-.nav-pills-custom .nav-link.active::before {
-    opacity: 1;
+    background: #fff;
+    margin-bottom: 3px;
 }
 
 .nav-pills-custom .tab-content {
     background: #fff;
     min-height: 400px;
+    margin-left: -12px;
+    border-left: 2px solid #4e73df;
 }

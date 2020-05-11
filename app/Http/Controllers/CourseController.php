@@ -16,14 +16,14 @@ class CourseController extends Controller
     {
         $this->data['navText'] = __('Tạo khóa khóa học');
         $this->data['hasBack'] = true;
-        return view('course.form', $this->data);
+        return view('course.edit', $this->data);
     }
 
     public function edit($courseId)
     {
         $this->data['navText'] = __('Chỉnh sửa khóa học');
         $this->data['hasBack'] = true;
-        return view('course.form', $this->data);
+        return view('course.edit', $this->data);
     }
 
     public function detail($courseId)
