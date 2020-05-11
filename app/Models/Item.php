@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Item extends Model
+{
+    protected $fillable = [
+        'title', 'type', 'user_id', 'short_content', 'content', 'price', 'sale_price',
+        'date_start', 'date_end', 'is_hot', 'status', 'seo_title', 'seo_url',
+        'seo_desc', 'image'
+    ];
+}

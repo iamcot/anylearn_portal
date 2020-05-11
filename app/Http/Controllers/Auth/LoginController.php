@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -25,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -35,5 +38,22 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function username()
+    {
+        return 'phone';
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if (auth()->user()->status == UserConstants::STATUS_INACTIVE) {
+            $name = auth()->user()->name;
+            $this->guard()->logout();
+            $request->session()->invalidate();
+            return redirect()->intended('/inactive')->with('name', $name);
+        }
+        $userM = new User();
+        return redirect($userM->redirectToUpdateDocs());
     }
 }
