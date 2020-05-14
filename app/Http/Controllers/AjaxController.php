@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\FileConstants;
 use App\Models\Configuration;
 use App\Models\User;
 use App\Models\UserDocument;
+use App\Services\FileServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +33,13 @@ class AjaxController extends Controller
             $this->buildResponse(false, __('Bạn không có quyền cho thao tác này'));
         } else {
             $files = UserDocument::where('user_id', $userId)->get();
+            if ($files) {
+                $files = $files->toArray();
+            }
+            $fileService = new FileServices();
+            for($i = 0; $i < sizeof($files); $i++) {
+                $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_FILE, $files[$i]['data']);
+            }
             $this->buildResponse(true, $files);
         }
         return response()->json($this->response);

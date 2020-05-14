@@ -15,7 +15,8 @@ class FileServices
         '.gitignore',
     ];
 
-    public function doUploadFile($request, $field = 'file', $disk = 'files', $changeName = true) {
+    public function doUploadFile($request, $field = 'file', $disk = 'files', $changeName = true, $childPath = '')
+    {
         $rs = false;
         try {
             if ($request->hasFile($field) && $request->file($field)->isValid()) {
@@ -29,12 +30,12 @@ class FileServices
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }
-                $path = Storage::disk($disk)->putFileAs('', $request->file($field), $file);
+                $path = Storage::disk($disk)->putFileAs($childPath, $request->file($field), $file);
                 if ($path) {
                     $rs = [
                         'file' => $file,
                         'path' => $path,
-                        'url' => Storage::disk($disk)->url($file),
+                        'url' => Storage::disk($disk)->url($childPath . '/' . $file),
                         'file_ext' => $extension,
                     ];
                 }
@@ -45,7 +46,7 @@ class FileServices
         return $rs;
     }
 
-    public function doUploadImage($request, $field = 'file', $disk = 'images', $changeName = true)
+    public function doUploadImage($request, $field = 'file', $disk = 'images', $changeName = true, $childPath = '')
     {
         $rs = false;
         try {
@@ -55,12 +56,12 @@ class FileServices
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }
-                $path = Storage::disk($disk)->putFileAs('', $request->file($field), $file);
+                $path = Storage::disk($disk)->putFileAs($childPath, $request->file($field), $file);
                 if ($path) {
                     $rs = [
                         'file' => $file,
                         'path' => $path,
-                        'url' => Storage::disk($disk)->url($file)
+                        'url' => Storage::disk($disk)->url($childPath . '/' . $file)
                     ];
                 }
             }
@@ -68,6 +69,13 @@ class FileServices
             Log::error($e);
         }
         return $rs;
+    }
+
+    public function urlFromPath($disk, $path) {
+        if ($path) {
+            return Storage::disk($disk)->url($path);
+        }
+        return '';
     }
 
     public function removeSystemFiles($files)

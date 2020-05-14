@@ -7,7 +7,11 @@
 
     <h1 class="h4 mb-0 text-gray-800">
         @if($hasBack ?? false)
-        <a href="javascript:window.history.back()"><i class="fas  fa-arrow-left"></i></a>
+            @if ($hasBack === true)
+            <a href="javascript:window.history.back()"><i class="fas  fa-arrow-left"></i></a>
+            @else 
+            <a href="{{ $hasBack }}"><i class="fas  fa-arrow-left"></i></a>
+            @endif
         @endif
         {{ $navText ?? '' }}
     </h1>

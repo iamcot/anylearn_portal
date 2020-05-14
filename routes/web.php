@@ -38,8 +38,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/course', 'CourseController@list')->name('course');
     Route::any('/course/create', 'CourseController@create')->name('course.create');
-    Route::get('/course/{courseId}', 'CourseController@detail')->name('course.detail');
-    Route::any('/course/{courseId}/edit', 'CourseController@edit')->name('course.edit');
+    Route::middleware('access.item')->get('/course/{id}', 'CourseController@detail')->name('course.detail');
+    Route::middleware('access.item')->any('/course/{id}/edit', 'CourseController@edit')->name('course.edit');
+    Route::middleware('access.resource')->get('/resource/{id}/delete', 'CourseController@resourceDelete')->name('resource.delete');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

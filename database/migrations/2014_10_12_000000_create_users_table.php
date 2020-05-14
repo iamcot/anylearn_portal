@@ -18,20 +18,25 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone')->unique();
+            $table->string('refcode')->unique();
             $table->string('password');
             $table->string('role', 20)->index();
             $table->tinyInteger('status')->index()->default(0);
             $table->tinyInteger('update_doc')->default(0);
             $table->bigInteger('ballance')->default(0);
             $table->integer('expire')->index()->default(0);
-            $table->bigInteger('commission')->default(0);
+            $table->bigInteger('wallet_m')->default(0);
+            $table->bigInteger('wallet_c')->default(0);
+            $table->float('commission_rate')->default(0.2);
             $table->bigInteger('user_id')->index()->nullable();
             $table->tinyInteger('is_hot')->index()->default(0);
             $table->text('image')->nullable();
             $table->text('introduce')->nullable();
+            $table->string('title')->nullable();
             $table->date('dob')->nullable();
             $table->text('address')->nullable();
             $table->string('country')->nullable();
+            $table->integer('num_friends')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
@@ -49,6 +54,7 @@ class CreateUsersTable extends Migration
 
         Schema::create('items', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('series_id')->nullable();
             $table->text('title');
             $table->string('type', 20)->index();
             $table->bigInteger('user_id')->index();
@@ -57,22 +63,54 @@ class CreateUsersTable extends Migration
             $table->text('content');
             $table->bigInteger('price')->default(0);
             $table->bigInteger('sale_price')->nullable();
-            $table->integer('date_start')->default(0);
-            $table->integer('date_end')->default(0);
+            $table->date('date_start')->index();
+            $table->string('time')->nullable();
+            $table->date('date_end')->nullable();
+            $table->string('location_type')->nullable();
+            $table->string('location')->nullable();
             $table->tinyInteger('is_hot')->index()->default(0);
             $table->tinyInteger('status')->index()->default(1);
             $table->text('seo_title')->nullable();
-            $table->string('seo_url')->nullable()->index();
+            $table->string('seo_url')->nullable();
             $table->text('seo_desc')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('course_schedules', function (Blueprint $table) {
+        Schema::create('course_series', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('item_id')->index();
-            $table->integer('date')->index();
+            $table->bigInteger('user_id')->index();
+            $table->string('title');
             $table->text('content')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+        Schema::create('class_schedules', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('item_id')->index();
+            $table->date('date')->index();
+            $table->string('time');
+            $table->text('content')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+
+        Schema::create('course_reviews', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('item_id')->index();
+            $table->bigInteger('user_id')->index();
+            $table->float('rating');
+            $table->text('comment');
+            $table->timestamps();
+        });
+
+        Schema::create('user_reviews', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('from_user_id')->index();
+            $table->bigInteger('to_user_id')->index();
+            $table->bigInteger('ref_item_id')->nullable()->index();
+            $table->float('rating');
+            $table->text('content');
             $table->timestamps();
         });
 
@@ -89,7 +127,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('course_resources', function (Blueprint $table) {
+        Schema::create('item_resources', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('item_id')->index();
             $table->string('type', 20)->index();
@@ -141,6 +179,16 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('user_id')->index();
+            $table->string('type')->index();
+            $table->bigInteger('amount');
+            $table->string('pay_method');
+            $table->text('pay_info');
+            $table->integer('status')->index();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -153,12 +201,16 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('user_documents');
         Schema::dropIfExists('items');
-        Schema::dropIfExists('course_schedules');
-        Schema::dropIfExists('course_resources');
+        Schema::dropIfExists('class_schedules');
+        Schema::dropIfExists('item_resources');
         Schema::dropIfExists('course_participations');
         Schema::dropIfExists('configurations');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('order_details');
         Schema::dropIfExists('commissions');
+        Schema::dropIfExists('course_series');
+        Schema::dropIfExists('course_reviews');
+        Schema::dropIfExists('user_reviews');
+        Schema::dropIfExists('transactions');
     }
 }

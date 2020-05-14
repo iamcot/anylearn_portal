@@ -5,4 +5,5 @@ class FileConstants {
     const DISK_IMAGE = 'images';
     const DISK_BANNER = 'banners';
     const DISK_FILE = 'files';
+    const DISK_COURSE = 'courses';
 }

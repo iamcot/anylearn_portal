@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CourseResource extends Model
+class ClassSchedule extends Model
 {
     protected $fillable = [
-        'item_id', 'type', 'title', 'desc', 'data', 
+        'item_id', 'date', 'status', 'content'
     ];
 }

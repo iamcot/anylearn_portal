@@ -16,6 +16,8 @@ class ConfigConstants
     const CONFIG_COMMISSION = 'commission';
     const CONFIG_DISCOUNT = 'discount';
     const CONFIG_BONUS_RATE = 'bonus_rate';
+    const CONFIG_COMMISSION_FOUNDATION = 'foundation';
+    const CONFIG_COMMISSION_COMPANY = 'company';
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';

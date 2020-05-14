@@ -2,7 +2,7 @@
 @extends('layout')
 
 @section('rightFixedTop')
-    <a class="btn btn-sm btn-primary" href="{{ route('user.mods.create') }}"><i class="fas fa-plus"></i> @lang('Thêm mới')</a>
+    <a class="btn btn-sm btn-success" href="{{ route('user.mods.create') }}"><i class="fas fa-plus"></i> @lang('Thêm mới')</a>
 @endsection
 
 @section('body')

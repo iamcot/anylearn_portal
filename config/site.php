@@ -28,16 +28,28 @@ return [
             'value' => 2000000
         ],
         ConfigConstants::CONFIG_COMMISSION => [
-            'title' => 'Tỉ lệ commission', 
+            'title' => 'Tỉ lệ commission f0->f2', 
             'hint' => 'Nhập số thập phân. vd: 0.05 (tương đương 5%)', 
             'type' => 'text', 
             'value' => 0.05
         ],
         ConfigConstants::CONFIG_DISCOUNT => [
-            'title' => 'Tỉ lệ chiết khấu mua hàng', 
+            'title' => 'Tỉ lệ chiết khấu mua hàng (f3)', 
             'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)', 
             'type' => 'text', 
             'value' => 0.1
+        ],
+        ConfigConstants::CONFIG_COMMISSION_FOUNDATION => [
+            'title' => 'Tỉ lệ foundation', 
+            'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)', 
+            'type' => 'text', 
+            'value' => 0.05
+        ],
+        ConfigConstants::CONFIG_COMMISSION_COMPANY => [
+            'title' => 'Tỉ lệ lợi nhuận công ty', 
+            'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)', 
+            'type' => 'text', 
+            'value' => 0.45
         ],
         ConfigConstants::CONFIG_BONUS_RATE => [
             'title' => 'Tỉ lệ chuyển tiền sử dụng về điểm thưởng', 

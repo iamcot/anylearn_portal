@@ -31,3 +31,11 @@
     margin-left: -12px;
     border-left: 2px solid #4e73df;
 }
+
+.col-form-label.is-invalid {
+    color: #e74a3b;
+}
+
+.form-control, .card {
+    border-radius: 0;
+}

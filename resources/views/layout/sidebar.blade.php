@@ -13,12 +13,17 @@
     @if($userService->haveAccess(Auth::user()->role, 'course'))
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
-        @lang('Quản lý khóa học')
+        @lang('Quản lý khóa/lớp học')
     </div>
     <li class="nav-item {{ in_array($route, ['course', 'course.create', 'course.edit']) ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('course') }}">
-            <i class="fas fa-fw fa-university"></i>
+            <i class="fas fa-fw fa-chalkboard-teacher"></i>
             <span>@lang('Chỉnh sửa Khóa học')</span></a>
+    </li>
+    <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit']) ? 'active' : '' }}">
+    <a class="nav-link" href="/">
+            <i class="fas fa-fw fa-university"></i>
+            <span>@lang('Chỉnh sửa Lớp học')</span></a>
     </li>
     <li class="nav-item {{ $route == 'course.confirm' ? 'active' : '' }}">
         <a class="nav-link" href="">

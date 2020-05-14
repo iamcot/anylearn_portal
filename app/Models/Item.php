@@ -8,7 +8,12 @@ class Item extends Model
 {
     protected $fillable = [
         'title', 'type', 'user_id', 'short_content', 'content', 'price', 'sale_price',
-        'date_start', 'date_end', 'is_hot', 'status', 'seo_title', 'seo_url',
-        'seo_desc', 'image'
+        'date_start', 'time', 'date_end', 'is_hot', 'status', 'seo_title', 'seo_url',
+        'seo_desc', 'image', 'location_type', 'location', 'series_id'
     ];
+
+    public function series()
+    {
+        return $this->belongsTo('App\Models\CourseSeries', 'series_id', 'id');
+    }
 }

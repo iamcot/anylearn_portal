@@ -29,7 +29,7 @@ class UserDocument extends Model
         $data = [
             'user_id' => $user->id,
             'store' => UserDocConstants::STORE_LOCAL,
-            'data' => $fileObj['url'],
+            'data' => $fileObj['path'],
             'file_ext' => !empty($fileObj['file_ext']) ? $fileObj['file_ext'] : '',
         ];
         if ($user->role == UserConstants::ROLE_SCHOOL) {

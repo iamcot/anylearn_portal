@@ -19,6 +19,7 @@ class RootUser extends Seeder
             [
                 'name' => 'Admin',
                 'phone' => '1900113', 
+                'refcode' => '1900113',
                 'password' => Hash::make('admin@abc123'),
                 'email' => 'admin@anylearn',
                 'role' => UserConstants::ROLE_ADMIN,
@@ -30,6 +31,7 @@ class RootUser extends Seeder
             [
                 'name' => 'Editor',
                 'phone' => '1900001', 
+                'refcode' => '1900001',
                 'password' => Hash::make('abc123'),
                 'email' => 'editor@anylearn',
                 'role' => UserConstants::ROLE_MOD,
@@ -41,6 +43,7 @@ class RootUser extends Seeder
             [
                 'name' => 'TestSchool',
                 'phone' => '1900002', 
+                'refcode' => '1900002',
                 'password' => Hash::make('abc123'),
                 'email' => 'TestSchool@anylearn',
                 'role' => UserConstants::ROLE_SCHOOL,
@@ -52,6 +55,7 @@ class RootUser extends Seeder
             [
                 'name' => 'TestTeacher',
                 'phone' => '1900003', 
+                'refcode' => '1900003',
                 'password' => Hash::make('abc123'),
                 'email' => 'TestSchool@anylearn',
                 'role' => UserConstants::ROLE_TEACHER,
