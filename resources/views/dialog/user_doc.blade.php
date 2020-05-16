@@ -37,13 +37,12 @@
             url: "/ajax/doc/" + userId,
             dataType: 'json',
             success: function(res) {
-                if (!res.success) {
-                    return;
+                if (!res.success || res.data.length == 0) {
+                    html = "<tr><td class=\"text-center\" colspan=\"5\">Thành viên này chưa có giấy tờ nào.</td></tr>";
+                } else {
+                    html = renderFiles(res.data);
                 }
-                if (res.data.length == 0) {
-                    return;
-                }
-                $('#userDocModal').find('tbody').html(renderFiles(res.data));
+                $('#userDocModal').find('tbody').html(html);
                 $('#userDocModal').modal('show');
             },
             error: function(request, status, error) {

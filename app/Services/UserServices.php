@@ -90,12 +90,15 @@ class UserServices
         }
     }
 
-    public function requiredDocIcon($userId, $isUpdateDoc)
+    public function requiredDocIcon($user)
     {
-        if ($isUpdateDoc == UserConstants::STATUS_ACTIVE) {
-            return '<a class="check_doc" href="#" data-id="' . $userId . '"><i class="fas fa-cloud-upload-alt text-success" title="Đã cập nhật"></i></a>';
+        if ($user->role == UserConstants::ROLE_MEMBER) {
+            return '';
+        }
+        if ($user->update_doc == UserConstants::STATUS_ACTIVE) {
+            return '<a class="check_doc" href="#" data-id="' . $user->id . '"><i class="fas fa-cloud-upload-alt text-success" title="Đã cập nhật"></i></a>';
         } else {
-            return '<i class="fas fa-cloud-upload-alt text-gray" title="Chưa cập nhật"></i>';
+            return '<a class="check_doc text-black-50" href="#" data-id="' . $user->id . '"><i class="fas fa-cloud-upload-alt text-gray" title="Chưa cập nhật"></i></a>';
         }
     }
 }

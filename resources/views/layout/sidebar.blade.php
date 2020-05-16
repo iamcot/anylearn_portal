@@ -56,7 +56,7 @@
     <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.members') }}">
             <i class="fas fa-fw fa-users-cog"></i>
-            <span>@lang('Duyệt thành viên')</span></a>
+            <span>@lang('Quản lý thành viên')</span></a>
     </li> 
     @if($userService->haveAccess(Auth::user()->role, 'root'))
     <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">

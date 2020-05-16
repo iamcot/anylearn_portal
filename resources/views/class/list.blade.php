@@ -32,7 +32,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <thead>
-                    <th>#</th>
+                    <th class="text-center">#</th>
                     @if($userServ->isMod()) <th  width="5%" class="text-center">Hot</th>@endif
                     <th>Khóa học</th>
                     <th>Thời gian</th>
@@ -44,7 +44,7 @@
             <tbody>
                 @foreach($courseList as $course)
                 <tr>
-                    <th>{{ $loop->index + 1 }}</th>
+                    <th class="text-center">{{ $loop->index + 1 }}</th>
                     @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">{!! $userServ->hotIcon($course->is_hot) !!}</a></td>@endif
                     <td><a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif</td>

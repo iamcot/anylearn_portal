@@ -47,10 +47,10 @@
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
-                    <td></td>
+                    <td>{{ $user->refuser ? $user->refuser->name . ' (' . $user->refuser->phone . ')' : '' }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>
-                    <td class="text-center">{!! $userServ->requiredDocIcon($user->id, $user->update_doc) !!}</td>
+                    <td class="text-center">{!! $userServ->requiredDocIcon($user) !!}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($user->updated_at)) }}</td>
                     <td class="text-right">
                         @if($user->id != 1)
@@ -64,8 +64,10 @@
             </tbody>
         </table>
         <div class="small ml-3">
-            <p><i class="fas fa-check-circle text-success"></i> Thành viên đang hoạt động. <i class="fas fa-stop-circle text-danger"></i> Thành viên đang bị khóa.
-            <i class="fas fa-cloud-upload-alt text-gray"></i> Chưa có giấy tờ. <i class="fas fa-cloud-upload-alt text-success"></i> Đã cập nhật chứng chỉ, giấy tờ >>> Click để xem chi tiết</p>
+            <p><i class="fas fa-fire text-danger" title="Nổi bật"></i> Thành viên nổi bật. <i class="fas fa-check-circle text-success"></i> Thành viên đang hoạt động. <i class="fas fa-stop-circle text-danger"></i> Thành viên đang bị khóa.
+            <i class="fas fa-cloud-upload-alt text-gray"></i> Giấy tờ chưa hợp lệ. <i class="fas fa-cloud-upload-alt text-success"></i> Đã cập nhật chứng chỉ, giấy tờ >>> Click để xem chi tiết. 
+            
+        </p>
         </div>
 
     </div>

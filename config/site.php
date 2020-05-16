@@ -16,7 +16,7 @@ return [
             'value' => 6
         ],
         ConfigConstants::CONFIG_FEE_TEACHER => [
-            'title' => 'Phí hàng tháng của giản viên', 
+            'title' => 'Phí hàng tháng của giảng viên', 
             'hint' => '', 
             'type' => 'number', 
             'value' => 1000000
@@ -41,13 +41,13 @@ return [
         ],
         ConfigConstants::CONFIG_COMMISSION_FOUNDATION => [
             'title' => 'Tỉ lệ foundation', 
-            'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)', 
+            'hint' => 'Nhập số thập phân. vd: 0.05 (tương đương 5%)', 
             'type' => 'text', 
             'value' => 0.05
         ],
         ConfigConstants::CONFIG_COMMISSION_COMPANY => [
             'title' => 'Tỉ lệ lợi nhuận công ty', 
-            'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)', 
+            'hint' => 'Nhập số thập phân. vd: 0.45 (tương đương 45%)', 
             'type' => 'text', 
             'value' => 0.45
         ],

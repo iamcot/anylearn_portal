@@ -45,6 +45,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function refuser()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+
     public function validateMember($data)
     {
         return Validator::make($data, [
@@ -70,6 +75,7 @@ class User extends Authenticatable
             'password' => Hash::make($data['password']),
             'status' => UserConstants::STATUS_ACTIVE,
             'update_doc' => UserConstants::STATUS_ACTIVE,
+            'refcode' => $data['phone'],
         ];
         if ($data['ref']) {
             $refUser = $this->where('phone', $data['ref'])->first();
@@ -123,6 +129,7 @@ class User extends Authenticatable
             'email' => $input['email'],
             'phone' => $input['phone'],
             'role' => $input['role'],
+            'user_id' => $input['user_id'],
             'commission_rate' => $input['commission_rate'],
 
         ];
@@ -168,7 +175,9 @@ class User extends Authenticatable
             }
         }
         $members = $members->orderby('updated_at', 'desc')
+            ->with('refuser')
             ->paginate(UserConstants::PP);
+   
         return $members;
     }
 }
