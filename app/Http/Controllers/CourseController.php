@@ -54,9 +54,13 @@ class CourseController extends Controller
                 return redirect()->back()->with(['notify' => $rs, 'tab' => $input['tab']]);
             }
         }
+        $courseDb =  $courseService->itemInfo($courseId);
+        if (empty($courseDb)) {
+            return redirect()->route('class')->with('notify', __('Lớp học không tồn tại'));
+        }
+        $this->data['course'] = $courseDb;
         $user = Auth::user();
         $this->data['courseSeries'] = $courseService->userCourseSeries($user->id);
-        $this->data['course'] = $courseService->itemInfo($courseId);
         $this->data['locationTypes'] = ItemConstants::$locationTypes;
         $this->data['navText'] = __('Chỉnh sửa khóa học');
         $this->data['hasBack'] = route('course');

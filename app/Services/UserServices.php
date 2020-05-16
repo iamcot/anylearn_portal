@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserServices
 {
@@ -29,6 +30,11 @@ class UserServices
     public function userRoles()
     {
         return array_keys($this->roles);
+    }
+
+    public function isMod() {
+        $user = Auth::user();
+        return in_array($user->role, UserConstants::$modRoles);
     }
 
     public function haveAccess($role, $routeName)
@@ -72,6 +78,15 @@ class UserServices
             return '<i class="fas fa-check-circle text-success" title="Đang hoạt động"></i>';
         } else {
             return '<i class="fas fa-stop-circle text-danger" title="Tạm khóa"></i>';
+        }
+    }
+
+    public function hotIcon($status)
+    {
+        if ($status == UserConstants::STATUS_ACTIVE) {
+            return '<i class="fas fa-fire text-danger" title="Nổi bật"></i>';
+        } else {
+            return '<i class="fas fa-fire text-black-50" title="Bình thường"></i>';
         }
     }
 

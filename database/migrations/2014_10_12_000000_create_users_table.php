@@ -91,7 +91,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('item_id')->index();
             $table->date('date')->index();
             $table->string('time_start');
-            $table->string('time_end');
+            $table->string('time_end')->nullable();
             $table->text('content')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

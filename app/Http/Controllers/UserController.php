@@ -67,7 +67,7 @@ class UserController extends Controller
         if ($request->input('save')) {
             $input = $request->all();
             $userM = new User();
-            $rs = $userM->saveMod($input);
+            $rs = $userM->saveMember($input);
             return redirect()->route('user.members')->with('notify', $rs);
         }
         $userService = new UserServices();
@@ -80,7 +80,7 @@ class UserController extends Controller
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = true;
         $this->data['type'] = 'member';
-        return view('user.mod_edit', $this->data);
+        return view('user.member_edit', $this->data);
     }
 
     public function modCreate(Request $request)

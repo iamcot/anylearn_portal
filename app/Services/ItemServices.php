@@ -17,7 +17,8 @@ class ItemServices
 {
     const PP = 20;
 
-    public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE) {
+    public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE)
+    {
         $courses = Item::where('type', $itemType);
         if ($userId) {
             $courses = $courses->where('user_id', $userId);
@@ -26,7 +27,7 @@ class ItemServices
             switch ($request->input('t')) {
                 case "series":
                     $serieseId = '';
-                    if (is_numeric($request->input('s')) ) {
+                    if (is_numeric($request->input('s'))) {
                         $serieseId = $request->input('s');
                     } else {
                         $seriesDB = CourseSeries::where('title', $request->input('s'))->first();
@@ -42,21 +43,36 @@ class ItemServices
             }
         }
         $courses = $courses->orderby('id', 'desc')
-        ->with('series')
-        ->paginate(self::PP);
+            ->with('series')
+            ->paginate(self::PP);
         return $courses;
     }
 
-    public function itemResources($courseId) {
+    public function itemResources($courseId)
+    {
         $files = ItemResource::where('item_id', $courseId)->get();
         if ($files) {
             $files = $files->toArray();
         }
         $fileService = new FileServices();
-        for($i = 0; $i < sizeof($files); $i++) {
+        for ($i = 0; $i < sizeof($files); $i++) {
             $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_COURSE, $files[$i]['data']);
         }
         return $files;
+    }
+
+    public function itemInfo($courseId)
+    {
+        $item = Item::find($courseId);
+        if (!$item) {
+            return false;
+        }
+        $item->image = $this->itemImageUrl($item->image);
+
+        $data['info'] = $item;
+        $data['resource'] = $this->itemResources($courseId);
+        $data['schedule'] = Schedule::where('item_id', $courseId)->get();
+        return $data;
     }
 
     public function createItem($input, $itemType = ItemConstants::TYPE_COURSE)
@@ -77,12 +93,7 @@ class ItemServices
         }
 
         $input['type'] = $itemType;
-
-        if (in_array($user->role, UserConstants::$modRoles)) {
-            $input['user_id'] = ItemConstants::COURSE_SYSTEM_USERID;
-        } else {
-            $input['user_id'] = $user->id;
-        }
+        $input['user_id'] = in_array($user->role, UserConstants::$modRoles) ? ItemConstants::COURSE_SYSTEM_USERID : $user->id;
 
         $newCourse = Item::create($input);
         if ($newCourse) {
@@ -100,19 +111,6 @@ class ItemServices
         return false;
     }
 
-    public function itemInfo($courseId)
-    {
-        $item = Item::find($courseId);
-        if (!$item) {
-            return false;
-        }
-        $item->image = $this->itemImageUrl($item->image);
-      
-        $data['info'] = $item;
-        $data['resource'] = $this->itemResources($courseId);
-        return $data;
-    }
-
     public function updateItem(Request $request, $input)
     {
         $user = Auth::user();
@@ -127,7 +125,6 @@ class ItemServices
 
         $canAddResource = $this->addItemResource($request, $input['id']);
 
-        $user = Auth::user();
         if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
             $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
             if ($newSeriesId === false) {
@@ -137,7 +134,7 @@ class ItemServices
             $input['series_id'] = $newSeriesId;
         }
         $courseImage = $this->changeItemImage($request, $input['id']);
-        if($courseImage) {
+        if ($courseImage) {
             $input['image'] = $courseImage;
         }
 
@@ -151,6 +148,8 @@ class ItemServices
                     'time_end' => $input['time_end'],
                     'content' => $input['title'],
                 ]);
+            } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
+                $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
             }
         }
         return $canUpdate;
@@ -173,6 +172,33 @@ class ItemServices
             return "";
         }
         return date('Y-m-d', $int);
+    }
+
+    private function updateClassSchedule(Request $request, $itemId)
+    {
+        $schedule = $request->get('schedule');
+        if (!empty($schedule)) {
+            foreach ($schedule as $date) {
+                if (empty($date['date'])) {
+                    continue;
+                }
+                if (empty($date['id'])) {
+                    Schedule::create([
+                        'item_id' => $itemId,
+                        'date' => $date['date'],
+                        'time_start' => $date['time_start'],
+                        'time_end' => $date['time_end'],
+                    ]);
+                } else {
+                    Schedule::find($date['id'])->update([
+                        'date' => $date['date'],
+                        'time_start' => $date['time_start'],
+                        'time_end' => $date['time_end'],
+                    ]);
+                }
+            }
+        }
+        return true;
     }
 
     private function createCourseSeries($userId, $courseName)
@@ -201,12 +227,14 @@ class ItemServices
         ]);
     }
 
-    private function itemImageUrl($path) {
+    private function itemImageUrl($path)
+    {
         $fileService = new FileServices();
         return $fileService->urlFromPath(FileConstants::DISK_COURSE, $path);
     }
 
-    private function changeItemImage(Request $request, $courseId) {
+    private function changeItemImage(Request $request, $courseId)
+    {
         $fileService = new FileServices();
         $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_COURSE, true, $courseId);
         if ($file !== false) {
@@ -216,29 +244,31 @@ class ItemServices
         return '';
     }
 
-    private function addItemResource(Request $request, $courseId) {
+    private function addItemResource(Request $request, $courseId)
+    {
         $fileService = new FileServices();
         $file = $fileService->doUploadFile($request, 'resource_data', FileConstants::DISK_COURSE, true, $courseId);
         if ($file !== false) {
             $resource = $request->get('resource');
             $db = ItemResource::create([
-                'item_id' => $courseId, 
-                'type' => $file['file_ext'], 
-                'title' => $resource['title'], 
-                'desc' => $resource['desc'], 
-                'data' => $file['path'], 
+                'item_id' => $courseId,
+                'type' => $file['file_ext'],
+                'title' => $resource['title'],
+                'desc' => $resource['desc'],
+                'data' => $file['path'],
             ]);
             return true;
         }
         return false;
     }
 
-    private function deleteOldItemImage($courseId) {
+    private function deleteOldItemImage($courseId)
+    {
         $course = Item::find($courseId);
         if (!$course) {
             return true;
         }
         $fileService = new FileServices();
-        $fileService->deleteFiles([$course->image], FileConstants::DISK_COURSE );
+        $fileService->deleteFiles([$course->image], FileConstants::DISK_COURSE);
     }
 }

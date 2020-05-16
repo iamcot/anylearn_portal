@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\ItemResource;
+use App\Models\Schedule;
 use App\Services\ItemServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,11 @@ class ClassController extends Controller
                 return redirect()->back()->with(['notify' => $rs, 'tab' => $input['tab']]);
             }
         }
-        $this->data['course'] = $courseService->itemInfo($courseId);
+        $courseDb =  $courseService->itemInfo($courseId);
+        if (empty($courseDb)) {
+            return redirect()->route('class')->with('notify', __('Lớp học không tồn tại'));
+        }
+        $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
@@ -64,6 +69,14 @@ class ClassController extends Controller
         return redirect()->back()->with([
             'tab' => 'resource',
             'notify' => $rs
+        ]);
+    }
+
+    public function delSchedule($id) {
+        $rs = Schedule::where('item_id', $id)->delete();
+        return redirect()->back()->with([
+            'tab' => 'schedule',
+            'notify' => ($rs > 0)
         ]);
     }
 }

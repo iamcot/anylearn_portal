@@ -46,11 +46,17 @@ Route::middleware(['auth'])->group(function () {
     Route::any('/class/create', 'ClassController@create')->name('class.create');
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
+    Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
+
+    Route::get('/confirm', 'Controller@developing')->name('confirm');
+    Route::get('/product', 'Controller@developing')->name('product');
+    Route::get('/order', 'Controller@developing')->name('order');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');
 
 //Ajax
 Route::get('/ajax/toc', 'AjaxController@toc')->name('ajax.toc');
+Route::middleware(['auth', 'access.mod'])->get('/ajax/touch-is-hot/{table}/{id}', 'AjaxController@touchIsHot')->name('ajax.touch.ishot');
 Route::middleware(['auth'])->get('/ajax/doc/{userId}', 'AjaxController@userDocs')->name('ajax.user.docs');
 Route::middleware(['auth'])->get('/ajax/remove-doc/{userId}', 'AjaxController@userRemoveUpdateDoc')->name('ajax.user.docs.remove');

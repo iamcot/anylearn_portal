@@ -49,7 +49,7 @@
         <div class="form-group row">
             <label for="time_start" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Thời gian bắt đầu') }}</label>
             <div class="col-md-8">
-                <input id="time_start" type="text" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm">
+                <input id="time_start" type="text" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm" required>
             </div>
         </div>
         <div class="form-group row">

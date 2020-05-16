@@ -25,8 +25,8 @@
             <i class="fas fa-fw fa-university"></i>
             <span>@lang('Chỉnh sửa Lớp học')</span></a>
     </li>
-    <li class="nav-item {{ $route == 'course.confirm' ? 'active' : '' }}">
-        <a class="nav-link" href="">
+    <li class="nav-item {{ $route == 'confirm' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('confirm') }}">
             <i class="fas fa-fw fa-check-double"></i>
             <span>@lang('Xác nhận tham gia')</span></a>
     </li>
@@ -37,12 +37,12 @@
         @lang('Quản lý sản phẩm')
     </div>
     <li class="nav-item {{ $route == 'product' ? 'active' : '' }}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('product') }}">
             <i class="fas fa-fw fa-boxes"></i>
             <span>@lang('Chỉnh sửa sản phẩm')</span></a>
     </li>
     <li class="nav-item {{ $route == 'order' ? 'active' : '' }}">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('order') }}">
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>@lang('Quản lý đơn hàng')</span></a>
     </li>

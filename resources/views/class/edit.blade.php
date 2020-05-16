@@ -55,6 +55,7 @@
     });
 
     $("#schedule_generate").click(function() {
+        var type = $(this).data("type");
         var num = $("#schedule_auto").find('#num').val();
         var configDays = $("#schedule_auto input:checkbox:checked").map(function() {
             return $(this).attr('name');
@@ -64,19 +65,37 @@
         var configEndTime = $("#time_end").val();
         var dt = new Date(startDate);
         var html = "";
-        for (i = 0; i < num;) {
-            var weekdayStr = "d" + dt.getDay();
-            if (configDays.includes(weekdayStr)) {
-                i++;
-                html += "<div class=\"row mb-1\">" +
-                    "<div class=\"col-6\"><input class=\"form-control\" value=\"" + dt.getFullYear() + "-" + dt.getMonth() + "-" + dt.getDate() + "\"/></div>" +
-                    "<div class=\"col-3\"><input class=\"form-control\" value=\"" + configStartTime + "\"/></div>" +
-                    "<div class=\"col-3\"><input class=\"form-control\" value=\"" + configEndTime + "\"/></div>" +
-                    "</div>";
+        if (configDays.length > 0) {
+            for (i = 0; i < num;) {
+                var weekdayStr = "d" + dt.getDay();
+                if (configDays.includes(weekdayStr)) {
+                    if (type == "create") {
+                        html += "<tr>" +
+                            "<td><input type=\"date\" name=\"schedule[" + i + "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (dt.getMonth() < 10 ? "0" : "") + dt.getMonth() + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() + "\"/></td>" +
+                            "<td><input name=\"schedule[" + i + "][time_start]\" class=\"time form-control\" value=\"" + configStartTime + "\"/></td>" +
+                            "<td><input name=\"schedule[" + i + "][time_end]\" class=\"time form-control\" value=\"" + configEndTime + "\"/></td>" +
+                            "<td></td></tr>";
+                    } else {
+                        $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (dt.getMonth() < 10 ? "0" : "") + dt.getMonth() + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
+                        if (configStartTime) {
+                            $("#schedule_" + i + "_time_start").val(configStartTime);
+                        }
+                        $("#schedule_" + i + "_time_end").val(configEndTime);
+                    }
+
+                    i++;
+                }
+                dt.setDate(dt.getDate() + 1);
             }
-            dt.setDate(dt.getDate() + 1);
+        } else {
+            alert("Vui lòng nhập số buổi và chọn ít nhất 1 ngày trong tuần.");
         }
-        $("#schedule_result").html(html);
+
+        if (html.length > 0) {
+            $("#schedule_result").html(html);
+            $('.time').mask('00:00');
+        }
+
     });
 </script>
 @endsection

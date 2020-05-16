@@ -13,4 +13,8 @@ class Controller extends BaseController
 
     protected $data  = [];
 
+    public function developing() {
+        return view('developing');
+    }
+
 }

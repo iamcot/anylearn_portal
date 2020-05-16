@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AccessItem;
+use App\Http\Middleware\AccessMod;
 use App\Http\Middleware\AccessResource;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -64,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'access.item' => AccessItem::class,
         'access.resource' => AccessResource::class,
+        'access.mod' => AccessMod::class,
     ];
 
     /**

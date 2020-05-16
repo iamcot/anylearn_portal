@@ -10,6 +10,7 @@ use App\Services\FileServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AjaxController extends Controller
 {
@@ -55,6 +56,12 @@ class AjaxController extends Controller
             $this->buildResponse(true, $rs);
         }
         return response()->json($this->response);
+    }
+
+    public function touchIsHot($table, $id)
+    {
+        $rs = DB::table($table)->where('id', $id)->update(['is_hot' => DB::raw('1 - is_hot')]);
+        return redirect()->back()->with('notify', $rs);
     }
 
     private function buildResponse($success, $data) {

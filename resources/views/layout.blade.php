@@ -24,7 +24,7 @@
     <div id="wrapper">
         @include('layout.sidebar')
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-column @yield('main-bg')">
             <!-- Main Content -->
             <div id="content">
                 @include('layout.topbar')

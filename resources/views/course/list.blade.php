@@ -1,3 +1,4 @@
+@inject('userServ','App\Services\UserServices')
 @extends('layout')
 
 @section('rightFixedTop')
@@ -33,6 +34,7 @@
             <thead>
                 <thead>
                     <th>#</th>
+                    @if($userServ->isMod()) <th width="5%" class="text-center">Hot</th>@endif
                     <th>Khóa học</th>
                     <th>Chuỗi</th>
                     <th>Thời gian</th>
@@ -45,6 +47,7 @@
                 @foreach($courseList as $course)
                 <tr>
                     <th>{{ $loop->index + 1 }}</th>
+                    @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">{!! $userServ->hotIcon($course->is_hot) !!}</a></td>@endif
                     <td><a href="{{ route('course.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
                     <td>@if($course->series)
                         <a href="?t=series&s={{ $course->series->id }}">{{ $course->series->title }}</a>

@@ -113,6 +113,25 @@ class User extends Authenticatable
         return $this->find($input['id'])->update($obj);
     }
 
+    public function saveMember($input)
+    {
+        if (empty($input['id'])) {
+            return 0;
+        }
+        $obj = [
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'phone' => $input['phone'],
+            'role' => $input['role'],
+            'commission_rate' => $input['commission_rate'],
+
+        ];
+        if (!empty($input['password'])) {
+            $obj['password'] = Hash::make($input['password']);
+        }
+        return $this->find($input['id'])->update($obj);
+    }
+
 
     public function redirectToUpdateDocs()
     {
