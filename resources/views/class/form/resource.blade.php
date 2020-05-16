@@ -1,7 +1,7 @@
 @inject('fileService', 'App\Services\FileServices')
 <div class="row p-5">
     <div class="col-6">
-        <h4>@lang('Hình ảnh chính của khóa học')
+        <h4>@lang('Hình ảnh chính của lớp học')
             <button class="btn btn-sm btn-primary float-right" name="tab" value="resource"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </h4>
         <hr />

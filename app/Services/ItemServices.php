@@ -6,19 +6,19 @@ use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\CourseSeries;
-use App\Models\User;
 use App\Models\Item;
 use App\Models\ItemResource;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class CourseServices
+class ItemServices
 {
     const PP = 20;
 
-    public function courseList(Request $request, $userId = null) {
-        $courses = Item::where('type', ItemConstants::TYPE_COURSE);
+    public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE) {
+        $courses = Item::where('type', $itemType);
         if ($userId) {
             $courses = $courses->where('user_id', $userId);
         }
@@ -47,7 +47,7 @@ class CourseServices
         return $courses;
     }
 
-    public function courseResources($courseId) {
+    public function itemResources($courseId) {
         $files = ItemResource::where('item_id', $courseId)->get();
         if ($files) {
             $files = $files->toArray();
@@ -59,7 +59,7 @@ class CourseServices
         return $files;
     }
 
-    public function createCourse($input)
+    public function createItem($input, $itemType = ItemConstants::TYPE_COURSE)
     {
         $user = Auth::user();
         $validator = $this->validate($input);
@@ -67,7 +67,7 @@ class CourseServices
             return $validator;
         }
 
-        if ($input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
+        if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
             $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
             if ($newSeriesId === false) {
                 $validator->errors()->add('series', __('Tạo chuỗi khóa học mới không thành công'));
@@ -76,7 +76,7 @@ class CourseServices
             $input['series_id'] = $newSeriesId;
         }
 
-        $input['type'] = ItemConstants::TYPE_COURSE;
+        $input['type'] = $itemType;
 
         if (in_array($user->role, UserConstants::$modRoles)) {
             $input['user_id'] = ItemConstants::COURSE_SYSTEM_USERID;
@@ -86,29 +86,38 @@ class CourseServices
 
         $newCourse = Item::create($input);
         if ($newCourse) {
+            if ($newCourse->type == ItemConstants::TYPE_COURSE) {
+                Schedule::create([
+                    'item_id' => $newCourse->id,
+                    'date' => $newCourse->date_start,
+                    'time_start' => $newCourse->time_start,
+                    'time_end' => $newCourse->time_end,
+                    'content' => $newCourse->title,
+                ]);
+            }
             return $newCourse->id;
         }
         return false;
     }
 
-    public function courseInfo($courseId)
+    public function itemInfo($courseId)
     {
         $item = Item::find($courseId);
         if (!$item) {
             return false;
         }
-        $item->image = $this->courseImageUrl($item->image);
+        $item->image = $this->itemImageUrl($item->image);
       
         $data['info'] = $item;
-        $data['resource'] = $this->courseResources($courseId);
+        $data['resource'] = $this->itemResources($courseId);
         return $data;
     }
 
-    public function updateCourse(Request $request, $input)
+    public function updateItem(Request $request, $input)
     {
         $user = Auth::user();
         $itemUpdate = Item::find($input['id']);
-        if (!in_array($user->role, UserConstants::$modRoles) || $user->id != $itemUpdate->user_id) {
+        if (!in_array($user->role, UserConstants::$modRoles) && $user->id != $itemUpdate->user_id) {
             return false;
         }
         $validator = $this->validate($input);
@@ -116,10 +125,10 @@ class CourseServices
             return $validator;
         }
 
-        $canAddResource = $this->addCourseResource($request, $input['id']);
+        $canAddResource = $this->addItemResource($request, $input['id']);
 
         $user = Auth::user();
-        if ($input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
+        if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
             $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
             if ($newSeriesId === false) {
                 $validator->errors()->add('series', __('Tạo chuỗi khóa học mới không thành công'));
@@ -127,12 +136,24 @@ class CourseServices
             }
             $input['series_id'] = $newSeriesId;
         }
-        $courseImage = $this->changeCourseImage($request, $input['id']);
+        $courseImage = $this->changeItemImage($request, $input['id']);
         if($courseImage) {
             $input['image'] = $courseImage;
         }
 
-        return $itemUpdate->update($input);
+        $canUpdate = $itemUpdate->update($input);
+
+        if ($canUpdate) {
+            if ($itemUpdate->type == ItemConstants::TYPE_COURSE) {
+                Schedule::where('item_id', $itemUpdate->id)->update([
+                    'date' => $input['date_start'],
+                    'time_start' => $input['time_start'],
+                    'time_end' => $input['time_end'],
+                    'content' => $input['title'],
+                ]);
+            }
+        }
+        return $canUpdate;
     }
 
     public function userCourseSeries($userId)
@@ -173,29 +194,29 @@ class CourseServices
     private function validate($data)
     {
         return Validator::make($data, [
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:250'],
             'price' => ['required'],
             'date_start' => ['required'],
             'content' => ['required'],
         ]);
     }
 
-    private function courseImageUrl($path) {
+    private function itemImageUrl($path) {
         $fileService = new FileServices();
         return $fileService->urlFromPath(FileConstants::DISK_COURSE, $path);
     }
 
-    private function changeCourseImage(Request $request, $courseId) {
+    private function changeItemImage(Request $request, $courseId) {
         $fileService = new FileServices();
         $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_COURSE, true, $courseId);
         if ($file !== false) {
-            $this->deleteOldCourseImage($courseId);
+            $this->deleteOldItemImage($courseId);
             return $file['path'];
         }
         return '';
     }
 
-    private function addCourseResource(Request $request, $courseId) {
+    private function addItemResource(Request $request, $courseId) {
         $fileService = new FileServices();
         $file = $fileService->doUploadFile($request, 'resource_data', FileConstants::DISK_COURSE, true, $courseId);
         if ($file !== false) {
@@ -212,7 +233,7 @@ class CourseServices
         return false;
     }
 
-    private function deleteOldCourseImage($courseId) {
+    private function deleteOldItemImage($courseId) {
         $course = Item::find($courseId);
         if (!$course) {
             return true;

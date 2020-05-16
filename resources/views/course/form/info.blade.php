@@ -47,12 +47,17 @@
         </div>
 
         <div class="form-group row">
-            <label for="time" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Thời gian') }}</label>
+            <label for="time_start" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Thời gian bắt đầu') }}</label>
             <div class="col-md-8">
-                <input id="time" type="text" class="time form-control @error('time') is-invalid @enderror" name="time" value="{{ old('time', !empty($course) ? $course['info']->time : '') }}" placeholder="hh:mm">
+                <input id="time_start" type="text" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm">
             </div>
         </div>
-
+        <div class="form-group row">
+            <label for="time_end" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Thời gian kết thúc') }}</label>
+            <div class="col-md-8">
+                <input id="time_end" type="text" class="time form-control @error('time_end') is-invalid @enderror" name="time_end" value="{{ old('time_end', !empty($course) ? $course['info']->time_end : '') }}" placeholder="hh:mm">
+            </div>
+        </div>
         <div class="form-group row">
             <label for="location_type" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Loại địa điểm') }}</label>
             <div class="col-md-8">

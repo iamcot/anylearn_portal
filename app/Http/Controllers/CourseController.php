@@ -6,7 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\Item;
 use App\Models\ItemResource;
-use App\Services\CourseServices;
+use App\Services\ItemServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Validator;
@@ -16,18 +16,18 @@ class CourseController extends Controller
     public function list(Request $request)
     {
         $user = Auth::user();
-        $courseService = new CourseServices();
+        $courseService = new ItemServices();
         $this->data['navText'] = __('Quản lý khóa học');
-        $this->data['courseList'] = $courseService->courseList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id);
+        $this->data['courseList'] = $courseService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id);
         return view('course.list', $this->data);
     }
 
     public function create(Request $request)
     {
-        $courseService = new CourseServices();
+        $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
-            $rs = $courseService->createCourse($input);
+            $rs = $courseService->createItem($input);
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo khóa học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {
@@ -37,17 +37,17 @@ class CourseController extends Controller
         $user = Auth::user();
         $this->data['courseSeries'] = $courseService->userCourseSeries($user->id);
         $this->data['locationTypes'] = ItemConstants::$locationTypes;
-        $this->data['navText'] = __('Tạo khóa khóa học');
+        $this->data['navText'] = __('Tạo khóa học');
         $this->data['hasBack'] = route('course');
         return view('course.edit', $this->data);
     }
 
     public function edit(Request $request, $courseId)
     {
-        $courseService = new CourseServices();
+        $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();
-            $rs = $courseService->updateCourse($request, $input);
+            $rs = $courseService->updateItem($request, $input);
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with(['tab' => $input['tab'], 'notify' => __('Sửa khóa học thất bại! Vui lòng kiểm tra lại dữ liệu')]);
             } else {
@@ -56,7 +56,7 @@ class CourseController extends Controller
         }
         $user = Auth::user();
         $this->data['courseSeries'] = $courseService->userCourseSeries($user->id);
-        $this->data['course'] = $courseService->courseInfo($courseId);
+        $this->data['course'] = $courseService->itemInfo($courseId);
         $this->data['locationTypes'] = ItemConstants::$locationTypes;
         $this->data['navText'] = __('Chỉnh sửa khóa học');
         $this->data['hasBack'] = route('course');

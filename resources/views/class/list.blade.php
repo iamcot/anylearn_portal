@@ -4,8 +4,7 @@
 <form class="row">
     <div class="col-xs-3 mr-1">
         <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tên khóa học</option>
-            <option {{ app('request')->input('t') == 'series' ? 'selected' : '' }} value="series">Chuỗi khóa học</option>
+            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tên lớp học</option>
         </select>
     </div>
     <div class="col-xs-6 mr-1">
@@ -16,7 +15,7 @@
     </div>
 
     <div class="col-xs-2 mr-1">
-        <a class="btn btn-success" href="{{ route('course.create') }}"><i class="fas fa-plus"></i> @lang('Thêm mới')</a>
+        <a class="btn btn-success" href="{{ route('class.create') }}"><i class="fas fa-plus"></i> @lang('Thêm mới')</a>
     </div>
 </form>
 @endsection
@@ -24,7 +23,7 @@
 @section('body')
 @if(sizeof($courseList) == 0)
 <div class="text-center mt-5 pt-5">
-    @lang('Chưa có khóa học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('course.create')])
+    @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('class.create')])
 </div>
 @else
 <div class="card shadow">
@@ -34,7 +33,6 @@
                 <thead>
                     <th>#</th>
                     <th>Khóa học</th>
-                    <th>Chuỗi</th>
                     <th>Thời gian</th>
                     <th>Học phí</th>
                     <th>Quan tâm</th>
@@ -45,11 +43,8 @@
                 @foreach($courseList as $course)
                 <tr>
                     <th>{{ $loop->index + 1 }}</th>
-                    <td><a href="{{ route('course.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
-                    <td>@if($course->series)
-                        <a href="?t=series&s={{ $course->series->id }}">{{ $course->series->title }}</a>
-                        @endif</td>
-                    <td>{{ $course->time_start }}-{{ $course->time_end }} {{ date('d/m/y', strtotime($course->date_start))}}</td>
+                    <td><a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
+                    <td>{{ date('d/m/y', strtotime($course->date_start))}} - {{ date('d/m/y', strtotime($course->date_end))}}</td>
                     <td>{{ number_format($course->price) }}</td>
                     <td></td>
                     <td></td>

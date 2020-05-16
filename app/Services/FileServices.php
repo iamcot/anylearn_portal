@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class FileServices
 {
-    public static $allowFileExts = ['jpg', 'png', 'doc', 'docx', 'pdf'];
+    public static $allowFileExts = ['jpg', 'png', 'doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
 
     private $systemFiles = [
         '.gitignore',
@@ -71,7 +71,8 @@ class FileServices
         return $rs;
     }
 
-    public function urlFromPath($disk, $path) {
+    public function urlFromPath($disk, $path)
+    {
         if ($path) {
             return Storage::disk($disk)->url($path);
         }
@@ -178,6 +179,36 @@ class FileServices
                 Log::error($e);
             }
         }
+    }
+
+    public function fileIcon($fileExt)
+    {
+        $icon = '';
+        switch ($fileExt) {
+            case 'jpg':
+            case 'png':
+                $icon = '<i class="fas fa-file-image"></i>';
+                break;
+            case 'ppt':
+            case 'pptx':
+                $icon = '<i class="fas fa-file-powerpoint"></i>';
+                break;
+            case 'doc':
+            case 'docx':
+                $icon = '<i class="fas fa-file-word"></i>';
+                break;
+            case 'xls':
+            case 'xlsx':
+                $icon = '<i class="fas fa-file-excel"></i>';
+                break;
+            case 'pdf':
+                $icon = '<i class="fas fa-file-pdf"></i>';
+                break;
+            default:
+                $icon = '<i class="fas fa-file"></i>';
+                break;
+        }
+        return $icon;
     }
 
     private function buildFullHtml($data)

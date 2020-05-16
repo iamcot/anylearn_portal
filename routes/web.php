@@ -41,6 +41,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('access.item')->get('/course/{id}', 'CourseController@detail')->name('course.detail');
     Route::middleware('access.item')->any('/course/{id}/edit', 'CourseController@edit')->name('course.edit');
     Route::middleware('access.resource')->get('/resource/{id}/delete', 'CourseController@resourceDelete')->name('resource.delete');
+
+    Route::get('/class', 'ClassController@list')->name('class');
+    Route::any('/class/create', 'ClassController@create')->name('class.create');
+    Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
+    Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

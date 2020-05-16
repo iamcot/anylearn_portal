@@ -76,10 +76,10 @@ return [
             'visibility' => 'public',
         ],
 
-        'courses' => [
+        'items' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/courses'),
-            'url' => env('APP_URL').'/storage/courses',
+            'root' => storage_path('app/public/items'),
+            'url' => env('APP_URL').'/storage/items',
             'visibility' => 'public',
         ],
 

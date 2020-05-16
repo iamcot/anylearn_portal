@@ -21,7 +21,7 @@
             <span>@lang('Chỉnh sửa Khóa học')</span></a>
     </li>
     <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit']) ? 'active' : '' }}">
-    <a class="nav-link" href="/">
+    <a class="nav-link" href="{{ route('class') }}">
             <i class="fas fa-fw fa-university"></i>
             <span>@lang('Chỉnh sửa Lớp học')</span></a>
     </li>
