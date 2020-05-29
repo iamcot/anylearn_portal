@@ -16,6 +16,9 @@ class UserApi extends Controller
         $credentials = $request->only('phone', 'password');
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            if (!$user->status) {
+                return response('Tài khoản của bạn đã bị khóa.', 403);
+            }
             if (empty($user->api_token)) {
                 $saveToken = User::find($user->id)->update(
                     ['api_token' => hash('sha256', Str::random(60))]
@@ -37,6 +40,9 @@ class UserApi extends Controller
         $user = User::where('api_token', $token)->first();
         if ($user == null) {
             return response('Thông tin xác thực không hợp lệ', 401);
+        }
+        if (!$user->status) {
+            return response('Tài khoản của bạn đã bị khóa.', 403);
         }
         return response()->json($user, 200);
     }
