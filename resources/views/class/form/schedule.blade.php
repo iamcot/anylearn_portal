@@ -36,7 +36,9 @@
                         </table>
                     </div>
                     <div class="card-footer">
+                        @if(!empty($course['schedule']))
                         <a href="{{ route('class.del.schedule', ['id' => $course['info']->id]) }}" class="btn btn-sm btn-danger">Xóa toàn bộ lịch học</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -44,12 +46,12 @@
                 <div class="card shadow">
                     <div class="card-header font-weight-bold">
                         Tạo/Cập nhật tự động
-                        <a href="#" id="schedule_generate" class="btn btn-sm btn-warning float-right" data-type="{{  sizeof($course['schedule']) > 0 ? 'update' : 'create' }}">Tạo</a>
+                        <a href="#" id="schedule_generate" class="btn btn-sm btn-warning float-right" data-type="{{  isset($course['schedule']) && sizeof($course['schedule']) > 0 ? 'update' : 'create' }}">Tạo</a>
                     </div>
                     <div class="card-body" id="schedule_auto">
                         <div class="form-group">
                             <label for="num" class="form-label font-weight-bold">{{ __('Số buổi') }}</label>
-                            <input id="num" type="number" class="form-control" {{ sizeof($course['schedule']) > 0 ? 'readonly' : ''}} value="{{ sizeof($course['schedule']) > 0 ? sizeof($course['schedule']) : ''}}">
+                            <input id="num" type="number" class="form-control" {{ isset($course['schedule']) && sizeof($course['schedule']) > 0 ? 'readonly' : ''}} value="{{ isset($course['schedule']) && sizeof($course['schedule']) > 0 ? sizeof($course['schedule']) : ''}}">
                             <small><i class="fas fa-info-circle"></i> Lưu ý: Số buổi chỉ được khởi tạo 1 lần duy nhất</small>
                         </div>
                         <div class="form-group">

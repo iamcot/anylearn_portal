@@ -16,14 +16,15 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone')->unique();
             $table->string('refcode')->unique();
             $table->string('password');
+            $table->string('api_token')->unique()->nullable()->default(null);
             $table->string('role', 20)->index();
             $table->tinyInteger('status')->index()->default(0);
             $table->tinyInteger('update_doc')->default(0);
-            $table->bigInteger('ballance')->default(0);
+            $table->integer('package_id')->default(0);
             $table->integer('expire')->index()->default(0);
             $table->bigInteger('wallet_m')->default(0);
             $table->bigInteger('wallet_c')->default(0);
@@ -31,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('user_id')->index()->nullable();
             $table->tinyInteger('is_hot')->index()->default(0);
             $table->text('image')->nullable();
+            $table->text('banner')->nullable();
             $table->text('introduce')->nullable();
             $table->string('title')->nullable();
             $table->date('dob')->nullable();
@@ -62,7 +64,7 @@ class CreateUsersTable extends Migration
             $table->text('short_content')->nullable();
             $table->text('content');
             $table->bigInteger('price')->default(0);
-            $table->bigInteger('sale_price')->nullable();
+            $table->bigInteger('org_price')->nullable();
             $table->date('date_start')->index();
             $table->string('time_start')->nullable();
             $table->date('date_end')->nullable();

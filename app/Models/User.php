@@ -21,10 +21,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'role', 'status', 'user_id',
-        'ballance', 'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
+        'name', 'email', 'password', 'api_token', 'phone', 'role', 'status', 'user_id',
+        'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
         'introduce', 'address', 'country', 'dob', 'update_doc',
-        'refcode', 'title', 'num_friends',
+        'refcode', 'title', 'num_friends', 'package_id', 'banner',
     ];
 
     /**
@@ -54,7 +54,7 @@ class User extends Authenticatable
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['string', 'email', 'max:255'],
             'phone' => ['required', 'min:10', 'max:10', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
@@ -66,12 +66,12 @@ class User extends Authenticatable
     {
         $obj = [
             'name' => $data['name'],
-            'email' => $data['email'],
+            'email' => isset($data['email']) ? $data['email'] : null,
             'phone' => $data['phone'],
-            'dob' => $data['dob'],
-            'address' => $data['address'],
+            'dob' => isset($data['dob']) ? $data['dob'] : null,
+            'address' => isset($data['address']) ? $data['address'] : null,
             'role' => $data['role'],
-            'country' => $data['country'],
+            'country' => isset($data['country']) ? $data['country'] : null,
             'password' => Hash::make($data['password']),
             'status' => UserConstants::STATUS_ACTIVE,
             'update_doc' => UserConstants::STATUS_ACTIVE,
@@ -177,7 +177,7 @@ class User extends Authenticatable
         $members = $members->orderby('updated_at', 'desc')
             ->with('refuser')
             ->paginate(UserConstants::PP);
-   
+
         return $members;
     }
 }
