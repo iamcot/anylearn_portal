@@ -37,6 +37,9 @@ class UserApi extends Controller
     public function userInfo(Request $request)
     {
         $token = $request->get('api_token');
+        if (empty($token)) {
+            return response('Yêu cầu không đúng', 400);
+        }
         $user = User::where('api_token', $token)->first();
         if ($user == null) {
             return response('Thông tin xác thực không hợp lệ', 401);
