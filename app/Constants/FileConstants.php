@@ -2,8 +2,10 @@
 
 class FileConstants {
     const SESSION_EDITOR_IMAGE = 'editor.image';
-    const DISK_IMAGE = 'images';
-    const DISK_BANNER = 'banners';
-    const DISK_FILE = 'files';
-    const DISK_COURSE = 'items';
+    const DISK_LOCAL = 'public';
+    const DISK_S3 = 's3';
+    const FOLDER_BANNERS = 'banners';
+    const FOLDER_IMAGES = 'images';
+    const FOLDER_ITEMS = 'items';
+    const FOLDER_FILES = 'files';
 }

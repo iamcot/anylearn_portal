@@ -60,11 +60,11 @@ class ConfigController extends Controller
 
     public function banner(Request $request) {
         $fileService = new FileServices();
-        $file = $fileService->doUploadImage($request, 'file', FileConstants::DISK_BANNER, false);
+        $file = $fileService->doUploadImage($request, 'file', FileConstants::DISK_S3, false, FileConstants::FOLDER_BANNERS);
         if ($file !== false) {
             return redirect()->back()->with('notify', true);
         } 
-        $banners = $fileService->getAllFiles(FileConstants::DISK_BANNER);
+        $banners = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
         $this->data['files'] = $fileService->removeSystemFiles($banners);
         $this->data['navText'] = __('Quản lý banner');
         return view('config.banner', $this->data);
@@ -73,7 +73,7 @@ class ConfigController extends Controller
     public function delBanner($file) {
         $fileService = new FileServices();
         $files = [$fileService->decodeFileName($file)];
-        $fileService->deleteFiles($files, FileConstants::DISK_BANNER);
+        $fileService->deleteFiles($files, FileConstants::DISK_S3);
         return redirect()->back()->with('notify', true);
     }
 }

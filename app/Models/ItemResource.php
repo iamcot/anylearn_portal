@@ -19,7 +19,7 @@ class ItemResource extends Model
             return true;
         }
         $fileService = new FileServices();
-        $fileService->deleteFiles([$res->data], FileConstants::DISK_COURSE);
+        $fileService->deleteFiles([$res->data], FileConstants::DISK_S3);
         return $res->delete();
     }
 }

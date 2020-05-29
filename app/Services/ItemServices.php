@@ -56,7 +56,7 @@ class ItemServices
         }
         $fileService = new FileServices();
         for ($i = 0; $i < sizeof($files); $i++) {
-            $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_COURSE, $files[$i]['data']);
+            $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_S3, $files[$i]['data']);
         }
         return $files;
     }
@@ -230,13 +230,13 @@ class ItemServices
     private function itemImageUrl($path)
     {
         $fileService = new FileServices();
-        return $fileService->urlFromPath(FileConstants::DISK_COURSE, $path);
+        return $fileService->urlFromPath(FileConstants::DISK_S3, $path);
     }
 
     private function changeItemImage(Request $request, $courseId)
     {
         $fileService = new FileServices();
-        $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_COURSE, true, $courseId);
+        $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, FileConstants::FOLDER_ITEMS . '/' . $courseId);
         if ($file !== false) {
             $this->deleteOldItemImage($courseId);
             return $file['path'];
@@ -247,7 +247,7 @@ class ItemServices
     private function addItemResource(Request $request, $courseId)
     {
         $fileService = new FileServices();
-        $file = $fileService->doUploadFile($request, 'resource_data', FileConstants::DISK_COURSE, true, $courseId);
+        $file = $fileService->doUploadFile($request, 'resource_data', FileConstants::DISK_S3, true, FileConstants::FOLDER_ITEMS . '/' . $courseId);
         if ($file !== false) {
             $resource = $request->get('resource');
             $db = ItemResource::create([
@@ -269,6 +269,6 @@ class ItemServices
             return true;
         }
         $fileService = new FileServices();
-        $fileService->deleteFiles([$course->image], FileConstants::DISK_COURSE);
+        $fileService->deleteFiles([$course->image], FileConstants::DISK_S3);
     }
 }

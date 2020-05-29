@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Log;
 
 class FileServices
 {
-    public static $allowFileExts = ['jpg', 'png', 'doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
+    public static $allowFileExts = ['jpg', 'jpeg', 'png', 'doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
 
     private $systemFiles = [
         '.gitignore',
     ];
 
-    public function doUploadFile($request, $field = 'file', $disk = 'files', $changeName = true, $childPath = '')
+    public function doUploadFile($request, $field = 'file', $disk = 's3', $changeName = true, $childPath = 'files')
     {
         $rs = false;
         try {
@@ -46,7 +46,7 @@ class FileServices
         return $rs;
     }
 
-    public function doUploadImage($request, $field = 'file', $disk = 'images', $changeName = true, $childPath = '')
+    public function doUploadImage($request, $field = 'file', $disk = 's3', $changeName = true, $childPath = 'images')
     {
         $rs = false;
         try {
@@ -92,7 +92,7 @@ class FileServices
     public function getAllFiles($disk, $folder = '')
     {
         try {
-            return Storage::disk($disk)->files();
+            return Storage::disk($disk)->files($folder);
         } catch (\Exception $e) {
             Log::error($e);
         }
@@ -119,7 +119,8 @@ class FileServices
             $imageTags = $htmlDom->getElementsByTagName('img');
             foreach ($imageTags as $imageTag) {
                 $imgSrc = $imageTag->getAttribute('src');
-                $images[] = basename($imgSrc);
+                //TODO hardcode S3
+                $images[] = 'images/' . basename($imgSrc);
             }
         } catch (\Exception $e) {
             Log::error($e);
@@ -140,7 +141,10 @@ class FileServices
             $imageTags = $htmlDom->getElementsByTagName('img');
             foreach ($imageTags as $imageTag) {
                 $imgSrc = $imageTag->getAttribute('src');
-                $imgFile = basename($imgSrc);
+                //TODO hardcode to images folder
+                $imgFile = 'images/' . basename($imgSrc);
+                // Log::debug("imgfile: " . $imgFile);
+
                 if (($key = array_search($imgFile, $uploadedImages)) !== false) {
                     unset($uploadedImages[$key]);
                 }
@@ -160,17 +164,20 @@ class FileServices
 
     public function encodeFileName($file)
     {
-        return str_replace('.', '=', $file);
+        $file = str_replace('.', '=', $file);
+        return str_replace('/', '+', $file);
     }
 
     public function decodeFileName($file)
     {
-        return str_replace("=", ".", $file);
+        $file = str_replace("=", ".", $file);
+        return str_replace('+', '/', $file);
     }
 
-    public function deleteFiles($files, $disk = 'images')
+    public function deleteFiles($files, $disk = 's3')
     {
         foreach ($files as $file) {
+            // Log::debug("uploadedImages: " . $file);
             try {
                 if (Storage::disk($disk)->exists($file)) {
                     Storage::disk($disk)->delete($file);

@@ -24,7 +24,7 @@
         @foreach($files as $file)
         <div class="card mb-2 shadow">
             <div class="card-body p-0">
-                <img class="img-fluid" src="{{ Storage::disk('banners')->url($file) }}">
+                <img class="img-fluid" src="{{ Storage::disk('s3')->url($file) }}">
             </div>
             <div class="card-footer">
                 <a href="{{ route('config.banner.del', ['img' => $fileService->encodeFileName($file) ]) }}" class="btn btn-sm btn-danger">

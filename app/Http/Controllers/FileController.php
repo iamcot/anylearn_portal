@@ -20,7 +20,8 @@ class FileController extends Controller
                 'data' => [ 'url' => $file['url']],
                 'success' => true
             ];
-            $fileService->editorHasNewImage($file['file']);
+            //TODO hardcode s3 folder
+            $fileService->editorHasNewImage('images/' . $file['file']);
         } 
         return response()->json($obj);
     }    

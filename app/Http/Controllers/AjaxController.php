@@ -39,7 +39,7 @@ class AjaxController extends Controller
             }
             $fileService = new FileServices();
             for($i = 0; $i < sizeof($files); $i++) {
-                $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_FILE, $files[$i]['data']);
+                $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_S3, $files[$i]['data']);
             }
             $this->buildResponse(true, $files);
         }
