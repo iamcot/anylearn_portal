@@ -33,7 +33,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'api_token',
     ];
 
     /**
@@ -179,5 +179,23 @@ class User extends Authenticatable
             ->paginate(UserConstants::PP);
 
         return $members;
+    }
+
+    public function validateUpdate($userId, $input) {
+        if (!empty($input['phone'])) {
+            $phoneExists = $this->where('phone', $input['phone'])
+            ->where('id', '!=', $userId)->count();
+            if ($phoneExists) {
+                return "Số điện thoại này đã được sử dụng";
+            }
+        }
+        if (!empty($input['refcode'])) {
+            $refExists = $this->where('refcode', $input['refcode'])
+            ->where('id', '!=', $userId)->count();
+            if ($refExists) {
+                return "Mã giới thiệu này đã được sử dụng";
+            }
+        }
+        return "";
     }
 }

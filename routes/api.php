@@ -16,5 +16,9 @@ use Illuminate\Http\Request;
 Route::get('/user', 'Apis\UserApi@userInfo');
 
 Route::middleware('throttle:10000,1')->get('/login', 'Apis\UserApi@login');
-Route::middleware('throttle:10000,1')->get('/register', 'Apis\UserApi@register');
+Route::middleware('throttle:10000,1')->get('/friends/{userId}', 'Apis\UserApi@friends');
+Route::middleware('throttle:10000,1')->post('/register', 'Apis\UserApi@register');
+Route::middleware('throttle:10000,1')->post('/user/edit', 'Apis\UserApi@edit');
+Route::middleware('throttle:10000,1')->post('/user/upload-image/{type}', 'Apis\UserApi@uploadImage');
+
 
