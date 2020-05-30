@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
+use App\Models\Configuration;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +34,8 @@ class UserServices
         return array_keys($this->roles);
     }
 
-    public function isMod() {
+    public function isMod()
+    {
         $user = Auth::user();
         return in_array($user->role, UserConstants::$modRoles);
     }
@@ -100,5 +103,25 @@ class UserServices
         } else {
             return '<a class="check_doc text-black-50" href="#" data-id="' . $user->id . '"><i class="fas fa-cloud-upload-alt text-gray" title="Chưa cập nhật"></i></a>';
         }
+    }
+
+    public function hotUsers($role)
+    {
+        $title = $role == UserConstants::ROLE_TEACHER ? "Chuyên gia nổi bật" : "Trung tâm nổi bật";
+        $route = $role == UserConstants::ROLE_TEACHER ? "/teacher" : "/school";
+        $configM = new Configuration();
+        $keyConfig = $role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_NUM_TEACHER : ConfigConstants::CONFIG_NUM_SCHOOL;
+        $pageSize = $configM->get($keyConfig);
+        $list = User::where('role', $role)
+            // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->where('status', UserConstants::STATUS_ACTIVE)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc')
+            ->take($pageSize)->get();
+        return [
+            'title' => $title,
+            'route' => $route,
+            'list' => $list,
+        ];
     }
 }

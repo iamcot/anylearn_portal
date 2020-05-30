@@ -13,6 +13,9 @@ class Configuration extends Model
 
     public function createOrUpdate($key, $value, $type)
     {
+        if (!$value) {
+            return;
+        }
         $find = $this->where('key', $key)->first();
         if (!$find) {
             $rs = $this->create([
@@ -35,7 +38,7 @@ class Configuration extends Model
         if (empty($dbConfig)) {
             return $data;
         }
-        foreach($dbConfig as $config) {
+        foreach ($dbConfig as $config) {
             if (!isset($data[$config->key])) {
                 continue;
             }
@@ -44,17 +47,21 @@ class Configuration extends Model
         return $data;
     }
 
-    public function getToc() 
+    public function getToc()
     {
         return $this->get(ConfigConstants::GUIDE_TOC);
     }
 
-    public function get($key) 
+    public function get($key)
     {
         $dbConfig = $this->where('key', $key)->first();
-        if (!$dbConfig) {
-            return null;
+        if ($dbConfig) {
+            return $dbConfig->value;
         }
-        return $dbConfig->value;
+        $fileConfig = config('site.' . $key);
+        if ($fileConfig) {
+            return $fileConfig['value'];
+        }
+        return null;
     }
 }

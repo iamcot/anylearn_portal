@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Apis;
 
+use App\Constants\ConfigConstants;
+use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
+use App\Models\Configuration;
 use App\Models\User;
 use App\Services\FileServices;
 use Illuminate\Http\Request;
@@ -97,6 +100,8 @@ class UserApi extends Controller
         if ($fileuploaded === false) {
             return response('Upload file không thành công.', 500);
         }
+        $oldImageUrl = $user->$type;
+        $fileService->deleteUserOldImageOnS3($oldImageUrl);
 
         User::find($user->id)->update([
             $type => $fileuploaded['url']
@@ -121,6 +126,26 @@ class UserApi extends Controller
         return response()->json([
             'user' => $friendsOfUser,
             'friends' => $friends,
+        ], 200);
+    }
+
+    public function usersList(Request $request, $role)
+    {
+        if (!in_array($role, [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])) {
+            return response('Yêu cầu không đúng', 400);
+        }
+        $pageSize = $request->get('pageSize', 9999);
+        $list = User::where('role', $role)
+            // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->where('status', UserConstants::STATUS_ACTIVE)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc')
+            ->paginate($pageSize);
+        $configM = new Configuration();
+        $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
+        return response()->json([
+            'banner' => $banner,
+            'list' => $list,
         ], 200);
     }
 }

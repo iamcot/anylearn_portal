@@ -11,6 +11,7 @@ class ConfigConstants
 
     const CONFIG_NUM_COURSE = 'num_course';
     const CONFIG_NUM_TEACHER = 'num_teacher';
+    const CONFIG_NUM_SCHOOL = 'num_school';
     const CONFIG_FEE_TEACHER = 'fee_teacher';
     const CONFIG_FEE_SCHOOL = 'fee_school';
     const CONFIG_COMMISSION = 'commission';
@@ -18,6 +19,8 @@ class ConfigConstants
     const CONFIG_BONUS_RATE = 'bonus_rate';
     const CONFIG_COMMISSION_FOUNDATION = 'foundation';
     const CONFIG_COMMISSION_COMPANY = 'company';
+    const CONFIG_TEACHER_BANNER = 'teacher_banner';
+    const CONFIG_SCHOOL_BANNER = 'school_banner';
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';

@@ -6,6 +6,7 @@ use App\Constants\FileConstants;
 use DOMDocument;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class FileServices
 {
@@ -26,7 +27,7 @@ class FileServices
                         Log::debug("$extension is not allowed");
                         return false;
                     }
-                    $file =  time() . '.' . $extension;
+                    $file =  $this->randomFileName() . '.' . $extension;
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }
@@ -45,6 +46,20 @@ class FileServices
         }
         return $rs;
     }
+    public function randomFileName() {
+        return Str::random(10). time();
+    }
+
+    public function getPathOfS3Url($url) {
+        $baseUrl = env('AWS_URL', 'https://s3-ap-southeast-1.amazonaws.com/anylearn.vn/');
+        $path = str_replace($baseUrl, "", $url);
+        return $path;
+    }
+
+    public function deleteUserOldImageOnS3($url) {
+        $path = $this->getPathOfS3Url($url);
+        $this->deleteFiles([$path]);
+    }
 
     public function doUploadImage($request, $field = 'file', $disk = 's3', $changeName = true, $childPath = 'images')
     {
@@ -52,7 +67,7 @@ class FileServices
         try {
             if ($request->hasFile($field) && $request->file($field)->isValid()) {
                 if ($changeName) {
-                    $file =  time() . '.jpg';
+                    $file =  $this->randomFileName() . '.jpg';
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }

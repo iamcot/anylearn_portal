@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
+use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\Item;
 use App\Models\ItemResource;
@@ -270,5 +272,18 @@ class ItemServices
         }
         $fileService = new FileServices();
         $fileService->deleteFiles([$course->image], FileConstants::DISK_S3);
+    }
+
+    public function monthItems()
+    {
+        $configM = new Configuration();
+        $pageSize = $configM->get(ConfigConstants::CONFIG_NUM_COURSE);
+        $list = Item::whereIn('type', [ItemConstants::TYPE_COURSE, ItemConstants::TYPE_CLASS])
+            // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->where('status', UserConstants::STATUS_ACTIVE)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc')
+            ->take($pageSize)->get();
+        return $list;
     }
 }

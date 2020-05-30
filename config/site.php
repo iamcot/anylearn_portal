@@ -15,6 +15,12 @@ return [
             'type' => 'number', 
             'value' => 6
         ],
+        ConfigConstants::CONFIG_NUM_SCHOOL => [
+            'title' => 'Số trung tâm nổi bật', 
+            'hint' => 'S/lg hiển thị trên trang chủ', 
+            'type' => 'number', 
+            'value' => 6
+        ],
         ConfigConstants::CONFIG_FEE_TEACHER => [
             'title' => 'Phí hàng tháng của giảng viên', 
             'hint' => '', 
@@ -56,5 +62,17 @@ return [
             'hint' => 'vd: tỉ lệ 1000  thì tiêu 1000 vnd được 1 điểm', 
             'type' => 'number', 
             'value' => 1000
+        ],
+        ConfigConstants::CONFIG_TEACHER_BANNER => [
+            'title' => 'Đường dẫn banner trang giảng viên', 
+            'hint' => 'Upload lên S3 và dán link vào', 
+            'type' => 'text', 
+            'value' => ''
+        ],
+        ConfigConstants::CONFIG_SCHOOL_BANNER => [
+            'title' => 'Đường dẫn banner trang trung tâm', 
+            'hint' => 'Upload lên S3 và dán link vào', 
+            'type' => 'text', 
+            'value' => ''
         ],
     ];
