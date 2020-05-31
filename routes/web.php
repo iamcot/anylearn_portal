@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
 
     Route::get('/user/status/{userId}', 'UserController@statusTouch')->name('user.status.touch');
+    Route::get('/item/status/{itemId}', 'CourseController@statusTouch')->name('item.status.touch');
 
     Route::get('/course', 'CourseController@list')->name('course');
     Route::any('/course/create', 'CourseController@create')->name('course.create');

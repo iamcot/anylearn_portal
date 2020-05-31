@@ -16,11 +16,12 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('first_name')->index()->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->unique();
             $table->string('refcode')->unique();
             $table->string('password');
-            $table->string('api_token')->unique()->nullable()->default(null);
+            $table->string('api_token')->unique()->nullable();
             $table->string('role', 20)->index();
             $table->tinyInteger('status')->index()->default(0);
             $table->tinyInteger('update_doc')->default(0);
@@ -62,7 +63,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('user_id')->index();
             $table->text('image')->nullable();
             $table->text('short_content')->nullable();
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->bigInteger('price')->default(0);
             $table->bigInteger('org_price')->nullable();
             $table->date('date_start')->index();
@@ -72,7 +73,9 @@ class CreateUsersTable extends Migration
             $table->string('location_type')->nullable();
             $table->string('location')->nullable();
             $table->tinyInteger('is_hot')->index()->default(0);
-            $table->tinyInteger('status')->index()->default(1);
+            $table->tinyInteger('status')->index()->default(0);
+            $table->tinyInteger('user_status')->index()->default(0);
+            $table->integer('boost_score')->index()->default(0);
             $table->text('seo_title')->nullable();
             $table->string('seo_url')->nullable();
             $table->text('seo_desc')->nullable();

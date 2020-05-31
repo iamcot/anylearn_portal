@@ -1,4 +1,5 @@
 @inject('userServ','App\Services\UserServices')
+@inject('itemServ','App\Services\ItemServices')
 @extends('layout')
 
 @section('rightFixedTop')
@@ -42,6 +43,7 @@
                     <th>Quan tâm</th>
                     <th>Đăng ký</th>
                     <th>Lần sửa cuối</th>
+                    <th>Thao tác</th>
                 </thead>
             <tbody>
                 @foreach($courseList as $course)
@@ -57,6 +59,11 @@
                     <td></td>
                     <td></td>
                     <td>{{ $course->updated_at }}</td>
+                    <td>
+                    @if($userServ->isMod(\Auth::user()->role))
+                    {!! $itemServ->statusOperation($course->id, $course->status) !!}
+                    @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

@@ -24,7 +24,7 @@ class User extends Authenticatable
         'name', 'email', 'password', 'api_token', 'phone', 'role', 'status', 'user_id',
         'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
         'introduce', 'address', 'country', 'dob', 'update_doc',
-        'refcode', 'title', 'num_friends', 'package_id', 'banner',
+        'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name'
     ];
 
     /**
@@ -77,6 +77,7 @@ class User extends Authenticatable
             'update_doc' => UserConstants::STATUS_ACTIVE,
             'refcode' => $data['phone'],
         ];
+        $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
         if ($data['ref']) {
             $refUser = $this->where('phone', $data['ref'])->first();
             $obj['user_id'] = $refUser->id;
@@ -136,6 +137,7 @@ class User extends Authenticatable
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
+        $obj['first_name'] = in_array($input['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($input['name']) : $input['name'];
         return $this->find($input['id'])->update($obj);
     }
 
@@ -181,21 +183,28 @@ class User extends Authenticatable
         return $members;
     }
 
-    public function validateUpdate($userId, $input) {
+    public function validateUpdate($userId, $input)
+    {
         if (!empty($input['phone'])) {
             $phoneExists = $this->where('phone', $input['phone'])
-            ->where('id', '!=', $userId)->count();
+                ->where('id', '!=', $userId)->count();
             if ($phoneExists) {
                 return "Số điện thoại này đã được sử dụng";
             }
         }
         if (!empty($input['refcode'])) {
             $refExists = $this->where('refcode', $input['refcode'])
-            ->where('id', '!=', $userId)->count();
+                ->where('id', '!=', $userId)->count();
             if ($refExists) {
                 return "Mã giới thiệu này đã được sử dụng";
             }
         }
         return "";
+    }
+
+    private function firstnameFromName($name)
+    {
+        $splitWords = explode(' ', $name);
+        return end($splitWords);
     }
 }

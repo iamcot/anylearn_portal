@@ -7,8 +7,10 @@ use App\Constants\UserConstants;
 use App\Models\Item;
 use App\Models\ItemResource;
 use App\Services\ItemServices;
+use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
 
 class CourseController extends Controller
@@ -83,5 +85,16 @@ class CourseController extends Controller
             'tab' => 'resource',
             'notify' => $rs
         ]);
+    }
+
+    public function statusTouch($itemId)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $rs = Item::find($itemId)->update(['status' => DB::raw('1 - status')]);
+        return redirect()->back()->with('notify', $rs);
     }
 }

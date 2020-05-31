@@ -50,6 +50,16 @@ class ItemServices
         return $courses;
     }
 
+    public function statusOperation($itemId, $status)
+    {
+        if ($status == ItemConstants::STATUS_ACTIVE) {
+            return '<a class="btn btn-sm btn-danger" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
+        } else {
+            return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['userId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở khóa</a>';
+        }
+    }
+
+
     public function itemResources($courseId)
     {
         $files = ItemResource::where('item_id', $courseId)->get();
@@ -69,7 +79,7 @@ class ItemServices
         if (!$item) {
             return false;
         }
-        $item->image = $this->itemImageUrl($item->image);
+        // $item->image = $this->itemImageUrl($item->image);
 
         $data['info'] = $item;
         $data['resource'] = $this->itemResources($courseId);
@@ -77,9 +87,9 @@ class ItemServices
         return $data;
     }
 
-    public function createItem($input, $itemType = ItemConstants::TYPE_COURSE)
+    public function createItem($input, $itemType = ItemConstants::TYPE_COURSE, $userApi = null)
     {
-        $user = Auth::user();
+        $user = $userApi ?? Auth::user();
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -113,9 +123,9 @@ class ItemServices
         return false;
     }
 
-    public function updateItem(Request $request, $input)
+    public function updateItem(Request $request, $input, $userApi = null)
     {
-        $user = Auth::user();
+        $user = $userApi ?? Auth::user();
         $itemUpdate = Item::find($input['id']);
         if (!in_array($user->role, UserConstants::$modRoles) && $user->id != $itemUpdate->user_id) {
             return false;
@@ -223,9 +233,8 @@ class ItemServices
     {
         return Validator::make($data, [
             'title' => ['required', 'string', 'max:250'],
-            'price' => ['required'],
+            'price' => ['required', 'integer'],
             'date_start' => ['required'],
-            'content' => ['required'],
         ]);
     }
 
@@ -240,8 +249,9 @@ class ItemServices
         $fileService = new FileServices();
         $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, FileConstants::FOLDER_ITEMS . '/' . $courseId);
         if ($file !== false) {
+            
             $this->deleteOldItemImage($courseId);
-            return $file['path'];
+            return $file['url'];
         }
         return '';
     }
@@ -271,7 +281,8 @@ class ItemServices
             return true;
         }
         $fileService = new FileServices();
-        $fileService->deleteFiles([$course->image], FileConstants::DISK_S3);
+        $fileService->deleteUserOldImageOnS3($course->image);
+        // $fileService->deleteFiles([$course->image], FileConstants::DISK_S3);
     }
 
     public function monthItems()

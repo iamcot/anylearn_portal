@@ -15,11 +15,16 @@ use Illuminate\Http\Request;
 
 Route::get('/user', 'Apis\UserApi@userInfo');
 
-Route::middleware('throttle:20,1')->get('/login', 'Apis\UserApi@login');
+Route::get('/login', 'Apis\UserApi@login');
 Route::get('/users/{role}', 'Apis\UserApi@usersList');
 Route::get('/friends/{userId}', 'Apis\UserApi@friends');
-Route::middleware('throttle:10,1')->post('/register', 'Apis\UserApi@register');
-Route::middleware('throttle:10,1')->post('/user/edit', 'Apis\UserApi@edit');
-Route::middleware('throttle:10,1')->post('/user/upload-image/{type}', 'Apis\UserApi@uploadImage');
+Route::post('/register', 'Apis\UserApi@register');
+Route::post('/user/edit', 'Apis\UserApi@edit');
+Route::post('/user/upload-image/{type}', 'Apis\UserApi@uploadImage');
 
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
+
+Route::post('/item/create', 'Apis\ItemApi@create');
+Route::get('/item/{id}/edit', 'Apis\ItemApi@edit');
+Route::post('/item/{id}/edit', 'Apis\ItemApi@save');
+Route::get('/item/list', 'Apis\ItemApi@list');
