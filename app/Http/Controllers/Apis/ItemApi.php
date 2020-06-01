@@ -43,6 +43,7 @@ class ItemApi extends Controller
         if (!($user instanceof User)) {
             return $user;
         }
+
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
             ->first();
@@ -51,11 +52,18 @@ class ItemApi extends Controller
         }
         return response()->json($item);
     }
+
     public function save(Request $request, $id)
     {
         $user = $this->isAuthedApi($request);
         if (!($user instanceof User)) {
             return $user;
+        }
+        $item = Item::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+        if (!$item) {
+            return response("Không có dữ liệu", 404);
         }
 
         $itemService = new ItemServices();
@@ -113,5 +121,64 @@ class ItemApi extends Controller
             'image' => $fileuploaded['url']
         ]);
         return response($fileuploaded['url'], 200);
+    }
+
+    public function changeUserStatus(Request $request, $itemId, $newStatus)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+
+        $rs = Item::where('id', $itemId)
+            ->where('user_id', $user->id)
+            ->update([
+                'user_status' => $newStatus,
+            ]);
+
+        return response()->json([
+            'result' => $rs == 0 ? false : true,
+        ]);
+    }
+
+    public function userItems(Request $request, $userId)
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            return response('Trang không tồn tại', 404);
+        }
+        $pageSize = $request->get('pageSize', 9999);
+        $items = Item::where('user_id', $userId)
+            // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->where('status', ItemConstants::STATUS_ACTIVE)
+            ->where('user_status', '>', ItemConstants::STATUS_INACTIVE)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc')
+            ->paginate($pageSize);
+        return response()->json([
+            'user' => $user,
+            'items' => $items,
+        ], 200);
+    }
+
+    public function pdp(Request $request, $itemId)
+    {
+        $item = Item::find($itemId);
+        if (!$item) {
+            return response('Trang không tồn tại', 404);
+        }
+        $author = User::find($item->user_id);
+        $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
+            ->where('user_status', ItemConstants::STATUS_ACTIVE)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc')
+            ->take(5)->get();
+        return response()->json([
+            'author' => $author,
+            'item' => $item,
+            'hotItems' => [
+                'title' => 'Sản phẩm liên quan',
+                'list' => $hotItems],
+        ]);
     }
 }
