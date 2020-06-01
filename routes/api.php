@@ -28,3 +28,4 @@ Route::post('/item/create', 'Apis\ItemApi@create');
 Route::get('/item/{id}/edit', 'Apis\ItemApi@edit');
 Route::post('/item/{id}/edit', 'Apis\ItemApi@save');
 Route::get('/item/list', 'Apis\ItemApi@list');
+Route::post('/item/{itemId}/upload-image', 'Apis\ItemApi@uploadImage');

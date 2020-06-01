@@ -44,8 +44,8 @@ class ItemApi extends Controller
             return $user;
         }
         $item = Item::where('id', $id)
-        ->where('user_id', $user->id)
-        ->first();
+            ->where('user_id', $user->id)
+            ->first();
         if (!$item) {
             return response("Không có dữ liệu", 404);
         }
@@ -57,7 +57,7 @@ class ItemApi extends Controller
         if (!($user instanceof User)) {
             return $user;
         }
-       
+
         $itemService = new ItemServices();
         $newItem = $itemService->updateItem($request, $request->all(), $user);
         if ($newItem instanceof Validator) {
@@ -85,5 +85,33 @@ class ItemApi extends Controller
             'open' => $open,
             'close' => $close
         ]);
+    }
+
+    public function uploadImage(Request $request, $itemId)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+
+        $item = Item::where('id', $itemId)
+            ->where('user_id', $user->id)
+            ->first();
+        if (!$item) {
+            return response("Không có dữ liệu", 404);
+        }
+
+        $fileService = new FileServices();
+        $fileuploaded = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, FileConstants::FOLDER_ITEMS . '/' . $item->id);
+        if ($fileuploaded === false) {
+            return response('Upload file không thành công.', 500);
+        }
+        $oldImageUrl = $item->image;
+        $fileService->deleteUserOldImageOnS3($oldImageUrl);
+
+        Item::find($item->id)->update([
+            'image' => $fileuploaded['url']
+        ]);
+        return response($fileuploaded['url'], 200);
     }
 }
