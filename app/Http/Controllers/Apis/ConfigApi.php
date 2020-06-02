@@ -7,6 +7,7 @@ use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
@@ -18,16 +19,18 @@ use Illuminate\Support\Str;
 
 class ConfigApi extends Controller
 {
-    public function home($role = 'guest') {
+    public function home($role = 'guest')
+    {
         $fileService = new FileServices();
         $bannersDriver = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
         $banners = [];
-        foreach($bannersDriver as $file) {
+        foreach ($bannersDriver as $file) {
             $banners[] = $fileService->urlFromPath(FileConstants::DISK_S3, $file);
         }
         $userService = new UserServices();
         $hotSchools = $userService->hotUsers(UserConstants::ROLE_SCHOOL);
         $hotTeachers = $userService->hotUsers(UserConstants::ROLE_TEACHER);
+        $hotUserInCate = $userService->hotUsers(UserConstants::ROLE_TEACHER, 1);
 
         $itemService = new ItemServices();
         $monthItems = $itemService->monthItems();
@@ -36,9 +39,41 @@ class ConfigApi extends Controller
             'banners' => $banners,
             'hot_items' => [
                 $hotSchools,
-                $hotTeachers
+                $hotTeachers,
+                $hotUserInCate,
             ],
             'month_courses' => $monthItems,
         ]);
+    }
+
+    public function transaction(Request $request, $type)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $trans = Transaction::where('user_id', $user->id)
+            ->where('type', $type)
+            ->orderby('id', 'desc')
+            ->take(5)->get();
+
+        $configM = new Configuration();
+        $rate = $configM->get(ConfigConstants::CONFIG_BONUS_RATE);
+        $config = [
+            'suggest' => [930000, 5000000, 2000000, 1000000, 500000, 200000],
+            'vip_fee' => 930000,
+            'vip_days' => 30,
+            'bank' => [
+                'bank_name' => 'Bank Nam',
+                'bank_no' => 'xxxxx',
+                'bank_branch' => 'CN SG',
+                'account_name' => 'MC Hoai Trinh',
+                'content' => 'anylearn - phone',
+            ],
+            'suggest_columns' => 3,
+            'rate' => $rate,
+            'transactions' => $trans,
+        ];
+        return response()->json($config);
     }
 }

@@ -292,6 +292,7 @@ class ItemServices
         $list = Item::whereIn('type', [ItemConstants::TYPE_COURSE, ItemConstants::TYPE_CLASS])
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
+            ->where('date_start', '>=', date('Y-m-d'))
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take($pageSize)->get();

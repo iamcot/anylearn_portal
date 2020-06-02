@@ -25,6 +25,10 @@ class ConfigConstants
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';
 
+    const TRANSACTION_DEPOSIT = 'deposit';
+    const TRANSACTION_WITHDRAW = 'withdraw';
+    const TRANSACTION_EXCHANGE = 'exchange';
+
 
     public static $guideTitle = [
         self::GUIDE_TOC => 'TOC - Điều khoản',

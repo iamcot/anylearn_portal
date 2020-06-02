@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('api_token')->unique()->nullable();
             $table->string('role', 20)->index();
             $table->tinyInteger('status')->index()->default(0);
+            $table->integer('user_category_id')->index()->default(0);
             $table->tinyInteger('update_doc')->default(0);
             $table->integer('package_id')->default(0);
             $table->integer('expire')->index()->default(0);
@@ -61,6 +62,7 @@ class CreateUsersTable extends Migration
             $table->text('title');
             $table->string('type', 20)->index();
             $table->bigInteger('user_id')->index();
+            $table->integer('item_category_id')->index()->default(0);
             $table->text('image')->nullable();
             $table->text('short_content')->nullable();
             $table->text('content')->nullable();
@@ -177,9 +179,9 @@ class CreateUsersTable extends Migration
         Schema::create('commissions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->index();
-            $table->bigInteger('item_id')->index();
+            $table->bigInteger('order_id')->index();
             $table->bigInteger('ref_user_id')->index();
-            $table->string('content');
+            $table->string('content')->nullable();
             $table->bigInteger('amount');
             $table->bigInteger('ref_amount');
             $table->integer('status')->index();
@@ -193,6 +195,8 @@ class CreateUsersTable extends Migration
             $table->bigInteger('amount');
             $table->string('pay_method');
             $table->text('pay_info');
+            $table->bigInteger('order_id')->index();
+            $table->string('content')->nullable();
             $table->integer('status')->index();
             $table->timestamps();
         });

@@ -105,9 +105,12 @@ class UserServices
         }
     }
 
-    public function hotUsers($role)
+    public function hotUsers($role, $catId = 0)
     {
-        $title = $role == UserConstants::ROLE_TEACHER ? "Chuyên gia nổi bật" : "Trung tâm nổi bật";
+        $title = $role == UserConstants::ROLE_TEACHER ? "any Professor" : "any School";
+        if ($catId > 0) {
+            $title = 'anyKinder';
+        }
         $route = $role == UserConstants::ROLE_TEACHER ? "/teacher" : "/school";
         $configM = new Configuration();
         $keyConfig = $role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_NUM_TEACHER : ConfigConstants::CONFIG_NUM_SCHOOL;
@@ -115,6 +118,7 @@ class UserServices
         $list = User::where('role', $role)
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
+            ->where('user_category_id', $catId)
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take($pageSize)->get();
