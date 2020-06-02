@@ -170,6 +170,7 @@ class ItemApi extends Controller
         $author = User::find($item->user_id);
         $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)
+            ->where('id', '!=', $itemId)
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
@@ -177,6 +178,7 @@ class ItemApi extends Controller
             'author' => $author,
             'item' => $item,
             'hotItems' => [
+                'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
                 'list' => $hotItems],
         ]);
