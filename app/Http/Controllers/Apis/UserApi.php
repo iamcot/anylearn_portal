@@ -67,6 +67,7 @@ class UserApi extends Controller
             return $user;
         }
         $user->makeVisible(['api_token']);
+        $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
         return response()->json($user, 200);
     }
 

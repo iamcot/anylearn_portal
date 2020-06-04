@@ -92,12 +92,14 @@ class TransactionApi extends Controller
                     return;
                     // return response()->json(['result' => true]);
                 }
+                $author = User::find($item->user_id);
+
                 //cal commission direct, update direct user wallet M + wallet C, save transaction log
                 $configM = new Configuration();
                 $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_COMMISSION, ConfigConstants::CONFIG_FRIEND_TREE]);
                 $userService = new UserServices();
 
-                $directCommission = $userService->calcCommission($item->price, $user->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                $directCommission = $userService->calcCommission($item->price, $author->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
@@ -121,8 +123,25 @@ class TransactionApi extends Controller
                     'content' => 'Nhận điểm từ mua khóa học: ' . $item->title,
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
+
+                //pay author 
+                $authorCommission = $amount * $author->commission_rate / $configs[ConfigConstants::CONFIG_BONUS_RATE];
+                User::find($item->user_id)->update([
+                    'wallet_c' => DB::raw('wallet_c + ' . $authorCommission),
+                ]);
+
+                Transaction::create([
+                    'user_id' => $author->id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $authorCommission,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'pay_info' => '',
+                    'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                ]);
+
                 //save commission indirect + transaction log + update wallet C indrect user
-                
+
                 $indirectCommission = $userService->calcCommission($item->price, $user->commission_rate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
                 $currentUserId = $user->user_id;
@@ -151,8 +170,8 @@ class TransactionApi extends Controller
                 DB::commit();
             });
         } catch (\Exception $e) {
-            return response("Không thể thực hiện được đơn hàng", 500);
             Log::error($e);
+            return response("Không thể thực hiện được đơn hàng" . $e, 500);
         }
         return response()->json(['result' => true]);
     }

@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Constants\ConfigConstants;
+use App\Constants\FileConstants;
+use App\Models\Configuration;
+use App\Models\Transaction;
+use App\Models\User;
+use App\Services\FileServices;
+use App\Services\UserServices;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class TransactionController extends Controller
+{
+    public function transaction(Request $request)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+            ->orderby('id', 'desc')
+            ->with('user')
+            ->paginate(20);
+        $this->data['navText'] = __('Quản lý Giao dịch');
+        return view('transaction.list', $this->data);
+    }
+
+    public function status(Request $request, $id, $status)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $transaction = Transaction::find($id);
+        if (!$transaction) {
+            return redirect()->back()->with('notify', 'Giao dịch không tồn tại');
+        }
+        if ($status == ConfigConstants::TRANSACTION_STATUS_DONE) {
+            Transaction::find($id)->update([
+                'status' => $status
+            ]);
+            User::find($transaction->user_id)->update([
+                'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
+            ]);
+
+        } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
+            Transaction::find($id)->update([
+                'status' => $status
+            ]);
+        }
+        return redirect()->back()->with('notify', 'Cập nhật thành công');
+    }
+}

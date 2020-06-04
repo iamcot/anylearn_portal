@@ -13,6 +13,11 @@ class Transaction extends Model
         'ref_user_id', 'ref_amount'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+
     public function pendingWalletM($userId)
     {
         return Transaction::where('user_id', $userId)

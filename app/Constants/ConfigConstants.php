@@ -15,11 +15,13 @@ class ConfigConstants
     const CONFIG_NUM_SCHOOL = 'num_school';
     const CONFIG_FEE_TEACHER = 'fee_teacher';
     const CONFIG_FEE_SCHOOL = 'fee_school';
+    const CONFIG_FEE_MEMBER = 'fee_member';
     const CONFIG_COMMISSION = 'commission';
     const CONFIG_DISCOUNT = 'discount';
     const CONFIG_BONUS_RATE = 'bonus_rate';
-    const CONFIG_COMMISSION_FOUNDATION = 'foundation';
-    const CONFIG_COMMISSION_COMPANY = 'company';
+    const CONFIG_COMMISSION_FOUNDATION = 'bonus_foundation';
+    const CONFIG_COMMISSION_COMPANY = 'bonus_company';
+    const CONFIG_COMMISSION_AUTHOR = 'bonus_author';
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 

@@ -52,7 +52,11 @@
     <div class="sidebar-heading">
         @lang('Quản lý người dùng') 
     </div>
-   
+    <li class="nav-item {{ strpos($route, 'transaction') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('transaction') }}">
+            <i class="fas fa-fw fa-money-check-alt"></i>
+            <span>@lang('Quản lý giao dịch')</span></a>
+    </li> 
     <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.members') }}">
             <i class="fas fa-fw fa-users-cog"></i>

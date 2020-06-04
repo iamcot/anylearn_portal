@@ -27,17 +27,11 @@ return [
         'type' => 'number',
         'value' => 6
     ],
-    ConfigConstants::CONFIG_FEE_TEACHER => [
-        'title' => 'Phí hàng tháng của giảng viên',
+    ConfigConstants::CONFIG_FEE_MEMBER => [
+        'title' => 'Phí hàng tháng của người dùng',
         'hint' => '',
         'type' => 'number',
-        'value' => 1000000
-    ],
-    ConfigConstants::CONFIG_FEE_SCHOOL => [
-        'title' => 'Phí hàng tháng của trung tâm',
-        'hint' => '',
-        'type' => 'number',
-        'value' => 2000000
+        'value' => 930000
     ],
     ConfigConstants::CONFIG_COMMISSION => [
         'title' => 'Tỉ lệ commission gián tiếp',
@@ -56,6 +50,12 @@ return [
         'hint' => 'Nhập số thập phân. vd: 0.05 (tương đương 5%)',
         'type' => 'text',
         'value' => 0.05
+    ],
+    ConfigConstants::CONFIG_COMMISSION_AUTHOR => [
+        'title' => 'Tỉ lệ mặc định của tác giả',
+        'hint' => 'Nhập số thập phân. vd: 0.2 (tương đương 20%)',
+        'type' => 'text',
+        'value' => 0.2
     ],
     ConfigConstants::CONFIG_COMMISSION_COMPANY => [
         'title' => 'Tỉ lệ lợi nhuận công ty',

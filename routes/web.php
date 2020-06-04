@@ -52,6 +52,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/confirm', 'Controller@developing')->name('confirm');
     Route::get('/product', 'Controller@developing')->name('product');
     Route::get('/order', 'Controller@developing')->name('order');
+
+    Route::get('/transaction', 'TransactionController@transaction')->name('transaction');
+    Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');
