@@ -58,6 +58,9 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Giao dịch không tồn tại');
         }
         if ($status == ConfigConstants::TRANSACTION_STATUS_DONE) {
+            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
+                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
+            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
@@ -66,6 +69,9 @@ class TransactionController extends Controller
             ]);
 
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
+            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
+                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
+            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
