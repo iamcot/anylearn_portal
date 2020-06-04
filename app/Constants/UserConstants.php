@@ -10,6 +10,9 @@ class UserConstants {
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
 
+    const WALLET_M = 'wallet_m';
+    const WALLET_C = 'wallet_c';
+
     const PP = 20;
 
     public static $memberRoles = [self::ROLE_MEMBER, self::ROLE_TEACHER, self::ROLE_SCHOOL];

@@ -9,6 +9,7 @@ class ConfigConstants
     const GUIDE_TEACHER = 'guide_teacher';
     const GUIDE_SCHOOL = 'guide_school';
 
+    const CONFIG_FRIEND_TREE = 'friend_tree';
     const CONFIG_NUM_COURSE = 'num_course';
     const CONFIG_NUM_TEACHER = 'num_teacher';
     const CONFIG_NUM_SCHOOL = 'num_school';
@@ -28,6 +29,12 @@ class ConfigConstants
     const TRANSACTION_DEPOSIT = 'deposit';
     const TRANSACTION_WITHDRAW = 'withdraw';
     const TRANSACTION_EXCHANGE = 'exchange';
+    const TRANSACTION_COMMISSION = 'commission';
+    const TRANSACTION_ORDER = 'order';
+
+    const TRANSACTION_STATUS_PENDING = 0;
+    const TRANSACTION_STATUS_DONE = 1;
+    const TRANSACTION_STATUS_REJECT = 99;
 
 
     public static $guideTitle = [

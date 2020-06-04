@@ -35,3 +35,7 @@ Route::post('/item/{itemId}/upload-image', 'Apis\ItemApi@uploadImage');
 Route::get('/item/{itemId}/user-status/{newStatus}', 'Apis\ItemApi@changeUserStatus');
 Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
 
+Route::post('/transaction/deposit', 'Apis\TransactionApi@saveDeposit');
+Route::get('/transaction/history', 'Apis\TransactionApi@history');
+
+Route::get('/transaction/register/{itemId}', 'Apis\TransactionApi@placeOrderOneItem');

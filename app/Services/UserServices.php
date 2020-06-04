@@ -128,4 +128,9 @@ class UserServices
             'list' => $list,
         ];
     }
+
+    public function calcCommission($price, $bonusSeller, $bonusRate, $exchangeRate) {
+        $netValue = $price * (1 - $bonusSeller);
+        return  floor($netValue * $bonusRate / $exchangeRate);
+    }
 }

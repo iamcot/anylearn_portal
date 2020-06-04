@@ -64,4 +64,20 @@ class Configuration extends Model
         }
         return null;
     }
+
+    public function gets(array $keys) {
+        $data = [];
+        $fileConfig = config('site');
+        foreach($keys as $key) {
+            $data[$key] = $fileConfig[$key]['value'];
+        }
+        $dbConfig = $this->whereIn('key', $keys)->get();
+        if ($dbConfig) {
+            foreach($dbConfig as $config) {
+                $data[$config->key] = $config->value;
+            }
+        }
+
+        return $data;
+    }
 }

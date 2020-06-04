@@ -168,36 +168,40 @@ class CreateUsersTable extends Migration
 
         Schema::create('order_details', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('order_id')->index();
             $table->bigInteger('user_id')->index();
             $table->bigInteger('item_id')->index();
             $table->bigInteger('unit_price');
             $table->bigInteger('paid_price');
-            $table->integer('quanity');
+            $table->integer('quanity')->default(1);
+            $table->string('status')->index();
             $table->timestamps();
         });
 
-        Schema::create('commissions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('user_id')->index();
-            $table->bigInteger('order_id')->index();
-            $table->bigInteger('ref_user_id')->index();
-            $table->string('content')->nullable();
-            $table->bigInteger('amount');
-            $table->bigInteger('ref_amount');
-            $table->integer('status')->index();
-            $table->timestamps();
-        });
+        // Schema::create('commissions', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->bigInteger('user_id')->index();
+        //     $table->bigInteger('order_id')->index();
+        //     $table->bigInteger('ref_user_id')->index();
+        //     $table->string('content')->nullable();
+        //     $table->bigInteger('amount');
+        //     $table->bigInteger('ref_amount');
+        //     $table->integer('status')->index();
+        //     $table->timestamps();
+        // });
 
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->index();
+            $table->bigInteger('ref_user_id')->index()->nullable();
             $table->string('type')->index();
             $table->bigInteger('amount');
-            $table->string('pay_method');
-            $table->text('pay_info');
-            $table->bigInteger('order_id')->index();
+            $table->bigInteger('ref_amount')->nullable();
+            $table->string('pay_method')->nullable();
+            $table->text('pay_info')->nullable();
+            $table->bigInteger('order_id')->index()->nullable();
             $table->string('content')->nullable();
-            $table->integer('status')->index();
+            $table->integer('status')->index()->default(0);
             $table->timestamps();
         });
     }
@@ -218,7 +222,7 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('configurations');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('order_details');
-        Schema::dropIfExists('commissions');
+        // Schema::dropIfExists('commissions');
         Schema::dropIfExists('course_series');
         Schema::dropIfExists('item_reviews');
         Schema::dropIfExists('user_reviews');

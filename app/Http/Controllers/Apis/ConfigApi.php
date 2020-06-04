@@ -24,9 +24,12 @@ class ConfigApi extends Controller
         $fileService = new FileServices();
         $bannersDriver = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
         $banners = [];
-        foreach ($bannersDriver as $file) {
-            $banners[] = $fileService->urlFromPath(FileConstants::DISK_S3, $file);
+        if ($bannersDriver != null) {
+            foreach ($bannersDriver as $file) {
+                $banners[] = $fileService->urlFromPath(FileConstants::DISK_S3, $file);
+            }
         }
+
         $userService = new UserServices();
         $hotSchools = $userService->hotUsers(UserConstants::ROLE_SCHOOL);
         $hotTeachers = $userService->hotUsers(UserConstants::ROLE_TEACHER);
@@ -59,7 +62,10 @@ class ConfigApi extends Controller
 
         $configM = new Configuration();
         $rate = $configM->get(ConfigConstants::CONFIG_BONUS_RATE);
+        $transM = new Transaction();
         $config = [
+            'pending_wallet_m' => (int) $transM->pendingWalletM($user->id),
+            'pending_wallet_c' => (int) $transM->pendingWalletC($user->id),
             'suggest' => [930000, 5000000, 2000000, 1000000, 500000, 200000],
             'vip_fee' => 930000,
             'vip_days' => 30,

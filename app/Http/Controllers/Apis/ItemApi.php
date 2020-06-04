@@ -167,7 +167,12 @@ class ItemApi extends Controller
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }
+        $configM = new Configuration();
+        $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
         $author = User::find($item->user_id);
+
+        $userService = new UserServices();
+        $commission = $userService->calcCommission($item->price, $author->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
         $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)
             ->where('id', '!=', $itemId)
@@ -175,12 +180,14 @@ class ItemApi extends Controller
             ->orderby('id', 'desc')
             ->take(5)->get();
         return response()->json([
+            'commission' => $commission,
             'author' => $author,
             'item' => $item,
             'hotItems' => [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
-                'list' => $hotItems],
+                'list' => $hotItems
+            ],
         ]);
     }
 }
