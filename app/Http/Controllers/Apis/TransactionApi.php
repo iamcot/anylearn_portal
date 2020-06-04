@@ -125,20 +125,20 @@ class TransactionApi extends Controller
                 ]);
 
                 //pay author 
-                $authorCommission = $amount * $author->commission_rate / $configs[ConfigConstants::CONFIG_BONUS_RATE];
-                User::find($item->user_id)->update([
-                    'wallet_c' => DB::raw('wallet_c + ' . $authorCommission),
-                ]);
+                // $authorCommission = $amount * $author->commission_rate / $configs[ConfigConstants::CONFIG_BONUS_RATE];
+                // User::find($item->user_id)->update([
+                //     'wallet_c' => DB::raw('wallet_c + ' . $authorCommission),
+                // ]);
 
-                Transaction::create([
-                    'user_id' => $author->id,
-                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
-                    'amount' => $authorCommission,
-                    'pay_method' => UserConstants::WALLET_C,
-                    'pay_info' => '',
-                    'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-                ]);
+                // Transaction::create([
+                //     'user_id' => $author->id,
+                //     'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                //     'amount' => $authorCommission,
+                //     'pay_method' => UserConstants::WALLET_C,
+                //     'pay_info' => '',
+                //     'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
+                //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                // ]);
 
                 //save commission indirect + transaction log + update wallet C indrect user
 
