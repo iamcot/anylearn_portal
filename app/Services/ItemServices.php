@@ -293,8 +293,8 @@ class ItemServices
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('date_start', '>=', date('Y-m-d'))
-            ->orderby('is_hot', 'desc')
-            ->orderby('id', 'desc')
+            ->where('is_hot', 1)
+            ->orderby('date_start', 'asc')
             ->take($pageSize)->get();
         return $list;
     }
