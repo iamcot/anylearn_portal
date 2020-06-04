@@ -152,7 +152,7 @@ class TransactionApi extends Controller
                             'wallet_c' => DB::raw('wallet_c + ' . $indirectCommission),
                         ]);
                         Transaction::create([
-                            'user_id' => $$refUser->id,
+                            'user_id' => $refUser->id,
                             'type' => ConfigConstants::TRANSACTION_COMMISSION,
                             'amount' => $indirectCommission,
                             'pay_method' => UserConstants::WALLET_C,
