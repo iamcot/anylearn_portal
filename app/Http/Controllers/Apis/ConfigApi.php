@@ -82,4 +82,19 @@ class ConfigApi extends Controller
         ];
         return response()->json($config);
     }
+
+    public function foundation()
+    {
+        $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
+            ->sum('amount');
+
+        return response()->json(['value' => $foundation]);
+    }
+
+    public function getDoc($key)
+    {
+        $configM = new Configuration();
+        $data = $configM->get($key);
+        return response()->json(['value' => $data ?? ""]);
+    }
 }

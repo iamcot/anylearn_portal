@@ -26,6 +26,8 @@ Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
 
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/transaction/{type}', 'Apis\ConfigApi@transaction');
+Route::get('/foundation', 'Apis\ConfigApi@foundation');
+Route::get('/doc/{key}', 'Apis\ConfigApi@getDoc');
 
 Route::post('/item/create', 'Apis\ItemApi@create');
 Route::get('/item/{id}/edit', 'Apis\ItemApi@edit');

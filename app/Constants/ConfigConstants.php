@@ -33,6 +33,7 @@ class ConfigConstants
     const TRANSACTION_EXCHANGE = 'exchange';
     const TRANSACTION_COMMISSION = 'commission';
     const TRANSACTION_ORDER = 'order';
+    const TRANSACTION_FOUNDATION = 'foundation';
 
     const TRANSACTION_STATUS_PENDING = 0;
     const TRANSACTION_STATUS_DONE = 1;

@@ -96,10 +96,10 @@ class TransactionApi extends Controller
 
                 //cal commission direct, update direct user wallet M + wallet C, save transaction log
                 $configM = new Configuration();
-                $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_COMMISSION, ConfigConstants::CONFIG_FRIEND_TREE]);
+                $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_COMMISSION, ConfigConstants::CONFIG_FRIEND_TREE, ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
                 $userService = new UserServices();
 
-                $directCommission = $userService->calcCommission($item->price, $author->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                $directCommission = $userService->calcCommission($amount, $author->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
@@ -142,7 +142,7 @@ class TransactionApi extends Controller
 
                 //save commission indirect + transaction log + update wallet C indrect user
 
-                $indirectCommission = $userService->calcCommission($item->price, $user->commission_rate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                $indirectCommission = $userService->calcCommission($amount, $author->commission_rate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
                 $currentUserId = $user->user_id;
                 for ($i = 1; $i < $configs[ConfigConstants::CONFIG_FRIEND_TREE]; $i++) {
@@ -167,6 +167,20 @@ class TransactionApi extends Controller
                         break;
                     }
                 }
+                //foundation 
+                $foundation = $userService->calcCommission($amount, $author->commission_rate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+                Transaction::create([
+                    'user_id' => 0,
+                    'type' => ConfigConstants::TRANSACTION_FOUNDATION,
+                    'amount' => $foundation,
+                    'pay_method' => UserConstants::WALLET_M,
+                    'pay_info' => '',
+                    'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'ref_user_id' => $user->id,
+                    'ref_amount' => $amount,
+                ]);
+
                 DB::commit();
             });
         } catch (\Exception $e) {
