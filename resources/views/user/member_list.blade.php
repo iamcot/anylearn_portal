@@ -30,12 +30,13 @@
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="10%" scope="col">SDT</th>
+                    <th>Ví M</th>
+                    <th>Ví C</th>
                     <th width="10%" scope="col">Người G/T</th>
-                    <th width="15%" scope="col">Email</th>
                     <th width="5%" scope="col">H/H</th>
                     <th class="text-center" width="5%" scope="col">C/T</th>
                     <th class="text-center">Cập nhật</th>
-                    <th width="15%" class="text-right" scope="col">Thao tác</th>
+                    <th class="text-right" scope="col">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,8 +48,9 @@
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
+                    <td>{{ number_format($user->wallet_m) }}</td>
+                    <td>{{ number_format($user->wallet_c) }}</td>
                     <td>{{ $user->refuser ? $user->refuser->name . ' (' . $user->refuser->phone . ')' : '' }}</td>
-                    <td>{{ $user->email }}</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>
                     <td class="text-center">{!! $userServ->requiredDocIcon($user) !!}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($user->updated_at)) }}</td>

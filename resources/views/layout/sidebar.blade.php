@@ -55,7 +55,12 @@
     <li class="nav-item {{ strpos($route, 'transaction') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
-            <span>@lang('Quản lý giao dịch')</span></a>
+            <span>@lang('Duyệt giao dịch')</span></a>
+    </li> 
+    <li class="nav-item {{ strpos($route, 'transaction.commission') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('transaction.commission') }}">
+            <i class="fas fa-fw fa-money-check-alt"></i>
+            <span>@lang('Lịch sử nhận hoa hồng')</span></a>
     </li> 
     <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.members') }}">

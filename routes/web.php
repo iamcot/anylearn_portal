@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/order', 'Controller@developing')->name('order');
 
     Route::get('/transaction', 'TransactionController@transaction')->name('transaction');
+    Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
 });
 

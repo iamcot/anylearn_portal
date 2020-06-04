@@ -31,6 +31,21 @@ class TransactionController extends Controller
         return view('transaction.list', $this->data);
     }
 
+    public function commission(Request $request)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_COMMISSION])
+            ->orderby('id', 'desc')
+            ->with('user')
+            ->paginate(20);
+        $this->data['navText'] = __('Lịch sử nhận hoa hồng');
+        return view('transaction.commission', $this->data);
+    }
+
     public function status(Request $request, $id, $status)
     {
         $userService = new UserServices();
