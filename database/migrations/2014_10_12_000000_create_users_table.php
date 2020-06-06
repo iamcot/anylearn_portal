@@ -33,6 +33,7 @@ class CreateUsersTable extends Migration
             $table->float('commission_rate')->default(0.2);
             $table->bigInteger('user_id')->index()->nullable();
             $table->tinyInteger('is_hot')->index()->default(0);
+            $table->integer('boost_score')->index()->default(0);
             $table->text('image')->nullable();
             $table->text('banner')->nullable();
             $table->text('introduce')->nullable();

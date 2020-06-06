@@ -119,8 +119,9 @@ class UserServices
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('user_category_id', $catId)
-            ->orderby('is_hot', 'desc')
-            ->orderby('id', 'desc')
+            ->where('is_hot', 1)
+            ->orderby('boost_score', 'desc')
+            ->orderby('first_name')
             ->take($pageSize)->get();
         return [
             'title' => $title,
