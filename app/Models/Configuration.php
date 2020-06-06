@@ -52,6 +52,10 @@ class Configuration extends Model
         return $this->get(ConfigConstants::GUIDE_TOC);
     }
 
+    public function getDoc($key) {
+        return $this->where('key', $key)->first();
+    }
+
     public function get($key)
     {
         $dbConfig = $this->where('key', $key)->first();

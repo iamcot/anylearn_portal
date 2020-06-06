@@ -107,7 +107,7 @@ class UserServices
 
     public function hotUsers($role, $catId = 0)
     {
-        $title = $role == UserConstants::ROLE_TEACHER ? "any Professor" : "any School";
+        $title = $role == UserConstants::ROLE_TEACHER ? "anyProfessor" : "anyCenter";
         if ($catId > 0) {
             $title = 'anyKinder';
         }

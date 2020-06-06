@@ -8,6 +8,9 @@ class ConfigConstants
     const GUIDE_MEMBER  = 'guide_member';
     const GUIDE_TEACHER = 'guide_teacher';
     const GUIDE_SCHOOL = 'guide_school';
+    const GUIDE_ABOUT = 'guide_about';
+    const GUIDE_TOC_TEACHER = 'guide_toc_teacher';
+    const GUIDE_TOC_SCHOOL = 'guide_toc_school';
 
     const CONFIG_FRIEND_TREE = 'friend_tree';
     const CONFIG_NUM_COURSE = 'num_course';
@@ -45,5 +48,8 @@ class ConfigConstants
         self::GUIDE_MEMBER => 'HDSD cho Thành viên',
         self::GUIDE_TEACHER => 'HDSD cho Giảng viên',
         self::GUIDE_SCHOOL => 'HDSD cho Trung tâm',
+        self::GUIDE_ABOUT => 'Giới thiệu',
+        self::GUIDE_TOC_SCHOOL => 'Chính sách cho trung tâm',
+        self::GUIDE_TOC_TEACHER => 'Chính sách cho giảng viên',
     ];
 }

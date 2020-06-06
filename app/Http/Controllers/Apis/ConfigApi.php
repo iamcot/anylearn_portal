@@ -45,7 +45,7 @@ class ConfigApi extends Controller
             'hot_items' => [
                 $hotSchools,
                 $hotTeachers,
-                $hotUserInCate,
+                // $hotUserInCate,
             ],
             'month_courses' => $monthItems,
         ]);
@@ -96,8 +96,14 @@ class ConfigApi extends Controller
     public function getDoc($key)
     {
         $configM = new Configuration();
-        $data = $configM->get($key);
-        return response()->json(['value' => $data ?? ""]);
+        $data = $configM->getDoc($key);
+        if (!$data) {
+            return response('Trang không tìm thấy', 404);
+        }
+        return response()->json([
+            'content' => $data->value,
+            'updated_at' => $data->updated_at,
+        ]);
     }
 
     public function event($month)
