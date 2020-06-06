@@ -64,6 +64,14 @@ class TransactionApi extends Controller
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }
+        $alreadyRegister = DB::table('order_details as od')
+        ->join('orders', 'orders.id', '=', 'od.order_id')
+        ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+        ->where('od.item_id', $itemId)
+        ->count();
+        if ($alreadyRegister > 0) {
+            return response('Bạn đã đăng ký khóa học này', 400);
+        }
         try {
             DB::transaction(function () use ($user, $item) {
                 $status = $user->wallet_m >= $item->price ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;

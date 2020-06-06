@@ -23,6 +23,9 @@ Route::post('/register', 'Apis\UserApi@register');
 Route::post('/user/edit', 'Apis\UserApi@edit');
 Route::post('/user/upload-image/{type}', 'Apis\UserApi@uploadImage');
 Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
+Route::get('/user/mycalendar', 'Apis\UserApi@myCalendar');
+Route::get('/user/join/{itemId}', 'Apis\UserApi@confirmJoinCourse');
+Route::get('/user/course-registered-users/{itemId}', 'Apis\UserApi@courseRegisteredUsers');
 
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/transaction/{type}', 'Apis\ConfigApi@transaction');
@@ -41,3 +44,5 @@ Route::post('/transaction/deposit', 'Apis\TransactionApi@saveDeposit');
 Route::get('/transaction/history', 'Apis\TransactionApi@history');
 
 Route::get('/transaction/register/{itemId}', 'Apis\TransactionApi@placeOrderOneItem');
+
+Route::get('/event/{month}', 'Apis\ConfigApi@event');

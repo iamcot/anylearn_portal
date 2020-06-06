@@ -4,14 +4,19 @@ namespace App\Http\Controllers\Apis;
 
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\OrderDetail;
+use App\Models\Participation;
+use App\Models\Schedule;
 use App\Models\User;
 use App\Services\FileServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -152,5 +157,72 @@ class UserApi extends Controller
         ], 200);
     }
 
-   
+    public function myCalendar(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+
+        $orderDetailM = new OrderDetail();
+        return response()->json($orderDetailM->userRegistered($user->id));
+    }
+
+    public function confirmJoinCourse(Request $request, $itemId)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+
+        $schedule = Schedule::where('item_id', $itemId)->first();
+        if (!$schedule) {
+            return response("Không có lịch cho buổi học này", 404);
+        }
+
+        $item = Item::find($itemId);
+        if (!$item) {
+            return response("Khóa  học không tồn tại", 404);
+        }
+
+        $isConfirmed = Participation::where('item_id', $itemId)
+            ->where('schedule_id',  $schedule->id)
+            ->where('participant_user_id', $user->id)
+            ->count();
+        if ($isConfirmed > 0) {
+            return response("Bạn đã xác nhận rồi", 400);
+        }
+        $rs = Participation::create([
+            'item_id' => $itemId,
+            'schedule_id' =>  $schedule->id,
+            'organizer_user_id' => $item->user_id,
+            'participant_user_id' => $user->id,
+            'organizer_confirm' => 1,
+            'participant_confirm' => 1,
+        ]);
+
+        return response()->json(['result' => $rs ? (int)$itemId : 0]);
+    }
+
+    public function courseRegisteredUsers(Request $request, $itemId)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+
+        $item = Item::find($itemId);
+        if (!$item) {
+            return response("Khóa  học không tồn tại", 404);
+        }
+
+        $list = DB::table('order_details as od')
+            ->join('orders', 'orders.id', '=', 'od.order_id')
+            ->join('users', 'users.id', '=', 'od.user_id')
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->where('od.item_id', $itemId)
+            ->select('users.id', 'users.name', 'users.phone', 'users.image')
+            ->get();
+        return response()->json($list);
+    }
 }

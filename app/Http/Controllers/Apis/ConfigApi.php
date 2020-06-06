@@ -7,6 +7,8 @@ use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Models\Item;
+use App\Models\Schedule;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
@@ -88,7 +90,7 @@ class ConfigApi extends Controller
         $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
             ->sum('amount');
 
-        return response()->json(['value' => $foundation]);
+        return response()->json(['value' => (int) $foundation]);
     }
 
     public function getDoc($key)
@@ -96,5 +98,32 @@ class ConfigApi extends Controller
         $configM = new Configuration();
         $data = $configM->get($key);
         return response()->json(['value' => $data ?? ""]);
+    }
+
+    public function event($month)
+    {
+        $startDay = $month . "-01";
+        $endDay = $month . "-31";
+        $db = Item::where('date_start', '>=', $startDay)
+            ->where('date_start', '<=', $endDay)
+            ->where('status', 1)
+            // ->where('user_status', 1)
+            ->with('user')
+            ->get();
+        $data = [];
+        if ($db) {
+            foreach ($db as $event) {
+                $data[$event->date_start][] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'date' => $event->date_start,
+                    'time' => $event->time_start,
+                    'author' => $event->user->name,
+                    'image' => $event->image,
+                    'content' => $event->short_content,
+                ];
+            }
+        }
+        return response()->json($data);
     }
 }
