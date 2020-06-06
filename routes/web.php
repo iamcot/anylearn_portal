@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+//public page
+Route::get('/privacy', 'ConfigController@privacy');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::any('/config/banner', 'ConfigController@banner')->name('config.banner');

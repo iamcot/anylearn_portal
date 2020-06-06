@@ -76,4 +76,13 @@ class ConfigController extends Controller
         $fileService->deleteFiles($files, FileConstants::DISK_S3);
         return redirect()->back()->with('notify', true);
     }
+
+    public function privacy() {
+        $configM = new Configuration();
+        $data = $configM->getDoc(ConfigConstants::GUIDE_PRIVACY);
+        if ($data) {
+            return $data->value;
+        }
+        echo "";
+    }
 }
