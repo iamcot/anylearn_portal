@@ -113,7 +113,7 @@ class ConfigApi extends Controller
         $db = Item::where('date_start', '>=', $startDay)
             ->where('date_start', '<=', $endDay)
             ->where('status', 1)
-            // ->where('user_status', 1)
+            ->where('user_status', 1)
             ->with('user')
             ->get();
         $data = [];
