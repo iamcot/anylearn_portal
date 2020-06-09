@@ -1631,8 +1631,8 @@
     <script src="/cdn/onepage/js/jquery.js"></script>
 
     <!-- Google Map Api -->
-    <script src="http://maps.google.com/maps/api/js?key=AIzaSyAOBKD6V47-g_3opmidcmFapb3kSNAR70U" type="text/javascript"></script>
-    <script src="/cdn/onepage/js/map.js" type="text/javascript"></script>
+    <!-- <script src="http://maps.google.com/maps/api/js?key=AIzaSyAOBKD6V47-g_3opmidcmFapb3kSNAR70U" type="text/javascript"></script> -->
+    <!-- <script src="/cdn/onepage/js/map.js" type="text/javascript"></script> -->
 
 
     <!-- REVOLUTION JS FILES -->
