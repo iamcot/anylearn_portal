@@ -14,6 +14,9 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/onepage', 'Controller@home');
+
 Auth::routes();
 
 //public page
