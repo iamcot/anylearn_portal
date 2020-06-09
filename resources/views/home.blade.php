@@ -78,8 +78,8 @@
                                 <li><a href="#skill_section" class="scroll">Giới thiệu</a></li>
                                 <li><a href="#work" class="scroll">Sứ mệnh</a></li>
                                 <li><a href="#team" class="scroll">Chuyên gia</a></li>
-                                <li><a href="#pricing_table" class="scroll">Học viện</a></li>
-                                <li><a href="#blog" class="scroll">Nhận xét</a></li>
+                                <li><a href="#blog" class="scroll">Học viện</a></li>
+                                <li><a href="#customer_feedback" class="scroll">Nhận xét</a></li>
                                 <li><a href="#contact-form" class="scroll">Liên hệ</a></li>
                             </ul>
                         </div>
@@ -100,10 +100,10 @@
                                         <a href="#team" class="scroll"> <span>04.</span>Chuyên gia</a>
                                     </li>
                                     <li class="clearfix">
-                                        <a href="#pricing_table" class="scroll"> <span>05.</span>Học viện</a>
+                                        <a href="#blog" class="scroll"> <span>05.</span>Học viện</a>
                                     </li>
                                     <li class="clearfix">
-                                        <a href="#blog" class="scroll"> <span>06.</span>Nhận xét</a>
+                                        <a href="#customer_feedback" class="scroll"> <span>06.</span>Nhận xét</a>
                                     </li>
                                     <li class="clearfix">
                                         <a href="#contact-form" class="scroll"> <span>07.</span>Liên hệ</a>
@@ -1094,7 +1094,7 @@
 
         <!-- Pricing Table -->
 
-        <section class="pricing_section big_padding bg_grey" id="pricing_table">
+        <!-- <section class="pricing_section big_padding bg_grey" id="pricing_table">
 
             <div class="container">
 
@@ -1280,103 +1280,9 @@
 
             </div>
 
-        </section>
+        </section> -->
 
         <!-- /Pricing Table -->
-
-        <!-- Customer Review Slider -->
-
-        <section class="customer_feedback_section big_padding text-center">
-
-            <div class="container">
-
-                <div class="feedaback_inner">
-
-
-
-                    <h2 class="default_section_heading text-center white_color">
-
-                        <span class="font_200">
-
-                            Client
-
-                        </span>
-
-                        Testimonials
-
-
-
-                    </h2>
-
-                    <hr class="default_divider default_divider_white default_divider_big">
-
-                    <div class="swiper-container customer_feedback_slider white_pagination">
-
-                        <div class="swiper-wrapper">
-
-                            <div class="swiper-slide">
-
-                                <p class="customer_feedback_text white_color open_sans default_text font_200">
-
-
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
-                                    convallis.
-
-                                </p>
-
-                                <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
-
-                            </div>
-
-                            <div class="swiper-slide">
-
-                                <p class="customer_feedback_text white_color open_sans default_text font_200">
-
-
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
-                                    convallis.
-
-                                </p>
-
-                                <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
-
-                            </div>
-
-                            <div class="swiper-slide">
-
-                                <p class="customer_feedback_text white_color open_sans default_text font_200">
-
-
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
-                                    convallis.
-
-                                </p>
-
-                                <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
-
-                            </div>
-
-                        </div>
-
-                        <!-- Add Pagination -->
-
-                        <div class="swiper-pagination"></div>
-
-                        <!-- Add Arrows -->
-
-                        <div class="swiper-button-next fa fa-angle-right hidden-sm hidden-xs"></div>
-
-                        <div class="swiper-button-prev fa fa-angle-left hidden-sm hidden-xs"></div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- /Customer Review Slider -->
 
         <!-- Blog Section -->
 
@@ -1389,16 +1295,14 @@
                 <h2 class="default_section_heading text-center">
 
                     <span class="font_200">
-
-                        Khách hàng
-
+                        Các
                     </span>
 
-                    Nhận xét
+                    Trung tâm giáo dục
 
                     <span class="font_200">
 
-                        gì về chúng tôi
+                        hàng đầu Việt Nam
 
                     </span>
 
@@ -1481,23 +1385,96 @@
                                 <div class="blog_img">
 
                                     <img src="/cdn/onepage/images/blog_post_3.jpg" alt="blog_img">
-
                                 </div>
-
                                 <p class="default_text open_sans center_on_mobile">
-
                                     Cras eget ligula dolor aenean ac velit ultricies, accumsan nisl cursus, aliquam sem morbi pretium tincidunt bibendum turpis maximus posuere get
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- /Blog Section -->
+
+        <!-- Customer Review Slider -->
+
+        <section class="customer_feedback_section big_padding text-center" id="customer_feedback">
+
+            <div class="container">
+
+                <div class="feedaback_inner">
+                    <h2 class="default_section_heading text-center white_color">
+                        <span class="font_200">
+                            Khách hàng
+                        </span>
+                        nói gì về chúng tôi
+                    </h2>
+
+                    <hr class="default_divider default_divider_white default_divider_big">
+
+                    <div class="swiper-container customer_feedback_slider white_pagination">
+
+                        <div class="swiper-wrapper">
+
+                            <div class="swiper-slide">
+
+                                <p class="customer_feedback_text white_color open_sans default_text font_200">
+
+
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
+                                    convallis.
 
                                 </p>
+
+                                <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
+
+                            </div>
+
+                            <div class="swiper-slide">
+
+                                <p class="customer_feedback_text white_color open_sans default_text font_200">
+
+
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
+                                    convallis.
+
+                                </p>
+
+                                <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
+
+                            </div>
+
+                            <div class="swiper-slide">
+
+                                <p class="customer_feedback_text white_color open_sans default_text font_200">
+
+
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
+                                    convallis.
+
+                                </p>
+
+                                <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
 
                             </div>
 
                         </div>
 
-                    </div>
+                        <!-- Add Pagination -->
 
-                    <!-- Add Pagination -->
-                    <div class="swiper-pagination"></div>
+                        <div class="swiper-pagination"></div>
+
+                        <!-- Add Arrows -->
+
+                        <div class="swiper-button-next fa fa-angle-right hidden-sm hidden-xs"></div>
+
+                        <div class="swiper-button-prev fa fa-angle-left hidden-sm hidden-xs"></div>
+
+                    </div>
 
                 </div>
 
@@ -1505,14 +1482,11 @@
 
         </section>
 
-        <!-- /Blog Section -->
+        <!-- /Customer Review Slider -->
 
         <!-- Google Map Section -->
-
-        <section id="map"></section>
-
+        <!-- <section id="map"></section> -->
         <!-- /Google Map Section -->
-
         <!-- Contact Form Section -->
 
         <section class="contact_form_section" id="contact-form">
