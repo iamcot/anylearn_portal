@@ -14,7 +14,7 @@
     <title>anyLEARN - HỌC không giới hạn</title>
 
     <!-- Bootstrap CSS File -->
-    <link rel="stylesheet" href="/cdn/onepage/css/bootstrap.css">
+    <link rel="stylesheet" href="/cdn/onepage/css/bootstrap.min.css">
     <!-- Font-Awesome CSS File -->
     <link rel="stylesheet" href="/cdn/onepage/css/font-awesome.css">
     <!-- Slider Revolution CSS File -->
