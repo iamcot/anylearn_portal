@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Meta Tags For Seo + Page Optimization -->
     <meta charset="utf-8">
@@ -73,12 +74,13 @@
                         <div class="collapse navbar-collapse navbar-ex1-collapse  ">
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="active"><a href="#home" class="scroll">
-                                    <i class="fa fa-home"></i>
-                                </a></li>
+                                        <i class="fa fa-home"></i>
+                                    </a></li>
                                 <li><a href="#skill_section" class="scroll">Giới thiệu</a></li>
                                 <li><a href="#work" class="scroll">Sứ mệnh</a></li>
                                 <li><a href="#team" class="scroll">Chuyên gia</a></li>
                                 <li><a href="#blog" class="scroll">Học viện</a></li>
+                                <li><a href="#pricing_table" class="scroll">Tải APP</a></li>
                                 <li><a href="#customer_feedback" class="scroll">Nhận xét</a></li>
                                 <li><a href="#contact-form" class="scroll">Liên hệ</a></li>
                             </ul>
@@ -103,10 +105,13 @@
                                         <a href="#blog" class="scroll"> <span>05.</span>Học viện</a>
                                     </li>
                                     <li class="clearfix">
-                                        <a href="#customer_feedback" class="scroll"> <span>06.</span>Nhận xét</a>
+                                        <a href="#pricing_table" class="scroll"> <span>06.</span>Tải APP</a>
                                     </li>
                                     <li class="clearfix">
-                                        <a href="#contact-form" class="scroll"> <span>07.</span>Liên hệ</a>
+                                        <a href="#customer_feedback" class="scroll"> <span>07.</span>Nhận xét</a>
+                                    </li>
+                                    <li class="clearfix">
+                                        <a href="#contact-form" class="scroll"> <span>08.</span>Liên hệ</a>
                                     </li>
                                 </ul>
                                 <div class="clearfix"></div>
@@ -837,7 +842,7 @@
                         </span>
                         Chuyên gia
                         <span class="font_200">
-                             hàng đầu
+                            hàng đầu
                         </span>
                     </h2>
                     <hr class="default_divider default_divider_blue default_divider_big">
@@ -1092,197 +1097,7 @@
 
         <!-- half Section Ended -->
 
-        <!-- Pricing Table -->
 
-        <!-- <section class="pricing_section big_padding bg_grey" id="pricing_table">
-
-            <div class="container">
-
-                <div class="pricing_table_section">
-
-                    <p class="default_text raleway text-center default_small_heading blue_color font_200">New Plans</p>
-
-                    <h2 class="default_section_heading text-center">
-
-                        <span class="font_200">
-
-                            Our
-
-                        </span>
-
-                        Pricing
-
-                        <span class="font_200">
-
-                            Table
-
-                        </span>
-
-                    </h2>
-
-                    <hr class="default_divider default_divider_blue default_divider_big">
-
-                    <div class="row">
-
-                        <div class="col-sm-4">
-
-                            <div class="pricing_table_column wow slideInLeft">
-
-                                <h3 class="small_heading_navy raleway">Basic</h3>
-
-                                <div class="price">
-
-                                    <div class="row">
-
-                                        <div class="col-xs-4">
-
-                                            <h2 class="open_sans font_400 pink_color"><span class="dollar raleway">$</span>19<br><span class="month raleway">Month</span></h2>
-
-                                        </div>
-
-                                        <div class="col-xs-8">
-
-                                            <p>It has survived not only five centuries, but also the leap into electronic.</p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <ul class="packages">
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Full access</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Unlimited Bandwidth</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Powerful Admin Panel</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Email Accounts</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>8 Free Forks Every Months</li>
-
-                                </ul>
-
-                                <div class="pricing_button">
-
-                                    <a href="#." class="bg_pink button button_default_style open_sans bg_before_navy">Buy Now</a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-sm-4">
-
-                            <div class="pricing_table_column blue_price wow fadeInUpBig">
-
-                                <h3 class="small_heading_navy raleway white_color">Advance</h3>
-
-                                <div class="price">
-
-                                    <div class="row">
-
-                                        <div class="col-xs-4">
-
-                                            <h2 class="open_sans font_400 white_color"><span class="dollar raleway">$</span>49<br><span class="month raleway">Month</span></h2>
-
-                                        </div>
-
-                                        <div class="col-xs-8">
-
-                                            <p>It has survived not only five centuries, but also the leap into electronic.</p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <ul class="packages">
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Full access</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Unlimited Bandwidth</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Powerful Admin Panel</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Email Accounts</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>8 Free Forks Every Months</li>
-
-                                </ul>
-
-                                <div class="pricing_button">
-
-                                    <a href="#." class="bg_white button button_default_style open_sans bg_before_pink navy_blue">Buy Now</a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-sm-4">
-
-                            <div class="pricing_table_column wow slideInRight">
-
-                                <h3 class="small_heading_navy raleway">Premium</h3>
-
-                                <div class="price">
-
-                                    <div class="row">
-
-                                        <div class="col-xs-4">
-
-                                            <h2 class="open_sans font_400 pink_color"><span class="dollar raleway">$</span>99<br><span class="month raleway">Month</span></h2>
-
-                                        </div>
-
-                                        <div class="col-xs-8">
-
-                                            <p>It has survived not only five centuries, but also the leap into electronic.</p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <ul class="packages">
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Full access</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Unlimited Bandwidth</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Powerful Admin Panel</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Email Accounts</li>
-
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>8 Free Forks Every Months</li>
-
-                                </ul>
-
-                                <div class="pricing_button">
-
-                                    <a href="#." class="bg_pink button button_default_style open_sans bg_before_navy">Buy Now</a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section> -->
-
-        <!-- /Pricing Table -->
 
         <!-- Blog Section -->
 
@@ -1399,6 +1214,77 @@
         </section>
 
         <!-- /Blog Section -->
+
+        <!-- Pricing Table -->
+
+        <section class="pricing_section big_padding bg_grey" id="pricing_table">
+
+            <div class="container">
+
+                <div class="pricing_table_section">
+
+                    <p class="default_text raleway text-center default_small_heading blue_color font_200">Tải Ứng dụng anyLEARN</p>
+
+                    <h2 class="default_section_heading text-center">
+
+                        <span class="font_200">
+
+                            Hãy
+
+                        </span>
+
+                        Tải ngay
+
+                        <span class="font_200">
+
+                            ứng dụng anyLEARN để HỌC không giới hạn
+
+                        </span>
+
+                    </h2>
+
+                    <hr class="default_divider default_divider_blue default_divider_big">
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <p>Giới thiệu về APP, các chỉ dẫn cơ bản download app và đăng ký </p>
+                                <ul class="packages">
+                                    <li><i class="fa fa-check" aria-hidden="true"></i>Giao diện thân thiện.</li>
+                                    <li><i class="fa fa-check" aria-hidden="true"></i>Không quảng cáo, không thu thập dữ liệu người dùng.</li>
+                                    <li><i class="fa fa-check" aria-hidden="true"></i>Chức năng phong phú cho cả thành viên và giảng viên.</li>
+                                    <li><i class="fa fa-check" aria-hidden="true"></i>Chức năng mới cập nhật thường xuyên</li>
+                                    <li><i class="fa fa-check" aria-hidden="true"></i>Hỗ trợ trên cả 2 nền hệ điều hành Android và iOS</li>
+
+                                </ul>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6" style="padding: 20px;">
+                                    <a href="">
+                                        <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
+                                    </a>
+                                </div>
+                                <div class="col-sm-6" style="padding: 20px;">
+                                    <a href="">
+                                        <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-4 ">
+                            <img src="/cdn/onepage/images/phone.png" alt="" class="" style="max-height: 500px;float:right;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- /Pricing Table -->
 
         <!-- Customer Review Slider -->
 
@@ -1553,7 +1439,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 wow slideInRight">
-                            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfPmk8hlUJ5DTu5a2gPUfCdAbrAWYK6GymJSkeMB5DrD0EmzA/viewform?embedded=true" width="640" height="750" frameborder="0" marginheight="0" marginwidth="0">Đang tải…</iframe>
+                            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfPmk8hlUJ5DTu5a2gPUfCdAbrAWYK6GymJSkeMB5DrD0EmzA/viewform?embedded=true" width="100%" height="750" frameborder="0" marginheight="0" marginwidth="0">Đang tải…</iframe>
                         </div>
                     </div>
                 </div>
