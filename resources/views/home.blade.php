@@ -1248,23 +1248,26 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <div class="row">
-                                <p>Giới thiệu về APP, các chỉ dẫn cơ bản download app và đăng ký </p>
-                                <ul class="packages">
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Giao diện thân thiện.</li>
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Không quảng cáo, không thu thập dữ liệu người dùng.</li>
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Chức năng phong phú cho cả thành viên và giảng viên.</li>
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Chức năng mới cập nhật thường xuyên</li>
-                                    <li><i class="fa fa-check" aria-hidden="true"></i>Hỗ trợ trên cả 2 nền hệ điều hành Android và iOS</li>
+                                <div class="col-xs-12">
+                                    <p>Giới thiệu về APP, các chỉ dẫn cơ bản download app và đăng ký </p>
+                                    <ul class="packages">
+                                        <li><i class="fa fa-check" aria-hidden="true"></i>Giao diện thân thiện.</li>
+                                        <li><i class="fa fa-check" aria-hidden="true"></i>Không quảng cáo, không thu thập dữ liệu người dùng.</li>
+                                        <li><i class="fa fa-check" aria-hidden="true"></i>Chức năng phong phú cho cả thành viên và giảng viên.</li>
+                                        <li><i class="fa fa-check" aria-hidden="true"></i>Chức năng mới cập nhật thường xuyên</li>
+                                        <li><i class="fa fa-check" aria-hidden="true"></i>Hỗ trợ trên cả 2 nền hệ điều hành Android và iOS</li>
 
-                                </ul>
+                                    </ul>
+                                </div>
+
                             </div>
                             <div class="row">
-                                <div class="col-sm-6" style="padding: 20px;">
+                                <div class="col-sm-6" style="padding: 30px;">
                                     <a href="">
                                         <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
                                     </a>
                                 </div>
-                                <div class="col-sm-6" style="padding: 20px;">
+                                <div class="col-sm-6" style="padding: 30px;">
                                     <a href="">
                                         <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
                                     </a>
@@ -1272,7 +1275,7 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-4 ">
+                        <div class="col-sm-4 visible-sm visible-md visible-lg">
                             <img src="/cdn/onepage/images/phone.png" alt="" class="" style="max-height: 500px;float:right;">
                         </div>
 
@@ -1381,7 +1384,7 @@
 
                 <div class="row">
                     <div class="contact_form_inner big_padding clearfix">
-                        <div class="col-md-6 wow slideInLeft">
+                        <div class="col-md-4 wow slideInLeft">
                             <div class="contact_form_detail  center_on_mobile">
                                 <!-- <p class="default_small_heading raleway blue_color font_200">Liên hệ</p> -->
                                 <h3 class="default_section_heading raleway navy_blue"> <span class="font_200">Let's Get In</span> Touch</h3>
@@ -1438,7 +1441,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 wow slideInRight">
+                        <div class="col-md-8 wow slideInRight">
                             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfPmk8hlUJ5DTu5a2gPUfCdAbrAWYK6GymJSkeMB5DrD0EmzA/viewform?embedded=true" width="100%" height="750" frameborder="0" marginheight="0" marginwidth="0">Đang tải…</iframe>
                         </div>
                     </div>
