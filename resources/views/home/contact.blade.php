@@ -17,10 +17,10 @@
                                 </div>
                                 <div class="col-md-11 col-sm-12">
                                     <p class="default_text form_text open_sans default_text_light">
-                                        Q4
+                                        Ho Chi Minh City
                                     </p>
                                     <p class="default_text form_text open_sans default_text_light">
-                                        Ho Chi Minh City, Vietnam
+                                        Vietnam
                                     </p>
                                 </div>
                             </div>
@@ -30,10 +30,7 @@
                                 </div>
                                 <div class="col-md-11 col-sm-12">
                                     <p class="default_text form_text open_sans default_text_light">
-                                        +84 1900 113
-                                    </p>
-                                    <p class="default_text form_text open_sans default_text_light">
-                                        +84 1900 911
+                                        +84 374900344
                                     </p>
                                 </div>
                             </div>

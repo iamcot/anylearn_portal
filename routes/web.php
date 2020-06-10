@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/onepage', 'Controller@home');
+Route::get('/', 'Controller@home');
 
 Auth::routes();
 
 //public page
 Route::get('/privacy', 'ConfigController@privacy');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::any('/config/banner', 'ConfigController@banner')->name('config.banner');
     Route::any('/config/site', 'ConfigController@site')->name('config.site');

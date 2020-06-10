@@ -19,7 +19,7 @@
                             <i class="fa fa-home"></i>
                         </a></li>
                     <li><a href="#skill_section" class="scroll">Giới thiệu</a></li>
-                    <li><a href="#work" class="scroll">Sứ mệnh</a></li>
+                    <li><a href="#work" class="scroll">Khóa học</a></li>
                     <li><a href="#team" class="scroll">Chuyên gia</a></li>
                     <li><a href="#blog" class="scroll">Học viện</a></li>
                     <li><a href="#pricing_table" class="scroll">Tải APP</a></li>
@@ -38,7 +38,7 @@
                             <a href="#skill_section" class="scroll"> <span>02.</span>Giới thiệu</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#work" class="scroll"> <span>03.</span>Sứ mệnh</a>
+                            <a href="#work" class="scroll"> <span>03.</span>Khóa học</a>
                         </li>
                         <li class="clearfix">
                             <a href="#team" class="scroll"> <span>04.</span>Chuyên gia</a>

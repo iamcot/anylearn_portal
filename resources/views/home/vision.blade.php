@@ -1,15 +1,15 @@
 <section class="portfolio_section big_padding" style="padding-bottom: 0;" id="work">
     <div class="container">
-        <p class="default_small_heading raleway text-center blue_color font_200">Creative Portfolio</p>
+        <p class="default_small_heading raleway text-center blue_color font_200">HỌC không giới hạn</p>
         <h2 class="default_section_heading text-center">
-            <span class="font_200"> Our </span>
-            Awesome
-            <span class="font_200">Work</span>
+            <span class="font_200"> Khám phá </span>
+            hàng ngàn khóa học
+            <span class="font_200"> của chúng tôi</span>
         </h2>
         <hr class="default_divider default_divider_blue default_divider_big">
     </div>
     <div class="cube_fullwidth_style_portfolio">
-        <div id="js-filters-mosaic-flat" class="cbp-l-filters-buttonCenter open_sans">
+        <!-- <div id="js-filters-mosaic-flat" class="cbp-l-filters-buttonCenter open_sans">
             <div data-filter="*" class="cbp-filter-item-active cbp-filter-item open_sans button bg_before_pink">
                 All
                 <div class="cbp-filter-counter"></div>
@@ -26,7 +26,7 @@
                 Photography
                 <div class="cbp-filter-counter"></div>
             </div>
-        </div>
+        </div> -->
         <div id="js-grid-mosaic-flat" class="cbp cbp-l-grid-mosaic-flat">
             <div class="cbp-item web-design photography">
                 <a href="/cdn/onepage/images/projects-1.jpg" class="cbp-caption cbp-lightbox" data-title="Bolt UI<br>by Tiberiu Neamu">

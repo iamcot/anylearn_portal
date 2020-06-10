@@ -12,27 +12,15 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <p class="customer_feedback_text white_color open_sans default_text font_200">
-
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
-                            convallis.
+                        Cảm ơn anyLEARN đã mang lại cho mình nhiều khoá học bổ ích, nhờ có anyLEARN, mình đã học được nhiều kiến thức trong việc dạy con và cách bồi dưỡng, vun đắp tình cảm gia đình.
                         </p>
-                        <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
+                        <p class="customer_feedback_name white_color open_sans default_small_heading font_600">Quỳnh Như – Thành viên anyLEARN</p>
                     </div>
                     <div class="swiper-slide">
                         <p class="customer_feedback_text white_color open_sans default_text font_200">
-
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
-                            convallis.
+                        Cảm ơn MC Hoài Trinh đã mang lại cho em khoá học bổ ích về Nghệ thuật toả sáng trước công chúng, giờ đây em đã không còn rụt rè, ngại ngùng mà đã tự tin hơn khi nói chuyện, thuyết trình trước đám đông. Xin chân thành cảm ơn chị.
                         </p>
-                        <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
-                    </div>
-                    <div class="swiper-slide">
-                        <p class="customer_feedback_text white_color open_sans default_text font_200">
-
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nisi enim, vulputate at justo tristique, tempor sagittis dolor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sit amet ligula consequat urna posuere
-                            convallis.
-                        </p>
-                        <p class="customer_feedback_name white_color open_sans default_small_heading font_600">John Doe - Google CEO</p>
+                        <p class="customer_feedback_name white_color open_sans default_small_heading font_600">Ngọc Huyền – Thành viên anyLEARN</p>
                     </div>
                 </div>
                 <!-- Add Pagination -->
