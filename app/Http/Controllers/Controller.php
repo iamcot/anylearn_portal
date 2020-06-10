@@ -35,8 +35,4 @@ class Controller extends BaseController
         }
         return $user;
     }
-
-    public function home() {
-        return view('home');
-    }
 }

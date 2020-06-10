@@ -33,7 +33,7 @@
                             </a>
                         </div>
                         <div class="col-sm-6" style="padding: 30px;">
-                            <a href="">
+                            <a href="https://play.google.com/store/apps/details?id=vn.anylearn">
                                 <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
                             </a>
                         </div>

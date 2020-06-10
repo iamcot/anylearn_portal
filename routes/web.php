@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', 'Controller@home');
+Route::get('/', 'PageController@home');
+Route::get('/ref/{code}', 'PageController@ref');
+Route::get('/ref', 'PageController@ref');
 
 Auth::routes();
 
