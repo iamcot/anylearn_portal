@@ -67,6 +67,7 @@ class TransactionApi extends Controller
         $alreadyRegister = DB::table('order_details as od')
         ->join('orders', 'orders.id', '=', 'od.order_id')
         ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+        ->where('od.user_id', $user->id)
         ->where('od.item_id', $itemId)
         ->count();
         if ($alreadyRegister > 0) {
