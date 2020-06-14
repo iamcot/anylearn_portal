@@ -116,7 +116,7 @@ class UserServices
         $keyConfig = $role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_NUM_TEACHER : ConfigConstants::CONFIG_NUM_SCHOOL;
         $pageSize = $configM->get($keyConfig);
         $list = User::where('role', $role)
-            // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('user_category_id', $catId)
             ->where('is_hot', 1)

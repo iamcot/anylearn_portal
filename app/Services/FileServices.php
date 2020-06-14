@@ -7,6 +7,7 @@ use DOMDocument;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Image;
 
 class FileServices
 {
@@ -15,6 +16,8 @@ class FileServices
     private $systemFiles = [
         '.gitignore',
     ];
+
+    const MAX_IMAGE_W = 1980;
 
     public function doUploadFile($request, $field = 'file', $disk = 's3', $changeName = true, $childPath = 'files')
     {
@@ -31,6 +34,7 @@ class FileServices
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }
+
                 $path = Storage::disk($disk)->putFileAs($childPath, $request->file($field), $file);
                 if ($path) {
                     $rs = [
@@ -46,17 +50,20 @@ class FileServices
         }
         return $rs;
     }
-    public function randomFileName() {
-        return Str::random(10). time();
+    public function randomFileName()
+    {
+        return Str::random(10) . time();
     }
 
-    public function getPathOfS3Url($url) {
+    public function getPathOfS3Url($url)
+    {
         $baseUrl = env('AWS_URL', 'https://s3-ap-southeast-1.amazonaws.com/anylearn.vn/');
         $path = str_replace($baseUrl, "", $url);
         return $path;
     }
 
-    public function deleteUserOldImageOnS3($url) {
+    public function deleteUserOldImageOnS3($url)
+    {
         $path = $this->getPathOfS3Url($url);
         $this->deleteFiles([$path]);
     }
@@ -66,16 +73,27 @@ class FileServices
         $rs = false;
         try {
             if ($request->hasFile($field) && $request->file($field)->isValid()) {
+                $extension = $request->file($field)->extension();
                 if ($changeName) {
                     $file =  $this->randomFileName() . '.jpg';
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }
-                $path = Storage::disk($disk)->putFileAs($childPath, $request->file($field), $file);
+                $photo = Image::make($request->file($field));
+                $width = $photo->width();
+                if ($width > self::MAX_IMAGE_W) {
+                    $photo->resize(self::MAX_IMAGE_W, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+                }
+
+                $photo->encode($extension, 70);
+                $path = Storage::disk($disk)->put($childPath . "/" . $file, $photo);
                 if ($path) {
                     $rs = [
                         'file' => $file,
                         'path' => $path,
+                        'file_ext' => $extension,
                         'url' => Storage::disk($disk)->url($childPath . '/' . $file)
                     ];
                 }

@@ -26,6 +26,10 @@ Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
 Route::get('/user/mycalendar', 'Apis\UserApi@myCalendar');
 Route::get('/user/join/{itemId}', 'Apis\UserApi@confirmJoinCourse');
 Route::get('/user/course-registered-users/{itemId}', 'Apis\UserApi@courseRegisteredUsers');
+Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
+Route::get('/user/get-docs', 'Apis\UserApi@getDocs');
+Route::post('/user/add-doc', 'Apis\UserApi@addDoc');
+Route::get('/user/remove-doc/{fileId}', 'Apis\UserApi@removeDoc');
 
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/transaction/{type}', 'Apis\ConfigApi@transaction');

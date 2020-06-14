@@ -13,6 +13,7 @@ use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\UserDocument;
 use App\Services\FileServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -144,7 +145,7 @@ class UserApi extends Controller
         }
         $pageSize = $request->get('pageSize', 9999);
         $list = User::where('role', $role)
-            // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
@@ -201,7 +202,7 @@ class UserApi extends Controller
             'participant_confirm' => 1,
         ]);
 
-        return response()->json(['result' => $rs ? (int)$itemId : 0]);
+        return response()->json(['result' => $rs ? (int) $itemId : 0]);
     }
 
     public function courseRegisteredUsers(Request $request, $itemId)
@@ -224,5 +225,68 @@ class UserApi extends Controller
             ->select('users.id', 'users.name', 'users.phone', 'users.image')
             ->get();
         return response()->json($list);
+    }
+
+    public function profile($userId)
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            return response("User không tồn tại", 404);
+        }
+        $user->docs = UserDocument::where('user_id', $user->id)->get();
+        return response()->json($user);
+    }
+
+    public function getDocs(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $docs = UserDocument::where('user_id', $user->id)->get();
+        return response()->json($docs);
+    }
+
+    public function addDoc(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $fileService = new FileServices();
+        $fileuploaded = $fileService->doUploadImage($request, 'image');
+        if ($fileuploaded === false) {
+            return response('Upload file không thành công.', 500);
+        }
+        $userDocM = new UserDocument();
+        $userDocM->addDocWeb($fileuploaded, $user);
+
+        $docs = UserDocument::where('user_id', $user->id)->get();
+        return response()->json($docs);
+    }
+
+    public function removeDoc(Request $request, $fileId)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $file = UserDocument::find($fileId);
+        if (!$file) {
+            return response("Tài liệu không có", 404);
+        }
+        if ($file->user_id != $user->id) {
+            return response("Bạn không có quyền", 400);
+        }
+        $fileService = new FileServices();
+        $oldImageUrl = $file->data;
+        $fileService->deleteUserOldImageOnS3($oldImageUrl);
+
+        $rs = UserDocument::find($fileId)->delete();
+        $docs = UserDocument::where('user_id', $user->id)->get();
+        if (count($docs) == 0) {
+            User::find($user->id)->update(['update_doc' => 0]);
+        }
+        return response()->json($docs);
     }
 }

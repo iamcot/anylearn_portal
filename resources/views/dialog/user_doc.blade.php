@@ -22,6 +22,7 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <button id="allow_doc" class="btn btn-success">@lang('Giấy tờ hợp lệ')</button>
                 <button id="clean_doc" class="btn btn-danger">@lang('Giấy tờ không hợp lệ')</button>
             </div>
         </div>
@@ -55,6 +56,25 @@
         $.ajax({
             type: "GET",
             url: "/ajax/remove-doc/" + userId,
+            dataType: 'json',
+            success: function(res) {
+                if (!res.success) {
+                    alert(res.data);
+                } else {
+                    $('#userDocModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(request, status, error) {
+                console.log("ajax call went wrong:" + request.responseText);
+            }
+        });
+    });
+
+    $('#allow_doc').click(function() {
+        $.ajax({
+            type: "GET",
+            url: "/ajax/allow-doc/" + userId,
             dataType: 'json',
             success: function(res) {
                 if (!res.success) {

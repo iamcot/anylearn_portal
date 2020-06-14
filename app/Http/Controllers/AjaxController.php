@@ -38,9 +38,9 @@ class AjaxController extends Controller
                 $files = $files->toArray();
             }
             $fileService = new FileServices();
-            for($i = 0; $i < sizeof($files); $i++) {
-                $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_S3, $files[$i]['data']);
-            }
+            // for($i = 0; $i < sizeof($files); $i++) {
+            //     $files[$i]['data'] = $fileService->urlFromPath(FileConstants::DISK_S3, $files[$i]['data']);
+            // }
             $this->buildResponse(true, $files);
         }
         return response()->json($this->response);
@@ -53,6 +53,18 @@ class AjaxController extends Controller
             $this->buildResponse(false, __('Bạn không có quyền cho thao tác này'));
         } else {
             $rs = User::find($userId)->update(['update_doc' => 0]);
+            $this->buildResponse(true, $rs);
+        }
+        return response()->json($this->response);
+    }
+
+    public function userAllowUpdateDoc($userId) {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->haveAccess($user->role, 'admin')) {
+            $this->buildResponse(false, __('Bạn không có quyền cho thao tác này'));
+        } else {
+            $rs = User::find($userId)->update(['update_doc' => 1]);
             $this->buildResponse(true, $rs);
         }
         return response()->json($this->response);

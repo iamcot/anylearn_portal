@@ -46,6 +46,28 @@ class UserDocument extends Model
         return false;
     }
 
+    public function addDocWeb($fileObj, $userApi = null) {
+        $user = $userApi ?? Auth::user();
+        $data = [
+            'user_id' => $user->id,
+            'store' => UserDocConstants::STORE_WEB,
+            'data' => $fileObj['url'],
+            'file_ext' => !empty($fileObj['file_ext']) ? $fileObj['file_ext'] : '',
+        ];
+        if ($user->role == UserConstants::ROLE_SCHOOL) {
+            $data['type'] = UserDocConstants::TYPE_SCHOOL_DOC;
+        } elseif ($user->role == UserConstants::ROLE_TEACHER) {
+            $data['type'] = UserDocConstants::TYPE_TEACHER_DOC;
+        } else {
+            $data['type'] = UserDocConstants::TYPE_FILE;
+        }
+        $db = $this->create($data);
+        if ($db && in_array($user->role, [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])  ) {
+            return User::find($user->id)->update(['update_doc' => 1]);
+        }
+        return false;
+    }
+
     public function getUserDocs($userId) {
 
     }

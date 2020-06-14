@@ -73,3 +73,4 @@ Route::get('/ajax/toc', 'AjaxController@toc')->name('ajax.toc');
 Route::middleware(['auth', 'access.mod'])->get('/ajax/touch-is-hot/{table}/{id}', 'AjaxController@touchIsHot')->name('ajax.touch.ishot');
 Route::middleware(['auth'])->get('/ajax/doc/{userId}', 'AjaxController@userDocs')->name('ajax.user.docs');
 Route::middleware(['auth'])->get('/ajax/remove-doc/{userId}', 'AjaxController@userRemoveUpdateDoc')->name('ajax.user.docs.remove');
+Route::middleware(['auth'])->get('/ajax/allow-doc/{userId}', 'AjaxController@userAllowUpdateDoc')->name('ajax.user.docs.remove');

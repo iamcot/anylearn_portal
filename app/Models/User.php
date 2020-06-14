@@ -24,7 +24,7 @@ class User extends Authenticatable
         'name', 'email', 'password', 'api_token', 'phone', 'role', 'status', 'user_id',
         'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
         'introduce', 'address', 'country', 'dob', 'update_doc', 'user_category_id',
-        'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name'
+        'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content'
     ];
 
     /**
