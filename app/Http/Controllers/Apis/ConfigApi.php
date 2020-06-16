@@ -7,6 +7,7 @@ use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Models\Feedback;
 use App\Models\Item;
 use App\Models\Schedule;
 use App\Models\Transaction;
@@ -131,5 +132,23 @@ class ConfigApi extends Controller
             }
         }
         return response()->json($data);
+    }
+
+    public function saveFeedback(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $fileService = new FileServices();
+        $fileuploaded = $fileService->doUploadImage($request, 'image');
+        Feedback::create([
+            'user_id' => $user->id,
+            'content' => $request->get('content'),
+            'file' => $fileuploaded['url'],
+        ]);
+        return response()->json([
+            'result' => true
+        ]);
     }
 }
