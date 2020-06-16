@@ -14,7 +14,7 @@ class AddUserDetail extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->text('full_content')->nullable()->after('introduce');
+            $table->longText('full_content')->nullable()->after('introduce');
         });
     }
 
