@@ -141,7 +141,7 @@ class ConfigApi extends Controller
             return $user;
         }
         $fileService = new FileServices();
-        $fileuploaded = $fileService->doUploadImage($request, 'image');
+        $fileuploaded = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'feedbacks');
         Feedback::create([
             'user_id' => $user->id,
             'content' => $request->get('content'),

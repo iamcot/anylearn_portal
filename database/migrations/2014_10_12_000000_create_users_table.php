@@ -66,7 +66,7 @@ class CreateUsersTable extends Migration
             $table->integer('item_category_id')->index()->default(0);
             $table->text('image')->nullable();
             $table->text('short_content')->nullable();
-            $table->text('content')->nullable();
+            $table->longText('content')->nullable();
             $table->bigInteger('price')->default(0);
             $table->bigInteger('org_price')->nullable();
             $table->date('date_start')->index();

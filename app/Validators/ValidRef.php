@@ -10,7 +10,7 @@ class ValidRef implements Rule
         if (empty($value)) {
             return true;
         }
-        $count = User::where('phone', $value)->count();
+        $count = User::where('refcode', $value)->count();
         return $count > 0;
     }
 
