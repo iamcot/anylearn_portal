@@ -24,7 +24,9 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        // $data['isReg'] = true;
+        if ($request->get('has-account')) {
+            $data['isReg'] = true;
+        }
         $data['user'] = $refUser;
         return view('ref', $data);
     }

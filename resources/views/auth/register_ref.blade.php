@@ -106,6 +106,7 @@
                     <button type="submit" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}">
                         <i class="fas fa-sign-in-alt"></i> {{ __('Đăng ký') }}
                     </button>
+                    <a href="?has-account=1">Tôi đã đăng ký</a>
                 </div>
             </div>
         </form>
