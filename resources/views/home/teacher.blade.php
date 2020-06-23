@@ -1,15 +1,8 @@
 <section class="team_section big_padding text-center " id="team">
     <div class="container">
-        <p class="raleway default_small_heading blue_color font_200">Hãy gặp gỡ</p>
         <div class="col-xs-12">
-            <h2 class="default_section_heading text-center">
-                <span class="font_200">
-                    Các
-                </span>
-                Chuyên gia
-                <span class="font_200">
-                    hàng đầu
-                </span>
+            <h2 class="default_section_heading text-center font-600 text-blue">
+            Học tập cùng với các Chuyên gia hàng đầu
             </h2>
             <hr class="default_divider default_divider_blue default_divider_big">
             <div class="swiper-container team_slider">
@@ -130,7 +123,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="side_section_text big_padding">
-                    <p class="default_small_heading raleway blue_color font_200">Đội ngũ giảng dạy</p>
+                    <!-- <p class="default_small_heading raleway blue_color font_200">Đội ngũ giảng dạy</p> -->
                     <h3 class="default_section_heading raleway navy_blue"><span class="font_200"> Nhiều </span> chuyên gia nổi tiếng <span class="font_200"> trên toàn thế giới </span></h3>
                     <hr class="default_divider default_divider_blue " style="margin-left: 0;">
                     <p class="default_text_light default_text open_sans">
