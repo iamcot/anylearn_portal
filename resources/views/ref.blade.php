@@ -22,8 +22,8 @@
     <section class="pricing_section big_padding bg_grey" id="pricing_table">
         <div class="container">
             <div class="pricing_table_section">
-                <h2 class="default_section_heading text-center">
-                    Đăng ký và tải ngay ứng dụng anyLEARN <br> và HỌC không giới hạn
+                <h2 class="default_section_heading text-center ">
+                    Đăng ký và tải ngay ứng dụng <span class="text-success">any</span><span class="text-primary">LEARN</span>
                 </h2>
                 <hr class="default_divider default_divider_blue default_divider_big">
                 <div class="row">
@@ -65,9 +65,9 @@
                         @include('auth.register_ref')
                         @else
                         <div class="row">
-                            <p>Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy bấm vào (icon ios) hoặc (icon CH play) để tải ứng dụng về máy và bắt đầu trải nghiệm!</p>
+                            <p>Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</p>
                             <div class="col-md-6" style="padding: 30px;">
-                                <a href="">
+                                <a href="https://apps.apple.com/vn/app/anylearn/id1518155412">
                                     <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
                                 </a>
                             </div>
