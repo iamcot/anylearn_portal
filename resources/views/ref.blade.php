@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="anyLEARN.vn - Nền tảng kết nối hàng đầu về giáo dục">
     <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Insert Favicon Here -->
     <link href="/favicon-16x16.png" rel="icon">
     <!-- Page Title(Name)-->
@@ -23,7 +24,7 @@
         <div class="container">
             <div class="pricing_table_section">
                 <h2 class="default_section_heading text-center ">
-                    Đăng ký và tải ngay ứng dụng <span class="text-success">any</span><span class="text-primary">LEARN</span>
+                    Đăng ký và tải ứng dụng <span class="text-success">any</span><span class="text-primary">LEARN</span>
                 </h2>
                 <hr class="default_divider default_divider_blue default_divider_big">
                 <div class="row">
