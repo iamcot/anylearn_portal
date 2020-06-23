@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -39,6 +40,26 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function registerRefPage(Request $request, $code)
+    {
+        $this->validator($request->all())->validate();
+        event(new Registered($user = $this->create($request->all())));
+
+        $data = [];
+        if (empty($code)) {
+            return redirect('/');
+        }
+        $refUser = User::where('refcode', $code)->first();
+        if (!$refUser) {
+            return redirect('/');
+        }
+        $data['user'] = $refUser;
+        $data['newUser'] = $user;
+        $data['isReg'] = true;
+
+        return view('ref', $data);
     }
 
     /**

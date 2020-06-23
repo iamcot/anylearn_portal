@@ -38,5 +38,14 @@ $('#accept_toc').click(function(){
     $('#tocModal').modal('hide');
     $("#toc").prop("checked", true);
 });
+
+$('input[type=radio][name=role]').change(function() {
+    if (this.value == 'school') {
+        $("#label_name").text("Tên trung tâm *");
+    }
+    else {
+        $("#label_name").text("Họ và Tên *");
+    }
+});
 </script>
 @endsection

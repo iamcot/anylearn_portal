@@ -39,3 +39,99 @@
 .form-control, .card {
     /* border-radius: 0; */
 }
+
+.default_section_heading {
+    font-size: 40px;
+    font-family: 'Raleway',sans-serif;
+    /* font-weight: 300; */
+    margin: 0;
+    padding: 0;
+    color: #232323;
+    padding-top: 80px;
+}
+
+.green {
+    background: green;
+    color: white;
+}
+
+.tripi__wrapper {
+    margin: 30px auto;
+    font-family: "Roboto", "Arial";
+    font-size: 14px;
+    display: none;
+}
+
+.tripi__title {
+    font-size: 14px;
+    line-height: 16px;
+    /* text-align: center; */
+}
+
+.tripi__actions {
+    text-align: center;
+}
+
+.tripi__main-button {
+    background: #4E346F;
+    border-radius: 18px;
+    color: white;
+    padding: 12px 80px;
+    border: none;
+    margin: auto;
+    font-weight: 500;
+}
+
+.tripi__main-button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tripi__stepper {}
+
+.tripi__ele-stepper {
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.tripi__ele-stepper:after {
+    background-image: url("https://storage.googleapis.com/tripi-assets/images/referral/line.png");
+    background-position: 75% 0, 100%, 20px 20px, 50%, 0 90%;
+    width: 1px;
+    height: 30px;
+    content: '';
+    position: absolute;
+    top: 33px;
+    left: 16px;
+}
+
+.tripi__ele-stepper:last-child:after {
+    content: '';
+    background: transparent !important;
+}
+
+.tripi__ele {
+    float: left;
+}
+
+.tripi__ele-title {
+    text-align: left;
+    width: 80%;
+}
+
+.tripi__ele.tripi__ele-cirle {
+    width: 33px;
+    height: 34px;
+    border: 1px solid #D1D1D1;
+    box-sizing: border-box;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.tripi__header {
+    margin-bottom: 10px;
+}

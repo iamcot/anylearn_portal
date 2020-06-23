@@ -53,7 +53,8 @@ class LoginController extends Controller
             $request->session()->invalidate();
             return redirect()->intended('/inactive')->with('name', $name);
         }
-        $userM = new User();
-        return redirect($userM->redirectToUpdateDocs());
+        //$userM = new User();
+        //return redirect($userM->redirectToUpdateDocs());
+        return redirect($this->redirectTo);
     }
 }

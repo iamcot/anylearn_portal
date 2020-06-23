@@ -147,7 +147,7 @@ class User extends Authenticatable
         if ($this->needUpdateDocs()) {
             return route('user.update_doc');
         }
-        return '/';
+        return '/admin';
     }
 
     public function needUpdateDocs()
