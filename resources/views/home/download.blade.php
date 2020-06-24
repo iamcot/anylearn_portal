@@ -1,22 +1,15 @@
 <section class="pricing_section big_padding bg_grey" id="pricing_table">
     <div class="container">
         <div class="pricing_table_section">
-            <p class="default_text raleway text-center default_small_heading blue_color font_200">Tải Ứng dụng anyLEARN</p>
-            <h2 class="default_section_heading text-center">
-                <span class="font_200">
-                    Hãy
-                </span>
-                Tải ngay
-                <span class="font_200">
-                    ứng dụng anyLEARN để HỌC không giới hạn
-                </span>
+            <!-- <p class="default_text raleway text-center default_small_heading blue_color font_200">Tải Ứng dụng anyLEARN</p> -->
+            <h2 class="default_section_heading text-center text-orange">
+                Tải ngay ứng dụng <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> để HỌC không giới hạn
             </h2>
             <hr class="default_divider default_divider_blue default_divider_big">
             <div class="row">
                 <div class="col-sm-8">
                     <div class="row">
                         <div class="col-xs-12">
-                            <p>Giới thiệu về APP, các chỉ dẫn cơ bản download app và đăng ký </p>
                             <ul class="packages">
                                 <li><i class="fa fa-check" aria-hidden="true"></i>Giao diện thân thiện.</li>
                                 <li><i class="fa fa-check" aria-hidden="true"></i>Không quảng cáo, không thu thập dữ liệu người dùng.</li>
@@ -28,12 +21,12 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-6" style="padding: 30px;">
-                            <a href="">
+                            <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
                                 <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
                             </a>
                         </div>
                         <div class="col-sm-6" style="padding: 30px;">
-                            <a href="https://play.google.com/store/apps/details?id=vn.anylearn">
+                            <a href="market://details?id=vn.anylearn">
                                 <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
                             </a>
                         </div>

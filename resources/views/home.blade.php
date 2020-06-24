@@ -92,33 +92,7 @@
         <footer class="footer_section big_padding bg_navy">
             <div class="container">
                 <div class="footer_detail">
-                    <ul class="footer_links text-center">
-                        <li>
-                            <a class="anchor_style_default facebook wow zoomInDown" href="#.">
-                                <i class="text-center fa fa-facebook "></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="anchor_style_default twitter wow zoomInUp" href="#.">
-                                <i class="text-center fa fa-twitter "></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="anchor_style_default g_plus wow zoomInDown" href="#.">
-                                <i class="text-center fa fa-google-plus "></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="anchor_style_default linkedin wow zoomInUp" href="#.">
-                                <i class="text-center fa fa-linkedin "></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="anchor_style_default  pinterest wow zoomInDown" href="#.">
-                                <i class="text-center fa fa-pinterest"></i>
-                            </a>
-                        </li>
-                    </ul>
+                    
                     <p class="text-center default_text open_sans white_color">&copy; 2020 anyLEARN.vn, HỌC không giới hạn. </p>
                 </div>
             </div>

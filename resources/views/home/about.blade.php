@@ -7,9 +7,10 @@
                 <div class="side_section_text big_padding">
                     <!-- <p class="default_small_heading raleway blue_color font_200">Về chúng tôi</p> -->
                     <h3 class="default_section_heading raleway"><span class="text-green">any</span><span class="text-blue">LEARN</span><br>HỌC không giới hạn</h3>
-                    <hr class="default_divider default_divider_blue " style="margin-left: 0;">
+                    <!-- <hr class="default_divider default_divider_blue " style="margin-left: 0;"> -->
+                    <br>
                     <p class="default_text_light default_text open_sans">
-                        <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> là nền tảng cung cấp dịch vụ trong lĩnh vực Giáo dục - Đào tạo, đi đầu về chuyển đổi số trong ngành giáo dục tại Việt Nam. Với hệ sinh thái có sẵn cùng việc ứng dụng công nghệ thông qua các thiết bị di động thông minh.
+                        Là nền tảng cung cấp dịch vụ trong lĩnh vực Giáo dục - Đào tạo, đi đầu về chuyển đổi số trong ngành giáo dục tại Việt Nam. Với hệ sinh thái có sẵn cùng việc ứng dụng công nghệ thông qua các thiết bị di động thông minh.
                     </p>
                     <div class="row">
                         <div class="col-md-6">
@@ -61,7 +62,7 @@
                                 <div class="expertise_block text-center margin_after_tab wow slideInLeft">
                                     <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-yellow">Các trường học chất lượng và uy tín</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn có câu trả lời cho câu hỏi “học gì, học ở đâu” một cách nhanh chóng và chuẩn xác bằng việc cung cấp thông tin những trường học, trung tâm đào tạo, học viện uy tín hàng đầu trong các lĩnh vực - đã được chuyên gia, cố vấn chọn lựa và gợi ý, được chính những học viên thực thụ đánh giá và giới thiệu - mang đến giải pháp tối ưu cho việc tìm trường giúp bạn xóa tan tâm trạng lo lắng mệt mỏi.
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn có được thông tin những trường học, trung tâm đào tạo, học viện uy tín hàng đầu trong các lĩnh vực - đã được chuyên gia, cố vấn chọn lựa và gợi ý, được chính những học viên thực thụ đánh giá và giới thiệu - mang đến giải pháp tối ưu cho việc tìm trường giúp bạn xóa tan tâm trạng lo lắng mệt mỏi.
                                     </p>
                                 </div>
                             </div>
@@ -95,30 +96,30 @@
         <div class="row">
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-check white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll"> 500 </h3>
-                    <p class="small_heading_navy white_color open_sans font_200">Khóa học</p>
+                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
+                    <h3 class="default_section_heading white_color raleway number-scroll text-blue"> 100 </h3>
+                    <p class="small_heading_navy white_color open_sans font_200 text-blue">Học viện</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-flag white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll"> 200 </h3>
-                    <p class="small_heading_navy white_color open_sans font_200">Giảng viên</p>
+                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
+                    <h3 class="default_section_heading white_color raleway number-scroll text-yellow"> 200 </h3>
+                    <p class="small_heading_navy white_color open_sans font_200 text-yellow">Giảng viên</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-globe white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll"> 100</h3>
-                    <p class="small_heading_navy white_color open_sans font_200">Trường học, Học Viện</p>
+                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
+                    <h3 class="default_section_heading white_color raleway number-scroll text-green"> 500</h3>
+                    <p class="small_heading_navy white_color open_sans font_200 text-green">Khóa học</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-gift white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll"> 1000 </h3>
-                    <p class="small_heading_navy white_color open_sans font_200">Sản phẩm giáo dục</p>
+                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
+                    <h3 class="default_section_heading white_color raleway number-scroll text-orange"> 1000 </h3>
+                    <p class="small_heading_navy white_color open_sans font_200 text-orange">Học viên</p>
                 </div>
             </div>
         </div>

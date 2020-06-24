@@ -1,11 +1,8 @@
 <section class="customer_feedback_section big_padding text-center" id="customer_feedback">
     <div class="container">
         <div class="feedaback_inner">
-            <h2 class="default_section_heading text-center white_color">
-                <span class="font_200">
-                    Khách hàng
-                </span>
-                nói gì về chúng tôi
+            <h2 class="default_section_heading text-center white_color text-yellow">
+                Chúng tôi luôn lắng nghe để hoàn thiện mỗi ngày
             </h2>
             <hr class="default_divider default_divider_white default_divider_big">
             <div class="swiper-container customer_feedback_slider white_pagination">

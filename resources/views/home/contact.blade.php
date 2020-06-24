@@ -2,62 +2,68 @@
     <div class="container">
         <div class="row">
             <div class="contact_form_inner big_padding clearfix">
-                <div class="col-md-4 wow slideInLeft">
-                    <div class="contact_form_detail  center_on_mobile">
-                        <!-- <p class="default_small_heading raleway blue_color font_200">Liên hệ</p> -->
-                        <h3 class="default_section_heading raleway navy_blue"> <span class="font_200">Let's Get In</span> Touch</h3>
-                        <hr class="default_divider default_divider_blue " style="margin-left: 0;">
-                        <p class="default_text_light default_text open_sans">
-                            Hãy liên lạc với chúng tôi qua các kênh sau
-                        </p>
+                <div class="col-md-12 wow slideInLeft">
+                    <div class="contact_form_detail  text-center">
+                        <h2 class="default_section_heading text-center white_color text-green font_300">
+                            Chúng tôi luôn sẵn sàng đồng hành cùng bạn
+                        </h2>
+                        <hr class="default_divider default_divider_blue ">
+
                         <div class="row">
-                            <div class="contact_form_extra_inner clearfix center_on_mobile">
-                                <div class="col-md-1 col-sm-12 form_padding_left_0">
-                                    <i class="fa fa-map-marker blue_color text-center form_icon" aria-hidden="true"></i>
-                                </div>
-                                <div class="col-md-11 col-sm-12">
-                                    <p class="default_text form_text open_sans default_text_light">
-                                        Ho Chi Minh City
-                                    </p>
-                                    <p class="default_text form_text open_sans default_text_light">
-                                        Vietnam
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="contact_form_extra_inner clearfix center_on_mobile">
-                                <div class="col-md-1 col-sm-12 form_padding_left_0">
-                                    <i class="fa fa-phone blue_color text-center form_icon" aria-hidden="true"></i>
-                                </div>
-                                <div class="col-md-11 col-sm-12">
-                                    <p class="default_text form_text open_sans default_text_light">
-                                        +84 374900344
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="contact_form_extra_inner clearfix center_on_mobile">
-                                <div class="col-md-1 col-sm-12 form_padding_left_0">
-                                    <i class="fa fa-globe blue_color text-center form_icon" aria-hidden="true"></i>
-                                </div>
-                                <div class="col-md-11 col-sm-12">
-                                    <a href="#." class="anchor_style_default">
-                                        <p class="default_text form_text open_sans default_text_light">
-                                            info.anylearn@gmail.com
-                                        </p>
+                            <ul class="footer_links text-center">
+                                <li>
+                                    <a class="anchor_style_default facebook wow zoomInDown text-yellow" href="#." style="margin-right: 15px;">
+                                        <i class="text-center fa fa-facebook fa-2x"></i>
                                     </a>
-                                    <a href="#." class="anchor_style_default">
-                                        <p class="default_text form_text open_sans default_text_light">
-                                            www.anylearn.vn
-                                        </p>
+                                </li>
+                                <li>
+                                    <a class="anchor_style_default twitter wow zoomInUp text-yellow" href="#." style="margin-right: 15px; margin-left:15px">
+                                        <i class="text-center fa fa-comment fa-2x"></i>
                                     </a>
-                                </div>
+                                </li>
+                                <li>
+                                    <a class="anchor_style_default g_plus wow zoomInDown text-yellow" href="#." style="margin-left: 15px;">
+                                        <i class="text-center fa fa-youtube fa-2x"></i>
+                                    </a>
+                                </li>
+
+                            </ul>
+                            <div class="contact_form_extra_inner clearfix center_on_mobile">
+                                <p>
+                                <i class="fa fa-globe blue_color text-center form_icon" aria-hidden="true"></i>
+                                </p>
+                                <p class="default_text form_text open_sans default_text_light">
+                                    www.anylearn.vn
+                                </p>
+
                             </div>
+                        </div>
+                        <div class="contact_form_extra_inner clearfix center_on_mobile">
+                            <p>
+                                <i class="fa fa-phone blue_color text-center form_icon" aria-hidden="true"></i>
+
+                            </p>
+                            <p class="default_text form_text open_sans default_text_light">
+                                +84 374900344
+                            </p>
+                        </div>
+                        <div class="contact_form_extra_inner clearfix center_on_mobile">
+
+                            <a href="#." class="anchor_style_default">
+                                <p>
+                                    <i class="fa fa-envelope blue_color text-center form_icon" aria-hidden="true"></i>
+                                </p>
+                                <p class="default_text form_text open_sans default_text_light">
+
+                                    info.anylearn@gmail.com
+                                </p>
+                            </a>
+
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8 wow slideInRight">
-                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfPmk8hlUJ5DTu5a2gPUfCdAbrAWYK6GymJSkeMB5DrD0EmzA/viewform?embedded=true" width="100%" height="750" frameborder="0" marginheight="0" marginwidth="0">Đang tải…</iframe>
-                </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
