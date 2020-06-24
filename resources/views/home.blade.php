@@ -37,6 +37,7 @@
     <!-- Color StyleSheet CSS File -->
     <link href="/cdn/onepage/css/pink.css" rel="stylesheet" id="color" type="text/css">
 </head>
+
 <body data-spy="scroll" data-target=".navbar" data-offset="50" id="body" class="only_portfolio_variation">
     <!-- Loader -->
     <!-- Loader -->
@@ -60,46 +61,52 @@
             <!-- /Main Slider Section -->
         </header>
         <!-- /Header Section -->
+
         @include('home.about')
 
-        <!-- Portfolio Section -->
-        @include('home.vision')
-        <!-- /Portfolio Section -->
+        @include('home.school')
 
-       @include('home.teacher')
+        @include('home.teacher')
 
-        <!-- Blog Section -->
-       @include('home.school')
-        <!-- /Blog Section -->
+        @include('home.course')
 
-        <!-- Pricing Table -->
         @include('home.download')
-        <!-- /Pricing Table -->
 
-        <!-- Customer Review Slider -->
         @include('home.feedback')
-        <!-- /Customer Review Slider -->
 
-        <!-- Google Map Section -->
-        <!-- <section id="map"></section> -->
-        <!-- /Google Map Section -->
-
-        <!-- Contact Form Section -->
         @include('home.contact')
-        <!-- /Contact Form  Section -->
 
         <!-- Footer Section -->
         <footer class="footer_section big_padding bg_navy">
             <div class="container">
                 <div class="footer_detail">
-                    
+
                     <p class="text-center default_text open_sans white_color">&copy; 2020 anyLEARN.vn, HỌC không giới hạn. </p>
                 </div>
             </div>
         </footer>
         <!-- /Footer Section -->
     </section>
+    <div id="fixed_menu">
+        <ul class="">
+            <li>
+                <a class="" href="#." >
+                    <i class="text-center fa fa-facebook fa-2x"></i>
+                </a>
+            </li>
+            <li>
+                <a class="" href="#." >
+                    <i class="text-center fa fa-comment fa-2x"></i>
+                </a>
+            </li>
+            <li>
+                <a class="" href="#.">
+                    <i class="text-center fa fa-youtube fa-2x"></i>
+                </a>
+            </li>
 
+        </ul>
+    </div>
     <!-- /Parent Section Ended -->
 
     <!-- jQuery 2.2.0-->

@@ -2,117 +2,19 @@
     <div class="container">
         <div class="col-xs-12">
             <h2 class="default_section_heading text-center font-600 text-blue">
-            Ban cố vấn và đội ngũ chuyên gia
+                Ban cố vấn và đội ngũ chuyên gia
             </h2>
             <hr class="default_divider default_divider_blue default_divider_big">
-            <div class="swiper-container team_slider">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="team_detail wow slideInLeft">
-                            <div class="team_detail_inner">
-                                <img src="/cdn/onepage/images/team-1.jpg" alt="team_img">
-                            </div>
-                            <h3 class="small_heading_navy default_small_heading navy_blue text-center raleway font_400 open_sans">MC Hoài Trinh</h3>
-                            <p class="default_text text-center open_sans">Founder anyLEARN.vn</p>
-                            <ul class="team_members_list">
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style google_team">
-                                        <i class="fa fa-linkedin team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style facebook_team">
-                                        <i class="fa fa-facebook team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style twiiter_team">
-                                        <i class="fa fa-twitter team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+            <ul class="teacher_list">
+                @foreach(config('home_teachers', []) as $teacher)
+                <li class="team_detail col-xs-6 col-md-3">
+                    <div class="team_detail_inner">
+                        <img src="{{ $teacher['avatar'] }}" alt="team_img">
                     </div>
-                    <div class="swiper-slide">
-                        <div class="team_detail wow fadeInUpBig">
-                            <div class="team_detail_inner">
-                                <img src="/cdn/onepage/images/team-2.jpg" alt="team_img">
-                            </div>
-                            <h3 class="small_heading_navy default_small_heading navy_blue text-center raleway font_400 open_sans">Lê Thị Phương Nga</h3>
-                            <p class="default_text text-center open_sans">Chuyên gia tâm lý</p>
-                            <ul class="team_members_list">
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style google_team">
-                                        <i class="fa fa-linkedin team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style facebook_team">
-                                        <i class="fa fa-facebook team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style twiiter_team">
-                                        <i class="fa fa-twitter team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="team_detail wow fadeInDownBig">
-                            <div class="team_detail_inner">
-                                <img src="/cdn/onepage/images/team-3.jpg" alt="team_img">
-                            </div>
-                            <h3 class="small_heading_navy default_small_heading navy_blue text-center raleway font_400 open_sans">Huỳnh Hoàng Điệp</h3>
-                            <p class="default_text text-center open_sans">Chuyên gia tâm lý</p>
-                            <ul class="team_members_list">
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style google_team">
-                                        <i class="fa fa-linkedin team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style facebook_team">
-                                        <i class="fa fa-facebook team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style twiiter_team">
-                                        <i class="fa fa-twitter team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="team_detail wow slideInRight">
-                            <div class="team_detail_inner">
-                                <img src="/cdn/onepage/images/team-4.jpg" alt="team_img">
-                            </div>
-                            <h3 class="small_heading_navy default_small_heading navy_blue text-center raleway font_400 open_sans">Lý Thị Mai</h3>
-                            <p class="default_text text-center open_sans">Chuyên gia</p>
-                            <ul class="team_members_list">
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style google_team">
-                                        <i class="fa fa-linkedin team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style facebook_team">
-                                        <i class="fa fa-facebook team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#." class="team_members_icons anchor_none_style twiiter_team">
-                                        <i class="fa fa-twitter team_members_icon_inner" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </li>
+                @endforeach
+
+            </ul>
         </div>
     </div>
 </section>
@@ -124,7 +26,7 @@
             <div class="col-md-6">
                 <div class="side_section_text big_padding">
                     <!-- <p class="default_small_heading raleway blue_color font_200">Đội ngũ giảng dạy</p> -->
-                    <h3 class="default_section_heading raleway text-blue font_300">Chọn học cùng <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> luôn đảm bảo, vì:</h3>
+                    <h3 class="default_section_heading raleway text-blue font_300">Chọn học cùng <span class="text-green">any</span><span class="text-blue">LEARN</span> luôn đảm bảo, vì:</h3>
                     <hr class="default_divider default_divider_blue " style="margin-left: 0;">
                     <p class="default_text_light default_text open_sans">
                     </p>

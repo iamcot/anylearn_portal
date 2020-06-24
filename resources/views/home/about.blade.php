@@ -96,29 +96,26 @@
         <div class="row">
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll text-blue"> 100 </h3>
-                    <p class="small_heading_navy white_color open_sans font_200 text-blue">Học viện</p>
+                    
+                    <h3 class="default_section_heading  text-blue text-top"> <span class=" number-scroll">100</span> <sup>+</sup> </h3>
+                    <p class="small_heading_navy white_color open_sans font_200 text-blue">Trung tâm</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll text-yellow"> 200 </h3>
+                    <h3 class="default_section_heading text-yellow"><span class=" number-scroll"> 200</span>  <sup>+</sup> </h3>
                     <p class="small_heading_navy white_color open_sans font_200 text-yellow">Giảng viên</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll text-green"> 500</h3>
+                    <h3 class="default_section_heading text-green"> <span class=" number-scroll">500</span>  <sup>+</sup></h3>
                     <p class="small_heading_navy white_color open_sans font_200 text-green">Khóa học</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 margin_after_tab text-center">
                 <div class="stats_section_inner">
-                    <i class="fa fa-plus white_color stats_section_icon text-center" aria-hidden="true"></i>
-                    <h3 class="default_section_heading white_color raleway number-scroll text-orange"> 1000 </h3>
+                    <h3 class="default_section_heading text-orange"> <span class=" number-scroll">1000</span>  <sup>+</sup> </h3>
                     <p class="small_heading_navy white_color open_sans font_200 text-orange">Học viên</p>
                 </div>
             </div>
