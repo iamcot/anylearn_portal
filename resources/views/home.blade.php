@@ -33,7 +33,7 @@
     <!-- Swiper CSS File -->
     <link rel="stylesheet" href="/cdn/onepage/css/swiper.min.css">
     <!-- Custom Style CSS File -->
-    <link rel="stylesheet" href="/cdn/onepage/css/style.css">
+    <link rel="stylesheet" href="/cdn/onepage/css/style.css?v{{ env('CDN_VERSION', '1.0.0') }}">
     <!-- Color StyleSheet CSS File -->
     <link href="/cdn/onepage/css/pink.css" rel="stylesheet" id="color" type="text/css">
 </head>
