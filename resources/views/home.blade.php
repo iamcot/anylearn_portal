@@ -96,7 +96,7 @@
         @include('home.contact')
 
         <!-- Footer Section -->
-        <footer class="footer_section big_padding bg_navy">
+        <footer class="footer_section big_padding bg_footer">
             <div class="container">
                 <div class="footer_detail">
 
