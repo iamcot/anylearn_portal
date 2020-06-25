@@ -39,7 +39,26 @@
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50" id="body" class="only_portfolio_variation">
-    <!-- Loader -->
+<div id="fixed_menu">
+        <ul class="">
+            <li>
+                <a class="" target="_blank" href="https://www.facebook.com/anylearnhockhonggioihan" >
+                    <i class="text-center fa fa-facebook fa-2x"></i>
+                </a>
+            </li>
+            <li>
+                <a class="" target="_blank" href="https://www.facebook.com/messages/t/anylearnhockhonggioihan" >
+                    <i class="text-center fa fa-comment fa-2x"></i>
+                </a>
+            </li>
+            <li>
+                <a class="" target="_blank" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw/featured">
+                    <i class="text-center fa fa-youtube fa-2x"></i>
+                </a>
+            </li>
+
+        </ul>
+    </div>
     <!-- Loader -->
     <div class="loader">
         <div class="loader-inner">
@@ -87,26 +106,7 @@
         </footer>
         <!-- /Footer Section -->
     </section>
-    <div id="fixed_menu">
-        <ul class="">
-            <li>
-                <a class="" href="#." >
-                    <i class="text-center fa fa-facebook fa-2x"></i>
-                </a>
-            </li>
-            <li>
-                <a class="" href="#." >
-                    <i class="text-center fa fa-comment fa-2x"></i>
-                </a>
-            </li>
-            <li>
-                <a class="" href="#.">
-                    <i class="text-center fa fa-youtube fa-2x"></i>
-                </a>
-            </li>
-
-        </ul>
-    </div>
+    
     <!-- /Parent Section Ended -->
 
     <!-- jQuery 2.2.0-->
