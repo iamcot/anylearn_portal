@@ -38,13 +38,13 @@
                             <a href="#skill_section" class="scroll"> <span>02.</span>Giới thiệu</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#work" class="scroll"> <span>03.</span>Khóa học</a>
+                            <a href="#work" class="scroll"> <span>03.</span>Trung tâm</a>
                         </li>
                         <li class="clearfix">
                             <a href="#team" class="scroll"> <span>04.</span>Chuyên gia</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#blog" class="scroll"> <span>05.</span>Học viện</a>
+                            <a href="#blog" class="scroll"> <span>05.</span>Khóa học</a>
                         </li>
                         <li class="clearfix">
                             <a href="#pricing_table" class="scroll"> <span>06.</span>Tải APP</a>

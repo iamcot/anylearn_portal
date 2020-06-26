@@ -1,12 +1,13 @@
 <?php return [
-    [
-        'image' => '/cdn/onepage/images/school_1.png',
-    ],
+    
     [
         'image' => '/cdn/onepage/images/school_2.png',
     ],
     [
         'image' => '/cdn/onepage/images/school_3.png',
+    ],
+    [
+        'image' => '/cdn/onepage/images/school_1.png',
     ],
     [
         'image' => '/cdn/onepage/images/school_4.png',
