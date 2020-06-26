@@ -44,7 +44,7 @@
         <div class="container">
             <div class="skill_section_inner">
                 <!-- <p class="default_text raleway text-center default_small_heading blue_color font_200">Chúng tôi làm gì</p> -->
-                <h2 class="default_section_heading text-center text-blue font_600">
+                <h2 class="default_section_heading text-center text-green font_500">
                 Bạn đang phân vân chưa biết học gì, học ở đâu?
                 </h2>
                 <hr class="default_divider default_divider_blue default_divider_big">
@@ -60,15 +60,15 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="expertise_block text-center margin_after_tab wow slideInLeft">
-                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-yellow">Các trường học chất lượng và uy tín</h3>
+                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-yellow">Tìm trường xịn nhất ngay gần nhà</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn có được thông tin những trường học, trung tâm đào tạo, học viện uy tín hàng đầu trong các lĩnh vực - đã được chuyên gia, cố vấn chọn lựa và gợi ý, được chính những học viên thực thụ đánh giá và giới thiệu - mang đến giải pháp tối ưu cho việc tìm trường giúp bạn xóa tan tâm trạng lo lắng mệt mỏi.
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn tìm được những trường học, trung tâm đào tạo, học viện uy tín hàng đầu trong các lĩnh vực, gợi ý cho bạn địa điểm gần nhà để chẳng còn nỗi lo đi xa.
                                     </p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="expertise_block text-center margin_after_tab wow fadeInUp">
-                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-blue">Học trực tuyến cùng với giảng viên, chuyên gia hàng đầu</h3>
+                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-blue">Học trực tuyến mọi lúc mọi nơi</h3>
                                     <p class="default_text text-center open_sans default_text_light">
                                     <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn tìm hiểu và đăng ký được những khóa học online mọi lúc mọi nơi, học trực tiếp với những chuyên gia hàng đầu, đem lại hiệu quả cao và sự phát triển vượt bậc cho chính bạn.
                                     </p>
@@ -76,9 +76,10 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="expertise_block text-center wow slideInRight">
-                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-green">Khóa học đảm bảo kiến thức và chuyên môn</h3>
+                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-green">Có bạn bè cùng share học phí</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> Các lớp học tại anyLEARN mang tới chương trình giáo dục chất lượng cao được thiết kế riêng cho từng đối tượng học viên. Các chuyên gia hàng đầu sẽ trực tiếp giảng dạy, thiết kế giáo trình lớp học bài bản với các cấp độ khác nhau để bạn tiến bộ qua mỗi giai đoạn học tập. Đồng thời, anyLEARN đã tạo ra nguồn học liệu trực tuyến lớn, nơi bạn có thể tìm thấy và tải về các nguồn tài liệu miễn phí dành cho lớp học giúp bạn nắm vững kiến thức, học tập chuyên nghiệp.
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn thành công, chỉ cần đầu tư vào 2 việc quan trọng: học tập phát triển bản thân và kết nối với nhiều bạn bè. Học một mình sao vui bằng một nhóm?!
+Hãy mời bạn cùng học trên anyLEARN!
                                     </p>
                                 </div>
                             </div>
