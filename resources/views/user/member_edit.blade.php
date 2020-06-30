@@ -7,41 +7,41 @@
     <input type="hidden" name="id" value="{{ !empty($user) ? $user->id : null }}">
     <div class="card shadow">
         <div class="card-body">
-            <div class="col-lg-6">
+            <div class="">
                 <div class="form-group row">
-                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Họ và tên') }}</label>
+                    <label for="name" class="col-md-2 col-form-label text-md-right">{{ __('Họ và tên') }}</label>
                     <div class="col-md-8">
                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required >
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Số điện thoại') }}</label>
+                    <label for="phone" class="col-md-2 col-form-label text-md-right">{{ __('Số điện thoại') }}</label>
                     <div class="col-md-8">
                         <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', !empty($user) ? $user->phone : '') }}" required>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="user_id" class="col-md-4 col-form-label text-md-right">{{ __('ID người giới thiệu') }}</label>
+                    <label for="user_id" class="col-md-2 col-form-label text-md-right">{{ __('ID người giới thiệu') }}</label>
                     <div class="col-md-8">
                         <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', !empty($user) ? $user->user_id : '') }}">
                         <small>Có thể tham khảo ID ngoài danh sách thành viên.</small>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Email') }}</label>
+                    <label for="email" class="col-md-2 col-form-label text-md-right">{{ __('Email') }}</label>
                     <div class="col-md-8">
-                        <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}" required>
+                        <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="commission_rate" class="col-md-4 col-form-label text-md-right">{{ __('Tỉ lệ hoa hồng') }}</label>
+                    <label for="commission_rate" class="col-md-2 col-form-label text-md-right">{{ __('Tỉ lệ hoa hồng') }}</label>
                     <div class="col-md-8">
                         <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($user) ? $user->commission_rate : '') }}" required>
                         <small>Tỉ lệ thành viên sẽ được nhận về từ doanh thu. Dạng thập phân</small>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Vai trò') }}</label>
+                    <label for="role" class="col-md-2 col-form-label text-md-right">{{ __('Vai trò') }}</label>
                     <div class="col-md-8">
                         <select class="form-control" name="role" id="role">
                             @foreach($type == 'mod' ? \App\Constants\UserConstants::$modRoles : \App\Constants\UserConstants::$memberRoles  as $role)
@@ -51,12 +51,18 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
+                    <label for="password" class="col-md-2 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
                     <div class="col-md-8">
                         <input id="password" type="password" class="form-control" name="password" value="" {{ empty($user) ? 'required' : '' }}>
                         @if(!empty($user))
                             <span class="small">*Để trống nếu không thay đổi</span>
                         @endif
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="editor" class="col-md-2 col-form-label text-md-right font-weight-bold @error('content') is-invalid @enderror">{{ __('Thông tin giới thiệu') }}</label>
+                    <div class="col-md-8">
+                        <textarea id="editor" name="full_content">{!! old('content', !empty($user) ? $user->full_content : '') !!}</textarea>
                     </div>
                 </div>
             </div>
@@ -66,4 +72,10 @@
         </div>
     </div>
 </form>
+@endsection
+@section('jscript')
+<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+</script>
 @endsection
