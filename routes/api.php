@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +14,10 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/user', 'Apis\UserApi@userInfo');
+Route::get('/user-less', 'Apis\UserApi@userInfoLess');
 
 Route::get('/login', 'Apis\UserApi@login');
+Route::get('/logout', 'Apis\UserApi@logout');
 Route::get('/users/{role}', 'Apis\UserApi@usersList');
 
 Route::get('/friends/{userId}', 'Apis\UserApi@friends');
@@ -30,6 +32,8 @@ Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
 Route::get('/user/get-docs', 'Apis\UserApi@getDocs');
 Route::post('/user/add-doc', 'Apis\UserApi@addDoc');
 Route::get('/user/remove-doc/{fileId}', 'Apis\UserApi@removeDoc');
+Route::get('/user/notification', 'Apis\UserApi@notification');
+Route::get('/user/notification/{id}', 'Apis\UserApi@notifRead');
 
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/transaction/{type}', 'Apis\ConfigApi@transaction');

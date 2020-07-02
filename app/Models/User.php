@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'api_token', 'phone', 'role', 'status', 'user_id',
+        'name', 'email', 'password', 'api_token', 'notif_token', 'phone', 'role', 'status', 'user_id',
         'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
         'address', 'country', 'dob', 'update_doc', 'user_category_id',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content'
@@ -33,7 +33,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'api_token',
+        'password', 'remember_token', 'api_token', 'full_content'
     ];
 
     /**
@@ -86,7 +86,15 @@ class User extends Authenticatable
             $obj['update_doc'] = UserConstants::STATUS_INACTIVE;
         }
 
-        return $this->create($obj);
+        $newMember = $this->create($obj);
+        if ($newMember) {
+            $notifM = new Notification();
+            $notifM->notifNewUser($newMember->id, $newMember->name);
+            if ($newMember->user_id > 0) {
+                $notifM->notifNewFriend($newMember->user_id, $newMember->name);
+            }
+        }
+        return $newMember;
     }
 
     public function createNewMod($input)

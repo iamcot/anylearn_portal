@@ -9,6 +9,7 @@ use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Schedule;
@@ -40,10 +41,27 @@ class UserApi extends Controller
                     return response('Không thể hoàn tất xác thực', 500);
                 }
             }
+            if ($request->get('notif_token')) {
+                User::find($user->id)->update([
+                    'notif_token' => $request->get('notif_token')
+                ]);
+            }
             $userDB = User::find($user->id)->makeVisible(['api_token']);
             return response()->json($userDB, 200);
         }
         return response('Thông tin xác thực không hợp lệ', 401);
+    }
+
+    public function logout(Request $request)
+    {
+        $user  = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        User::find($user->id)->update([
+            'notif_token' => '',
+        ]);
+        return response('OK', 200);
     }
 
     public function edit(Request $request)
@@ -66,13 +84,24 @@ class UserApi extends Controller
         return response("Cập nhật thông tin thất bại, vui lòng thử lại", 500);
     }
 
-    public function userInfo(Request $request)
+    public function userInfoLess(Request $request)
     {
         $user  = $this->isAuthedApi($request);
         if (!($user instanceof User)) {
             return $user;
         }
         $user->makeVisible(['api_token']);
+        $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
+        return response()->json($user, 200);
+    }
+
+    public function userInfo(Request $request)
+    {
+        $user  = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $user->makeVisible(['api_token', 'full_content']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
         return response()->json($user, 200);
     }
@@ -229,7 +258,7 @@ class UserApi extends Controller
 
     public function profile($userId)
     {
-        $user = User::find($userId);
+        $user = User::find($userId)->makeVisible(['full_content']);
         if (!$user) {
             return response("User không tồn tại", 404);
         }
@@ -288,5 +317,30 @@ class UserApi extends Controller
             User::find($user->id)->update(['update_doc' => 0]);
         }
         return response()->json($docs);
+    }
+
+    public function notification(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $notif = Notification::where('user_id', $user->id)
+            ->orderby('id', 'desc')
+            ->paginate(Notification::PAGESIZE);
+        return response()->json($notif);
+    }
+
+    public function notifRead(Request $request, $id)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $notif = Notification::find($id)->update([
+            'read' => DB::raw('now()')
+        ]);
+        return response('OK', 200);
+        
     }
 }
