@@ -36,7 +36,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.removeDialogTabs = 'image:advanced;link:advanced';
     config.height = "500px";
     config.extraPlugins = 'simage';
-    config.imageUploadURL = "/upload/ckimage";
+    config.imageUploadURL = "/admin/upload/ckimage";
     config.extraAllowedContent = '*(*)';
     config.allowedContent = true;
 };
