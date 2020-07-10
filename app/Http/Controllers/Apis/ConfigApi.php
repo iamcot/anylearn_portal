@@ -80,7 +80,7 @@ class ConfigApi extends Controller
                 'content' => 'Nạp ví anyLEARN',
             ],
             'suggest_columns' => 3,
-            'rate' => $rate,
+            'rate' => (int)$rate,
             'transactions' => $trans,
         ];
         return response()->json($config);
