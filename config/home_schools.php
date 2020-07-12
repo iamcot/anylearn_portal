@@ -3,9 +3,9 @@
     [
         'image' => '/cdn/onepage/images/school_2.png',
     ],
-    [
-        'image' => '/cdn/onepage/images/school_3.png',
-    ],
+    // [
+    //     'image' => '/cdn/onepage/images/school_3.png',
+    // ],
     [
         'image' => '/cdn/onepage/images/school_1.png',
     ],
@@ -44,6 +44,9 @@
     ],
     [
         'image' => '/cdn/onepage/images/school_15.png',
+    ],
+    [
+        'image' => '/cdn/onepage/images/school_16.png',
     ],
 ];
 

@@ -104,7 +104,8 @@
             <div class="container">
                 <div class="footer_detail">
 
-                    <p class="text-center default_text open_sans white_color">&copy; 2020 anyLEARN.vn, HỌC không giới hạn. </p>
+                    <p class="text-center default_text open_sans white_color">&copy; 02/07/2020 anyLEARN.vn</p>
+                    <p class="text-center default_text open_sans white_color">MSKD: 0316363793</p>
                 </div>
             </div>
         </footer>
