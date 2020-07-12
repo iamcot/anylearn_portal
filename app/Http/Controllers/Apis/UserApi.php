@@ -177,7 +177,8 @@ class UserApi extends Controller
             ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->orderby('is_hot', 'desc')
-            ->orderby('id', 'desc')
+            ->orderby('boost_score', 'desc')
+            ->orderby('first_name')
             ->paginate($pageSize);
         $configM = new Configuration();
         $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);

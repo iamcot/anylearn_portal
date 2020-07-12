@@ -23,7 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'api_token', 'notif_token', 'phone', 'role', 'status', 'user_id',
         'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
-        'address', 'country', 'dob', 'update_doc', 'user_category_id',
+        'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content'
     ];
 
@@ -140,6 +140,7 @@ class User extends Authenticatable
             'phone' => $input['phone'],
             'role' => $input['role'],
             'user_id' => $input['user_id'],
+            'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
 
         ];
@@ -185,7 +186,10 @@ class User extends Authenticatable
                     break;
             }
         }
-        $members = $members->orderby('updated_at', 'desc')
+        $members = $members
+            ->orderby('is_hot', 'desc')
+            ->orderby('boost_score', 'desc')
+            ->orderby('id', 'desc')
             ->with('refuser')
             ->paginate(UserConstants::PP);
 

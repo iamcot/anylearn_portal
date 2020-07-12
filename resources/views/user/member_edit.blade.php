@@ -21,6 +21,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="boost_score" class="col-md-2 col-form-label text-md-right">{{ __('Boost Score') }}</label>
+                    <div class="col-md-8">
+                        <input id="boost_score" type="text" class="form-control @error('boost_score') is-invalid @enderror" name="boost_score" value="{{ old('boost_score', !empty($user) ? $user->boost_score : '') }}">
+                        <small>Số càng lớn càng được ưu tiên</small>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="user_id" class="col-md-2 col-form-label text-md-right">{{ __('ID người giới thiệu') }}</label>
                     <div class="col-md-8">
                         <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', !empty($user) ? $user->user_id : '') }}">

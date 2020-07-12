@@ -27,6 +27,7 @@
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th class="text-center">Hot</th>
+                    <th class="text-center">Boost</th>
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="10%" scope="col">SDT</th>
@@ -45,6 +46,7 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $user->id }}</th>
                     <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'users', 'id' =>  $user->id ]) }}">{!! $userServ->hotIcon($user->is_hot) !!}</a></td>
+                    <td>{{ $user->boost_score }}</td>
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
