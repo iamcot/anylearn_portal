@@ -167,6 +167,7 @@ class ItemApi extends Controller
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }
+        $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
         $author = User::find($item->user_id);
