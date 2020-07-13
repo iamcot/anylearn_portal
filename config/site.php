@@ -69,6 +69,12 @@ return [
         'type' => 'number',
         'value' => 1000
     ],
+    ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS => [
+        'title' => '% học viên xác nhận để chia bonus cho giảng viên/trung tâm',
+        'hint' => 'vd: 0.2 ~ 20%',
+        'type' => 'text',
+        'value' => 0.2
+    ],
     ConfigConstants::CONFIG_TEACHER_BANNER => [
         'title' => 'Đường dẫn banner trang giảng viên',
         'hint' => 'Upload lên S3 và dán link vào',

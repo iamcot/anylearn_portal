@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     protected $fillable = [
-        'title', 'type', 'user_id', 'short_content', 'content', 'price', 'org_price',
+        'title', 'type', 'user_id', 'short_content', 'content', 'price', 'org_price', 'commission_rate', 'got_bonus',
         'date_start', 'time_start', 'date_end', 'time_end', 'is_hot', 'status', 'seo_title', 'seo_url',
         'seo_desc', 'image', 'location_type', 'location', 'series_id', 'user_status', 'boost_score', 'item_category_id',
     ];

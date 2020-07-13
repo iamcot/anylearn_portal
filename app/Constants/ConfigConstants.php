@@ -23,6 +23,7 @@ class ConfigConstants
     const CONFIG_COMMISSION = 'commission';
     const CONFIG_DISCOUNT = 'discount';
     const CONFIG_BONUS_RATE = 'bonus_rate';
+    const CONFIG_NUM_CONFIRM_GOT_BONUS = 'num_confirm';
     const CONFIG_COMMISSION_FOUNDATION = 'bonus_foundation';
     const CONFIG_COMMISSION_COMPANY = 'bonus_company';
     const CONFIG_COMMISSION_AUTHOR = 'bonus_author';

@@ -108,7 +108,9 @@ class TransactionApi extends Controller
                 $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_COMMISSION, ConfigConstants::CONFIG_FRIEND_TREE, ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
                 $userService = new UserServices();
 
-                $directCommission = $userService->calcCommission($amount, $author->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                $commissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+
+                $directCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
@@ -151,7 +153,7 @@ class TransactionApi extends Controller
 
                 //save commission indirect + transaction log + update wallet C indrect user
 
-                $indirectCommission = $userService->calcCommission($amount, $author->commission_rate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                $indirectCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
                 $currentUserId = $user->user_id;
                 for ($i = 1; $i < $configs[ConfigConstants::CONFIG_FRIEND_TREE]; $i++) {
@@ -177,7 +179,7 @@ class TransactionApi extends Controller
                     }
                 }
                 //foundation 
-                $foundation = $userService->calcCommission($amount, $author->commission_rate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+                $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
                 Transaction::create([
                     'user_id' => 0,
                     'type' => ConfigConstants::TRANSACTION_FOUNDATION,

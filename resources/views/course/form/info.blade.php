@@ -38,6 +38,18 @@
                 <input id="price" type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price', !empty($course) ? $course['info']->price : '') }}">
             </div>
         </div>
+        <div class="form-group row">
+            <label for="org_price" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Học phí gốc') }}</label>
+            <div class="col-md-8">
+                <input id="org_price" type="number" class="form-control @error('org_price') is-invalid @enderror" name="org_price" value="{{ old('org_price', !empty($course) ? $course['info']->org_price : '') }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="commission_rate" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Tỉ lệ hoa hồng') }}</label>
+            <div class="col-md-8">
+                <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($course) ? $course['info']->commission_rate : '') }}">
+            </div>
+        </div>
 
         <div class="form-group row">
             <label for="date_start" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Ngày diễn ra') }}</label>

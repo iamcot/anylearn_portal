@@ -13,6 +13,7 @@ use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Schedule;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
@@ -232,6 +233,37 @@ class UserApi extends Controller
             'organizer_confirm' => 1,
             'participant_confirm' => 1,
         ]);
+
+        if ($item->got_bonus == 0) {
+            $configM = new Configuration();
+            $configs = $configM->gets([ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS, ConfigConstants::CONFIG_BONUS_RATE]);
+            $needNumConfirm = $configs[ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS];
+            $totalReg = OrderDetail::where('item_id', $itemId)->count();
+            $totalConfirm = Participation::where('item_id', $itemId)->count();
+            if ($totalConfirm / $totalReg >= $needNumConfirm) {
+                $author = User::find($item->user_id);
+                $bonusRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+                $commission = floor($item->price * $bonusRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                User::find($author->id)->update([
+                    'wallet_c' => DB::raw('wallet_c + ' . $commission),
+                ]);
+             
+                Transaction::create([
+                    'user_id' => $author->id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $commission,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'pay_info' => '',
+                    'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                ]);
+
+                Item::find($itemId)->update([
+                    'got_bonus' => 1
+                ]);
+            }
+           
+        }
 
         return response()->json(['result' => $rs ? (int) $itemId : 0]);
     }

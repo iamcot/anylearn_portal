@@ -174,7 +174,8 @@ class ItemApi extends Controller
         $author = User::find($item->user_id);
 
         $userService = new UserServices();
-        $commission = $userService->calcCommission($item->price, $author->commission_rate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+        $authorCommissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+        $commission = $userService->calcCommission($item->price, $authorCommissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
         $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)
             ->where('id', '!=', $itemId)
