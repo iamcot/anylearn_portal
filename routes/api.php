@@ -55,3 +55,5 @@ Route::get('/transaction/history', 'Apis\TransactionApi@history');
 Route::get('/transaction/register/{itemId}', 'Apis\TransactionApi@placeOrderOneItem');
 
 Route::get('/event/{month}', 'Apis\ConfigApi@event');
+
+Route::get('/search', 'Apis\ConfigApi@search');

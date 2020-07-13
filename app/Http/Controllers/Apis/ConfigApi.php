@@ -17,6 +17,7 @@ use App\Services\ItemServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -150,5 +151,39 @@ class ConfigApi extends Controller
         return response()->json([
             'result' => true
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $type = $request->get('t', 'item');
+        $screen = $request->get('s', '');
+        $query = $request->get('q', '');
+        if (empty($query)) {
+            return response()->json(null);
+        }
+        $result = null;
+        if ($type == 'user') {
+            $result = User::where('status', 1);
+            if ($screen == UserConstants::ROLE_SCHOOL || $screen == UserConstants::ROLE_TEACHER) {
+                $result = $result->where('role', $screen);
+            }
+            $result = $result->where('name', 'like', "%$query%")
+            ->orderby('boost_score', 'desc')
+            ->orderby('is_hot', 'desc')
+            ->orderby('first_name')
+            ->get();
+        } else {
+            $result = DB::table('items')
+            ->where('items.status', 1)
+            ->where('items.user_status', '>', 0)
+            ->join('users', 'users.id', '=', 'items.user_id')
+            ->where('items.title', 'like', "%$query%")
+            ->select('items.*', 'users.name AS author', 'users.role AS author_type')
+            ->orderby('items.is_hot', 'desc')
+            ->orderby('users.is_hot', 'desc')
+            ->orderby('users.boost_score', 'desc')
+            ->get();
+        }
+        return response()->json($result);
     }
 }
