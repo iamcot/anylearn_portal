@@ -9,6 +9,7 @@ use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\Schedule;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
@@ -180,11 +181,15 @@ class ItemApi extends Controller
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
+
+        $numSchedule = Schedule::where('item_id', $itemId)->count();
+
         return response()->json([
             'commission' => $commission,
             'author' => $author,
             'item' => $item,
-            'hotItems' => [
+            'num_schedule' => $numSchedule,
+            'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
                 'list' => $hotItems

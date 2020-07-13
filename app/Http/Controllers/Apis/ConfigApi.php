@@ -108,25 +108,47 @@ class ConfigApi extends Controller
         ]);
     }
 
-    public function event($month)
+    public function event(Request $request, $month)
     {
+
         $startDay = $month . "-01";
         $endDay = $month . "-31";
-        $db = Item::where('date_start', '>=', $startDay)
-            ->where('date_start', '<=', $endDay)
-            ->where('status', 1)
-            ->where('user_status', 1)
-            ->with('user')
+        // $db = Item::where('date_start', '>=', $startDay)
+        //     ->where('date_start', '<=', $endDay)
+        //     ->where('status', 1)
+        //     ->where('user_status', 1)
+        //     ->with('user')
+        //     ->get();
+        $db = DB::table('schedules')
+            ->join('items', 'items.id', '=' , 'schedules.item_id')
+            ->join('users', 'users.id', '=', 'items.user_id')
+            ->where('schedules.date', '>=', $startDay)
+            ->where('schedules.date', '<=', $endDay)
+            ->where('items.status', 1)
+            ->where('items.user_status', 1)
+            ->where('users.status', 1)
+            ->select(
+                'items.id',
+                'items.title',
+                'schedules.date',
+                'schedules.time_start',
+                'users.name as author',
+                'items.image',
+                'items.short_content'
+            )
             ->get();
+        // $user = $this->isAuthedApi($request);
+        // if ($user instanceof User) {
+        // }
         $data = [];
         if ($db) {
             foreach ($db as $event) {
-                $data[$event->date_start][] = [
+                $data[$event->date][] = [
                     'id' => $event->id,
                     'title' => $event->title,
-                    'date' => $event->date_start,
+                    'date' => $event->date,
                     'time' => $event->time_start,
-                    'author' => $event->user->name,
+                    'author' => $event->author,
                     'image' => $event->image,
                     'content' => $event->short_content,
                 ];
@@ -168,21 +190,21 @@ class ConfigApi extends Controller
                 $result = $result->where('role', $screen);
             }
             $result = $result->where('name', 'like', "%$query%")
-            ->orderby('boost_score', 'desc')
-            ->orderby('is_hot', 'desc')
-            ->orderby('first_name')
-            ->get();
+                ->orderby('boost_score', 'desc')
+                ->orderby('is_hot', 'desc')
+                ->orderby('first_name')
+                ->get();
         } else {
             $result = DB::table('items')
-            ->where('items.status', 1)
-            ->where('items.user_status', '>', 0)
-            ->join('users', 'users.id', '=', 'items.user_id')
-            ->where('items.title', 'like', "%$query%")
-            ->select('items.*', 'users.name AS author', 'users.role AS author_type')
-            ->orderby('items.is_hot', 'desc')
-            ->orderby('users.is_hot', 'desc')
-            ->orderby('users.boost_score', 'desc')
-            ->get();
+                ->where('items.status', 1)
+                ->where('items.user_status', '>', 0)
+                ->join('users', 'users.id', '=', 'items.user_id')
+                ->where('items.title', 'like', "%$query%")
+                ->select('items.*', 'users.name AS author', 'users.role AS author_type')
+                ->orderby('items.is_hot', 'desc')
+                ->orderby('users.is_hot', 'desc')
+                ->orderby('users.boost_score', 'desc')
+                ->get();
         }
         return response()->json($result);
     }

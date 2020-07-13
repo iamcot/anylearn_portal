@@ -64,19 +64,21 @@
         var configStartTime = $("#time_start").val();
         var configEndTime = $("#time_end").val();
         var dt = new Date(startDate);
+
         var html = "";
         if (configDays.length > 0) {
             for (i = 0; i < num;) {
                 var weekdayStr = "d" + dt.getDay();
                 if (configDays.includes(weekdayStr)) {
+                    var month = dt.getMonth() + 1;
                     if (type == "create") {
                         html += "<tr>" +
-                            "<td><input type=\"date\" name=\"schedule[" + i + "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (dt.getMonth() < 10 ? "0" : "") + dt.getMonth() + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() + "\"/></td>" +
+                            "<td><input type=\"date\" name=\"schedule[" + i + "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() + "\"/></td>" +
                             "<td><input name=\"schedule[" + i + "][time_start]\" class=\"time form-control\" value=\"" + configStartTime + "\"/></td>" +
                             "<td><input name=\"schedule[" + i + "][time_end]\" class=\"time form-control\" value=\"" + configEndTime + "\"/></td>" +
                             "<td></td></tr>";
                     } else {
-                        $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (dt.getMonth() < 10 ? "0" : "") + dt.getMonth() + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
+                        $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
                         if (configStartTime) {
                             $("#schedule_" + i + "_time_start").val(configStartTime);
                         }

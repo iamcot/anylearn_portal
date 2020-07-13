@@ -45,7 +45,7 @@ class ItemServices
             }
         }
         $courses = $courses->orderby('id', 'desc')
-            ->with('series')
+            ->with('series', 'user')
             ->paginate(self::PP);
         return $courses;
     }

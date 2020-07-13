@@ -32,16 +32,17 @@ class OrderDetail extends Model
         $query = DB::table('order_details AS od')
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('users', 'users.id', '=', 'od.user_id')
-            ->leftJoin('participations AS pa', 'pa.item_id', '=', 'od.item_id')
+            ->join('schedules', 'schedules.item_id', '=', 'od.item_id')
+            ->leftJoin('participations AS pa', 'pa.schedule_id', '=', 'schedules.id')
             ->where('od.user_id', $userId)
             ->where('items.status', '>', 0)
             ->where('users.status', '>', 0)
             ->where('items.user_status', '>', 0)
-            ->select('items.id', 'items.title', 'items.date_start as date', 'items.time_start as time', 
-            'items.time_end', 'items.short_content as content', 'pa.id AS user_joined', 'items.user_status as author_status',
+            ->select('schedules.id', 'items.title', 'schedules.date as date', 'schedules.time_start as time', 
+            'schedules.time_end', 'items.short_content as content', 'pa.id AS user_joined', 'items.user_status as author_status',
             'items.location')
-            ->orderBy('items.date_start')
-            ->orderBy('items.time_start');
+            ->orderBy('schedules.date')
+            ->orderBy('schedules.time_start');
         $query2 = clone $query;
         $done = $query->where('items.date_start', '<', $today)->get();
         $open = $query2->where('items.date_start', '>=', $today)->get();

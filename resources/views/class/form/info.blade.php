@@ -25,6 +25,12 @@
             </div>
         </div>
         <div class="form-group row">
+            <label for="time_start" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Thời gian bắt đầu') }}</label>
+            <div class="col-md-8">
+                <input id="time_start" type="text" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm" required>
+            </div>
+        </div>
+        <div class="form-group row">
             <label for="date_end" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Ngày kết thúc') }}</label>
             <div class="col-md-8">
                 <input id="date_end" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ old('date_end', !empty($course) ? $course['info']->date_end : '') }}">

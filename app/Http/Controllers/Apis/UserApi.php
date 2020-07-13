@@ -199,22 +199,23 @@ class UserApi extends Controller
         return response()->json($orderDetailM->userRegistered($user->id));
     }
 
-    public function confirmJoinCourse(Request $request, $itemId)
+    public function confirmJoinCourse(Request $request, $scheduleId)
     {
         $user = $this->isAuthedApi($request);
         if (!($user instanceof User)) {
             return $user;
         }
 
-        $schedule = Schedule::where('item_id', $itemId)->first();
+        $schedule = Schedule::find($scheduleId);
         if (!$schedule) {
             return response("Không có lịch cho buổi học này", 404);
         }
 
-        $item = Item::find($itemId);
+        $item = Item::find($schedule->item_id);
         if (!$item) {
             return response("Khóa  học không tồn tại", 404);
         }
+        $itemId = $item->id;
 
         $isConfirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $schedule->id)
@@ -225,7 +226,7 @@ class UserApi extends Controller
         }
         $rs = Participation::create([
             'item_id' => $itemId,
-            'schedule_id' =>  $schedule->id,
+            'schedule_id' =>  $scheduleId,
             'organizer_user_id' => $item->user_id,
             'participant_user_id' => $user->id,
             'organizer_confirm' => 1,
