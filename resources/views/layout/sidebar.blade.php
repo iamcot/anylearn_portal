@@ -52,12 +52,12 @@
     <div class="sidebar-heading">
         @lang('Quản lý người dùng') 
     </div>
-    <li class="nav-item {{ strpos($route, 'transaction') !== false ? 'active' : '' }}">
+    <li class="nav-item {{ $route == 'transaction' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Duyệt giao dịch')</span></a>
     </li> 
-    <li class="nav-item {{ strpos($route, 'transaction.commission') !== false ? 'active' : '' }}">
+    <li class="nav-item {{ $route == 'transaction.commission' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction.commission') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Lịch sử nhận hoa hồng')</span></a>
