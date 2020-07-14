@@ -47,8 +47,7 @@ class ItemApi extends Controller
 
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
-            ->makeVisible(['content'])
-            ->first();
+            ->first()->makeVisible(['content']);
         if (!$item) {
             return response("Không có dữ liệu", 404);
         }
