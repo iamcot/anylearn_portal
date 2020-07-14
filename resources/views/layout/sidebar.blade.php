@@ -25,13 +25,13 @@
             <i class="fas fa-fw fa-university"></i>
             <span>@lang('Chỉnh sửa Lớp học')</span></a>
     </li>
-    <li class="nav-item {{ $route == 'confirm' ? 'active' : '' }}">
+    <!-- <li class="nav-item {{ $route == 'confirm' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('confirm') }}">
             <i class="fas fa-fw fa-check-double"></i>
             <span>@lang('Xác nhận tham gia')</span></a>
-    </li>
+    </li> -->
     @endif
-    @if($userService->haveAccess(Auth::user()->role, 'school'))
+    <!-- @if($userService->haveAccess(Auth::user()->role, 'school'))
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
         @lang('Quản lý sản phẩm')
@@ -46,7 +46,7 @@
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>@lang('Quản lý đơn hàng')</span></a>
     </li>
-    @endif
+    @endif -->
     @if($userService->haveAccess(Auth::user()->role, 'admin'))
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
@@ -74,6 +74,11 @@
             <span>@lang('Quản lý Mods')</span></a>
     </li>
     @endif
+    <li class="nav-item {{ $route == 'feedback' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('feedback') }}">
+            <i class="fas fa-fw fa-comments"></i>
+            <span>@lang('Xem feedback')</span></a>
+    </li> 
 
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">

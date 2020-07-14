@@ -62,6 +62,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/product', 'Controller@developing')->name('product');
     Route::get('/order', 'Controller@developing')->name('order');
 
+    Route::get('/feedback', 'DashboardController@feedback')->name('feedback');
+
     Route::get('/transaction', 'TransactionController@transaction')->name('transaction');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');

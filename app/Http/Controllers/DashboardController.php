@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feedback;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -20,5 +21,11 @@ class DashboardController extends Controller
         }
         $this->data['navText'] = __('Bảng thông tin');
         return view('dashboard.index', $this->data);
+    }
+
+    public function feedback(Request $request) {
+        $this->data['feedbacks'] = Feedback::with('user')->orderby('id', 'desc')->paginate(20);
+        // dd($this->data['feedbacks']);
+        return view('dashboard.feedback', $this->data);
     }
 }
