@@ -122,6 +122,7 @@ class UserServices
             ->where('is_hot', 1)
             ->orderby('boost_score', 'desc')
             ->orderby('first_name')
+            ->select('id', 'name', 'role', 'image', 'banner', 'introduce', 'title')
             ->take($pageSize)->get();
         return [
             'title' => $title,
