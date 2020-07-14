@@ -161,7 +161,9 @@ class UserApi extends Controller
         if (!$friendsOfUser) {
             return response('Yêu cầu không đúng', 400);
         }
-        $friends = User::where('user_id', $userId)->get();
+        $friends = User::where('user_id', $userId)
+        ->orderby('first_name')
+        ->get();
         return response()->json([
             'user' => $friendsOfUser,
             'friends' => $friends,
