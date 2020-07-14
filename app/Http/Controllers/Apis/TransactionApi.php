@@ -33,7 +33,7 @@ class TransactionApi extends Controller
             'amount' => $request->get('amount'),
             'pay_method' => $request->get('pay_method'),
             'pay_info' => '',
-            'content' => 'Nạp tiền vào ví'
+            'content' => 'Nạp tiền vào tài khoản'
         ]);
 
         return response()->json(['result' => $rs != null ? true : false]);

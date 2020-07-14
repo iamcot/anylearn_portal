@@ -78,7 +78,7 @@ class ConfigApi extends Controller
                 'bank_no' => '618704060057326',
                 'bank_branch' => 'CN Tân Định',
                 'account_name' => 'ĐẶNG THỊ HOÀI TRINH',
-                'content' => 'Nạp ví anyLEARN',
+                'content' => 'Nap tien anyLEARN',
             ],
             'suggest_columns' => 3,
             'rate' => (int)$rate,
