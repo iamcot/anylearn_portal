@@ -46,11 +46,14 @@ class SendNotif extends Command
         $notifM = new Notification();
         foreach ($notSendNotifs as $notif) {
             $user = User::find($notif->user_id);
-            print($user->notif_token);
             if (!$user->notif_token) {
                 continue;
             }
             $notifM->firebaseMessage($notif, $user->notif_token);
+            Notification::find($notif->id)->update([
+                'is_send' => 1,
+                'send' => DB::raw("now()")
+            ]);
             print("Send notif to $user->id , token $user->notif_token \n");
         }
     }

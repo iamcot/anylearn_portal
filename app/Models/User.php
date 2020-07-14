@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -94,6 +95,7 @@ class User extends Authenticatable
                 $notifM->notifNewFriend($newMember->user_id, $newMember->name);
             }
         }
+        $this->updateUpTree($newMember->user_id);
         return $newMember;
     }
 
@@ -215,9 +217,57 @@ class User extends Authenticatable
         return "";
     }
 
+    public function correctTreeNum()
+    {
+        $usersNoUpTree = DB::table('users')->whereNull('user_id')->get();
+        foreach ($usersNoUpTree as $user) {
+            print("\n- start root node " . $user->id);
+            $this->updateTreeNum($user->id);
+        }
+    }
+
+    private function updateTreeNum($userId = null, $level = 2)
+    {
+        $tab = "";
+        for ($i = 1; $i <= $level; $i++) {
+            $tab .= "-";
+        }
+
+        $friends = $this->where('user_id', $userId)->get();
+        if (count($friends) == 0) {
+            print("\n" . $tab . " node " . $userId . " 0 friend");
+            $this->find($userId)->update([
+                'num_friends' => 0,
+            ]);
+            return 1;
+        }
+        print("\n" . $tab . " friends of node " . $userId);
+
+        $numFriends = 0;
+        foreach ($friends as $friend) {
+            $numFriends += $this->updateTreeNum($friend->id, $level + 1);
+        }
+
+        print("\n" . $tab . " update node " . $userId . " = " . $numFriends);
+        $this->find($userId)->update([
+            'num_friends' => $numFriends,
+        ]);
+        return 1 + $numFriends;
+    }
+
     private function firstnameFromName($name)
     {
         $splitWords = explode(' ', $name);
         return end($splitWords);
+    }
+
+    private function updateUpTree($upUserId)
+    {
+        $upUser = $this->find($upUserId);
+        $upUser->update(['num_friends' => $upUser->num_friends + 1]);
+        if ($upUser->user_id > 0) {
+            $this->updateUpTree($upUser->user_id);
+        }
+        return;
     }
 }
