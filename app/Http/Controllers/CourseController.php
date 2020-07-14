@@ -6,6 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\Item;
 use App\Models\ItemResource;
+use App\Models\Schedule;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
@@ -96,5 +97,31 @@ class CourseController extends Controller
         }
         $rs = Item::find($itemId)->update(['status' => DB::raw('1 - status')]);
         return redirect()->back()->with('notify', $rs);
+    }
+
+    public function typeChange($itemId, $newType)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        if ($newType == ItemConstants::TYPE_CLASS) {
+            $rs = Item::find($itemId)->update([
+                'status' => 0,
+                'type' => ItemConstants::TYPE_CLASS,
+                'series_id' => null
+            ]);
+            Schedule::where('item_id', $itemId)->delete();
+            return redirect()->route('class.edit', ['id' => $itemId])->with('notify', __('Khóa học đã trở thành lớp học, vui lòng cập nhật lại lịch học.'));
+        } elseif ($newType == ItemConstants::TYPE_COURSE) {
+            $rs = Item::find($itemId)->update([
+                'status' => 0,
+                'type' => ItemConstants::TYPE_COURSE,
+            ]);
+            Schedule::where('item_id', $itemId)->delete();
+            return redirect()->route('course.edit', ['id' => $itemId])->with('notify', __('Lớp học đã trở thành khóa học, vui lòng cập nhật lại giờ học'));
+        }
+        
     }
 }

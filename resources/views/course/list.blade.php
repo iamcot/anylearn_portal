@@ -34,14 +34,14 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <thead>
-                    <th class="text-center">#</th>
+                    <th class="text-center">#ID</th>
                     @if($userServ->isMod()) <th width="5%" class="text-center">Hot</th>@endif
                     @if($userServ->isMod()) <th width="5%" class="text-center">Người tạo</th>@endif
                     <th>Khóa học</th>
                     <th>Chuỗi</th>
                     <th>Thời gian</th>
                     <th>Học phí</th>
-                    <th>Quan tâm</th>
+                    <!-- <th>Quan tâm</th> -->
                     <th>Đăng ký</th>
                     <th>Lần sửa cuối</th>
                     <th>Thao tác</th>
@@ -49,7 +49,7 @@
             <tbody>
                 @foreach($courseList as $course)
                 <tr>
-                    <th class="text-center">{{ $loop->index + 1 }}</th>
+                    <th class="text-center">{{ $course->id }}</th>
                     @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">{!! $userServ->hotIcon($course->is_hot) !!}</a></td>@endif
                     @if($userServ->isMod()) <td class="text-center">
                         {{ $course->user->name }}
@@ -61,12 +61,13 @@
                         @endif</td>
                     <td>{{ $course->time_start }}-{{ $course->time_end }} {{ date('d/m/y', strtotime($course->date_start))}}</td>
                     <td>{{ number_format($course->price) }}</td>
-                    <td></td>
-                    <td></td>
+                    <!-- <td></td> -->
+                    <td>{{ $course->sum_reg }}</td>
                     <td>{{ $course->updated_at }}</td>
                     <td>
                     @if($userServ->isMod(\Auth::user()->role))
                     {!! $itemServ->statusOperation($course->id, $course->status) !!}
+                    {!! $itemServ->typeOperation($course) !!}
                     @endif
                     </td>
                 </tr>

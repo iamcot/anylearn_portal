@@ -13,6 +13,7 @@ use App\Models\ItemResource;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ItemServices
@@ -45,6 +46,7 @@ class ItemServices
             }
         }
         $courses = $courses->orderby('id', 'desc')
+            ->select('items.*', DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg'))
             ->with('series', 'user')
             ->paginate(self::PP);
         return $courses;
@@ -56,6 +58,14 @@ class ItemServices
             return '<a class="btn btn-sm btn-danger" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
         } else {
             return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['userId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở khóa</a>';
+        }
+    }
+
+    public function typeOperation($item) {
+        if ($item->type == ItemConstants::TYPE_COURSE) {
+            return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_CLASS]) . '"><i class="fas fa-exchange-alt"></i> Lớp học</a>';
+        } else {
+            return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_COURSE]) . '"><i class="fas fa-exchange-alt"></i> Khóa học</a>';
         }
     }
 
@@ -154,12 +164,24 @@ class ItemServices
 
         if ($canUpdate) {
             if ($itemUpdate->type == ItemConstants::TYPE_COURSE) {
-                Schedule::where('item_id', $itemUpdate->id)->update([
-                    'date' => $input['date_start'],
-                    'time_start' => $input['time_start'],
-                    'time_end' => $input['time_end'],
-                    'content' => $input['title'],
-                ]);
+                $hasSchedule = Schedule::where('item_id', $itemUpdate->id)->count();
+                if ($hasSchedule) {
+                    Schedule::where('item_id', $itemUpdate->id)->update([
+                        'date' => $input['date_start'],
+                        'time_start' => $input['time_start'],
+                        'time_end' => $input['time_end'],
+                        'content' => $input['title'],
+                    ]);
+                } else {
+                    Schedule::create([
+                        'item_id' => $itemUpdate->id,
+                        'date' => $input['date_start'],
+                        'time_start' => $input['time_start'],
+                        'time_end' => $input['time_end'],
+                        'content' => $input['title'],
+                    ]);
+                }
+                
             } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
                 $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
             }
