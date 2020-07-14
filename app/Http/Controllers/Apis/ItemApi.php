@@ -47,6 +47,7 @@ class ItemApi extends Controller
 
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
+            ->makeVisible(['content'])
             ->first();
         if (!$item) {
             return response("Không có dữ liệu", 404);
@@ -164,7 +165,7 @@ class ItemApi extends Controller
 
     public function pdp(Request $request, $itemId)
     {
-        $item = Item::find($itemId);
+        $item = Item::find($itemId)->makeVisible(['content']);
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }

@@ -12,6 +12,10 @@ class Item extends Model
         'seo_desc', 'image', 'location_type', 'location', 'series_id', 'user_status', 'boost_score', 'item_category_id',
     ];
 
+    protected $hidden = [
+        'content'
+    ];
+
     public function series()
     {
         return $this->belongsTo('App\Models\CourseSeries', 'series_id', 'id');

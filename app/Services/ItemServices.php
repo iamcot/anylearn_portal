@@ -85,7 +85,7 @@ class ItemServices
 
     public function itemInfo($courseId)
     {
-        $item = Item::find($courseId);
+        $item = Item::find($courseId)->makeVisible(['content']);
         if (!$item) {
             return false;
         }
