@@ -264,6 +264,9 @@ class User extends Authenticatable
     private function updateUpTree($upUserId)
     {
         $upUser = $this->find($upUserId);
+        if (!$upUser) {
+            return;
+        }
         $upUser->update(['num_friends' => $upUser->num_friends + 1]);
         if ($upUser->user_id > 0) {
             $this->updateUpTree($upUser->user_id);
