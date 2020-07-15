@@ -48,6 +48,7 @@ class DashboardServices
         FROM users 
         JOIN items ON items.user_id = users.id
         LEFT JOIN order_details AS od on od.item_id = items.id
+        where users.role in ('school', 'teacher')
         GROUP BY users.name
         ORDER BY reg_num DESC
         LIMIT ? 

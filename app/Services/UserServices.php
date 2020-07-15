@@ -71,7 +71,7 @@ class UserServices
         if ($status == UserConstants::STATUS_ACTIVE) {
             return '<a class="btn btn-sm btn-danger" href="' . route('user.status.touch', ['userId' => $userId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
         } else {
-            return '<a class="btn btn-sm btn-success" href="' . route('user.status.touch', ['userId' => $userId]) . '"><i class="fas fa-unlock"></i> Mở khóa</a>';
+            return '<a class="btn btn-sm btn-success" href="' . route('user.status.touch', ['userId' => $userId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         }
     }
 

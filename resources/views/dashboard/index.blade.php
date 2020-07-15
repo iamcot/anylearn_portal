@@ -3,18 +3,19 @@
 @extends('layout')
 @section('body')
 <div class="row">
+    @include('dashboard.count_box', ['title' => 'Khóa học', 'data' => $dashServ->itemCount(),
+    'icon' => 'fa-fire', 'color' => 'danger'])
     @include('dashboard.count_box', ['title' => 'Thành viên', 'data' => $dashServ->userCount('member'),
     'icon' => 'fa-users', 'color' => 'success' ])
     @include('dashboard.count_box', ['title' => 'Trường học', 'data' => $dashServ->userCount('school'),
     'icon' => 'fa-university', 'color' => 'warning'])
     @include('dashboard.count_box', ['title' => 'Giảng Viên', 'data' => $dashServ->userCount('teacher'),
     'icon' => 'fa-chalkboard-teacher', 'color' => 'info'])
-    @include('dashboard.count_box', ['title' => 'Khóa học', 'data' => $dashServ->itemCount(),
-    'icon' => 'fa-fire', 'color' => 'danger'])
+
 </div>
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card border-bottom-primary shadow">
             <div class="card-header">
                 <h6 class="m-0 font-weight-bold text-primary">Người dùng đăng ký mới</h6>
             </div>
@@ -24,9 +25,9 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card">
+        <div class="card border-bottom-success shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">Top User</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Top GV/Trường được mua</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
@@ -43,12 +44,12 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card">
+        <div class="card border-bottom-danger shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">Top Khóa học</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Top Khóa học được mua</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
-            <table class="table">
+                <table class="table">
                     <tbody>
                         @foreach($topItems as $item)
                         <tr>
@@ -75,7 +76,7 @@
         data: {
             labels: chartData['labels'],
             datasets: [{
-                label: "User",
+                label: "Người dùng mới",
                 lineTension: 0.3,
                 backgroundColor: "rgba(78, 115, 223, 0.05)",
                 borderColor: "rgba(78, 115, 223, 1)",

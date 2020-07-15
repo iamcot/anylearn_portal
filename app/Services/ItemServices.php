@@ -57,15 +57,15 @@ class ItemServices
         if ($status == ItemConstants::STATUS_ACTIVE) {
             return '<a class="btn btn-sm btn-danger" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
         } else {
-            return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['userId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở khóa</a>';
+            return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['userId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         }
     }
 
     public function typeOperation($item) {
         if ($item->type == ItemConstants::TYPE_COURSE) {
-            return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_CLASS]) . '"><i class="fas fa-exchange-alt"></i> Lớp học</a>';
+            return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_CLASS]) . '"><i class="fas fa-exchange-alt"></i> Lớp-học</a>';
         } else {
-            return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_COURSE]) . '"><i class="fas fa-exchange-alt"></i> Khóa học</a>';
+            return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_COURSE]) . '"><i class="fas fa-exchange-alt"></i> Khóa-học</a>';
         }
     }
 
