@@ -127,6 +127,7 @@ class ConfigApi extends Controller
             ->where('items.status', 1)
             ->where('items.user_status', 1)
             ->where('users.status', 1)
+            ->where('items.is_test', 0)
             ->select(
                 'items.id',
                 'items.title',

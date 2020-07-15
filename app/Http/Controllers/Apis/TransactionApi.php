@@ -77,6 +77,13 @@ class TransactionApi extends Controller
             DB::transaction(function () use ($user, $item) {
                 $status = $user->wallet_m >= $item->price ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
                 $amount = $item->price;
+
+                //if no walletM, break
+                if ($user->wallet_m < $amount) {
+                    DB::commit();
+                    return;
+                    // return response()->json(['result' => true]);
+                }
                 //save order
                 $newOrder = Order::create([
                     'user_id' => $user->id,
@@ -86,7 +93,7 @@ class TransactionApi extends Controller
                     'payment' => UserConstants::WALLET_M,
                 ]);
                 //save order details
-                OrderDetail::create([
+                $orderDetail = OrderDetail::create([
                     'order_id' => $newOrder->id,
                     'user_id' => $user->id,
                     'item_id' => $item->id,
@@ -95,12 +102,6 @@ class TransactionApi extends Controller
                     'status' => $status,
                 ]);
 
-                //if no walletM, break
-                if ($user->wallet_m < $amount) {
-                    DB::commit();
-                    return;
-                    // return response()->json(['result' => true]);
-                }
                 $author = User::find($item->user_id);
 
                 //cal commission direct, update direct user wallet M + wallet C, save transaction log
@@ -136,20 +137,21 @@ class TransactionApi extends Controller
                 ]);
 
                 //pay author 
-                // $authorCommission = $amount * $author->commission_rate / $configs[ConfigConstants::CONFIG_BONUS_RATE];
+                 $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
                 // User::find($item->user_id)->update([
                 //     'wallet_c' => DB::raw('wallet_c + ' . $authorCommission),
                 // ]);
 
-                // Transaction::create([
-                //     'user_id' => $author->id,
-                //     'type' => ConfigConstants::TRANSACTION_COMMISSION,
-                //     'amount' => $authorCommission,
-                //     'pay_method' => UserConstants::WALLET_C,
-                //     'pay_info' => '',
-                //     'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
-                //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-                // ]);
+                Transaction::create([
+                    'user_id' => $author->id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $authorCommission,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'pay_info' => '',
+                    'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'order_id' => $orderDetail->id,//TODO user order detail instead order id to know item
+                ]);
 
                 //save commission indirect + transaction log + update wallet C indrect user
 
@@ -179,18 +181,21 @@ class TransactionApi extends Controller
                     }
                 }
                 //foundation 
-                $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
-                Transaction::create([
-                    'user_id' => 0,
-                    'type' => ConfigConstants::TRANSACTION_FOUNDATION,
-                    'amount' => $foundation,
-                    'pay_method' => UserConstants::WALLET_M,
-                    'pay_info' => '',
-                    'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title,
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-                    'ref_user_id' => $user->id,
-                    'ref_amount' => $amount,
-                ]);
+                if (!$item->is_test) {
+                    $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+                    Transaction::create([
+                        'user_id' => 0,
+                        'type' => ConfigConstants::TRANSACTION_FOUNDATION,
+                        'amount' => $foundation,
+                        'pay_method' => UserConstants::WALLET_M,
+                        'pay_info' => '',
+                        'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title,
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                        'ref_user_id' => $user->id,
+                        'ref_amount' => $amount,
+                    ]);
+                }
+                
 
                 DB::commit();
             });

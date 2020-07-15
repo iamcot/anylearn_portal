@@ -179,6 +179,7 @@ class UserApi extends Controller
         $list = User::where('role', $role)
             ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
+            ->where('is_test', 0)
             ->orderby('is_hot', 'desc')
             ->orderby('boost_score', 'desc')
             ->orderby('first_name')
@@ -238,26 +239,32 @@ class UserApi extends Controller
 
         if ($item->got_bonus == 0) {
             $configM = new Configuration();
-            $configs = $configM->gets([ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS, ConfigConstants::CONFIG_BONUS_RATE]);
-            $needNumConfirm = $configs[ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS];
+            $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
             $totalReg = OrderDetail::where('item_id', $itemId)->count();
             $totalConfirm = Participation::where('item_id', $itemId)->count();
             if ($totalConfirm / $totalReg >= $needNumConfirm) {
                 $author = User::find($item->user_id);
-                $bonusRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
-                $commission = floor($item->price * $bonusRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                
+                $totalCommission = DB::table('transactions')
+                ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                ->where('od.item_id', $item->id)
+                ->where('transactions.user_id', $author->id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->sum('transactions.amount');
+                
                 User::find($author->id)->update([
-                    'wallet_c' => DB::raw('wallet_c + ' . $commission),
+                    'wallet_c' => DB::raw('wallet_c + ' . $totalCommission),
                 ]);
              
-                Transaction::create([
-                    'user_id' => $author->id,
-                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
-                    'amount' => $commission,
-                    'pay_method' => UserConstants::WALLET_C,
-                    'pay_info' => '',
-                    'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                DB::table('transactions')
+                ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                ->where('od.item_id', $item->id)
+                ->where('transactions.user_id', $author->id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->update([
+                    'transactions.status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
 
                 Item::find($itemId)->update([
