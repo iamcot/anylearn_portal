@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Constants\FileConstants;
 use App\Constants\UserConstants;
+use App\Services\FileServices;
 use App\Validators\ValidRef;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -131,13 +133,15 @@ class User extends Authenticatable
         return $this->find($input['id'])->update($obj);
     }
 
-    public function saveMember($input)
+    public function saveMember(Request $request, $input)
     {
         if (empty($input['id'])) {
             return 0;
         }
         $obj = [
             'name' => $input['name'],
+            'title' => $input['title'],
+            'introduce' => $input['introduce'],
             'full_content' => $input['full_content'],
             'email' => $input['email'],
             'phone' => $input['phone'],
@@ -151,7 +155,27 @@ class User extends Authenticatable
             $obj['password'] = Hash::make($input['password']);
         }
         $obj['first_name'] = in_array($input['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($input['name']) : $input['name'];
-        return $this->find($input['id'])->update($obj);
+
+        $fileService = new FileServices();
+        $avatar = $fileService->doUploadImage($request, 'image');
+        $banner = $fileService->doUploadImage($request, 'banner');
+
+        $currentData = $this->find($input['id']);
+        $needDelete = [];
+        if (!empty($avatar['url'])) {
+            $needDelete[] = $currentData->image;
+            $obj['image'] = $avatar['url'];
+        }
+        if (!empty($banner['url'])) {
+            $needDelete[] = $currentData->banner;
+            $obj['banner'] = $banner['url'];
+        }
+
+        $rs = $this->find($input['id'])->update($obj);
+        if ($rs) {
+            $fileService->deleteFiles($needDelete);
+        }
+        return $rs;
     }
 
 

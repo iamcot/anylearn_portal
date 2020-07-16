@@ -17,7 +17,7 @@
 @endsection
 
 @section('body')
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id" value="{{ !empty($user) ? $user->id : null }}">
     <div class="card shadow">
@@ -27,6 +27,12 @@
                     <label for="name" class="col-md-2 col-form-label text-md-right">{{ __('Họ và tên') }}</label>
                     <div class="col-md-8">
                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="title" class="col-md-2 col-form-label text-md-right">{{ __('Chức danh/Đại diện') }}</label>
+                    <div class="col-md-8">
+                        <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', !empty($user) ? $user->title : '') }}">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -82,9 +88,37 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="phone" class="col-md-2 col-form-label text-md-right">{{ __('Avatar') }}</label>
+                    <div class="col-md-4">
+                    <input name="image" type="file" id="image"  />
+                    </div>
+                    <div class="col-md-4" >
+                    @if($user->image)
+                        <img src="{{ $user->image }}" alt="" style="height: 50px;">
+                    @endif
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="phone" class="col-md-2 col-form-label text-md-right">{{ __('Banner') }}</label>
+                    <div class="col-md-4">
+                    <input name="banner" type="file" id="image"  />
+                    </div>
+                    <div class="col-md-4" >
+                    @if($user->banner)
+                        <img src="{{ $user->banner }}" alt="" style="height: 50px;">
+                    @endif
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="introduce" class="col-md-2 col-form-label text-md-right font-weight-bold @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="editor" class="col-md-2 col-form-label text-md-right font-weight-bold @error('content') is-invalid @enderror">{{ __('Thông tin giới thiệu') }}</label>
                     <div class="col-md-8">
-                        <textarea id="editor" name="full_content">{!! old('content', !empty($user) ? $user->full_content : '') !!}</textarea>
+                        <textarea id="editor" name="full_content">{!! old('full_content', !empty($user) ? $user->full_content : '') !!}</textarea>
                     </div>
                 </div>
             </div>

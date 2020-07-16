@@ -85,13 +85,13 @@ class UserController extends Controller
         if ($request->input('save')) {
             $input = $request->all();
             $userM = new User();
-            $rs = $userM->saveMember($input);
+            $rs = $userM->saveMember($request, $input);
             return redirect()->route('user.members')->with('notify', $rs);
         }
 
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
-        $this->data['hasBack'] = true;
+        $this->data['hasBack'] = route('user.members');
         $this->data['type'] = 'member';
         return view('user.member_edit', $this->data);
     }
