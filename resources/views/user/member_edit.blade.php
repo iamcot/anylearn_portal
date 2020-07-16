@@ -1,6 +1,21 @@
 @inject('userServ','App\Services\UserServices')
 @extends('layout')
 
+@section('rightFixedTop')
+<form class="row pt-4">
+    <div class="col-xs-2 mr-1 text-success">
+        <div>
+            <div>Ví M: {{ $user->wallet_m }}</div>
+            <div>Ví C: {{ $user->wallet_c }}</div>
+        </div>
+
+    </div>
+    <div class="col-xs-2 mr-1">
+        <a class="btn btn-primary" id="moneyfix-action" href="#"><i class="fas fa-comments-dollar"></i> @lang('Giao dịch tiền')</a>
+    </div>
+</form>
+@endsection
+
 @section('body')
 <form method="POST">
     @csrf
@@ -11,7 +26,7 @@
                 <div class="form-group row">
                     <label for="name" class="col-md-2 col-form-label text-md-right">{{ __('Họ và tên') }}</label>
                     <div class="col-md-8">
-                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required >
+                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -51,8 +66,8 @@
                     <label for="role" class="col-md-2 col-form-label text-md-right">{{ __('Vai trò') }}</label>
                     <div class="col-md-8">
                         <select class="form-control" name="role" id="role">
-                            @foreach($type == 'mod' ? \App\Constants\UserConstants::$modRoles : \App\Constants\UserConstants::$memberRoles  as $role)
-                            <option value="{{ $role }}" {{ !empty($user) && $user->role  == $role ? 'selected' : '' }} >{{ $role }}</option>
+                            @foreach($type == 'mod' ? \App\Constants\UserConstants::$modRoles : \App\Constants\UserConstants::$memberRoles as $role)
+                            <option value="{{ $role }}" {{ !empty($user) && $user->role  == $role ? 'selected' : '' }}>{{ $role }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -62,7 +77,7 @@
                     <div class="col-md-8">
                         <input id="password" type="password" class="form-control" name="password" value="" {{ empty($user) ? 'required' : '' }}>
                         @if(!empty($user))
-                            <span class="small">*Để trống nếu không thay đổi</span>
+                        <span class="small">*Để trống nếu không thay đổi</span>
                         @endif
                     </div>
                 </div>
@@ -80,9 +95,14 @@
     </div>
 </form>
 @endsection
+@include('dialog.money_fix')
 @section('jscript')
+@parent
 <script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('editor');
+    $('#moneyfix-action').click(function() {
+        $('#moneyFixModal').modal('show');
+    });
 </script>
 @endsection

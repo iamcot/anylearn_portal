@@ -6,8 +6,10 @@ use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserServices
 {
@@ -131,8 +133,40 @@ class UserServices
         ];
     }
 
-    public function calcCommission($price, $bonusSeller, $bonusRate, $exchangeRate) {
+    public function calcCommission($price, $bonusSeller, $bonusRate, $exchangeRate)
+    {
         $netValue = $price * (1 - $bonusSeller);
         return  floor($netValue * $bonusRate / $exchangeRate);
+    }
+
+    public function createMoneyFix($user, $input)
+    {
+        try {
+            DB::beginTransaction();
+            $trans = Transaction::create([
+                'type' => $input['type'],
+                'amount' => $input['amount'],
+                'user_id' => $user->id,
+                'content' => $input['content'],
+                'status' => 1,
+            ]);
+            if ($input['type'] == ConfigConstants::TRANSACTION_DEPOSIT_REFUND) {
+                if ($user->wallet_m < $input['amount']) {
+                    return 'Tiền không đủ';
+                }
+                User::find($user->id)->update([
+                    'wallet_m' => ($user->wallet_m - $input['amount'])
+                ]);
+            } elseif($input['type'] == ConfigConstants::TRANSACTION_COMMISSION_ADD) {
+                User::find($user->id)->update([
+                    'wallet_c' => ($user->wallet_c + $input['amount'])
+                ]);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $ex) {
+            DB::rollback();
+        }
+        return 'Giao dịch thất bại';
     }
 }

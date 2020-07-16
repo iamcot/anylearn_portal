@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
 use App\Models\User;
 use App\Models\UserDocument;
@@ -41,7 +42,7 @@ class UserController extends Controller
         $user = Auth::user();
         if (!$userService->haveAccess($user->role, 'root')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
-        } 
+        }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)
             ->orderby('role')
             ->paginate(UserConstants::PP);
@@ -55,7 +56,7 @@ class UserController extends Controller
         $user = Auth::user();
         if (!$userService->haveAccess($user->role, 'admin')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
-        } 
+        }
         $userM = new User();
         $this->data['members'] = $userM->searchMembers($request);
         $this->data['navText'] = __('Quản lý Thành viên');
@@ -64,19 +65,31 @@ class UserController extends Controller
 
     public function memberEdit(Request $request, $userId)
     {
+        $userService = new UserServices();
+        $user = Auth::user();
+
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+
+        $editUser = User::find($userId);
+
+        if ($request->input('moneyFix')) {
+            $result = $userService->createMoneyFix($editUser, $request->all());
+            if ($result === true) {
+                return redirect()->back()->with('notify', 'Giao dịch mới đã được cập nhật.');
+            } else {
+                return redirect()->back()->with('notify', $result);
+            }
+        }
         if ($request->input('save')) {
             $input = $request->all();
             $userM = new User();
             $rs = $userM->saveMember($input);
             return redirect()->route('user.members')->with('notify', $rs);
         }
-        $userService = new UserServices();
-        $user = Auth::user();
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
-            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
-        } else {
-            $this->data['user'] = User::find($userId);
-        }
+
+        $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = true;
         $this->data['type'] = 'member';
