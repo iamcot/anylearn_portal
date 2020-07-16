@@ -5,8 +5,8 @@
 <form class="row pt-4">
     <div class="col-xs-2 mr-1 text-success">
         <div>
-            <div>Ví M: {{ $user->wallet_m }}</div>
-            <div>Ví C: {{ $user->wallet_c }}</div>
+            <div>Ví M: {{ number_format($user->wallet_m, 0, ',', '.') }}</div>
+            <div>Ví C: {{ number_format($user->wallet_c, 0, ',', '.') }}</div>
         </div>
 
     </div>
