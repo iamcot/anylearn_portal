@@ -143,13 +143,13 @@ class UserServices
     {
         try {
             DB::beginTransaction();
-            $trans = Transaction::create([
+            $obj = [
                 'type' => $input['type'],
                 'amount' => $input['amount'],
                 'user_id' => $user->id,
                 'content' => $input['content'],
                 'status' => 1,
-            ]);
+            ];
             if ($input['type'] == ConfigConstants::TRANSACTION_DEPOSIT_REFUND) {
                 if ($user->wallet_m < $input['amount']) {
                     return 'Tiền không đủ';
@@ -157,11 +157,21 @@ class UserServices
                 User::find($user->id)->update([
                     'wallet_m' => ($user->wallet_m - $input['amount'])
                 ]);
+                $obj['amount'] = $obj['amount'] > 0 ? $obj['amount'] * -1 : $obj['amount'];
             } elseif($input['type'] == ConfigConstants::TRANSACTION_COMMISSION_ADD) {
                 User::find($user->id)->update([
                     'wallet_c' => ($user->wallet_c + $input['amount'])
                 ]);
+            } elseif ($input['type'] == ConfigConstants::TRANSACTION_WITHDRAW) {
+                if ($user->wallet_c < $input['amount']) {
+                    return 'Điểm không đủ';
+                }
+                User::find($user->id)->update([
+                    'wallet_c' => ($user->wallet_c - $input['amount'])
+                ]);
+                $obj['amount'] = $obj['amount'] > 0 ? $obj['amount'] * -1 : $obj['amount'];
             }
+            $trans = Transaction::create($obj);
             DB::commit();
             return true;
         } catch (\Exception $ex) {

@@ -12,7 +12,9 @@
                     <div class="form-group">
                         <label for="type" class="col-form-label">{{ __('Loại giao dịch') }}</label>
                         <select class="form-control" name="type" id="type">
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_DEPOSIT_REFUND }}">Hoàn tiền nạp</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_DEPOSIT_REFUND }}">Hoàn tiền nạp về ngân hàng</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_WITHDRAW }}">
+                                Rút điểm về ngân hàng (tỉ lệ 1đ = {{ $configs[\App\Constants\ConfigConstants::CONFIG_BONUS_RATE] }} vnd)</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_COMMISSION_ADD }}">Bổ sung hoa hồng</option>
                         </select>
                     </div>

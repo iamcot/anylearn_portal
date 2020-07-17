@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
+use App\Models\Configuration;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
@@ -88,7 +89,9 @@ class UserController extends Controller
             $rs = $userM->saveMember($request, $input);
             return redirect()->route('user.members')->with('notify', $rs);
         }
-
+        $configM = new Configuration();
+        $this->data['configs'] = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
+                
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
