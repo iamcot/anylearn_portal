@@ -5,11 +5,14 @@ namespace App\Services;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
+use App\Constants\NotifConstants;
 use App\Constants\UserConstants;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\Item;
 use App\Models\ItemResource;
+use App\Models\Notification;
+use App\Models\OrderDetail;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,8 +49,10 @@ class ItemServices
             }
         }
         $courses = $courses->orderby('id', 'desc')
-            ->select('items.*', 
-            DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg'))
+            ->select(
+                'items.*',
+                DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg')
+            )
             ->with('series', 'user')
             ->paginate(self::PP);
         return $courses;
@@ -62,7 +67,8 @@ class ItemServices
         }
     }
 
-    public function typeOperation($item) {
+    public function typeOperation($item)
+    {
         if ($item->type == ItemConstants::TYPE_COURSE) {
             return '<a class="btn btn-sm btn-info" href="' . route('item.type.change', ['itemId' => $item->id, 'newType' => ItemConstants::TYPE_CLASS]) . '"><i class="fas fa-exchange-alt"></i> Lớp-học</a>';
         } else {
@@ -184,9 +190,25 @@ class ItemServices
                         'content' => $input['title'],
                     ]);
                 }
-                
             } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
                 $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
+            }
+            if (
+                $itemUpdate->date_start != $input['date_start']
+                || $itemUpdate->date_start != $input['time_start']
+                || $itemUpdate->location != $input['location']
+            ) {
+                $registerUsers = OrderDetail::where('item_id', $itemUpdate->id)->get();
+                $notifServ = new Notification();
+                foreach ($registerUsers as $user) {
+                    $notifServ->createNotif(
+                        NotifConstants::COURSE_HAS_CHANGED,
+                        $user->user_id,
+                        [
+                            'course' => $itemUpdate->title
+                        ]
+                    );
+                }
             }
         }
         return $canUpdate;
@@ -274,7 +296,7 @@ class ItemServices
         $fileService = new FileServices();
         $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, FileConstants::FOLDER_ITEMS . '/' . $courseId);
         if ($file !== false) {
-            
+
             $this->deleteOldItemImage($courseId);
             return $file['url'];
         }

@@ -81,6 +81,7 @@ class TransactionApi extends Controller
         }
         try {
             DB::transaction(function () use ($user, $item) {
+                $notifServ = new Notification();
                 $status = $user->wallet_m >= $item->price ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
                 $amount = $item->price;
 
@@ -141,6 +142,10 @@ class TransactionApi extends Controller
                     'content' => 'Nhận điểm từ mua khóa học: ' . $item->title,
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
+                $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [
+                    'username' => $user->name,
+                    'amount' => number_format($directCommission, 0, ',', '.'),
+                ]);
 
                 //pay author 
                 $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
@@ -181,6 +186,10 @@ class TransactionApi extends Controller
                             'ref_user_id' => $user->id,
                             'ref_amount' => $amount,
                         ]);
+                        $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $refUser->id, [
+                            'username' => $refUser->name,
+                            'amount' => number_format($indirectCommission, 0, ',', '.'),
+                        ]);
                         $currentUserId = $refUser->user_id;
                     } else {
                         break;
@@ -205,7 +214,6 @@ class TransactionApi extends Controller
 
 
                 DB::commit();
-                $notifServ = new Notification();
                 $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
                     'course' => $item->title,
                 ]);

@@ -50,7 +50,7 @@ return [
     ],
     NotifConstants::COURSE_HAS_CHANGED =>  [
         'title' => 'Khóa học có chút thay đổi',
-        'template' => '{username} ơi, Khóa học {course} của bạn đăng ký có chút thay đổi, bạn cập nhật thông tin nhé.',
+        'template' => 'Bạn ơi, Khóa học {course} của bạn đăng ký có chút thay đổi về thời gian và địa điểm, bạn cập nhật thông tin nhé.',
         'route' => '/account/calendar',
     ],
 
