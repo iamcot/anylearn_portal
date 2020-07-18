@@ -135,4 +135,10 @@ class CourseController extends Controller
         $notifM->notifRemindConfirms($itemId);
         return redirect()->back()->with('notify', 'Đã gửi thông báo nhắc xác nhận.');
     }
+
+    public function remindJoin($itemId) {
+        $notifM = new Notification();
+        $notifM->notifRemindJoin($itemId);
+        return redirect()->back()->with('notify', 'Đã gửi thông báo nhắc xác nhận.');
+    }
 }

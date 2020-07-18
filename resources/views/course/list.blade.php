@@ -59,7 +59,10 @@
                     <td>@if($course->series)
                         <a href="?t=series&s={{ $course->series->id }}">{{ $course->series->title }}</a>
                         @endif</td>
-                    <td>{{ $course->time_start }}-{{ $course->time_end }} {{ date('d/m/y', strtotime($course->date_start))}}</td>
+                    <td>{{ $course->time_start }}-{{ $course->time_end }} {{ date('d/m/y', strtotime($course->date_start))}} 
+                     <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
+
+                    </td>
                     <td>{{ number_format($course->price) }}</td>
                     <!-- <td></td> -->
                     <td>{{ $course->sum_reg }}

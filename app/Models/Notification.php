@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -109,6 +110,46 @@ class Notification extends Model
             ->get();
         foreach ($registers as $register) {
             $this->notifRemindConfirm($register->id, $register->name, $register->title);
+        }
+    }
+
+    public function notifRemindJoin($itemId)
+    {
+        $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->select('users.id', 'users.name', 'items.title', 'items.date_start', 'items.time_start')
+            ->get();
+        $now = new DateTime('now');
+        $diff = null;
+        foreach ($registers as $register) {
+            if ($diff == null) {
+                $itemDate = new DateTime($register->date_start . ' ' . $register->time_start);
+                $diff = date_diff($now, $itemDate);
+            }
+            if ($diff->d >= 1) {
+                $this->createNotif(NotifConstants::REMIND_COURSE_GOING, $register->id, [
+                    'username' => $register->name,
+                    'course' => $register->title,
+                    'day' => $diff->d,
+                ]);
+            } elseif ($diff->h >= 1) {
+                $this->createNotif(NotifConstants::REMIND_COURSE_GOING_JOIN, $register->id, [
+                    'username' => $register->name,
+                    'course' => $register->title,
+                    'time' => $diff->h . ' giờ',
+                ]);
+            } elseif ($diff->i >= 1) {
+                $this->createNotif(NotifConstants::REMIND_COURSE_GOING_JOIN, $register->id, [
+                    'username' => $register->name,
+                    'course' => $register->title,
+                    'time' => $diff->i . ' phút',
+                ]);
+            } else {
+                $this->createNotif(NotifConstants::REMIND_COURSE_JOIN, $register->id, [
+                    'course' => $register->title,
+                ]);
+            }
         }
     }
     public function notifRemindConfirm($userId, $userName, $itemName)

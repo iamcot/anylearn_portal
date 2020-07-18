@@ -53,6 +53,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::middleware('access.resource')->get('/resource/{id}/delete', 'CourseController@resourceDelete')->name('resource.delete');
 
     Route::get('/notif/remind-confirm/{id}', 'CourseController@remindConfirm')->name('notif.remind_confirm');
+    Route::get('/notif/remind-join/{id}', 'CourseController@remindJoin')->name('notif.remind_join');
 
     Route::get('/class', 'ClassController@list')->name('class');
     Route::any('/class/create', 'ClassController@create')->name('class.create');
