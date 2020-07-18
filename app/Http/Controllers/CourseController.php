@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ItemResource;
 use App\Models\Notification;
 use App\Models\Schedule;
+use App\Models\User;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
@@ -97,6 +98,9 @@ class CourseController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $rs = Item::find($itemId)->update(['status' => DB::raw('1 - status')]);
+        $notifServ = new Notification();
+        $notifServ->notifCourseStatus($itemId);
+        
         return redirect()->back()->with('notify', $rs);
     }
 

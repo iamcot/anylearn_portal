@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
+use App\Constants\NotifConstants;
 use App\Models\Configuration;
+use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
@@ -67,7 +69,8 @@ class TransactionController extends Controller
             User::find($transaction->user_id)->update([
                 'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
             ]);
-
+            $notifServ = new Notification();
+            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
             if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
                 return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
@@ -75,6 +78,9 @@ class TransactionController extends Controller
             Transaction::find($id)->update([
                 'status' => $status
             ]);
+            $notifServ = new Notification();
+            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
+        
         }
         return redirect()->back()->with('notify', 'Cập nhật thành công');
     }

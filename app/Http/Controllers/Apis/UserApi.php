@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis;
 
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
+use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
@@ -236,6 +237,12 @@ class UserApi extends Controller
             'organizer_confirm' => 1,
             'participant_confirm' => 1,
         ]);
+        $author = User::find($item->user_id);
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
+            'username' => $user->name,
+            'course' => $item->title,
+        ]);
 
         if ($item->got_bonus == 0) {
             $configM = new Configuration();
@@ -243,7 +250,7 @@ class UserApi extends Controller
             $totalReg = OrderDetail::where('item_id', $itemId)->count();
             $totalConfirm = Participation::where('item_id', $itemId)->count();
             if ($totalConfirm / $totalReg >= $needNumConfirm) {
-                $author = User::find($item->user_id);
+                
                 
                 $totalCommission = DB::table('transactions')
                 ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')

@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
+use App\Constants\NotifConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
+use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -142,6 +144,10 @@ class UserServices
     public function createMoneyFix($user, $input)
     {
         try {
+            $notifServ = new Notification();
+            $configM = new Configuration();
+            $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
+                
             DB::beginTransaction();
             $obj = [
                 'type' => $input['type'],
@@ -157,10 +163,18 @@ class UserServices
                 User::find($user->id)->update([
                     'wallet_m' => ($user->wallet_m - $input['amount'])
                 ]);
+                $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REFUND, $user->id, [
+                    'username' => $user->name,
+                    'amount' => number_format($input['amount'], 0, ',', '.'),
+                ]);
                 $obj['amount'] = $obj['amount'] > 0 ? $obj['amount'] * -1 : $obj['amount'];
-            } elseif($input['type'] == ConfigConstants::TRANSACTION_COMMISSION_ADD) {
+            } elseif ($input['type'] == ConfigConstants::TRANSACTION_COMMISSION_ADD) {
                 User::find($user->id)->update([
                     'wallet_c' => ($user->wallet_c + $input['amount'])
+                ]);
+                $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [
+                    'username' => $user->name,
+                    'amount' => number_format($input['amount'], 0, ',', '.'),
                 ]);
             } elseif ($input['type'] == ConfigConstants::TRANSACTION_WITHDRAW) {
                 if ($user->wallet_c < $input['amount']) {
@@ -170,6 +184,9 @@ class UserServices
                     'wallet_c' => ($user->wallet_c - $input['amount'])
                 ]);
                 $obj['amount'] = $obj['amount'] > 0 ? $obj['amount'] * -1 : $obj['amount'];
+                $notifServ->createNotif(NotifConstants::TRANS_WITHRAW_APPROVED, $user->id, [
+                    'amount' => number_format($input['amount'] * $configs[ConfigConstants::CONFIG_BONUS_RATE] , 0, ',', '.'),
+                ]);
             }
             $trans = Transaction::create($obj);
             DB::commit();

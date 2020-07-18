@@ -38,12 +38,17 @@ class Transaction extends Model
     {
         $query = Transaction::where('user_id', $userId);
         if ($wallet == UserConstants::WALLET_M) {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_DEPOSIT_REFUND]);
         } else {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_COMMISSION]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
         }
-        return $query->orderby('id', 'desc')
+        $db = $query->orderby('id', 'desc')
             ->get();
+        $data = [];
+        foreach($db as $k => $v) {
+            $data[$k] = $v;
+            $data[$k]->pay_info = $v->pay_info ?? "";
+        }
+        return $data;
     }
-
 }

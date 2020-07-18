@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Apis;
 
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
+use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Transaction;
@@ -34,6 +36,10 @@ class TransactionApi extends Controller
             'pay_method' => $request->get('pay_method'),
             'pay_info' => '',
             'content' => 'Nạp tiền vào tài khoản'
+        ]);
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_SENT, $user->id, [
+            'amount' => number_format($rs->amount, 0, ',', '.'),
         ]);
 
         return response()->json(['result' => $rs != null ? true : false]);
@@ -65,11 +71,11 @@ class TransactionApi extends Controller
             return response('Trang không tồn tại', 404);
         }
         $alreadyRegister = DB::table('order_details as od')
-        ->join('orders', 'orders.id', '=', 'od.order_id')
-        ->where('orders.status', OrderConstants::STATUS_DELIVERED)
-        ->where('od.user_id', $user->id)
-        ->where('od.item_id', $itemId)
-        ->count();
+            ->join('orders', 'orders.id', '=', 'od.order_id')
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->where('od.user_id', $user->id)
+            ->where('od.item_id', $itemId)
+            ->count();
         if ($alreadyRegister > 0) {
             return response('Bạn đã đăng ký khóa học này', 400);
         }
@@ -137,7 +143,7 @@ class TransactionApi extends Controller
                 ]);
 
                 //pay author 
-                 $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+                $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
                 // User::find($item->user_id)->update([
                 //     'wallet_c' => DB::raw('wallet_c + ' . $authorCommission),
                 // ]);
@@ -150,7 +156,7 @@ class TransactionApi extends Controller
                     'pay_info' => '',
                     'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
-                    'order_id' => $orderDetail->id,//TODO user order detail instead order id to know item
+                    'order_id' => $orderDetail->id, //TODO user order detail instead order id to know item
                 ]);
 
                 //save commission indirect + transaction log + update wallet C indrect user
@@ -181,6 +187,7 @@ class TransactionApi extends Controller
                     }
                 }
                 //foundation 
+                $foundation = 0;
                 if (!$item->is_test) {
                     $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
                     Transaction::create([
@@ -195,9 +202,21 @@ class TransactionApi extends Controller
                         'ref_amount' => $amount,
                     ]);
                 }
-                
+
 
                 DB::commit();
+                $notifServ = new Notification();
+                $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
+                    'course' => $item->title,
+                ]);
+                $notifServ->createNotif(NotifConstants::TRANS_FOUNDATION, $user->id, [
+                    'amount' => number_format($foundation, 0, ',', '.'),
+                    'course' => $item->title,
+                ]);
+                $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
+                    'username' => $author->name,
+                    'course' => $item->title,
+                ]);
             });
         } catch (\Exception $e) {
             Log::error($e);

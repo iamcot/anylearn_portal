@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -116,6 +117,22 @@ class Notification extends Model
             'username' => $userName,
             'course' => $itemName,
         ]);
+    }
+
+    public function notifCourseStatus($itemId)
+    {
+        $itemUpdated = Item::find($itemId);
+        $author = User::find($itemUpdated->user_id);
+        if ($itemUpdated->status == ItemConstants::STATUS_ACTIVE) {
+            return $this->createNotif(NotifConstants::COURSE_APPROVED, $author->id, [
+                'course' => $itemUpdated->title,
+            ]);
+        } else {
+            return $this->createNotif(NotifConstants::COURSE_REJECTED, $author->id, [
+                'course' => $itemUpdated->title,
+                'username' => $author->name,
+            ]);
+        }
     }
 
     private function buildContent($template, $data)
