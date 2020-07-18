@@ -22,7 +22,7 @@ return [
 
     NotifConstants::REMIND_CONFIRM =>  [
         'title' => 'Hoàn thành khóa học!',
-        'template' => 'Chúc mừng {username} đã vừa hoàn thành khoá học {course}. Hãy dành chút thời gian vào mục Lịch học bấm Xác nhận tham gia lớp học để phục vụ cho công tác điểm danh của buổi học nhé!',
+        'template' => 'Chúc mừng {username} đã vừa hoàn thành buổi học {course}. Hãy dành chút thời gian vào mục Lịch học bấm Xác nhận tham gia lớp học để phục vụ cho công tác điểm danh của buổi học nhé!',
         'route' => '/account/calendar'
     ],
 ];
