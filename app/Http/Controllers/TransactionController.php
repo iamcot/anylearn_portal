@@ -38,7 +38,7 @@ class TransactionController extends Controller
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_COMMISSION])
+        $this->data['transaction'] = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
             ->orderby('id', 'desc')
             ->with('user')
             ->paginate(20);
