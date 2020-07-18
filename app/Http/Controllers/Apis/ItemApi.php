@@ -9,6 +9,7 @@ use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\Notification;
 use App\Models\Schedule;
 use App\Models\User;
 use App\Services\FileServices;
@@ -17,6 +18,7 @@ use App\Services\UserServices;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -131,6 +133,10 @@ class ItemApi extends Controller
             return $user;
         }
 
+        if ($newStatus == ItemConstants::USERSTATUS_DONE) {
+            $notifService = new Notification();
+            $notifService->notifRemindConfirms($itemId);
+        }
         $rs = Item::where('id', $itemId)
             ->where('user_id', $user->id)
             ->update([

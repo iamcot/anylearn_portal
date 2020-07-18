@@ -99,6 +99,25 @@ class Notification extends Model
         ]);
     }
 
+    public function notifRemindConfirms($itemId)
+    {
+        $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->select('users.id', 'users.name', 'items.title')
+            ->get();
+        foreach ($registers as $register) {
+            $this->notifRemindConfirm($register->id, $register->name, $register->title);
+        }
+    }
+    public function notifRemindConfirm($userId, $userName, $itemName)
+    {
+        return $this->createNotif(NotifConstants::REMIND_CONFIRM, $userId, [
+            'username' => $userName,
+            'course' => $itemName,
+        ]);
+    }
+
     private function buildContent($template, $data)
     {
         $keys = [];

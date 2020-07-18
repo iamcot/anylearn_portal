@@ -46,7 +46,8 @@ class ItemServices
             }
         }
         $courses = $courses->orderby('id', 'desc')
-            ->select('items.*', DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg'))
+            ->select('items.*', 
+            DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg'))
             ->with('series', 'user')
             ->paginate(self::PP);
         return $courses;

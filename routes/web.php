@@ -52,6 +52,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::middleware('access.item')->any('/course/{id}/edit', 'CourseController@edit')->name('course.edit');
     Route::middleware('access.resource')->get('/resource/{id}/delete', 'CourseController@resourceDelete')->name('resource.delete');
 
+    Route::get('/notif/remind-confirm/{id}', 'CourseController@remindConfirm')->name('notif.remind_confirm');
+
     Route::get('/class', 'ClassController@list')->name('class');
     Route::any('/class/create', 'ClassController@create')->name('class.create');
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');

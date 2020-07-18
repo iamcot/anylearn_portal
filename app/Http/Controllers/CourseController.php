@@ -6,6 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\Item;
 use App\Models\ItemResource;
+use App\Models\Notification;
 use App\Models\Schedule;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -123,5 +124,11 @@ class CourseController extends Controller
             return redirect()->route('course.edit', ['id' => $itemId])->with('notify', __('Lớp học đã trở thành khóa học, vui lòng cập nhật lại giờ học'));
         }
         
+    }
+
+    public function remindConfirm($itemId) {
+        $notifM = new Notification();
+        $notifM->notifRemindConfirms($itemId);
+        return redirect()->back()->with('notify', 'Đã gửi thông báo nhắc xác nhận.');
     }
 }

@@ -56,7 +56,7 @@
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif</td>
                     <td>{{ number_format($course->price) }}</td>
                     <!-- <td></td> -->
-                    <td>{{ $course->sum_reg }}</td>
+                    <td>{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a></td>
                     <td>{{ $course->updated_at }}</td>
                     <td>
                         @if($userServ->isMod(\Auth::user()->role))
