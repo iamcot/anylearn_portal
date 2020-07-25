@@ -118,13 +118,19 @@ class Notification extends Model
         $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->select('users.id', 'users.name', 'items.title', 'items.date_start', 'items.time_start')
+            // ->select('users.id', 'users.name', 'items.title', 'items.date_start', 'items.time_start')
+            ->select('users.id', 'users.name', 'items.title')
             ->get();
         $now = new DateTime('now');
+
+        $nowInDay = date('Y-m-d');
+        $nearestSchedule = Schedule::where('item_id', $itemId)
+        ->where('date', '>=', $nowInDay)
+        ->first();
         $diff = null;
         foreach ($registers as $register) {
             if ($diff == null) {
-                $itemDate = new DateTime($register->date_start . ' ' . $register->time_start);
+                $itemDate = new DateTime($nearestSchedule->date . ' ' . $nearestSchedule->time_start);
                 $diff = date_diff($now, $itemDate);
             }
             if ($diff->d >= 1) {
