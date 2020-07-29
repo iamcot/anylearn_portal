@@ -97,7 +97,7 @@ class ConfigController extends Controller
         return view('config.voucher_list', $this->data);
     }
 
-    public function voucherEdit(Request $request, $id)
+    public function voucherEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
             $input = $request->input();
