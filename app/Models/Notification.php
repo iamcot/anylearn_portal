@@ -101,6 +101,15 @@ class Notification extends Model
         ]);
     }
 
+    public function notifCourseShare($item, $username, $userId)
+    {
+        return $this->createNotif(NotifConstants::COURSE_SHARE, $userId, [
+            'username' => $username,
+            'course' => $item->title,
+            'args' => $item->id,
+        ]);
+    }
+
     public function notifRemindConfirms($itemId)
     {
         $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
@@ -125,8 +134,8 @@ class Notification extends Model
 
         $nowInDay = date('Y-m-d');
         $nearestSchedule = Schedule::where('item_id', $itemId)
-        ->where('date', '>=', $nowInDay)
-        ->first();
+            ->where('date', '>=', $nowInDay)
+            ->first();
         $diff = null;
         foreach ($registers as $register) {
             if ($diff == null) {

@@ -196,4 +196,31 @@ class UserServices
         }
         return 'Giao dịch thất bại';
     }
+
+    public function allFriends($userId) {
+        $configM = new Configuration();
+        $maxLevel = $configM->get(ConfigConstants::CONFIG_FRIEND_TREE);
+        $data = [];
+        $userIds = [$userId];
+        for ($i = 1; $i <= $maxLevel; $i++) {
+            $db = DB::table('users')
+                ->whereIn('user_id', $userIds)
+                ->get();
+            $userIds = [];
+            if (count($db) > 0) {
+                foreach ($db as $friend) {
+                    $data[] = [
+                        'id' => $friend->id,
+                        'name' => $friend->name,
+                        'image' => $friend->image,
+                    ];
+                    $userIds[] = $friend->id;
+                }
+            }
+            if (empty($userIds)) {
+                break;
+            }
+        }
+        return $data;
+    }
 }

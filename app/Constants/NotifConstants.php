@@ -16,6 +16,7 @@ class NotifConstants
     const COURSE_HAS_REGISTERED = 'course_has_registered';
     const COURSE_HAS_NEW = 'course_has_new';
     const COURSE_HAS_CHANGED = 'course_has_changed';
+    const COURSE_SHARE = 'course_share';
 
     /** Transaction */
     const TRANS_DEPOSIT_SENT = 'trans_deposit_sent';

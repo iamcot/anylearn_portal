@@ -15,6 +15,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Voucher;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,19 +30,66 @@ class TransactionApi extends Controller
             return $user;
         }
 
+        $paymentInput = $request->get('pay_method');
+        $amountInput = $request->get('amount');
+        $refAmount = 0;
+        $status = 0;
+
+        $usedVoucher = '';
+        if ($paymentInput == 'voucher') {
+            try {
+                $voucherM = new Voucher();
+                $amount = $voucherM->useVoucher($user->id, $amountInput);
+                $usedVoucher = " bằng voucher " . $amountInput;
+                $status = 1;
+            } catch (\Exception $e) {
+                return response($e->getMessage(), 400);
+            }
+        } else {
+            $amount = $amountInput;
+        }
+
         $rs = Transaction::create([
             'user_id' => $user->id,
             'type' => ConfigConstants::TRANSACTION_DEPOSIT,
-            'amount' => $request->get('amount'),
-            'pay_method' => $request->get('pay_method'),
-            'pay_info' => '',
-            'content' => 'Nạp tiền vào tài khoản'
+            'amount' => $amount,
+            'pay_method' => $paymentInput,
+            'ref_amount' => $refAmount,
+            'content' => 'Nạp tiền vào tài khoản' . $usedVoucher,
+            'status' => $status,
         ]);
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_SENT, $user->id, [
             'amount' => number_format($rs->amount, 0, ',', '.'),
         ]);
 
+        return response()->json(['result' => $rs != null ? true : false]);
+    }
+
+    public function saveExchange(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        // Log::debug($user);
+        $point = $request->get('amount');
+        if ($point > $user->wallet_c) {
+            return response('Không đủ điểm', 400);
+        }
+        $configM = new Configuration();
+        $rate = $configM->get(ConfigConstants::CONFIG_BONUS_RATE);
+        $walletM = $point * $rate;
+        $rs = User::find($user->id)->update([
+            'wallet_c' => $user->wallet_c - $point,
+            'wallet_m' => $user->wallet_m + $walletM,
+        ]);
+        return response()->json(['result' => $rs ? true : false]);
+    }
+
+    public function saveWithdraw(Request $request)
+    {
+        $rs = true;
         return response()->json(['result' => $rs != null ? true : false]);
     }
 

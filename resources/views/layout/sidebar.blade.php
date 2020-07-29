@@ -84,6 +84,11 @@
     <div class="sidebar-heading">
         @lang('Quản lý hệ thống')
     </div>
+    <li class="nav-item {{ $route == 'config.voucher' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('config.voucher') }}">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>@lang('Voucher')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'config.site' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('config.site') }}">
             <i class="fas fa-fw fa-cogs"></i>

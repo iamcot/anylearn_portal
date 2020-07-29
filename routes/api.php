@@ -35,6 +35,9 @@ Route::get('/user/remove-doc/{fileId}', 'Apis\UserApi@removeDoc');
 Route::get('/user/notification', 'Apis\UserApi@notification');
 Route::get('/user/notification/{id}', 'Apis\UserApi@notifRead');
 
+Route::get('/user/all-friends', 'Apis\UserApi@allFriends');
+
+
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/transaction/{type}', 'Apis\ConfigApi@transaction');
 Route::get('/foundation', 'Apis\ConfigApi@foundation');
@@ -48,8 +51,12 @@ Route::get('/item/list', 'Apis\ItemApi@list');
 Route::post('/item/{itemId}/upload-image', 'Apis\ItemApi@uploadImage');
 Route::get('/item/{itemId}/user-status/{newStatus}', 'Apis\ItemApi@changeUserStatus');
 Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
+Route::post('/item/{id}/share', 'Apis\ItemApi@share');
+
 
 Route::post('/transaction/deposit', 'Apis\TransactionApi@saveDeposit');
+Route::post('/transaction/exchange', 'Apis\TransactionApi@saveExchange');
+Route::post('/transaction/withdraw', 'Apis\TransactionApi@saveWithdraw');
 Route::get('/transaction/history', 'Apis\TransactionApi@history');
 
 Route::get('/transaction/register/{itemId}', 'Apis\TransactionApi@placeOrderOneItem');

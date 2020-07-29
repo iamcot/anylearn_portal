@@ -54,6 +54,13 @@ return [
         'route' => '/account/calendar',
     ],
 
+    NotifConstants::COURSE_SHARE =>  [
+        'title' => 'Bạn đã biết khóa học này chưa?',
+        'template' => '{username} mời bạn cùng học {course}. Hãy xem khóa học này có gì hay nhé.',
+        'route' => '/pdp',
+        'args' => true,
+    ],
+
     /** Transaction */
     NotifConstants::TRANS_DEPOSIT_SENT =>  [
         'title' => 'Yêu cầu nạp tiền đã gửi',

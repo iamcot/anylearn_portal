@@ -18,6 +18,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
+use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -163,8 +164,8 @@ class UserApi extends Controller
             return response('Yêu cầu không đúng', 400);
         }
         $friends = User::where('user_id', $userId)
-        ->orderby('first_name')
-        ->get();
+            ->orderby('first_name')
+            ->get();
         return response()->json([
             'user' => $friendsOfUser,
             'friends' => $friends,
@@ -250,35 +251,34 @@ class UserApi extends Controller
             $totalReg = OrderDetail::where('item_id', $itemId)->count();
             $totalConfirm = Participation::where('item_id', $itemId)->count();
             if ($totalConfirm / $totalReg >= $needNumConfirm) {
-                
-                
+
+
                 $totalCommission = DB::table('transactions')
-                ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-                ->where('od.item_id', $item->id)
-                ->where('transactions.user_id', $author->id)
-                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->sum('transactions.amount');
-                
+                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('od.item_id', $item->id)
+                    ->where('transactions.user_id', $author->id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                    ->sum('transactions.amount');
+
                 User::find($author->id)->update([
                     'wallet_c' => DB::raw('wallet_c + ' . $totalCommission),
                 ]);
-             
+
                 DB::table('transactions')
-                ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-                ->where('od.item_id', $item->id)
-                ->where('transactions.user_id', $author->id)
-                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->update([
-                    'transactions.status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-                ]);
+                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('od.item_id', $item->id)
+                    ->where('transactions.user_id', $author->id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                    ->update([
+                        'transactions.status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    ]);
 
                 Item::find($itemId)->update([
                     'got_bonus' => 1
                 ]);
             }
-           
         }
 
         return response()->json(['result' => $rs ? (int) $itemId : 0]);
@@ -391,6 +391,16 @@ class UserApi extends Controller
             'read' => DB::raw('now()')
         ]);
         return response('OK', 200);
-        
+    }
+
+    public function allFriends(Request $request)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $userServ = new UserServices();
+        $data = $userServ->allFriends($user->id);
+        return response()->json($data);
     }
 }

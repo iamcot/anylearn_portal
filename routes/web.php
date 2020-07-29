@@ -33,6 +33,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/config/guide/{type}', 'ConfigController@guideUpdate');
     Route::post('/upload/ckimage', 'FileController@ckEditorImage')->name('upload.ckimage');
     
+    Route::any('/config/voucher', 'ConfigController@voucher')->name('config.voucher');
+    Route::any('/config/voucher/create', 'ConfigController@voucherEdit')->name('config.voucher.create');
+    Route::any('/config/voucher/{id}', 'ConfigController@voucherEdit')->name('config.voucher.edit');
+
     Route::any('/user/update-doc', 'UserController@updateDoc')->name('user.update_doc');
     
     Route::any('/user/mods/create', 'UserController@modCreate')->name('user.mods.create');

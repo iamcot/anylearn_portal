@@ -203,4 +203,33 @@ class ItemApi extends Controller
             ],
         ]);
     }
+
+    public function share(Request $request, $itemId)
+    {
+        $user = $this->isAuthedApi($request);
+        if (!($user instanceof User)) {
+            return $user;
+        }
+        $item = Item::find($itemId);
+        if (!$item) {
+            return response('Trang không tồn tại', 404);
+        }
+
+        $friends = $request->get('friends');
+        $notifM = new Notification();
+        //TODO need to avoid spam later
+        if ($friends == 'ALL') {
+            $userServ = new UserServices();
+            $allFriends = $userServ->allFriends($user->id);
+            foreach ($allFriends as $friend) {
+                $notifM->notifCourseShare($item, $user->name, $friend['id']);
+            }
+        } elseif (count(json_decode($friends, true)) > 0) {
+            foreach (json_decode($friends, true) as $id) {
+                $notifM->notifCourseShare($item, $user->name, $id);
+            }
+        }
+
+        return response()->json(['result' => true]);
+    }
 }
