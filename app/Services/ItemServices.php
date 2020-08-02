@@ -48,7 +48,8 @@ class ItemServices
                     break;
             }
         }
-        $courses = $courses->orderby('id', 'desc')
+        $courses = $courses->orderby('is_hot', 'desc')
+        ->orderby('id', 'desc')
             ->select(
                 'items.*',
                 DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg')
