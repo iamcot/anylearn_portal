@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AccessItem;
 use App\Http\Middleware\AccessMod;
 use App\Http\Middleware\AccessResource;
+use App\Http\Middleware\ApiUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'access.item' => AccessItem::class,
         'access.resource' => AccessResource::class,
         'access.mod' => AccessMod::class,
+        'api.user' => ApiUser::class,
     ];
 
     /**

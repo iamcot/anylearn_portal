@@ -9,6 +9,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Models\Contract;
 use App\Models\Item;
 use App\Models\Notification;
 use App\Models\OrderDetail;
@@ -69,10 +70,8 @@ class UserApi extends Controller
 
     public function edit(Request $request)
     {
-        $user  = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user  = $request->get('_user');
+
         $inputs = $request->all();
         $userModel = new User();
         $validateExists = $userModel->validateUpdate($user->id, $inputs);
@@ -89,10 +88,8 @@ class UserApi extends Controller
 
     public function userInfoLess(Request $request)
     {
-        $user  = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user  = $request->get('_user');
+
         $user->makeVisible(['api_token']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
         return response()->json($user, 200);
@@ -100,10 +97,8 @@ class UserApi extends Controller
 
     public function userInfo(Request $request)
     {
-        $user  = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user  = $request->get('_user');
+
         $user->makeVisible(['api_token', 'full_content']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
         return response()->json($user, 200);
@@ -132,10 +127,8 @@ class UserApi extends Controller
 
     public function uploadImage(Request $request, $type)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         $fileService = new FileServices();
         $fileuploaded = $fileService->doUploadImage($request, 'image');
         if ($fileuploaded === false) {
@@ -152,10 +145,7 @@ class UserApi extends Controller
 
     public function friends(Request $request, $userId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
         if (!$userId) {
             return response('Yêu cầu không đúng', 400);
         }
@@ -196,10 +186,7 @@ class UserApi extends Controller
 
     public function myCalendar(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
 
         $orderDetailM = new OrderDetail();
         return response()->json($orderDetailM->userRegistered($user->id));
@@ -207,10 +194,7 @@ class UserApi extends Controller
 
     public function confirmJoinCourse(Request $request, $scheduleId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
 
         $schedule = Schedule::find($scheduleId);
         if (!$schedule) {
@@ -286,10 +270,7 @@ class UserApi extends Controller
 
     public function courseRegisteredUsers(Request $request, $itemId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
 
         $item = Item::find($itemId);
         if (!$item) {
@@ -318,20 +299,14 @@ class UserApi extends Controller
 
     public function getDocs(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
         $docs = UserDocument::where('user_id', $user->id)->get();
         return response()->json($docs);
     }
 
     public function addDoc(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
         $fileService = new FileServices();
         $fileuploaded = $fileService->doUploadImage($request, 'image');
         if ($fileuploaded === false) {
@@ -346,10 +321,8 @@ class UserApi extends Controller
 
     public function removeDoc(Request $request, $fileId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         $file = UserDocument::find($fileId);
         if (!$file) {
             return response("Tài liệu không có", 404);
@@ -371,10 +344,7 @@ class UserApi extends Controller
 
     public function notification(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
         $notif = Notification::where('user_id', $user->id)
             ->orderby('id', 'desc')
             ->paginate(Notification::PAGESIZE);
@@ -383,10 +353,7 @@ class UserApi extends Controller
 
     public function notifRead(Request $request, $id)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
         $notif = Notification::find($id)->update([
             'read' => DB::raw('now()')
         ]);
@@ -395,12 +362,88 @@ class UserApi extends Controller
 
     public function allFriends(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
         $userServ = new UserServices();
         $data = $userServ->allFriends($user->id);
         return response()->json($data);
+    }
+
+    public function getContract(Request $request)
+    {
+        $user = $request->get('_user');
+        $lastContract = Contract::where('user_id', $user->id)
+            ->orderby('id', 'desc')->first();
+        $configM = new Configuration();
+        if ($lastContract->type == UserConstants::ROLE_TEACHER) {
+            $key = ConfigConstants::CONTRACT_TEACHER;
+            $template = $configM->get($key);
+            $lastContract->template = Contract::makeTeacherContent($template, $user, $lastContract);
+        } else {
+            $key = ConfigConstants::CONTRACT_SCHOOL;
+            $template = $configM->get($key);
+            $lastContract->template = Contract::makeSchoolContent($template, $user, $lastContract);
+        }
+        return response()->json($lastContract);
+    }
+
+    public function saveContract(Request $request)
+    {
+        $user = $request->get('_user');
+        $contractJson = $request->get('contract');
+        $contract = json_decode($contractJson, true);
+        if (empty($contract)) {
+            return response("Không có thông tin hợp đồng.", 400);
+        }
+        $contract['user_id'] = $user->id;
+        $contract['type'] = $user->role;
+        $contract['status'] = UserConstants::CONTRACT_NEW;
+
+        Contract::where('user_id', $user->id)->update([
+            'status' => UserConstants::CONTRACT_DELETED,
+        ]);
+        $newContract = Contract::create($contract);
+        if ($newContract) {
+            $dataUpdate = [
+                "is_signed" => UserConstants::CONTRACT_NEW,
+                "email" => $contract['email'],
+                "address" => $contract['address'],
+            ];
+            if ($user->role == UserConstants::ROLE_TEACHER) {
+                $dataUpdate['dob'] = $contract['dob'];
+            } else {
+                $dataUpdate['title'] = $contract['ref'];
+            }
+            User::find($user->id)->update($dataUpdate);
+        }
+
+        return response()->json([
+            'status' => true,
+        ]);
+    }
+
+    public function signContract(Request $request)
+    {
+        $user = $request->get('_user');
+        $fileService = new FileServices();
+        $fileuploaded = $fileService->doUploadImage($request, 'image');
+        if ($fileuploaded === false) {
+            return response('Upload file không thành công.', 500);
+        }
+        $lastContract = Contract::where('user_id', $user->id)
+            ->orderby('id', 'desc')->first();
+        $oldImageUrl = $lastContract->signed;
+        if ($oldImageUrl) {
+            $fileService->deleteUserOldImageOnS3($oldImageUrl);
+        }
+
+        Contract::find($lastContract->id)->update([
+            'signed' => $fileuploaded['url'],
+            'status' => UserConstants::CONTRACT_SIGNED,
+        ]);
+
+        User::find($lastContract->user_id)->update([
+            'is_signed' => UserConstants::CONTRACT_SIGNED
+        ]);
+        return response($fileuploaded['url'], 200);
     }
 }

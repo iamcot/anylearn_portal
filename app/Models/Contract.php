@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Contract extends Model
+{
+    protected $fillable = [
+        'user_id', 'status', 'type', 'cert_id', 'cert_place', 'cert_date',
+        'tax', 'ref', 'ref_title', 'address', 'commission', 'email', 'dob', 'dob_place',
+        'bank_name', 'bank_branch', 'bank_no', 'bank_account', 'signed',
+    ];
+
+    public static function makeTeacherContent($template, $user, $contract)
+    {
+        return strtr($template, [
+            '{id}' => $contract->id,
+            '{name}' => $user->name,
+            '{dob}' => $contract->dob,
+            '{dob_place}' => $contract->dob_place,
+            '{cert_id}' => $contract->cert_id,
+            '{cert_place}' => $contract->cert_place,
+            '{address}' => $contract->address,
+            '{phone}' => $user->phone,
+            '{email}' => $contract->email,
+            '{bank_name}' => $contract->bank_name,
+            '{bank_no}' => $contract->bank_no,
+            '{bank_account}' => $contract->bank_account,
+        ]);
+    }
+
+    public static function makeSchoolContent($template, $user, $contract)
+    {
+        return strtr($template, [
+            '{id}' => $contract->id,
+            '{name}' => $user->name,
+            '{refcode}' => $user->refcode,
+            '{tax}' => $contract->tax,
+            '{ref}' => $contract->ref,
+            '{ref_title}' => $contract->ref_title,
+            '{cert_id}' => $contract->cert_id,
+            '{cert_date}' => $contract->cert_date,
+            '{address}' => $contract->address,
+            '{phone}' => $user->phone,
+            '{email}' => $contract->email,
+            '{bank_name}' => $contract->bank_name,
+            '{bank_no}' => $contract->bank_no,
+            '{bank_account}' => $contract->bank_account,
+        ]);
+    }
+}

@@ -26,10 +26,8 @@ class ItemApi extends Controller
 {
     public function create(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         if (empty($request->get('type'))) {
             return response('Chưa có loại khóa học', 400);
         }
@@ -42,10 +40,7 @@ class ItemApi extends Controller
     }
     public function edit(Request $request, $id)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
 
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
@@ -58,10 +53,8 @@ class ItemApi extends Controller
 
     public function save(Request $request, $id)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
             ->first();
@@ -79,10 +72,8 @@ class ItemApi extends Controller
 
     public function list(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+        
         $open = Item::where('user_id', $user->id)
             ->where('user_status', '<=', ItemConstants::USERSTATUS_ACTIVE)
             ->orderby('user_status', 'desc')
@@ -100,11 +91,8 @@ class ItemApi extends Controller
 
     public function uploadImage(Request $request, $itemId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
-
+        $user = $request->get('_user');
+        
         $item = Item::where('id', $itemId)
             ->where('user_id', $user->id)
             ->first();
@@ -128,11 +116,8 @@ class ItemApi extends Controller
 
     public function changeUserStatus(Request $request, $itemId, $newStatus)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
-
+        $user = $request->get('_user');
+        
         if ($newStatus == ItemConstants::USERSTATUS_DONE) {
             $notifService = new Notification();
             $notifService->notifRemindConfirms($itemId);
@@ -206,10 +191,8 @@ class ItemApi extends Controller
 
     public function share(Request $request, $itemId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+        
         $item = Item::find($itemId);
         if (!$item) {
             return response('Trang không tồn tại', 404);

@@ -55,10 +55,8 @@ class ConfigApi extends Controller
 
     public function transaction(Request $request, $type)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         $trans = Transaction::where('user_id', $user->id)
             ->where('type', $type)
             ->orderby('id', 'desc')
@@ -120,7 +118,7 @@ class ConfigApi extends Controller
         //     ->with('user')
         //     ->get();
         $db = DB::table('schedules')
-            ->join('items', 'items.id', '=' , 'schedules.item_id')
+            ->join('items', 'items.id', '=', 'schedules.item_id')
             ->join('users', 'users.id', '=', 'items.user_id')
             ->where('schedules.date', '>=', $startDay)
             ->where('schedules.date', '<=', $endDay)
@@ -160,10 +158,8 @@ class ConfigApi extends Controller
 
     public function saveFeedback(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         $fileService = new FileServices();
         $fileuploaded = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'feedbacks');
         Feedback::create([

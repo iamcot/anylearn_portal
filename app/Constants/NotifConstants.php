@@ -22,6 +22,7 @@ class NotifConstants
     const TRANS_DEPOSIT_SENT = 'trans_deposit_sent';
     const TRANS_DEPOSIT_APPROVED = 'trans_deposit_approved';
     const TRANS_DEPOSIT_REJECTED = 'trans_deposit_rejected';
+    const TRANS_WITHDRAW_SENT = 'trans_withdraw_sent';
     const TRANS_WITHRAW_APPROVED = 'trans_withdraw_approved';
     const TRANS_EXCHANGE_APPROVED = 'trans_exchange_approved';
     const TRANS_WITHRAW_REJECTED = 'trans_withdraw_rejected';

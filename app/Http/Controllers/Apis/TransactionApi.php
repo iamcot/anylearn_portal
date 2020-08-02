@@ -25,10 +25,7 @@ class TransactionApi extends Controller
 {
     public function saveDeposit(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
 
         $paymentInput = $request->get('pay_method');
         $amountInput = $request->get('amount');
@@ -68,11 +65,8 @@ class TransactionApi extends Controller
 
     public function saveExchange(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
-        // Log::debug($user);
+        $user = $request->get('_user');
+
         $point = $request->get('amount');
         if ($point > $user->wallet_c) {
             return response('Không đủ điểm', 400);
@@ -84,21 +78,60 @@ class TransactionApi extends Controller
             'wallet_c' => $user->wallet_c - $point,
             'wallet_m' => $user->wallet_m + $walletM,
         ]);
+        $rs = Transaction::create([
+            'user_id' => $user->id,
+            'type' => ConfigConstants::TRANSACTION_EXCHANGE,
+            'amount' => $walletM,
+            'pay_method' => 'wallet_c',
+            'ref_amount' => -$point,
+            'content' => "Đổi $point điểm sang tài khoản.",
+            'status' => 1,
+        ]);
         return response()->json(['result' => $rs ? true : false]);
     }
 
     public function saveWithdraw(Request $request)
     {
-        $rs = true;
-        return response()->json(['result' => $rs != null ? true : false]);
+        $user = $request->get('_user');
+
+        $point = $request->get('amount');
+        if ($point > $user->wallet_c) {
+            return response('Không đủ điểm', 400);
+        }
+        $bankInfoStr = $request->get('pay_info');
+        $bankInfo = json_decode($bankInfoStr, true);
+        if (empty($bankInfo)) {
+            return response('Không có thông tin ngân hàng', 400);
+        }
+
+        $configM = new Configuration();
+        $rate = $configM->get(ConfigConstants::CONFIG_BONUS_RATE);
+        $walletM = $point * $rate;
+        $rs = User::find($user->id)->update([
+            'wallet_c' => $user->wallet_c - $point,
+        ]);
+        $rs = Transaction::create([
+            'user_id' => $user->id,
+            'type' => ConfigConstants::TRANSACTION_WITHDRAW,
+            'amount' => - $point,
+            'pay_method' => 'wallet_c',
+            'pay_info' => $bankInfoStr,
+            'ref_amount' => $walletM,
+            'content' => "Rút $point điểm về ngân hàng.",
+            'status' => 0,
+        ]);
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::TRANS_WITHRAW_APPROVED, $user->id, [
+            'amount' => number_format($walletM, 0, ',', '.'),
+            'point' => number_format($point, 0, ',', '.'),
+        ]);
+        return response()->json(['result' => $rs ? true : false]);
     }
 
     public function history(Request $request)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+
         $transM =  new Transaction();
         $walletM = $transM->history($user->id, UserConstants::WALLET_M);
         $walletC = $transM->history($user->id, UserConstants::WALLET_C);
@@ -110,10 +143,8 @@ class TransactionApi extends Controller
 
     public function placeOrderOneItem(Request $request, $itemId)
     {
-        $user = $this->isAuthedApi($request);
-        if (!($user instanceof User)) {
-            return $user;
-        }
+        $user = $request->get('_user');
+        
         $item = Item::find($itemId);
         if (!$item) {
             return response('Trang không tồn tại', 404);

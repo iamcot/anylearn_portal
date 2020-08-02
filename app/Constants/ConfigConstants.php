@@ -12,6 +12,8 @@ class ConfigConstants
     const GUIDE_TOC_TEACHER = 'guide_toc_teacher';
     const GUIDE_TOC_SCHOOL = 'guide_toc_school';
     const GUIDE_PRIVACY = 'guide_privacy';
+    const CONTRACT_TEACHER = 'contract_teacher';
+    const CONTRACT_SCHOOL = 'contract_school';
 
     const CONFIG_FRIEND_TREE = 'friend_tree';
     const CONFIG_NUM_COURSE = 'num_course';
@@ -56,5 +58,7 @@ class ConfigConstants
         self::GUIDE_TOC_SCHOOL => 'Chính sách cho trung tâm',
         self::GUIDE_TOC_TEACHER => 'Chính sách cho giảng viên',
         self::GUIDE_PRIVACY => 'Chính sách bảo mật',
+        self::CONTRACT_TEACHER => 'Mẫu HĐ Giảng Viên',
+        self::CONTRACT_SCHOOL => 'Mẫu HĐ Trường Học',
     ];
 }

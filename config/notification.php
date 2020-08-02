@@ -77,6 +77,11 @@ return [
         'template' => 'Yêu cầu nạp tiền của bạn đã bị từ chối. Thử lại lần nữa hoặc liên hệ 0374 900 344 để được hỗ trợ.',
         'route' => '/transaction',
     ],
+    NotifConstants::TRANS_WITHDRAW_SENT =>  [
+        'title' => 'Yêu cầu rút tiền đã gửi',
+        'template' => 'Bạn vừa gửi yêu cầu rút {point} điểm thành {amount} về ngân hàng. Vui lòng chờ đợi trong ít phút nhé. Liên hệ 037 4900 344 nếu bạn cần hỗ trợ',
+        'route' => '/transaction',
+    ],
     NotifConstants::TRANS_WITHRAW_APPROVED =>  [
         'title' => 'Rút điểm về ngân hàng được duyệt',
         'template' => 'Bạn vừa rút {amount} về ngân hàng của mình. Chúc mừng bạn đã nhận được khoản tiền xứng đáng nhờ đầu tư học tập!',
