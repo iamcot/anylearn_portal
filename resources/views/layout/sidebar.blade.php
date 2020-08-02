@@ -57,6 +57,11 @@
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Duyệt giao dịch')</span></a>
     </li> 
+    <li class="nav-item {{ $route == 'user.contract' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.contract') }}">
+            <i class="fas fa-fw fa-certificate"></i>
+            <span>@lang('Quản lý hợp đồng')</span></a>
+    </li> 
     <li class="nav-item {{ $route == 'transaction.commission' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction.commission') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Constants\ConfigConstants;
+use App\Constants\NotifConstants;
 use App\Constants\UserConstants;
 use App\Models\Configuration;
+use App\Models\Contract;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
@@ -91,7 +94,7 @@ class UserController extends Controller
         }
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
-                
+
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
@@ -143,5 +146,73 @@ class UserController extends Controller
         }
         $rs = User::find($userId)->update(['status' => DB::raw('1 - status')]);
         return redirect()->back()->with('notify', $rs);
+    }
+
+    public function contractList(Request $request)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->haveAccess($user->role, 'admin')) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $list = DB::table('contracts')
+            ->join('users', 'users.id', '=', 'contracts.user_id');
+        if (!empty($request->input('s'))) {
+            switch ($request->input('t')) {
+                case "phone":
+                    $list = $list->where('users.phone', $request->input('s'));
+                    break;
+                default:
+                    $list = $list->where('users.name', 'like', '%' . $request->input('s') . '%');
+                    break;
+            }
+        }
+        $list = $list->where('contracts.status', '>', 0)
+            ->orderBy('contracts.id', 'desc')
+            ->select('users.name', 'users.phone', 'contracts.*')
+            ->paginate(20);
+        $this->data['list'] = $list;
+        $this->data['navText'] = __('Các hợp đồng với thành viên');
+        return view('user.contract_list', $this->data);
+    }
+
+    public function contractInfo(Request $request, $id)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->haveAccess($user->role, 'admin')) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $contract = DB::table('contracts')
+            ->join('users', 'users.id', '=', 'contracts.user_id')
+            ->where('contracts.id', $id)
+            ->select('users.name', 'users.phone', 'contracts.*')
+            ->first();
+        if ($request->get('action')) {
+            $notifM = new Notification();
+            if ($request->get('action') == UserConstants::CONTRACT_APPROVED) {
+                Contract::find($id)->update(['status' => UserConstants::CONTRACT_APPROVED]);
+                User::find($contract->user_id)->update([
+                    'is_signed' => UserConstants::CONTRACT_APPROVED,
+                    'commission_rate' => $contract->commission,
+                ]);
+                $notifM->createNotif(NotifConstants::CONTRACT_APPROVED, $contract->user_id, [
+                    'username' => $contract->name,
+                ]);
+                return redirect()->back()->with('notify', 'Đã duyệt hợp đồng và cập nhật hoa hồng mới');
+            } elseif ($request->get('action') == UserConstants::CONTRACT_DELETED) {
+                Contract::find($id)->update(['status' => UserConstants::CONTRACT_DELETED]);
+                User::find($contract->user_id)->update(['is_signed' => UserConstants::CONTRACT_DELETED]);
+                $notifM->createNotif(NotifConstants::CONTRACT_DELETED, $contract->user_id, [
+                    'username' => $contract->name,
+                ]);
+                return redirect()->route('user.contract')->with('notify', 'Đã từ chối hợp đồng với ' . $contract->name);
+            }
+        }
+
+        $this->data['contract']  = $contract;
+        $this->data['hasBack'] = route('user.contract');
+        $this->data['navText'] = __('Hợp đồng với ' . $contract->name);
+        return view('user.contract_info', $this->data);
     }
 }

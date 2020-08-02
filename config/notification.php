@@ -15,6 +15,16 @@ return [
         'route' => '/account/friends',
         'args' => true,
     ],
+    NotifConstants::CONTRACT_APPROVED => [
+        'title' => 'Hợp đồng được duyệt',
+        'template' => 'Chúc mừng {username}! Hợp đồng của bạn đã được duyệt.',
+        'route' => '/account',
+    ],
+    NotifConstants::CONTRACT_DELETED => [
+        'title' => 'Hợp đồng bị từ chối',
+        'template' => '{username} ơi. Rất tiếc hợp đồng của bạn đã bị từ chối, xin kiểm tra lại thông tin hoặc vui lòng liên hệ 0374 900 344 để được hỗ trợ.',
+        'route' => '/account',
+    ],
 
     /** Course process */
     NotifConstants::COURSE_APPROVED =>  [

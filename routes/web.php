@@ -45,6 +45,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::get('/user/members', 'UserController@members')->name('user.members');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
+    Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
+    Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
 
     Route::get('/user/status/{userId}', 'UserController@statusTouch')->name('user.status.touch');
     Route::get('/item/status/{itemId}', 'CourseController@statusTouch')->name('item.status.touch');

@@ -7,6 +7,10 @@ class NotifConstants
     /** User notif */
     const NEW_USER = 'new_user';
     const NEW_FRIEND = 'new_friend';
+    const CONTRACT_NEW = 'contract_new';
+    const CONTRACT_APPROVED = 'contract_approved';
+    const CONTRACT_DELETED = 'contract_deleted';
+    const CONTRACT_SIGNED = 'contract_signed';
 
     /** Course process */
     const COURSE_APPROVED = 'course_approved';

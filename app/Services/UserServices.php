@@ -147,7 +147,7 @@ class UserServices
             $notifServ = new Notification();
             $configM = new Configuration();
             $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
-                
+
             DB::beginTransaction();
             $obj = [
                 'type' => $input['type'],
@@ -185,7 +185,7 @@ class UserServices
                 ]);
                 $obj['amount'] = $obj['amount'] > 0 ? $obj['amount'] * -1 : $obj['amount'];
                 $notifServ->createNotif(NotifConstants::TRANS_WITHRAW_APPROVED, $user->id, [
-                    'amount' => number_format($input['amount'] * $configs[ConfigConstants::CONFIG_BONUS_RATE] , 0, ',', '.'),
+                    'amount' => number_format($input['amount'] * $configs[ConfigConstants::CONFIG_BONUS_RATE], 0, ',', '.'),
                 ]);
             }
             $trans = Transaction::create($obj);
@@ -197,7 +197,8 @@ class UserServices
         return 'Giao dịch thất bại';
     }
 
-    public function allFriends($userId) {
+    public function allFriends($userId)
+    {
         $configM = new Configuration();
         $maxLevel = $configM->get(ConfigConstants::CONFIG_FRIEND_TREE);
         $data = [];
@@ -222,5 +223,21 @@ class UserServices
             }
         }
         return $data;
+    }
+
+    public function contractStatus($status)
+    {
+        switch ($status) {
+            case UserConstants::CONTRACT_NEW:
+                return "Mới tạo";
+            case UserConstants::CONTRACT_SIGNED:
+                return "Thành viên ký";
+            case UserConstants::CONTRACT_APPROVED:
+                return "Công ty xác nhận";
+            case UserConstants::CONTRACT_DELETED:
+                return "Đã Hủy";
+            default:
+                return "N/A";
+        }
     }
 }
