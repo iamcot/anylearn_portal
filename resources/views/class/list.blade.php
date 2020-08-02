@@ -63,7 +63,7 @@
                     <td>
                         @if($userServ->isMod(\Auth::user()->role))
                         {!! $itemServ->statusOperation($course->id, $course->status) !!}
-                        {!! $itemServ->typeOperation($course) !!}
+                        <!-- {!! $itemServ->typeOperation($course) !!} -->
                         @endif
                         
                     </td>

@@ -104,7 +104,7 @@ class ItemServices
         return $data;
     }
 
-    public function createItem($input, $itemType = ItemConstants::TYPE_COURSE, $userApi = null)
+    public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
         $user = $userApi ?? Auth::user();
         $validator = $this->validate($input);
@@ -128,15 +128,15 @@ class ItemServices
 
         $newCourse = Item::create($input);
         if ($newCourse) {
-            if ($newCourse->type == ItemConstants::TYPE_COURSE) {
-                Schedule::create([
-                    'item_id' => $newCourse->id,
-                    'date' => $newCourse->date_start,
-                    'time_start' => $newCourse->time_start,
-                    'time_end' => $newCourse->time_end,
-                    'content' => $newCourse->title,
-                ]);
-            }
+            // if ($newCourse->type == ItemConstants::TYPE_COURSE) {
+            Schedule::create([
+                'item_id' => $newCourse->id,
+                'date' => $newCourse->date_start,
+                'time_start' => $newCourse->time_start,
+                'time_end' => $newCourse->time_end,
+                'content' => $newCourse->title,
+            ]);
+            // }
             return $newCourse->id;
         }
         return false;
@@ -172,27 +172,29 @@ class ItemServices
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
-            if ($itemUpdate->type == ItemConstants::TYPE_COURSE) {
-                $hasSchedule = Schedule::where('item_id', $itemUpdate->id)->count();
-                if ($hasSchedule) {
-                    Schedule::where('item_id', $itemUpdate->id)->update([
-                        'date' => $input['date_start'],
-                        'time_start' => $input['time_start'],
-                        'time_end' => $input['time_end'],
-                        'content' => $input['title'],
-                    ]);
-                } else {
-                    Schedule::create([
-                        'item_id' => $itemUpdate->id,
-                        'date' => $input['date_start'],
-                        'time_start' => $input['time_start'],
-                        'time_end' => $input['time_end'],
-                        'content' => $input['title'],
-                    ]);
-                }
-            } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
-                $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
+            // if ($itemUpdate->type == ItemConstants::TYPE_COURSE) {
+            $hasSchedule = Schedule::where('item_id', $itemUpdate->id)->count();
+            if ($hasSchedule == 1) {
+                Schedule::where('item_id', $itemUpdate->id)->update([
+                    'date' => $input['date_start'],
+                    'time_start' => $input['time_start'],
+                    'time_end' => $input['time_end'],
+                    'content' => $input['title'],
+                ]);
             }
+            //  elseif ($hasSchedule == 0) {
+            //     Schedule::create([
+            //         'item_id' => $itemUpdate->id,
+            //         'date' => $input['date_start'],
+            //         'time_start' => $input['time_start'],
+            //         'time_end' => $input['time_end'],
+            //         'content' => $input['title'],
+            //     ]);
+            // }
+            
+            // } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
+            //     $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
+            // }
             if (
                 $itemUpdate->date_start != $input['date_start']
                 || $itemUpdate->date_start != $input['time_start']

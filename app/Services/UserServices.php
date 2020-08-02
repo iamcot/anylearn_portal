@@ -19,10 +19,9 @@ class UserServices
         UserConstants::ROLE_ADMIN => [],
         UserConstants::ROLE_MOD => [],
         UserConstants::ROLE_TEACHER => [
-            'course',
+            'school',
         ],
         UserConstants::ROLE_SCHOOL => [
-            'course',
             'school'
         ],
     ];
