@@ -24,7 +24,9 @@ class Contract extends Model
                 $contractArray["{" . $key. "}"] = date('d/m/Y', strtotime($value));
             } elseif($key == 'commission') {
                 $contractArray["{commission}"] = ($value * 100) . "%";
-            } else {
+            } elseif($key == 'signed' && !empty($value)) {
+                $contractArray["{signed}"] = '<img src="'.$value.'" style="max-width:100px; max-height:100%">';
+            }else {
                 $contractArray["{" . $key . "}"] = $value;
             }
         }
