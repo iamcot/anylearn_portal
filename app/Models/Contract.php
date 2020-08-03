@@ -21,12 +21,12 @@ class Contract extends Model
         ];
         foreach (json_decode(json_encode($contract), true) as $key => $value) {
             if (in_array($key, ['dob', 'cert_date', 'created_at', 'updated_at'])) {
-                $contractArray["{" . $key. "}"] = date('d/m/Y', strtotime($value));
-            } elseif($key == 'commission') {
+                $contractArray["{" . $key . "}"] = date('d/m/Y', strtotime($value));
+            } elseif ($key == 'commission') {
                 $contractArray["{commission}"] = ($value * 100) . "%";
-            } elseif($key == 'signed' && !empty($value)) {
-                $contractArray["{signed}"] = '<img src="'.$value.'" style="max-width:100px; max-height:100%">';
-            }else {
+            } elseif ($key == 'signed' && !empty($value)) {
+                $contractArray["{signed}"] = '<img src="' . $value . '" style="max-width:100px; max-height:100px;">';
+            } else {
                 $contractArray["{" . $key . "}"] = $value;
             }
         }
