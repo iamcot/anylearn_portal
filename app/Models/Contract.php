@@ -17,10 +17,13 @@ class Contract extends Model
         $contractArray = [
             '{name}' => $user->name,
             '{phone}' => $user->phone,
+            '{refcode}' => $user->refcode,
         ];
         foreach (json_decode(json_encode($contract), true) as $key => $value) {
             if (in_array($key, ['dob', 'cert_date', 'created_at', 'updated_at'])) {
                 $contractArray["{" . $key. "}"] = date('d/m/Y', strtotime($value));
+            } elseif($key == 'commission') {
+                $contractArray["{commission}"] = ($value * 100) . "%";
             } else {
                 $contractArray["{" . $key . "}"] = $value;
             }
