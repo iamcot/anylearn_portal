@@ -20,9 +20,9 @@ class Contract extends Model
         ];
         foreach (json_decode(json_encode($contract), true) as $key => $value) {
             if (in_array($key, ['dob', 'cert_date', 'created_at', 'updated_at'])) {
-                $contractArray["{$key}"] = date('d/m/Y', strtotime($value));
+                $contractArray["{" . $key. "}"] = date('d/m/Y', strtotime($value));
             } else {
-                $contractArray["{$key}"] = $value;
+                $contractArray["{" . $key . "}"] = $value;
             }
         }
         return strtr($template, $contractArray);
