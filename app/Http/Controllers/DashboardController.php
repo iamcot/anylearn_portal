@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Feedback;
 use App\Models\User;
 use App\Services\DashboardServices;
+use App\Services\UserServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -21,11 +23,16 @@ class DashboardController extends Controller
             $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
         }
         $this->data['navText'] = __('Bảng thông tin');
-        $dashServ = new DashboardServices();
-        $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByWeek());
-        $this->data['topUsers'] = $dashServ->topUser();
-        $this->data['topItems'] = $dashServ->topItem();
-        return view('dashboard.index', $this->data);
+        $userServ = new UserServices();
+        if ($userServ->haveAccess(Auth::user()->role, 'admin')) {
+            $dashServ = new DashboardServices();
+            $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByWeek());
+            $this->data['topUsers'] = $dashServ->topUser();
+            $this->data['topItems'] = $dashServ->topItem();
+            return view('dashboard.index', $this->data);
+        } else {
+            return view('dashboard.member', $this->data);
+        }
     }
 
     public function feedback(Request $request)
