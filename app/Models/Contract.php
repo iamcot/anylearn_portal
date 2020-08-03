@@ -25,7 +25,7 @@ class Contract extends Model
             } elseif ($key == 'commission') {
                 $contractArray["{commission}"] = ($value * 100) . "%";
             } elseif ($key == 'signed' && !empty($value)) {
-                $contractArray["{signed}"] = '<img src="' . $value . '" style="max-width:100px; max-height:100px;">';
+                $contractArray["{signed}"] = '<img src="' . $value . '" style="width:100px;">';
             } else {
                 $contractArray["{" . $key . "}"] = $value;
             }
