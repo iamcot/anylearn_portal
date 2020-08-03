@@ -377,11 +377,11 @@ class UserApi extends Controller
         if ($lastContract->type == UserConstants::ROLE_TEACHER) {
             $key = ConfigConstants::CONTRACT_TEACHER;
             $template = $configM->get($key);
-            $lastContract->template = Contract::makeTeacherContent($template, $user, $lastContract);
+            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
         } else {
             $key = ConfigConstants::CONTRACT_SCHOOL;
             $template = $configM->get($key);
-            $lastContract->template = Contract::makeSchoolContent($template, $user, $lastContract);
+            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
         }
         return response()->json($lastContract);
     }

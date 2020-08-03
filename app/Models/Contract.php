@@ -12,6 +12,22 @@ class Contract extends Model
         'bank_name', 'bank_branch', 'bank_no', 'bank_account', 'signed',
     ];
 
+    public static function makeContent($template, $user, $contract)
+    {
+        $contractArray = [
+            '{name}' => $user->name,
+            '{phone}' => $user->phone,
+        ];
+        foreach (json_decode(json_encode($contract), true) as $key => $value) {
+            if (in_array($key, ['dob', 'cert_date', 'created_at', 'updated_at'])) {
+                $contractArray["{$key}"] = date('d/m/Y', strtotime($value));
+            } else {
+                $contractArray["{$key}"] = $value;
+            }
+        }
+        return strtr($template, $contractArray);
+    }
+
     public static function makeTeacherContent($template, $user, $contract)
     {
         return strtr($template, [
