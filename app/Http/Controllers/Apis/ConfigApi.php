@@ -145,6 +145,7 @@ class ConfigApi extends Controller
             foreach ($db as $event) {
                 $data[$event->date][] = [
                     'id' => $event->id,
+                    'item_id' => $event->id,
                     'title' => $event->title,
                     'date' => $event->date,
                     'time' => $event->time_start,
