@@ -27,6 +27,11 @@ Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
 Route::get('/foundation', 'Apis\ConfigApi@foundation');
 Route::get('/doc/{key}', 'Apis\ConfigApi@getDoc');
+Route::get('/item/{itemId}/reviews', 'Apis\ItemApi@reviews');
+
+Route::get('/article', 'Apis\ArticleApi@index');
+Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
+Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/user', 'Apis\UserApi@userInfo');
@@ -63,4 +68,7 @@ Route::middleware(['api.user'])->group(function () {
 
     Route::get('/config/transaction/{type}', 'Apis\ConfigApi@transaction');
     Route::post('/config/feedback', 'Apis\ConfigApi@saveFeedback');
+
+    Route::get('/item/{itemId}/touch-fav', 'Apis\ItemApi@touchFav');
+    Route::post('/item/{itemId}/save-rating', 'Apis\ItemApi@saveRating');
 });

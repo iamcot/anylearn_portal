@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class ItemUserAction extends Model
+{
+    const TYPE_FAV = 'fav';
+    const TYPE_RATING = 'rating';
+    const FAV_ADDED = 1;
+    const FAV_REMOVED = 0;
+
+    protected $fillable = ['item_id', 'user_id', 'type', 'value', 'extra_value'];
+
+    protected $table = 'item_user_actions';
+
+    public function touchFav($itemId, $userId)
+    {
+        $exits = $this->where('item_id', $itemId)
+            ->where('user_id', $userId)
+            ->where('type', self::TYPE_FAV)->first();
+        if ($exits) {
+            $this->where('item_id', $itemId)
+                ->where('user_id', $userId)
+                ->where('type', self::TYPE_FAV)->update([
+                    'value' => 1 - (int) $exits->value,
+                ]);
+        } else {
+            $this->create([
+                'item_id' => $itemId,
+                'user_id' => $userId,
+                'type' => self::TYPE_FAV,
+                'value' => self::FAV_ADDED,
+            ]);
+        }
+
+        $isFav = $this->isFav($itemId, $userId);
+        return $isFav;
+    }
+
+    public function isFav($itemId, $userId)
+    {
+        $action = $this->where('item_id', $itemId)
+            ->where('user_id', $userId)
+            ->where('type', self::TYPE_FAV)->first();
+        return $action && $action->value == 1 ? true : false;
+    }
+
+    public function numFav($itemId)
+    {
+        return $this->where('item_id', $itemId)
+            ->where('type', self::TYPE_FAV)
+            ->where('value', self::FAV_ADDED)
+            ->count();
+    }
+
+    public function numReg($itemId)
+    {
+        return OrderDetail::where('item_id', $itemId)
+            ->count();
+    }
+
+    public function rating($itemId)
+    {
+        return $this->where('item_id', $itemId)
+            ->where('type', self::TYPE_RATING)
+            ->avg('value');
+    }
+
+    public function saveRating($itemId, $userId, $rating, $comment)
+    {
+        $exits = $this->where('item_id', $itemId)
+            ->where('user_id', $userId)
+            ->where('type', self::TYPE_RATING)->first();
+
+        if ($exits) {
+            $this->where('item_id', $itemId)
+                ->where('user_id', $userId)
+                ->where('type', self::TYPE_RATING)->update([
+                    'value' => $rating,
+                    'extra_value' => $comment,
+                ]);
+        } else {
+            $this->create([
+                'item_id' => $itemId,
+                'user_id' => $userId,
+                'type' => self::TYPE_RATING,
+                'value' => $rating,
+                'extra_value' => $comment,
+            ]);
+        }
+
+        return true;
+    }
+}

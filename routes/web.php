@@ -76,6 +76,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/transaction', 'TransactionController@transaction')->name('transaction');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
+    
+    Route::get('/article', 'ArticleController@list')->name('article');
+    Route::post('/article/create', 'ArticleController@create')->name('article.create');
+    Route::any('/article/{id}', 'ArticleController@edit')->name('article.edit');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

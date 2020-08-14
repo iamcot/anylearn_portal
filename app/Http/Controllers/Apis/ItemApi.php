@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Apis;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
-use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
 use App\Models\User;
@@ -17,10 +17,7 @@ use App\Services\ItemServices;
 use App\Services\UserServices;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ItemApi extends Controller
 {
@@ -73,7 +70,7 @@ class ItemApi extends Controller
     public function list(Request $request)
     {
         $user = $request->get('_user');
-        
+
         $open = Item::where('user_id', $user->id)
             ->where('user_status', '<=', ItemConstants::USERSTATUS_ACTIVE)
             ->orderby('user_status', 'desc')
@@ -92,7 +89,7 @@ class ItemApi extends Controller
     public function uploadImage(Request $request, $itemId)
     {
         $user = $request->get('_user');
-        
+
         $item = Item::where('id', $itemId)
             ->where('user_id', $user->id)
             ->first();
@@ -117,7 +114,7 @@ class ItemApi extends Controller
     public function changeUserStatus(Request $request, $itemId, $newStatus)
     {
         $user = $request->get('_user');
-        
+
         if ($newStatus == ItemConstants::USERSTATUS_DONE) {
             $notifService = new Notification();
             $notifService->notifRemindConfirms($itemId);
@@ -140,12 +137,17 @@ class ItemApi extends Controller
             return response('Trang không tồn tại', 404);
         }
         $pageSize = $request->get('pageSize', 9999);
-        $items = Item::where('user_id', $userId)
+        $items = DB::table('items')
+            ->where('user_id', $userId)
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', '>', ItemConstants::STATUS_INACTIVE)
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
+            ->select(
+                'items.*',
+                DB::raw("(select avg(iua.value) from item_user_actions AS iua WHERE type = 'rating' AND iua.item_id = items.id) AS rating")
+            )
             ->paginate($pageSize);
         return response()->json([
             'user' => $user,
@@ -176,11 +178,18 @@ class ItemApi extends Controller
 
         $numSchedule = Schedule::where('item_id', $itemId)->count();
 
+        $itemUserActionM = new ItemUserAction();
+        $user = $this->isAuthedApi($request);
+        $item->num_favorite = $itemUserActionM->numFav($itemId);
+        $item->num_cart = $itemUserActionM->numReg($itemId);
+        $item->rating = $itemUserActionM->rating($itemId);
+
         return response()->json([
             'commission' => $commission,
             'author' => $author,
             'item' => $item,
             'num_schedule' => $numSchedule,
+            'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
@@ -192,7 +201,7 @@ class ItemApi extends Controller
     public function share(Request $request, $itemId)
     {
         $user = $request->get('_user');
-        
+
         $item = Item::find($itemId);
         if (!$item) {
             return response('Trang không tồn tại', 404);
@@ -214,5 +223,42 @@ class ItemApi extends Controller
         }
 
         return response()->json(['result' => true]);
+    }
+
+    public function touchFav(Request $request, $itemId)
+    {
+        $user = $request->get('_user');
+        $item = Item::find($itemId);
+        if (!$item) {
+            return response('Trang không tồn tại', 404);
+        }
+        $itemUserActionM = new ItemUserAction();
+        $rs = $itemUserActionM->touchFav($itemId, $user->id);
+        return response()->json(['is_fav' => $rs]);
+    }
+
+    public function saveRating(Request $request, $itemId)
+    {
+        $user = $request->get('_user');
+        $item = Item::find($itemId);
+        if (!$item) {
+            return response('Trang không tồn tại', 404);
+        }
+        $rating = $request->get('rating', 5);
+        $comment = $request->get('comment', '');
+        $itemUserActionM = new ItemUserAction();
+        $rs = $itemUserActionM->saveRating($itemId, $user->id, $rating, $comment);
+        return response()->json(['result' => $rs]);
+    }
+
+    public function reviews($itemId)
+    {
+        $data = DB::table('item_user_actions AS iua')
+            ->join('users', 'users.id', '=', 'iua.user_id')
+            ->where('iua.item_id', $itemId)
+            ->where('iua.type', ItemUserAction::TYPE_RATING)
+            ->select('iua.*', 'users.name AS user_name', 'users.id AS user_id', 'users.image AS user_image')
+            ->get();
+        return response()->json($data);
     }
 }

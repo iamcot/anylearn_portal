@@ -128,6 +128,7 @@ class ConfigApi extends Controller
             ->where('items.is_test', 0)
             ->select(
                 'items.id',
+                'items.id AS item_id',
                 'items.title',
                 'schedules.date',
                 'schedules.time_start',

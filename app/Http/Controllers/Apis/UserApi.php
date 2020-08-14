@@ -168,13 +168,17 @@ class UserApi extends Controller
             return response('Yêu cầu không đúng', 400);
         }
         $pageSize = $request->get('pageSize', 9999);
-        $list = User::where('role', $role)
+        $list = DB::table('users')->where('role', $role)
             ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('is_test', 0)
             ->orderby('is_hot', 'desc')
             ->orderby('boost_score', 'desc')
             ->orderby('first_name')
+            ->select(
+                'users.*',
+                DB::raw("(select avg(iua.value) from item_user_actions AS iua WHERE type = 'rating' AND iua.item_id in (select items.id from items where items.user_id = users.id) ) AS rating")
+            )
             ->paginate($pageSize);
         $configM = new Configuration();
         $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);

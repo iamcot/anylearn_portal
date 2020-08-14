@@ -179,7 +179,7 @@ class ItemServices
                 Schedule::where('item_id', $itemUpdate->id)->update([
                     'date' => $input['date_start'],
                     'time_start' => $input['time_start'],
-                    'time_end' => $input['time_end'],
+                    'time_end' => empty($input['time_end']) ? "" : $input['time_end'],
                     'content' => $input['title'],
                 ]);
             }

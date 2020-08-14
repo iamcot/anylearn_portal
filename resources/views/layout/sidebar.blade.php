@@ -1,6 +1,6 @@
 @inject('userService', 'App\Services\UserServices')
 <!-- Sidebar -->
-@php ( $route  = app('router')->getRoutes()->match(app('request'))->getName() )
+@php ( $route = app('router')->getRoutes()->match(app('request'))->getName() )
 <ul class="navbar-nav bg-gradient-{{ env('MAIN_COLOR', 'primary') }} sidebar sidebar-dark accordion d-print-none" id="accordionSidebar">
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
@@ -21,7 +21,7 @@
             <span>@lang('Chỉnh sửa Khóa học')</span></a>
     </li> -->
     <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit']) ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('class') }}">
+        <a class="nav-link" href="{{ route('class') }}">
             <i class="fas fa-fw fa-university"></i>
             <span>@lang('Chỉnh sửa Lớp học')</span></a>
     </li>
@@ -50,41 +50,42 @@
     @if($userService->haveAccess(Auth::user()->role, 'admin'))
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
-        @lang('Quản lý người dùng') 
+        @lang('Quản lý người dùng')
+    </div>
+    <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.members') }}">
+            <i class="fas fa-fw fa-users-cog"></i>
+            <span>@lang('Quản lý thành viên')</span></a>
+    </li>
+    <li class="nav-item {{ $route == 'user.contract' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.contract') }}">
+            <i class="fas fa-fw fa-certificate"></i>
+            <span>@lang('Quản lý hợp đồng')</span></a>
+    </li>
+    <hr class="sidebar-divider d-none d-md-block">
+    <div class="sidebar-heading">
+        @lang('Quản lý APP')
     </div>
     <li class="nav-item {{ $route == 'transaction' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Duyệt giao dịch')</span></a>
-    </li> 
-    <li class="nav-item {{ $route == 'user.contract' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('user.contract') }}">
-            <i class="fas fa-fw fa-certificate"></i>
-            <span>@lang('Quản lý hợp đồng')</span></a>
-    </li> 
+    </li>
     <li class="nav-item {{ $route == 'transaction.commission' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction.commission') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Lịch sử nhận hoa hồng')</span></a>
-    </li> 
-    <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('user.members') }}">
-            <i class="fas fa-fw fa-users-cog"></i>
-            <span>@lang('Quản lý thành viên')</span></a>
-    </li> 
-    @if($userService->haveAccess(Auth::user()->role, 'root'))
-    <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('user.mods') }}">
-            <i class="fas fa-fw fa-user-shield"></i>
-            <span>@lang('Quản lý Mods')</span></a>
     </li>
-    @endif
     <li class="nav-item {{ $route == 'feedback' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('feedback') }}">
             <i class="fas fa-fw fa-comments"></i>
             <span>@lang('Xem feedback')</span></a>
-    </li> 
-
+    </li>
+    <li class="nav-item {{ $route == 'article' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('article') }}">
+            <i class="fas fa-fw fa-comments"></i>
+            <span>@lang('Viết bài Học & Hỏi')</span></a>
+    </li>
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
         @lang('Quản lý hệ thống')
@@ -104,6 +105,13 @@
             <i class="fas fa-fw fa-images"></i>
             <span>@lang('Banners')</span></a>
     </li>
+    @if($userService->haveAccess(Auth::user()->role, 'root'))
+    <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.mods') }}">
+            <i class="fas fa-fw fa-user-shield"></i>
+            <span>@lang('Quản lý Mods')</span></a>
+    </li>
+    @endif
     <li class="nav-item {{ $route == 'config.guide' ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="{{ $route == 'config.guide' ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
