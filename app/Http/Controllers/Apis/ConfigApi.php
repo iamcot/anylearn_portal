@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\Configuration;
 use App\Models\Feedback;
 use App\Models\Item;
@@ -50,6 +51,8 @@ class ConfigApi extends Controller
                 // $hotUserInCate,
             ],
             'month_courses' => $monthItems,
+            'articles' => Article::where('status', 1)->orderby('id', 'desc')->take(5)->get(),
+            'configs' => config('home_config'),
         ]);
     }
 
