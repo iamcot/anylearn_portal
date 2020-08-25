@@ -45,7 +45,7 @@
                     <td>{{ $article->title }}</td>
                     <td>{{ $article->updated_at }}</td>
                     <td>
-                        <a href="{{ route('article.edit', ['id' => $article->id  ]) }}"></a>
+                        <a href="{{ route('article.edit', ['id' => $article->id  ]) }}"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
                 @endforeach
