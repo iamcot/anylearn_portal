@@ -124,4 +124,45 @@ class ConfigController extends Controller
         $this->data['navText'] = __('Quản lý voucher');
         return view('config.voucher_form', $this->data);
     }
+
+    public function homePopup(Request $request)
+    {
+        if ($request->get('save')) {
+
+            $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
+            $version = 0;
+            $lastImage = "";
+            if (!empty($lastConfig)) {
+                $data = json_decode($lastConfig->value, true);
+                $version = $data['version'];
+                $lastImage = $data['image'];
+                Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->delete();
+            }
+
+            $fileService = new FileServices();
+            $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'popup');
+           
+            $config = $request->all();
+
+            Configuration::create([
+                'key' => ConfigConstants::CONFIG_HOME_POPUP,
+                'type' => ConfigConstants::TYPE_CONFIG,
+                'value' => json_encode([
+                    'image' => empty($file) ? $lastImage : $file['url'],
+                    'title' => $config['title'],
+                    'route' => $config['route'],
+                    'args' => $config['args'],
+                    'version' => (int)$version + 1,
+                    'status' => isset($config['status']) && $config['status'] == 'on' ? 1 : 0,
+                ]),
+            ]);
+            return redirect()->back()->with('notify', 'Cập nhật thành công');
+        }
+        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
+        if ($lastConfig) {
+            $this->data['config'] = json_decode($lastConfig->value, true);
+        }
+        $this->data['navText'] = __('Quản lý Popup Quảng cáo');
+        return view('config.homepopup', $this->data);
+    }
 }

@@ -43,6 +43,15 @@ class ConfigApi extends Controller
         $itemService = new ItemServices();
         $monthItems = $itemService->monthItems();
 
+        $homeConfig = config('home_config');
+        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
+        if (!empty($lastConfig)) {
+            $homePopup = json_decode($lastConfig->value, true);
+            if($homePopup['status'] == 1) {
+                $homeConfig['popup'] = $homePopup;
+            }
+        } 
+        
         return response()->json([
             'banners' => $banners,
             'hot_items' => [
@@ -52,7 +61,7 @@ class ConfigApi extends Controller
             ],
             'month_courses' => $monthItems,
             'articles' => Article::where('status', 1)->orderby('id', 'desc')->take(5)->get(),
-            'configs' => config('home_config'),
+            'configs' => $homeConfig,
         ]);
     }
 

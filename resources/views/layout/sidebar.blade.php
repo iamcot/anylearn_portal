@@ -95,6 +95,11 @@
             <i class="fas fa-fw fa-tags"></i>
             <span>@lang('Voucher')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'config.homepopup' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('config.homepopup') }}">
+            <i class="fas fa-fw fa-fire"></i>
+            <span>@lang('Thông báo trang chủ')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'config.site' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('config.site') }}">
             <i class="fas fa-fw fa-cogs"></i>
