@@ -35,7 +35,7 @@
                         <input name="image" type="file" id="image" />
                     </div>
                     <div class="col-md-4">
-                        @if($article && $article->video)
+                        @if($article && $article->image)
                         <img src="{{ $article->image }}" alt="" style="height: 50px;">
                         @endif
                     </div>
