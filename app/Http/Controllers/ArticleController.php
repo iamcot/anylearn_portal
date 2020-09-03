@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\FileConstants;
 use App\Models\Article;
+use App\Services\FileServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +20,11 @@ class ArticleController extends Controller
     {
         if ($request->get('save')) {
             $input = $request->all();
+            $fileService = new FileServices();
+            $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'articles');
+            if ($file !== false) {
+                $input['image'] = $file['url'];
+            }
             $input['user_id'] = Auth::user()->id;
             $newArticle = Article::create($input);
             return redirect()->route('article')->with('notify', $newArticle ? 1 : 0);
@@ -29,6 +36,11 @@ class ArticleController extends Controller
     {
         if ($request->get('save')) {
             $input = $request->all();
+            $fileService = new FileServices();
+            $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'articles');
+            if ($file !== false) {
+                $input['image'] = $file['url'];
+            }
             $newArticle = Article::find($id)->update($input);
             return redirect()->route('article')->with('notify', $newArticle ? 1 : 0);
         }
