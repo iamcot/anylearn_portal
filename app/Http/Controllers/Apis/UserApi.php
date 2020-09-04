@@ -89,16 +89,18 @@ class UserApi extends Controller
     public function userInfoLess(Request $request)
     {
         $user  = $request->get('_user');
-
         $user->makeVisible(['api_token']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
+        
+        $configM = new Configuration();
+        $user->disable_ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_DISABLE_IOS_TRANSACTION);
+        
         return response()->json($user, 200);
     }
 
     public function userInfo(Request $request)
     {
         $user  = $request->get('_user');
-
         $user->makeVisible(['api_token', 'full_content']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
         return response()->json($user, 200);

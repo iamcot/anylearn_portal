@@ -3,6 +3,12 @@
 use App\Constants\ConfigConstants;
 
 return [
+    ConfigConstants::CONFIG_DISABLE_IOS_TRANSACTION => [
+        'title' => 'Tắt giao dịch trên iOS',
+        'hint' => 'Tắt giao dịch trên iOS để review app. 0: tắt; 1: mở',
+        'type' => 'number',
+        'value' => 0
+    ],
     ConfigConstants::CONFIG_FRIEND_TREE => [
         'title' => 'Số cấp của cây thành viên',
         'hint' => 'Chỉ đếm gián tiếp',
