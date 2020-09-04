@@ -3,8 +3,8 @@
 use App\Constants\ConfigConstants;
 
 return [
-    ConfigConstants::CONFIG_DISABLE_IOS_TRANSACTION => [
-        'title' => 'Tắt giao dịch trên iOS',
+    ConfigConstants::CONFIG_IOS_TRANSACTION => [
+        'title' => 'Giao dịch trên iOS',
         'hint' => 'Tắt giao dịch trên iOS để review app. 0: tắt; 1: mở',
         'type' => 'number',
         'value' => 0

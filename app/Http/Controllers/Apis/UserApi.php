@@ -93,7 +93,7 @@ class UserApi extends Controller
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
         
         $configM = new Configuration();
-        $user->disable_ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_DISABLE_IOS_TRANSACTION);
+        $user->disable_ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_IOS_TRANSACTION);
         
         return response()->json($user, 200);
     }
