@@ -1,3 +1,4 @@
+@inject('itemServ','App\Services\ItemServices')
 @extends('layout')
 
 @section('rightFixedTop')
@@ -32,6 +33,7 @@
             <thead>
                 <thead>
                     <th class="text-center">#</th>
+                    <th></th>
                     <th>Loại</th>
                     <th>Tiêu đề</th>
                     <th>Lần sửa cuối</th>
@@ -41,6 +43,9 @@
                 @foreach($list as $article)
                 <tr>
                     <th class="text-center">{{ $article->id }}</th>
+                    <td>
+                        {!! $itemServ->articleStatusOperation($article->id, $article->status) !!}
+                    </td>
                     <td>{{ $article->type }}</td>
                     <td>{{ $article->title }}</td>
                     <td>{{ $article->updated_at }}</td>

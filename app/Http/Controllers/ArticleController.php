@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Constants\FileConstants;
 use App\Models\Article;
 use App\Services\FileServices;
+use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -46,5 +48,11 @@ class ArticleController extends Controller
         }
         $this->data['article'] = Article::find($id);
         return view('article.form', $this->data);
+    }
+
+    public function statusTouch($userId)
+    {
+        $rs = Article::find($userId)->update(['status' => DB::raw('1 - status')]);
+        return redirect()->back()->with('notify', $rs);
     }
 }

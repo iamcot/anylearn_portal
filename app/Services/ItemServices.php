@@ -64,7 +64,16 @@ class ItemServices
         if ($status == ItemConstants::STATUS_ACTIVE) {
             return '<a class="btn btn-sm btn-danger" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
         } else {
-            return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['userId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+            return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+        }
+    }
+
+    public function articleStatusOperation($itemId, $status)
+    {
+        if ($status == ItemConstants::STATUS_ACTIVE) {
+            return '<a class="btn btn-sm btn-danger" href="' . route('article.status.touch', ['articleId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
+        } else {
+            return '<a class="btn btn-sm btn-success" href="' . route('article.status.touch', ['articleId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         }
     }
 
