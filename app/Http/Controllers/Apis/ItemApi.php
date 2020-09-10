@@ -165,7 +165,6 @@ class ItemApi extends Controller
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
         $author = User::find($item->user_id);
-        $item->ios_transaction = (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION];
         
         $userService = new UserServices();
         $authorCommissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
@@ -190,6 +189,7 @@ class ItemApi extends Controller
             'author' => $author,
             'item' => $item,
             'num_schedule' => $numSchedule,
+            'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
             'hotItems' =>  [
                 'route' => '/event',
