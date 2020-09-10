@@ -163,9 +163,10 @@ class ItemApi extends Controller
         }
         $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
-        $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
+        $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
         $author = User::find($item->user_id);
-
+        $item->ios_transaction = (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION];
+        
         $userService = new UserServices();
         $authorCommissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
         $commission = $userService->calcCommission($item->price, $authorCommissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
