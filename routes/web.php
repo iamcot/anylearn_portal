@@ -50,7 +50,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
 
     Route::get('/user/status/{userId}', 'UserController@statusTouch')->name('user.status.touch');
-    Route::get('/user/status/{userId}', 'UserController@statusTouch')->name('user.status.touch');
+    Route::get('/item/status/{itemId}', 'CourseController@statusTouch')->name('item.status.touch');
     Route::get('/item/type/change/{itemId}/{newType}', 'CourseController@typeChange')->name('item.type.change');
 
     Route::get('/course', 'CourseController@list')->name('course');
