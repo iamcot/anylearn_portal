@@ -11,7 +11,7 @@ class PageController extends Controller
 
     public function home()
     {
-        return view('home');
+        return view('home', $this->data);
     }
 
     public function ref(Request $request, $code = "")

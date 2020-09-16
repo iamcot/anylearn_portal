@@ -81,7 +81,7 @@ class ConfigApi extends Controller
             'pending_wallet_m' => (int) $transM->pendingWalletM($user->id),
             'pending_wallet_c' => (int) $transM->pendingWalletC($user->id),
             'suggest' => [930000, 5000000, 2000000, 1000000, 500000, 200000],
-            'vip_fee' => 930000,
+            'vip_fee' => 0,
             'vip_days' => 30,
             'bank' => [
                 'bank_name' => 'Ngân hàng Quốc Tế VIB',
