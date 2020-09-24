@@ -49,4 +49,10 @@ class ArticleApi extends Controller
         Log::debug($data);
         return response()->json($data);
     }
+
+    public function quote() {
+        $quotes = config('quotes', []);
+        $quote = $quotes[mt_rand(0, count($quotes) - 1)];
+        return response()->json($quote);
+    }
 }

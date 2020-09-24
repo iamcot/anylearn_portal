@@ -29,7 +29,7 @@
 </div>
 @else
 <div class="card shadow">
-    <div class="card-body p-0">
+    <div class="card-body p-0 table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
                 <thead>

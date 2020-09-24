@@ -33,6 +33,8 @@ Route::get('/article', 'Apis\ArticleApi@index');
 Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
 Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
 
+Route::get('/quote', 'Apis\ArticleApi@quote');
+
 Route::middleware(['api.user'])->group(function () {
     Route::get('/user', 'Apis\UserApi@userInfo');
     Route::get('/user-less', 'Apis\UserApi@userInfoLess');
