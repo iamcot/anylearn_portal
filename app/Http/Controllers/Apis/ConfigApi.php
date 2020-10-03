@@ -60,7 +60,7 @@ class ConfigApi extends Controller
                 // $hotUserInCate,
             ],
             'month_courses' => $monthItems,
-            'articles' => Article::where('status', 1)->makeHidden(['content'])->orderby('id', 'desc')->take(5)->get(),
+            'articles' => Article::where('status', 1)->orderby('id', 'desc')->take(5)->get()->makeHidden(['content']),
             'configs' => $homeConfig,
         ]);
     }
