@@ -195,7 +195,11 @@ class TransactionApi extends Controller
                 $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_COMMISSION, ConfigConstants::CONFIG_FRIEND_TREE, ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
                 $userService = new UserServices();
 
-                $commissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+                if ($item->commission_rate == -1) {
+                    $commissionRate = 0;
+                } else {
+                    $commissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+                }
 
                 $directCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
