@@ -17,7 +17,9 @@ class Voucher extends Model
         if (!$dbVoucher) {
             throw new \Exception("Voucher không có");
         }
-        $userUsed = VoucherUsed::where('user_id', $userId)->first();
+        $userUsed = VoucherUsed::where('user_id', $userId)
+        ->where('voucher_id', $dbVoucher->id)
+        ->first();
         if ($userUsed) {
             throw new \Exception("Bạn đã sử dụng voucher này rồi.");
         }
