@@ -215,4 +215,39 @@ class UserController extends Controller
         $this->data['navText'] = __('Hợp đồng với ' . $contract->name);
         return view('user.contract_info', $this->data);
     }
+
+    public function userNoProfile(Request $request)
+    {
+        $users = DB::table('users')->where('status', 1)
+            ->whereNotIn('role', ['admin', 'mod']);
+        if (!empty($request->input('s'))) {
+            switch ($request->input('t')) {
+                case "phone":
+                    $users = $users->where('users.phone', $request->input('s'));
+                    break;
+                default:
+                    $users = $users->where('users.name', 'like', '%' . $request->input('s') . '%');
+                    break;
+            }
+        }
+        $users = $users->where(function ($q) {
+            $q->whereNull('image')
+                ->orWhereNull('introduce')
+                ->orWhereNull('full_content');
+        })
+            ->select(DB::raw("users.*, (SELECT notifications.created_at 
+        FROM notifications WHERE notifications.user_id = users.id AND type = '" . NotifConstants::UPDATE_INFO_REMIND . "'  order by notifications.id desc limit 1) AS last_notif"))
+            ->orderBy('users.id', 'desc')
+            ->paginate(20);
+        $this->data['list'] = $users;
+        $this->data['navText'] = __('Nhắc nhở các thành viên chưa cập nhật thông tin');
+        return view('user.no_profile', $this->data);
+    }
+
+    public function remindProfile($userId)
+    {
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::UPDATE_INFO_REMIND, $userId, []);
+        return redirect()->back()->with('notify', 'Đã gửi thông báo');
+    }
 }

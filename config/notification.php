@@ -25,6 +25,11 @@ return [
         'template' => '{username} ơi. Rất tiếc hợp đồng của bạn đã bị từ chối, xin kiểm tra lại thông tin hoặc vui lòng liên hệ 0374 900 344 để được hỗ trợ.',
         'route' => '/account',
     ],
+    NotifConstants::UPDATE_INFO_REMIND => [
+        'title' => 'Cập nhật thông tin',
+        'template' => 'Bạn ơi, bạn hãy cập nhật thông tin cá nhân và làm profile của mình thật cool ngầu nhé.',
+        'route' => '/account/edit',
+    ],
 
     /** Course process */
     NotifConstants::COURSE_APPROVED =>  [

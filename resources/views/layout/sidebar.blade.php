@@ -57,6 +57,11 @@
             <i class="fas fa-fw fa-users-cog"></i>
             <span>@lang('Quản lý thành viên')</span></a>
     </li>
+    <li class="nav-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.noprofile') }}">
+            <i class="fas fa-fw fa-fire"></i>
+            <span>@lang('Nhắc cập nhật profile')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'user.contract' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.contract') }}">
             <i class="fas fa-fw fa-certificate"></i>

@@ -49,6 +49,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
 
+    Route::any('/user/no-profile', 'UserController@userNoProfile')->name('user.noprofile');
+    Route::any('/user/remind-profile/{userId}', 'UserController@remindProfile')->name('user.noprofile.remind');
+
     Route::get('/user/status/{userId}', 'UserController@statusTouch')->name('user.status.touch');
     Route::get('/item/status/{itemId}', 'CourseController@statusTouch')->name('item.status.touch');
     Route::get('/item/type/change/{itemId}/{newType}', 'CourseController@typeChange')->name('item.type.change');

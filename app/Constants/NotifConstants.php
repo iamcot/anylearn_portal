@@ -11,6 +11,8 @@ class NotifConstants
     const CONTRACT_APPROVED = 'contract_approved';
     const CONTRACT_DELETED = 'contract_deleted';
     const CONTRACT_SIGNED = 'contract_signed';
+    const UPDATE_INFO_REMIND = 'update_info_remind';
+    const REGISTER_CLASS_REMIND = 'register_class_remind';
 
     /** Course process */
     const COURSE_APPROVED = 'course_approved';
