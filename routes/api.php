@@ -23,6 +23,7 @@ Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
 
 Route::get('/event/{month}', 'Apis\ConfigApi@event');
 Route::get('/search', 'Apis\ConfigApi@search');
+Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
 Route::get('/foundation', 'Apis\ConfigApi@foundation');
@@ -34,6 +35,9 @@ Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
 Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
 
 Route::get('/quote', 'Apis\ArticleApi@quote');
+
+Route::get('/ask/list', 'Apis\AskApi@getList');
+Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/user', 'Apis\UserApi@userInfo');
@@ -73,4 +77,10 @@ Route::middleware(['api.user'])->group(function () {
 
     Route::get('/item/{itemId}/touch-fav', 'Apis\ItemApi@touchFav');
     Route::post('/item/{itemId}/save-rating', 'Apis\ItemApi@saveRating');
+
+    Route::post('/ask/create/{type}', 'Apis\AskApi@create');
+    Route::post('/ask/{askId}/edit', 'Apis\AskApi@edit');
+    Route::get('/ask/{askId}/select', 'Apis\AskApi@selectAnswer');
+    Route::get('/ask/{askId}/vote/{type}', 'Apis\AskApi@vote');
+    Route::get('/ask/{askId}/touch/{status}', 'Apis\AskApi@touchStatus');
 });

@@ -30,6 +30,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="tags" class="col-md-2 col-form-label text-md-right">{{ __('Tags') }}</label>
+                    <div class="col-md-8">
+                        <input id="tags" type="text" class="form-control @error('tags') is-invalid @enderror" name="tags" value="{{ old('tags', !empty($article) ? $article->tags : '') }}">
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="image" class="col-md-2 col-form-label text-md-right">{{ __('Hình ảnh') }}</label>
                     <div class="col-md-4">
                         <input name="image" type="file" id="image" />

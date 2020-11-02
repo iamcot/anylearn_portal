@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Apis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\Ask;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ArticleApi extends Controller
@@ -23,9 +25,17 @@ class ArticleApi extends Controller
             ->orderby('id', 'desc')
             ->take(3)
             ->get();
+        $asks =  DB::table('asks')
+            ->where('asks.type', Ask::TYPE_QUESTION)
+            ->where('asks.status', 1)
+            ->join('users', 'users.id', '=', 'asks.user_id')
+            ->select('asks.*', 'users.name', 'users.image AS user_image', 'users.role AS user_role')
+            ->orderBy('asks.id', 'desc')
+            ->take(3)->get();
         return response()->json([
             'reads' => $reads,
             'videos' => $videos,
+            'asks' => $asks,
         ]);
     }
 
@@ -50,7 +60,8 @@ class ArticleApi extends Controller
         return response()->json($data);
     }
 
-    public function quote() {
+    public function quote()
+    {
         $quotes = config('quotes', []);
         $quote = $quotes[mt_rand(0, count($quotes) - 1)];
         return response()->json($quote);

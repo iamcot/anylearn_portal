@@ -41,4 +41,9 @@ class NotifConstants
     const REMIND_COURSE_JOIN = 'remind_course_join';
     const REMIND_COURSE_GOING_JOIN = 'remind_course_going_join';
     const REMIND_COURSE_GOING = 'remind_course_going';
+
+    /** Ask forum */
+    const ASK_NEW_ANSWER = 'ask_new_answer';
+    const ASK_NEW_COMMENT = 'ask_new_comment';
+    const ASK_ANSWER_SELECTED = 'ask_answer_selected';
 }

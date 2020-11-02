@@ -14,6 +14,7 @@ use App\Models\ItemResource;
 use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Schedule;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +50,7 @@ class ItemServices
             }
         }
         $courses = $courses->orderby('is_hot', 'desc')
-        ->orderby('id', 'desc')
+            ->orderby('id', 'desc')
             ->select(
                 'items.*',
                 DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg')
@@ -136,8 +137,16 @@ class ItemServices
 
         $input['is_test'] = $user->is_test;
 
+        if (!empty($input['nolimit_time']) && $input['nolimit_time'] == 'on') {
+            $input['nolimit_time'] = 1;
+        } else {
+            $input['nolimit_time'] = 0;
+        }
+
         $newCourse = Item::create($input);
         if ($newCourse) {
+            $tagsModel = new Tag();
+            $tagsModel->createTagFromItem($newCourse, Tag::TYPE_CLASS);
             // if ($newCourse->type == ItemConstants::TYPE_COURSE) {
             Schedule::create([
                 'item_id' => $newCourse->id,
@@ -179,9 +188,17 @@ class ItemServices
             $input['image'] = $courseImage;
         }
 
+        if (!empty($input['nolimit_time']) && $input['nolimit_time'] == 'on') {
+            $input['nolimit_time'] = 1;
+        } else {
+            $input['nolimit_time'] = 0;
+        }
+
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
+            $tagsModel = new Tag();
+            $tagsModel->createTagFromItem($itemUpdate, Tag::TYPE_CLASS);
             // if ($itemUpdate->type == ItemConstants::TYPE_COURSE) {
             $hasSchedule = Schedule::where('item_id', $itemUpdate->id)->count();
             if ($hasSchedule == 1) {
@@ -201,7 +218,7 @@ class ItemServices
             //         'content' => $input['title'],
             //     ]);
             // }
-            
+
             // } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
             //     $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
             // }

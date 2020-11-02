@@ -11,7 +11,7 @@ class Article extends Model
 
     protected $fillable = [
         'user_id', 'category', 'type', 'title', 'image', 'video',
-        'short_content', 'content', 'view', 'status', 'is_hot',
+        'short_content', 'content', 'view', 'status', 'is_hot', 'tags',
     ];
 
 }

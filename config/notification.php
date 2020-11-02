@@ -147,6 +147,28 @@ return [
     NotifConstants::REMIND_COURSE_GOING_JOIN =>  [
         'title' => 'Sắp bắt đầu giờ học rồi nè!',
         'template' => '{username} ơi, khóa học {course} của bạn sẽ bắt đầu trong {time} nữa thôi. Chúng ta hãy vào lớp đúng giờ nhé!',
-        'route' => '/account/calendar'
+        'route' => '/account/calendar',
+    ],
+
+    NotifConstants::ASK_NEW_ANSWER =>  [
+        'title' => 'Có câu trả lời mới',
+        'template' => 'Câu hỏi của bạn có một trả lời mới, xem nhé',
+        'route' => '/ask/forum/thread',
+        'args' => true,
+
+    ],
+
+    NotifConstants::ASK_NEW_COMMENT =>  [
+        'title' => 'Có bình luận mới',
+        'template' => 'Câu trả lời của bạn có một bình luận mới, xem nhé',
+        'route' => '/ask/forum/thread',
+        'args' => true,
+    ],
+
+    NotifConstants::ASK_ANSWER_SELECTED =>  [
+        'title' => 'Trả lời của bạn được chọn',
+        'template' => 'Câu trả lời của bạn đã được người hỏi chọn là câu trả lời chính xác, xem nhé',
+        'route' => '/ask/forum/thread',
+        'args' => true,
     ],
 ];

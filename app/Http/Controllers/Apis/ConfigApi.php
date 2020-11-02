@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis;
 
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
@@ -11,6 +12,7 @@ use App\Models\Configuration;
 use App\Models\Feedback;
 use App\Models\Item;
 use App\Models\Schedule;
+use App\Models\Tag;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
@@ -47,11 +49,11 @@ class ConfigApi extends Controller
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if (!empty($lastConfig)) {
             $homePopup = json_decode($lastConfig->value, true);
-            if($homePopup['status'] == 1) {
+            if ($homePopup['status'] == 1) {
                 $homeConfig['popup'] = $homePopup;
             }
-        } 
-        
+        }
+
         return response()->json([
             'banners' => $banners,
             'hot_items' => [
@@ -101,8 +103,19 @@ class ConfigApi extends Controller
     {
         $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
             ->sum('amount');
+        $data = [
+            'value' => (int) $foundation,
+            'history' => Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
+                ->orderby('id', 'desc')->take(20)->get(),
+            'news' => DB::table('tags')->where('tags.type', Tag::TYPE_ARTICLE)
+                ->where('tags.tag', ConfigConstants::FOUNDATION_TAG)
+                ->join('articles', 'articles.id', '=', 'tags.item_id')
+                ->where('articles.status', 1)
+                ->orderBy('articles.id', 'desc')
+                ->take(20)->get(),
+        ];
 
-        return response()->json(['value' => (int) $foundation]);
+        return response()->json($data);
     }
 
     public function getDoc($key)
@@ -218,5 +231,15 @@ class ConfigApi extends Controller
                 ->get();
         }
         return response()->json($result);
+    }
+
+    public function searchTags()
+    {
+        $db = Tag::select('tag')->get();
+        $data = [];
+        foreach ($db as $tag) {
+            $data[] = $tag->tag;
+        }
+        return response()->json($data);
     }
 }

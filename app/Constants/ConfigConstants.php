@@ -4,6 +4,8 @@ namespace App\Constants;
 
 class ConfigConstants
 {
+    const FOUNDATION_TAG = 'foundation';
+    
     const GUIDE_TOC = 'guide_toc';
     const GUIDE_MEMBER  = 'guide_member';
     const GUIDE_TEACHER = 'guide_teacher';

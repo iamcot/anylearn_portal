@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\FileConstants;
 use App\Models\Article;
+use App\Models\Tag;
 use App\Services\FileServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
@@ -29,6 +30,8 @@ class ArticleController extends Controller
             }
             $input['user_id'] = Auth::user()->id;
             $newArticle = Article::create($input);
+            $tagsModel = new Tag();
+            $tagsModel->createTagFromItem($newArticle, Tag::TYPE_ARTICLE);
             return redirect()->route('article')->with('notify', $newArticle ? 1 : 0);
         }
         return view('article.form', $this->data);
@@ -44,6 +47,8 @@ class ArticleController extends Controller
                 $input['image'] = $file['url'];
             }
             $newArticle = Article::find($id)->update($input);
+            $tagsModel = new Tag();
+            $tagsModel->createTagFromItem(Article::find($id), Tag::TYPE_ARTICLE);
             return redirect()->route('article')->with('notify', $newArticle ? 1 : 0);
         }
         $this->data['article'] = Article::find($id);

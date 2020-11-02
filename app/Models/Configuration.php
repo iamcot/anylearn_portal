@@ -13,9 +13,9 @@ class Configuration extends Model
 
     public function createOrUpdate($key, $value, $type)
     {
-        // if (empty($value)) {
-        //     return;
-        // }
+        if (empty($value)) {
+            return;
+        }
         $find = $this->where('key', $key)->first();
         if (!$find) {
             $rs = $this->create([

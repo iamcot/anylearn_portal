@@ -33,8 +33,11 @@ class OrderDetail extends Model
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('users', 'users.id', '=', 'od.user_id')
             ->join('schedules', 'schedules.item_id', '=', 'od.item_id')
-            ->leftJoin('participations AS pa', 'pa.schedule_id', '=', 'schedules.id')
-            ->leftJoin('item_user_actions AS iua', function($query) {
+            ->leftJoin('participations AS pa', function ($join) {
+                $join->on('pa.schedule_id', '=', 'schedules.id')
+                    ->on('pa.participant_user_id', '=', 'users.id');
+            })
+            ->leftJoin('item_user_actions AS iua', function ($query) {
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
             ->where('od.user_id', $userId)
@@ -52,13 +55,16 @@ class OrderDetail extends Model
                 'items.user_status as author_status',
                 'items.location',
                 'items.id as item_id',
+                'items.nolimit_time',
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('schedules.date')
             ->orderBy('schedules.time_start');
         $query2 = clone $query;
-        $done = $query->where('items.date_start', '<', $today)->get();
-        $open = $query2->where('items.date_start', '>=', $today)->get();
+        // $done = $query->where('items.date_start', '<', $today)->get();
+        $done = $query->whereNotNull('pa.id')->get();
+        // $open = $query2->where('items.date_start', '>=', $today)->get();
+        $open = $query2->whereNull('pa.id')->get();
 
         $fav = DB::table('item_user_actions AS iua')
             ->join('items', 'items.id', '=', 'iua.item_id')

@@ -43,6 +43,12 @@
             </div>
         </div>
         <div class="form-group row">
+            <label for="nolimit_time" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Không giới hạn kết thúc') }}</label>
+            <div class="col-md-8">
+                <input type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
+            </div>
+        </div>
+        <div class="form-group row">
             <label for="date_end" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Ngày kết thúc') }}</label>
             <div class="col-md-8">
                 <input id="date_end" type="date" class="form-control @error('date_end') is-invalid @enderror" name="date_end" value="{{ old('date_end', !empty($course) ? $course['info']->date_end : '') }}">
@@ -54,6 +60,12 @@
             <div class="col-md-8">
                 <input id="location_type" type="hidden" name="location_type" value="offline">
                 <input id="location" type="text" class="form-control @error('location') is-invalid @enderror" name="location" value="{{ old('location', !empty($course) ? $course['info']->location : '') }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="tags" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Tags') }}</label>
+            <div class="col-md-8">
+                <input id="tags" type="text" class="form-control @error('tags') is-invalid @enderror" name="tags" value="{{ old('tags', !empty($course) ? $course['info']->tags : '') }}">
             </div>
         </div>
 
