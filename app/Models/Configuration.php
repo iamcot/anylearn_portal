@@ -13,7 +13,7 @@ class Configuration extends Model
 
     public function createOrUpdate($key, $value, $type)
     {
-        if (empty($value)) {
+        if ($value == "") {
             return;
         }
         $find = $this->where('key', $key)->first();
