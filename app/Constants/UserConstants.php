@@ -15,6 +15,7 @@ class UserConstants
 
     const WALLET_M = 'wallet_m';
     const WALLET_C = 'wallet_c';
+    const VOUCHER = 'voucher';
 
     const PP = 20;
 

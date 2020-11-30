@@ -6,9 +6,11 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Models\Configuration;
 use App\Models\Voucher;
+use App\Models\VoucherGroup;
 use App\Services\FileServices;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConfigController extends Controller
 {
@@ -92,35 +94,80 @@ class ConfigController extends Controller
 
     public function voucher(Request $request)
     {
-        $this->data['vouchers'] = Voucher::all();
-        $this->data['navText'] = __('Danh sách voucher');
+        $this->data['vouchers'] = VoucherGroup::paginate(20);
+        $this->data['navText'] = __('Danh sách Bộ Voucher');
+        return view('config.voucher_group_list', $this->data);
+    }
+
+    public function voucherList(Request $request, $id)
+    {
+        $this->data['vouchers'] = Voucher::where('voucher_group_id', $id)->paginate(20);
+        $this->data['navText'] = __('Danh sách Voucher');
+        $this->data['hasBack'] = route('config.voucher');
         return view('config.voucher_list', $this->data);
     }
 
-    public function voucherEdit(Request $request, $id = null)
+    public function voucherClose($id)
+    {
+        $rs = VoucherGroup::find($id)->update(['status' => DB::raw('1 - status')]);
+        return redirect()->back()->with('notify', $rs);
+    }
+
+
+    public function voucherEdit(Request $request)
     {
         if ($request->get('save')) {
             $input = $request->input();
-            if (empty($input['id'])) {
-                $newVoucher = Voucher::create([
-                    'voucher' => $input['voucher'],
-                    'value' => $input['value'],
-                    'amount' => $input['amount'],
-                    'expired' => strtotime($input['expired']),
-                ]);
-            } else {
-                Voucher::find($input['id'])->update([
-                    'voucher' => $input['voucher'],
-                    'value' => $input['value'],
-                    'amount' => $input['amount'],
-                    'expired' => strtotime($input['expired']),
-                ]);
+            $data = [
+                'type' => $input['voucher_type'],
+                'generate_type' => $input['generate_type'],
+                'prefix' => $input['prefix'],
+                'qtt' => $input['qtt'],
+                'value' => $input['value'],
+                'status' => 1,
+            ];
+            $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
+            if ($exists > 0) {
+                return redirect()->back()->with('notify', 'Mã này đã tạo');
             }
+            if ($data['type'] == VoucherGroup::TYPE_CLASS) {
+                if (empty(trim($input['ext']))) {
+                    return redirect()->back()->with('notify', 'Voucher lớp học cần nhập IDs các khóa học.');
+                }
+                $classIds = explode(',', $input['ext']);
+                for ($i = 0; $i < count($classIds); $i++) {
+                    $classIds[$i] = intval($classIds[$i]);
+                }
+                $data['ext'] = implode(",", $classIds);
+            }
+            $newGroup = VoucherGroup::create($data);
+            if ($newGroup) {
+                if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
+                    for ($i = 1; $i <= $newGroup->qtt; $i++) {
+                        $newVoucher = Voucher::create([
+                            'voucher_group_id' => $newGroup->id,
+                            'voucher' => Voucher::buildAutoVoucher($newGroup->prefix),
+                            'amount' => 1,
+                            'value' => $newGroup->value,
+                            'status' => 1,
+                            'expired' => 0
+                        ]);
+                    }
+                } else {
+                    $newVoucher = Voucher::create([
+                        'voucher_group_id' => $newGroup->id,
+                        'voucher' => $newGroup->prefix,
+                        'amount' => $newGroup->qtt,
+                        'value' => $newGroup->value,
+                        'status' => 1,
+                        'expired' => 0
+                    ]);
+                }
+            }
+
             return redirect()->route('config.voucher')->with('notify', 'Thao tác thành công.');
         }
-        if ($id) {
-            $this->data['voucher'] = Voucher::find($id);
-        }
+
         $this->data['navText'] = __('Quản lý voucher');
         return view('config.voucher_form', $this->data);
     }
@@ -141,7 +188,7 @@ class ConfigController extends Controller
 
             $fileService = new FileServices();
             $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'popup');
-           
+
             $config = $request->all();
 
             Configuration::create([

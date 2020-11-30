@@ -8,18 +8,25 @@ use Illuminate\Support\Facades\DB;
 class Voucher extends Model
 {
     protected $fillable = [
-        'voucher', 'amount', 'value', 'status', 'expired'
+        'voucher', 'amount', 'value', 'status', 'expired', 'voucher_group_id'
     ];
 
     public function useVoucher($userId, $voucher)
     {
-        $dbVoucher = $this->where('voucher', $voucher)->first();
+        $dbVoucher = DB::table('vouchers')
+            ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
+            ->where('vouchers.voucher', $voucher)
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount')
+            ->first();
         if (!$dbVoucher) {
             throw new \Exception("Voucher không có");
         }
+        if ($dbVoucher->type != VoucherGroup::TYPE_MONEY) {
+            throw new \Exception("Loại voucher không hợp lệ.");
+        }
         $userUsed = VoucherUsed::where('user_id', $userId)
-        ->where('voucher_id', $dbVoucher->id)
-        ->first();
+            ->where('voucher_id', $dbVoucher->id)
+            ->first();
         if ($userUsed) {
             throw new \Exception("Bạn đã sử dụng voucher này rồi.");
         }
@@ -38,5 +45,50 @@ class Voucher extends Model
         ]);
         return $value;
         // throw new \Exception("error of voucher");
+    }
+    public function useVoucherClass($userId, $itemId, $voucher)
+    {
+        $dbVoucher = DB::table('vouchers')
+            ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
+            ->where('vouchers.voucher', $voucher)
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount')
+            ->first();
+        if (!$dbVoucher) {
+            throw new \Exception("Voucher không có");
+        }
+
+        if ($dbVoucher->type != VoucherGroup::TYPE_CLASS) {
+            throw new \Exception("Loại voucher không hợp lệ.");
+        }
+        if (!in_array($itemId, explode(",", $dbVoucher->ext))) {
+            throw new \Exception("Voucher không dùng cho khóa học này.");
+        }
+        $userUsed = VoucherUsed::where('user_id', $userId)
+            ->where('voucher_id', $dbVoucher->id)
+            ->first();
+        if ($userUsed) {
+            throw new \Exception("Bạn đã sử dụng voucher này rồi.");
+        }
+
+        $numUsed = VoucherUsed::where('voucher_id', $dbVoucher->id)->count();
+        if ($numUsed >= $dbVoucher->amount) {
+            throw new \Exception("Voucher này đã bị sử dụng hết.");
+        }
+
+        VoucherUsed::create([
+            'voucher_id' => $dbVoucher->id,
+            'user_id' => $userId
+        ]);
+        return true;
+        // throw new \Exception("error of voucher");
+    }
+
+    public static function buildAutoVoucher($prefix, $length = 6)
+    {
+        $voucher = $prefix;
+        for ($i = 1; $i <= $length; $i++) {
+            $voucher .= mt_rand(0, 9);
+        }
+        return $voucher;
     }
 }

@@ -37,6 +37,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::any('/config/voucher', 'ConfigController@voucher')->name('config.voucher');
     Route::any('/config/voucher/create', 'ConfigController@voucherEdit')->name('config.voucher.create');
     Route::any('/config/voucher/{id}', 'ConfigController@voucherEdit')->name('config.voucher.edit');
+    Route::any('/config/voucher/{id}/list', 'ConfigController@voucherList')->name('config.voucher.list');
+    Route::any('/config/voucher/{id}/close', 'ConfigController@voucherClose')->name('config.voucher.close');
 
     Route::any('/user/update-doc', 'UserController@updateDoc')->name('user.update_doc');
     
