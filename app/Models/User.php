@@ -97,6 +97,11 @@ class User extends Authenticatable
             if ($newMember->user_id > 0) {
                 $notifM->notifNewFriend($newMember->user_id, $newMember->name);
             }
+
+            if (!empty($newMember->user_id)) {
+                $voucherEvent = new VoucherEventLog();
+                $voucherEvent->useEvent(VoucherEvent::TYPE_REGISTER, $newMember->id, $newMember->user_id);
+            }
         }
         $this->updateUpTree($newMember->user_id);
         return $newMember;

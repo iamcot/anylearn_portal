@@ -100,6 +100,11 @@
             <i class="fas fa-fw fa-tags"></i>
             <span>@lang('Voucher')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'config.voucherevent' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('config.voucherevent') }}">
+            <i class="fas fa-fw fa-gifts"></i>
+            <span>@lang('Sự kiện phát Voucher')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'config.homepopup' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('config.homepopup') }}">
             <i class="fas fa-fw fa-fire"></i>

@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Models\Configuration;
 use App\Models\Voucher;
+use App\Models\VoucherEvent;
 use App\Models\VoucherGroup;
 use App\Services\FileServices;
 use Illuminate\Support\Facades\Log;
@@ -99,20 +100,77 @@ class ConfigController extends Controller
         return view('config.voucher_group_list', $this->data);
     }
 
+    public function voucherEvent(Request $request)
+    {
+        $this->data['events'] = VoucherEvent::paginate(20);
+        $this->data['navText'] = __('Danh sách Sự kiện phát Voucher');
+        return view('config.voucher_event', $this->data);
+    }
+
+    public function voucherEventLog(Request $request, $id)
+    {
+        $this->data['data'] = DB::table('voucher_event_logs AS vel')
+            ->where('vel.voucher_event_id', $id)
+            ->paginate(20);
+        $this->data['navText'] = __('Danh sách Thành viên sử dụng event');
+        $this->data['hasBack'] = route('config.voucherevent');
+        return view('config.voucher_event_log', $this->data);
+    }
+
     public function voucherList(Request $request, $id)
     {
-        $this->data['vouchers'] = Voucher::where('voucher_group_id', $id)->paginate(20);
+        $this->data['vouchers'] = DB::table('vouchers')
+            ->where('vouchers.voucher_group_id', $id)
+            ->select('vouchers.*', DB::raw("(SELECT GROUP_CONCAT(users.phone SEPARATOR ', ') FROM vouchers_used
+        join users on vouchers_used.user_id = users.id
+        where vouchers_used.voucher_id = vouchers.id) AS used"))
+            ->paginate(20);
         $this->data['navText'] = __('Danh sách Voucher');
         $this->data['hasBack'] = route('config.voucher');
         return view('config.voucher_list', $this->data);
     }
 
-    public function voucherClose($id)
+    public function voucherClose($type, $id)
     {
-        $rs = VoucherGroup::find($id)->update(['status' => DB::raw('1 - status')]);
+        if ($type == 'voucher') {
+            $rs = Voucher::find($id)->update(['status' => DB::raw('1 - status')]);
+        } else {
+            $rs = VoucherGroup::find($id)->update(['status' => DB::raw('1 - status')]);
+        }
         return redirect()->back()->with('notify', $rs);
     }
 
+    public function voucherEventClose($id)
+    {
+        $rs = VoucherEvent::find($id)->update(['status' => DB::raw('1 - status')]);
+        
+        return redirect()->back()->with('notify', $rs);
+    }
+
+    public function voucherEventEdit(Request $request)
+    {
+        if ($request->get('save')) {
+            $input = $request->input();
+            $data = [
+                'type' => $input['type'],
+                'title' => $input['title'],
+                'trigger' => $input['trigger'],
+                'targets' => $input['targets'],
+                'qtt' => $input['qtt'],
+                'status' => 1,
+            ];
+
+            $newEvent = VoucherEvent::create($data);
+            if (!$newEvent) {
+                return redirect()->back()->with('notify', 'Tạo sự kiện mới thất bại');
+            }
+            return redirect()->route('config.voucherevent')->with('notify', 'Thao tác thành công.');
+        }
+
+        $this->data['navText'] = __('Quản lý Sự kiện phát voucher');
+        $this->data['hasBack'] = true;
+        return view('config.voucher_event_form', $this->data);
+    }
 
     public function voucherEdit(Request $request)
     {

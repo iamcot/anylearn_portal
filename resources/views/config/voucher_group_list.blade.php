@@ -42,7 +42,7 @@
                         <a class="btn btn-sm btn-info" href="{{ route('config.voucher.list', ['id' => $voucher->id]) }}">
                             Danh sách
                         </a>
-                        <a class="btn btn-sm btn-{{ $voucher->status == 1 ? 'danger' : 'success' }}" href="{{ route('config.voucher.close', ['id' => $voucher->id]) }}">
+                        <a class="btn btn-sm btn-{{ $voucher->status == 1 ? 'danger' : 'success' }}" href="{{ route('config.voucher.close', ['id' => $voucher->id, 'type' => 'group']) }}">
                         {{ $voucher->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>
                     </td>

@@ -171,4 +171,21 @@ return [
         'route' => '/ask/forum/thread',
         'args' => true,
     ],
+
+    NotifConstants::VOUCHER_MONEY_SENT =>  [
+        'title' => 'Bạn vừa được nhận một voucher tiền mặt',
+        'template' => 'Bạn vừa nhận voucher {voucher} trị giá {amount}. Hãy dùng nhé',
+        'route' => '/deposit',
+        'args' => true,
+    ],
+    NotifConstants::VOUCHER_CLASS_SENT =>  [
+        'title' => 'Bạn vừa được nhận một voucher khóa học',
+        'template' => 'Bạn vừa nhận voucher {voucher} để tham gia khóa học {class}. Hãy đăng ký nhé',
+        'route' => '/pdp',
+        'args' => true,
+    ],
+    NotifConstants::VOUCHER_PARTNER_SENT =>  [
+        'title' => 'Bạn vừa được nhận một voucher của đối tác',
+        'template' => 'Bạn vừa nhận một voucher {voucher} từ đối tác {partner}',
+    ],
 ];

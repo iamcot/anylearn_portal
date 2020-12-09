@@ -1,9 +1,9 @@
 @extends('layout')
 
 @section('body')
-@if(sizeof($vouchers) == 0)
+@if(sizeof($data) == 0)
 <div class="text-center mt-5 pt-5">
-    @lang('Chưa có voucher nào.')
+    @lang('Chưa có ai sử dụng sự kiện này.')
 </div>
 @else
 <div class="card shadow">
@@ -12,26 +12,24 @@
             <thead>
                 <thead>
                     <th class="text-center">#ID</th>
-                    <th>Mã voucher</th>
-                    <th>Giá trị</th>
-                    <th>Số lượng</th>
-                    <th>Đã dùng</th>
+                    <th>Thành viên</th>
+                    <th>Khởi tạo</th>
+                    <th>Bộ Voucher</th>
+                    <th>Dữ liệu</th>
                     <th>Tạo lúc</th>
                     <th>Thao tác</th>
                 </thead>
             <tbody>
-                @foreach($vouchers as $voucher)
+                @foreach($data as $voucher)
                 <tr>
                     <th class="text-center">{{ $voucher->id }}</th>
-                    <td>{{ $voucher->voucher }}</td>
-                    <td>{{ $voucher->value }}</td>
-                    <td>{{ $voucher->amount }}</td>
-                    <td>{{ $voucher->used }}</td>
+                    <td>{{ $voucher->user_id }}</td>
+                    <td>{{ $voucher->trigger }}</td>
+                    <td>{{ $voucher->target }}</td>
+                    <td>{{ $voucher->data }}</td>
                     <td>{{ $voucher->updated_at }}</td>
                     <td>
-                        <a class="btn btn-sm btn-{{ $voucher->status == 1 ? 'danger' : 'success' }}" href="{{ route('config.voucher.close', ['id' => $voucher->id, 'type' => 'voucher']) }}">
-                        {{ $voucher->status == 1 ? 'Khóa' : 'Mở' }}
-                        </a>
+                     
                     </td>
                 </tr>
                 @endforeach
@@ -40,7 +38,7 @@
         </table>
     </div>
     <div class="card-footer">
-        {{ $vouchers->links() }}
+        {{ $data->links() }}
     </div>
 </div>
 

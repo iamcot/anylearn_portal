@@ -38,8 +38,14 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::any('/config/voucher/create', 'ConfigController@voucherEdit')->name('config.voucher.create');
     Route::any('/config/voucher/{id}', 'ConfigController@voucherEdit')->name('config.voucher.edit');
     Route::any('/config/voucher/{id}/list', 'ConfigController@voucherList')->name('config.voucher.list');
-    Route::any('/config/voucher/{id}/close', 'ConfigController@voucherClose')->name('config.voucher.close');
+    Route::any('/config/voucher/{type}/{id}/close', 'ConfigController@voucherClose')->name('config.voucher.close');
 
+    Route::get('/config/voucher-event', 'ConfigController@voucherEvent')->name('config.voucherevent');
+    Route::post('/config/voucher-event/create', 'ConfigController@voucherEventEdit')->name('config.voucherevent.create');
+    Route::get('/config/voucher-event/{id}', 'ConfigController@voucherEventEdit')->name('config.voucherevent.edit');
+    Route::get('/config/voucher-event/{id}/log', 'ConfigController@voucherEventLog')->name('config.voucherevent.log');
+    Route::any('/config/voucher-event/{id}/close', 'ConfigController@voucherEventClose')->name('config.voucherevent.close');
+   
     Route::any('/user/update-doc', 'UserController@updateDoc')->name('user.update_doc');
     
     Route::any('/user/mods/create', 'UserController@modCreate')->name('user.mods.create');

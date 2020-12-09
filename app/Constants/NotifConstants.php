@@ -46,4 +46,9 @@ class NotifConstants
     const ASK_NEW_ANSWER = 'ask_new_answer';
     const ASK_NEW_COMMENT = 'ask_new_comment';
     const ASK_ANSWER_SELECTED = 'ask_answer_selected';
+
+    /** Voucher */
+    const VOUCHER_MONEY_SENT = 'voucher_money_sent';
+    const VOUCHER_CLASS_SENT = 'voucher_class_sent';
+    const VOUCHER_PARTNER_SENT = 'voucher_partner_sent';
 }
