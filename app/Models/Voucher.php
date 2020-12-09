@@ -16,7 +16,9 @@ class Voucher extends Model
         $dbVoucher = DB::table('vouchers')
             ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
             ->where('vouchers.voucher', $voucher)
-            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount')
+            ->where('vouchers.status', 1)
+            ->where('vg.status', 1)
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vouchers.value')
             ->first();
         if (!$dbVoucher) {
             throw new \Exception("Voucher không có");
@@ -51,6 +53,8 @@ class Voucher extends Model
         $dbVoucher = DB::table('vouchers')
             ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
             ->where('vouchers.voucher', $voucher)
+            ->where('vouchers.status', 1)
+            ->where('vg.status', 1)
             ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount')
             ->first();
         if (!$dbVoucher) {
