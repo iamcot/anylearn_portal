@@ -137,7 +137,7 @@ class UserServices
     public function calcCommission($price, $bonusSeller, $bonusRate, $exchangeRate)
     {
         $netValue = $price * (1 - $bonusSeller);
-        return  floor($netValue * $bonusRate / $exchangeRate);
+        return  round($netValue * $bonusRate / $exchangeRate);
     }
 
     public function createMoneyFix($user, $input)
