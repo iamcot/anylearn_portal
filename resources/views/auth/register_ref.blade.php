@@ -20,7 +20,7 @@
                 <div class="col-md-8">
                     <div class="special-check @error('role') is-invalid @enderror">
                         <div class="form-check form-check-inline pt-2 mr-0">
-                            <input class="form-check-input" type="radio" name="role" id="role1" value="member">
+                            <input class="form-check-input" type="radio" name="role" id="role1" value="member" checked>
                             <label class="form-check-label" for="role1">@lang('Học viên')</label>
                         </div>
                         <div class="form-check form-check-inline mr-0">
@@ -95,7 +95,7 @@
             <div class="form-group row">
                 <div class="col-12 offset-sm-2">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="toc" required>
+                        <input class="form-check-input" type="checkbox" id="toc" required checked>
                         <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="#" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
                     </div>
                 </div>
