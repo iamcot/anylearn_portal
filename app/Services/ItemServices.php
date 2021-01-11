@@ -220,7 +220,9 @@ class ItemServices
             // }
 
             // } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
-            //     $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
+            else {
+                $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
+            }
             // }
             if (
                 $itemUpdate->date_start != $input['date_start']
@@ -278,11 +280,12 @@ class ItemServices
                         'time_end' => $date['time_end'],
                     ]);
                 } else {
-                    Schedule::find($date['id'])->update([
+                    $data = [
                         'date' => $date['date'],
                         'time_start' => $date['time_start'],
                         'time_end' => $date['time_end'],
-                    ]);
+                    ];
+                    Schedule::find($date['id'])->update($data);
                 }
             }
         }
