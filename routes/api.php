@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', 'Apis\UserApi@login');
+Route::post('/login/facebook', 'Apis\UserApi@loginFacebook');
 Route::get('/logout', 'Apis\UserApi@logout');
 Route::post('/register', 'Apis\UserApi@register');
 

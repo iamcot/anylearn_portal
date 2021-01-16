@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -43,6 +45,52 @@ class LoginController extends Controller
     public function username()
     {
         return 'phone';
+    }
+
+    /**
+     * Redirect the user to the Facebook authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToProvider(Request $request, $provider)
+    {
+        if ($request->get('ref')) {
+            session(['ref' => $request->get('ref')]);
+        }
+        return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Obtain the user information from Facebook.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleFacebookCallback()
+    {
+        $user = Socialite::driver('facebook')->user();
+        $existsUser = User::where('3rd_id', $user->id)->first();
+        if (!$existsUser) {
+            $data = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->id,
+                'role' => UserConstants::ROLE_MEMBER,
+                'password' => $user->email,
+                'ref' => session('ref', null) ?? null,
+            ];
+            $userModel = new User();
+            $existsUser = $userModel->createNewMember($data);
+            if ($existsUser) {
+                User::find($existsUser->id)->update([
+                    '3rd_id' => $user->id,
+                    '3rd_type' => User::LOGIN_3RD_FACEBOOK,
+                    '3rd_token' => $user->token,
+                    'image' => $user->avatar,
+                ]);
+            }
+        }
+        Auth::login($existsUser);
+        return redirect()->route('refpage', ['code' => session('ref', null)]);
     }
 
     protected function authenticated(Request $request, $user)

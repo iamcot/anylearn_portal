@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="anyLEARN.vn - Nền tảng kết nối hàng đầu về giáo dục">
     <meta name="author" content="">
+    <link href="/cdn/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Insert Favicon Here -->
     <link href="/favicon-16x16.png" rel="icon">
@@ -34,7 +35,16 @@
                                 <div id="en" class="tripi__wrapper" style="display: block;">
                                     @if($user)
                                     <div class="tripi__header">
+                                        @if($newUser != null)
+                                        <div>
+                                            Hi {{ $newUser->name }} [<form class="d-inline" action="{{ route('logout') }}" method="POST">
+                                                {{ csrf_field() }}
+                                                <a href="javascript:$('form').submit()">Đăng xuất</a>
+                                            </form>]
+                                        </div>
+                                        @endif
                                         <p class="tripi__title">
+
                                             <b class="username">{{ $user->name }}</b> @lang('mời bạn tham gia cộng đồng <b>anyLEARN</b>').
                                         </p>
                                         <p class="tripi__title">@lang('Hoàn thành 3 bước sau để trở thành bạn bè của') <b class="username">{{ $user->name }}</b>

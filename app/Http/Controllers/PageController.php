@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
@@ -24,10 +25,11 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        if ($request->get('has-account')) {
+        if ($request->get('has-account') || Auth::user()) {
             $data['isReg'] = true;
         }
         $data['user'] = $refUser;
+        $data['newUser'] = Auth::user();
         return view('ref', $data);
     }
 }

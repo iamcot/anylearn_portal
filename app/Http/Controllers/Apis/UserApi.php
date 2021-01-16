@@ -56,6 +56,50 @@ class UserApi extends Controller
         return response('Thông tin xác thực không hợp lệ', 401);
     }
 
+    public function loginFacebook(Request $request)
+    {
+        $data = $request->all();
+        // Log::debug($data);
+        $existsUser = User::where('3rd_id', $data['id'])->first();
+        if (!$existsUser) {
+            $data = [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['id'],
+                'role' => UserConstants::ROLE_MEMBER,
+                'password' => $data['email'],
+            ];
+            $userModel = new User();
+            $existsUser = $userModel->createNewMember($data);
+            if ($existsUser) {
+                User::find($existsUser->id)->update([
+                    '3rd_id' => $data['id'],
+                    '3rd_type' => User::LOGIN_3RD_FACEBOOK,
+                    '3rd_token' => null,
+                    'image' => $data['picture'],
+                ]);
+            }
+        }
+        if (!$existsUser->status) {
+            return response('Tài khoản của bạn đã bị khóa.', 403);
+        }
+        if (empty($existsUser->api_token)) {
+            $saveToken = User::find($existsUser->id)->update(
+                ['api_token' => hash('sha256', Str::random(60))]
+            );
+            if (!$saveToken) {
+                return response('Không thể hoàn tất xác thực', 500);
+            }
+        }
+        if ($request->get('notif_token')) {
+            User::find($existsUser->id)->update([
+                'notif_token' => $request->get('notif_token')
+            ]);
+        }
+        $userDB = User::find($existsUser->id)->makeVisible(['api_token']);
+        return response()->json($userDB, 200);
+    }
+
     public function logout(Request $request)
     {
         $user  = $this->isAuthedApi($request);
@@ -91,10 +135,10 @@ class UserApi extends Controller
         $user  = $request->get('_user');
         $user->makeVisible(['api_token']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
-        
+
         $configM = new Configuration();
         $user->ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_IOS_TRANSACTION);
-        
+
         return response()->json($user, 200);
     }
 

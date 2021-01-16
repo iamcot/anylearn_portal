@@ -56,7 +56,11 @@ class ArticleApi extends Controller
         if (!$data) {
             return response('Bài viết không có', 404);
         }
-        Log::debug($data);
+        $relateArticles = Article::where('status', 1)
+            ->where('type', $data->type)
+            ->where('id', '!=', $data->id)
+            ->orderBy('id', 'desc')->take(5)->get();
+        $data->related = $relateArticles;
         return response()->json($data);
     }
 
