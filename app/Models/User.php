@@ -86,7 +86,7 @@ class User extends Authenticatable
             'refcode' => $data['phone'],
         ];
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
-        if ($data['ref']) {
+        if (!empty($data['ref'])) {
             $refUser = $this->where('refcode', $data['ref'])->first();
             $obj['user_id'] = $refUser->id;
         }
