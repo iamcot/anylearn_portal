@@ -58,25 +58,25 @@ class UserApi extends Controller
 
     public function loginFacebook(Request $request)
     {
-        $data = $request->all();
-        Log::debug($data);
-        $existsUser = User::where('3rd_id', $data['id'])->first();
+        $input = $request->all();
+        Log::debug($input);
+        $existsUser = User::where('3rd_id', $input['id'])->first();
         if (!$existsUser) {
             $data = [
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['id'],
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'phone' => $input['id'],
                 'role' => UserConstants::ROLE_MEMBER,
-                'password' => $data['email'],
+                'password' => $input['email'],
             ];
             $userModel = new User();
             $existsUser = $userModel->createNewMember($data);
             if ($existsUser) {
                 User::find($existsUser->id)->update([
-                    '3rd_id' => $data['id'],
+                    '3rd_id' => $input['id'],
                     '3rd_type' => User::LOGIN_3RD_FACEBOOK,
                     '3rd_token' => null,
-                    'image' => $data['picture'],
+                    'image' => $input['picture'],
                 ]);
             }
         }
