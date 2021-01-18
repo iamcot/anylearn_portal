@@ -59,7 +59,7 @@ class UserApi extends Controller
     public function loginFacebook(Request $request)
     {
         $data = $request->all();
-        // Log::debug($data);
+        Log::debug($data);
         $existsUser = User::where('3rd_id', $data['id'])->first();
         if (!$existsUser) {
             $data = [
