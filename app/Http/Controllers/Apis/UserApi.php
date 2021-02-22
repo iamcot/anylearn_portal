@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Item;
+use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Participation;
@@ -339,11 +340,36 @@ class UserApi extends Controller
 
     public function profile($userId)
     {
-        $user = User::find($userId)->makeVisible(['full_content']);
+        $user = User::where('id', $userId)
+            ->select('id', 'title', 'name', 'image', 'role', 'introduce', 'banner', 'full_content')
+            ->first();
         if (!$user) {
             return response("User không tồn tại", 404);
         }
         $user->docs = UserDocument::where('user_id', $user->id)->get();
+        $user->registered = DB::table('order_details AS od') 
+        ->join('items', 'items.id', '=', 'od.item_id')
+        ->where('od.user_id', $userId)
+        ->select('items.title', 'items.image', 'items.short_content', 'items.id')
+        ->take(10)
+        ->get();
+        $user->faved = DB::table('item_user_actions AS iua')
+            ->join('items', 'items.id', '=', 'iua.item_id')
+            ->where('iua.type', ItemUserAction::TYPE_FAV)
+            ->where('iua.user_id', $userId)
+            ->where('iua.value', 1)
+            ->select('items.title', 'items.image', 'items.short_content', 'items.id')
+            ->take(10)
+            ->get();
+        $user->rated = DB::table('item_user_actions AS iua')
+            ->join('items', 'items.id', '=', 'iua.item_id')
+            ->where('iua.type', ItemUserAction::TYPE_RATING)
+            ->where('iua.user_id', $userId)
+            ->select('items.title', 'items.image', 'items.short_content', 'iua.value', 'items.id')
+            ->take(10)
+            ->get();
+
+
         return response()->json($user);
     }
 

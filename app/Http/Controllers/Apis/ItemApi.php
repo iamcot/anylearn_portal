@@ -137,8 +137,13 @@ class ItemApi extends Controller
             return response('Trang không tồn tại', 404);
         }
         $pageSize = $request->get('pageSize', 9999);
+        // DB::enableQueryLog(); 
+
         $items = DB::table('items')
-            ->where('user_id', $userId)
+            ->where(function($query) use ($userId) {
+                $query->where('user_id', $userId)
+                ->orWhereRaw('items.id in (SELECT class_id from class_teachers AS ct where ct.user_id = ?)', [$userId]);
+            })
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', '>', ItemConstants::STATUS_INACTIVE)
@@ -149,6 +154,9 @@ class ItemApi extends Controller
                 DB::raw("(select avg(iua.value) from item_user_actions AS iua WHERE type = 'rating' AND iua.item_id = items.id) AS rating")
             )
             ->paginate($pageSize);
+
+
+            // dd(DB::getQueryLog());
         return response()->json([
             'user' => $user,
             'items' => $items,

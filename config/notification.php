@@ -6,7 +6,7 @@ return [
     /** User notif */
     NotifConstants::NEW_USER => [
         'title' => 'Chào mừng',
-        'template' => 'Chào mừng {username} đến với ứng dụng anyLEARN - Học không giới hạn. Chúc bạn có thật nhiều niềm vui và kiến thức bổ ích khi trải nghiệm nhé. Bạn hãy giành ít phút cập nhật thông tin của mình nhé.',
+        'template' => 'Chào mừng {username} đến với ứng dụng anyLEARN - Học không giới hạn. Chúc bạn có thật nhiều niềm vui và kiến thức bổ ích khi trải nghiệm nhé. Bạn hãy dành ít phút cập nhật thông tin của mình nhé.',
         'route' => '/account',
     ],
     NotifConstants::NEW_FRIEND => [

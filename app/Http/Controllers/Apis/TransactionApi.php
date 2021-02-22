@@ -248,7 +248,7 @@ class TransactionApi extends Controller
                 'amount' => $directCommission,
                 'pay_method' => UserConstants::WALLET_C,
                 'pay_info' => '',
-                'content' => 'Nhận điểm từ mua khóa học: ' . $item->title,
+                'content' => 'Nhận điểm từ khóa học đã mua: ' . $item->title,
                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
             ]);
             $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [

@@ -7,6 +7,7 @@ use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\UserConstants;
+use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\Item;
@@ -194,6 +195,8 @@ class ItemServices
             $input['nolimit_time'] = 0;
         }
 
+        $this->updateClassTeachers($request, $input['id']);
+
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
@@ -262,6 +265,27 @@ class ItemServices
             return "";
         }
         return date('Y-m-d', $int);
+    }
+
+    private function updateClassTeachers(Request $request, $itemId)
+    {
+        if ($request->get('tab') == 'teachers') {
+            $teachers = $request->get('teachers');
+            if (empty($teachers)) {
+                return false;
+            }
+            ClassTeacher::where('class_id', $itemId)->delete();
+            $userIds = array_keys($teachers);
+            foreach ($userIds as $userId) {
+                ClassTeacher::create([
+                    'class_id' => $itemId,
+                    'user_id' => $userId,
+                ]);
+            }
+            return true;
+        }
+
+        return false;
     }
 
     private function updateClassSchedule(Request $request, $itemId)

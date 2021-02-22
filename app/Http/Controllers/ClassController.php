@@ -6,9 +6,11 @@ use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\ItemResource;
 use App\Models\Schedule;
+use App\Models\User;
 use App\Services\ItemServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
 
 class ClassController extends Controller
@@ -55,6 +57,22 @@ class ClassController extends Controller
         if (empty($courseDb)) {
             return redirect()->route('class')->with('notify', __('Lớp học không tồn tại'));
         }
+        $author = User::find($courseDb['info']->user_id);
+        if ($author->role == UserConstants::ROLE_SCHOOL) {
+            $this->data['isSchool'] = true;
+            $this->data['teachers'] = DB::table('users')
+                ->leftjoin('class_teachers AS ct', function ($join) use ($courseDb) {
+                    $join->on('ct.user_id', '=', 'users.id');
+                    $join->on('ct.class_id', '=', DB::raw($courseDb['info']->id));
+                })
+
+                ->where('users.user_id', $courseDb['info']->user_id)
+                ->where('users.role', UserConstants::ROLE_TEACHER)
+                ->select('users.*', 'ct.id AS isSelected')
+                ->get();
+        } else {
+            $this->data['isSchool'] = false;
+        }
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
@@ -72,7 +90,8 @@ class ClassController extends Controller
         ]);
     }
 
-    public function delSchedule($id) {
+    public function delSchedule($id)
+    {
         $rs = Schedule::where('item_id', $id)->delete();
         return redirect()->back()->with([
             'tab' => 'schedule',

@@ -16,6 +16,9 @@
                 <a class="shadow nav-link {{ session('tab') == 'seo' ? 'active' : '' }}" id="v-pills-seo-tab" data-toggle="pill" href="#v-pills-seo" role="tab" aria-controls="v-pills-seo" aria-selected="false">@lang('SEO')</a>
                 <a class="shadow nav-link {{ session('tab') == 'schedule' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-schedule-tab" data-toggle="pill" href="#v-pills-schedule" role="tab" aria-controls="v-pills-schedule" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}">@lang('Lịch học')</a>
                 <a class="shadow nav-link {{ session('tab') == 'resource' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-resource-tab" data-toggle="pill" href="#v-pills-resource" role="tab" aria-controls="v-pills-resource" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}">@lang('Hình ảnh, Tài liệu')</a>
+                @if($isSchool)
+                <a class="shadow nav-link {{ session('tab') == 'teachers' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-teachers-tab" data-toggle="pill" href="#v-pills-teachers" role="tab" aria-controls="v-pills-teachers" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}">@lang('Giảng viên')</a>
+                @endif
             </div>
         </div>
         <div class="col-10 pl-0 mb-3">
@@ -32,6 +35,11 @@
                 <div class="tab-pane fade {{ session('tab') == 'resource' ? 'show active' : '' }}" id="v-pills-resource" role="tabpanel" aria-labelledby="v-pills-resource-tab">
                     @include('class.form.resource')
                 </div>
+                @if($isSchool)
+                <div class="tab-pane fade {{ session('tab') == 'teachers' ? 'show active' : '' }}" id="v-pills-teachers" role="tabpanel" aria-labelledby="v-pills-teachers-tab">
+                    @include('class.form.teachers')
+                </div>
+                @endif
             </div>
         </div>
     </div>
