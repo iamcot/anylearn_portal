@@ -66,9 +66,13 @@ class TransactionController extends Controller
             Transaction::find($id)->update([
                 'status' => $status
             ]);
-            User::find($transaction->user_id)->update([
-                'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
-            ]);
+            
+            if ($transaction->type == ConfigConstants::TRANSACTION_DEPOSIT) {
+                User::find($transaction->user_id)->update([
+                    'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
+                ]);
+            }
+
             $notifServ = new Notification();
             $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
@@ -80,7 +84,6 @@ class TransactionController extends Controller
             ]);
             $notifServ = new Notification();
             $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
-        
         }
         return redirect()->back()->with('notify', 'Cập nhật thành công');
     }
