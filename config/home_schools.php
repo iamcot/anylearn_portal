@@ -1,52 +1,71 @@
 <?php return [
     
     [
-        'image' => '/cdn/onepage/images/school_2.png',
-    ],
-    // [
-    //     'image' => '/cdn/onepage/images/school_3.png',
-    // ],
+        'image' => '/cdn/onepage/images/schools/W-01.jpg',
+    ], 
     [
-        'image' => '/cdn/onepage/images/school_1.png',
+        'image' => '/cdn/onepage/images/schools/W-02.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_4.png',
+        'image' => '/cdn/onepage/images/schools/W-03.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_5.png',
+        'image' => '/cdn/onepage/images/schools/W-04.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_6.png',
+        'image' => '/cdn/onepage/images/schools/W-05.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_7.png',
+        'image' => '/cdn/onepage/images/schools/W-06.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_8.png',
+        'image' => '/cdn/onepage/images/schools/W-07.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_9.png',
+        'image' => '/cdn/onepage/images/schools/W-08.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_10.png',
+        'image' => '/cdn/onepage/images/schools/W-09.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_11.png',
+        'image' => '/cdn/onepage/images/schools/W-10.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_12.png',
+        'image' => '/cdn/onepage/images/schools/W-11.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_13.png',
+        'image' => '/cdn/onepage/images/schools/W-12.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_14.png',
+        'image' => '/cdn/onepage/images/schools/W-13.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_15.png',
+        'image' => '/cdn/onepage/images/schools/W-14.jpg',
     ],
     [
-        'image' => '/cdn/onepage/images/school_16.png',
+        'image' => '/cdn/onepage/images/schools/W-15.jpg',
     ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-16.jpg',
+    ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-17.jpg',
+    ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-18.jpg',
+    ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-19.jpg',
+    ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-20.jpg',
+    ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-21.jpg',
+    ],
+    [
+        'image' => '/cdn/onepage/images/schools/W-22.jpg',
+    ],
+    
 ];
 

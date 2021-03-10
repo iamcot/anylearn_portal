@@ -25,4 +25,6 @@
     "Văn hóa gia đình", 
     "Yoga", 
     "Văn hóa doanh nghiệp",
+    "Huấn luyện Tư duy ý chí nhà vô địch",
+    "Content “Khác mới hay”",
 ];
