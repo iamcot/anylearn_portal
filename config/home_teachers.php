@@ -1,5 +1,20 @@
 <?php return [
-
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/team-1.jpg',
+        'title' => '',
+        'contact' => [],
+    ], [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/team-2.jpg',
+        'title' => '',
+        'contact' => [],
+    ], [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/team-3.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
     [
         'name' => '',
         'avatar' => '/cdn/onepage/images/teachers/PX-02.jpg',
@@ -45,12 +60,6 @@
     [
         'name' => '',
         'avatar' => '/cdn/onepage/images/teachers/PX-09.jpg',
-        'title' => '',
-        'contact' => [],
-    ],
-    [
-        'name' => '',
-        'avatar' => '/cdn/onepage/images/teachers/PX-10.jpg',
         'title' => '',
         'contact' => [],
     ],
