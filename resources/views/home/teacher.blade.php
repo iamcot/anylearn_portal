@@ -7,7 +7,7 @@
             <hr class="default_divider default_divider_blue default_divider_big">
             <ul class="teacher_list">
                 @foreach(config('home_teachers', []) as $teacher)
-                <li class="team_detail col-xs-6 col-md-3">
+                <li class="team_detail">
                     <div class="team_detail_inner">
                         <img src="{{ $teacher['avatar'] }}" alt="team_img">
                     </div>
