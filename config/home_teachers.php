@@ -1,47 +1,87 @@
 <?php return [
+
     [
-        'name' => 'MC Hoài Trinh',
-        'avatar' => '/cdn/onepage/images/team-1.jpg',
-        'title' => 'Founder anyLEARN.vn',
-        'contact' => [
-            // [
-            //     'icon' => '',
-            //     'link' => ''
-            // ]
-        ],
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-02.jpg',
+        'title' => '',
+        'contact' => [],
     ],
     [
-        'name' => 'Lê Thị Phương Nga',
-        'avatar' => '/cdn/onepage/images/team-2.jpg',
-        'title' => 'Chuyên gia tâm lý',
-        'contact' => [
-            // [
-            //     'icon' => '',
-            //     'link' => ''
-            // ]
-        ],
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-03.jpg',
+        'title' => '',
+        'contact' => [],
     ],
     [
-        'name' => 'Huỳnh Hoàng Điệp',
-        'avatar' => '/cdn/onepage/images/team-3.jpg',
-        'title' => 'Chuyên gia',
-        'contact' => [
-            // [
-            //     'icon' => '',
-            //     'link' => ''
-            // ]
-        ],
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-04.jpg',
+        'title' => '',
+        'contact' => [],
     ],
     [
-        'name' => 'Lý Thị Mai',
-        'avatar' => '/cdn/onepage/images/team-4.jpg',
-        'title' => 'Chuyên gia',
-        'contact' => [
-            // [
-            //     'icon' => '',
-            //     'link' => ''
-            // ]
-        ],
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-05.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-06.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-07.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-08.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-09.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-10.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-11.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-12.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-13.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-14.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-01.jpg',
+        'title' => '',
+        'contact' => [],
     ],
 ];
-
