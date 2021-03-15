@@ -93,4 +93,16 @@
         'title' => '',
         'contact' => [],
     ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-15.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
+    [
+        'name' => '',
+        'avatar' => '/cdn/onepage/images/teachers/PX-16.jpg',
+        'title' => '',
+        'contact' => [],
+    ],
 ];
