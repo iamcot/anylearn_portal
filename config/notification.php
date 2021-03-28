@@ -77,6 +77,13 @@ return [
     ],
 
     /** Transaction */
+
+    NotifConstants::TRANSACTIONN_UPDATE =>  [
+        'title' => 'Điểm của bạn có sự thay đổi',
+        'template' => '{content}',
+        'route' => '/transaction',
+    ],
+
     NotifConstants::TRANS_DEPOSIT_SENT =>  [
         'title' => 'Yêu cầu nạp tiền đã gửi',
         'template' => 'Bạn vừa gửi yêu cầu nạp {amount} vào tài khoản trên anyLEARN. Vui lòng hoàn thành các thao tác yêu cầu và đợi trong ít phút nhé. Liên hệ 037 4900 344 nếu bạn cần hỗ trợ',

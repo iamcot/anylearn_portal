@@ -20,6 +20,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
+use App\Services\TransactionService;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -280,34 +281,93 @@ class UserApi extends Controller
             'course' => $item->title,
         ]);
 
-        if ($item->got_bonus == 0) {
+        $transService = new TransactionService();
+        // approve direct and indirect commission
+        $directCommission = DB::table('transactions')
+            ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+            ->where('od.item_id', $item->id)
+            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+            ->where('transactions.user_id', $user->id)
+            ->select('transactions.*')
+            ->first();
+        if ($directCommission) {
+            $transService->approveWalletcTransaction($directCommission->id);
+        }
+
+        // approve up tree transaction, just 1 level
+        $refUser = User::find($user->user_id);
+        if ($refUser) {
+            $inDirectCommission = DB::table('transactions')
+                ->where('transactions.order_id', $directCommission->order_id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.user_id', $refUser->id)
+                ->select('transactions.*')
+                ->first();
+            if ($inDirectCommission) {
+                $transService->approveWalletcTransaction($inDirectCommission->id);
+            }
+        }
+
+        // No limit time class => just touch transaction related to approved user 
+        if ($item->nolimit_time == 1) {
+            //get transaction relate order id & user & item
+            $trans = DB::table('transactions')
+                ->join('order_details AS od', function ($query) use ($user) {
+                    $query->on('od.id', '=', 'transactions.order_id')
+                        ->where('od.user_id', '=', $user->id);
+                })
+                ->where('od.item_id', $item->id)
+                ->where('transactions.user_id', $author->id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->select('transactions.*')
+                ->first();
+            // approve author transaction
+            if ($trans) {
+                $transService->approveWalletcTransaction($trans->id);
+            }
+            // approve foundation transaction
+            DB::table('transactions')
+                ->where('transactions.order_id', $trans->order_id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                ->update([
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                ]);
+        } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
             $configM = new Configuration();
             $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
             $totalReg = OrderDetail::where('item_id', $itemId)->count();
             $totalConfirm = Participation::where('item_id', $itemId)->count();
+            //update author commssion when reach % of approved users
             if ($totalConfirm / $totalReg >= $needNumConfirm) {
-
-
-                $totalCommission = DB::table('transactions')
+                //get ALL transaction relate order id & item
+                $allTrans = DB::table('transactions')
                     ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
                     ->where('od.item_id', $item->id)
                     ->where('transactions.user_id', $author->id)
                     ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
                     ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                    ->sum('transactions.amount');
+                    ->select('transactions.*')
+                    ->get();
 
-                User::find($author->id)->update([
-                    'wallet_c' => DB::raw('wallet_c + ' . $totalCommission),
-                ]);
-
+                // approve author transaction
+                if ($allTrans) {
+                    foreach ($allTrans as $trans) {
+                        $transService->approveWalletcTransaction($trans->id);
+                    }
+                }
+                // approve foundation transaction
                 DB::table('transactions')
                     ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
                     ->where('od.item_id', $item->id)
                     ->where('transactions.user_id', $author->id)
                     ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
                     ->update([
-                        'transactions.status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
                     ]);
 
                 Item::find($itemId)->update([
@@ -347,12 +407,12 @@ class UserApi extends Controller
             return response("User không tồn tại", 404);
         }
         $user->docs = UserDocument::where('user_id', $user->id)->get();
-        $user->registered = DB::table('order_details AS od') 
-        ->join('items', 'items.id', '=', 'od.item_id')
-        ->where('od.user_id', $userId)
-        ->select('items.title', 'items.image', 'items.short_content', 'items.id')
-        ->take(10)
-        ->get();
+        $user->registered = DB::table('order_details AS od')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->where('od.user_id', $userId)
+            ->select('items.title', 'items.image', 'items.short_content', 'items.id')
+            ->take(10)
+            ->get();
         $user->faved = DB::table('item_user_actions AS iua')
             ->join('items', 'items.id', '=', 'iua.item_id')
             ->where('iua.type', ItemUserAction::TYPE_FAV)

@@ -169,7 +169,6 @@ class TransactionApi extends Controller
                 try {
                     $voucherM = new Voucher();
                     $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $voucher);
-                    //save order
                     $newOrder = Order::create([
                         'user_id' => $user->id,
                         'amount' => $item->price,
@@ -178,7 +177,6 @@ class TransactionApi extends Controller
                         'payment' => UserConstants::VOUCHER,
                     ]);
                 } catch (\Exception $e) {
-                    // dd($e);
                     DB::rollback();
                     return $e->getMessage();
                 }
@@ -188,7 +186,6 @@ class TransactionApi extends Controller
                 }
                 $status = $user->wallet_m >= $item->price ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
 
-                //save order
                 $newOrder = Order::create([
                     'user_id' => $user->id,
                     'amount' => $amount,
@@ -249,12 +246,13 @@ class TransactionApi extends Controller
                 'pay_method' => UserConstants::WALLET_C,
                 'pay_info' => '',
                 'content' => 'Nhận điểm từ khóa học đã mua: ' . $item->title,
-                'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                'order_id' => $orderDetail->id
             ]);
-            $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [
-                'username' => $user->name,
-                'amount' => number_format($directCommission, 0, ',', '.'),
-            ]);
+            // $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [
+            //     'username' => $user->name,
+            //     'amount' => number_format($directCommission, 0, ',', '.'),
+            // ]);
 
             //pay author 
             $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
@@ -273,7 +271,7 @@ class TransactionApi extends Controller
                 'order_id' => $orderDetail->id, //TODO user order detail instead order id to know item
             ]);
 
-            //save commission indirect + transaction log + update wallet C indrect user
+            //save commission indirect + transaction log in PENDING status
 
             $indirectCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
@@ -281,9 +279,9 @@ class TransactionApi extends Controller
             for ($i = 1; $i < $configs[ConfigConstants::CONFIG_FRIEND_TREE]; $i++) {
                 $refUser = User::find($currentUserId);
                 if ($refUser) {
-                    User::find($refUser->id)->update([
-                        'wallet_c' => DB::raw('wallet_c + ' . $indirectCommission),
-                    ]);
+                    // User::find($refUser->id)->update([
+                    //     'wallet_c' => DB::raw('wallet_c + ' . $indirectCommission),
+                    // ]);
                     Transaction::create([
                         'user_id' => $refUser->id,
                         'type' => ConfigConstants::TRANSACTION_COMMISSION,
@@ -291,14 +289,15 @@ class TransactionApi extends Controller
                         'pay_method' => UserConstants::WALLET_C,
                         'pay_info' => '',
                         'content' => 'Nhận điểm từ ' . $user->name . ' mua khóa học: ' . $item->title,
-                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                        'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                         'ref_user_id' => $user->id,
                         'ref_amount' => $amount,
+                        'order_id' => $orderDetail->id
                     ]);
-                    $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $refUser->id, [
-                        'username' => $refUser->name,
-                        'amount' => number_format($indirectCommission, 0, ',', '.'),
-                    ]);
+                    // $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $refUser->id, [
+                    //     'username' => $refUser->name,
+                    //     'amount' => number_format($indirectCommission, 0, ',', '.'),
+                    // ]);
                     $currentUserId = $refUser->user_id;
                 } else {
                     break;
@@ -315,9 +314,10 @@ class TransactionApi extends Controller
                     'pay_method' => UserConstants::WALLET_M,
                     'pay_info' => '',
                     'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title,
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'ref_user_id' => $user->id,
                     'ref_amount' => $amount,
+                    'order_id' => $orderDetail->id
                 ]);
             }
 
@@ -326,10 +326,10 @@ class TransactionApi extends Controller
             $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
                 'course' => $item->title,
             ]);
-            $notifServ->createNotif(NotifConstants::TRANS_FOUNDATION, $user->id, [
-                'amount' => number_format($foundation, 0, ',', '.'),
-                'course' => $item->title,
-            ]);
+            // $notifServ->createNotif(NotifConstants::TRANS_FOUNDATION, $user->id, [
+            //     'amount' => number_format($foundation, 0, ',', '.'),
+            //     'course' => $item->title,
+            // ]);
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
                 'username' => $author->name,
                 'course' => $item->title,

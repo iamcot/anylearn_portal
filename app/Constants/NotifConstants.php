@@ -35,6 +35,7 @@ class NotifConstants
     const TRANS_DEPOSIT_REFUND = 'trans_deposit_return';
     const TRANS_COMMISSION_RECEIVED = 'trans_commission_received';
     const TRANS_FOUNDATION = 'trans_foundation';
+    const TRANSACTIONN_UPDATE = 'transaction_update';
 
     /** Reminder */
     const REMIND_CONFIRM = 'remind_confirm';

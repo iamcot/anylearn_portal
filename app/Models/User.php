@@ -32,7 +32,7 @@ class User extends Authenticatable
         'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
         'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
-        'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token'
+        'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child'
     ];
 
     /**
