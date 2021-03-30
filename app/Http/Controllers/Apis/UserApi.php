@@ -25,6 +25,7 @@ use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -140,6 +141,9 @@ class UserApi extends Controller
 
         $configM = new Configuration();
         $user->ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_IOS_TRANSACTION);
+        $user->children = User::where('user_id', $user->id)
+            ->where('is_child', 1)
+            ->get();
 
         return response()->json($user, 200);
     }
@@ -149,6 +153,9 @@ class UserApi extends Controller
         $user  = $request->get('_user');
         $user->makeVisible(['api_token', 'full_content']);
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
+        $user->children = User::where('user_id', $user->id)
+            ->where('is_child', 1)
+            ->get();
         return response()->json($user, 200);
     }
 
@@ -247,6 +254,8 @@ class UserApi extends Controller
     public function confirmJoinCourse(Request $request, $scheduleId)
     {
         $user = $request->get('_user');
+        $childId = $request->get('child');
+        $joinedUserId = !empty($childId) ? $childId : $user->id;
 
         $schedule = Schedule::find($scheduleId);
         if (!$schedule) {
@@ -261,7 +270,7 @@ class UserApi extends Controller
 
         $isConfirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $schedule->id)
-            ->where('participant_user_id', $user->id)
+            ->where('participant_user_id', $joinedUserId)
             ->count();
         if ($isConfirmed > 0) {
             return response("Bạn đã xác nhận rồi", 400);
@@ -270,7 +279,7 @@ class UserApi extends Controller
             'item_id' => $itemId,
             'schedule_id' =>  $scheduleId,
             'organizer_user_id' => $item->user_id,
-            'participant_user_id' => $user->id,
+            'participant_user_id' => $joinedUserId,
             'organizer_confirm' => 1,
             'participant_confirm' => 1,
         ]);
@@ -285,6 +294,8 @@ class UserApi extends Controller
         // approve direct and indirect commission
         $directCommission = DB::table('transactions')
             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+            ->join('orders', 'orders.id', '=', 'od.order_id')
+            ->where('orders.user_id', $joinedUserId)
             ->where('od.item_id', $item->id)
             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
@@ -318,6 +329,8 @@ class UserApi extends Controller
                     $query->on('od.id', '=', 'transactions.order_id')
                         ->where('od.user_id', '=', $user->id);
                 })
+                ->join('orders', 'orders.id', '=', 'od.order_id')
+                ->where('orders.user_id', $joinedUserId)
                 ->where('od.item_id', $item->id)
                 ->where('transactions.user_id', $author->id)
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
@@ -581,5 +594,44 @@ class UserApi extends Controller
             'is_signed' => UserConstants::CONTRACT_SIGNED
         ]);
         return response($fileuploaded['url'], 200);
+    }
+
+    public function listChildren(Request $request)
+    {
+        $user = $request->get('_user');
+        $children = User::where('user_id', $user->id)
+            ->where('is_child', 1)
+            ->get();
+        return response()->json($children);
+    }
+
+    public function saveChildren(Request $request)
+    {
+        $user = $request->get('_user');
+        $id = $request->get('id');
+        $name = $request->get('name');
+        if ($id == 0) {
+            $phoneByTime = $user->phone . time();
+            $newChild = User::create([
+                'is_child' => 1,
+                'user_id' => $user->id,
+                'name' => $name,
+                'phone' => $phoneByTime,
+                'refcode' => $phoneByTime,
+                'password' => Hash::make($user->phone),
+                'role' => UserConstants::ROLE_MEMBER,
+                'status' => UserConstants::STATUS_ACTIVE,
+            ]);
+        } else {
+            $child = User::find($id);
+            if ($child->is_child == 1 && $child->user_id == $user->id) {
+                $child->update([
+                    'name' => $name,
+                ]);
+            }
+        }
+        return response()->json([
+            'result' => true
+        ]);
     }
 }

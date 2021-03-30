@@ -40,7 +40,9 @@ class TransactionService
         ]);
         // send notif 
         $notifServ = new Notification();
-        $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, $trans->content);
+        $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
+            'content' => $trans->content
+        ]);
         return true;
     }
 

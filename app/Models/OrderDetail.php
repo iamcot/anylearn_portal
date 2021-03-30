@@ -30,12 +30,14 @@ class OrderDetail extends Model
     {
         $today = date('Y-m-d');
         $query = DB::table('order_details AS od')
+            ->join('orders', 'orders.id', '=', 'od.order_id')
             ->join('items', 'items.id', '=', 'od.item_id')
-            ->join('users', 'users.id', '=', 'od.user_id')
+            ->join('users', 'users.id', '=', 'od.user_id') //this join is for main user
+            ->join('users AS u2', 'u2.id', '=', 'orders.user_id') //this join is for child user
             ->join('schedules', 'schedules.item_id', '=', 'od.item_id')
             ->leftJoin('participations AS pa', function ($join) {
                 $join->on('pa.schedule_id', '=', 'schedules.id')
-                    ->on('pa.participant_user_id', '=', 'users.id');
+                    ->on('pa.participant_user_id', '=', 'u2.id');
             })
             ->leftJoin('item_user_actions AS iua', function ($query) {
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
@@ -56,6 +58,8 @@ class OrderDetail extends Model
                 'items.location',
                 'items.id as item_id',
                 'items.nolimit_time',
+                'u2.id AS child_id',
+                'u2.name AS child_name',
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('schedules.date')

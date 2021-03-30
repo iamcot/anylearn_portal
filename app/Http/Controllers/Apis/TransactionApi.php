@@ -144,6 +144,7 @@ class TransactionApi extends Controller
     public function placeOrderOneItem(Request $request, $itemId)
     {
         $user = $request->get('_user');
+        $childUser = $request->get('child', '');
 
         $item = Item::find($itemId);
         if (!$item) {
@@ -152,7 +153,7 @@ class TransactionApi extends Controller
         $alreadyRegister = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->where('orders.status', OrderConstants::STATUS_DELIVERED)
-            ->where('od.user_id', $user->id)
+            ->where('orders.user_id', ($childUser > 0 ? $childUser : $user->id))
             ->where('od.item_id', $itemId)
             ->count();
         if ($alreadyRegister > 0) {
@@ -160,7 +161,7 @@ class TransactionApi extends Controller
         }
         $voucher = $request->get('voucher', '');
 
-        $result = DB::transaction(function () use ($user, $item, $voucher) {
+        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser) {
             $notifServ = new Notification();
             $newOrder = null;
             $status = OrderConstants::STATUS_DELIVERED;
@@ -170,7 +171,7 @@ class TransactionApi extends Controller
                     $voucherM = new Voucher();
                     $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $voucher);
                     $newOrder = Order::create([
-                        'user_id' => $user->id,
+                        'user_id' => $childUser > 0 ? $childUser : $user->id,
                         'amount' => $item->price,
                         'quantity' => 1,
                         'status' => $status,
@@ -187,7 +188,7 @@ class TransactionApi extends Controller
                 $status = $user->wallet_m >= $item->price ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
 
                 $newOrder = Order::create([
-                    'user_id' => $user->id,
+                    'user_id' => $childUser > 0 ? $childUser : $user->id,
                     'amount' => $amount,
                     'quantity' => 1,
                     'status' => $status,

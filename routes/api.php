@@ -84,4 +84,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/ask/{askId}/select', 'Apis\AskApi@selectAnswer');
     Route::get('/ask/{askId}/vote/{type}', 'Apis\AskApi@vote');
     Route::get('/ask/{askId}/touch/{status}', 'Apis\AskApi@touchStatus');
+
+    Route::get('/user/children', 'Apis\UserApi@listChildren');
+    Route::post('/user/children', 'Apis\UserApi@saveChildren');
 });
