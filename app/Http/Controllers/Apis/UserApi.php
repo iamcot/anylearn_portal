@@ -545,7 +545,7 @@ class UserApi extends Controller
         }
         $contract['user_id'] = $user->id;
         $contract['type'] = $user->role;
-        $contract['status'] = UserConstants::CONTRACT_NEW;
+        $contract['status'] = UserConstants::CONTRACT_SIGNED;
 
         Contract::where('user_id', $user->id)->update([
             'status' => UserConstants::CONTRACT_DELETED,
@@ -553,7 +553,7 @@ class UserApi extends Controller
         $newContract = Contract::create($contract);
         if ($newContract) {
             $dataUpdate = [
-                "is_signed" => UserConstants::CONTRACT_NEW,
+                "is_signed" => UserConstants::CONTRACT_SIGNED,
                 "email" => $contract['email'],
                 "address" => $contract['address'],
             ];
