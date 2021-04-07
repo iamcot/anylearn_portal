@@ -77,6 +77,7 @@ class VoucherEventLog extends Model
                         $notifM->createNotif(NotifConstants::VOUCHER_CLASS_SENT, $userId, [
                             'voucher' => $voucher->voucher,
                             'class' => $classesDB->class,
+                            'args' => $classesDB->id,
                         ]);
                     }
                 }
