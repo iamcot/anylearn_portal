@@ -13,6 +13,7 @@
                     <select name="voucher_type" id="voucher_type" class="form-control">
                         <option value="{{ App\Models\VoucherGroup::TYPE_MONEY }}">Tiền mặt</option>
                         <option value="{{ App\Models\VoucherGroup::TYPE_CLASS }}">Khóa học</option>
+                        <option value="{{ App\Models\VoucherGroup::TYPE_PARTNER }}">Voucher Đối tác</option>
                     </select>
                 </div>
             </div>
@@ -22,10 +23,10 @@
                     <input id="ext" type="text" class="form-control @error('expired') is-invalid @enderror" name="ext" value="{{ old('ext', !empty($voucher) ? $voucher->ext : '') }}">
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row normal_voucher">
                 <label for="generate_type" class="col-md-2 col-form-label text-md-right">{{ __('Cách tạo') }}</label>
                 <div class="col-md-6">
-                <select name="generate_type" id="generate_type" class="form-control">
+                    <select name="generate_type" id="generate_type" class="form-control">
                         <option value="{{ App\Models\VoucherGroup::GENERATE_MANUALLY }}">Mã giống nhau</option>
                         <option value="{{ App\Models\VoucherGroup::GENERATE_AUTO }}">Tự động tạo mã khác nhau</option>
                     </select>
@@ -34,19 +35,26 @@
             <div class="form-group row">
                 <label for="prefix" class="col-md-2 col-form-label text-md-right">{{ __('Voucher/Tiền tố') }}</label>
                 <div class="col-md-6">
-                    <input id="prefix" type="text" class="form-control @error('voucher') is-invalid @enderror" name="prefix" value="{{ old('prefix', !empty($voucher) ? $voucher->prefix : '') }}" required>
+                    <input id="prefix" type="text" class="form-control @error('voucher') is-invalid @enderror" name="prefix" value="{{ old('prefix', !empty($voucher) ? $voucher->prefix : '') }}" >
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row normal_voucher">
                 <label for="value" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị') }}</label>
                 <div class="col-md-6">
-                    <input id="value" type="text" class="form-control @error('value') is-invalid @enderror" name="value" value="{{ old('value', !empty($voucher) ? $voucher->value : '') }}" required>
+                    <input id="value" type="text" class="form-control @error('value') is-invalid @enderror" name="value" value="{{ old('value', !empty($voucher) ? $voucher->value : '') }}" >
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row normal_voucher">
                 <label for="qtt" class="col-md-2 col-form-label text-md-right">{{ __('Số lượng') }}</label>
                 <div class="col-md-6">
                     <input id="qtt" type="text" class="form-control @error('amount') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($voucher) ? $voucher->qtt : '') }}">
+                </div>
+            </div>
+            <div class="form-group row" id="partner_voucher" style="display: none;">
+                <label for="ext" class="col-md-2 col-form-label text-md-right">{{ __('Danh sách voucher') }}</label>
+                <div class="col-md-6">
+                    <p class="small">Mỗi voucher nằm trên 1 dòng</p>
+                    <textarea class="form-control" name="partner_vouchers" rows="10"></textarea>
                 </div>
             </div>
             <!-- <div class="form-group row">
@@ -64,12 +72,20 @@
 @endsection
 @section('jscript')
 <script>
-$("#voucher_type").change(function() {
-    if ($(this).val() == "{{ App\Models\VoucherGroup::TYPE_MONEY }}") {
-        $("#extra_box").hide();
-    } else {
-        $("#extra_box").show();
-    }
-});
+    $("#voucher_type").change(function() {
+        if ($(this).val() == "{{ App\Models\VoucherGroup::TYPE_MONEY }}") {
+            $(".normal_voucher").show();
+            $("#extra_box").hide();
+            $("#partner_voucher").hide();
+        } else if ($(this).val() == "{{ App\Models\VoucherGroup::TYPE_PARTNER }}") {
+            $("#extra_box").hide();
+            $(".normal_voucher").hide();
+            $("#partner_voucher").show();
+        } else {
+            $("#partner_voucher").hide();
+            $(".normal_voucher").show();
+            $("#extra_box").show();
+        }
+    });
 </script>
 @endsection

@@ -143,7 +143,7 @@ class ConfigController extends Controller
     public function voucherEventClose($id)
     {
         $rs = VoucherEvent::find($id)->update(['status' => DB::raw('1 - status')]);
-        
+
         return redirect()->back()->with('notify', $rs);
     }
 
@@ -175,55 +175,88 @@ class ConfigController extends Controller
     public function voucherEdit(Request $request)
     {
         if ($request->get('save')) {
+            $totalSaved = 0;
             $input = $request->input();
-            $data = [
-                'type' => $input['voucher_type'],
-                'generate_type' => $input['generate_type'],
-                'prefix' => $input['prefix'],
-                'qtt' => $input['qtt'],
-                'value' => $input['value'],
-                'status' => 1,
-            ];
-            $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
-            if ($exists > 0) {
-                return redirect()->back()->with('notify', 'Mã này đã tạo');
-            }
-            if ($data['type'] == VoucherGroup::TYPE_CLASS) {
-                if (empty(trim($input['ext']))) {
-                    return redirect()->back()->with('notify', 'Voucher lớp học cần nhập IDs các khóa học.');
-                }
-                $classIds = explode(',', $input['ext']);
-                for ($i = 0; $i < count($classIds); $i++) {
-                    $classIds[$i] = intval($classIds[$i]);
-                }
-                $data['ext'] = implode(",", $classIds);
-            }
-            $newGroup = VoucherGroup::create($data);
-            if ($newGroup) {
-                if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
-                    for ($i = 1; $i <= $newGroup->qtt; $i++) {
-                        $newVoucher = Voucher::create([
+            $partnerVouchers = empty($input['partner_vouchers']) ? [] : explode("\n", $input['partner_vouchers']);
+            if ($input['voucher_type'] == VoucherGroup::TYPE_PARTNER) {
+                $data = [
+                    'type' => VoucherGroup::TYPE_PARTNER,
+                    'prefix' => $input['prefix'],
+                    'generate_type' => VoucherGroup::TYPE_PARTNER,
+                    'qtt' => count($partnerVouchers),
+                    'value' => 0,
+                    'status' => 1,
+                ];
+                $newGroup = VoucherGroup::create($data);
+                if ($newGroup) {
+                    foreach ($partnerVouchers as $voucher) {
+                        $existVoucher = Voucher::where('voucher', $voucher)->count();
+                        if ($existVoucher > 0) {
+                            continue;
+                        }
+                        Voucher::create([
                             'voucher_group_id' => $newGroup->id,
-                            'voucher' => Voucher::buildAutoVoucher($newGroup->prefix),
+                            'voucher' => $voucher,
                             'amount' => 1,
                             'value' => $newGroup->value,
                             'status' => 1,
                             'expired' => 0
                         ]);
+                        $totalSaved++;
                     }
-                } else {
-                    $newVoucher = Voucher::create([
-                        'voucher_group_id' => $newGroup->id,
-                        'voucher' => $newGroup->prefix,
-                        'amount' => $newGroup->qtt,
-                        'value' => $newGroup->value,
-                        'status' => 1,
-                        'expired' => 0
-                    ]);
+                }
+            } else {
+                $data = [
+                    'type' => $input['voucher_type'],
+                    'generate_type' => $input['generate_type'],
+                    'prefix' => $input['prefix'],
+                    'qtt' => $input['qtt'],
+                    'value' => $input['value'],
+                    'status' => 1,
+                ];
+                $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
+                if ($exists > 0) {
+                    return redirect()->back()->with('notify', 'Mã này đã tạo');
+                }
+                if ($data['type'] == VoucherGroup::TYPE_CLASS) {
+                    if (empty(trim($input['ext']))) {
+                        return redirect()->back()->with('notify', 'Voucher lớp học cần nhập IDs các khóa học.');
+                    }
+                    $classIds = explode(',', $input['ext']);
+                    for ($i = 0; $i < count($classIds); $i++) {
+                        $classIds[$i] = intval($classIds[$i]);
+                    }
+                    $data['ext'] = implode(",", $classIds);
+                }
+                $newGroup = VoucherGroup::create($data);
+                if ($newGroup) {
+                    if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
+                        for ($i = 1; $i <= $newGroup->qtt; $i++) {
+                            Voucher::create([
+                                'voucher_group_id' => $newGroup->id,
+                                'voucher' => Voucher::buildAutoVoucher($newGroup->prefix),
+                                'amount' => 1,
+                                'value' => $newGroup->value,
+                                'status' => 1,
+                                'expired' => 0
+                            ]);
+                            $totalSaved++;
+                        }
+                    } else {
+                        Voucher::create([
+                            'voucher_group_id' => $newGroup->id,
+                            'voucher' => $newGroup->prefix,
+                            'amount' => $newGroup->qtt,
+                            'value' => $newGroup->value,
+                            'status' => 1,
+                            'expired' => 0
+                        ]);
+                        $totalSaved++;
+                    }
                 }
             }
 
-            return redirect()->route('config.voucher')->with('notify', 'Thao tác thành công.');
+            return redirect()->route('config.voucher')->with('notify', "Thêm thành công $totalSaved voucher");
         }
 
         $this->data['navText'] = __('Quản lý voucher');
