@@ -186,7 +186,7 @@ return [
     ],
     NotifConstants::VOUCHER_PARTNER_SENT =>  [
         'title' => 'Bạn vừa được nhận một voucher của đối tác',
-        'template' => 'Bạn vừa nhận một voucher {voucher} từ {partner}',
+        'template' => 'Mã kích hoạt {partner} của bạn là: {voucher}',
         'route' => '/',
         'args' => false,
     ],
