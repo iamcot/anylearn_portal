@@ -47,6 +47,10 @@ class UserApi extends Controller
                 }
             }
             if ($request->get('notif_token')) {
+                if (empty($user->notif_token)) {
+                    $notifM = new Notification();
+                    $notifM->resendUnsentMessage($user->id, $request->get('notif_token'));
+                }
                 User::find($user->id)->update([
                     'notif_token' => $request->get('notif_token')
                 ]);
@@ -93,6 +97,10 @@ class UserApi extends Controller
             }
         }
         if ($request->get('notif_token')) {
+            if (empty($existsUser->notif_token)) {
+                $notifM = new Notification();
+                $notifM->resendUnsentMessage($existsUser->id, $request->get('notif_token'));
+            }
             User::find($existsUser->id)->update([
                 'notif_token' => $request->get('notif_token')
             ]);
@@ -347,12 +355,12 @@ class UserApi extends Controller
             return response("User không tồn tại", 404);
         }
         $user->docs = UserDocument::where('user_id', $user->id)->get();
-        $user->registered = DB::table('order_details AS od') 
-        ->join('items', 'items.id', '=', 'od.item_id')
-        ->where('od.user_id', $userId)
-        ->select('items.title', 'items.image', 'items.short_content', 'items.id')
-        ->take(10)
-        ->get();
+        $user->registered = DB::table('order_details AS od')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->where('od.user_id', $userId)
+            ->select('items.title', 'items.image', 'items.short_content', 'items.id')
+            ->take(10)
+            ->get();
         $user->faved = DB::table('item_user_actions AS iua')
             ->join('items', 'items.id', '=', 'iua.item_id')
             ->where('iua.type', ItemUserAction::TYPE_FAV)

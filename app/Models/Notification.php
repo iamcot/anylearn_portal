@@ -52,6 +52,23 @@ class Notification extends Model
         }
     }
 
+    public function resendUnsentMessage($userId, $notifToken)
+    {
+        $notSendNotifs = Notification::where('user_id', $userId)
+            ->where('is_send', 0)->get();
+
+        if (!$notifToken) {
+            return;
+        }
+        foreach ($notSendNotifs as $notif) {
+            $this->firebaseMessage($notif, $notifToken);
+            Notification::find($notif->id)->update([
+                'is_send' => 1,
+                'send' => DB::raw("now()")
+            ]);
+        }
+    }
+
     public function firebaseMessage($notifDB, $token)
     {
         try {

@@ -16,6 +16,8 @@ use App\Models\OrderDetail;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Models\VoucherEvent;
+use App\Models\VoucherEventLog;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -222,6 +224,10 @@ class TransactionApi extends Controller
                 'paid_price' => $item->price,
                 'status' => $status,
             ]);
+
+            // voucher event
+            $voucherEvent = new VoucherEventLog();
+            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
 
             $author = User::find($item->user_id);
 
