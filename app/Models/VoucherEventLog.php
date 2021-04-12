@@ -72,11 +72,21 @@ class VoucherEventLog extends Model
                         ]);
                     } elseif ($voucherGroup->type == VoucherGroup::TYPE_CLASS) {
                         $classesDB = DB::table('items')->whereIn('id', explode(',', $voucherGroup->ext))
-                            ->select(DB::raw("GROUP_CONCAT(title SEPARATOR ', ') AS class"))
+                            ->select(DB::raw("GROUP_CONCAT(title SEPARATOR ', ') AS class"), DB::raw("GROUP_CONCAT(id SEPARATOR ',') AS ids"))
                             ->first();
-                        $notifM->createNotif(NotifConstants::VOUCHER_CLASS_SENT, $userId, [
+                        if (!empty($classesDB)) {
+                            $notifData = [
+                                'voucher' => $voucher->voucher,
+                                'class' => $classesDB->class,
+                            ];
+                            $firstId = explode(",", $classesDB->ids)[0];
+                            $notifData['args'] = $firstId;
+                            $notifM->createNotif(NotifConstants::VOUCHER_CLASS_SENT, $userId, $notifData);
+                        }
+                    } elseif ($voucherGroup->type == VoucherGroup::TYPE_PARTNER) {
+                        $notifM->createNotif(NotifConstants::VOUCHER_PARTNER_SENT, $userId, [
                             'voucher' => $voucher->voucher,
-                            'class' => $classesDB->class,
+                            'partner' => $voucherGroup->prefix,
                         ]);
                     }
                 }

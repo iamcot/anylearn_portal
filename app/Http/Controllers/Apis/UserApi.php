@@ -49,6 +49,10 @@ class UserApi extends Controller
                 }
             }
             if ($request->get('notif_token')) {
+                if (empty($user->notif_token)) {
+                    $notifM = new Notification();
+                    $notifM->resendUnsentMessage($user->id, $request->get('notif_token'));
+                }
                 User::find($user->id)->update([
                     'notif_token' => $request->get('notif_token')
                 ]);
@@ -95,6 +99,10 @@ class UserApi extends Controller
             }
         }
         if ($request->get('notif_token')) {
+            if (empty($existsUser->notif_token)) {
+                $notifM = new Notification();
+                $notifM->resendUnsentMessage($existsUser->id, $request->get('notif_token'));
+            }
             User::find($existsUser->id)->update([
                 'notif_token' => $request->get('notif_token')
             ]);
