@@ -9,7 +9,7 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <p class="customer_feedback_text white_color open_sans default_text font_200">
-                        Tôi cảm thấy rất vui khi biết đến app anyLEARN. Nhờ app mà khi đăng ký khóa học cho con, tôi đều được tích lũy để đăng ký thêm cho con học những khóa học bổ ích khác. Tôi rất chú trọng vào việc đầu tư học tập cho con nên cứ như vậy là tôi thấy rất thích
+                        Tôi cảm thấy rất có lợi khi dùng app anyLEARN. Nhờ app mà khi đăng ký học cho con, tôi đều được tích lũy điểm để tiết kiệm hơn cho những khóa sau. Tôi rất chú trọng vào việc đầu tư học tập cho con và đăng ký học qua ứng dụng như vầy cũng yên tâm hơn nhiều, học tốt mà tiết kiệm nữa.
                         </p>
                         <p class="feedback_avatar"><img src="/cdn/onepage/images/feedbacks/kimchi.jpg" alt=""></p>
                         <p class="customer_feedback_name white_color open_sans default_small_heading font_600">Ms. Kim Chi – Phụ huynh</p>
