@@ -21,7 +21,7 @@
     ],
     [
         "_id" => "4",
-        "quoteText" => "Đừng xấu khổ khi không biết. Chỉ xấu hổ khi không học.",
+        "quoteText" => "Đừng xấu hổ khi không biết. Chỉ xấu hổ khi không học.",
         "quoteAuthor" => "Ngạn ngữ",
     ]
 ];
