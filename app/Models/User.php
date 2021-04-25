@@ -20,6 +20,7 @@ class User extends Authenticatable
     use Notifiable;
 
     const LOGIN_3RD_FACEBOOK = 'facebook';
+    const LOGIN_3RD_APPLE = 'apple';
     const LOGIN_3RD_GOOGLE = 'google';
 
     /**

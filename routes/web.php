@@ -25,6 +25,8 @@ Route::get('/privacy', 'ConfigController@privacy');
 Route::get('/login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallback');
 
+Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
+
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
