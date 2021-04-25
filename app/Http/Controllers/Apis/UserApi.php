@@ -109,6 +109,54 @@ class UserApi extends Controller
         return response()->json($userDB, 200);
     }
 
+    public function loginApple(Request $request)
+    {
+        $input = $request->all();
+        Log::debug($input);
+        $existsUser = User::where('3rd_id', $input['id'])->first();
+        if (!$existsUser) {
+            $data = [
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'phone' => $input['id'],
+                'role' => UserConstants::ROLE_MEMBER,
+                'password' => $input['email'],
+            ];
+            $userModel = new User();
+            $existsUser = $userModel->createNewMember($data);
+            if ($existsUser) {
+                User::find($existsUser->id)->update([
+                    '3rd_id' => $input['id'],
+                    '3rd_type' => User::LOGIN_3RD_APPLE,
+                    '3rd_token' => null,
+                    'image' => $input['picture'],
+                ]);
+            }
+        }
+        if (!$existsUser->status) {
+            return response('Tài khoản của bạn đã bị khóa.', 403);
+        }
+        if (empty($existsUser->api_token)) {
+            $saveToken = User::find($existsUser->id)->update(
+                ['api_token' => hash('sha256', Str::random(60))]
+            );
+            if (!$saveToken) {
+                return response('Không thể hoàn tất xác thực', 500);
+            }
+        }
+        if ($request->get('notif_token')) {
+            if (empty($existsUser->notif_token)) {
+                $notifM = new Notification();
+                $notifM->resendUnsentMessage($existsUser->id, $request->get('notif_token'));
+            }
+            User::find($existsUser->id)->update([
+                'notif_token' => $request->get('notif_token')
+            ]);
+        }
+        $userDB = User::find($existsUser->id)->makeVisible(['api_token']);
+        return response()->json($userDB, 200);
+    }
+
     public function logout(Request $request)
     {
         $user  = $this->isAuthedApi($request);
