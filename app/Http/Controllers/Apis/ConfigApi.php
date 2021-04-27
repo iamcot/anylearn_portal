@@ -230,9 +230,9 @@ class ConfigApi extends Controller
 
                 if (strpos($query, "#") == 0) {
                     $tag = substr($query, 1);
-                    $query->where('items.tags', 'like', "%$tag%");
+                    $query = $query->where('items.tags', 'like', "%$tag%");
                 } else {
-                    $query->where('items.title', 'like', "%$query%");
+                    $query = $query->where('items.title', 'like', "%$query%");
                 }
 
                 $result = $query->select('items.*', 'users.name AS author', 'users.role AS author_type')
