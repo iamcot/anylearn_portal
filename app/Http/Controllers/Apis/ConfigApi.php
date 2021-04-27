@@ -228,14 +228,14 @@ class ConfigApi extends Controller
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');
 
-                if (strpos($query, "#") !== false) {
-                    $tag = substr($query, 1);
-                    $querydb = $querydb->where('items.tags', 'like', "%$tag%");
-                } else {
-                    $querydb = $querydb->where('items.title', 'like', "%$query%");
-                }
+            if (strpos($query, "#") !== false) {
+                $tag = substr($query, 1);
+                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)",[$tag]);
+            } else {
+                $querydb = $querydb->where('items.title', 'like', "%$query%");
+            }
 
-                $result = $querydb->select('items.*', 'users.name AS author', 'users.role AS author_type')
+            $result = $querydb->select('items.*', 'users.name AS author', 'users.role AS author_type')
                 ->orderby('items.is_hot', 'desc')
                 ->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
@@ -246,7 +246,9 @@ class ConfigApi extends Controller
 
     public function searchTags()
     {
-        $db = Tag::select('tag')->distinct()->get();
+        $db = Tag::select('tag')
+            ->where('type', 'class')
+            ->distinct()->get();
         $data = [];
         foreach ($db as $tag) {
             $data[] = $tag->tag;
