@@ -208,6 +208,7 @@ class ConfigApi extends Controller
         $type = $request->get('t', 'item');
         $screen = $request->get('s', '');
         $query = $request->get('q', '');
+
         if (empty($query)) {
             return response()->json(null);
         }
@@ -228,9 +229,8 @@ class ConfigApi extends Controller
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');
 
-            if (strpos($query, "#") !== false) {
-                $tag = substr($query, 1);
-                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)",[$tag]);
+            if ($screen == 'tag') {
+                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)",[urldecode($query)]);
             } else {
                 $querydb = $querydb->where('items.title', 'like', "%$query%");
             }
