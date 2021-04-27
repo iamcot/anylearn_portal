@@ -229,8 +229,9 @@ class ConfigApi extends Controller
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');
 
-            if ($screen == 'tag') {
-                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)",[urldecode($query)]);
+            if (strpos($query, "@") !== false) {
+                $tag = substr($query, 1);
+                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)",[urldecode($tag)]);
             } else {
                 $querydb = $querydb->where('items.title', 'like', "%$query%");
             }
