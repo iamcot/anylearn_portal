@@ -87,7 +87,7 @@ class VoucherEventLog extends Model
                         $notifM->createNotif(NotifConstants::VOUCHER_PARTNER_SENT, $userId, [
                             'voucher' => $voucher->voucher,
                             'partner' => $voucherGroup->prefix,
-                        ]);
+                        ], $voucher->voucher);
                     }
                 }
             }

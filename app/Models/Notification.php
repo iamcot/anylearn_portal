@@ -22,7 +22,7 @@ class Notification extends Model
         'send', 'read', 'route', 'type', 'is_send',
     ];
 
-    public function createNotif($type, $userId, $data)
+    public function createNotif($type, $userId, $data, $copy = "")
     {
         $config = config('notification.' . $type);
         $obj = [
@@ -34,6 +34,10 @@ class Notification extends Model
         ];
         if (!empty($config['args']) && !empty($data['args'])) {
             $obj['extra_content'] = $data['args'];
+        }
+        if (!empty($config['copy']) && !empty($copy)) {
+            $obj['extra_content'] = 'copy';
+            $obj['route'] = $copy;
         }
         $newNotif = $this->create($obj);
         if (!$newNotif) {
