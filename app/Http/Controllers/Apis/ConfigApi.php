@@ -228,7 +228,7 @@ class ConfigApi extends Controller
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');
 
-                if (strpos($query, "#") == 0) {
+                if (strpos("#", $query) == 0) {
                     $tag = substr($query, 1);
                     $query = $query->where('items.tags', 'like', "%$tag%");
                 } else {
