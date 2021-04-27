@@ -223,19 +223,19 @@ class ConfigApi extends Controller
                 ->orderby('first_name')
                 ->get();
         } else {
-            $query = DB::table('items')
+            $querydb = DB::table('items')
                 ->where('items.status', 1)
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');
 
                 if (strpos($query, "#") !== false) {
                     $tag = substr($query, 1);
-                    $query = $query->where('items.tags', 'like', "%$tag%");
+                    $querydb = $querydb->where('items.tags', 'like', "%$tag%");
                 } else {
-                    $query = $query->where('items.title', 'like', "%$query%");
+                    $querydb = $querydb->where('items.title', 'like', "%$query%");
                 }
 
-                $result = $query->select('items.*', 'users.name AS author', 'users.role AS author_type')
+                $result = $querydb->select('items.*', 'users.name AS author', 'users.role AS author_type')
                 ->orderby('items.is_hot', 'desc')
                 ->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
