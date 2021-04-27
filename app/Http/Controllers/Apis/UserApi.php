@@ -473,8 +473,7 @@ class UserApi extends Controller
     {
         $user = User::where('id', $userId)
             ->select('id', 'title', 'name', 'image', 'role', 'introduce', 'banner', 'full_content')
-            ->makeVisible(['full_content'])
-            ->first();
+            ->first()->makeVisible(['full_content']);
         if (!$user) {
             return response("User không tồn tại", 404);
         }
