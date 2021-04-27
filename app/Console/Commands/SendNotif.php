@@ -41,20 +41,24 @@ class SendNotif extends Command
      */
     public function handle()
     {
-        $notSendNotifs = Notification::where('is_send', 0)->get();
+        // $notSendNotifs = Notification::where('is_send', 0)->get();
    
         $notifM = new Notification();
-        foreach ($notSendNotifs as $notif) {
-            $user = User::find($notif->user_id);
-            if (!$user->notif_token) {
-                continue;
-            }
-            $notifM->firebaseMessage($notif, $user->notif_token);
-            Notification::find($notif->id)->update([
-                'is_send' => 1,
-                'send' => DB::raw("now()")
-            ]);
-            print("Send notif to $user->id , token $user->notif_token \n");
-        }
+        $notSendNotifs = Notification::first();
+        $notifM->firebaseMessage($notSendNotifs, 'ciRPgtgEQ4CFDtWIBfFK6V:APA91bE4U3Zf8uxJ4AE1rE8t5dGujVG0a3yrtYhD36AT5y4Zp0Dczy6i5CGdl4dLZA2hDAElHtv_DkunTRl1Uj9kFlEC4MbUCUlnHAUs11BmsNDuL4iuYEHBavmJyHB3ce10Qp3WvDTR');
+        print("Send notif");
+
+        // foreach ($notSendNotifs as $notif) {
+        //     $user = User::find($notif->user_id);
+        //     if (!$user->notif_token) {
+        //         continue;
+        //     }
+        //     $notifM->firebaseMessage($notif, $user->notif_token);
+        //     Notification::find($notif->id)->update([
+        //         'is_send' => 1,
+        //         'send' => DB::raw("now()")
+        //     ]);
+        //     print("Send notif to $user->id , token $user->notif_token \n");
+        // }
     }
 }

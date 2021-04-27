@@ -223,12 +223,19 @@ class ConfigApi extends Controller
                 ->orderby('first_name')
                 ->get();
         } else {
-            $result = DB::table('items')
+            $query = DB::table('items')
                 ->where('items.status', 1)
                 ->where('items.user_status', '>', 0)
-                ->join('users', 'users.id', '=', 'items.user_id')
-                ->where('items.title', 'like', "%$query%")
-                ->select('items.*', 'users.name AS author', 'users.role AS author_type')
+                ->join('users', 'users.id', '=', 'items.user_id');
+
+                if (strpos($query, "#") == 0) {
+                    $tag = substr($query, 1);
+                    $query->where('items.tags', 'like', "%$tag%");
+                } else {
+                    $query->where('items.title', 'like', "%$query%");
+                }
+
+                $result = $query->select('items.*', 'users.name AS author', 'users.role AS author_type')
                 ->orderby('items.is_hot', 'desc')
                 ->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
@@ -239,7 +246,7 @@ class ConfigApi extends Controller
 
     public function searchTags()
     {
-        $db = Tag::select('tag')->get();
+        $db = Tag::select('tag')->distinct()->get();
         $data = [];
         foreach ($db as $tag) {
             $data[] = $tag->tag;
