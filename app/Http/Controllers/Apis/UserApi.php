@@ -446,7 +446,7 @@ class UserApi extends Controller
             }
         }
 
-        return response()->json(['result' => $rs ? (int) $itemId : 0]);
+        return response()->json(['result' => 1]);
     }
 
     public function courseRegisteredUsers(Request $request, $itemId)
@@ -461,9 +461,10 @@ class UserApi extends Controller
         $list = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->join('users', 'users.id', '=', 'od.user_id')
+            ->join('users AS childs', 'childs.id', '=', 'orders.user_id')
             ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->where('od.item_id', $itemId)
-            ->select('users.id', 'users.name', 'users.phone', 'users.image')
+            ->select('users.id', 'users.name', 'users.phone', 'users.image', 'childs.name AS child')
             ->get();
         return response()->json($list);
     }
