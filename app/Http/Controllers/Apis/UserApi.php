@@ -78,14 +78,14 @@ class UserApi extends Controller
             ];
             $userModel = new User();
             $existsUser = $userModel->createNewMember($data);
-            if ($existsUser) {
-                User::find($existsUser->id)->update([
-                    '3rd_id' => $input['id'],
-                    '3rd_type' => User::LOGIN_3RD_FACEBOOK,
-                    '3rd_token' => null,
-                    'image' => $input['picture'],
-                ]);
-            }
+        }
+        if ($existsUser) {
+            User::find($existsUser->id)->update([
+                '3rd_id' => $input['id'],
+                '3rd_type' => User::LOGIN_3RD_FACEBOOK,
+                '3rd_token' => null,
+                'image' => $input['picture'],
+            ]);
         }
         if (!$existsUser->status) {
             return response('Tài khoản của bạn đã bị khóa.', 403);
@@ -126,14 +126,14 @@ class UserApi extends Controller
             ];
             $userModel = new User();
             $existsUser = $userModel->createNewMember($data);
-            if ($existsUser) {
-                User::find($existsUser->id)->update([
-                    '3rd_id' => $input['id'],
-                    '3rd_type' => User::LOGIN_3RD_APPLE,
-                    '3rd_token' => null,
-                    'image' => $input['picture'],
-                ]);
-            }
+        }
+        if ($existsUser) {
+            User::find($existsUser->id)->update([
+                '3rd_id' => $input['id'],
+                '3rd_type' => User::LOGIN_3RD_APPLE,
+                '3rd_token' => null,
+                'image' => $input['picture'],
+            ]);
         }
         if (!$existsUser->status) {
             return response('Tài khoản của bạn đã bị khóa.', 403);
