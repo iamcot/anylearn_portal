@@ -206,7 +206,7 @@ class TransactionApi extends Controller
                     'amount' => (0 - $amount),
                     'pay_method' => UserConstants::WALLET_M,
                     'pay_info' => '',
-                    'content' => 'Thanh toán khóa học: ' . $item->title . $childUserDB != null ? ' [' . $childUserDB->name . ']' : '',
+                    'content' => 'Thanh toán khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
             }
@@ -253,7 +253,7 @@ class TransactionApi extends Controller
                 'amount' => $directCommission,
                 'pay_method' => UserConstants::WALLET_C,
                 'pay_info' => '',
-                'content' => 'Nhận điểm từ khóa học đã mua: ' . $item->title . $childUserDB != null ? ' [' . $childUserDB->name . ']' : '',
+                'content' => 'Nhận điểm từ khóa học đã mua: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
                 'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                 'order_id' => $orderDetail->id
             ]);
@@ -296,7 +296,7 @@ class TransactionApi extends Controller
                         'amount' => $indirectCommission,
                         'pay_method' => UserConstants::WALLET_C,
                         'pay_info' => '',
-                        'content' => 'Nhận điểm từ ' . $user->name . ' mua khóa học: ' . $item->title . $childUserDB != null ? ' [' . $childUserDB->name . ']' : '',
+                        'content' => 'Nhận điểm từ ' . $user->name . ' mua khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
                         'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                         'ref_user_id' => $user->id,
                         'ref_amount' => $amount,
@@ -321,7 +321,7 @@ class TransactionApi extends Controller
                     'amount' => $foundation,
                     'pay_method' => UserConstants::WALLET_M,
                     'pay_info' => '',
-                    'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title . $childUserDB != null ? ' [' . $childUserDB->name . ']' : '',
+                    'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'ref_user_id' => $user->id,
                     'ref_amount' => $amount,
