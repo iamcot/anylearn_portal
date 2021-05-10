@@ -98,13 +98,13 @@ class UserApi extends Controller
                 return response('Không thể hoàn tất xác thực', 500);
             }
         }
-        if ($request->get('notif_token')) {
+        if ($request->get('notify_token')) {
             if (empty($existsUser->notif_token)) {
                 $notifM = new Notification();
-                $notifM->resendUnsentMessage($existsUser->id, $request->get('notif_token'));
+                $notifM->resendUnsentMessage($existsUser->id, $request->get('notify_token'));
             }
             User::find($existsUser->id)->update([
-                'notif_token' => $request->get('notif_token')
+                'notif_token' => $request->get('notify_token')
             ]);
         }
         $userDB = User::find($existsUser->id)->makeVisible(['api_token']);
@@ -146,13 +146,13 @@ class UserApi extends Controller
                 return response('Không thể hoàn tất xác thực', 500);
             }
         }
-        if ($request->get('notif_token')) {
+        if ($request->get('notify_token')) {
             if (empty($existsUser->notif_token)) {
                 $notifM = new Notification();
-                $notifM->resendUnsentMessage($existsUser->id, $request->get('notif_token'));
+                $notifM->resendUnsentMessage($existsUser->id, $request->get('notify_token'));
             }
             User::find($existsUser->id)->update([
-                'notif_token' => $request->get('notif_token')
+                'notif_token' => $request->get('notify_token')
             ]);
         }
         $userDB = User::find($existsUser->id)->makeVisible(['api_token']);
