@@ -238,11 +238,10 @@ class UserApi extends Controller
 
     public function simpleRegister(Request $request) {
         $inputs = $request->all();
-        if (empty($inputs['ref']) || empty($inputs['phone'])) {
-            return response("Dữ liệu không đúng", 400);
+        if (empty($inputs['ref']) || empty($inputs['phone']) || empty($inputs['name'])) {
+            return response("ref, phone, name is required params", 400);
         }
         $inputs['password'] = $inputs['phone'];
-        $inputs['name'] = $inputs['phone'];
         $inputs['role'] = UserConstants::ROLE_MEMBER;
 
         $userM = new User();
