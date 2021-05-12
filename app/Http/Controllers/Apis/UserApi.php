@@ -236,6 +236,32 @@ class UserApi extends Controller
         }
     }
 
+    public function simpleRegister(Request $request) {
+        $inputs = $request->all();
+        if (empty($inputs['ref']) || empty($inputs['phone'])) {
+            return response("Dữ liệu không đúng", 400);
+        }
+        $inputs['password'] = $inputs['phone'];
+        $inputs['name'] = $inputs['phone'];
+        $inputs['role'] = UserConstants::ROLE_MEMBER;
+
+        $userM = new User();
+        if (!isset($inputs['password_confirmation'])) {
+            $inputs['password_confirmation'] = $inputs['password'];
+        }
+        $validator = $userM->validateMember($inputs);
+        if ($validator->fails()) {
+            return response($validator->errors()->first(), 400);
+        }
+        try {
+            $newUser = $userM->createNewMember($inputs);
+            return response('success', 200);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response($e->__toString(), 500);
+        }
+    }
+
     public function uploadImage(Request $request, $type)
     {
         $user = $request->get('_user');
