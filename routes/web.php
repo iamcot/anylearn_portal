@@ -27,6 +27,8 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
+Route::get('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {

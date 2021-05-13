@@ -12,6 +12,7 @@ $(window).on('scroll', function () {
 
         $('.navbar .navbar-brand> img').attr('src', '/cdn/onepage/images/logo-dark.png');
         $('.navbar .navbar-brand.green_logo> img').attr('src', '/cdn/onepage/images/logo-green-dark.png');
+        $('.navbar .navbar-brand.page_logo> img').attr('src', '/cdn/onepage/images/logo-pink-dark.png');
         $('.navbar .navbar-brand.pink_logo> img').attr('src', '/cdn/onepage/images/logo-pink-dark.png');
         $('.navbar .navbar-brand.orange_logo> img').attr('src', '/cdn/onepage/images/logo-orange-dark.png');
         $('.navbar .navbar-brand.orange_logo_rtl> img').attr('src', '/cdn/onepage/images/logo-arabic-dark.png');
@@ -39,7 +40,8 @@ $(window).on('scroll', function () {
 
         $('.navbar .navbar-brand> img').attr('src', '/cdn/onepage/images/logo.png');
         $('.navbar .navbar-brand.green_logo> img').attr('src', '/cdn/onepage/images/logo-green.png');
-        $('.navbar .navbar-brand.pink_logo> img').attr('src', '/cdn/onepage/images/logo-pink.png');
+        $('.navbar .navbar-brand.page_logo> img').attr('src', '/cdn/onepage/images/logo-pink.png');
+        $('.navbar .navbar-brand.page_logo> img').attr('src', '/cdn/onepage/images/logo-pink-dark.png');
         $('.navbar .navbar-brand.orange_logo> img').attr('src', '/cdn/onepage/images/logo-orange.png');
         $('.navbar .navbar-brand.orange_logo_rtl> img').attr('src', '/cdn/onepage/images/logo-arabic-light.png');
         $('.navbar .navbar-brand.yellow_logo_crypto> img').attr('src', '/cdn/onepage/images/logo_crypto.png');

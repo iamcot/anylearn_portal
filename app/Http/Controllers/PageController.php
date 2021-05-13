@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\ItemServices;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,5 +33,18 @@ class PageController extends Controller
         $data['user'] = $refUser;
         $data['newUser'] = Auth::user();
         return view('ref', $data);
+    }
+
+    public function pdp(Request $request, $itemId)
+    {
+        $itemService = new ItemServices();
+        $user = null;
+        try {
+            $data = $itemService->pdpData($itemId, $user);
+            // dd($data);
+            return view('pdp.index', ['data' => $data]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

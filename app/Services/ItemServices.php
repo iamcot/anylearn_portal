@@ -12,10 +12,13 @@ use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\Item;
 use App\Models\ItemResource;
+use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Schedule;
 use App\Models\Tag;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +27,47 @@ use Illuminate\Support\Facades\Validator;
 class ItemServices
 {
     const PP = 20;
+
+    public function pdpData($itemId, $user) {
+        $item = Item::find($itemId)->makeVisible(['content']);
+        if (!$item) {
+            throw new Exception("Trang không tồn tại", 404);
+        }
+        // $item->content = "<html><body>" . $item->content . "</body></html>";
+        $configM = new Configuration();
+        $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
+        $author = User::find($item->user_id);
+        
+        $userService = new UserServices();
+        $authorCommissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+        $commission = $userService->calcCommission($item->price, $authorCommissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+        $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
+            ->where('user_status', ItemConstants::STATUS_ACTIVE)
+            ->where('id', '!=', $itemId)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc')
+            ->take(5)->get();
+
+        $numSchedule = Schedule::where('item_id', $itemId)->count();
+
+        $itemUserActionM = new ItemUserAction();
+        $item->num_favorite = $itemUserActionM->numFav($itemId);
+        $item->num_cart = $itemUserActionM->numReg($itemId);
+        $item->rating = $itemUserActionM->rating($itemId);
+        return [
+            'commission' => $commission,
+            'author' => $author,
+            'item' => $item,
+            'num_schedule' => $numSchedule,
+            'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
+            'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
+            'hotItems' =>  [
+                'route' => '/event',
+                'title' => 'Sản phẩm liên quan',
+                'list' => $hotItems
+            ],
+        ];
+    }
 
     public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE)
     {
