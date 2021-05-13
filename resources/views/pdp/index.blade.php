@@ -31,6 +31,11 @@
                         <div><i class="fa fa-{{ $data['author']->role == 'teacher' ? 'user' : 'university'}}"></i> {{ $data['author']->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $data['author']->name }}</div>
                         <h3 class="text-orange">{{ number_format($data['item']->price, 0, ',', '.') }}</h3>
                         <div><button class="btn btn-success form-control">Đăng ký học</button></div>
+                     
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="anylearn_content">
                             {!! $data['item']->content !!}
                         </div>
