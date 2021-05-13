@@ -29,10 +29,11 @@ class ItemServices
     const PP = 20;
 
     public function pdpData($itemId, $user) {
-        $item = Item::find($itemId)->makeVisible(['content']);
+        $item = Item::find($itemId);
         if (!$item) {
             throw new Exception("Trang không tồn tại", 404);
         }
+        $item = $item->makeVisible(['content']);
         // $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
