@@ -25,6 +25,7 @@
                     <li><a href="#pricing_table" class="scroll">Tải APP</a></li>
                     <li><a href="#customer_feedback" class="scroll">Nhận xét</a></li>
                     <li><a href="#contact-form" class="scroll">Liên hệ</a></li>
+                    <li><a href="{{ route('me.dashboard') }}"><i class="fas fa-user-circle"></i></a></li>
                 </ul>
             </div>
             <div class="sidebar_menu">
@@ -54,6 +55,9 @@
                         </li>
                         <li class="clearfix">
                             <a href="#contact-form" class="scroll"> <span>08.</span>Liên hệ</a>
+                        </li>
+                        <li class="clearfix">
+                            <a href="{{ route('me.dashboard') }}"> <span>09.</span>Trang quản lý</a>
                         </li>
                     </ul>
                     <div class="clearfix"></div>

@@ -150,6 +150,7 @@ class User extends Authenticatable
         }
         $obj = [
             'name' => $input['name'],
+            'refcode' => $input['refcode'],
             'title' => $input['title'],
             'introduce' => $input['introduce'],
             'full_content' => $input['full_content'],

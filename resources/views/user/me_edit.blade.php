@@ -1,21 +1,6 @@
 @inject('userServ','App\Services\UserServices')
 @extends('layout')
 
-@section('rightFixedTop')
-<form class="row pt-4">
-    <div class="col-xs-2 mr-1 text-success">
-        <div>
-            <div>Ví M: {{ number_format($user->wallet_m, 0, ',', '.') }}</div>
-            <div>Ví C: {{ number_format($user->wallet_c, 0, ',', '.') }}</div>
-        </div>
-
-    </div>
-    <div class="col-xs-2 mr-1">
-        <a class="btn btn-primary" id="moneyfix-action" href="#"><i class="fas fa-comments-dollar"></i> @lang('Giao dịch tiền')</a>
-    </div>
-</form>
-@endsection
-
 @section('body')
 <form method="POST" enctype="multipart/form-data">
     @csrf
@@ -48,40 +33,9 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="boost_score" class="col-md-2 col-form-label text-md-right">{{ __('Boost Score') }}</label>
-                    <div class="col-md-8">
-                        <input id="boost_score" type="text" class="form-control @error('boost_score') is-invalid @enderror" name="boost_score" value="{{ old('boost_score', !empty($user) ? $user->boost_score : '') }}">
-                        <small>Số càng lớn càng được ưu tiên</small>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="user_id" class="col-md-2 col-form-label text-md-right">{{ __('ID người giới thiệu') }}</label>
-                    <div class="col-md-8">
-                        <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', !empty($user) ? $user->user_id : '') }}">
-                        <small>Có thể tham khảo ID ngoài danh sách thành viên.</small>
-                    </div>
-                </div>
-                <div class="form-group row">
                     <label for="email" class="col-md-2 col-form-label text-md-right">{{ __('Email') }}</label>
                     <div class="col-md-8">
                         <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="commission_rate" class="col-md-2 col-form-label text-md-right">{{ __('Tỉ lệ hoa hồng') }}</label>
-                    <div class="col-md-8">
-                        <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($user) ? $user->commission_rate : '') }}" required>
-                        <small>Tỉ lệ thành viên sẽ được nhận về từ doanh thu. Dạng thập phân</small>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="role" class="col-md-2 col-form-label text-md-right">{{ __('Vai trò') }}</label>
-                    <div class="col-md-8">
-                        <select class="form-control" name="role" id="role">
-                            @foreach($type == 'mod' ? \App\Constants\UserConstants::$modRoles : \App\Constants\UserConstants::$memberRoles as $role)
-                            <option value="{{ $role }}" {{ !empty($user) && $user->role  == $role ? 'selected' : '' }}>{{ $role }}</option>
-                            @endforeach
-                        </select>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -135,14 +89,10 @@
     </div>
 </form>
 @endsection
-@include('dialog.money_fix')
 @section('jscript')
 @parent
 <script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('editor');
-    $('#moneyfix-action').click(function() {
-        $('#moneyFixModal').modal('show');
-    });
 </script>
 @endsection

@@ -38,7 +38,7 @@ $(window).on('scroll', function () {
     else {
         $('.navbar').removeClass("shrink");
 
-        $('.navbar .navbar-brand> img').attr('src', '/cdn/onepage/images/logo.png');
+        $('.navbar .navbar-brand> img').attr('src', '/cdn/onepage/images/logo-pink.png');
         $('.navbar .navbar-brand.green_logo> img').attr('src', '/cdn/onepage/images/logo-green.png');
         $('.navbar .navbar-brand.page_logo> img').attr('src', '/cdn/onepage/images/logo-pink.png');
         $('.navbar .navbar-brand.page_logo> img').attr('src', '/cdn/onepage/images/logo-pink-dark.png');

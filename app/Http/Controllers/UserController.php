@@ -67,6 +67,24 @@ class UserController extends Controller
         return view('user.member_list', $this->data);
     }
 
+    public function meEdit(Request $request) {
+        $editUser = Auth::user();
+        if ($request->input('save')) {
+            $input = $request->all();
+            $input['role'] = $editUser->role;
+            $input['user_id'] = $editUser->user_id;
+            $input['boost_score'] = $editUser->boost_score;
+            $input['commission_rate'] = $editUser->commission_rate;
+            $userM = new User();
+            $rs = $userM->saveMember($request, $input);
+            return redirect()->route('me.edit')->with('notify', $rs);
+        }
+        $this->data['user'] = $editUser;
+        $this->data['navText'] = __('Chỉnh sửa Thông tin');
+        $this->data['type'] = 'member';
+        return view('user.me_edit', $this->data);
+    }
+
     public function memberEdit(Request $request, $userId)
     {
         $userService = new UserServices();

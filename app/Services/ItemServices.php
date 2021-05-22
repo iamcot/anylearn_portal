@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ItemServices
 {
@@ -68,6 +69,14 @@ class ItemServices
                 'list' => $hotItems
             ],
         ];
+    }
+
+    public function classUrl($id) {
+        $item = Item::find($id);
+        if (!$item) {
+            return "";
+        }
+        return route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title). '.html']);
     }
 
     public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE)

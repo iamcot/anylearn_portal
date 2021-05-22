@@ -22,7 +22,11 @@
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
-        @include('layout.sidebar')
+        @if (auth()->user()->role == 'admin')
+            @include('layout.sidebar')
+        @else
+         @include('layout.me_sidebar')
+        @endif
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column @yield('main-bg')">
             <!-- Main Content -->

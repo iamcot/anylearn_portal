@@ -70,6 +70,7 @@
                     </td>
                     <td>{{ $course->updated_at }}</td>
                     <td>
+                    {{ $itemServ->classUrl($course->id) }}
                     @if($userServ->isMod(\Auth::user()->role))
                     {!! $itemServ->statusOperation($course->id, $course->status) !!}
                     {!! $itemServ->typeOperation($course) !!}

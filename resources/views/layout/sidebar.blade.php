@@ -1,3 +1,4 @@
+
 @inject('userService', 'App\Services\UserServices')
 <!-- Sidebar -->
 @php ( $route = app('router')->getRoutes()->match(app('request'))->getName() )

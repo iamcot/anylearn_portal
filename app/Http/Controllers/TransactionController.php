@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
+use App\Services\TransactionService;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -31,6 +32,16 @@ class TransactionController extends Controller
             ->paginate(20);
         $this->data['navText'] = __('Quản lý Giao dịch');
         return view('transaction.list', $this->data);
+    }
+
+    public function add2cart(Request $request) {
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
+        }
+        $transService = new TransactionService();
+        $result = $transService->placeOrderOneItem($request, $user, $request->get('class'));
+        return redirect()->back()->with('notify', $result === true ? "Bạn đã đăng ký khoá học thành công!" : $result);
     }
 
     public function commission(Request $request)

@@ -135,3 +135,5 @@
 .tripi__header {
     margin-bottom: 10px;
 }
+
+#fixed_menu{position: fixed; z-index:999; bottom:10%; right: 0;display: block;} #fixed_menu ul {list-style-type: none;}#fixed_menu ul li{display: block; padding: 5px; margin: 5px 0 5px 0;background: #ddd; border: #0076af; text-align: center; border-top-left-radius: 10px; border-bottom-left-radius: 10px;}

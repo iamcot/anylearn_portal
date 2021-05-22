@@ -12,7 +12,7 @@
 <!-- Bootstrap CSS File -->
 <link rel="stylesheet" href="/cdn/onepage/css/bootstrap.min.css">
 <!-- Font-Awesome CSS File -->
-<link rel="stylesheet" href="/cdn/onepage/css/font-awesome.css">
+<link rel="stylesheet" href="/cdn/onepage/css/all.min.css">
 <!-- Slider Revolution CSS File -->
 <link rel="stylesheet" href="/cdn/onepage/css/settings.css">
 <!--  Fancy Box CSS File -->

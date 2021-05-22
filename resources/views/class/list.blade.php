@@ -61,6 +61,7 @@
                     <td>{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a></td>
                     <td>{{ $course->updated_at }}</td>
                     <td>
+                        <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link"></i></a>
                         @if($userServ->isMod(\Auth::user()->role))
                         {!! $itemServ->statusOperation($course->id, $course->status) !!}
                         <!-- {!! $itemServ->typeOperation($course) !!} -->

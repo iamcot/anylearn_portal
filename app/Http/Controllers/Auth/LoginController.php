@@ -95,14 +95,18 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if (auth()->user()->status == UserConstants::STATUS_INACTIVE) {
-            $name = auth()->user()->name;
+        if ($user->status == UserConstants::STATUS_INACTIVE) {
+            $name = $user->name;
             $this->guard()->logout();
             $request->session()->invalidate();
             return redirect()->intended('/inactive')->with('name', $name);
         }
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());
-        return redirect($this->redirectTo);
+        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+            return redirect($this->redirectTo);
+        } else {
+            return redirect('/me');
+        }
     }
 }
