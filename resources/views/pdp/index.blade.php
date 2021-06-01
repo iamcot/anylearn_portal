@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{{ env('APP_NAME_LONG') }}</title>
+    <title>{{ $data['item']->title }}</title>
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <!-- Custom fonts for this template-->
     <link href="/cdn/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -49,7 +49,7 @@
 
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-sm-12">
                         <div class="anylearn_content">
                             {!! $data['item']->content !!}
@@ -62,7 +62,6 @@
         <hr>
         @include('layout.footer')
     </section>
-
 
     @include('dialog.pdpadd2cart', ['class' => $data['item'], 'author' => $data['author'], 'num_schedule' => $data['num_schedule']])
     <script src="/cdn/vendor/jquery/jquery.min.js"></script>

@@ -47,4 +47,9 @@ class PageController extends Controller
             echo $e->getMessage();
         }
     }
+
+    public function paymentHelp() {
+        $data['bank'] = config('bank');
+        return view('checkout.paymenthelp', $data);
+    }
 }

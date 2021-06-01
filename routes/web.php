@@ -28,6 +28,7 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::get('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+Route::get('/checkout/payment-help', 'PageController@paymentHelp')->name('checkout.paymenthelp');
 
 Auth::routes();
 

@@ -197,4 +197,10 @@ return [
         'route' => '',
         'copy' => true,
     ],
+
+    NotifConstants::COURSE_REGISTER_APPROVE =>  [
+        'title' => 'Đăng ký học đã được xác nhận thanh toán',
+        'template' => 'Khoá học bạn đăng ký đã được thanh toán. Vui lòng kiểm tra lịch học.',
+        'route' => '/account/calendar',
+    ],
 ];

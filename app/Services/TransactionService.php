@@ -68,7 +68,7 @@ class TransactionService
         }
     }
 
-    public function placeOrderOneItem(Request $request, $user, $itemId)
+    public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
     {
         $childUser = $request->get('child', '');
 
@@ -78,7 +78,7 @@ class TransactionService
         }
         $alreadyRegister = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
-            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->whereIn('orders.status', [OrderConstants::STATUS_DELIVERED, OrderConstants::STATUS_NEW])
             ->where('orders.user_id', ($childUser > 0 ? $childUser : $user->id))
             ->where('od.item_id', $itemId)
             ->count();
@@ -87,7 +87,7 @@ class TransactionService
         }
         $voucher = $request->get('voucher', '');
 
-        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser) {
+        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $allowNoMoney) {
             $notifServ = new Notification();
             $newOrder = null;
             $status = OrderConstants::STATUS_DELIVERED;
@@ -109,10 +109,12 @@ class TransactionService
                     return $e->getMessage();
                 }
             } else {
-                if ($user->wallet_m < $amount) {
+                if ($user->wallet_m < $amount && !$allowNoMoney) {
                     return "Không đủ tiền";
                 }
-                $status = $user->wallet_m >= $item->price ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
+              
+                $status = $user->wallet_m >= $amount ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
+                $transStatus = $user->wallet_m >= $amount ? ConfigConstants::TRANSACTION_STATUS_DONE : ConfigConstants::TRANSACTION_STATUS_PENDING;
 
                 $newOrder = Order::create([
                     'user_id' => $childUser > 0 ? $childUser : $user->id,
@@ -131,7 +133,8 @@ class TransactionService
                     'pay_method' => UserConstants::WALLET_M,
                     'pay_info' => '',
                     'content' => 'Thanh toán khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'status' => $transStatus,
+                    'order_id' => $newOrder->id
                 ]);
             }
             if ($newOrder == null) {
@@ -266,8 +269,48 @@ class TransactionService
                 'username' => $author->name,
                 'course' => $item->title,
             ]);
-            return true;
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? true : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
         return $result;
+    }
+
+    public function approveRegistrationAfterDeposit($userId) {
+        
+        $children = User::where('user_id', $userId)
+        ->where('is_child', 1)
+        ->get();
+        $ids = [$userId];
+        if (count($children) > 0) {
+            foreach($children as $child) {
+                $ids[] = $child->id;
+            }
+        }
+        $allUserNewOrders = Order::whereIn('user_id', $ids)
+        ->where('status', OrderConstants::STATUS_NEW)
+        ->get();
+        if (count($allUserNewOrders) > 0) {
+            $notifServ = new Notification();
+
+            foreach($allUserNewOrders as $order) {
+                $userDB = User::find($userId);
+                if ($userDB->wallet_m >= $order->amount) {
+                    $userDB->update([
+                        'wallet_m' => DB::raw('wallet_m - ' . $order->amount)
+                    ]);
+                    OrderDetail::where('order_id', $order->id)->update([
+                        'status' => OrderConstants::STATUS_DELIVERED
+                    ]);
+                    Order::find($order->id)->update([
+                        'status' => OrderConstants::STATUS_DELIVERED
+                    ]);
+                    Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
+                    ->where('order_id', $order->id)
+                    ->update([
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    ]);
+                    $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $userId, []);
+                }
+            }
+        }
     }
 }

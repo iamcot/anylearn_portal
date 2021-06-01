@@ -40,8 +40,15 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
         $transService = new TransactionService();
-        $result = $transService->placeOrderOneItem($request, $user, $request->get('class'));
-        return redirect()->back()->with('notify', $result === true ? "Bạn đã đăng ký khoá học thành công!" : $result);
+        $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
+        if ($result === true) {
+            return redirect()->back()->with('notify',"Bạn đã đăng ký khoá học thành công!");
+        } else if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            return redirect()->route('checkout.paymenthelp')->with('notify', "Bạn đã đăng ký khoá học thành công. Vui lòng hoàn tất nạp tiền theo hướng dẫn.");
+        } else {
+            return redirect()->back()->with('notify', $result);
+        }
+        
     }
 
     public function commission(Request $request)
@@ -70,6 +77,7 @@ class TransactionController extends Controller
         if (!$transaction) {
             return redirect()->back()->with('notify', 'Giao dịch không tồn tại');
         }
+        $transService = new TransactionService();
         if ($status == ConfigConstants::TRANSACTION_STATUS_DONE) {
             if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
                 return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
@@ -82,6 +90,7 @@ class TransactionController extends Controller
                 User::find($transaction->user_id)->update([
                     'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
                 ]);
+                $transService->approveRegistrationAfterDeposit($transaction->user_id);
             }
 
             $notifServ = new Notification();
