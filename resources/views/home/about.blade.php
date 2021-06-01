@@ -60,25 +60,25 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="expertise_block text-center margin_after_tab wow slideInLeft">
-                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-yellow">Tìm trường xịn nhất ngay gần nhà</h3>
+                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-yellow">Trường học và Chuyên gia hàng đầu</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn tìm được những trường học, trung tâm đào tạo, học viện uy tín hàng đầu trong các lĩnh vực, gợi ý cho bạn địa điểm gần nhà để chẳng còn nỗi lo đi xa.
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn tìm được những Trường học, Trung tâm đào tạo, Học viện uy tín cùng các Chuyên gia hàng đầu trong các lĩnh vực giáo dục tại Việt Nam.
                                     </p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="expertise_block text-center margin_after_tab wow fadeInUp">
-                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-blue">Học trực tuyến mọi lúc mọi nơi</h3>
+                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-blue">Đăng ký khóa học Online và Offline</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn tìm hiểu và đăng ký được những khóa học online mọi lúc mọi nơi, học trực tiếp với những chuyên gia hàng đầu, đem lại hiệu quả cao và sự phát triển vượt bậc cho chính bạn.
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn học không giới hạn. Bạn có thể lựa chọn bất cứ hình thức học tập nào như: học trực tuyến, học qua video, học bằng ứng dụng giáo dục hoặc học tại các trường học.
                                     </p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="expertise_block text-center wow slideInRight">
-                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-green">Có bạn bè cùng share học phí</h3>
+                                    <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-green">Tiết kiệm chi phí, thêm bạn học thêm vui</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> giúp bạn thành công, chỉ cần đầu tư vào 2 việc quan trọng: học tập phát triển bản thân và kết nối với nhiều bạn bè. Học một mình sao vui bằng một nhóm?!
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> cam kết giúp bạn giảm chi phí đầu tư học tập tối đa đến 100%.
 Hãy mời bạn cùng học trên anyLEARN!
                                     </p>
                                 </div>

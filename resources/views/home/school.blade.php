@@ -7,7 +7,7 @@
         <div class="">
             <ul class="school-logo">
                 @foreach(config('home_schools', []) as $school)
-                <li>
+                <li class="col-xs-4 col-sm-3 col-md-2 col-lg-1">
                     <img src="{{ $school['image'] }}" alt="">
                 </li>
                 @endforeach
