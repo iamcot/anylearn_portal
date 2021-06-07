@@ -357,6 +357,15 @@ class UserApi extends Controller
         if ($isConfirmed > 0) {
             return response("Bạn đã xác nhận rồi", 400);
         }
+
+        $unpaiedOrders = OrderDetail::where('item_id', $itemId)
+        ->where('user_id', $user->id)
+        ->where('status', OrderConstants::STATUS_NEW)
+        ->count();
+        if ($unpaiedOrders > 0) {
+            return response("Bạn chưa thanh toán cho khoá học này", 400);
+        }
+        
         $rs = Participation::create([
             'item_id' => $itemId,
             'schedule_id' =>  $scheduleId,
