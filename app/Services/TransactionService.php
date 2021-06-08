@@ -20,6 +20,7 @@ use App\Models\VoucherEventLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransactionService
 {
@@ -285,6 +286,8 @@ class TransactionService
                 $ids[] = $child->id;
             }
         }
+        Log::debug("Approve register for Ids ", ["ids" => $ids]);
+
         $allUserNewOrders = Order::whereIn('user_id', $ids)
         ->where('status', OrderConstants::STATUS_NEW)
         ->get();
@@ -293,6 +296,7 @@ class TransactionService
 
             foreach($allUserNewOrders as $order) {
                 $userDB = User::find($userId);
+                Log::debug("User", ["userId" => $userDB->id, "wallet_m" => $userDB->wallet_m]);
                 if ($userDB->wallet_m >= $order->amount) {
                     $userDB->update([
                         'wallet_m' => DB::raw('wallet_m - ' . $order->amount)
@@ -308,6 +312,7 @@ class TransactionService
                     ->update([
                         'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                     ]);
+                    Log::debug("Update all transaction & orders", ["orderId" => $order->id]);
                     $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $userId, []);
                 }
             }
