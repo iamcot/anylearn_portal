@@ -1,3 +1,4 @@
+@inject('itemServ','App\Services\ItemServices')
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,7 +46,7 @@
                         <p><i class="fa fa-calendar"></i> Khai giảng: {{ date('d/m/Y', strtotime($data['item']->date_start)) }} {{ $data['num_schedule'] <= 1 ? '' : '(có ' . $data['num_schedule'] . ' buổi học)' }}</p>
                         <p><i class="fa fa-{{ $data['author']->role == 'teacher' ? 'user' : 'university'}}"></i> {{ $data['author']->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $data['author']->name }}</p>
                         <h3 class="text-orange">{{ number_format($data['item']->price, 0, ',', '.') }}</h3>
-                        <div><a id="add2cart-action" class="btn btn-success form-control" href="{{ auth()->check() ? '#' : route('login') }}">Đăng ký học</a></div>
+                        <div><a id="add2cart-action" class="btn btn-success form-control" href="{{ auth()->check() ? '#' : route('login') . '?cb=' . urlencode($itemServ->classUrl($data['item']->id))   }}">Đăng ký học</a></div>
 
                     </div>
                 </div>

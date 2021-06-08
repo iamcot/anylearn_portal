@@ -42,6 +42,14 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    public function showLoginForm(Request $request)
+    {
+        if ($request->get('cb')) {
+            $request->session()->flash('cb', $request->get('cb'));
+        }
+        return view('auth.login');
+    }
+
     public function username()
     {
         return 'phone';
@@ -103,7 +111,10 @@ class LoginController extends Controller
         }
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());
-        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+        if ($request->session()->get('cb')) {
+            return redirect()->to($request->session()->get('cb'));
+        }
+        else if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
             return redirect($this->redirectTo);
         } else {
             return redirect('/me');
