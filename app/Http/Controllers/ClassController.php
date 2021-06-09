@@ -38,6 +38,7 @@ class ClassController extends Controller
                 return redirect()->route('class.edit', ['id' => $rs])->with(['tab' => 'schedule', 'notify' => __('Tạo lớp học thành công, vui lòng cập nhật lịch học.')]);
             }
         }
+        $this->data['companyCommission'] = null;
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
