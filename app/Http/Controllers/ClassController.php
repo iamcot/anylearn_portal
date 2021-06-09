@@ -38,6 +38,11 @@ class ClassController extends Controller
                 return redirect()->route('class.edit', ['id' => $rs])->with(['tab' => 'schedule', 'notify' => __('Tạo lớp học thành công, vui lòng cập nhật lịch học.')]);
             }
         }
+        $configM = new Configuration();
+        $this->data['configs'] = $configM->gets([
+        ConfigConstants::CONFIG_DISCOUNT, 
+        ConfigConstants::CONFIG_COMMISSION, 
+        ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
         $this->data['companyCommission'] = null;
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
