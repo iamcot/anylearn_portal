@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
+use App\Models\Configuration;
 use App\Models\ItemResource;
 use App\Models\Schedule;
 use App\Models\User;
@@ -74,6 +76,14 @@ class ClassController extends Controller
         } else {
             $this->data['isSchool'] = false;
         }
+        $configM = new Configuration();
+        $this->data['configs'] = $configM->gets([
+        ConfigConstants::CONFIG_DISCOUNT, 
+        ConfigConstants::CONFIG_COMMISSION, 
+        ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
+
+        $this->data['companyCommission'] = json_decode($courseDb['info']->company_commission, true);
+            
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');

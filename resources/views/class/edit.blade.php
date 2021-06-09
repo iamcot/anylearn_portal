@@ -62,6 +62,10 @@
         $("#courseEditForm").submit();
     });
 
+    $('#companyCommission-action').click(function() {
+        $('#companyCommissionModal').modal('show');
+    });
+
     $("#schedule_generate").click(function() {
         var type = $(this).data("type");
         var num = $("#schedule_auto").find('#num').val();

@@ -160,7 +160,21 @@ class TransactionService
 
             //cal commission direct, update direct user wallet M + wallet C, save transaction log
             $configM = new Configuration();
-            $configs = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_COMMISSION, ConfigConstants::CONFIG_FRIEND_TREE, ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
+            $configs = $configM->gets([
+                ConfigConstants::CONFIG_BONUS_RATE, 
+                ConfigConstants::CONFIG_DISCOUNT, 
+                ConfigConstants::CONFIG_COMMISSION, 
+                ConfigConstants::CONFIG_FRIEND_TREE, 
+                ConfigConstants::CONFIG_COMMISSION_FOUNDATION
+            ]);
+            if ($item->companyCommission != null) {
+                $overrideConfigs = json_decode($item->company_commission, true);
+                foreach($overrideConfigs as $key => $value) {
+                    if ($value != null) {
+                        $configs[$key] = $value;
+                    }
+                }
+            }
             $userService = new UserServices();
 
             if ($item->commission_rate == -1) {

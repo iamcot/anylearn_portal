@@ -228,6 +228,9 @@ class ItemServices
             return $validator;
         }
 
+        $companyCommission = $input['company'];
+        $input['company_commission'] = json_encode($companyCommission);
+
         $canAddResource = $this->addItemResource($request, $input['id']);
 
         if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {

@@ -1,3 +1,4 @@
+@inject('userServ','App\Services\UserServices')
 <div class="row">
     <div class="col-12 p-5">
         <h4>@lang('Thông tin cơ bản lớp học')
@@ -24,12 +25,27 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="commission_rate" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Tỉ lệ hoa hồng') }}</label>
+            <label for="commission_rate" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Hoa hồng người bán') }}</label>
             <div class="col-md-8">
                 <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($course) ? $course['info']->commission_rate : '') }}">
+                <div class="small">Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong hợp đồng.</div>
             </div>
         </div>
-
+        @if($userServ->isMod())
+        <div class="form-group row">
+            <label for="company_rate" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Hoa hồng công ty') }}</label>
+            <div class="col-md-8">
+                @if($companyCommission != null) 
+                    @foreach($companyCommission as $key => $config)
+                        @if ($config != null) 
+                        {{ $key }}= {{ $config }};
+                        @endif
+                    @endforeach
+                @endif
+                <a class="btn btn-sm btn-danger" id="companyCommission-action" href="#"><i class="fa fa-edit"></i></a>
+            </div>
+        </div>
+        @endif
         <div class="form-group row">
             <label for="date_start" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Ngày bắt đầu') }}</label>
             <div class="col-md-8">
@@ -82,6 +98,6 @@
                 <textarea id="editor" name="content">{!! old('content', !empty($course) ? $course['info']->content : '') !!}</textarea>
             </div>
         </div>
-
     </div>
 </div>
+@include('dialog.company_commission')
