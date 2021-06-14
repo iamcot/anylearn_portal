@@ -105,6 +105,7 @@ class TransactionService
                         'status' => $status,
                         'payment' => UserConstants::VOUCHER,
                     ]);
+                    $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
                 } catch (\Exception $e) {
                     DB::rollback();
                     return $e->getMessage();
@@ -167,7 +168,7 @@ class TransactionService
                 ConfigConstants::CONFIG_FRIEND_TREE, 
                 ConfigConstants::CONFIG_COMMISSION_FOUNDATION
             ]);
-            if ($item->companyCommission != null) {
+            if ($item->company_commission != null) {
                 $overrideConfigs = json_decode($item->company_commission, true);
                 foreach($overrideConfigs as $key => $value) {
                     if ($value != null) {
