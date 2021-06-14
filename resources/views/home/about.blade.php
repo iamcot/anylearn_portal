@@ -78,8 +78,7 @@
                                 <div class="expertise_block text-center wow slideInRight">
                                     <h3 class="small_heading_navy text-center raleway h3_pink font_500 text-green">Tiết kiệm chi phí, thêm bạn học thêm vui</h3>
                                     <p class="default_text text-center open_sans default_text_light">
-                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> cam kết giúp bạn giảm chi phí đầu tư học tập tối đa đến 100%.
-Hãy mời bạn cùng học trên anyLEARN!
+                                    <b><span class="text-green">any</span><span class="text-blue">LEARN</span></b> cam kết giúp bạn giảm chi phí đầu tư học tập tối đa đến 100%. Đăng ký Thành viên anyLEARN ngay hôm nay và học cùng bạn bè nào!
                                     </p>
                                 </div>
                             </div>
