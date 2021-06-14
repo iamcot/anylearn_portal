@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -133,7 +134,8 @@ class ConfigApi extends Controller
     {
 
         $startDay = $month . "-01";
-        $endDay = $month . "-31";
+        $d = new DateTime($startDay);
+        $endDay = $d->format('Y-m-t');
         // $db = Item::where('date_start', '>=', $startDay)
         //     ->where('date_start', '<=', $endDay)
         //     ->where('status', 1)
