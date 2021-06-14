@@ -227,9 +227,10 @@ class ItemServices
         if ($validator->fails()) {
             return $validator;
         }
-
-        $companyCommission = $input['company'];
-        $input['company_commission'] = json_encode($companyCommission);
+        if (!empty($input['company'])) {
+            $companyCommission = $input['company'];
+            $input['company_commission'] = json_encode($companyCommission);
+        }
 
         $canAddResource = $this->addItemResource($request, $input['id']);
 
