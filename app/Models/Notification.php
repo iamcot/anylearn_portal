@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use FCM;
+use Illuminate\Support\Facades\Mail;
 use LaravelFCM\Facades\FCM as FacadesFCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
@@ -44,6 +45,12 @@ class Notification extends Model
             return;
         }
         $user = User::find($userId);
+        //email
+        if (isset($config['email'])) {
+            if (!empty($user->email)) {
+                Mail::to($user->email)->send(new $config['email']($data));
+            }
+        }
         if (!$user->notif_token) {
             return;
         }
