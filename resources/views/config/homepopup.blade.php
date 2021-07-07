@@ -4,6 +4,9 @@
 <form method="POST" enctype="multipart/form-data">
     @csrf
     <div class="card shadow">
+        <div class="card-header">
+        Popup trên APP
+        </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
@@ -47,8 +50,54 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button name="save" value="save" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+                <button name="save" value="save_app" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu cho APP')</button>
             </div>
         </div>
+    </div>
+</form>
+<hr />
+<form method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="card shadow">
+        <div class="card-header">
+        Popup trên WEB
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group row">
+                        <label for="voucher" class="col-md-2 col-form-label text-md-right">{{ __("Hình ảnh") }}</label>
+                        <div class="col-md-6">
+                            <input name="image" type="file" id="imgInp" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="voucher" class="col-md-2 col-form-label text-md-right">{{ __("Tiêu đề") }}</label>
+                        <div class="col-md-6">
+                            <input id="voucher" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', !empty($webconfig) ? $webconfig['title'] : '') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="value" class="col-md-2 col-form-label text-md-right">{{ __('Đường dẫn') }}</label>
+                        <div class="col-md-6">
+                            <input id="value" type="text" class="form-control @error('route') is-invalid @enderror" name="route" value="{{ old('route', !empty($webconfig) ? $webconfig['route'] : '') }}">
+                        </div>
+                    </div>
+                  
+                    <div class="form-group row">
+                        <label for="status" class="col-md-2 col-form-label text-md-right">{{ __('Kích hoạt') }}</label>
+                        <div class="col-md-6">
+                            <input type="checkbox" name="status" id="status" class="form-control" {{ !empty($webconfig) && $webconfig['status'] == 1 ? 'checked' : '' }}>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+            <div class="card-footer">
+                <button name="save" value="save_web" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu cho WEB')</button>
+            </div>
+        </div>
+    </div>
 </form>
 @endsection

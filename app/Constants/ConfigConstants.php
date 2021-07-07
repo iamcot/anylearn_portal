@@ -36,6 +36,7 @@ class ConfigConstants
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 
     const CONFIG_HOME_POPUP = 'home_popup';
+    const CONFIG_HOME_POPUP_WEB = 'home_popup_web';
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';

@@ -8,6 +8,7 @@ return [
         'title' => 'Chào mừng',
         'template' => 'Chào mừng {username} đến với ứng dụng anyLEARN - Học không giới hạn. Chúc bạn có thật nhiều niềm vui và kiến thức bổ ích khi trải nghiệm nhé. Bạn hãy dành ít phút cập nhật thông tin của mình nhé.',
         'route' => '/account',
+        'email' => 'App\Mail\UserRegistered',
     ],
     NotifConstants::NEW_FRIEND => [
         'title' => 'Bạn mới',

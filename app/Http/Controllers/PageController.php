@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ConfigConstants;
+use App\Models\Configuration;
 use App\Models\User;
 use App\Services\ItemServices;
 use Exception;
@@ -14,6 +16,13 @@ class PageController extends Controller
 
     public function home()
     {
+        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
+        if (!empty($lastConfig)) {
+            $homePopup = json_decode($lastConfig->value, true);
+            if ($homePopup['status'] == 1) {
+                $this->data['popup'] = $homePopup;
+            }
+        }
         return view('home', $this->data);
     }
 

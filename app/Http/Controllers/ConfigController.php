@@ -266,15 +266,16 @@ class ConfigController extends Controller
     public function homePopup(Request $request)
     {
         if ($request->get('save')) {
-
-            $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
             $version = 0;
             $lastImage = "";
+            $key = $request->get('save') == 'save_app' ? ConfigConstants::CONFIG_HOME_POPUP : ConfigConstants::CONFIG_HOME_POPUP_WEB;
+
+            $lastConfig = Configuration::where('key', $key)->first();
             if (!empty($lastConfig)) {
                 $data = json_decode($lastConfig->value, true);
                 $version = $data['version'];
                 $lastImage = $data['image'];
-                Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->delete();
+                Configuration::where('key', $key)->delete();
             }
 
             $fileService = new FileServices();
@@ -283,24 +284,28 @@ class ConfigController extends Controller
             $config = $request->all();
 
             Configuration::create([
-                'key' => ConfigConstants::CONFIG_HOME_POPUP,
+                'key' => $key,
                 'type' => ConfigConstants::TYPE_CONFIG,
                 'value' => json_encode([
                     'image' => empty($file) ? $lastImage : $file['url'],
                     'title' => $config['title'],
-                    'route' => $config['route'],
-                    'args' => $config['args'],
+                    'route' => isset($config['route']) ? $config['route'] : "",
+                    'args' => isset($config['args']) ? $config['args'] : "",
                     'version' => (int)$version + 1,
                     'status' => isset($config['status']) && $config['status'] == 'on' ? 1 : 0,
                 ]),
             ]);
             return redirect()->back()->with('notify', 'Cập nhật thành công');
         }
-        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
-        if ($lastConfig) {
-            $this->data['config'] = json_decode($lastConfig->value, true);
+        $appConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
+        if ($appConfig) {
+            $this->data['config'] = json_decode($appConfig->value, true);
         }
-        $this->data['navText'] = __('Quản lý Popup Quảng cáo');
+        $webConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
+        if ($webConfig) {
+            $this->data['webconfig'] = json_decode($webConfig->value, true);
+        }
+        $this->data['navText'] = __('Quản lý Popup Trang Chủ APP/WEB');
         return view('config.homepopup', $this->data);
     }
 }

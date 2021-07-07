@@ -47,6 +47,17 @@
     </section>
     @include('layout.onepage_script')
 
+    @if(!empty($popup))
+        @include('dialog.homepopup', ['popup' => $popup]) 
+        <script>
+        $(function() {
+        setTimeout(() => {
+            $('#homepopupModal').modal('show');
+        }, 2000);
+        });
+        </script>
+    @endif
+
 </body>
 
 </html>
