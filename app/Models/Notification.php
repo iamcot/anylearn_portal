@@ -118,6 +118,7 @@ class Notification extends Model
     {
         return $this->createNotif(NotifConstants::NEW_USER, $userId, [
             'username' => $name,
+            'userid' => $userId,
         ]);
     }
 

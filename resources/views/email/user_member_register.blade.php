@@ -469,7 +469,7 @@ div.preheader {
   <style type="text/css">
 .main,.mso{background-color:#fff}.logo a:hover,.logo a:focus{color:#1e2e3b !important}.footer-logo a:hover,.footer-logo a:focus{color:#372d1b !important}.mso .layout-has-border{border-top:1px solid #ccc;border-bottom:1px solid #ccc}.mso .layout-has-bottom-border{border-bottom:1px solid #ccc}.mso .border,.ie .border{background-color:#ccc}.mso h1,.ie h1{}.mso h1,.ie h1{font-size:22px !important;line-height:31px !important}.mso h2,.ie h2{}.mso h2,.ie h2{font-size:20px !important;line-height:28px !important}.mso h3,.ie h3{}.mso h3,.ie h3{font-size:18px !important;line-height:26px !important}.mso .layout__inner,.ie .layout__inner{}.mso .footer__share-button p{}.mso .footer__share-button p{font-family:sans-serif}
 </style><meta name="robots" content="noindex,nofollow"></meta>
-<meta property="og:title" content="[anyLEARN] M&#7903; tài kho&#7843;n Trư&#7901;ng h&#7885;c /Gi&#7843;ng viên anyLEARN"></meta>
+<meta property="og:title" content="[anyLEARN] M&#7903; tài kho&#7843;n thành viên trên anyLEARN"></meta>
 </head>
 <!--[if mso]>
   <body class="mso">
@@ -495,7 +495,7 @@ div.preheader {
         <div class="header" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);" id="emb-email-header-container">
         <!--[if (mso)|(IE)]><table align="center" class="header" cellpadding="0" cellspacing="0" role="presentation"><tr><td style="width: 600px"><![endif]-->
           <div class="logo emb-logo-margin-box" style="font-size: 26px;line-height: 32px;Margin-top: 0px;Margin-bottom: 0px;color: #41637e;font-family: Avenir,sans-serif;Margin-left: 20px;Margin-right: 20px;" align="center">
-            <div class="logo-center" align="center" id="emb-email-header"><img style="display: block;height: auto;width: 100%;border: 0;max-width: 220px;" src="https://i1.createsend1.com/ei/y/11/F50/32F/144753/csfinal/logo-anylearn-09.png" alt="" width="220"></div>
+            <div class="logo-center" align="center" id="emb-email-header"><img style="display: block;height: auto;width: 100%;border: 0;max-width: 220px;" src="https://i1.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/logo-anylearn-09.png" alt="" width="220"></div>
           </div>
         <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
         </div>
@@ -517,14 +517,14 @@ div.preheader {
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <h2 class="size-20" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span style="color:#ffffff">anyLEARN - &#7912;ng d&#7909;ng k&#7871;t n&#7889;i gi&#225;o d&#7909;c h&#224;ng &#273;&#7847;u Vi&#234;t Nam.</span></h2>
+        <h2 class="size-20" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-20"><span style="color:#ffffff">anyLEARN - &#7912;ng d&#7909;ng k&#7871;t n&#7889;i gi&#225;o d&#7909;c h&#224;ng &#273;&#7847;u</span></h2>
       </div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div class="btn btn--flat btn--small" style="Margin-bottom: 20px;text-align: center;">
-        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #1a7aba !important;background-color: #ffffff;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-r/">T&#7843;i app ngay</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-r/" style="width:91px" arcsize="13%" fillcolor="#FFFFFF" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#1A7ABA;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">T&#7843;i app ngay</center></v:textbox></v:roundrect><![endif]--></div>
+        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #1a7aba !important;background-color: #ffffff;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-r/">T&#7843;i app ngay</a><![endif]>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-r/" style="width:91px" arcsize="13%" fillcolor="#FFFFFF" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#1A7ABA;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">T&#7843;i app ngay</center></v:textbox></v:roundrect><![endif]--></div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -565,7 +565,7 @@ div.preheader {
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <h1 style="Margin-top: 0;Margin-bottom: 20px;font-style: normal;font-weight: normal;color: #fff;font-size: 18px;line-height: 26px;text-align: center;"><span style="color:#0d0d0d"><strong>Ch&#224;o m&#7915;ng&nbsp; {{ !empty($username) ? $username : "" }} &#273;&#7871;n v&#7899;i &#7913;ng d&#7909;ng anyLEARN</strong></span></h1>
+        <h1 style="Margin-top: 0;Margin-bottom: 20px;font-style: normal;font-weight: normal;color: #fff;font-size: 18px;line-height: 26px;text-align: center;"><span style="color:#0d0d0d"><strong>Ch&#224;o m&#7915;ng&nbsp;{{ !empty($username) ? $username : "" }} &#273;&#7871;n v&#7899;i &#7913;ng d&#7909;ng anyLEARN</strong></span></h1>
       </div>
     </div>
             
@@ -575,14 +575,14 @@ div.preheader {
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <p class="size-16" style="Margin-top: 0;Margin-bottom: 20px;font-size: 16px;line-height: 24px;text-align: center;" lang="x-size-16"><span style="color:#0d0d0d">&#272;&#7875; ho&#224;n t&#7845;t &#273;&#259;ng k&#253; &#273;&#259;ng k&#253; t&#224;i kho&#7843;n [Tr&#432;&#7901;ng h&#7885;c/ Gi&#7843;ng vi&#234;n], b&#7841;n vui l&#242;ng C&#7853;p nh&#7853;t th&#244;ng tin c&#225; nh&#226;n v&#224; T&#7841;o h&#7907;p &#273;&#7891;ng tr&#234;n app nh&#233;!</span></p>
+        <p class="size-16" style="Margin-top: 0;Margin-bottom: 20px;font-size: 16px;line-height: 24px;text-align: center;" lang="x-size-16"><span style="color:#0d0d0d">&#272;&#7875; h&#7891; s&#417; t&#224;i kho&#7843;n c&#7911;a &nbsp;&#273;&#432;&#7907;c lung linh h&#417;n v&#224; c&#243; c&#417; h&#7897;i nh&#7853;n &#273;&#432;&#7907;c nhi&#7873;u &#432;u &#273;&#227;i&nbsp;c&#7911;a c&#225;c&nbsp;kh&#243;a h&#7885;c, b&#7841;n&nbsp;vui l&#242;ng c&#7853;p nh&#7853;t th&#244;ng tin c&#225; nh&#226;n tr&#234;n &#7913;ng d&#7909;ng nh&#233;!</span></p>
       </div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div class="btn btn--flat btn--large" style="Margin-bottom: 20px;text-align: center;">
-        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #1a7aba;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-y/">Xem h&#432;&#7899;ng d&#7851;n ngay</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-y/" style="width:193px" arcsize="9%" fillcolor="#1A7ABA" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,11px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">Xem h&#432;&#7899;ng d&#7851;n ngay</center></v:textbox></v:roundrect><![endif]--></div>
+        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 14px;font-weight: bold;line-height: 24px;padding: 12px 24px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #1a7aba;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-y/">Xem h&#432;&#7899;ng d&#7851;n ngay</a><![endif]>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-y/" style="width:193px" arcsize="9%" fillcolor="#1A7ABA" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,11px,0px,11px"><center style="font-size:14px;line-height:24px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">Xem h&#432;&#7899;ng d&#7851;n ngay</center></v:textbox></v:roundrect><![endif]--></div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -602,7 +602,7 @@ div.preheader {
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;">
             
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
-          <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-j/"><img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="College students hanging out" width="600" src="https://i1.createsend1.com/ei/y/11/F50/32F/144754/csfinal/BannerwebT5-04-9900000000079e3c.jpg"></a>
+          <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-j/"><img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;display: block;height: auto;width: 100%;max-width: 465px;" alt="College students hanging out" width="465" src="https://i1.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/BannerwebT5-04-990451079e05143c.jpg"></a>
         </div>
       
               <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 20px;">
@@ -615,10 +615,28 @@ div.preheader {
         </div>
       </div>
   
-      <div style="background-color: #ffffff;">
+      <div class="layout one-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
+        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 600px" class="w560"><![endif]-->
+          <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;">
+        
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-16" style="Margin-top: 0;Margin-bottom: 0;font-size: 16px;line-height: 24px;" lang="x-size-16"><em><span style="color:#2b292b">Hi&#7879;n &#273;ang c&#243; r&#7845;t nhi&#7873;u kh&#243;a h&#7885;c h&#7845;p d&#7851;n tr&#234;n &#7913;ng d&#7909;ng anyLEARN. C&#249;ng t&#236;m hi&#7875;u v&#224; ch&#7885;n &#273;&#259;ng k&#253; kh&#243;a h&#7885;c ph&#249; h&#7907;p nh&#7845;t nh&#233;!</span></em></p>
+      </div>
+    </div>
+        
+          </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        </div>
+      </div>
+  
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
+  
+      <div class="has-border" style="background-color: #ffffff;border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;">
         <div class="layout two-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
           <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
-          <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <!--[if (mso)|(IE)]><table class="layout-has-border" width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]-->
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -627,18 +645,28 @@ div.preheader {
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <h2 class="size-18" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;" lang="x-size-18"><span style="color:#1a7aba"><strong>T&#7841;o &amp; Qu&#7843;n l&#253; h&#7907;p &#273;&#7891;ng tr&#7921;c ti&#7871;p ngay tr&#234;n app</strong></span></h2>
+        <h2 class="size-18" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-18"><span style="color:#1a7aba">Kh&#243;a h&#7885;c<strong> </strong><br>
+<strong>Super Summer Camp 2021</strong></span></h2>
       </div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <p class="size-15" style="Margin-top: 0;Margin-bottom: 20px;font-size: 15px;line-height: 23px;" lang="x-size-15"><span style="color:#0d0d0d">[Tr&#432;&#7901;ng h&#7885;c/ Gi&#7843;ng vi&#234;n] s&#7869; ch&#7911; &#273;&#7897;ng T&#7841;o h&#7907;p &#273;&#7891;ng, K&#253; t&#234;n v&#224; Qu&#7843;n l&#253; tr&#7921;c ti&#7871;p h&#7907;p &#273;&#7891;ng ngay tr&#234;n app.</span></p>
+        <p class="size-14" style="Margin-top: 0;Margin-bottom: 20px;font-size: 14px;line-height: 21px;" lang="x-size-14"><span style="color:#4d575e">M&#249;a h&#232; k&#233;o d&#224;i, con &#7903; nh&#224; kh&#225; l&#226;u, thi&#7871;u &#273;i nh&#7919;ng ho&#7841;t &#273;&#7897;ng, s&#226;n ch&#417;i b&#7893; &#237;ch.&nbsp;<br>
+V&#7853;y ph&#7843;i h&#7885;c g&#236;, l&#224;m sao &#273;&#7875; con lu&#244;n duy tr&#236; n&#259;ng l&#432;&#7907;ng h&#7885;c t&#7853;p, kh&#244;ng th&#7845;y nh&#224;m ch&#225;n khi &#7903; nh&#224;, &#273;&#7863;c bi&#7879;t l&#224; ph&#225;t tri&#7875;n th&#234;m nh&#7919;ng k&#7929; n&#259;ng &#273;&#7875; c&#243; m&#7897;t m&#249;a h&#232; vui v&#7867; v&#224; &#253; ngh&#297;a?</span></p>
       </div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
-      <div style="mso-line-height-rule: exactly;line-height: 10px;font-size: 1px;">&nbsp;</div>
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-12" style="Margin-top: 0;Margin-bottom: 20px;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-t/" data-emb-iscopy="true"><span style="color:#f72525">T&#204;M HI&#7874;U TH&#202;M</span></a></p>
+      </div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div class="btn btn--flat btn--small" style="text-align:center;">
+        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #15a14f;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-i/">&#272;&#258;NG K&#221; H&#7884;C</a><![endif]>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-i/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]--></div>
     </div>
             
             </div>
@@ -646,7 +674,7 @@ div.preheader {
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
             
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
-          <img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;display: block;height: auto;width: 100%;max-width: 119px;" alt="" width="119" src="https://i2.createsend1.com/ei/y/11/F50/32F/144754/csfinal/app-10-d951704007deb870.png">
+          <img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="300" src="https://i2.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/900x900-14-990000000003cf3c.png">
         </div>
       
               <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 20px;">
@@ -658,6 +686,60 @@ div.preheader {
           </div>
         </div>
       </div>
+  
+      <div class="layout two-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
+        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
+    </div>
+          
+        <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
+          <img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-bottom" style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="" width="300" src="https://i3.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/59edcd38090dfd53a41c-148786d6f7cfbc46.jpg">
+        </div>
+      
+          </div>
+        <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
+    </div>
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-16" style="Margin-top: 0;Margin-bottom: 20px;font-size: 16px;line-height: 24px;text-align: center;" lang="x-size-16"><span style="color:#1a7aba">Kh&#243;a h&#7885;c<br>
+<strong>T&#432; Duy &#221; Ch&#237; Nh&#224;&nbsp;</strong><strong>V&#244; &#272;&#7883;ch</strong></span></p>
+      </div>
+    </div>
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p style="Margin-top: 0;Margin-bottom: 20px;"><span style="color:#4d575e">V&#7899;i&nbsp;vai tr&#242; l&#224; ng&#432;&#7901;i d&#7851;n d&#7855;t, &#273;&#7883;nh h&#432;&#7899;ng, MMS b&#7855;t &#273;&#7847;u b&#7857;ng nh&#7919;ng c&#226;u chuy&#7879;n g&#7847;n g&#361;i, c&#225;ch truy&#7873;n &#273;&#7841;t d&#7877; hi&#7875;u, g&#7847;n v&#7899;i t&#226;m l&#253; c&#7911;a t&#7915;ng &#273;&#7897; tu&#7893;i &#273;&#7875; t&#225;c &#273;&#7897;ng s&#226;u &#273;&#7871;n c&#225;ch suy ngh&#297; v&#224; h&#224;nh &#273;&#7897;ng c&#7911;a con tr&#7867;. T&#7841;o cho tr&#7867; s&#7921; h&#7913;ng th&#250;, t&#7921; nh&#236;n nh&#7853;n, t&#7921; r&#232;n luy&#7879;n th&#243;i quen, c&#225;ch h&#224;nh x&#7917; &#273;&#250;ng m&#7921;c v&#224; &#273;&#432;&#7907;c b&#7855;t &#273;&#7847;u t&#7915; nh&#7919;ng &#273;i&#7873;u &#273;&#417;n gi&#7843;n, nh&#7887; b&#233; 
+h&#7857;ng ng&#224;y.</span></p>
+      </div>
+    </div>
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-12" style="Margin-top: 0;Margin-bottom: 20px;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-d/" data-emb-iscopy="true"><span style="color:#f72525">T&#204;M HI&#7874;U TH&#202;M</span></a></p>
+      </div>
+    </div>
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div class="btn btn--flat btn--small" style="text-align:center;">
+        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #15a14f;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-h/">&#272;&#258;NG K&#221; H&#7884;C</a><![endif]>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-h/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]--></div>
+    </div>
+          
+          </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        </div>
+      </div>
+  
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
   
       <div style="background-color: #ffffff;" dir="rtl">
         <div class="layout two-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
@@ -669,19 +751,11 @@ div.preheader {
       <div style="mso-line-height-rule: exactly;line-height: 1px;font-size: 1px;">&nbsp;</div>
     </div>
             
-              <div style="Margin-left: 20px;Margin-right: 20px;">
-      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <h2 class="size-18" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;" lang="x-size-18"><span style="color:#1a7aba"><strong>Ch&#7911; &#273;&#7897;ng T&#7841;o kh&#243;a h&#7885;c nhanh ch&#243;ng</strong></span></h2>
-      </div>
-    </div>
-            
-              <div style="Margin-left: 20px;Margin-right: 20px;">
-      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-        <p class="size-15" style="Margin-top: 0;Margin-bottom: 20px;font-size: 15px;line-height: 23px;" lang="x-size-15"><span style="color:#0d0d0d">[Tr&#432;&#7901;ng h&#7885;c/Gi&#7843;ng vi&#234;n] s&#7869; ch&#7911; &#273;&#7897;ng&nbsp;T&#7841;o kh&#243;a h&#7885;c tr&#234;n app ho&#7863;c tr&#234;n website anyLEARN, qu&#7843;n l&#253; danh s&#225;ch h&#7885;c vi&#234;n &#273;&#259;ng k&#253;,...</span></p>
-      </div>
-    </div>
-            
-              <div style="Margin-left: 20px;Margin-right: 20px;">
+        <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
+          <img style="border: 0;display: block;height: auto;width: 100%;max-width: 480px;" alt="College students chatting" width="300" src="https://i4.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/z2598154525507_eb0dba2ad57e47b792c840f3a3da6ecb-46ef960b9b05a2df.jpg">
+        </div>
+      
+              <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 20px;">
       <div style="mso-line-height-rule: exactly;line-height: 1px;font-size: 1px;">&nbsp;</div>
     </div>
             
@@ -693,8 +767,100 @@ div.preheader {
       <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
     </div>
             
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <h2 class="size-18" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-18"><span style="color:#1a7aba">Kh&#243;a h&#7885;c<br>
+Tr&#7841;i h&#232;<strong> STEAM &amp; Ti&#7871;ng anh&nbsp;</strong></span></h2>
+      </div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p style="Margin-top: 0;Margin-bottom: 20px;"><span style="color:#4d575e">V&#7899;i ch&#7911; &#273;&#7873; &#8220;&#119826;&#119849;&#119834;&#119836;&#119838; &#119812;&#119857;&#119849;&#119845;&#119848;&#119851;&#119838;&#119851;&#119852; &#119826;&#119850;&#119854;&#119834;&#119837;&#8221;, &#273;&#226;y s&#7869; ch&#432;&#417;ng tr&#236;nh k&#7883;p th&#7901;i &#273;&#225;p &#7913;ng nhu c&#7847;u h&#7885;c t&#7853;p, vui ch&#417;i ng&#224;y h&#232; c&#7911;a con, v&#7915;a an to&#224;n v&#224; ho&#224;n to&#224;n th&#237;ch &#7913;ng v&#7899;i t&#236;nh h&#236;nh....</span></p>
+      </div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-12" style="Margin-top: 0;Margin-bottom: 20px;font-size: 12px;line-height: 19px;text-align: center;" lang="x-size-12"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-k/" data-emb-iscopy="true"><span style="color:#f72525">T&#204;M HI&#7874;U&nbsp; TH&#202;M</span></a></p>
+      </div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div class="btn btn--flat btn--small" style="text-align:center;">
+        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #15a14f;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-u/">&#272;&#258;NG K&#221; H&#7884;C</a><![endif]>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-u/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]--></div>
+    </div>
+            
+            </div>
+          <!--[if (mso)|(IE)]></td><td class="layout__edges">&nbsp;</td></tr></table><![endif]-->
+          </div>
+        </div>
+      </div>
+  
+      <div class="layout two-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
+        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
+    </div>
+          
+          </div>
+        <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
+          
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
+    </div>
+          
+          </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        </div>
+      </div>
+  
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
+  
+      <div class="layout one-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
+        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 600px" class="w560"><![endif]-->
+          <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;">
+        
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #ccc;Margin-bottom: 20px;">&nbsp;</div>
+    </div>
+        
+            <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-14" style="Margin-top: 0;Margin-bottom: 0;font-size: 14px;line-height: 21px;text-align: center;" lang="x-size-14"><span style="color:#1a7aba"><em>&#272;&#259;ng k&#253; &amp; T&#7843;i &#7913;ng d&#7909;ng anyLEARN &#273;&#7875; c&#243; c&#417; h&#7897;i nh&#7853;n nhi&#7873;u &#432;u &#273;&#227;i khi &#273;&#259;ng k&#253;<br>
+c&#225;c kh&#243;a h&#7885;c hay v&#224; b&#7893; &#237;ch nh&#233;!</em></span></p>
+      </div>
+    </div>
+        
+          </div>
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        </div>
+      </div>
+  
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
+  
+      <div style="background-color: #ffffff;">
+        <div class="layout two-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+          <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
+          <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+            <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
+            
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
-          <img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-bottom" style="border: 0;display: block;height: auto;width: 100%;max-width: 121px;" alt="College students chatting" width="121" src="https://i3.createsend1.com/ei/y/11/F50/32F/144754/csfinal/app-11-1895d85c1570e28.png">
+          <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-o/"><img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top gnd-corner-image-bottom" style="border: 0;display: block;height: auto;width: 100%;max-width: 157px;" alt="" width="157" src="https://i5.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/ios-9906db045101453c.png"></a>
+        </div>
+      
+            </div>
+          <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+            <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
+            
+        <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
+          <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-b/"><img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top gnd-corner-image-bottom" style="border: 0;display: block;height: auto;width: 100%;max-width: 157px;" alt="" width="157" src="https://i6.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/android-9906db045101453c.png"></a>
         </div>
       
             </div>
@@ -702,6 +868,8 @@ div.preheader {
           </div>
         </div>
       </div>
+  
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
   
       <div style="background-color: #ffffff;">
         <div class="layout one-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
@@ -714,7 +882,7 @@ div.preheader {
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
-      <div style="mso-line-height-rule: exactly;line-height: 35px;font-size: 1px;">&nbsp;</div>
+      <div style="mso-line-height-rule: exactly;line-height: 1px;font-size: 1px;">&nbsp;</div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -730,8 +898,8 @@ email: info@anylearn.vn</em></p>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div class="btn btn--flat btn--small" style="Margin-bottom: 20px;text-align: center;">
-        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #1a7aba;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-t/">Li&#234;n h&#7879; h&#7895; tr&#7907;</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujyhd-l-t/" style="width:98px" arcsize="13%" fillcolor="#1A7ABA" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">Li&#234;n h&#7879; h&#7895; tr&#7907;</center></v:textbox></v:roundrect><![endif]--></div>
+        <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #1a7aba;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-n/">Li&#234;n h&#7879; h&#7895; tr&#7907;</a><![endif]>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-n/" style="width:98px" arcsize="13%" fillcolor="#1A7ABA" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">Li&#234;n h&#7879; h&#7895; tr&#7907;</center></v:textbox></v:roundrect><![endif]--></div>
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -770,6 +938,27 @@ email: info@anylearn.vn</em></p>
       <div style="mso-line-height-rule: exactly;line-height: 15px;font-size: 1px;">&nbsp;</div>
     </div>
             
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+        <p class="size-11" style="Margin-top: 0;Margin-bottom: 20px;font-size: 11px;line-height: 19px;text-align: center;" lang="x-size-11"><span style="color:#ffffff">Xem th&#234;m v&#7873;&nbsp;anyLEARN</span></p>
+      </div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div>
+        <div style="padding-top: 8px; text-align: center"><span style="padding-right: 4px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;display: inline-block;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-p/"><img style="border: 0;" src="https://i1.createsend1.com/static/eb/master/13-the-blueprint-3/images/socialmedia/facebook-brandcolor-small-circle.png" alt="Facebook" height="24" width="24" cm_dontimportimage></a></span><span style="padding-right: 4px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;display: inline-block;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-x/"><img style="border: 0;" 
+src="https://i5.createsend1.com/static/eb/master/13-the-blueprint-3/images/socialmedia/website-brandcolor-small-circle.png" alt="Website" height="24" width="24" cm_dontimportimage></a></span><span style="padding-right: 4px;"><a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;display: inline-block;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-m/"><img style="border: 0;" src="https://i6.createsend1.com/static/eb/master/13-the-blueprint-3/images/socialmedia/youtube-brandcolor-small-circle.png" alt="YouTube" height="24" width="24" cm_dontimportimage></a></span></div>
+      </div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 1px;">&nbsp;</div>
+    </div>
+            
+              <div style="Margin-left: 20px;Margin-right: 20px;">
+      <div style="mso-line-height-rule: exactly;line-height: 1px;font-size: 1px;">&nbsp;</div>
+    </div>
+            
             </div>
           <!--[if (mso)|(IE)]></td><td class="layout__edges">&nbsp;</td></tr></table><![endif]-->
           </div>
@@ -777,14 +966,14 @@ email: info@anylearn.vn</em></p>
       </div>
   
       </div>
-      <div role="contentinfo"><div style="line-height:0px;font-size:0px;" id="footer-top-spacing">&nbsp;</div><div class="layout email-flexible-footer email-footer" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;" id="footer-content">
+      <div role="contentinfo"><div style="line-height:10px;font-size:10px;" id="footer-top-spacing">&nbsp;</div><div class="layout email-flexible-footer email-footer" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;" id="footer-content">
       <div class="layout__inner left-aligned-footer" style="border-collapse: collapse;display: table;width: 100%;">
         <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><![endif]-->
         <!--[if (mso)|(IE)]><td><table cellpadding="0" cellspacing="0"><![endif]-->
         <!--[if (mso)|(IE)]><td valign="top"><![endif]-->
           <div class="column" style="text-align: left;font-size: 12px;line-height: 19px;color: #94a4b0;font-family: sans-serif;display: inline-block;">
       <div class="footer-logo emb-logo-margin-box" style="font-size: 26px;line-height: 32px;Margin-top: 0px;Margin-bottom: 0px;color: #7b663d;font-family: Roboto,Tahoma,sans-serif;" align="center">
-        <div emb-flexible-footer-logo align="center"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 180px;" src="https://i1.createsend1.com/ei/y/11/F50/32F/144753/csfinal/lgoknnctstngang.png" alt="" width="180"></div>
+        <div emb-flexible-footer-logo align="center"><img style="border: 0;display: block;height: auto;width: 100%;max-width: 134px;" src="https://i1.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/lgoknnctstngang.png" alt="" width="134"></div>
       </div>
     </div>
         <!--[if (mso)|(IE)]></td><![endif]-->
@@ -801,12 +990,14 @@ email: info@anylearn.vn</em></p>
     </div>
         <!--[if (mso)|(IE)]></td><![endif]-->
         <!--[if (mso)|(IE)]><td valign="top"><![endif]-->
-          <table style="border-collapse: collapse;table-layout: fixed;display: inline-block;width: 405px;" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="column js-footer-additional-info" style="text-align: left;font-size: 12px;line-height: 19px;color: #94a4b0;font-family: sans-serif;display: inline-block;width: 405px;">
+          <table style="border-collapse: collapse;table-layout: fixed;display: inline-block;width: 451px;" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="column js-footer-additional-info" style="text-align: left;font-size: 12px;line-height: 19px;color: #94a4b0;font-family: sans-serif;display: inline-block;width: 451px;">
       <div style="margin-left: 0;margin-right: 0;Margin-top: 10px;Margin-bottom: 10px;">
         <div class="email-footer__additional-info" style="font-size: 12px;line-height: 19px;margin-bottom: 18px;margin-left: 20px;margin-right: 20px;margin-top: 0px;">
-          <div bind-to="address"><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">C&#244;ng ty c&#7893; ph&#7847;n &#272;&#7847;u T&#432; v&#224; Gi&#225;o D&#7909;c anyLEARN</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">MST: 0316363793</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">&#272;&#7883;a ch&#7881;: 352/28A Nguy&#7877;n T&#7845;t Th&#224;nh, ph&#432;&#7901;ng 13, Qu&#7853;n 4, TP.HCM</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">Hotline: 0374900344</p></div>
+          <div bind-to="address"><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">C&#244;ng ty c&#7893; ph&#7847;n &#272;&#7847;u T&#432; v&#224; Gi&#225;o D&#7909;c anyLEARN</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">MST: 0316363793</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">&#272;&#7883;a ch&#7881;: 352/28A Nguy&#7877;n T&#7845;t Th&#224;nh, ph&#432;&#7901;ng 13, Qu&#7853;n 4, TP.HCM</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">Hotline: 0374900344</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 0;">Website: anylearn.vn</p><p class="email-flexible-footer__additionalinfo--center" style="Margin-top: 0;Margin-bottom: 
+0;">&nbsp;</p></div>
         </div>
         
+    
         <!--[if mso]>&nbsp;<![endif]-->
       </div>
     </div></td></tr></tbody></table>
