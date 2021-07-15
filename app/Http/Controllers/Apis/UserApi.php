@@ -236,7 +236,8 @@ class UserApi extends Controller
         }
     }
 
-    public function simpleRegister(Request $request) {
+    public function simpleRegister(Request $request)
+    {
         $inputs = $request->all();
         if (empty($inputs['ref']) || empty($inputs['phone']) || empty($inputs['name'])) {
             return response("ref, phone, name is required params", 400);
@@ -292,6 +293,16 @@ class UserApi extends Controller
         $friends = User::where('user_id', $userId)
             ->where('is_child', 0)
             ->orderby('first_name')
+            ->select(
+                'id',
+                'name',
+                'role',
+                'image',
+                'banner',
+                'introduce',
+                'title',
+                'num_friends'
+            )
             ->get();
         return response()->json([
             'user' => $friendsOfUser,
@@ -313,7 +324,14 @@ class UserApi extends Controller
             ->orderby('boost_score', 'desc')
             ->orderby('first_name')
             ->select(
-                'users.*',
+                'id',
+                'name',
+                'role',
+                'image',
+                'banner',
+                'introduce',
+                'title',
+                'num_friends',
                 DB::raw("(select avg(iua.value) from item_user_actions AS iua WHERE type = 'rating' AND iua.item_id in (select items.id from items where items.user_id = users.id) ) AS rating")
             )
             ->paginate($pageSize);
@@ -359,13 +377,13 @@ class UserApi extends Controller
         }
 
         $unpaiedOrders = OrderDetail::where('item_id', $itemId)
-        ->where('user_id', $user->id)
-        ->where('status', OrderConstants::STATUS_NEW)
-        ->count();
+            ->where('user_id', $user->id)
+            ->where('status', OrderConstants::STATUS_NEW)
+            ->count();
         if ($unpaiedOrders > 0) {
             return response("Bạn chưa thanh toán cho khoá học này", 400);
         }
-        
+
         $rs = Participation::create([
             'item_id' => $itemId,
             'schedule_id' =>  $scheduleId,
