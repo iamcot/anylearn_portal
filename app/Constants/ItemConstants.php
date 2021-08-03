@@ -8,6 +8,10 @@ class ItemConstants
     const TYPE_CLASS = 'class';
     const TYPE_PRODUCT = 'product';
 
+    const SUBTYPE_ONLINE = 'online';
+    const SUBTYPE_DIGITAL = 'digital';
+    const SUBTYPE_OFFLINE = 'offline';
+
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 

@@ -29,7 +29,8 @@ class ItemServices
 {
     const PP = 20;
 
-    public function pdpData($itemId, $user) {
+    public function pdpData($itemId, $user)
+    {
         $item = Item::find($itemId);
         if (!$item) {
             throw new Exception("Trang không tồn tại", 404);
@@ -39,7 +40,7 @@ class ItemServices
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
         $author = User::find($item->user_id);
-        
+
         $userService = new UserServices();
         $authorCommissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
         $commission = $userService->calcCommission($item->price, $authorCommissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
@@ -71,17 +72,18 @@ class ItemServices
         ];
     }
 
-    public function classUrl($id) {
+    public function classUrl($id)
+    {
         $item = Item::find($id);
         if (!$item) {
             return "";
         }
-        return route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title). '.html']);
+        return route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
     }
 
     public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE)
     {
-        $courses = Item::where('type', $itemType);
+        $courses = Item::where('type', $itemType)->whereNull('item_id');
         if ($userId) {
             $courses = $courses->where('user_id', $userId);
         }
@@ -121,6 +123,15 @@ class ItemServices
             return '<a class="btn btn-sm btn-danger" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
         } else {
             return '<a class="btn btn-sm btn-success" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+        }
+    }
+
+    public function userStatusOperation($itemId, $status)
+    {
+        if ($status == ItemConstants::STATUS_ACTIVE) {
+            return '<a class="btn btn-sm btn-danger" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Khóa</a>';
+        } else {
+            return '<a class="btn btn-sm btn-success" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         }
     }
 
@@ -253,6 +264,8 @@ class ItemServices
             $input['nolimit_time'] = 0;
         }
 
+        // if (!empty($input['subtype'])) {}
+
         $this->updateClassTeachers($request, $input['id']);
 
         $canUpdate = $itemUpdate->update($input);
@@ -260,31 +273,9 @@ class ItemServices
         if ($canUpdate) {
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($itemUpdate, Tag::TYPE_CLASS);
-            // if ($itemUpdate->type == ItemConstants::TYPE_COURSE) {
-            $hasSchedule = Schedule::where('item_id', $itemUpdate->id)->count();
-            if ($hasSchedule == 1) {
-                Schedule::where('item_id', $itemUpdate->id)->update([
-                    'date' => $input['date_start'],
-                    'time_start' => $input['time_start'],
-                    'time_end' => empty($input['time_end']) ? "" : $input['time_end'],
-                    'content' => $input['title'],
-                ]);
-            }
-            //  elseif ($hasSchedule == 0) {
-            //     Schedule::create([
-            //         'item_id' => $itemUpdate->id,
-            //         'date' => $input['date_start'],
-            //         'time_start' => $input['time_start'],
-            //         'time_end' => $input['time_end'],
-            //         'content' => $input['title'],
-            //     ]);
-            // }
-
-            // } elseif ($itemUpdate->type == ItemConstants::TYPE_CLASS) {
-            else {
-                $canUpdateSchedule = $this->updateClassSchedule($request, $input['id']);
-            }
-            // }
+           
+            $canUpdateSchedule = $this->updateClassSchedule($request, $input);
+         
             if (
                 $itemUpdate->date_start != $input['date_start']
                 || $itemUpdate->date_start != $input['time_start']
@@ -346,31 +337,107 @@ class ItemServices
         return false;
     }
 
-    private function updateClassSchedule(Request $request, $itemId)
+    private function updateClassSchedule(Request $request, $input)
     {
+        $itemId = $input['id'];
+
+        if ($request->get('tab') == 'schedule' && $request->get('a') == 'create-opening') {
+            $opening = $request->get('opening');
+            if (!empty($opening) && !empty($opening['title'])) {
+                $hasRegister = OrderDetail::where('item_id', $itemId)->count();
+                if (Item::where('item_id', $input['id'])->count() == 0 && $hasRegister > 0) {
+                    throw new Exception('Không tạo được khai giảng mới vì khoá học mặc định này đã có học viên đăng ký');
+                }
+                $rs = DB::statement("INSERT INTO items (
+                    title,
+                    `type`,
+                    subtype,
+                    user_id,
+                    price,
+                    commission_rate,
+                    got_bonus,
+                    date_start,
+                    time_start, 
+                    nolimit_time,
+                    company_commission,
+                    `status`,
+                    is_test,
+                    item_id,
+                    user_location_id 
+                ) 
+                SELECT 
+                    ?,
+                    `type`,
+                    subtype,
+                    user_id,
+                    price,
+                    commission_rate,
+                    got_bonus,
+                    ?,
+                    time_start, 
+                    nolimit_time,
+                    company_commission,
+                    1,
+                    is_test,
+                    ?,
+                    ?
+                FROM items WHERE id = ? "
+                , [$opening['title'], $opening['date_start'], $input['id'], $opening['location_id'], $input['id']]);
+
+                if (Item::where('item_id', $input['id'])->count() == 1) {
+                    Schedule::where('item_id', $input['id'])->delete();
+                }
+               
+                return true;
+            }
+        } else if ($request->get('tab') == 'schedule' && $request->get('op') > 0 ) {
+            $itemId = $request->get('op');
+            $opening = $request->get('opening');
+            if (!empty($opening) && !empty($opening['title'])) {
+                Item::find($itemId)->update([
+                    'title' => $opening['title'],
+                    'user_location_id' => $opening['location_id'],
+                    'date_start' => $opening['date_start']
+                ]);
+            }
+        } 
+
+        $defaulOpeningthasSchedule = Schedule::where('item_id', $input['id'])->count();
+        if ($defaulOpeningthasSchedule == 1) {
+            Schedule::where('item_id', $input['id'])->update([
+                'date' => $input['date_start'],
+                'time_start' => $input['time_start'],
+                'time_end' => empty($input['time_end']) ? "" : $input['time_end'],
+                'content' => $input['title'],
+            ]);
+            return true;
+        }
+       
         $schedule = $request->get('schedule');
-        if (!empty($schedule)) {
-            foreach ($schedule as $date) {
-                if (empty($date['date'])) {
-                    continue;
-                }
-                if (empty($date['id'])) {
-                    Schedule::create([
-                        'item_id' => $itemId,
-                        'date' => $date['date'],
-                        'time_start' => $date['time_start'],
-                        'time_end' => $date['time_end'],
-                    ]);
-                } else {
-                    $data = [
-                        'date' => $date['date'],
-                        'time_start' => $date['time_start'],
-                        'time_end' => $date['time_end'],
-                    ];
-                    Schedule::find($date['id'])->update($data);
-                }
+        if (empty($schedule)) {
+            return false;
+        }
+        foreach ($schedule as $date) {
+            if (empty($date['date'])) {
+                continue;
+            }
+            if (empty($date['id'])) {
+                Schedule::create([
+                    'item_id' => $itemId,
+                    'date' => $date['date'],
+                    'time_start' => $date['time_start'],
+                    'time_end' => $date['time_end'],
+                ]);
+            } else {
+                $data = [
+                    'date' => $date['date'],
+                    'time_start' => $date['time_start'],
+                    'time_end' => $date['time_end'],
+                ];
+                Schedule::find($date['id'])->update($data);
             }
         }
+
         return true;
     }
 

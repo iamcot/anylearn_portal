@@ -18,14 +18,19 @@
                     <li class="active"><a href="#home" class="scroll">
                             <i class="fa fa-home"></i>
                         </a></li>
-                    <li><a href="#skill_section" class="scroll">Giới thiệu</a></li>
+                    <li><a href="#" id="search-action">Tìm kiếm</a></li>
+                    <li><a href="#customer_feedback" class="scroll">Nhận xét</a></li>
                     <li><a href="#work" class="scroll">Trung tâm</a></li>
                     <li><a href="#team" class="scroll">Chuyên gia</a></li>
                     <li><a href="#blog" class="scroll">Khóa học</a></li>
                     <li><a href="#pricing_table" class="scroll">Tải APP</a></li>
-                    <li><a href="#customer_feedback" class="scroll">Nhận xét</a></li>
-                    <li><a href="#contact-form" class="scroll">Liên hệ</a></li>
-                    <li><a href="{{ route('me.dashboard') }}"><i class="fas fa-user-circle"></i></a></li>
+                 
+                    @if (@auth()->check())
+                    <li><a href="{{ route('me.dashboard') }}">Trang cá nhân</a></li>
+                    @else
+                    <li><a href="{{ route('me.dashboard') }}">Đăng nhập</a></li>
+                    <li><a href="{{ route('refpage', ['code' => 'anyLEARN' ]) }}">Đăng ký</a></li>
+                    @endif
                 </ul>
             </div>
             <div class="sidebar_menu">
@@ -36,29 +41,27 @@
                             <a href="#home" class="scroll"><span></span><i class="fa fa-home"></i></a>
                         </li>
                         <li class="clearfix">
-                            <a href="#skill_section" class="scroll"> <span>02.</span>Giới thiệu</a>
+                            <a href="#customer_feedback" class="scroll"> <span>03.</span>Nhận xét</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#work" class="scroll"> <span>03.</span>Trung tâm</a>
+                            <a href="#work" class="scroll"> <span>04.</span>Trung tâm</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#team" class="scroll"> <span>04.</span>Chuyên gia</a>
+                            <a href="#team" class="scroll"> <span>05.</span>Chuyên gia</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#blog" class="scroll"> <span>05.</span>Khóa học</a>
+                            <a href="#blog" class="scroll"> <span>06.</span>Khóa học</a>
                         </li>
                         <li class="clearfix">
-                            <a href="#pricing_table" class="scroll"> <span>06.</span>Tải APP</a>
+                            <a href="#pricing_table" class="scroll"> <span>07.</span>Tải APP</a>
                         </li>
-                        <li class="clearfix">
-                            <a href="#customer_feedback" class="scroll"> <span>07.</span>Nhận xét</a>
-                        </li>
-                        <li class="clearfix">
-                            <a href="#contact-form" class="scroll"> <span>08.</span>Liên hệ</a>
-                        </li>
-                        <li class="clearfix">
-                            <a href="{{ route('me.dashboard') }}"> <span>09.</span>Trang quản lý</a>
-                        </li>
+                      
+                        @if (@auth()->check())
+                        <li class="clearfix"><a href="{{ route('me.dashboard') }}">Trang cá nhân</a></li>
+                        @else
+                        <li class="clearfix"><a href="{{ route('me.dashboard') }}">Đăng nhập</a></li>
+                        <li class="clearfix"><a href="{{ route('refpage', ['code' => 'anyLEARN' ]) }}">Đăng ký</a></li>
+                        @endif
                     </ul>
                     <div class="clearfix"></div>
                     <ul class="social_icon black top25 bottom20 list-inline">

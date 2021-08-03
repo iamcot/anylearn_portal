@@ -5,7 +5,7 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <h1 class="h4 mb-0 text-gray-800">
+    <h1 class="h5 mb-0 text-gray-800">
         @if($hasBack ?? false)
             @if ($hasBack === true)
             <a href="javascript:window.history.back()"><i class="fas  fa-arrow-left"></i></a>

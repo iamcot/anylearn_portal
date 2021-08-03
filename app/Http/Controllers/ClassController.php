@@ -6,14 +6,18 @@ use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\Configuration;
+use App\Models\Item;
 use App\Models\ItemResource;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\UserLocation;
 use App\Services\ItemServices;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
+use Vanthao03596\HCVN\Models\Province;
 
 class ClassController extends Controller
 {
@@ -55,7 +59,12 @@ class ClassController extends Controller
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();
-            $rs = $courseService->updateItem($request, $input);
+            try {
+                $rs = $courseService->updateItem($request, $input);
+            } catch (Exception $e) {
+                return redirect()->back()->with(['tab' => $input['tab'], 'notify' => $e->getMessage()]);
+            }
+            
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with(['tab' => $input['tab'], 'notify' => __('Sửa lớp học thất bại! Vui lòng kiểm tra lại dữ liệu')]);
             } else {
@@ -89,11 +98,27 @@ class ClassController extends Controller
         ConfigConstants::CONFIG_COMMISSION_FOUNDATION]);
 
         $this->data['companyCommission'] = json_decode($courseDb['info']->company_commission, true);
-            
+        $userLocations = UserLocation::where('user_id', $author->id)->orderby('is_head', 'desc')->get();
+        $this->data['userLocations'] = $userLocations;
+        $this->data['openings'] = DB::table('items')
+        ->join('user_locations', 'user_locations.id', '=', 'user_location_id')
+        ->where('item_id', $courseId)
+        ->select('items.title', 'items.id', 'user_locations.title AS location', 'items.user_status', 'items.date_start')
+        ->get();
+
+        if ($request->get('tab')) {
+            $request->session()->flash('tab', $request->get('tab'));
+        } 
+        if ($request->get('op')) {
+            $op = Item::find($request->get('op'));
+            $this->data['opening'] = $op ?? null;
+            $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
+        }
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
+
         return view('class.edit', $this->data);
     }
 

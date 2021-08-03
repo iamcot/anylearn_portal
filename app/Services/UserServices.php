@@ -10,8 +10,11 @@ use App\Models\Configuration;
 use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\User;
+use Exception;
+use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserServices
 {
@@ -238,5 +241,26 @@ class UserServices
             default:
                 return "N/A";
         }
+    }
+
+    public function getUserLocationGeo($address) {
+        try {
+            $code = Geocoder::geocode($address)->get();
+            if (empty($code[0])) {
+                return false;
+            }
+    
+            $rs = $code[0];
+            // dd($rs);
+            $data = [
+                'longitude' => $rs->getCoordinates()->getLongitude(),
+                'latitude' => $rs->getCoordinates()->getLatitude()
+            ];
+            return $data;
+        } catch(Exception $e) {
+            Log::error($e);
+        }
+        return false;
+       
     }
 }

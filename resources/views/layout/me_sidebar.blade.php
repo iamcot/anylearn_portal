@@ -14,7 +14,12 @@
     <li class="nav-item {{ in_array($route, ['me.class', 'me.class.create', 'me.class.edit']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.class') }}">
             <i class="fas fa-fw fa-university"></i>
-            <span>@lang('Chỉnh sửa Lớp học')</span></a>
+            <span>@lang('Quản lý Lớp học')</span></a>
+    </li>
+    <li class="nav-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('location') }}">
+            <i class="fas fa-fw fa-map-marker"></i>
+            <span>@lang('Sổ địa chỉ/Chi nhánh')</span></a>
     </li>
     <li class="nav-item {{ $route == 'me.edit' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.edit') }}">

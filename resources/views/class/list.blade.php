@@ -3,23 +3,9 @@
 @extends('layout')
 
 @section('rightFixedTop')
-<form class="row">
-    <div class="col-xs-3 mr-1">
-        <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tên lớp học</option>
-        </select>
-    </div>
-    <div class="col-xs-6 mr-1">
-        <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
-    </div>
-    <div class="col-xs-1 mr-1">
-        <button class="btn btn-primary btn"><i class="fas fa-search"></i></button>
-    </div>
-
-    <div class="col-xs-2 mr-1">
-        <a class="btn btn-success" href="{{ route('class.create') }}"><i class="fas fa-plus"></i> @lang('Thêm mới')</a>
-    </div>
-</form>
+<div class="col-xs-2 mr-1">
+    <a class="btn btn-success btn-sm" href="{{ route('class.create') }}"><i class="fas fa-plus"> </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
+</div>
 @endsection
 
 @section('body')
@@ -28,6 +14,23 @@
     @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('class.create')])
 </div>
 @else
+<div class="card shadow mb-1">
+    <div class="card-body">
+        <form class="row">
+            <div class="col-xs-2 mr-1">
+                <select class="form-control" name="t" id="">
+                    <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tên lớp học</option>
+                </select>
+            </div>
+            <div class="col-xs-4 mr-1">
+                <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
+            </div>
+            <div class="col-xs-1">
+                <button class="btn btn-primary btn"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">
         <table class="table table-bordered table-striped">
@@ -54,7 +57,7 @@
                     </td>@endif
                     <td><a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
-                    <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
+                        <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
                     </td>
                     <td>{{ number_format($course->price) }}</td>
                     <!-- <td></td> -->
@@ -66,7 +69,7 @@
                         {!! $itemServ->statusOperation($course->id, $course->status) !!}
                         <!-- {!! $itemServ->typeOperation($course) !!} -->
                         @endif
-                        
+
                     </td>
                 </tr>
                 @endforeach

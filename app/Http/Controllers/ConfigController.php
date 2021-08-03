@@ -9,9 +9,13 @@ use App\Models\Voucher;
 use App\Models\VoucherEvent;
 use App\Models\VoucherGroup;
 use App\Services\FileServices;
+use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Vanthao03596\HCVN\Models\District;
+use Vanthao03596\HCVN\Models\Province;
+use Vanthao03596\HCVN\Models\Ward;
 
 class ConfigController extends Controller
 {
@@ -307,5 +311,28 @@ class ConfigController extends Controller
         }
         $this->data['navText'] = __('Quản lý Popup Trang Chủ APP/WEB');
         return view('config.homepopup', $this->data);
+    }
+
+    public function locationTree($level, $parentCode)
+    {
+        if (!in_array($level, ['ward', 'district', 'ward_path'])) {
+            return "";
+        }
+
+        if ($level  == 'district') {
+            $districts = District::where('parent_code', $parentCode)->orderby('name')->get();
+            return response()->json($districts);
+        } else if ($level == 'ward') {
+            $wards = Ward::where('parent_code', $parentCode)->orderby('name')->get();;
+            return response()->json($wards);
+        } else if ($level == 'ward_path') {
+            $ward = Ward::where('code', $parentCode)->first();
+            return response()->json($ward);
+        }
+    }
+
+    public function locationGeo($address) {
+       
+        // return response()->json($data);
     }
 }

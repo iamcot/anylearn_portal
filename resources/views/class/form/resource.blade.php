@@ -1,8 +1,8 @@
 @inject('fileService', 'App\Services\FileServices')
 <div class="row p-5">
-    <div class="col-6">
-        <h4>@lang('Hình ảnh chính của lớp học')
-            <button class="btn btn-sm btn-primary float-right" name="tab" value="resource"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+    <div class="col-md-6 mb-2">
+        <h4>@lang('Hình ảnh chính')
+            <button class="btn btn-sm btn-primary pull-right" name="tab" value="resource"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </h4>
         <hr />
         <input name="image" type="file" id="mainImageInp" />
@@ -12,7 +12,7 @@
             @endif
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-md-6">
         @if(!empty($course['resource']))
         <h4>@lang('Danh sách tài liệu')
         </h4>
@@ -31,8 +31,8 @@
             @endforeach
         </div>
         @endif
-        <h4>@lang('Thêm tài liệu')
-            <button class="btn btn-sm btn-primary float-right" name="tab" value="resource"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+        <h4>@lang('Tài liệu')
+            <button class="btn btn-sm btn-primary pull-right" name="tab" value="resource"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </h4>
         <hr />
         <div class="form-group">

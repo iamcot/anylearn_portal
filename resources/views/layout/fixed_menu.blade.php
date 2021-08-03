@@ -16,7 +16,7 @@
             </a>
         </li>
         <li>
-            <a href="#pricing_table" class="scroll">
+            <a href="#footer-download" class="scroll">
                 <i class="text-center fa fa-download fa-2x"></i>
             </a>
         </li>

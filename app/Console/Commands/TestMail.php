@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Mail\UserRegistered;
 use App\Models\User;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -41,9 +42,10 @@ class TestMail extends Command
      */
     public function handle()
     {
+        throw new Exception();
         $user = User::find(1);
         print("Start Send Email To User $user->name");
-        Mail::to("info.anylearn@gmail.com")->send(new UserRegistered($user));
+        Mail::to("info.anylearn@gmail.com")->send(new UserRegistered(['userid' => 1]));
         print("\nEmail Sent!!!");
     }
 }

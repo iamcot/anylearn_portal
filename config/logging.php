@@ -89,6 +89,11 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+        'newrelic' => [
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\NewRelicHandler::class,
+            'formatter' => 'default',
+        ],
     ],
 
 ];

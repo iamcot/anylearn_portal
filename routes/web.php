@@ -19,6 +19,11 @@ Route::get('/', 'PageController@home');
 Route::get('/ref/{code}', 'PageController@ref')->name('refpage');
 Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');
 
+Route::get('/search', 'PageController@search')->name('search');
+Route::get('/schools', 'PageController@schools')->name('schools');
+Route::get('/teachers', 'PageController@teachers')->name('teachers');
+Route::get('/{role}/{id}/classes', 'PageController@classes')->name('classes');
+
 //public page
 Route::get('/privacy', 'ConfigController@privacy');
 
@@ -29,6 +34,8 @@ Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::get('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
 Route::get('/checkout/payment-help', 'PageController@paymentHelp')->name('checkout.paymenthelp');
+
+Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Auth::routes();
 
@@ -42,6 +49,14 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
 
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/location-geo/{address}', 'ConfigController@locationGeo')->name('location-geo');
+    Route::get('/location', 'UserController@locationList')->name('location');
+    Route::any('/location/create', 'UserController@locationCreate')->name('location.create');
+    Route::any('/location/{id}', 'UserController@locationEdit')->name('location.edit');
+    Route::get('/item/userstatus/{itemId}', 'CourseController@userStatusTouch')->name('item.userstatus.touch');
 });
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {

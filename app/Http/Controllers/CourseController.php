@@ -104,6 +104,12 @@ class CourseController extends Controller
         return redirect()->back()->with('notify', $rs);
     }
 
+    public function userStatusTouch($itemId)
+    {
+        $rs = Item::find($itemId)->update(['user_status' => DB::raw('1 - user_status')]);
+        return redirect()->back()->with('notify', $rs);
+    }
+
     public function typeChange($itemId, $newType)
     {
         $userService = new UserServices();

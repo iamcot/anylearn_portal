@@ -230,7 +230,6 @@ return [
         'Image' => Intervention\Image\ImageServiceProvider::class,
         'FCM'      => LaravelFCM\Facades\FCM::class,
         'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
-
     ],
 
 ];

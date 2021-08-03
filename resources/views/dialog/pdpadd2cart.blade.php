@@ -15,7 +15,7 @@
                     <h3 class="font-weight-bold text-{{ env('MAIN_COLOR', 'primary') }}">{{ $class->title }}</h3>
                     <p>{{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
                     <p>Khai giảng: {{ date('d/m/Y', strtotime($class->date_start)) }} {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
-                    <p>Học phí: <strong>{{ number_format($data['item']->price, 0, ',', '.') }}</strong></p>
+                    <p>Học phí: <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
                     <p>[<a class="text-success" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ KHUYẾN MÃI</strong></a>]</p>
                     <div id="add2cartvoucher" style="display: none;">
                         <div class="row">

@@ -31,21 +31,29 @@
 
         @include('home.about')
 
+        @include('home.feedback')
+
         @include('home.school')
 
         @include('home.teacher')
 
         @include('home.course')
 
+        @include('home.benefit')
+
         @include('home.download')
-
-        @include('home.feedback')
-
-        @include('home.contact')
-
+        
         @include('layout.footer')
     </section>
+    @include('dialog.searchpopup')
+
     @include('layout.onepage_script')
+    <script src="/cdn/js/location-tree.js"></script>
+    <script>
+        $('#search-action').click(function() {
+            $('#homesearchModal').modal('show');
+        });
+    </script>
 
     @if(!empty($popup))
         @include('dialog.homepopup', ['popup' => $popup]) 

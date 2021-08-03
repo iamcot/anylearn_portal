@@ -10,11 +10,17 @@ use App\Models\Contract;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserDocument;
+use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\UserServices;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Vanthao03596\HCVN\Models\District;
+use Vanthao03596\HCVN\Models\Province;
+use Vanthao03596\HCVN\Models\Ward;
 
 class UserController extends Controller
 {
@@ -67,7 +73,8 @@ class UserController extends Controller
         return view('user.member_list', $this->data);
     }
 
-    public function meEdit(Request $request) {
+    public function meEdit(Request $request)
+    {
         $editUser = Auth::user();
         if ($request->input('save')) {
             $input = $request->all();
@@ -267,5 +274,86 @@ class UserController extends Controller
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::UPDATE_INFO_REMIND, $userId, []);
         return redirect()->back()->with('notify', 'Đã gửi thông báo');
+    }
+
+    public function locationList(Request $request)
+    {
+        $user = Auth::user();
+        $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
+        $this->data['navText'] = __('Quản lý địa điểm/chi nhánh');
+        return view('user.location_list', $this->data);
+    }
+
+    public function locationEdit(Request $request, $id)
+    {
+        $location = UserLocation::find($id);
+        if ($request->get('save') == "save") {
+            $input = $request->input();
+            $userService = new UserServices();
+            $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
+            if ($geoCode !== false) {
+                $input['longitude'] = $geoCode['longitude'];
+                $input['latitude'] = $geoCode['latitude'];
+            }
+            // $input['user_id'] = Auth::user()->id;
+            if (isset($input['is_head'])) {
+                UserLocation::where('user_id', $input['user_id'])->update(['is_head' => 0]);
+                $input['is_head'] =  1;
+            } else {
+                $input['is_head'] =  0;
+            }
+        
+            try {
+                $new = UserLocation::find($id)->update($input);
+            } catch (Exception $e) {
+                Log::error($e);
+                return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
+            }
+            
+            return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
+        }
+        $this->data['location'] = $location;
+        $this->data['provinces'] = Province::orderby('name')->get();
+        $this->data['districts'] = District::where('parent_code', $location->province_code)->orderBy('name')->get();
+        $this->data['wards'] = Ward::where('parent_code', $location->district_code)->orderBy('name')->get();
+        $this->data['navText'] = __('Chỉnh sửa địa điểm/chi nhánh');
+        $this->data['hasBack'] = true;
+        return view('user.location_form', $this->data);
+    }
+
+    public function locationCreate(Request $request)
+    {
+        if ($request->get('save') == "save") {
+            $input = $request->input();
+            $input['user_id'] = Auth::user()->id;
+           
+            $userService = new UserServices();
+            $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
+            if ($geoCode !== false) {
+                $input['longitude'] = $geoCode['longitude'];
+                $input['latitude'] = $geoCode['latitude'];
+            }
+           
+            if (isset($input['is_head'])) {
+                UserLocation::where('user_id', $input['user_id'])->update(['is_head' => 0]);
+                $input['is_head'] =  1;
+            } else {
+                $input['is_head'] =  0;
+            }
+        
+            try {
+                $new = UserLocation::create($input);
+            } catch (Exception $e) {
+                Log::error($e);
+                return redirect()->back()->with('notify',  "Tạo địa chỉ thất bại");
+            }
+            
+            return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
+        }
+        $this->data['provinces'] = Province::orderby('name')->get();
+        $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
+
+        $this->data['hasBack'] = true;
+        return view('user.location_form', $this->data);
     }
 }
