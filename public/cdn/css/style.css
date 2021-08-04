@@ -170,7 +170,8 @@
 
 .grid_title {
     line-height:1.5em;
-    min-height:3em;
+    min-height:4.5em;
+    text-overflow: ellipsis;
 }
 
 .imagebox {
