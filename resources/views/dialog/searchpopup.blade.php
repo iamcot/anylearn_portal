@@ -29,7 +29,7 @@
                     <div class="row mt-2">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <select class="form-control location-tree" data-next-level="district" name="p" required>
+                                <select class="form-control location-tree" data-next-level="district" name="p">
                                     <option value="">--Chọn Tỉnh/Thành Phố--</option>
                                     @foreach($provinces as $province)
                                     <option value="{{ $province->code }}" {{ !empty($location) && $province->code == $location->province_code ? "selected" : ""}}>{{ $province->name }}</option>
