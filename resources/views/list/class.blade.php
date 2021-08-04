@@ -28,7 +28,7 @@
 
                 <div class="description">
                     <div class="mb-2">@include('pdp.rating', ['score' => 5])</div>
-                    <h5 class="grid_title"><strong>{{ $class->title }}</strong></h5>
+                    <h5 class="grid_title">{{ $class->title }}</h5>
                     <div class="">
                         <a href="{{ $itemServ->classUrl($class->id) }}" class="btn btn-sm btn-primary form-control">XEM THÊM <i class="fa fa-chevron-right"></i></a>
                     </div>
