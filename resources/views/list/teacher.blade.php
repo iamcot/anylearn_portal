@@ -23,7 +23,7 @@
                
                <div class="description">
                     <div class="mb-2">@include('pdp.rating', ['score' => 5])</div>
-                    <h5><strong>{{ $school->name }}</strong></h5>
+                    <h5  class="grid_title"><strong>{{ $school->name }}</strong></h5>
                     <div class="">
                     <a href="{{ route('classes', ['role' => 'teacher', 'id' => $school->id ]) }}" class="btn btn-sm btn-primary form-control">CÁC KHOÁ HỌC <i class="fa fa-chevron-right"></i></a>
                     </div>
