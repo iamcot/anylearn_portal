@@ -18,7 +18,7 @@
             <p><i class="fa fa-calendar"></i> Khai giảng: {{ date('d/m/Y', strtotime($item->date_start)) }} {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
             <p><i class="fa fa-{{ $author->role == 'teacher' ? 'user' : 'university'}}"></i> {{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
             <h3 class="text-orange">{{ number_format($item->price, 0, ',', '.') }}</h3>
-            <div><a id="add2cart-action" class="btn btn-success form-control" href="{{ auth()->check() ? '#' : route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id))   }}">Đăng ký học</a></div>
+            <div><a @if(auth()->check()) id="add2cart-action"  @endif class="btn btn-success form-control" href="{{ auth()->check() ? '#' : route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id))   }}">Đăng ký học</a></div>
 
         </div>
     </div>

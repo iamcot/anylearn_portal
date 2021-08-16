@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <select class="form-control location-tree" id="select-district" name="d">
                                     @if(empty($wards))
-                                    <option>--Vui lòng chọn Quận/Huyện--</option>
+                                    <option value="">--Vui lòng chọn Quận/Huyện--</option>
                                     @else
                                     @foreach($wards as $ward)
                                     <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>

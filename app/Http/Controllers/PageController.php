@@ -79,12 +79,6 @@ class PageController extends Controller
         }
     }
 
-    public function paymentHelp()
-    {
-        $data['bank'] = config('bank');
-        return view('checkout.paymenthelp', $data);
-    }
-
     public function search(Request $request)
     {
         if ($request->get('a') == 'search') {

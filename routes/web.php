@@ -33,9 +33,12 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::get('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
-Route::get('/checkout/payment-help', 'PageController@paymentHelp')->name('checkout.paymenthelp');
 
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
+
+Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
+Route::get('/payment-return/{payment}', 'TransactionController@return')->name('checkout.return');
+Route::get('/payment-result', 'TransactionController@paymentResult')->name('checkout.result');
 
 Auth::routes();
 
@@ -43,7 +46,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::get('/', 'DashboardController@index')->name('me.dashboard');
     Route::get('/class', 'ClassController@list')->name('me.class');
     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
-    Route::post('/add2cart', 'TransactionController@add2cart')->name('me.add2cart');
+   
     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
@@ -57,6 +60,12 @@ Route::middleware(['auth'])->group(function () {
     Route::any('/location/create', 'UserController@locationCreate')->name('location.create');
     Route::any('/location/{id}', 'UserController@locationEdit')->name('location.edit');
     Route::get('/item/userstatus/{itemId}', 'CourseController@userStatusTouch')->name('item.userstatus.touch');
+
+    Route::post('/add2cart', 'TransactionController@add2cart')->name('add2cart');
+    Route::get('/cart', 'TransactionController@cart')->name('cart');
+    Route::post('/payment', 'TransactionController@payment')->name('payment');
+    Route::get('/payment-help', 'TransactionController@paymentHelp')->name('checkout.paymenthelp');
+    Route::get('/finish', 'TransactionController@finish')->name('checkout.finish');
 });
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {

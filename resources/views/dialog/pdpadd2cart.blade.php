@@ -1,4 +1,4 @@
-<form action="{{ route('me.add2cart') }}" method="post" id="pdpAdd2Cart">
+<form action="{{ route('add2cart') }}" method="post" id="pdpAdd2Cart">
     @csrf
     <input type="hidden" name="action" value="pdpAdd2Cart">
     <input type="hidden" name="class" value="{{ $class->id }}">
@@ -25,8 +25,16 @@
                             <div class="col-2"> <a href="javascript:offVoucher()">ĐÓNG</a></div>
                         </div>
                     </div>
+                    @if (@auth()->check())
+                        @if(Auth::user()->wallet_m < $item->price)
+                        <p class=" text-danger">Số dư tài khoản không đủ, bạn sẽ được dẫn đến trang thanh toán</p>
+                        @else 
+                        <p class=" text-danger">Số dư của bạn sau khi đăng ký là {{ number_format((Auth::user()->wallet_m - $item->price), 0 , ",", ".") }}</p>
+                        @endif
+                   @endif
                 </div>
                 <div class="modal-footer">
+                   
                     <button id="add2CartBtn" name="add2cart" value="add2cart" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}">@lang('ĐĂNG KÝ KHOÁ HỌC')</button>
                 </div>
             </div>

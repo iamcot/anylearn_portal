@@ -7,6 +7,7 @@ class ConfigConstants
     const FOUNDATION_TAG = 'foundation';
     
     const GUIDE_TOC = 'guide_toc';
+    const GUIDE_PAYMENT_TERM = 'guide_payment_term';
     const GUIDE_MEMBER  = 'guide_member';
     const GUIDE_TEACHER = 'guide_teacher';
     const GUIDE_SCHOOL = 'guide_school';
@@ -64,6 +65,7 @@ class ConfigConstants
         self::GUIDE_TOC_SCHOOL => 'Chính sách cho trung tâm',
         self::GUIDE_TOC_TEACHER => 'Chính sách cho giảng viên',
         self::GUIDE_PRIVACY => 'Chính sách bảo mật',
+        self::GUIDE_PAYMENT_TERM => 'Chính sách thanh toán',
         self::CONTRACT_TEACHER => 'Mẫu HĐ Giảng Viên',
         self::CONTRACT_SCHOOL => 'Mẫu HĐ Trường Học',
     ];
