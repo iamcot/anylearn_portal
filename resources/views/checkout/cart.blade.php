@@ -14,6 +14,7 @@
                     <th></th>
                     <th width="55%">Khoá học</th>
                     <th class="text-right">Học phí</th>
+                    <th></th>
                 </tr>
                 <tbody>
                 @foreach($detail as $item)
@@ -22,6 +23,9 @@
                     <td><img class="img-fluid" style="max-height: 80px" src="{{ $item->image }}"></td>
                     <td>{{ $item->title }} </td>
                     <td class="text-right">{{ number_format($item->paid_price, 0, ",", ".") }}</td>
+                    <td>
+                        <a href="{{ route('checkout.remove2cart', ['odId' => $item->id ]) }}" class="btn btn-sm btn-danger" title="Xoá khỏi giỏ hàng"><i class="fa fa-trash"></i></a>
+                    </td>
                 </tr>
                 @endforeach
                 </tbody>

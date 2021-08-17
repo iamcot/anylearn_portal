@@ -119,8 +119,8 @@ class TransactionService
                 }
 
                 $openOrder = Order::where('user_id', $user->id)
-                ->where('status', OrderConstants::STATUS_NEW)
-                ->first();
+                    ->where('status', OrderConstants::STATUS_NEW)
+                    ->first();
                 if ($openOrder) {
                     $status = OrderConstants::STATUS_NEW;
                     $transStatus = ConfigConstants::TRANSACTION_STATUS_PENDING;
@@ -131,7 +131,7 @@ class TransactionService
                 } else {
                     $status = $user->wallet_m >= $amount ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
                     $transStatus = $user->wallet_m >= $amount ? ConfigConstants::TRANSACTION_STATUS_DONE : ConfigConstants::TRANSACTION_STATUS_PENDING;
-    
+
                     $openOrder = Order::create([
                         'user_id' => $childUser > 0 ? $childUser : $user->id,
                         'amount' => $amount,
@@ -140,7 +140,7 @@ class TransactionService
                         'payment' => UserConstants::WALLET_M,
                     ]);
                 }
-               
+
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
                 ]);
@@ -304,6 +304,29 @@ class TransactionService
             return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? true : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
         return $result;
+    }
+
+    public function remove2Cart($od, $order, $user)
+    {
+        if ($od->status != OrderConstants::STATUS_NEW) {
+            return false;
+        }
+        DB::transaction(function () use ($od, $order, $user) {
+            Transaction::where('order_id', $od->id)->delete();
+            OrderDetail::find($od->id)->delete();
+            User::find($user->id)->update(
+                ['wallet_m' => DB::raw('wallet_m + ' . $od->paid_price),]
+            );
+            Order::find($order->id)->update([
+                'amount' => DB::raw('amount - ' . $od->paid_price),
+                'quantity' => DB::raw('quantity - 1'),
+            ]);
+            if ($order->quantity == 1) {
+                Transaction::where('order_id', $order->id)->delete();
+                Order::find($order->id)->delete();
+            }
+        });
+        return true;
     }
 
     public function approveRegistrationAfterDeposit($userId)

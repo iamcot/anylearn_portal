@@ -66,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/payment', 'TransactionController@payment')->name('payment');
     Route::get('/payment-help', 'TransactionController@paymentHelp')->name('checkout.paymenthelp');
     Route::get('/finish', 'TransactionController@finish')->name('checkout.finish');
+    Route::get('/remove2cart/{odId}', 'TransactionController@remove2cart')->name('checkout.remove2cart');
 });
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {

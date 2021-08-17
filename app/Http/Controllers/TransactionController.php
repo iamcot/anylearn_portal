@@ -114,6 +114,25 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Cập nhật thành công');
     }
 
+    public function remove2cart(Request $request, $orderDetailsId)
+    {
+        $user = Auth::user();
+        $orderDetail = OrderDetail::find($orderDetailsId);
+        if (!$orderDetail) {
+            return redirect()->back()->with('notify', 'Dữ liệu không đúng');
+        }
+        $order = Order::find($orderDetail->order_id);
+        if ($user->id != $order->user_id) {
+            return redirect()->back()->with('notify', 'Dữ liệu không đúng');
+        }
+        $transService = new TransactionService();
+        $result = $transService->remove2Cart($orderDetail, $order, $user);
+        if ($result) {
+            return redirect()->back()->with('notify', 'Cập nhật thành công');
+        } 
+        return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại.');
+    }
+
     public function cart()
     {
         $user = Auth::user();
@@ -123,7 +142,7 @@ class TransactionController extends Controller
         $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
             ->first();
         if (!$openOrder) {
-            return redirect()->back()->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
+            return redirect()->to("/")->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
         }
         $orderDetails = DB::table('order_details AS od')
             ->join('items', 'items.id', '=', 'od.item_id')
@@ -139,7 +158,7 @@ class TransactionController extends Controller
         if ($doc) {
             $data['term'] = $doc->value;
         }
-       
+
 
         return view('checkout.cart', $data);
     }
@@ -211,7 +230,7 @@ class TransactionController extends Controller
     {
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
-      
+
         if (!isset($result['status'])) {
             return redirect()->route('cart');
         }
