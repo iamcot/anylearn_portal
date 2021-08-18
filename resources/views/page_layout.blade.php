@@ -18,6 +18,15 @@
     <link href="/cdn/onepage/css/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     <link href="/cdn/css/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     @yield('morestyle')
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NKEYYJ92SP');
+    </script>
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50" id="body" class="only_portfolio_variation">
@@ -50,20 +59,6 @@
         $('.toast').toast('show')
     </script>
     @yield('jscript')
-    <script>
-        $('#add2cart-action').click(function() {
-            $('#pdpAdd2CartModal').modal('show');
-        });
-
-        function offVoucher() {
-            $("#add2cartvoucher").hide();
-            $("input[name=voucher]").val("");
-        }
-
-        function onVoucher() {
-            $("#add2cartvoucher").show();
-        }
-    </script>
 </body>
 
 </html>

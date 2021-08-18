@@ -3,6 +3,15 @@
 
 <head>
     @include('layout.onepage_header')
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NKEYYJ92SP');
+    </script>
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50" id="body" class="only_portfolio_variation">

@@ -1,7 +1,7 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('page_layout')
 @section('body')
-<form method="POST" action="{{ route('payment') }}">
+<form method="POST" action="{{ route('payment') }}" id="cartsubmit">
     @csrf
 <div class="card mb-5 border-left-primary shadow">
     <div class="card-header"><h5 class="modal-title m-0 font-weight-bold text-primary"><i class="fa fa-shopping-cart"></i> Đơn hàng của bạn</h5>
@@ -44,7 +44,7 @@
     <div class="card-header"><h5 class="modal-title m-0 font-weight-bold text-danger"><i class="fa fa-wallet"></i> Thanh toán</h5></div>
     <div class="card-body">
         <ul class="list-unstyled">
-            @foreach(config('payment') as $key => $payment) 
+            @foreach($payments as $key => $payment) 
             <li><input required type="radio" name="payment" value="{{ $key }}" id="radio_{{ $key }}"> <label for="radio_{{ $key }}"><strong>{{ $payment['title'] }}</strong></label></li>
             @endforeach
         </ul>
@@ -59,5 +59,24 @@
 @endsection
 @section('jscript')
 @parent
-
+<script>
+     $("#cartsubmit").on("submit", function(event) {
+        event.preventDefault();
+        gtag("event", "purchase", {
+            currency: "VND",
+            value: {{ $order->amount }},
+            item: [
+                @foreach($detail as $item)
+                {
+                    item_name: "{{ $item->title }}",
+                    price: {{ $item->paid_price }},
+                    quantity: 1,
+                    currency: "VND"
+                }
+                @endforeach
+            ]
+        });
+        $(this).unbind('submit').submit();
+    });
+</script>
 @endsection

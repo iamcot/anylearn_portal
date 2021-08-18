@@ -153,6 +153,14 @@ class TransactionController extends Controller
         $data['order'] = $openOrder;
         $data['detail'] = $orderDetails;
         $data['term'] = "Chính sách thanh toán.";
+        $paymentConfigs = config('payment');
+        $envPayments = explode(",", env('PAYMENT_METHOD'));
+        $data['payments'] = [];
+        foreach($envPayments as $k) {
+            if (!empty($paymentConfigs[$k])) {
+                $data['payments'][$k] = $paymentConfigs[$k];
+            }
+        }
         $configM = new Configuration();
         $doc = $configM->getDoc(ConfigConstants::GUIDE_PAYMENT_TERM);
         if ($doc) {
