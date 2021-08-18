@@ -120,6 +120,7 @@ class TransactionService
 
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
+                    ->orderBy('id', 'desc')
                     ->first();
                 if ($openOrder) {
                     $status = OrderConstants::STATUS_NEW;

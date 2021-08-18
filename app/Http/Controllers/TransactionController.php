@@ -129,7 +129,7 @@ class TransactionController extends Controller
         $result = $transService->remove2Cart($orderDetail, $order, $user);
         if ($result) {
             return redirect()->back()->with('notify', 'Cập nhật thành công');
-        } 
+        }
         return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại.');
     }
 
@@ -140,6 +140,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
         $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
+            ->orderBy('id', 'desc')
             ->first();
         if (!$openOrder) {
             return redirect()->to("/")->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
@@ -156,7 +157,7 @@ class TransactionController extends Controller
         $paymentConfigs = config('payment');
         $envPayments = explode(",", env('PAYMENT_METHOD'));
         $data['payments'] = [];
-        foreach($envPayments as $k) {
+        foreach ($envPayments as $k) {
             if (!empty($paymentConfigs[$k])) {
                 $data['payments'][$k] = $paymentConfigs[$k];
             }
@@ -256,6 +257,7 @@ class TransactionController extends Controller
     {
         $data['bank'] = config('bank');
         $openOrder = $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
+            ->orderBy('id', 'desc')
             ->first();
         $data['orderAmount'] = $openOrder->amount;
         return view('checkout.paymenthelp', $data);
