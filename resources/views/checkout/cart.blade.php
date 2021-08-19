@@ -63,15 +63,17 @@
      $("#cartsubmit").on("submit", function(event) {
         event.preventDefault();
         gtag("event", "purchase", {
-            currency: "VND",
-            value: {{ $order->amount }},
-            item: [
+            "transaction_id": "{{ $order->id }}",
+            "currency": "VND",
+            "value": {{ $order->amount }},
+            "items": [
                 @foreach($detail as $item)
                 {
-                    item_name: "{{ $item->title }}",
-                    price: {{ $item->paid_price }},
-                    quantity: 1,
-                    currency: "VND"
+                    "id": "{{ $item->item_id }}",
+                    "name": "{{ $item->title }}",
+                    "price": {{ $item->paid_price }},
+                    "quantity": 1,
+                    "currency": "VND"
                 }
                 @endforeach
             ]

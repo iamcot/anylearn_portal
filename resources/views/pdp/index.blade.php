@@ -51,14 +51,13 @@
     $("#pdpAdd2Cart").on("submit", function(event) {
         event.preventDefault();
         gtag("event", "add_to_cart", {
-            currency: "VND",
-            value: {{ $item->price }},
-            item: [
+            "items": [
                 {
-                    item_name: "{{ $item->title }}",
-                    price: {{ $item->price }},
-                    quantity: 1,
-                    currency: "VND"
+                    "id": "{{ $item->id }}",
+                    "name": "{{ $item->title }}",
+                    "price": {{ $item->price }},
+                    "quantity": 1,
+                    "currency": "VND"
                 }
             ]
         });
