@@ -140,6 +140,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
         $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
+            ->where('user_id', $user->id)
             ->orderBy('id', 'desc')
             ->first();
         if (!$openOrder) {
@@ -174,6 +175,7 @@ class TransactionController extends Controller
 
     public function payment(Request $request)
     {
+        $user = Auth::user();
         if ($request->get('payment') == 'atm') {
             return redirect()->route('checkout.paymenthelp');
         }
@@ -184,6 +186,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Phương thức thanh toán không hợp lệ');
         }
         $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
+            ->where('user_id', $user->id)
             ->first();
         if (!$openOrder) {
             return redirect()->back()->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
