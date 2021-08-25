@@ -100,24 +100,33 @@ class PageController extends Controller
             ->where('users.role', UserConstants::ROLE_SCHOOL)
             ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->where('users.is_test', 0)
-            ->where('users.is_child', 0);
-
+            ->where('users.is_child', 0)
+            ->groupBy('users.name', 'users.image', 'users.id')
+            ->select('users.name', 'users.image', 'users.id')
+            ->orderBy('users.is_hot', 'desc');
+        $listSearch = clone($list);
+        $data['hasSearch'] = false;
         if ($request->get('a') == 'search') {
+            $data['hasSearch'] = true;
             $province = $request->get('p');
             $district = $request->get('d');
             if ($province) {
-                $list = $list->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
+                $listSearch = $listSearch->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
                     ->where('ul.province_code', $province);
                 if ($district) {
-                    $list = $list->where('ul.district_code', $district);
+                    $listSearch = $listSearch->where('ul.district_code', $district);
                 }
             }
         }
+        $listSearch = $listSearch->paginate();
 
-        $list = $list->groupBy('users.name', 'users.image', 'users.id')
-            ->select('users.name', 'users.image', 'users.id')
-            ->orderBy('users.is_hot', 'desc')
-            ->paginate();
+        if ($listSearch->total() == 0) {
+            $data['searchNotFound'] = true;
+            $list = $list->paginate();
+        } else {
+            $list = $listSearch;
+            $data['searchNotFound'] = false;
+        }
 
         $data['provinces'] = Province::orderby('name')->get();
 

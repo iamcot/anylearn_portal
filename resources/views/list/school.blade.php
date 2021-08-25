@@ -33,6 +33,10 @@
     </div>
     <div class="col-md-9">
         @include('layout.breadcrumb', ['breadcrumb' => $breadcrumb])
+        @if($hasSearch && $searchNotFound)
+        <p>Không tìm thấy trung tâm bạn đang tìm kiếm, hãy tìm thử các trung tâm dưới đây nhé.</p>
+        <hr>
+        @endif
         @if(count($list) <= 0) 
         @else 
         <ul class="row list-unstyled grid">
