@@ -148,8 +148,9 @@ class TransactionController extends Controller
         }
         $orderDetails = DB::table('order_details AS od')
             ->join('items', 'items.id', '=', 'od.item_id')
+            ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
             ->where('od.order_id', $openOrder->id)
-            ->select('od.*', 'items.title', 'items.image')
+            ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
             ->get();
 
         $data['order'] = $openOrder;
@@ -229,8 +230,9 @@ class TransactionController extends Controller
         }
         $orderDetails = DB::table('order_details AS od')
             ->join('items', 'items.id', '=', 'od.item_id')
+            ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
             ->where('od.order_id', $order->id)
-            ->select('od.*', 'items.title', 'items.image')
+            ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
             ->get();
 
         $data['order'] = $order;
@@ -263,6 +265,7 @@ class TransactionController extends Controller
             ->orderBy('id', 'desc')
             ->first();
         $data['orderAmount'] = $openOrder->amount;
+        $data['orderId'] = $openOrder->id;
         return view('checkout.paymenthelp', $data);
     }
 

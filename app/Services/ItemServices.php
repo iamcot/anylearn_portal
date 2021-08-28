@@ -57,6 +57,7 @@ class ItemServices
         $item->num_favorite = $itemUserActionM->numFav($itemId);
         $item->num_cart = $itemUserActionM->numReg($itemId);
         $item->rating = $itemUserActionM->rating($itemId);
+        $item->openings = Item::where('item_id', $item->id)->get();
         return [
             'commission' => $commission,
             'author' => $author,

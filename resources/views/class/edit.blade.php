@@ -81,7 +81,7 @@
         var configDays = $("#schedule_auto input:checkbox:checked").map(function() {
             return $(this).attr('name');
         }).get();
-        var startDate = $("#date_start").val();
+        var startDate = $("#opening_date").val().length > 0 ? $("#opening_date").val() : $("#date_start").val();
         var configStartTime = $("#time_start").val();
         var configEndTime = $("#time_end").val();
         var dt = new Date(startDate);

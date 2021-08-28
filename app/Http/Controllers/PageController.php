@@ -182,8 +182,10 @@ class PageController extends Controller
             return redirect()->back()->with('notify', 'Yêu cầu không hợp lệ');
         }
         $data['classes'] = Item::where('user_id', $id)
+            ->where('type', ItemConstants::TYPE_CLASS)
             ->where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)
+            ->whereNull('item_id')
             ->orderBy('is_hot', 'desc')
             ->paginate();
 

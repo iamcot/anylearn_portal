@@ -16,6 +16,16 @@
                     <p>{{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
                     <p>Khai giảng: {{ date('d/m/Y', strtotime($class->date_start)) }} {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
                     <p>Học phí: <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
+                    @if(count($item->openings) > 0)
+                    <p class="text-danger">Chọn lịch khai giảng</p>
+                    <ul class="list-unstyled">
+                        @foreach($item->openings as $opening)
+                            <li>
+                                <label for="class_{{ $opening->id }}"> <input required id="class_{{ $opening->id }}" type="radio" name="class" value="{{ $opening->id }}"> {{ $opening->title }}</label>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @endif
                     <p>[<a class="text-success" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ KHUYẾN MÃI</strong></a>]</p>
                     <div id="add2cartvoucher" style="display: none;">
                         <div class="row">
@@ -26,9 +36,7 @@
                         </div>
                     </div>
                     @if (@auth()->check())
-                        @if(Auth::user()->wallet_m < $item->price)
-                        <p class=" text-danger">Số dư tài khoản không đủ, bạn sẽ được dẫn đến trang thanh toán</p>
-                        @else 
+                        @if(Auth::user()->wallet_m >= $item->price)
                         <p class=" text-danger">Số dư của bạn sau khi đăng ký là {{ number_format((Auth::user()->wallet_m - $item->price), 0 , ",", ".") }}</p>
                         @endif
                    @endif

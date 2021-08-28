@@ -289,6 +289,7 @@ class UserController extends Controller
         $location = UserLocation::find($id);
         if ($request->get('save') == "save") {
             $input = $request->input();
+            $input['user_id'] = Auth::user()->id;
             $userService = new UserServices();
             $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
             if ($geoCode !== false) {

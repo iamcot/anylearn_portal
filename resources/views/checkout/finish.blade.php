@@ -20,7 +20,14 @@
                 <tr>
                     <td>{{ $loop->index + 1 }}</td>
                     <td><img class="img-fluid" style="max-height: 80px" src="{{ $item->image }}"></td>
-                    <td>{{ $item->title }} </td>
+                    <td>
+                        @if($item->class_name)
+                        {{ $item->class_name }} 
+                        <span class="small text-danger">({{ $item->title }} )</span>
+                        @else
+                        {{ $item->title }} 
+                        @endif
+                    </td>
                     <td class="text-right">{{ number_format($item->paid_price, 0, ",", ".") }}</td>
                 </tr>
                 @endforeach

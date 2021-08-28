@@ -49,6 +49,7 @@
                 </div>
             </div>
             <div class="col-md-4 mt-1">
+                @if(request()->get('a') == 'create-opening' || !empty($opening))
                 <div class="card shadow {{ request()->get('a') == 'create-opening' ? 'border border-danger' : '' }}">
                     <div class="card-header font-weight-bold">{{ !empty($opening) ? 'Cập nhật' : 'Tạo mới'  }}
                         <button class="btn btn-sm btn-primary float-right" name="tab" value="opening"><i class="fas fa-save"></i> @lang('Lưu khai giảng')</button>
@@ -85,6 +86,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>

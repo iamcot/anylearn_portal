@@ -106,7 +106,7 @@ class ClassController extends Controller
         ->select('items.title', 'items.id', 'user_locations.title AS location', 'items.user_status', 'items.date_start')
         ->get();
 
-        if ($request->get('tab')) {
+        if ( !$request->session()->get('tab') && $request->get('tab')) {
             $request->session()->flash('tab', $request->get('tab'));
         } 
         if ($request->get('op')) {

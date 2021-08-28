@@ -16,7 +16,7 @@
             <dt class="col-sm-3">Người thụ hưởng</dt>
             <dd class="col-sm-9">{{ $bank['account_name'] }}</dd>
             <dt class="col-sm-3">Nội dung tin chuyển tiền</dt>
-            <dd class="col-sm-9">{{ $bank['content'] }}</dd>
+            <dd class="col-sm-9">{{ $bank['content'] }} #{{ $orderId }}</dd>
             <dt class="col-sm-3">Số tiền</dt>
             <dd class="col-sm-9">{{ number_format($orderAmount, 0, ",", ".") }}</dd>
         </dl>
