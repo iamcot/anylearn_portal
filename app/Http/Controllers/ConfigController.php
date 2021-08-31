@@ -68,22 +68,60 @@ class ConfigController extends Controller
 
     public function banner(Request $request)
     {
-        $fileService = new FileServices();
-        $file = $fileService->doUploadImage($request, 'file', FileConstants::DISK_S3, false, FileConstants::FOLDER_BANNERS);
-        if ($file !== false) {
-            return redirect()->back()->with('notify', true);
+        $key = ConfigConstants::CONFIG_APP_BANNERS;
+        if ($request->hasFile('file')) {
+            $fileService = new FileServices();
+            $file = $fileService->doUploadImage($request, 'file', FileConstants::DISK_S3, false, FileConstants::FOLDER_BANNERS);
+            if ($file !== false) {
+                $banners = [];
+                $dbBanners = Configuration::where('key', $key)->first();
+                if ($dbBanners) {
+                    $banners = json_decode($dbBanners->value, true);
+                }
+                $banners[$file['file']] = $file['url'];
+                Configuration::where('key', $key)->delete();
+                Configuration::create([
+                    'key' => $key,
+                    'type' => ConfigConstants::TYPE_CONFIG,
+                    'value' => json_encode($banners),
+                ]);
+                return redirect()->back()->with('notify', true);
+            }
         }
-        $banners = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
-        $this->data['files'] = $fileService->removeSystemFiles($banners);
+        $dbBanners = Configuration::where('key', $key)->first();
+        if ($dbBanners) {
+            $banners = json_decode($dbBanners->value, true);
+        } else {
+            $banners = [];
+        }
+
+        $this->data['files'] = $banners;
         $this->data['navText'] = __('Quản lý banner');
         return view('config.banner', $this->data);
     }
 
     public function delBanner($file)
     {
+        $key = ConfigConstants::CONFIG_APP_BANNERS;
         $fileService = new FileServices();
-        $files = [$fileService->decodeFileName($file)];
+        $files = ['banners/'. $fileService->decodeFileName($file)];
         $fileService->deleteFiles($files, FileConstants::DISK_S3);
+        $dbBanners = Configuration::where('key', $key)->first();
+        if ($dbBanners) {
+            $banners = json_decode($dbBanners->value, true);
+            $newBanners = [];
+            foreach($banners as $dbfile => $url) {
+                if ($dbfile != $file) {
+                    $newBanners[$file] = $url;
+                }
+            }
+            Configuration::where('key', $key)->delete();
+            Configuration::create([
+                'key' => $key,
+                'type' => ConfigConstants::TYPE_CONFIG,
+                'value' => json_encode($newBanners),
+            ]);
+        }
         return redirect()->back()->with('notify', true);
     }
 
@@ -313,6 +351,51 @@ class ConfigController extends Controller
         return view('config.homepopup', $this->data);
     }
 
+
+    public function homeClasses(Request $request)
+    {
+        if ($request->get('save')) {
+            $key = ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES;
+            $lastConfig = Configuration::where('key', $key)->first();
+
+            if (!empty($lastConfig)) {
+                $data = json_decode($lastConfig->value, true);
+                Configuration::where('key', $key)->delete();
+            }
+
+            $configs = $request->all();
+
+            $values = [];
+            foreach ($configs['block'] as $index => $config) {
+                if (empty($config['title'])) {
+                    $values[$index] = [];
+                } else {
+                    $values[$index] = $config;
+                }
+            }
+            Configuration::create([
+                'key' => $key,
+                'type' => ConfigConstants::TYPE_CONFIG,
+                'value' => json_encode($values),
+            ]);
+            return redirect()->back()->with('notify', 'Cập nhật thành công');
+        }
+        $config = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        $this->data['configs'] = [
+            [], [], [], //3
+        ];
+        if ($config) {
+            $values = json_decode($config->value, true);
+            for ($i = 0; $i < count($this->data['configs']); $i++) {
+                $this->data['configs'][$i] = $values[$i];
+            }
+        }
+
+        $this->data['navText'] = __('Quản lý Các Khoá học Đặc biệt trên HOME APP');
+        return view('config.homeclasses', $this->data);
+    }
+
+
     public function locationTree($level, $parentCode)
     {
         if (!in_array($level, ['ward', 'district', 'ward_path'])) {
@@ -331,8 +414,9 @@ class ConfigController extends Controller
         }
     }
 
-    public function locationGeo($address) {
-       
+    public function locationGeo($address)
+    {
+
         // return response()->json($data);
     }
 }

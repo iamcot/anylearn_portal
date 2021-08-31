@@ -24,24 +24,31 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use League\OAuth1\Client\Server\Trello;
 
 class ConfigApi extends Controller
 {
     public function home($role = 'guest')
     {
         $fileService = new FileServices();
-        $bannersDriver = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
+
         $banners = [];
-        if ($bannersDriver != null) {
-            foreach ($bannersDriver as $file) {
-                $banners[] = $fileService->urlFromPath(FileConstants::DISK_S3, $file);
+        $dbBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
+        if ($dbBanners) {
+            $banners = array_values(json_decode($dbBanners->value, true));
+        } else {
+            $bannersDriver = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
+            if ($bannersDriver != null) {
+                foreach ($bannersDriver as $file) {
+                    $banners[] = $fileService->urlFromPath(FileConstants::DISK_S3, $file);
+                }
             }
         }
 
         $userService = new UserServices();
         $hotSchools = $userService->hotUsers(UserConstants::ROLE_SCHOOL);
         $hotTeachers = $userService->hotUsers(UserConstants::ROLE_TEACHER);
-        $hotUserInCate = $userService->hotUsers(UserConstants::ROLE_TEACHER, 1);
+        // $hotUserInCate = $userService->hotUsers(UserConstants::ROLE_TEACHER, 1);
 
         $itemService = new ItemServices();
         $monthItems = $itemService->monthItems();
@@ -55,6 +62,24 @@ class ConfigApi extends Controller
             }
         }
 
+        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        $homeClasses = [];
+        if ($homeClassesDb) {
+            foreach (json_decode($homeClassesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->where('status', 1)
+                    ->where('user_status', 1)
+                    ->get();
+                $homeClasses[] = [
+                    'title' => $block['title'],
+                    'classes' => $items
+                ];
+            }
+        }
+
         return response()->json([
             'banners' => $banners,
             'hot_items' => [
@@ -63,8 +88,16 @@ class ConfigApi extends Controller
                 // $hotUserInCate,
             ],
             'month_courses' => $monthItems,
-            'articles' => Article::where('status', 1)->orderby('id', 'desc')->take(5)->get()->makeHidden(['content']),
+            'articles' => Article::where('status', 1)
+                ->where('type', Article::TYPE_READ)
+                ->orderby('id', 'desc')
+                ->take(5)->get()->makeHidden(['content']),
+            'videos' => Article::where('status', 1)
+                ->where('type', Article::TYPE_VIDEO)
+                ->orderby('id', 'desc')
+                ->take(5)->get()->makeHidden(['content']),
             'configs' => $homeConfig,
+            'home_classes' => $homeClasses
         ]);
     }
 
@@ -227,7 +260,7 @@ class ConfigApi extends Controller
 
             if (strpos($query, "@") !== false) {
                 $tag = substr($query, 1);
-                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)",[urldecode($tag)]);
+                $querydb = $querydb->whereRaw("items.id in (SELECT item_id from tags where tag = ?)", [urldecode($tag)]);
             } else {
                 $querydb = $querydb->where('items.title', 'like', "%$query%");
             }

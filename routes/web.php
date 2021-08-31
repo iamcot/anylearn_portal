@@ -76,6 +76,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/config/banner/del/{img}', 'ConfigController@delBanner')->name('config.banner.del');
     Route::get('/config/guide/{type}', 'ConfigController@guide')->name('config.guide');
     Route::any('/config/homepopup', 'ConfigController@homePopup')->name('config.homepopup');
+    Route::any('/config/homeclasses', 'ConfigController@homeClasses')->name('config.homeclasses');
     Route::post('/config/guide/{type}', 'ConfigController@guideUpdate');
     Route::post('/upload/ckimage', 'FileController@ckEditorImage')->name('upload.ckimage');
     

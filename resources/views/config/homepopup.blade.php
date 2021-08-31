@@ -5,7 +5,7 @@
     @csrf
     <div class="card shadow">
         <div class="card-header">
-        Popup trên APP
+            Popup trên APP
         </div>
         <div class="card-body">
             <div class="row">
@@ -49,9 +49,10 @@
                     </ul>
                 </div>
             </div>
-            <div class="card-footer">
-                <button name="save" value="save_app" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu cho APP')</button>
-            </div>
+
+        </div>
+        <div class="card-footer">
+            <button name="save" value="save_app" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu cho APP')</button>
         </div>
     </div>
 </form>
@@ -60,7 +61,7 @@
     @csrf
     <div class="card shadow">
         <div class="card-header">
-        Popup trên WEB
+            Popup trên WEB
         </div>
         <div class="card-body">
             <div class="row">
@@ -83,7 +84,7 @@
                             <input id="value" type="text" class="form-control @error('route') is-invalid @enderror" name="route" value="{{ old('route', !empty($webconfig) ? $webconfig['route'] : '') }}">
                         </div>
                     </div>
-                  
+
                     <div class="form-group row">
                         <label for="status" class="col-md-2 col-form-label text-md-right">{{ __('Kích hoạt') }}</label>
                         <div class="col-md-6">
@@ -94,9 +95,10 @@
                 <div class="col-md-4">
                 </div>
             </div>
-            <div class="card-footer">
-                <button name="save" value="save_web" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu cho WEB')</button>
-            </div>
+
+        </div>
+        <div class="card-footer">
+            <button name="save" value="save_web" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu cho WEB')</button>
         </div>
     </div>
 </form>

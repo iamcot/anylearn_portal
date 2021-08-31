@@ -38,6 +38,8 @@ class ConfigConstants
 
     const CONFIG_HOME_POPUP = 'home_popup';
     const CONFIG_HOME_POPUP_WEB = 'home_popup_web';
+    const CONFIG_HOME_SPECIALS_CLASSES = 'home_special_classes';
+    const CONFIG_APP_BANNERS = 'home_app_banners';
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';

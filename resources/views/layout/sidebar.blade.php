@@ -111,6 +111,11 @@
             <i class="fas fa-fw fa-fire"></i>
             <span>@lang('Thông báo trang chủ')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'config.homeclasses' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('config.homeclasses') }}">
+            <i class="fas fa-fw fa-fire"></i>
+            <span>@lang('Khoá học tiểu biểu')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'config.site' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('config.site') }}">
             <i class="fas fa-fw fa-cogs"></i>
