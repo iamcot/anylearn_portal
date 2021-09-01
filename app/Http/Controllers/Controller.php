@@ -35,4 +35,14 @@ class Controller extends BaseController
         }
         return $user;
     }
+
+    protected function detectUserAgent(Request $request)
+    {
+        $userAgent = $request->header('User-Agent');
+        if ($userAgent == "anylearn-app") {
+            $this->data['isApp'] = true;
+        } else {
+            $this->data['isApp'] = false;
+        }
+    }
 }

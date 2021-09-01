@@ -60,8 +60,10 @@ Route::middleware(['auth'])->group(function () {
     Route::any('/location/create', 'UserController@locationCreate')->name('location.create');
     Route::any('/location/{id}', 'UserController@locationEdit')->name('location.edit');
     Route::get('/item/userstatus/{itemId}', 'CourseController@userStatusTouch')->name('item.userstatus.touch');
+});
 
-    Route::post('/add2cart', 'TransactionController@add2cart')->name('add2cart');
+Route::middleware(['webappauth'])->group(function () {
+    Route::any('/add2cart', 'TransactionController@add2cart')->name('add2cart');
     Route::get('/cart', 'TransactionController@cart')->name('cart');
     Route::post('/payment', 'TransactionController@payment')->name('payment');
     Route::get('/payment-help', 'TransactionController@paymentHelp')->name('checkout.paymenthelp');

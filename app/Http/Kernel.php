@@ -6,6 +6,7 @@ use App\Http\Middleware\AccessItem;
 use App\Http\Middleware\AccessMod;
 use App\Http\Middleware\AccessResource;
 use App\Http\Middleware\ApiUser;
+use App\Http\Middleware\WebAppAuth;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,6 +69,7 @@ class Kernel extends HttpKernel
         'access.resource' => AccessResource::class,
         'access.mod' => AccessMod::class,
         'api.user' => ApiUser::class,
+        'webappauth' => WebAppAuth::class,
     ];
 
     /**

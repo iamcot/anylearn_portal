@@ -30,15 +30,19 @@
 </head>
 
 <body data-spy="scroll" data-target=".navbar" data-offset="50" id="body" class="only_portfolio_variation">
+    @if(empty($isApp) || !$isApp)
     @include('layout.fixed_menu')
+    @endif
     <!-- Parent Section -->
     <section class="page_content_parent_section">
         <!-- Header Section -->
+        @if(empty($isApp) || !$isApp)
         <header>
             <!-- Navbar Section -->
             @include('../layout.page_nav')
             <!-- /Navbar Section -->
         </header>
+        @endif
         <!-- /Header Section -->
         <section>
             @include('notify', ['notify' => session('notify', '')])
@@ -46,7 +50,9 @@
                 @yield('body')
             </div>
         </section>
+        @if(empty($isApp) || !$isApp)
         @include('layout.footer')
+        @endif
     </section>
 
     <script src="/cdn/vendor/jquery/jquery.min.js"></script>

@@ -42,7 +42,15 @@ class TransactionController extends Controller
 
     public function add2cart(Request $request)
     {
-        $user = Auth::user();
+        if ($request->get('_user')) {
+            $user = $request->get('_user');
+            $this->data['api_token'] = $user->api_token;
+        } else {
+            $user = Auth::user();
+            $this->data['api_token'] = null;
+        }
+        $this->detectUserAgent($request);
+
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
@@ -51,9 +59,16 @@ class TransactionController extends Controller
         if ($result === true) {
             return redirect()->back()->with('notify', "Bạn đã đăng ký khoá học thành công!");
         } else if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            if ($this->data['api_token']) {
+                return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
+            }
             return redirect()->route('cart')->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
         } else {
-            return redirect()->back()->with('notify', $result);
+            if ($this->data['api_token']) {
+                return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', $result);
+            } else {
+                return redirect()->back()->with('notify', $result);
+            }
         }
     }
 
@@ -116,7 +131,8 @@ class TransactionController extends Controller
 
     public function remove2cart(Request $request, $orderDetailsId)
     {
-        $user = Auth::user();
+        $user = $request->get('_user') ?? Auth::user();
+
         $orderDetail = OrderDetail::find($orderDetailsId);
         if (!$orderDetail) {
             return redirect()->back()->with('notify', 'Dữ liệu không đúng');
@@ -133,9 +149,18 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại.');
     }
 
-    public function cart()
+    public function cart(Request $request)
     {
-        $user = Auth::user();
+        if ($request->get('_user')) {
+            $user = $request->get('_user');
+            $this->data['api_token'] = $user->api_token;
+        } else {
+            $user = Auth::user();
+            $this->data['api_token'] = null;
+        }
+
+        $this->detectUserAgent($request);
+
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
@@ -143,42 +168,49 @@ class TransactionController extends Controller
             ->where('user_id', $user->id)
             ->orderBy('id', 'desc')
             ->first();
-        if (!$openOrder) {
-            return redirect()->to("/")->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
+        if ($openOrder) {
+            $orderDetails = DB::table('order_details AS od')
+                ->join('items', 'items.id', '=', 'od.item_id')
+                ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
+                ->where('od.order_id', $openOrder->id)
+                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
+                ->get();
+            $this->data['order'] = $openOrder;
+            $this->data['detail'] = $orderDetails;
+        } else {
+            $this->data['order'] = null;
+            $this->data['detail'] = null;
         }
-        $orderDetails = DB::table('order_details AS od')
-            ->join('items', 'items.id', '=', 'od.item_id')
-            ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
-            ->where('od.order_id', $openOrder->id)
-            ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
-            ->get();
 
-        $data['order'] = $openOrder;
-        $data['detail'] = $orderDetails;
-        $data['term'] = "Chính sách thanh toán.";
+        $this->data['term'] = "Chính sách thanh toán.";
         $paymentConfigs = config('payment');
         $envPayments = explode(",", env('PAYMENT_METHOD'));
-        $data['payments'] = [];
+        $this->data['payments'] = [];
         foreach ($envPayments as $k) {
             if (!empty($paymentConfigs[$k])) {
-                $data['payments'][$k] = $paymentConfigs[$k];
+                $this->data['payments'][$k] = $paymentConfigs[$k];
             }
         }
         $configM = new Configuration();
         $doc = $configM->getDoc(ConfigConstants::GUIDE_PAYMENT_TERM);
         if ($doc) {
-            $data['term'] = $doc->value;
+            $this->data['term'] = $doc->value;
         }
-
-
-        return view('checkout.cart', $data);
+        return view('checkout.cart', $this->data);
     }
 
     public function payment(Request $request)
     {
-        $user = Auth::user();
+        if ($request->get('_user')) {
+            $user = $request->get('_user');
+            $this->data['api_token'] = $user->api_token;
+        } else {
+            $user = Auth::user();
+            $this->data['api_token'] = null;
+        }
+
         if ($request->get('payment') == 'atm') {
-            return redirect()->route('checkout.paymenthelp');
+            return redirect()->route('checkout.paymenthelp', ['order_id' => $request->input('order_id')]);
         }
         $payment = $request->get('payment');
         $processor = Processor::getProcessor($payment);
@@ -214,19 +246,28 @@ class TransactionController extends Controller
             return redirect()->to($response->data);
         } else {
             Log::error('Make payment error,', ['data' => $response]);
-            return redirect()->route('payment')->with('notify', 'Có lỗi khi thanh toán, vui lòng thử lại');
+            return redirect()->back()->with('notify', 'Có lỗi khi thanh toán, vui lòng thử lại');
         }
     }
 
     public function finish(Request $request)
     {
-        $orderId = session('orderId');
+        $this->detectUserAgent($request);
+
+        $orderId = $request->get('order_id');
         if (!$orderId) {
             return redirect('/')->with('notify', 'Yêu cầu không hợp lệ');
         }
         $order = Order::find($orderId);
         if (!$order) {
             return redirect('/')->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
+        }
+
+        if (!$this->data['isApp']) {
+            $user = Auth::user();
+            if ($order->user_id != $user->id) {
+                return redirect("/");
+            }
         }
         $orderDetails = DB::table('order_details AS od')
             ->join('items', 'items.id', '=', 'od.item_id')
@@ -235,9 +276,9 @@ class TransactionController extends Controller
             ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
             ->get();
 
-        $data['order'] = $order;
-        $data['detail'] = $orderDetails;
-        return view('checkout.finish', $data);
+        $this->data['order'] = $order;
+        $this->data['detail'] = $orderDetails;
+        return view('checkout.finish', $this->data);
     }
 
     public function paymentResult(Request $request)
@@ -245,28 +286,43 @@ class TransactionController extends Controller
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
+        $orderId = $result['orderId'];
+        $order = Order::find($orderId);
+        $user = User::find($order->user_id);
+
         if (!isset($result['status'])) {
-            return redirect()->route('cart');
+            return redirect()->route('cart', ['api_token' => $user->api_token]);
         }
         if ($result['status'] == 1) {
             $orderId = $result['orderId'];
             $transService = new TransactionService();
             $transService->approveRegistrationAfterWebPayment($orderId);
-            session(['orderId' => $orderId]);
-            return redirect()->route('checkout.finish');
+            return redirect()->route('checkout.finish', ['order_id' => $orderId]);
         }
+
+        $this->detectUserAgent($request);
+        if ($this->data['isApp']) {
+            return redirect()->route('cart', ['api_token' => $user->api_token])->with('notify', isset($result['message']) ? $result['message'] : 'Có lỗi xảy ra. vui lòng thử lại!');
+        } 
         return redirect()->route('cart')->with('notify', isset($result['message']) ? $result['message'] : 'Có lỗi xảy ra. vui lòng thử lại!');
     }
 
-    public function paymentHelp()
+    public function paymentHelp(Request $request)
     {
-        $data['bank'] = config('bank');
-        $openOrder = $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
-            ->orderBy('id', 'desc')
-            ->first();
-        $data['orderAmount'] = $openOrder->amount;
-        $data['orderId'] = $openOrder->id;
-        return view('checkout.paymenthelp', $data);
+        $this->detectUserAgent($request);
+        $orderId = $request->get('order_id');
+        $order = Order::find($orderId);
+        if (!$this->data['isApp']) {
+            $user = Auth::user();
+            if ($order->user_id != $user->id) {
+                return redirect("/");
+            }
+        }
+
+        $this->data['bank'] = config('bank');
+        $this->data['orderAmount'] = $order->amount;
+        $this->data['orderId'] = $order->id;
+        return view('checkout.paymenthelp', $this->data);
     }
 
     public function notify(Request $request, $payment)
