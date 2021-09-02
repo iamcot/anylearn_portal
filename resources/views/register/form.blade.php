@@ -97,7 +97,7 @@
 
         @else
         <div class="row p1" style="margin-top:100px;">
-        <h5 class="text-light text-center">Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</h5>
+            <h5 class="text-light text-center">Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</h5>
             <div class="col-md-6" style="padding: 30px;">
                 <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
                     <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
@@ -108,6 +108,12 @@
                     <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
                 </a>
             </div>
+            <p>
+            <form action="{{ route('logout') }}" method="POST" class="text-center">
+                {{ csrf_field() }}
+                <a href="/"><i class="fa fa-home"></i> Về trang chủ</a> <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit">@lang('Đăng xuất')</button>
+            </form>
+            </p>
         </div>
         @endif
     </div>
