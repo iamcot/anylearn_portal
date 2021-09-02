@@ -59,7 +59,15 @@ class RegisterController extends Controller
         $data['newUser'] = $user;
         $data['isReg'] = true;
 
-        return view('ref', $data);
+        $data['role'] = $request->get('r');
+        if ($data['role'] == 'member') {
+            return view('register.member', $data);
+        } else if ($data['role'] == 'school') {
+            return view('register.school', $data);
+        } else if ($data['role'] == 'teacher') {
+            return view('register.teacher', $data);
+        }
+        return view('register.index', $data);
     }
 
     /**

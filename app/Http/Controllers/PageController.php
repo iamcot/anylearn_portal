@@ -34,6 +34,31 @@ class PageController extends Controller
 
     public function ref(Request $request, $code = "")
     {
+        if (empty($code)) {
+            return redirect('/');
+        }
+        $refUser = User::where('refcode', $code)->first();
+        if (!$refUser) {
+            return redirect('/');
+        }
+        if ($request->get('has-account') || Auth::user()) {
+            $this->data['isReg'] = true;
+        }
+        $this->data['user'] = $refUser;
+        $this->data['newUser'] = Auth::user();
+        $this->data['role'] = $request->get('r');
+        if ($this->data['role'] == 'member') {
+            return view('register.member', $this->data);
+        } else if ($this->data['role'] == 'school') {
+            return view('register.school', $this->data);
+        } else if ($this->data['role'] == 'teacher') {
+            return view('register.teacher', $this->data);
+        }
+        return view('register.index', $this->data);
+    }
+
+    public function _ref(Request $request, $code = "")
+    {
         $data = [];
         if (empty($code)) {
             return redirect('/');
@@ -104,7 +129,7 @@ class PageController extends Controller
             ->groupBy('users.name', 'users.image', 'users.id')
             ->select('users.name', 'users.image', 'users.id')
             ->orderBy('users.is_hot', 'desc');
-        $listSearch = clone($list);
+        $listSearch = clone ($list);
         $data['hasSearch'] = false;
         if ($request->get('a') == 'search') {
             $data['hasSearch'] = true;

@@ -73,7 +73,11 @@
                     </div>
                     <div class="col-sm-6">
                         @if(!isset($isReg))
-                        @include('auth.register_ref')
+                        <div class="card shadow">
+                            <div class="card-body">
+                                @include('auth.register_ref')
+                            </div>
+                        </div>
                         @else
                         <div class="row">
                             <p>Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</p>
