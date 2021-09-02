@@ -372,6 +372,12 @@ class TransactionService
                         ->update([
                             'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                         ]);
+
+                    $orderDetails = OrderDetail::where('order_id', $order->id)->get();
+                    $voucherEvent = new VoucherEventLog();
+                    foreach($orderDetails as $item) {
+                        $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $userId->id, $item->id);
+                    }
                     
                     Log::debug("Update all transaction & orders", ["orderId" => $order->id]);
                     $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $userId, []);
