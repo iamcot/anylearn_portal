@@ -40,6 +40,36 @@ class TransactionController extends Controller
         return view('transaction.list', $this->data);
     }
 
+    public function orderOpen(Request $request) {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $this->data['orders'] = DB::table('orders')
+        ->join('users', 'users.id', '=', 'orders.user_id')
+        ->where('orders.status', OrderConstants::STATUS_NEW)
+        ->select('orders.*', 'users.name', 'users.phone')
+        ->paginate();
+        $this->data['navText'] = __('Đơn hàng chờ xác nhận');
+        return view('transaction.order_open', $this->data);
+    }
+
+    public function approveOrder($orderId) {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $order = Order::find($orderId);
+        if ($order->status != OrderConstants::STATUS_NEW) {
+            return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
+        }
+        $transService = new TransactionService();
+        $transService->approveRegistrationAfterWebPayment($orderId);
+        return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
+    }
+
     public function add2cart(Request $request)
     {
         if ($request->get('_user')) {

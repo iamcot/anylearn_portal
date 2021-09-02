@@ -171,8 +171,11 @@ class TransactionService
             ]);
 
             // voucher event
-            $voucherEvent = new VoucherEventLog();
-            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
+            if ($status == OrderConstants::STATUS_DELIVERED) {
+                $voucherEvent = new VoucherEventLog();
+                $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
+            }
+           
 
             $author = User::find($item->user_id);
 
@@ -330,6 +333,7 @@ class TransactionService
         return true;
     }
 
+    //@DEPRECATED
     public function approveRegistrationAfterDeposit($userId)
     {
 
@@ -368,6 +372,7 @@ class TransactionService
                         ->update([
                             'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                         ]);
+                    
                     Log::debug("Update all transaction & orders", ["orderId" => $order->id]);
                     $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $userId, []);
                 }
@@ -408,6 +413,11 @@ class TransactionService
             ->update([
                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
             ]);
+        $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
+        $voucherEvent = new VoucherEventLog();
+        foreach($orderDetails as $item) {
+            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
+        }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
         $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, []);
         return true;

@@ -77,6 +77,11 @@
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Duyệt giao dịch')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'order.open' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('order.open') }}">
+            <i class="fas fa-fw fa-money-check-alt"></i>
+            <span>@lang('Duyệt đơn hàng')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'transaction.commission' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaction.commission') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
