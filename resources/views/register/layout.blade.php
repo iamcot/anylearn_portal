@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <!-- Meta Tags For Seo + Page Optimization -->
     <meta charset="utf-8">
@@ -11,7 +10,7 @@
     <link href="/cdn/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Insert Favicon Here -->
-    <link href="/favicon-16x16.png" rel="icon">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <!-- Page Title(Name)-->
     <title>anyLEARN - HỌC không giới hạn</title>
     
