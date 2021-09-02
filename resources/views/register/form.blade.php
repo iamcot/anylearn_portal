@@ -1,11 +1,11 @@
 @extends('register.layout')
 @section('body')
 <div class="row">
+    @if(!isset($isReg))
     <div class="col-lg-5 introduce text-center">
         @yield('introduce')
     </div>
     <div class="col-lg-7 register_form">
-        @if(!isset($isReg))
         <h2 class="text-light text-center">@yield('header1')</h2>
         <br>
         <h5 class="text-light text-center">@yield('header2')</h5>
@@ -93,10 +93,9 @@
                 </div>
             </form>
         </div>
-
-
         @else
-        <div class="row p1" style="margin-top:100px;">
+        <div class="col-lg-6 offset-lg-3 register_form">
+        <div class="row p1 text-center" style="margin-top:100px;">
             <h5 class="text-light text-center">Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</h5>
             <div class="col-md-6" style="padding: 30px;">
                 <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
