@@ -17,7 +17,7 @@ class SendNotif extends Command
      *
      * @var string
      */
-    protected $signature = 'firenotif {userIds} {message} {--type=id} {--route=} {--copy=}';
+    protected $signature = 'firenotif {userIds} {message} {--type=id} {--route=} {--copy=} {--routearg=}';
 
     /**
      * The console command description.
@@ -49,6 +49,7 @@ class SendNotif extends Command
             $message = $this->argument('message');
             $type = $this->option('type');
             $route = $this->option('route');
+            $routeArg = $this->option('routearg');
             $copy = $this->option('copy');
     
             $notifM = new Notification();
@@ -57,9 +58,12 @@ class SendNotif extends Command
             } else {
                 $users = User::whereIn('id', explode(",", $userIds))->get();
             }
-            
+            $data = ['message' => $message];
+            if (!empty($routeArg)) {
+                $data['args'] = $routeArg;
+            }
             foreach($users as $user) {
-                $notifM->createNotif(NotifConstants::SYSTEM_NOTIF, $user->id, ['message' => $message], $copy, $route);
+                $notifM->createNotif(NotifConstants::SYSTEM_NOTIF, $user->id, $data , $copy, $route);
                 print("Sent message to user " . $user->id . " | " .  $user->phone . " | " . $user->name . "\n");
             }
             print("--All done! --\n");

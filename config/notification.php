@@ -209,6 +209,7 @@ return [
         'title' => 'Thông báo từ anyLEARN',
         'template' => '{message}',
         'route' => '',
-        'copy' => true
+        'args' => true,
+        'copy' => true,
     ],
 ];
