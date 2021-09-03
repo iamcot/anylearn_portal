@@ -53,4 +53,6 @@ class NotifConstants
     const VOUCHER_MONEY_SENT = 'voucher_money_sent';
     const VOUCHER_CLASS_SENT = 'voucher_class_sent';
     const VOUCHER_PARTNER_SENT = 'voucher_partner_sent';
+
+    const SYSTEM_NOTIF = 'system_notif';
 }

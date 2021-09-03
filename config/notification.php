@@ -204,4 +204,11 @@ return [
         'template' => 'Khoá học bạn đăng ký đã được thanh toán. Vui lòng kiểm tra lịch học.',
         'route' => '/account/calendar',
     ],
+
+    NotifConstants::SYSTEM_NOTIF =>  [
+        'title' => 'Thông báo từ anyLEARN',
+        'template' => '{message}',
+        'route' => '',
+        'copy' => true
+    ],
 ];

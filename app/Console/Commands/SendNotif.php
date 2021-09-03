@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Constants\NotifConstants;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -15,7 +16,7 @@ class SendNotif extends Command
      *
      * @var string
      */
-    protected $signature = 'firenotif';
+    protected $signature = 'firenotif {userIds} {message} {--type=id} {--route=} {--copy=}';
 
     /**
      * The console command description.
@@ -42,23 +43,23 @@ class SendNotif extends Command
     public function handle()
     {
         // $notSendNotifs = Notification::where('is_send', 0)->get();
-   
-        $notifM = new Notification();
-        $notSendNotifs = Notification::first();
-        $notifM->firebaseMessage($notSendNotifs, 'ciRPgtgEQ4CFDtWIBfFK6V:APA91bE4U3Zf8uxJ4AE1rE8t5dGujVG0a3yrtYhD36AT5y4Zp0Dczy6i5CGdl4dLZA2hDAElHtv_DkunTRl1Uj9kFlEC4MbUCUlnHAUs11BmsNDuL4iuYEHBavmJyHB3ce10Qp3WvDTR');
-        print("Send notif");
+        $userIds = $this->argument('userIds');
+        $message = $this->argument('message');
+        $type = $this->option('type');
+        $route = $this->option('route');
+        $copy = $this->option('copy');
 
-        // foreach ($notSendNotifs as $notif) {
-        //     $user = User::find($notif->user_id);
-        //     if (!$user->notif_token) {
-        //         continue;
-        //     }
-        //     $notifM->firebaseMessage($notif, $user->notif_token);
-        //     Notification::find($notif->id)->update([
-        //         'is_send' => 1,
-        //         'send' => DB::raw("now()")
-        //     ]);
-        //     print("Send notif to $user->id , token $user->notif_token \n");
-        // }
+        $notifM = new Notification();
+        if ($type == 'phone') {
+            $users = User::whereIn('phone', explode(",", $userIds))->get();
+        } else {
+            $users = User::whereIn('id', explode(",", $userIds))->get();
+        }
+        
+        foreach($users as $user) {
+            $notifM->createNotif(NotifConstants::SYSTEM_NOTIF, $user->id, ['message' => $message], $copy, $route);
+            print("Sent message to user " . $user->id . " | " .  $user->phone . " | " . $user->name . "\n");
+        }
+        print("--All done! --\n");
     }
 }
