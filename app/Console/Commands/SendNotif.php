@@ -53,11 +53,16 @@ class SendNotif extends Command
             $copy = $this->option('copy');
     
             $notifM = new Notification();
-            if ($type == 'phone') {
-                $users = User::whereIn('phone', explode(",", $userIds))->get();
+            if ($userIds == 'ALL') {
+                $users = User::all();
             } else {
-                $users = User::whereIn('id', explode(",", $userIds))->get();
+                if ($type == 'phone') {
+                    $users = User::whereIn('phone', explode(",", $userIds))->get();
+                } else {
+                    $users = User::whereIn('id', explode(",", $userIds))->get();
+                }
             }
+         
             $data = ['message' => $message];
             if (!empty($routeArg)) {
                 $data['args'] = $routeArg;
