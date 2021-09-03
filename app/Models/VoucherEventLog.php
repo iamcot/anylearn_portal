@@ -20,6 +20,7 @@ class VoucherEventLog extends Model
     {
         $existsEvent = VoucherEvent::where('type', $type)
             ->where('trigger', $triggerId)
+            ->where('status', 1)
             ->orderby('id', 'desc')
             ->first();
         if (!$existsEvent) {
