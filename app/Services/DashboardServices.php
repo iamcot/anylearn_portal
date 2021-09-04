@@ -43,6 +43,27 @@ class DashboardServices
         return $chartDataset;
     }
 
+    public function userCreatedByDay() {
+        $last3m = date('Ym', strtotime('-3 month'));
+        
+        $sql = "SELECT  DATE(created_at) AS `day`, count(*) AS num FROM anylearn.users
+        where created_at is not null
+        and yearweek(created_at) >= ?
+        group by DATE(created_at);
+        ";
+
+        $results = DB::select($sql, [$last3m]);
+        $chartDataset = [
+            'labels' => [],
+            'data' => []
+        ];
+        foreach($results as $row) {
+            $chartDataset['labels'][] = date( 'd/m', strtotime($row->day));
+            $chartDataset['data'][] = $row->num;
+        }
+        return $chartDataset;
+    }
+
     public function topUser($num = 5) {
         $sql = "SELECT users.name, count(od.id) AS reg_num
         FROM users 

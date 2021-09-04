@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $userServ = new UserServices();
         if ($userServ->haveAccess(Auth::user()->role, 'admin')) {
             $dashServ = new DashboardServices();
-            $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByWeek());
+            $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByDay());
             $this->data['topUsers'] = $dashServ->topUser();
             $this->data['topItems'] = $dashServ->topItem();
             return view('dashboard.index', $this->data);

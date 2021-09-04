@@ -104,7 +104,7 @@
             scales: {
                 xAxes: [{
                     time: {
-                        unit: 'Week'
+                        unit: 'Ngày'
                     },
                     gridLines: {
                         display: false,
