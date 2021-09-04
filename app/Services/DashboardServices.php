@@ -44,11 +44,10 @@ class DashboardServices
     }
 
     public function userCreatedByDay() {
-        $last3m = date('Ym', strtotime('-1 month'));
-        
+        $last3m = date('Y-m-d', strtotime('-30 days'));
         $sql = "SELECT  DATE(created_at) AS `day`, count(*) AS num FROM anylearn.users
         where created_at is not null
-        and yearweek(created_at) >= ?
+        and DATE(created_at) >= ?
         group by DATE(created_at);
         ";
 
