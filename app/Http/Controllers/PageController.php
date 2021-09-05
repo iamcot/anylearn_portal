@@ -226,4 +226,8 @@ class PageController extends Controller
 
         return view('list.class', $data);
     }
+
+    public function helpcenter(Request $request) {
+        echo '<p>Trang đang được xây dựng.</p>';
+    }
 }

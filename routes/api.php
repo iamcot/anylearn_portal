@@ -60,6 +60,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/contract', 'Apis\UserApi@getContract');
     Route::post('/user/contract', 'Apis\UserApi@saveContract');
     Route::post('/user/contract/sign', 'Apis\UserApi@signContract');
+    Route::post('/user/changepass', 'Apis\UserApi@changePass');
 
     Route::get('/transaction/history', 'Apis\TransactionApi@history');
     Route::post('/transaction/deposit', 'Apis\TransactionApi@saveDeposit');

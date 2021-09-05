@@ -759,4 +759,17 @@ class UserApi extends Controller
             'result' => true
         ]);
     }
+
+    public function changePass(Request $request)
+    {
+        $user = $request->get('_user')->makeVisible(['password']);
+        $checkPass = Hash::check($request->get('oldpass'), $user->password);
+        if ($checkPass) {
+            User::find($user->id)->update([
+                'password' => Hash::make($request->get('newpass'))
+            ]);
+            return response()->json(['result' => true]);
+        }
+        return response('Mật khẩu không đúng', 400);
+    }
 }

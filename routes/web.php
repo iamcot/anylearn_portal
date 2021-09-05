@@ -26,6 +26,7 @@ Route::get('/{role}/{id}/classes', 'PageController@classes')->name('classes');
 
 //public page
 Route::get('/privacy', 'ConfigController@privacy');
+Route::get('/helpcenter', 'PageController@helpcenter');
 
 Route::get('/login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallback');
