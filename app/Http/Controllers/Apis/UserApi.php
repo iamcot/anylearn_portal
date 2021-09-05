@@ -22,6 +22,7 @@ use App\Models\UserDocument;
 use App\Services\FileServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -657,27 +658,41 @@ class UserApi extends Controller
         $contract['type'] = $user->role;
         $contract['status'] = UserConstants::CONTRACT_SIGNED;
 
-        Contract::where('user_id', $user->id)->update([
-            'status' => UserConstants::CONTRACT_DELETED,
-        ]);
-        $newContract = Contract::create($contract);
-        if ($newContract) {
-            $dataUpdate = [
-                "is_signed" => UserConstants::CONTRACT_SIGNED,
-                "email" => $contract['email'],
-                "address" => $contract['address'],
-            ];
-            if ($user->role == UserConstants::ROLE_TEACHER) {
-                $dataUpdate['dob'] = $contract['dob'];
-            } else {
-                $dataUpdate['title'] = $contract['ref'];
-            }
-            User::find($user->id)->update($dataUpdate);
-        }
 
-        return response()->json([
-            'status' => true,
-        ]);
+        $result = DB::transaction(function () use ($user, $contract) {
+            try {
+                Contract::where('user_id', $user->id)->update([
+                    'status' => UserConstants::CONTRACT_DELETED,
+                ]);
+                $newContract = Contract::create($contract);
+                if ($newContract) {
+                    $dataUpdate = [
+                        "is_signed" => UserConstants::CONTRACT_SIGNED,
+                        "email" => $contract['email'],
+                        "address" => $contract['address'],
+                    ];
+                    if ($user->role == UserConstants::ROLE_TEACHER) {
+                        $dataUpdate['dob'] = $contract['dob'];
+                    } else {
+                        $dataUpdate['title'] = $contract['ref'];
+                    }
+                    User::find($user->id)->update($dataUpdate);
+                }
+                return true;
+            } catch (Exception $e) {
+                DB::rollback();
+                Log::error($e);
+                return "Có lỗi xảy ra khi tạo hợp đồng mới, vui lòng thử lại.";
+            }
+        });
+
+        if ($result === true) {
+            return response()->json([
+                'result' => true,
+            ]);
+        } else {
+            return response($result, 400);
+        }
     }
 
     public function signContract(Request $request)
