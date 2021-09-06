@@ -9,7 +9,7 @@
                         <span class="badge badge-success"><i class="fa fa-shopping-cart"> 0</i></span>
                     </a>
                     <a class="" href="{{ route('me.dashboard') }}">
-                        <span class="badge badge-success">Số dư: {{ number_format(Auth::user()->wallet_m, 0 , ",",".") }} đ</span>
+                        <!-- <span class="badge badge-success">Số dư: {{ number_format(Auth::user()->wallet_m, 0 , ",",".") }} đ</span> -->
                         <span class="mr-2 d-lg-inline text-primary">{{ Auth::user()->first_name }}</span>
                     </a>
                     @else

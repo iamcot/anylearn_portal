@@ -13,11 +13,15 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Voucher;
+use App\Models\VoucherGroup;
+use App\Models\VoucherUsed;
 use App\PaymentGateway\OnepayLocal;
 use App\PaymentGateway\Processor;
 use App\Services\FileServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,22 +44,24 @@ class TransactionController extends Controller
         return view('transaction.list', $this->data);
     }
 
-    public function orderOpen(Request $request) {
+    public function orderOpen(Request $request)
+    {
         $userService = new UserServices();
         $user = Auth::user();
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['orders'] = DB::table('orders')
-        ->join('users', 'users.id', '=', 'orders.user_id')
-        ->where('orders.status', OrderConstants::STATUS_NEW)
-        ->select('orders.*', 'users.name', 'users.phone')
-        ->paginate();
+            ->join('users', 'users.id', '=', 'orders.user_id')
+            ->where('orders.status', OrderConstants::STATUS_NEW)
+            ->select('orders.*', 'users.name', 'users.phone')
+            ->paginate();
         $this->data['navText'] = __('Đơn hàng chờ xác nhận');
         return view('transaction.order_open', $this->data);
     }
 
-    public function approveOrder($orderId) {
+    public function approveOrder($orderId)
+    {
         $userService = new UserServices();
         $user = Auth::user();
         if (!$userService->isMod($user->role)) {
@@ -207,6 +213,13 @@ class TransactionController extends Controller
                 ->get();
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
+            $voucherUsed = DB::table('vouchers_used')
+                ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
+                ->select('vouchers_used.id', 'vouchers.voucher')
+                ->where('order_id', $openOrder->id)->first();
+            if ($voucherUsed) {
+                $this->data['voucherUsed'] = $voucherUsed;
+            }
         } else {
             $this->data['order'] = null;
             $this->data['detail'] = null;
@@ -227,6 +240,48 @@ class TransactionController extends Controller
             $this->data['term'] = $doc->value;
         }
         return view('checkout.cart', $this->data);
+    }
+
+    public function applyVoucher(Request $request)
+    {
+        if ($request->get('_user')) {
+            $user = $request->get('_user');
+            $this->data['api_token'] = $user->api_token;
+        } else {
+            $user = Auth::user();
+            $this->data['api_token'] = null;
+        }
+        $orderId = $request->get('order_id');
+        $order = Order::find($orderId);
+        if (empty($order)) {
+            return redirect()->back()->with('notify', 'Đơn hàng hoặc mã khuyến mãi không hợp lệ.');
+        }
+        $voucher = $request->get('payment_voucher');
+        if ($request->get('cart_action') == 'apply_voucher') {
+            
+            $voucherM = new Voucher();
+            try {
+                $voucherM->useVoucherPayment($user->id, $voucher, $orderId);
+            } catch (Exception $ex) {
+                return redirect()->back()->with('notify', $ex->getMessage());
+            }
+    
+            $voucherDB = Voucher::where('voucher', $voucher)->first();
+    
+            $transService = new TransactionService();
+            $res = $transService->recalculateOrderAmountWithVoucher($orderId, $voucherDB->value);
+            if (!$res) {
+                return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
+            }
+    
+            return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
+        } else if ($request->get('cart_action') == 'remove_voucher'){
+            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
+            $transService = new TransactionService();
+            $res = $transService->recalculateOrderAmount($orderId);
+            return redirect()->back()->with('notify', 'Đã huỷ voucher.');
+        }
+        
     }
 
     public function payment(Request $request)
@@ -333,7 +388,7 @@ class TransactionController extends Controller
         $this->detectUserAgent($request);
         if ($this->data['isApp']) {
             return redirect()->route('cart', ['api_token' => $user->api_token])->with('notify', isset($result['message']) ? $result['message'] : 'Có lỗi xảy ra. vui lòng thử lại!');
-        } 
+        }
         return redirect()->route('cart')->with('notify', isset($result['message']) ? $result['message'] : 'Có lỗi xảy ra. vui lòng thử lại!');
     }
 

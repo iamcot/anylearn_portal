@@ -41,13 +41,14 @@ class Voucher extends Model
         User::find($userId)->update([
             'wallet_m' => DB::raw("wallet_m + $value")
         ]);
+
         VoucherUsed::create([
             'voucher_id' => $dbVoucher->id,
-            'user_id' => $userId
+            'user_id' => $userId,
         ]);
         return $value;
-        // throw new \Exception("error of voucher");
     }
+
     public function useVoucherClass($userId, $itemId, $voucher)
     {
         $dbVoucher = DB::table('vouchers')
@@ -84,7 +85,45 @@ class Voucher extends Model
             'user_id' => $userId
         ]);
         return true;
-        // throw new \Exception("error of voucher");
+    }
+
+    public function useVoucherPayment($userId, $voucher, $orderId)
+    {
+        $dbVoucher = DB::table('vouchers')
+            ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
+            ->where('vouchers.voucher', $voucher)
+            ->where('vouchers.status', 1)
+            ->where('vg.status', 1)
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount')
+            ->first();
+        if (!$dbVoucher) {
+            throw new \Exception("Voucher không có");
+        }
+
+        if ($dbVoucher->type != VoucherGroup::TYPE_PAYMENT) {
+            throw new \Exception("Loại voucher không hợp lệ.");
+        }
+        // if (!in_array($itemId, explode(",", $dbVoucher->ext))) {
+        //     throw new \Exception("Voucher không dùng cho khóa học này.");
+        // }
+        $userUsed = VoucherUsed::where('user_id', $userId)
+            ->where('voucher_id', $dbVoucher->id)
+            ->first();
+        if ($userUsed) {
+            throw new \Exception("Bạn đã sử dụng voucher này rồi.");
+        }
+
+        $numUsed = VoucherUsed::where('voucher_id', $dbVoucher->id)->count();
+        if ($numUsed >= $dbVoucher->amount) {
+            throw new \Exception("Voucher này đã bị sử dụng hết.");
+        }
+
+        VoucherUsed::create([
+            'voucher_id' => $dbVoucher->id,
+            'user_id' => $userId,
+            'order_id' => $orderId
+        ]);
+        return true;
     }
 
     public static function buildAutoVoucher($prefix, $length = 6)

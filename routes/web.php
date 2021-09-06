@@ -67,6 +67,7 @@ Route::middleware(['webappauth'])->group(function () {
     Route::any('/add2cart', 'TransactionController@add2cart')->name('add2cart');
     Route::get('/cart', 'TransactionController@cart')->name('cart');
     Route::post('/payment', 'TransactionController@payment')->name('payment');
+    Route::post('/applyvoucher', 'TransactionController@applyVoucher')->name('applyvoucher');
     Route::get('/payment-help', 'TransactionController@paymentHelp')->name('checkout.paymenthelp');
     Route::get('/finish', 'TransactionController@finish')->name('checkout.finish');
     Route::get('/remove2cart/{odId}', 'TransactionController@remove2cart')->name('checkout.remove2cart');

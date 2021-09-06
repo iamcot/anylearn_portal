@@ -11,6 +11,7 @@
                 <label for="voucher" class="col-md-2 col-form-label text-md-right">{{ __('Loại voucher') }}</label>
                 <div class="col-md-6">
                     <select name="voucher_type" id="voucher_type" class="form-control">
+                        <option value="{{ App\Models\VoucherGroup::TYPE_PAYMENT }}">Voucher Thanh Toán</option>
                         <option value="{{ App\Models\VoucherGroup::TYPE_MONEY }}">Tiền mặt</option>
                         <option value="{{ App\Models\VoucherGroup::TYPE_CLASS }}">Khóa học</option>
                         <option value="{{ App\Models\VoucherGroup::TYPE_PARTNER }}">Voucher Đối tác</option>
@@ -42,6 +43,7 @@
                 <label for="value" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị') }}</label>
                 <div class="col-md-6">
                     <input id="value" type="text" class="form-control @error('value') is-invalid @enderror" name="value" value="{{ old('value', !empty($voucher) ? $voucher->value : '') }}" >
+                    <p class="small">Số thập phân (ví dụ 0.2) để giảm phần trăm. Hoặc số > 1000 để giảm số tiền cụ thể.</p>
                 </div>
             </div>
             <div class="form-group row normal_voucher">

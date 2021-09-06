@@ -16,11 +16,12 @@ class VoucherGroup extends Model
     const TYPE_MONEY = 'money';
     const TYPE_CLASS = 'class';
     const TYPE_PARTNER = 'partner';
+    const TYPE_PAYMENT = 'payment';
 
     const GENERATE_MANUALLY = 'manual';
     const GENERATE_AUTO = 'auto';
     const GENERATE_PARTNER = 'partner';
 
-    const VALUE_FIXED = 'fixed';
-    const VALUE_PERCENT = 'percent';
+    // const VALUE_FIXED = 'fixed';
+    // const VALUE_PERCENT = 'percent';
 }

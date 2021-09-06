@@ -175,7 +175,7 @@ class TransactionService
                 $voucherEvent = new VoucherEventLog();
                 $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
             }
-           
+
 
             $author = User::find($item->user_id);
 
@@ -333,6 +333,38 @@ class TransactionService
         return true;
     }
 
+    public function recalculateOrderAmount($orderId)
+    {
+        $orderDetails = OrderDetail::where('order_id', $orderId)->get();
+        $amount = 0;
+        foreach ($orderDetails as $item) {
+            $amount += $item->paid_price;
+        }
+        Order::find($orderId)->update(
+            ['amount' => $amount],
+        );
+        return true;
+    }
+
+    public function recalculateOrderAmountWithVoucher($orderId, $value)
+    {
+        $order = Order::find($orderId);
+        $amount = false;
+        if ($value >= 1000) {
+            $amount = $order->amount - $value;
+        } else if ($value > 0 && $value < 1) {
+            $amount = $order->amount * $value;
+        } 
+        if ($amount === false) {
+            return false;
+        } 
+
+        Order::find($orderId)->update(
+            ['amount' => $amount],
+        );
+        return true;
+    }
+
     //@DEPRECATED
     public function approveRegistrationAfterDeposit($userId)
     {
@@ -375,10 +407,10 @@ class TransactionService
 
                     $orderDetails = OrderDetail::where('order_id', $order->id)->get();
                     $voucherEvent = new VoucherEventLog();
-                    foreach($orderDetails as $item) {
+                    foreach ($orderDetails as $item) {
                         $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $userId->id, $item->id);
                     }
-                    
+
                     Log::debug("Update all transaction & orders", ["orderId" => $order->id]);
                     $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $userId, []);
                 }
@@ -421,7 +453,7 @@ class TransactionService
             ]);
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
         $voucherEvent = new VoucherEventLog();
-        foreach($orderDetails as $item) {
+        foreach ($orderDetails as $item) {
             $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);

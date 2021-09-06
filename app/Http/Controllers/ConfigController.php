@@ -104,13 +104,13 @@ class ConfigController extends Controller
     {
         $key = ConfigConstants::CONFIG_APP_BANNERS;
         $fileService = new FileServices();
-        $files = ['banners/'. $fileService->decodeFileName($file)];
+        $files = ['banners/' . $fileService->decodeFileName($file)];
         $fileService->deleteFiles($files, FileConstants::DISK_S3);
         $dbBanners = Configuration::where('key', $key)->first();
         if ($dbBanners) {
             $banners = json_decode($dbBanners->value, true);
             $newBanners = [];
-            foreach($banners as $dbfile => $url) {
+            foreach ($banners as $dbfile => $url) {
                 if ($dbfile != $file) {
                     $newBanners[$file] = $url;
                 }
@@ -137,14 +137,18 @@ class ConfigController extends Controller
 
     public function voucher(Request $request)
     {
-        $this->data['vouchers'] = VoucherGroup::paginate(20);
+        $this->data['vouchers'] = VoucherGroup::orderby('status', 'desc')
+            ->orderby('id', 'desc')
+            ->paginate(20);
         $this->data['navText'] = __('Danh sách Bộ Voucher');
         return view('config.voucher_group_list', $this->data);
     }
 
     public function voucherEvent(Request $request)
     {
-        $this->data['events'] = VoucherEvent::paginate(20);
+        $this->data['events'] = VoucherEvent::orderby('status', 'desc')
+            ->orderby('id', 'desc')
+            ->paginate(20);
         $this->data['navText'] = __('Danh sách Sự kiện phát Voucher');
         return view('config.voucher_event', $this->data);
     }
@@ -153,6 +157,7 @@ class ConfigController extends Controller
     {
         $this->data['data'] = DB::table('voucher_event_logs AS vel')
             ->where('vel.voucher_event_id', $id)
+            ->orderby('vel.id', 'desc')
             ->paginate(20);
         $this->data['navText'] = __('Danh sách Thành viên sử dụng event');
         $this->data['hasBack'] = route('config.voucherevent');
@@ -163,6 +168,7 @@ class ConfigController extends Controller
     {
         $this->data['vouchers'] = DB::table('vouchers')
             ->where('vouchers.voucher_group_id', $id)
+            ->orderby('vouchers.id', 'desc')
             ->select('vouchers.*', DB::raw("(SELECT GROUP_CONCAT(users.phone SEPARATOR ', ') FROM vouchers_used
         join users on vouchers_used.user_id = users.id
         where vouchers_used.voucher_id = vouchers.id) AS used"))
