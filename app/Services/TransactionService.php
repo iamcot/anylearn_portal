@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
@@ -80,6 +81,10 @@ class TransactionService
         if (!$item) {
             return 'Trang không tồn tại';
         }
+        if ($item->status != ItemConstants::STATUS_ACTIVE || $item->user_status != ItemConstants::USERSTATUS_ACTIVE) {
+            return 'Khoá học không cho phép đăng ký lúc này.';
+        }
+        
         $alreadyRegister = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->whereIn('orders.status', [OrderConstants::STATUS_DELIVERED, OrderConstants::STATUS_NEW])
