@@ -69,9 +69,9 @@
 @if(!empty($order))
     <input type="hidden" name="order_id" value="{{ $order->id }}">
 @endif
-<div class="card mb-2 border-left-danger shadow">
+<div class="card mb-2 border-left-success shadow">
     <div class="card-body">
-        <label for="" class="font-weight-bold text-danger">Mã giảm giá</label>
+        <label for="" class="font-weight-bold text-success">Mã giảm giá</label>
         <div class="row">
             <div class="form-group col-lg-6">
                 <input type="text" class="form-control" name="payment_voucher" value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
@@ -97,9 +97,9 @@
 @if(!empty($order))
     <input type="hidden" name="order_id" value="{{ $order->id }}">
 @endif
-        <div class="card mb-2 border-left-danger shadow">
+        <div class="card mb-2 border-left-success shadow">
             <div class="card-header">
-                <h5 class="modal-title m-0 font-weight-bold text-danger"><i class="fa fa-wallet"></i> Phương thức Thanh toán</h5>
+                <h5 class="modal-title m-0 font-weight-bold text-success"><i class="fa fa-wallet"></i> Phương thức Thanh toán</h5>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled">
@@ -111,7 +111,7 @@
                 <p class="font-weight-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán</label></p>
             </div>
             <div class="card-footer">
-                <button class="btn btn-danger" name="cart_action" value="pay">THANH TOÁN</button>
+                <button class="btn btn-success" name="cart_action" value="pay">THANH TOÁN</button>
             </div>
         </div>
     </form>

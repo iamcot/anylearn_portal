@@ -220,16 +220,9 @@ class TransactionService
                 'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                 'order_id' => $orderDetail->id
             ]);
-            // $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [
-            //     'username' => $user->name,
-            //     'amount' => number_format($directCommission, 0, ',', '.'),
-            // ]);
 
             //pay author 
             $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
-            // User::find($item->user_id)->update([
-            //     'wallet_c' => DB::raw('wallet_c + ' . $authorCommission),
-            // ]);
 
             Transaction::create([
                 'user_id' => $author->id,
@@ -250,9 +243,7 @@ class TransactionService
             for ($i = 1; $i < $configs[ConfigConstants::CONFIG_FRIEND_TREE]; $i++) {
                 $refUser = User::find($currentUserId);
                 if ($refUser) {
-                    // User::find($refUser->id)->update([
-                    //     'wallet_c' => DB::raw('wallet_c + ' . $indirectCommission),
-                    // ]);
+
                     Transaction::create([
                         'user_id' => $refUser->id,
                         'type' => ConfigConstants::TRANSACTION_COMMISSION,
@@ -265,10 +256,7 @@ class TransactionService
                         'ref_amount' => $amount,
                         'order_id' => $orderDetail->id
                     ]);
-                    // $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $refUser->id, [
-                    //     'username' => $refUser->name,
-                    //     'amount' => number_format($indirectCommission, 0, ',', '.'),
-                    // ]);
+
                     $currentUserId = $refUser->user_id;
                 } else {
                     break;
@@ -294,17 +282,16 @@ class TransactionService
 
 
             DB::commit();
-            $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
-                'course' => $item->title,
-            ]);
-            // $notifServ->createNotif(NotifConstants::TRANS_FOUNDATION, $user->id, [
-            //     'amount' => number_format($foundation, 0, ',', '.'),
-            //     'course' => $item->title,
-            // ]);
-            $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
-                'username' => $author->name,
-                'course' => $item->title,
-            ]);
+            if ($status == OrderConstants::STATUS_DELIVERED) {
+                $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
+                    'course' => $item->title,
+                ]);
+                $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
+                    'username' => $author->name,
+                    'course' => $item->title,
+                ]);
+            }
+
             return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? true : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
         return $result;
@@ -351,13 +338,13 @@ class TransactionService
         $order = Order::find($orderId);
         $amount = false;
         if ($value >= 1000) {
-            $amount = $order->amount - $value;
+            $amount =  ($value > $order->amount) ? ($order->amount - $value) : 0;
         } else if ($value > 0 && $value < 1) {
             $amount = $order->amount * $value;
-        } 
+        }
         if ($amount === false) {
             return false;
-        } 
+        }
 
         Order::find($orderId)->update(
             ['amount' => $amount],
@@ -446,6 +433,7 @@ class TransactionService
         Order::find($openOrder->id)->update([
             'status' => OrderConstants::STATUS_DELIVERED
         ]);
+
         Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
             ->where('order_id', $openOrder->id)
             ->update([
@@ -453,11 +441,20 @@ class TransactionService
             ]);
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
         $voucherEvent = new VoucherEventLog();
-        foreach ($orderDetails as $item) {
-            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
+        foreach ($orderDetails as $orderItem) {
+            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->id);
+            $item = Item::find($orderItem->item_id);
+            $author = User::find($item->user_id);
+            $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
+                'course' => $item->title,
+            ]);
+            $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
+                'username' => $author->name,
+                'course' => $item->title,
+            ]);
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
-        $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, []);
+        // $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, []);
         return true;
     }
 }

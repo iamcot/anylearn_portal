@@ -1,3 +1,4 @@
+@inject('userServ','App\Services\UserServices')
 <nav class="navbar shrink">
     <div class="container-fluid">
         <div class="container">
@@ -6,7 +7,7 @@
                 <div class="float-right nav-link pt-3">
                     @if(@auth()->check())
                     <a class="" href="{{ route('cart') }}">
-                        <span class="badge badge-success"><i class="fa fa-shopping-cart"> 0</i></span>
+                        <span class="badge badge-success"><i class="fa fa-shopping-cart"> {{ $userServ->countItemInCart(Auth::user()->id) }}</i></span>
                     </a>
                     <a class="" href="{{ route('me.dashboard') }}">
                         <!-- <span class="badge badge-success">Số dư: {{ number_format(Auth::user()->wallet_m, 0 , ",",".") }} đ</span> -->

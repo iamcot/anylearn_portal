@@ -2,7 +2,7 @@
 @section('body')
 <div class="card shadow mb-5 border-left-success">
     <div class="card-body">
-        <h5 class="mb-5 font-weight-bold text-primary">Để hoàn thất thanh toán, quý khách vui lòng chuyển khoản theo thông tin sau.</h5>
+        <h5 class="mb-5 font-weight-bold text-primary">Để hoàn tất thanh toán, quý khách vui lòng chuyển khoản theo thông tin sau.</h5>
         <dl class="row">
             <dt class="col-sm-3">Ngân hàng</dt>
             <dd class="col-sm-9">{{ $bank['bank_name'] }}</dd>

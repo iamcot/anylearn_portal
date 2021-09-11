@@ -35,7 +35,9 @@ class ConfigApi extends Controller
         $banners = [];
         $dbBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
         if ($dbBanners) {
-            $banners = array_values(json_decode($dbBanners->value, true));
+            foreach(array_values(json_decode($dbBanners->value, true)) as $row) {
+                $banners[] = is_array($row) ? $row['file'] : $row;
+            }
         } else {
             $bannersDriver = $fileService->getAllFiles(FileConstants::DISK_S3, FileConstants::FOLDER_BANNERS);
             if ($bannersDriver != null) {
@@ -43,6 +45,11 @@ class ConfigApi extends Controller
                     $banners[] = $fileService->urlFromPath(FileConstants::DISK_S3, $file);
                 }
             }
+        }
+        $newBanners = [];
+        $dbNewBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
+        if ($dbNewBanners) {
+            $newBanners = array_values(json_decode($dbNewBanners->value, true));
         }
 
         $userService = new UserServices();
@@ -82,6 +89,7 @@ class ConfigApi extends Controller
 
         return response()->json([
             'banners' => $banners,
+            'new_banners' => $newBanners,
             'hot_items' => [
                 $hotSchools,
                 $hotTeachers,

@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Constants\ConfigConstants;
 use App\Constants\NotifConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
 use App\Models\Notification;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Transaction;
 use App\Models\User;
 use Exception;
@@ -262,5 +265,16 @@ class UserServices
         }
         return false;
        
+    }
+
+    public function countItemInCart($userId) {
+        $openOrder = Order::where('user_id', $userId)
+        ->where('status', OrderConstants::STATUS_NEW)
+        ->orderby('id', 'desc')
+        ->first();
+        if (!$openOrder) {
+            return 0;
+        }
+        return OrderDetail::where('order_id', $openOrder->id)->count();
     }
 }

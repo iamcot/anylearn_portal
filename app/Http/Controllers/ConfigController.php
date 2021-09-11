@@ -78,7 +78,11 @@ class ConfigController extends Controller
                 if ($dbBanners) {
                     $banners = json_decode($dbBanners->value, true);
                 }
-                $banners[$file['file']] = $file['url'];
+                $banners[$file['file']] = [
+                    'file' => $file['url'],
+                    'route' => $request->get('route'),
+                    'arg' => $request->get('arg'),
+                ];
                 Configuration::where('key', $key)->delete();
                 Configuration::create([
                     'key' => $key,

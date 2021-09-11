@@ -202,6 +202,9 @@ class UserApi extends Controller
             ->where('is_child', 1)
             ->get();
 
+        $userServ = new UserServices();
+        $user->cartcount = $userServ->countItemInCart($user->id);
+
         return response()->json($user, 200);
     }
 
