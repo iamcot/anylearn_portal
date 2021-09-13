@@ -58,13 +58,19 @@ return [
         'value' => 0.05
     ],
     ConfigConstants::CONFIG_COMMISSION_AUTHOR => [
-        'title' => 'Tỉ lệ mặc định của tác giả',
+        'title' => 'Tỉ lệ mặc định của tác giả nhận được',
         'hint' => 'Nhập số thập phân. vd: 0.2 (tương đương 20%)',
         'type' => 'text',
         'value' => 0.2
     ],
+    ConfigConstants::CONFIG_COMMISSION_SCHOOL => [
+        'title' => 'Tỉ lệ mặc định của trường học nhận được',
+        'hint' => 'Nhập số thập phân. vd: 0.2 (tương đương 20%)',
+        'type' => 'text',
+        'value' => 0.7
+    ],
     ConfigConstants::CONFIG_COMMISSION_COMPANY => [
-        'title' => 'Tỉ lệ lợi nhuận công ty',
+        'title' => 'Tỉ lệ lợi nhuận công ty nhận được',
         'hint' => 'Nhập số thập phân. vd: 0.45 (tương đương 45%)',
         'type' => 'text',
         'value' => 0.45

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Services\FileServices;
@@ -85,6 +86,7 @@ class User extends Authenticatable
             'status' => UserConstants::STATUS_ACTIVE,
             'update_doc' => UserConstants::STATUS_ACTIVE,
             'refcode' => $data['phone'],
+
         ];
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
         if (!empty($data['ref'])) {
@@ -93,6 +95,14 @@ class User extends Authenticatable
         }
         if ($data['role'] == UserConstants::ROLE_SCHOOL || $data['role'] == UserConstants::ROLE_TEACHER) {
             $obj['update_doc'] = UserConstants::STATUS_INACTIVE;
+            $configM = new Configuration();
+            $configs = $configM->gets([
+                ConfigConstants::CONFIG_COMMISSION_AUTHOR,
+                ConfigConstants::CONFIG_COMMISSION_SCHOOL
+            ]);
+            $obj['commission_rate'] = $data['role'] == UserConstants::ROLE_TEACHER 
+            ? $configs[ConfigConstants::CONFIG_COMMISSION_AUTHOR] 
+            : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
         }
 
         $newMember = $this->create($obj);
