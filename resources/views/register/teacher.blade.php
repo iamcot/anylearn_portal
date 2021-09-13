@@ -14,16 +14,16 @@ Cùng anyLEARN xây dựng cộng đồng học tập không giới hạn
 </div>
 <div class="row p1">
     <div class="col-3">
-        <img src="/cdn/img/register/step1.png" alt="">
+        <img src="/cdn/img/register/teacher_step1.png" alt="">
     </div>
     <div class="col-3">
-        <img src="/cdn/img/register/step2.png" alt="">
+        <img src="/cdn/img/register/teacher_step2.png" alt="">
     </div>
     <div class="col-3">
-        <img src="/cdn/img/register/step3.png" alt="">
+        <img src="/cdn/img/register/teacher_step3.png" alt="">
     </div>
     <div class="col-3">
-        <img src="/cdn/img/register/step4.png" alt="">
+        <img src="/cdn/img/register/teacher_step4.png" alt="">
     </div>
 </div>
 <div class="m2">
@@ -31,7 +31,7 @@ Cùng anyLEARN xây dựng cộng đồng học tập không giới hạn
 </div>
 <div class="row p1">
     <div class="col-3">
-        <img src="/cdn/img/register/school_r1.png" alt="">
+        <img src="/cdn/img/register/teacher_r1.png" alt="">
     </div>
     <div class="col-3">
         <img src="/cdn/img/register/teacher_r2.png" alt="">

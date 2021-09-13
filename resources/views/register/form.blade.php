@@ -1,11 +1,11 @@
 @extends('register.layout')
 @section('body')
-<div class="row">
+<div class="row register">
     @if(!isset($isReg))
-    <div class="col-lg-5 introduce text-center">
+    <div class="col-12 introduce text-center">
         @yield('introduce')
     </div>
-    <div class="col-lg-7 register_form">
+    <div class="col-12 register_form">
         <h2 class="text-light text-center">@yield('header1')</h2>
         <br>
         <h5 class="text-light text-center">@yield('header2')</h5>
@@ -18,7 +18,7 @@
         <p class="text-light text-center">--- HOẶC ---</p>
         @endif
         <div class="col-12 p1 text-light">
-            <form method="POST">
+            <form method="POST" id="register_form">
                 @csrf
                 <input id="ref" type="hidden" name="ref" value="{{ !empty($user) ? $user->refcode : old('ref') }}">
                 <input type="hidden" name="role" value="{{ $role }}">
@@ -85,9 +85,11 @@
                 </div>
                 <div class="form-group row mb-0">
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success border border-2">
-                            <i class="fas fa-sign-in-alt"></i> {{ __('Đăng ký') }}
-                        </button>
+                        <div class="register_btn">
+                            <button>
+                                <img src="/cdn/img/register/register_btn.png" alt="">
+                            </button>
+                        </div>
                         <a href="{{ url()->full() }}&has-account=1">Tôi đã đăng ký</a>
                     </div>
                 </div>
@@ -95,26 +97,26 @@
         </div>
         @else
         <div class="col-lg-6 offset-lg-3 register_form">
-        <div class="row p1 text-center" style="margin-top:100px;">
-            <h5 class="text-light text-center">Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</h5>
-            <div class="col-md-6" style="padding: 30px;">
-                <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
-                    <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
-                </a>
+            <div class="row p1 text-center" style="margin-top:100px;">
+                <h5 class="text-light text-center">Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</h5>
+                <div class="col-md-6" style="padding: 30px;">
+                    <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
+                        <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
+                    </a>
+                </div>
+                <div class="col-md-6" style="padding: 30px;">
+                    <a href="market://details?id=vn.anylearn">
+                        <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
+                    </a>
+                </div>
+                <p>
+                <form action="{{ route('logout') }}" method="POST" class="text-center">
+                    {{ csrf_field() }}
+                    <a href="/"><i class="fa fa-home"></i> Về trang chủ</a> <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit">@lang('Đăng xuất')</button>
+                </form>
+                </p>
             </div>
-            <div class="col-md-6" style="padding: 30px;">
-                <a href="market://details?id=vn.anylearn">
-                    <img src="/cdn/onepage/images/android.png" style="width:100%" alt="">
-                </a>
-            </div>
-            <p>
-            <form action="{{ route('logout') }}" method="POST" class="text-center">
-                {{ csrf_field() }}
-                <a href="/"><i class="fa fa-home"></i> Về trang chủ</a> <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit">@lang('Đăng xuất')</button>
-            </form>
-            </p>
+            @endif
         </div>
-        @endif
     </div>
-</div>
-@include('dialog.toc')
+    @include('dialog.toc')

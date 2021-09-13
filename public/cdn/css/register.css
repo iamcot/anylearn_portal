@@ -6,6 +6,25 @@ body {
     min-height:3em;
 }
 
+.register {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+.register_btn {
+   width: 30%;
+   margin: auto;
+}
+
+.register_btn button {
+    background: none;
+    border: none;
+    padding: 0px;
+}
+
+.register_btn img {
+    width: 100%;
+}
+
 h1.primary {
     color: rgb(35, 64, 136);
 }
@@ -55,4 +74,8 @@ h1.primary {
     .index_logo {
         width: 50%
     }
+
+    .register_btn {
+        width: 100%;
+     }
 }
