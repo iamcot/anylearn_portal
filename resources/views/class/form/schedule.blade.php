@@ -143,7 +143,7 @@
                               
                             </tbody>
                         </table>
-                        @if($course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE)
+                        @if(!empty($course['info']) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE)
                         <p class="text-info ml-2"><i class="fa fa-info"></i> Nếu bạn muốn cập nhật đường link cho từng lịch học, Lưu lịch học trước.</p>
                         @endif
                     </div>

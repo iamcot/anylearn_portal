@@ -14,7 +14,7 @@
         <div class="form-group row">
             <label for="subtype" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Loại khoá học') }}</label>
             <div class="col-md-8">
-                <select class="form-control" name="subtype" required>
+                <select class="form-control" name="subtype" required @if(!empty($course) && count($course['schedule']) > 0) disabled @endif>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>Khoá học Tại trung tâm</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>Khoá học Online</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>Mã code Ứng dụng khác</option>

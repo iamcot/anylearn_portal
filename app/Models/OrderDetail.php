@@ -49,9 +49,11 @@ class OrderDetail extends Model
             ->select(
                 'schedules.id',
                 'items.title',
+                'items.subtype as item_subtype',
                 'schedules.date as date',
                 'schedules.time_start as time',
                 'schedules.time_end',
+                'schedules.content as schedule_content',
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
