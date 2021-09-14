@@ -78,4 +78,9 @@ h1.primary {
     .register_btn {
         width: 100%;
      }
+
+     .register {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
