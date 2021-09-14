@@ -32,14 +32,14 @@
         </form>
     </div>
     <div class="col-md-8">
-        @foreach($files as $file => $url)
+        @foreach($files as $index => $url)
         <div class="card mb-2 shadow">
             <div class="card-body p-0">
                 <img class="img-fluid" src="{{ is_array($url) ? $url['file'] : $url }}">
             </div>
             <div class="card-footer">
-                <a href="{{ route('config.banner.del', ['img' => $fileService->encodeFileName($file) ]) }}" class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash-alt"></i> Xóa banner {{ $file }}</a>
+                <a href="{{ route('config.banner.del', ['index' => $index ]) }}" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash-alt"></i> Xóa banner {{ $index }}</a>
             </div>
         </div>
         @endforeach

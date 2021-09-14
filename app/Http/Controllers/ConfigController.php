@@ -78,7 +78,7 @@ class ConfigController extends Controller
                 if ($dbBanners) {
                     $banners = json_decode($dbBanners->value, true);
                 }
-                $banners[$file['file']] = [
+                $banners[count($banners)] = [
                     'file' => $file['url'],
                     'route' => $request->get('route'),
                     'arg' => $request->get('arg'),
@@ -104,28 +104,33 @@ class ConfigController extends Controller
         return view('config.banner', $this->data);
     }
 
-    public function delBanner($file)
+    public function delBanner($index)
     {
         $key = ConfigConstants::CONFIG_APP_BANNERS;
-        $fileService = new FileServices();
-        $files = ['banners/' . $fileService->decodeFileName($file)];
-        $fileService->deleteFiles($files, FileConstants::DISK_S3);
         $dbBanners = Configuration::where('key', $key)->first();
-        if ($dbBanners) {
-            $banners = json_decode($dbBanners->value, true);
-            $newBanners = [];
-            foreach ($banners as $dbfile => $url) {
-                if ($dbfile != $file) {
-                    $newBanners[$file] = $url;
-                }
-            }
-            Configuration::where('key', $key)->delete();
-            Configuration::create([
-                'key' => $key,
-                'type' => ConfigConstants::TYPE_CONFIG,
-                'value' => json_encode($newBanners),
-            ]);
+        if (!$dbBanners) {
+            return redirect()->back();
         }
+        $banners = json_decode($dbBanners->value, true);
+        $bannerToDelete = $banners[$index];
+
+        $fileService = new FileServices();
+        $files = ['banners/' . $bannerToDelete['file']];
+        $fileService->deleteFiles($files, FileConstants::DISK_S3);
+
+        $newBanners = [];
+        foreach ($banners as $i => $url) {
+            if ($i != $index) {
+                $newBanners[$i] = $url;
+            }
+        }
+
+        Configuration::where('key', $key)->delete();
+        Configuration::create([
+            'key' => $key,
+            'type' => ConfigConstants::TYPE_CONFIG,
+            'value' => json_encode($newBanners),
+        ]);
         return redirect()->back()->with('notify', true);
     }
 

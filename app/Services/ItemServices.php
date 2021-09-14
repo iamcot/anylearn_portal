@@ -408,8 +408,7 @@ class ItemServices
             Schedule::where('item_id', $input['id'])->update([
                 'date' => $input['date_start'],
                 'time_start' => $input['time_start'],
-                'time_end' => empty($input['time_end']) ? "" : $input['time_end'],
-                'content' => $input['title'],
+                'content' => $input['content'],
             ]);
             return true;
         }
@@ -418,6 +417,7 @@ class ItemServices
         if (empty($schedule)) {
             return false;
         }
+        $lastItemData = Item::find($itemId);
         foreach ($schedule as $date) {
             if (empty($date['date'])) {
                 continue;
@@ -427,14 +427,17 @@ class ItemServices
                     'item_id' => $itemId,
                     'date' => $date['date'],
                     'time_start' => $date['time_start'],
-                    'time_end' => $date['time_end'],
                 ]);
             } else {
                 $data = [
                     'date' => $date['date'],
                     'time_start' => $date['time_start'],
-                    'time_end' => $date['time_end'],
                 ];
+                if ($lastItemData->subtype == ItemConstants::SUBTYPE_ONLINE) {
+                    $data['content'] = json_encode($date['content']);
+                } else {
+                    $data['content'] = $date['content'];
+                }
                 Schedule::find($date['id'])->update($data);
             }
         }

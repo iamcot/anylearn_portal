@@ -148,6 +148,7 @@ class ItemApi extends Controller
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', '>', ItemConstants::STATUS_INACTIVE)
+            ->whereNull('items.item_id')
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->select(

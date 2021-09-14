@@ -96,7 +96,7 @@
         </h4>
         <hr />
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header font-weight-bold">Lịch đã tạo</div>
                     <div class="card-body p-0 table-responsive">
@@ -111,9 +111,8 @@
                             <thead>
                                 <tr>
                                     <th>@lang('Ngày')</th>
-                                    <th style="min-width: 100px;">@lang('Giờ bắt đầu')</th>
-                                    <th style="min-width: 100px;">@lang('Giờ kết thúc')</th>
-                                    <th width="10%"></th>
+                                    <th>@lang('Giờ bắt đầu')</th>
+                                    <th>Ghi chú</th>
                                 </tr>
                             </thead>
                             <tbody id="schedule_result">
@@ -125,14 +124,28 @@
                                         <input type="date" class="form-control" name="schedule[{{ $loop->index }}][date]" value="{{ $date->date}}" id="schedule_{{ $loop->index }}_date">
                                     </td>
                                     <td><input type="text" class="time form-control" name="schedule[{{ $loop->index }}][time_start]" value="{{ $date->time_start}}" id="schedule_{{ $loop->index }}_time_start"></td>
-                                    <td><input type="text" class="time form-control" name="schedule[{{ $loop->index }}][time_end]" value="{{ $date->time_end}}" id="schedule_{{ $loop->index }}_time_end"></td>
-                                    <td></td>
+                                    <td>
+                                        @if($course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE)
+                                        @php
+                                            $contentData = json_decode($date->content, true);
+                                        @endphp
+                                        <input placeholder="URL phòng học" type="text" class="form-control" name="schedule[{{ $loop->index }}][content][url]" value="{{ empty($contentData) ? '' : $contentData['url'] }}" id="schedule_{{ $loop->index }}_content_url">
+                                        <input placeholder="Chỉ dẫn vào phòng học" type="text" class="form-control mt-1" name="schedule[{{ $loop->index }}][content][info]" value="{{ empty($contentData) ? '' : $contentData['info'] }}" id="schedule_{{ $loop->index }}_content_info">
+                                        @else
+                                            <textarea class="form-control" name="schedule[{{ $loop->index }}][content]"  rows="1">{{ $date->content}}</textarea>
+                                        @endif
+
+                                    </td>
                                 </tr>
 
                                 @endforeach
                                 @endif
+                              
                             </tbody>
                         </table>
+                        @if($course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE)
+                        <p class="text-info ml-2"><i class="fa fa-info"></i> Nếu bạn muốn cập nhật đường link cho từng lịch học, Lưu lịch học trước.</p>
+                        @endif
                     </div>
                     <div class="card-footer">
                         @if(!empty($course['schedule']))
@@ -142,7 +155,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mt-1">
+            <div class="col-md-4 mt-1">
                 <div class="card shadow">
                     <div class="card-header font-weight-bold">
                         Tạo/Cập nhật tự động
@@ -164,10 +177,6 @@
                         <div class="form-group">
                             <label for="time_start" class="form-label font-weight-bold">{{ __('Giờ bắt đầu') }}</label>
                             <input id="time_start" type="text" class="time form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="time_end" class="form-label font-weight-bold">{{ __('Giờ kết thúc') }}</label>
-                            <input id="time_end" type="text" class="time form-control">
                         </div>
                     </div>
                 </div>

@@ -77,7 +77,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::any('/config/banner', 'ConfigController@banner')->name('config.banner');
     Route::any('/config/site', 'ConfigController@site')->name('config.site');
-    Route::get('/config/banner/del/{img}', 'ConfigController@delBanner')->name('config.banner.del');
+    Route::get('/config/banner/del/{index}', 'ConfigController@delBanner')->name('config.banner.del');
     Route::get('/config/guide/{type}', 'ConfigController@guide')->name('config.guide');
     Route::any('/config/homepopup', 'ConfigController@homePopup')->name('config.homepopup');
     Route::any('/config/homeclasses', 'ConfigController@homeClasses')->name('config.homeclasses');
