@@ -81,7 +81,7 @@ class ItemServices
             return "";
         }
         $url = route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
-        $url = str_replace("https://api.", "https://", $url, 1);
+        $url = str_replace("https://api.", "https://", $url);
         return $url;
     }
 
