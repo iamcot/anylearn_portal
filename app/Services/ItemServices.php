@@ -220,8 +220,6 @@ class ItemServices
                 'item_id' => $newCourse->id,
                 'date' => $newCourse->date_start,
                 'time_start' => $newCourse->time_start,
-                'time_end' => $newCourse->time_end,
-                'content' => $newCourse->title,
             ]);
             // }
             return $newCourse->id;
@@ -280,7 +278,7 @@ class ItemServices
          
             if (
                 $itemUpdate->date_start != $input['date_start']
-                || $itemUpdate->date_start != $input['time_start']
+                || $itemUpdate->time_start != $input['time_start']
                 || $itemUpdate->location != $input['location']
             ) {
                 $registerUsers = OrderDetail::where('item_id', $itemUpdate->id)->get();
@@ -404,15 +402,14 @@ class ItemServices
             }
         } 
 
-        $defaulOpeningthasSchedule = Schedule::where('item_id', $input['id'])->count();
-        if ($defaulOpeningthasSchedule == 1) {
-            Schedule::where('item_id', $input['id'])->update([
-                'date' => $input['date_start'],
-                'time_start' => $input['time_start'],
-                'content' => $input['content'],
-            ]);
-            return true;
-        }
+        // $defaulOpeningthasSchedule = Schedule::where('item_id', $input['id'])->count();
+        // if ($defaulOpeningthasSchedule == 1) {
+        //     Schedule::where('item_id', $input['id'])->update([
+        //         'date' => $input['date_start'],
+        //         'time_start' => $input['time_start'],
+        //     ]);
+        //     return true;
+        // }
        
         $schedule = $request->get('schedule');
         if (empty($schedule)) {
