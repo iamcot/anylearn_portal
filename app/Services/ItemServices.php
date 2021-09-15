@@ -65,6 +65,7 @@ class ItemServices
             'num_schedule' => $numSchedule,
             'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
+            'url' => $this->classUrl($itemId),
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
