@@ -58,7 +58,7 @@ class ItemServices
         $item->num_cart = $itemUserActionM->numReg($itemId);
         $item->rating = $itemUserActionM->rating($itemId);
         $item->openings = Item::where('item_id', $item->id)->select('id', 'title')->get();
-        $item->url = $this->classUrl($itemId);
+        $item->url = "Khoá học " . $item->title . " cực hay trên anyLEARN bạn có biết chưa " . $this->classUrl($itemId);
         return [
             'commission' => $commission,
             'author' => $author,
@@ -80,7 +80,9 @@ class ItemServices
         if (!$item) {
             return "";
         }
-        return route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
+        $url = route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
+        $url = str_replace("https://api.", "https://", $url, 1);
+        return $url;
     }
 
     public function itemList(Request $request, $userId = null, $itemType = ItemConstants::TYPE_COURSE)
