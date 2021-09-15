@@ -58,6 +58,7 @@ class ItemServices
         $item->num_cart = $itemUserActionM->numReg($itemId);
         $item->rating = $itemUserActionM->rating($itemId);
         $item->openings = Item::where('item_id', $item->id)->select('id', 'title')->get();
+        $item->url = $this->classUrl($itemId);
         return [
             'commission' => $commission,
             'author' => $author,
@@ -65,7 +66,6 @@ class ItemServices
             'num_schedule' => $numSchedule,
             'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
-            'url' => $this->classUrl($itemId),
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
