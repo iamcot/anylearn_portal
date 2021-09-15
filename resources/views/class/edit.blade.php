@@ -81,7 +81,7 @@
         var configDays = $("#schedule_auto input:checkbox:checked").map(function() {
             return $(this).attr('name');
         }).get();
-        var startDate = $("#opening_date").val().length > 0 ? $("#opening_date").val() : $("#date_start").val();
+        var startDate = $("#opening_date").val() ?? $("#date_start").val();
         var configStartTime = $("#time_start").val();
         var configEndTime = $("#time_end").val();
         var dt = new Date(startDate);
@@ -96,14 +96,12 @@
                         html += "<tr>" +
                             "<td><input type=\"date\" name=\"schedule[" + i + "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() + "\"/></td>" +
                             "<td><input name=\"schedule[" + i + "][time_start]\" class=\"time form-control\" value=\"" + configStartTime + "\"/></td>" +
-                            "<td><input name=\"schedule[" + i + "][time_end]\" class=\"time form-control\" value=\"" + configEndTime + "\"/></td>" +
                             "<td></td></tr>";
                     } else {
                         $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
                         if (configStartTime) {
                             $("#schedule_" + i + "_time_start").val(configStartTime);
                         }
-                        $("#schedule_" + i + "_time_end").val(configEndTime);
                     }
 
                     i++;
