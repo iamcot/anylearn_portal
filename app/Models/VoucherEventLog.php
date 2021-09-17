@@ -66,7 +66,7 @@ class VoucherEventLog extends Model
                     'data' => $voucher->voucher,
                 ]);
                 if ($newEventLog) {
-                    if ($voucherGroup->type == VoucherGroup::TYPE_MONEY) {
+                    if ($voucherGroup->type == VoucherGroup::TYPE_MONEY || $voucherGroup->type == VoucherGroup::TYPE_PAYMENT) {
                         $notifM->createNotif(NotifConstants::VOUCHER_MONEY_SENT, $userId, [
                             'voucher' => $voucher->voucher,
                             'amount' => $voucher->value,
