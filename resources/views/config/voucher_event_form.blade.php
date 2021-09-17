@@ -27,7 +27,8 @@
             <div class="form-group row">
                 <label for="trigger" class="col-md-2 col-form-label text-md-right">{{ __('ID khởi tạo') }}</label>
                 <div class="col-md-6">
-                    <input id="trigger" type="text" class="form-control @error('trigger') is-invalid @enderror" name="trigger" value="{{ old('trigger', !empty($event) ? $event->trigger : '') }}" required>
+                    <input id="trigger" type="text" class="form-control @error('trigger') is-invalid @enderror" name="trigger" value="{{ old('trigger', !empty($event) ? $event->trigger : 0) }}" required>
+                    <p class="small">Set 0 nếu áp dụng cho tất cả</p>
                 </div>
             </div>
 

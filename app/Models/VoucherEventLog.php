@@ -19,7 +19,7 @@ class VoucherEventLog extends Model
     public function useEvent($type, $userId, $triggerId)
     {
         $existsEvent = VoucherEvent::where('type', $type)
-            ->where('trigger', $triggerId)
+            ->whereIn('trigger', [0, $triggerId])
             ->where('status', 1)
             ->orderby('id', 'desc')
             ->first();
