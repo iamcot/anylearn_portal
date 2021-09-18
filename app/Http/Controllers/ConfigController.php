@@ -213,6 +213,7 @@ class ConfigController extends Controller
                 'title' => $input['title'],
                 'trigger' => $input['trigger'],
                 'targets' => $input['targets'],
+                'template' => $input['template'],
                 'qtt' => $input['qtt'],
                 'status' => 1,
             ];

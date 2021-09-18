@@ -46,6 +46,13 @@
                     <input id="qtt" type="text" class="form-control @error('qtt') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($event) ? $event->qtt : '') }}" required>
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="template" class="col-md-2 col-form-label text-md-right">{{ __('Template notification') }}</label>
+                <div class="col-md-6">
+                    <textarea id="template" class="form-control" name="template">{{ old('qtt', !empty($event) ? $event->qtt : '') }}</textarea>
+                    <p class="small">Dùng các mẫu {voucher}, {amount} để thay thế cho mã voucher và số tiền nếu có.</p>
+                </div>
+            </div>
         </div>
         <div class="card-footer">
             <button name="save" value="save" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Tạo mới')</button>

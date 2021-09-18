@@ -23,14 +23,14 @@ class Notification extends Model
         'send', 'read', 'route', 'type', 'is_send',
     ];
 
-    public function createNotif($type, $userId, $data, $copy = "", $route = "")
+    public function createNotif($type, $userId, $data, $copy = "", $route = "", $template = "")
     {
         $config = config('notification.' . $type);
         $obj = [
             'type' => $type,
             'user_id' => $userId,
             'title' => $config['title'],
-            'content' => $this->buildContent($config['template'], $data),
+            'content' => $this->buildContent(!empty($template) ? $template : $config['template'], $data),
             'route' => !empty($route) ? $route : $config['route'],
         ];
         if (!empty($config['args']) && !empty($data['args'])) {

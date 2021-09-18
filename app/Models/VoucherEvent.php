@@ -12,6 +12,6 @@ class VoucherEvent extends Model
     protected $table = 'voucher_events';
 
     protected $fillable = [
-        'type', 'status', 'title', 'trigger', 'targets', 'qtt'
+        'type', 'status', 'title', 'trigger', 'targets', 'qtt', 'template'
     ];
 }
