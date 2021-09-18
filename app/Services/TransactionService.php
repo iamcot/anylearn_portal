@@ -297,7 +297,7 @@ class TransactionService
                 ]);
             }
 
-            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? true : ConfigConstants::TRANSACTION_STATUS_PENDING;
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? $openOrder->id : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
         return $result;
     }

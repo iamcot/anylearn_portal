@@ -22,6 +22,7 @@ use App\Services\FileServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
 use Exception;
+use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,8 +93,9 @@ class TransactionController extends Controller
         }
         $transService = new TransactionService();
         $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
-        if ($result === true) {
-            return redirect()->back()->with('notify', "Bạn đã đăng ký khoá học thành công!");
+        if (is_numeric($result)) {
+            return redirect()->route('checkout.finish', ['order_id' => $result]);
+            // return redirect()->back()->with('notify', "Bạn đã đăng ký khoá học thành công!");
         } else if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
             if ($this->data['api_token']) {
                 return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");

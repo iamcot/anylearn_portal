@@ -26,7 +26,7 @@
                         @endforeach
                     </ul>
                     @endif
-                    <p>[<a class="text-success" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ KHUYẾN MÃI</strong></a>]</p>
+                    <p>[<a class="text-success" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ QUÀ TẶNG KHOÁ HỌC</strong></a>]</p>
                     <div id="add2cartvoucher" style="display: none;">
                         <div class="row">
                             <div class="col-10">
@@ -34,6 +34,7 @@
                             </div>
                             <div class="col-2"> <a href="javascript:offVoucher()">ĐÓNG</a></div>
                         </div>
+                        <p class="small">Chỉ nhập mã quà tặng khoá học, không hỗ trợ mã thanh  toán ở đây.</p>
                     </div>
                     @if (@auth()->check())
                         @if(Auth::user()->wallet_m >= $item->price)
