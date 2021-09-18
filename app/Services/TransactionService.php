@@ -343,7 +343,7 @@ class TransactionService
         $order = Order::find($orderId);
         $amount = false;
         if ($value >= 1000) {
-            $amount =  ($value > $order->amount) ? ($order->amount - $value) : 0;
+            $amount =  ($value > $order->amount) ? 0 : ($order->amount - $value);
         } else if ($value > 0 && $value < 1) {
             $amount = $order->amount * $value;
         }
