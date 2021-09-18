@@ -37,6 +37,7 @@
                 <div class="col-md-6">
                     <input id="targets" type="text" class="form-control @error('targets') is-invalid @enderror" name="targets" value="{{ old('targets', !empty($event) ? $event->targets : '') }}" required>
                     <div class="small">Nhiều bộ voucher thì phân cách nhau bằng dấu phẩy (ví dụ: 1,2,3)</div>
+                    <p class="small">Nếu event dùng notif và email template riêng, nên chỉ dùng 1 bộ voucher.</p>
                 </div>
             </div>
 
