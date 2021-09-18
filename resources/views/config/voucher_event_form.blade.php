@@ -3,7 +3,7 @@
 @section('body')
 <form method="POST">
     @csrf
-    <input type="hidden" name="id" value="{{ !empty($voucher) ? $voucher->id : null }}">
+    <input type="hidden" name="id" value="{{ !empty($event) ? $event->id : null }}">
     <div class="card shadow">
         <div class="card-body">       
             <div class="form-group row">
@@ -47,15 +47,22 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="template" class="col-md-2 col-form-label text-md-right">{{ __('Template notification') }}</label>
+                <label for="notif_template" class="col-md-2 col-form-label text-md-right">{{ __('Template notification') }}</label>
                 <div class="col-md-6">
-                    <textarea id="template" class="form-control" name="template">{{ old('qtt', !empty($event) ? $event->qtt : '') }}</textarea>
+                    <textarea id="notif_template" class="form-control" name="notif_template">{{ old('notif_template', !empty($event) ? $event->notif_template : '') }}</textarea>
+                    <p class="small">Dùng các mẫu {voucher}, {amount} để thay thế cho mã voucher và số tiền nếu có.</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="email_template" class="col-md-2 col-form-label text-md-right">{{ __('Template Email') }}</label>
+                <div class="col-md-6">
+                    <textarea id="email_template" class="form-control" name="email_template" rows="5">{{ old('email_template', !empty($event) ? $event->email_template : '') }}</textarea>
                     <p class="small">Dùng các mẫu {voucher}, {amount} để thay thế cho mã voucher và số tiền nếu có.</p>
                 </div>
             </div>
         </div>
         <div class="card-footer">
-            <button name="save" value="save" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Tạo mới')</button>
+            <button name="save" value="save" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu')</button>
         </div>
     </div>
 </form>

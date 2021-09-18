@@ -14,7 +14,8 @@ class AddTemplateToVoucherEvent extends Migration
     public function up()
     {
         Schema::table('voucher_events', function (Blueprint $table) {
-            $table->text('template')->nullable();
+            $table->text('notif_template')->nullable();
+            $table->text('email_template')->nullable();
         });
     }
 
@@ -26,7 +27,8 @@ class AddTemplateToVoucherEvent extends Migration
     public function down()
     {
         Schema::table('voucher_events', function (Blueprint $table) {
-            $table->dropColumn('template');
+            $table->dropColumn('notif_template');
+            $table->dropColumn('email_template');
         });
     }
 }

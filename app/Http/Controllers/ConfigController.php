@@ -204,7 +204,7 @@ class ConfigController extends Controller
         return redirect()->back()->with('notify', $rs);
     }
 
-    public function voucherEventEdit(Request $request)
+    public function voucherEventEdit(Request $request, $eventId = null)
     {
         if ($request->get('save')) {
             $input = $request->input();
@@ -213,16 +213,25 @@ class ConfigController extends Controller
                 'title' => $input['title'],
                 'trigger' => $input['trigger'],
                 'targets' => $input['targets'],
-                'template' => $input['template'],
+                'notif_template' => $input['notif_template'],
+                'email_template' => $input['email_template'],
                 'qtt' => $input['qtt'],
                 'status' => 1,
             ];
 
-            $newEvent = VoucherEvent::create($data);
-            if (!$newEvent) {
-                return redirect()->back()->with('notify', 'Tạo sự kiện mới thất bại');
+            if (empty($input['id'])) {
+                $newEvent = VoucherEvent::create($data);
+                if (!$newEvent) {
+                    return redirect()->back()->with('notify', 'Tạo sự kiện mới thất bại');
+                }
+            } else {
+                VoucherEvent::find($input['id'])->update($data);
+                return redirect()->route('config.voucherevent')->with('notify', 'Thao tác thành công.');
             }
-            return redirect()->route('config.voucherevent')->with('notify', 'Thao tác thành công.');
+            
+        }
+        if (!empty($eventId)) {
+            $this->data['event'] = VoucherEvent::find($eventId);
         }
 
         $this->data['navText'] = __('Quản lý Sự kiện phát voucher');

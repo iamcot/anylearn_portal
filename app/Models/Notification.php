@@ -220,7 +220,7 @@ class Notification extends Model
         }
     }
 
-    private function buildContent($template, $data)
+    public function buildContent($template, $data)
     {
         $keys = [];
         foreach (array_keys($data) as $key) {

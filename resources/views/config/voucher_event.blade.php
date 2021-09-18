@@ -42,6 +42,9 @@
                         <a class="btn btn-sm btn-info" href="{{ route('config.voucherevent.log', ['id' => $event->id]) }}">
                             DS đã phát
                         </a>
+                        <a class="btn btn-sm btn-warning" href="{{ route('config.voucherevent.edit', ['id' => $event->id]) }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
                         <a class="btn btn-sm btn-{{ $event->status == 1 ? 'danger' : 'success' }}" href="{{ route('config.voucherevent.close', ['id' => $event->id]) }}">
                         {{ $event->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>

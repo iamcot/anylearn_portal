@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Constants\NotifConstants;
+use App\Mail\VoucherEventEmail;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class VoucherEventLog extends Model
 {
@@ -70,7 +72,8 @@ class VoucherEventLog extends Model
                         $notifM->createNotif(NotifConstants::VOUCHER_MONEY_SENT, $userId, [
                             'voucher' => $voucher->voucher,
                             'amount' => $voucher->value,
-                        ], $voucher->voucher, "", $existsEvent->template);
+                        ], $voucher->voucher, "", $existsEvent->notif_template);
+                        
                     } elseif ($voucherGroup->type == VoucherGroup::TYPE_CLASS) {
                         $classesDB = DB::table('items')->whereIn('id', explode(',', $voucherGroup->ext))
                             ->select(DB::raw("GROUP_CONCAT(title SEPARATOR ', ') AS class"), DB::raw("GROUP_CONCAT(id SEPARATOR ',') AS ids"))
@@ -82,13 +85,26 @@ class VoucherEventLog extends Model
                             ];
                             $firstId = explode(",", $classesDB->ids)[0];
                             $notifData['args'] = $firstId;
-                            $notifM->createNotif(NotifConstants::VOUCHER_CLASS_SENT, $userId, $notifData);
+                            $notifM->createNotif(NotifConstants::VOUCHER_CLASS_SENT, $userId, $notifData, "", "", $existsEvent->notif_template);
                         }
                     } elseif ($voucherGroup->type == VoucherGroup::TYPE_PARTNER) {
                         $notifM->createNotif(NotifConstants::VOUCHER_PARTNER_SENT, $userId, [
                             'voucher' => $voucher->voucher,
                             'partner' => $voucherGroup->prefix,
-                        ], $voucher->voucher, "", $existsEvent->template);
+                        ], $voucher->voucher, "", $existsEvent->notif_template);
+                    }
+                    if ($existsEvent->email_template) {
+                        $user = User::find($userId);
+       
+                        //@TODO just temporary
+                        if (!empty($user->email)) {
+                            Mail::to($user->email)->send(new VoucherEventEmail([
+                                'template' => $existsEvent->email_template,
+                                'data' => [
+                                    'voucher' => $voucher->voucher,
+                                ]
+                            ]));
+                        }
                     }
                 }
             }

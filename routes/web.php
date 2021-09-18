@@ -92,7 +92,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::get('/config/voucher-event', 'ConfigController@voucherEvent')->name('config.voucherevent');
     Route::post('/config/voucher-event/create', 'ConfigController@voucherEventEdit')->name('config.voucherevent.create');
-    Route::get('/config/voucher-event/{id}', 'ConfigController@voucherEventEdit')->name('config.voucherevent.edit');
+    Route::any('/config/voucher-event/{id}', 'ConfigController@voucherEventEdit')->name('config.voucherevent.edit');
     Route::get('/config/voucher-event/{id}/log', 'ConfigController@voucherEventLog')->name('config.voucherevent.log');
     Route::any('/config/voucher-event/{id}/close', 'ConfigController@voucherEventClose')->name('config.voucherevent.close');
    
