@@ -70,7 +70,7 @@ class VoucherEventLog extends Model
                         $notifM->createNotif(NotifConstants::VOUCHER_MONEY_SENT, $userId, [
                             'voucher' => $voucher->voucher,
                             'amount' => $voucher->value,
-                        ]);
+                        ], $voucher->voucher);
                     } elseif ($voucherGroup->type == VoucherGroup::TYPE_CLASS) {
                         $classesDB = DB::table('items')->whereIn('id', explode(',', $voucherGroup->ext))
                             ->select(DB::raw("GROUP_CONCAT(title SEPARATOR ', ') AS class"), DB::raw("GROUP_CONCAT(id SEPARATOR ',') AS ids"))

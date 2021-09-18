@@ -181,10 +181,10 @@ return [
     ],
 
     NotifConstants::VOUCHER_MONEY_SENT =>  [
-        'title' => 'Bạn vừa được nhận một voucher tiền mặt',
-        'template' => 'Bạn vừa nhận voucher {voucher} trị giá {amount}. Hãy dùng nhé',
-        'route' => '/deposit',
-        'args' => true,
+        'title' => 'Bạn vừa được nhận một voucher',
+        'template' => 'Bạn vừa nhận voucher {voucher} trị giá {amount} dùng để thanh toán giỏ hàng (chạm để  copy).',
+        'route' => '',
+        'copy' => true,
     ],
     NotifConstants::VOUCHER_CLASS_SENT =>  [
         'title' => 'Bạn vừa được nhận một voucher khóa học',
