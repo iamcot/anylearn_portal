@@ -80,7 +80,7 @@ class TransactionController extends Controller
     public function add2cart(Request $request)
     {
         Log::debug("add2cart");
-        Log::debug($request);
+        Log::debug($request->fullUrl());
         if ($request->get('_user')) {
             $user = $request->get('_user');
             $this->data['api_token'] = $user->api_token;
@@ -192,7 +192,7 @@ class TransactionController extends Controller
     public function cart(Request $request)
     {
         Log::debug("Cart request");
-        Log::debug($request);
+        Log::debug($request->fullUrl());
         if ($request->get('_user')) {
             $user = $request->get('_user');
             $this->data['api_token'] = $user->api_token;
