@@ -79,8 +79,6 @@ class TransactionController extends Controller
 
     public function add2cart(Request $request)
     {
-        Log::debug("add2cart");
-        Log::debug($request->fullUrl());
         if ($request->get('_user')) {
             $user = $request->get('_user');
             $this->data['api_token'] = $user->api_token;
@@ -95,14 +93,13 @@ class TransactionController extends Controller
         }
         $transService = new TransactionService();
         $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
-        if (is_numeric($result)) {
-            return redirect()->route('checkout.finish', ['order_id' => $result]);
-            // return redirect()->back()->with('notify', "Bạn đã đăng ký khoá học thành công!");
-        } else if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
+        if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
             if ($this->data['api_token']) {
                 return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
             }
             return redirect()->route('cart')->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
+        } else if (is_numeric($result)) {
+            return redirect()->route('checkout.finish', ['order_id' => $result]);
         } else {
             if ($this->data['api_token']) {
                 return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', $result);
@@ -191,8 +188,6 @@ class TransactionController extends Controller
 
     public function cart(Request $request)
     {
-        Log::debug("Cart request");
-        Log::debug($request->fullUrl());
         if ($request->get('_user')) {
             $user = $request->get('_user');
             $this->data['api_token'] = $user->api_token;
@@ -264,30 +259,29 @@ class TransactionController extends Controller
         }
         $voucher = $request->get('payment_voucher');
         if ($request->get('cart_action') == 'apply_voucher') {
-            
+
             $voucherM = new Voucher();
             try {
                 $voucherM->useVoucherPayment($user->id, $voucher, $orderId);
             } catch (Exception $ex) {
                 return redirect()->back()->with('notify', $ex->getMessage());
             }
-    
+
             $voucherDB = Voucher::where('voucher', $voucher)->first();
-    
+
             $transService = new TransactionService();
             $res = $transService->recalculateOrderAmountWithVoucher($orderId, $voucherDB->value);
             if (!$res) {
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }
-    
+
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
-        } else if ($request->get('cart_action') == 'remove_voucher'){
+        } else if ($request->get('cart_action') == 'remove_voucher') {
             VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $transService = new TransactionService();
             $res = $transService->recalculateOrderAmount($orderId);
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
-        
     }
 
     public function payment(Request $request)
