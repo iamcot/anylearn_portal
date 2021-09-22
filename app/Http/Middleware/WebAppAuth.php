@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class WebAppAuth
 {
@@ -18,6 +19,8 @@ class WebAppAuth
     public function handle($request, Closure $next)
     {
         $userAgent = $request->header('User-Agent');
+        Log::debug("UserAgent");
+        Log::debug($userAgent);
         if ($userAgent == "anylearn-app") {
             $token = $request->header('token') ?? $request->get('api_token');
             $user = User::where('api_token', $token)->first();
