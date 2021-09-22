@@ -19,8 +19,8 @@ class WebAppAuth
     public function handle($request, Closure $next)
     {
         $userAgent = $request->header('User-Agent');
-        Log::debug("UserAgent");
-        Log::debug($userAgent);
+        Log::debug("header");
+        Log::debug($request->header);
         if ($userAgent == "anylearn-app") {
             $token = $request->header('token') ?? $request->get('api_token');
             $user = User::where('api_token', $token)->first();
