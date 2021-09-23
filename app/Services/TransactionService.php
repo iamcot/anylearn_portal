@@ -447,7 +447,7 @@ class TransactionService
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
         $voucherEvent = new VoucherEventLog();
         foreach ($orderDetails as $orderItem) {
-            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->id);
+            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
             $item = Item::find($orderItem->item_id);
             $author = User::find($item->user_id);
             $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
