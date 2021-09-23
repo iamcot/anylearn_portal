@@ -44,8 +44,8 @@ return [
         'route' => '/course/list',
     ],
     NotifConstants::COURSE_REGISTERED =>  [
-        'title' => 'Đăng kí khóa học thành công',
-        'template' => 'Bạn đã đăng ký khóa học {course} thành công. Kiểm tra lịch học để đừng bỏ lỡ nhé.',
+        'title' => 'Đăng kí thành công',
+        'template' => 'Bạn đã đăng ký {course} thành công. Kiểm tra lịch để đừng bỏ lỡ nhé.',
         'route' => '/account/calendar',
     ],
     NotifConstants::COURSE_JOINED =>  [
