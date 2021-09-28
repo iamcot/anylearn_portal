@@ -55,7 +55,7 @@
                 {
                     "id": "{{ $item->id }}",
                     "name": "{{ $item->title }}",
-                    "price": {{ $item->price }},
+                    "price": "{{ $item->price }}",
                     "quantity": 1,
                     "currency": "VND"
                 }

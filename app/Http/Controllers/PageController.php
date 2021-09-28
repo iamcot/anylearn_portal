@@ -29,7 +29,7 @@ class PageController extends Controller
             }
         }
         $this->data['provinces'] = Province::orderby('name')->get();
-        return view('home', $this->data);
+        return view(env('TEMPLATE', '') . 'home', $this->data);
     }
 
     public function ref(Request $request, $code = "")
