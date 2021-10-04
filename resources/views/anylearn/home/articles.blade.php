@@ -53,7 +53,7 @@
         var items = document.querySelectorAll('#{{ $carouselId }} .carousel-item')
         console.log(items);
         items.forEach((el) => {
-            const minPerSlide = 3;
+            var minPerSlide = screen.width <= 768 ? 1 : 3;
             let next = el.nextElementSibling
             for (var i = 1; i < minPerSlide; i++) {
                 if (!next) {
