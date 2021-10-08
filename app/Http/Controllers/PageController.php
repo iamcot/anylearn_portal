@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
+use App\Models\Article;
 use App\Models\Configuration;
 use App\Models\Item;
 use App\Models\User;
@@ -29,6 +30,31 @@ class PageController extends Controller
             }
         }
         $this->data['provinces'] = Province::orderby('name')->get();
+        $this->data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
+        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+        $this->data['events'] = Article::where('type', Article::TYPE_EVENT)
+        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+        $this->data['articles'] = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
+        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        $homeClasses = [];
+        if ($homeClassesDb) {
+            foreach (json_decode($homeClassesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->where('status', 1)
+                    ->where('user_status', 1)
+                    ->get();
+                $homeClasses[] = [
+                    'title' => $block['title'],
+                    'classes' => $items
+                ];
+            }
+        }
+        $this->data['classes'] = $homeClasses;
+
         return view(env('TEMPLATE', '') . 'home', $this->data);
     }
 
@@ -98,7 +124,7 @@ class PageController extends Controller
                     'text' => 'Khoá học',
                 ]
             ];
-            return view('pdp.index', $data);
+            return view(env('TEMPLATE', '') . 'pdp.index', $data);
         } catch (Exception $e) {
             echo $e->getMessage();
         }

@@ -48,14 +48,14 @@ nav a {
 
 #quote-top {
     position: absolute;
-    width: 5%;
-    left: 5%;
+    width: 3%;
+    left: 3%;
 }
 
 #quote-bottom {
     position: absolute;
-    width: 5%;
-    right: 5%;
+    width: 3%;
+    right: 3%;
     bottom: 5px;
 }
 
@@ -109,6 +109,10 @@ nav a {
 .carousel4 .class-button {
     position: absolute;
     bottom: 0;
+}
+
+.carousel4 .card {
+    min-width: 100%;
 }
 
 .carousel3 .carousel-item .col-md-4 {
@@ -166,11 +170,84 @@ footer h6 {
     font-size: 20px;
 }
 
-footer a {}
+#pdptab .active {
+    color: #01A652 !important;
+}
+
+.collapse-module .collapse,
+.collapse-module .collapsing {
+    height: 20rem;
+    /* [NUM_OF_LINES] x [LINE_HEIGHT] */
+}
+
+.collapse-module .collapse {
+    position: relative;
+    /* For ...'s content absolute positioning */
+    display: block;
+    overflow: hidden;
+}
+
+.collapse-module .collapse:before {
+    content: ' ...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.collapse-module .collapse.show {
+    height: auto;
+    /* You need to reset the height when not collapsed */
+}
+
+.collapse-module .collapse.show:before {
+    display: none;
+}
+
+.collapse-module button[aria-expanded="false"]:after {
+    content: '⇳ MỞ RỘNG';
+}
+
+.collapse-module button[aria-expanded="true"]:after {
+    content: '⇳ THU GỌN';
+}
+
+.imagebox:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+    /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
+}
+
+.imagebox {
+    position: relative;
+}
+
+.imagebox img {
+    position: absolute;
+    /* Take your picture out of the flow */
+    top: 3%;
+    bottom: 3%;
+    left: 3%;
+    right: 3%;
+    /* Make the picture taking the size of it's parent */
+    width: 94%;
+    /* This if for the object-fit */
+    height: 94%;
+    /* This if for the object-fit */
+    object-fit: cover;
+    /* Equivalent of the background-size: cover; of a background-image */
+    object-position: center;
+}
+
+.class-title {
+    line-height: 1.5rem;
+    height: 3rem;
+    overflow: hidden;
+}
 
 @media screen and (max-width: 768px) {
     #search {
-        max-width: 95%;
+        max-width: 93%;
     }
     .carousel3 {
         margin-left: 0;

@@ -6,13 +6,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title m-0 font-weight-bold text-{{ env('MAIN_COLOR', 'primary') }}">@lang('Bạn đang đăng ký khoá học')
+                    <h5 class="modal-title m-0 fw-bold text-success }}">@lang('Bạn đang đăng ký khoá học')
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="font-weight-bold text-{{ env('MAIN_COLOR', 'primary') }}">{{ $class->title }}</h3>
+                    <h3 class="fw-bold text-success }}">{{ $class->title }}</h3>
                     <p>{{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
                     <p>Khai giảng: {{ date('d/m/Y', strtotime($class->date_start)) }} {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
                     <p>Học phí: <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
@@ -36,15 +35,10 @@
                         </div>
                         <p class="small">Chỉ nhập mã quà tặng khoá học, không hỗ trợ mã thanh  toán ở đây.</p>
                     </div>
-                    @if (@auth()->check())
-                        @if(Auth::user()->wallet_m >= $item->price)
-                        <p class=" text-danger">Số dư của bạn sau khi đăng ký là {{ number_format((Auth::user()->wallet_m - $item->price), 0 , ",", ".") }}</p>
-                        @endif
-                   @endif
                 </div>
                 <div class="modal-footer">
                    
-                    <button id="add2CartBtn" name="add2cart" value="add2cart" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}">@lang('ĐĂNG KÝ KHOÁ HỌC')</button>
+                    <button id="add2CartBtn" name="add2cart" value="add2cart" class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button>
                 </div>
             </div>
         </div>

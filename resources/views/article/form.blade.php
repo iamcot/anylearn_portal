@@ -17,14 +17,14 @@
                     <label for="type" class="col-md-2 col-form-label text-md-right">{{ __('Chuyên mục') }}</label>
                     <div class="col-md-8">
                         <select class="form-control" name="type" id="type">
-                            @foreach(["read", "video"] as $type)
+                            @foreach(["read", "video", "event", "promotion"] as $type)
                             <option value="{{ $type }}" {{ !empty($article) && $article->type  == $type ? 'selected' : '' }}>{{ $type }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="video" class="col-md-2 col-form-label text-md-right">{{ __('Link youtube') }}</label>
+                    <label for="video" class="col-md-2 col-form-label text-md-right">{{ __('Link youtube / Số giảm promotion') }}</label>
                     <div class="col-md-8">
                         <input id="video" type="text" class="form-control @error('video') is-invalid @enderror" name="video" value="{{ old('video', !empty($article) ? $article->video : '') }}">
                     </div>

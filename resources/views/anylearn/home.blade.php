@@ -25,13 +25,26 @@ anyLEARN - HỌC không giới hạn
     'title' => 'ƯU ĐÃI HOT',
     'carouselId' => 'promotions'
     ])
+@foreach($classes as $classBlock)
     @include('anylearn.home.classes', [
-    'title' => 'KHOÁ HỌC ÂM NHẠC', 
-    'carouselId' => 'events'
-    ])
+        'title' => $classBlock['title'], 
+        'carouselId' => 'class_' . $loop->index,
+        'data' => $classBlock['classes']
+        ])
+    @if(count($classes) == 1 || $loop->index == floor(count($classes) / 2) - 1 )
+        @include('anylearn.home.articles', [
+        'title' => 'SỰ KIỆN SẮP DIỄN RA', 
+        'carouselId' => 'events',
+        'data' => $events
+        ])
+    @endif
+@endforeach
+
+  
 @include('anylearn.home.articles', [
     'title' => 'HỌC VÀ HỎI', 
-    'carouselId' => 'asks'
+    'carouselId' => 'asks',
+    'data' => $articles
     ])
 <section class="hot-items mt-5">
 </section>

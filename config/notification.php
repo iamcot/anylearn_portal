@@ -55,7 +55,7 @@ return [
     ],
     NotifConstants::COURSE_HAS_REGISTERED =>  [
         'title' => 'Khóa học có người đăng ký',
-        'template' => '{username} ơi! Khóa học {course} của bạn vừa có thêm người đăng ký mới. Kiểm tra xem ai nè.',
+        'template' => 'Khóa học {course} của bạn vừa có thêm người đăng ký mới. Kiểm tra danh sách học viên của bạn nhé!',
         'route' => '/course/list',
     ],
     NotifConstants::COURSE_HAS_NEW =>  [

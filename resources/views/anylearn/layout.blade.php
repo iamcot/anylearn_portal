@@ -44,6 +44,7 @@
         @endif
     </section>
     <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
     @yield('jscript')
 </body>
 

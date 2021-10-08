@@ -407,12 +407,12 @@ class ConfigController extends Controller
         }
         $config = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $this->data['configs'] = [
-            [], [], [], //3
+            [], [], [], [], [],//5
         ];
         if ($config) {
             $values = json_decode($config->value, true);
             for ($i = 0; $i < count($this->data['configs']); $i++) {
-                $this->data['configs'][$i] = $values[$i];
+                $this->data['configs'][$i] = empty($values[$i]) ? [] : $values[$i];
             }
         }
 

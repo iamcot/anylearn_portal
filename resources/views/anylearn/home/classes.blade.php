@@ -1,3 +1,4 @@
+@inject('itemServ','App\Services\ItemServices')
 <section class="carousel4">
     <div class="row mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}" class="carousel slide" data-bs-interval="false">
@@ -6,96 +7,32 @@
             </a>
             <div class="carousel-inner" role="listbox">
                 <h5 class="m-2 fw-bold text-uppercase">{{ $title }}</h5>
-                <div class="carousel-item active">
+                @foreach($data as $class)
+                <div class="carousel-item  {{ $loop->index == 0 ? 'active' : '' }}">
                     <div class="col-xs-6 col-md-3  d-flex align-items-stretch">
                         <div class="card border-0 shadow-sm">
-                            <div class="card-img ">
-                                <img src="/cdn/anylearn/img/class.png" class="img-fluid">
-                                <div class="mt-1 fw-bold p-1"><span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> Hội thảo nghề làm cha mẹ</div>
-                                <div class="p-1"><span class="bg-success badge mr-1">-25%</span>
-                                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format(200000, 0, ',', '.') }}</span>
-                                    <span class="text-success fw-bold">{{ number_format(150000, 0, ',', '.') }}</span>
+                            <div class="card-img">
+                                <div class="imagebox">
+                                <img src="{{ $class->image }}" class="img-fluid">
                                 </div>
-                                <div class="p-1">@include('anylearn.widget.rating', ['score' =>3.5])</div>
+                                <div class="class-title mt-1 fw-bold p-1">@if($class->is_hot) <span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> @endif {{ $class->title }}</div>
+                                <div class="p-1">
+                                    @if($class->org_price > 0)
+                                    <span class="bg-success badge mr-1">-{{ number_format((($class->org_price - $class->price) / $class->org_price) * 100, 0,".",",") }}%</span>
+                                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format($class->org_price, 0, ',', '.') }}</span>
+                                    @endif
+                                    <span class="text-success fw-bold">{{ number_format($class->price, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="p-1">@include('anylearn.widget.rating', ['score' => $class->rating ?? 0])</div>
                                 <div class="text-center mb-2">
-                                    <a href="" class="btn btn-success rounded-pill border-0 w-75">CHI TIẾT</a>
+                                    <a href="{{ $itemServ->classUrl($class->id) }}" class="btn btn-success rounded-pill border-0 w-75">CHI TIẾT</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <div class="col-xs-6 col-md-3 d-flex align-items-stretch">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-img ">
-                                <img src="/cdn/anylearn/img/class.png" class="img-fluid">
-                                <div class="mt-1 fw-bold p-1"><span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> Hội thảo nghề làm cha mẹ 2</div>
-                                <div class="p-1"><span class="bg-success badge mr-1">-25%</span>
-                                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format(200000, 0, ',', '.') }}</span>
-                                    <span class="text-success fw-bold">{{ number_format(150000, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="p-1">@include('anylearn.widget.rating', ['score' =>3.5])</div>
-                                <div class="text-center mb-2">
-                                    <a href="" class="btn btn-success rounded-pill border-0 w-75">CHI TIẾT</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="col-xs-6 col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-img ">
-                                <img src="/cdn/anylearn/img/class.png" class="img-fluid">
-                                <div class="mt-1 fw-bold p-1"><span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> Hội thảo nghề làm cha mẹ 3</div>
-                                <div class="p-1"><span class="bg-success badge mr-1">-25%</span>
-                                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format(200000, 0, ',', '.') }}</span>
-                                    <span class="text-success fw-bold">{{ number_format(150000, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="p-1">@include('anylearn.widget.rating', ['score' =>3.5])</div>
-                                <div class="text-center mb-2">
-                                    <a href="" class="btn btn-success rounded-pill border-0 w-75">CHI TIẾT</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="col-xs-6 col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-img ">
-                                <img src="/cdn/anylearn/img/class.png" class="img-fluid">
-                                <div class="mt-1 fw-bold p-1"><span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> Hội thảo nghề làm cha mẹ 4</div>
-                                <div class="p-1"><span class="bg-success badge mr-1">-25%</span>
-                                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format(200000, 0, ',', '.') }}</span>
-                                    <span class="text-success fw-bold">{{ number_format(150000, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="p-1">@include('anylearn.widget.rating', ['score' =>3.5])</div>
-                                <div class="text-center mb-2">
-                                    <a href="" class="btn btn-success rounded-pill border-0 w-75">CHI TIẾT</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="col-xs-6 col-md-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-img ">
-                                <img src="/cdn/anylearn/img/class.png" class="img-fluid">
-                                <div class="mt-1 fw-bold p-1"><span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> Hội thảo nghề làm cha mẹ 5</div>
-                                <div class="p-1"><span class="bg-success badge mr-1">-25%</span>
-                                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format(200000, 0, ',', '.') }}</span>
-                                    <span class="text-success fw-bold">{{ number_format(150000, 0, ',', '.') }}</span>
-                                </div>
-                                <div class="p-1">@include('anylearn.widget.rating', ['score' =>3.5])</div>
-                                <div class="text-center mb-2">
-                                    <a href="" class="btn btn-success rounded-pill border-0 w-75">CHI TIẾT</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+
             </div>
         </div>
     </div>

@@ -1,3 +1,4 @@
+@if(!empty($promotions))
 <section class="carousel3">
     <div class="row mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}" class="carousel slide" data-bs-interval="false">
@@ -6,46 +7,18 @@
             </a>
             <div class="carousel-inner" role="listbox">
                 <h5 class="m-2 fw-bold text-uppercase">{{ $title }}</h5>
-                <div class="carousel-item active">
+                @foreach($promotions as $promotion)
+                <div class="carousel-item {{ $loop->index == 0 ? 'active' : '' }}">
                     <div class="col-md-4">
                         <div class="card border-0">
                             <div class="card-img">
-                                <img src="/cdn/anylearn/img/promotion.png" class="img-fluid">
-                                <div class="promotion-tag">-50%</div>
+                                <img src="{{ $promotion->image }}" class="img-fluid">
+                                <div class="promotion-tag">{{ $promotion->video }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <div class="col-md-4">
-                        <div class="card border-0">
-                            <div class="card-img">
-                                <img src="/cdn/anylearn/img/promotion.png" class="img-fluid">
-                                <div class="promotion-tag">FREE</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="col-md-4">
-                        <div class="card border-0">
-                            <div class="card-img">
-                                <img src="/cdn/anylearn/img/promotion.png" class="img-fluid">
-                                <div class="promotion-tag">2</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="col-md-4">
-                        <div class="card border-0">
-                            <div class="card-img">
-                                <img src="/cdn/anylearn/img/promotion.png" class="img-fluid">
-                                <div class="promotion-tag">3</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -66,3 +39,4 @@
         })
     </script>
 </section>
+@endif
