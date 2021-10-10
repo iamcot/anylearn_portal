@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherEvent;
 use App\Models\VoucherEventLog;
+use App\Models\VoucherUsed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +85,7 @@ class TransactionService
         if ($item->status != ItemConstants::STATUS_ACTIVE || $item->user_status != ItemConstants::USERSTATUS_ACTIVE) {
             return 'Khoá học không cho phép đăng ký lúc này.';
         }
-        
+
         $alreadyRegister = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->whereIn('orders.status', [OrderConstants::STATUS_DELIVERED, OrderConstants::STATUS_NEW])
@@ -174,6 +175,13 @@ class TransactionService
                 'paid_price' => $item->price,
                 'status' => $status,
             ]);
+
+            $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
+            if ($usingVoucher) {
+                $this->recalculateOrderAmount($openOrder->id);
+                $voucher = Voucher::find($usingVoucher->voucher_id);
+                $this->recalculateOrderAmountWithVoucher($openOrder->id, $voucher->value);
+            }
 
             // voucher event
             if ($status == OrderConstants::STATUS_DELIVERED) {
@@ -319,7 +327,15 @@ class TransactionService
             ]);
             if ($order->quantity == 1) {
                 Transaction::where('order_id', $order->id)->delete();
+                VoucherUsed::where('order_id', $order->id)->delete();
                 Order::find($order->id)->delete();
+            } else {
+                $usingVoucher = VoucherUsed::where('order_id', $order->id)->first();
+                if ($usingVoucher) {
+                    $this->recalculateOrderAmount($order->id);
+                    $voucher = Voucher::find($usingVoucher->voucher_id);
+                    $this->recalculateOrderAmountWithVoucher($order->id, $voucher->value);
+                }
             }
         });
         return true;
@@ -345,7 +361,7 @@ class TransactionService
         if ($value >= 1000) {
             $amount =  ($value > $order->amount) ? 0 : ($order->amount - $value);
         } else if ($value > 0 && $value < 1) {
-            $amount = $order->amount * $value;
+            $amount = $order->amount - ($order->amount * $value);
         }
         if ($amount === false) {
             return false;
