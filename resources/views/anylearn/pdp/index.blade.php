@@ -14,8 +14,14 @@
                 <div class="col-lg-8 col-md-6 text-secondary">
                     @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
                     <h2 class="text-dark fw-bold">{{ $item->title }}</h2>
-                    <p class=""><i class="text-success fa fa-{{ $author->role == 'teacher' ? 'user' : 'university'}}"></i> {{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
-
+                    <p class="">{{ $author->name }}</p>
+                    <div>
+                        <ul class="list-unstyled list-inline">
+                            @foreach($categories as $category)
+                            <li class="list-inline-item border border-success rounded text-success p-1 fw-light">{{ $category->title }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                     <div>
                         @include('anylearn.widget.rating', ['score' => $item->rating ?? 0])
                     </div>
@@ -36,7 +42,11 @@
                     </div>
                     <div class="col-lg-6 col-md-6 d-flex">
                         <div class="flex-fill pt-2"><a @if(auth()->check()) id="add2cart-action" @endif class="border-0 btn btn-success form-control rounded-pill" href="{{ auth()->check() ? '#' : route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id))   }}">Đăng ký học</a></div>
-                        <div class="flex-end p-2 text-success"><a><i class="far fa-2x fa-heart"></i></a></div>
+                        @if($is_fav)
+                        <div class="flex-end p-2"><a class=" text-danger" href="{{ route('class.like', ['itemId' => $item->id ]) }}"><i class="fas fa-2x fa-heart"></i></a></div>
+                        @else
+                        <div class="flex-end p-2 text-success"><a class="text-danger" href="{{ route('class.like', ['itemId' => $item->id ]) }}"><i class="far fa-2x fa-heart"></i></a></div>
+                        @endif
                         <div class="flex-end p-2 text-success"><a><i class="far fa-2x fa-share-square"></i></a></div>
                     </div>
                 </div>
@@ -49,9 +59,11 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link text-secondary fw-bold active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">MÔ TẢ</button>
             </li>
-            <li class="nav-item" role="presentation">
+            @if($author->role == 'school')
+            <!-- <li class="nav-item" role="presentation">
                 <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
-            </li>
+            </li> -->
+            @endif
             <li class="nav-item" role="presentation">
                 <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">ĐÁNH GIÁ</button>
             </li>
@@ -68,8 +80,12 @@
                 </div>
 
             </div>
-            <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div>
-            <div class="tab-pane fade p-2" id="review" role="tabpanel" aria-labelledby="review-tab">...</div>
+            @if($author->role == 'school')
+            <!-- <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div> -->
+            @endif
+            <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel" aria-labelledby="review-tab">
+                @include('anylearn.pdp.review')
+            </div>
         </div>
     </div>
     <div class="mb-3">

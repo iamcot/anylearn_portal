@@ -11,6 +11,7 @@ use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\Item;
+use App\Models\ItemCategory;
 use App\Models\ItemResource;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
@@ -59,6 +60,26 @@ class ItemServices
         $item->rating = $itemUserActionM->rating($itemId);
         $item->openings = Item::where('item_id', $item->id)->select('id', 'title')->get();
         $item->url = "Khoá học " . $item->title . " cực hay trên anyLEARN bạn có biết chưa " . $this->classUrl($itemId);
+        $categories = DB::table('items_categories')
+            ->join('categories', 'categories.id', '=', 'items_categories.category_id')
+            ->where('item_id', $itemId)
+            ->select('categories.id', 'categories.url', 'categories.title')
+            ->get();
+        $teachers = DB::table('users')
+            ->join('class_teachers AS ct', function ($join) use ($item) {
+                $join->on('ct.user_id', '=', 'users.id')
+                    ->where('ct.class_id', '=', DB::raw($item->id));
+            })
+            ->where('users.user_id', $item->user_id)
+            ->where('users.role', UserConstants::ROLE_TEACHER)
+            ->select('users.*')
+            ->get();
+        $reviews = DB::table('item_user_actions AS iua')
+            ->join('users', 'users.id', '=', 'iua.user_id')
+            ->where('iua.item_id', $itemId)
+            ->where('iua.type', ItemUserAction::TYPE_RATING)
+            ->select('iua.*', 'users.name AS user_name', 'users.id AS user_id', 'users.image AS user_image')
+            ->get();
         return [
             'commission' => $commission,
             'author' => $author,
@@ -66,6 +87,9 @@ class ItemServices
             'num_schedule' => $numSchedule,
             'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
+            'categories' => $categories,
+            'teachers' => $teachers,
+            'reviews' => $reviews,
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
@@ -185,6 +209,17 @@ class ItemServices
         return $data;
     }
 
+    public function assignCategoryToItem($itemId, $categories)
+    {
+        ItemCategory::where('item_id', $itemId)->delete();
+        foreach ($categories as $cat) {
+            ItemCategory::create([
+                'item_id' => $itemId,
+                'category_id' => $cat,
+            ]);
+        }
+    }
+
     public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
         $user = $userApi ?? Auth::user();
@@ -215,6 +250,7 @@ class ItemServices
 
         $newCourse = Item::create($input);
         if ($newCourse) {
+            $this->assignCategoryToItem($newCourse->id, $input['categories']);
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($newCourse, Tag::TYPE_CLASS);
             // if ($newCourse->type == ItemConstants::TYPE_COURSE) {
@@ -273,11 +309,13 @@ class ItemServices
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
+            $this->assignCategoryToItem($itemUpdate->id, $input['categories']);
+
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($itemUpdate, Tag::TYPE_CLASS);
-           
+
             $canUpdateSchedule = $this->updateClassSchedule($request, $input);
-         
+
             if (
                 $itemUpdate->date_start != $input['date_start']
                 || $itemUpdate->time_start != $input['time_start']
@@ -350,7 +388,8 @@ class ItemServices
                 if (Item::where('item_id', $input['id'])->count() == 0 && $hasRegister > 0) {
                     throw new Exception('Không tạo được khai giảng mới vì khoá học mặc định này đã có học viên đăng ký');
                 }
-                $rs = DB::statement("INSERT INTO items (
+                $rs = DB::statement(
+                    "INSERT INTO items (
                     title,
                     `type`,
                     subtype,
@@ -383,16 +422,17 @@ class ItemServices
                     is_test,
                     ?,
                     ?
-                FROM items WHERE id = ? "
-                , [$opening['title'], $opening['date_start'], $input['id'], $opening['location_id'], $input['id']]);
+                FROM items WHERE id = ? ",
+                    [$opening['title'], $opening['date_start'], $input['id'], $opening['location_id'], $input['id']]
+                );
 
                 if (Item::where('item_id', $input['id'])->count() == 1) {
                     Schedule::where('item_id', $input['id'])->delete();
                 }
-               
+
                 return true;
             }
-        } else if ($request->get('tab') == 'schedule' && $request->get('op') > 0 ) {
+        } else if ($request->get('tab') == 'schedule' && $request->get('op') > 0) {
             $itemId = $request->get('op');
             $opening = $request->get('opening');
             if (!empty($opening) && !empty($opening['title'])) {
@@ -402,7 +442,7 @@ class ItemServices
                     'date_start' => $opening['date_start']
                 ]);
             }
-        } 
+        }
 
         // $defaulOpeningthasSchedule = Schedule::where('item_id', $input['id'])->count();
         // if ($defaulOpeningthasSchedule == 1) {
@@ -412,7 +452,7 @@ class ItemServices
         //     ]);
         //     return true;
         // }
-       
+
         $schedule = $request->get('schedule');
         if (empty($schedule)) {
             return false;

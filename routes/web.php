@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::any('/location/create', 'UserController@locationCreate')->name('location.create');
     Route::any('/location/{id}', 'UserController@locationEdit')->name('location.edit');
     Route::get('/item/userstatus/{itemId}', 'CourseController@userStatusTouch')->name('item.userstatus.touch');
+    Route::get('/class-like/{itemId}', 'ClassController@likeTouch')->name('class.like');
 });
 
 Route::middleware(['webappauth'])->group(function () {
@@ -145,6 +146,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/article/create', 'ArticleController@create')->name('article.create');
     Route::any('/article/{id}', 'ArticleController@edit')->name('article.edit');
     Route::get('/article/status/{articleId}', 'ArticleController@statusTouch')->name('article.status.touch');
+
+    Route::get('category', 'ClassController@category')->name('category');
+    Route::any('category-edit/{id?}', 'ClassController@categoryEdit')->name('category.edit');
+    Route::get('/service/touch-status/{table}/{id}', 'Controller@touchStatus')->name('service.touch.status');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

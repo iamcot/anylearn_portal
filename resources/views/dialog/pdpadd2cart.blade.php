@@ -6,7 +6,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title m-0 fw-bold text-success }}">@lang('Bạn đang đăng ký khoá học')
+                    <h5 class="modal-title m-0 text-primary }}">@lang('Bạn đang đăng ký khoá học')
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -25,13 +25,14 @@
                         @endforeach
                     </ul>
                     @endif
-                    <p>[<a class="text-success" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ QUÀ TẶNG KHOÁ HỌC</strong></a>]</p>
+                    <p>[<a class="text-primary" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ QUÀ TẶNG KHOÁ HỌC</strong></a>]</p>
                     <div id="add2cartvoucher" style="display: none;">
                         <div class="row">
                             <div class="col-10">
                                 <input type="text" class="form-control" name="voucher">
                             </div>
-                            <div class="col-2"> <a href="javascript:offVoucher()">ĐÓNG</a></div>
+                            <div class="col-2"> 
+                            <button onclick="offVoucher()" type="button" class="btn-close" aria-label="Close"></button>    
                         </div>
                         <p class="small">Chỉ nhập mã quà tặng khoá học, không hỗ trợ mã thanh  toán ở đây.</p>
                     </div>

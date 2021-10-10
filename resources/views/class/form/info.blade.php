@@ -22,6 +22,18 @@
             </div>
         </div>
 
+        <div class="form-group row">
+            <label for="categories" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('Chuyên mục') }}</label>
+            <div class="col-md-8">
+                <select class="form-control" name="categories[]" multiple>
+                    @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ in_array($category->id, $itemCategories) ? 'selected' : '' }}>{{ $category->title }}</option>
+                    @endforeach
+                </select>
+            <p class="small">Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)</p>
+            </div>
+        </div>
+
         <div class="form-group row" id="locationbox" {{ !empty($course) && !empty($course['info']->subtype) && $course['info']->subtype != \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'style=display:none' : '' }}>
             <label for="location" class="col-md-3 col-form-label text-md-right font-weight-bold">{{ __('URL Room học') }}</label>
             <div class="col-md-8">

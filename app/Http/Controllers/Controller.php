@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
@@ -44,5 +45,21 @@ class Controller extends BaseController
         } else {
             $this->data['isApp'] = false;
         }
+    }
+
+    public function touchIsHot($table, $id)
+    {
+        $rs = DB::table($table)
+        ->where('id', $id)
+        ->update(['is_hot' => DB::raw('1 - is_hot')]);
+        return redirect()->back()->with('notify', $rs);
+    }
+
+    public function touchStatus($table, $id)
+    {
+        $rs = DB::table($table)
+        ->where('id', $id)
+        ->update(['status' => DB::raw('1 - status')]);
+        return redirect()->back()->with('notify', $rs);
     }
 }

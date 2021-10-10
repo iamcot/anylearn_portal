@@ -104,7 +104,7 @@ class PageController extends Controller
     public function pdp(Request $request, $itemId)
     {
         $itemService = new ItemServices();
-        $user = null;
+        $user = Auth::user();
         try {
             $data = $itemService->pdpData($itemId, $user);
             // dd($data);
@@ -188,7 +188,7 @@ class PageController extends Controller
             ]
         ];
         $data['query'] = $request->input();
-        return view('list.school', $data);
+        return view(env('TEMPLATE', '') . 'list.school', $data);
     }
 
     public function teachers(Request $request)
@@ -223,7 +223,7 @@ class PageController extends Controller
             ]
         ];
         $data['query'] = $request->input();
-        return view('list.teacher', $data);
+        return view(env('TEMPLATE', '') . 'list.teacher', $data);
     }
 
     public function classes(Request $request, $role, $id)
@@ -250,7 +250,7 @@ class PageController extends Controller
             ]
         ];
 
-        return view('list.class', $data);
+        return view(env('TEMPLATE', '') . 'list.class', $data);
     }
 
     public function helpcenter(Request $request) {
