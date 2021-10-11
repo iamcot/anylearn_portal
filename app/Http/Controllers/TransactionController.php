@@ -262,7 +262,8 @@ class TransactionController extends Controller
 
             $voucherM = new Voucher();
             try {
-                $voucherM->useVoucherPayment($user->id, $voucher, $orderId);
+                $dbVoucher = $voucherM->getVoucherData($user->id, $voucher);
+                $voucherM->useVoucherPayment($user->id, $orderId, $dbVoucher);
             } catch (Exception $ex) {
                 return redirect()->back()->with('notify', $ex->getMessage());
             }

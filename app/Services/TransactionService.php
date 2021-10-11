@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherEvent;
 use App\Models\VoucherEventLog;
+use App\Models\VoucherGroup;
 use App\Models\VoucherUsed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,27 +104,28 @@ class TransactionService
             $status = OrderConstants::STATUS_DELIVERED;
             $amount = $item->price;
             $childUserDB = $childUser > 0 ? User::find($childUser) : null;
+            $dbVoucher = null;
+            $voucherM = new Voucher();
             if (!empty($voucher)) {
                 try {
-                    $voucherM = new Voucher();
-                    $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $voucher);
-                    $openOrder = Order::create([
-                        'user_id' => $childUser > 0 ? $childUser : $user->id,
-                        'amount' => $item->price,
-                        'quantity' => 1,
-                        'status' => $status,
-                        'payment' => UserConstants::VOUCHER,
-                    ]);
-                    $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
+                    $dbVoucher = $voucherM->getVoucherData($user->id, $voucher);
+                    if ($dbVoucher->type == VoucherGroup::TYPE_CLASS) {
+                        $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $dbVoucher);
+                        $openOrder = Order::create([
+                            'user_id' => $childUser > 0 ? $childUser : $user->id,
+                            'amount' => $item->price,
+                            'quantity' => 1,
+                            'status' => $status,
+                            'payment' => UserConstants::VOUCHER,
+                        ]);
+                        $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
+                    }
                 } catch (\Exception $e) {
                     DB::rollback();
                     return $e->getMessage();
                 }
-            } else {
-                if ($user->wallet_m < $amount && !$allowNoMoney) {
-                    return "Không đủ tiền";
-                }
-
+            }
+            if (!$openOrder) {
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
                     ->orderBy('id', 'desc')
@@ -175,6 +177,10 @@ class TransactionService
                 'paid_price' => $item->price,
                 'status' => $status,
             ]);
+            
+            if ($dbVoucher && $dbVoucher->type == VoucherGroup::TYPE_PAYMENT) {
+                $voucherM->useVoucherPayment($user->id, $openOrder->id, $dbVoucher);
+            }
 
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
