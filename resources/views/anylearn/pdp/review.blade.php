@@ -34,7 +34,9 @@
 
         </div>
     </div>
+    @if(count($reviews) > 2)
     <div class="text-center">
         <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#reviewCollapse" aria-expanded="false" aria-controls="reviewCollapse">
     </div>
+    @endif
 </div>

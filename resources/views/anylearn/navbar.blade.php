@@ -9,19 +9,19 @@
         <div class="navbar-collapse collapse" id="navbar10">
             <ul class="navbar-nav nav-fill w-100">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">TRUNG TÂM</a>
+                    <a class="nav-link" href="/schools">TRUNG TÂM</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">CHUYÊN GIA</a>
+                    <a class="nav-link" href="/teachers">CHUYÊN GIA</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">KHOÁ HỌC</a>
+                    <a class="nav-link" href="/classes">KHOÁ HỌC</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">TẢI APP</a>
+                    <a class="nav-link" href="/ref/anylearn">TẢI APP</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">ĐĂNG NHẬP</a>
+                    <a class="nav-link" href="/login">ĐĂNG NHẬP</a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">ĐĂNG KÝ</a>

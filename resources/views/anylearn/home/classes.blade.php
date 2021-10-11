@@ -38,7 +38,6 @@
     </div>
     <script>
         var items = document.querySelectorAll('#{{ $carouselId }} .carousel-item')
-        console.log(items);
         items.forEach((el) => {
             var minPerSlide = screen.width <= 768 ? 2 : 5;
             let next = el.nextElementSibling

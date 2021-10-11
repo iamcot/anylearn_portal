@@ -49,14 +49,15 @@ nav a {
 #quote-top {
     position: absolute;
     width: 3%;
-    left: 3%;
+    left: 5%;
+    top: 6%;
 }
 
 #quote-bottom {
     position: absolute;
     width: 3%;
-    right: 3%;
-    bottom: 5px;
+    right: 5%;
+    bottom: 6%;
 }
 
 .quote-text {
@@ -176,7 +177,7 @@ footer h6 {
 
 .collapse-module .collapse,
 .collapse-module .collapsing {
-    height: 20rem;
+    height: 250px;
     /* [NUM_OF_LINES] x [LINE_HEIGHT] */
 }
 
@@ -188,7 +189,6 @@ footer h6 {
 }
 
 .collapse-module .collapse:before {
-    content: ' ...';
     position: absolute;
     right: 0;
     bottom: 0;
@@ -237,6 +237,12 @@ footer h6 {
     object-fit: cover;
     /* Equivalent of the background-size: cover; of a background-image */
     object-position: center;
+}
+
+.grid_title {
+    height: 4rem;
+    line-height: 1.5rem;
+    overflow: hidden;
 }
 
 .class-title {

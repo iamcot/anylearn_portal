@@ -21,6 +21,7 @@ Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');
 
 Route::get('/search', 'PageController@search')->name('search');
 Route::get('/schools', 'PageController@schools')->name('schools');
+Route::get('/classes', 'PageController@classes')->name('allclasses');
 Route::get('/teachers', 'PageController@teachers')->name('teachers');
 Route::get('/{role}/{id}/classes', 'PageController@classes')->name('classes');
 

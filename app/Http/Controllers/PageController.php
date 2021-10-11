@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use App\Constants\UserConstants;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Item;
 use App\Models\User;
@@ -31,11 +32,11 @@ class PageController extends Controller
         }
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
-        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
         $this->data['events'] = Article::where('type', Article::TYPE_EVENT)
-        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
         $this->data['articles'] = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
-        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
         if ($homeClassesDb) {
@@ -161,12 +162,26 @@ class PageController extends Controller
             $data['hasSearch'] = true;
             $province = $request->get('p');
             $district = $request->get('d');
+            $searchType = $request->get('t');
+            $searchCategory = $request->get('c');
             if ($province) {
                 $listSearch = $listSearch->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
                     ->where('ul.province_code', $province);
                 if ($district) {
                     $listSearch = $listSearch->where('ul.district_code', $district);
                 }
+            }
+            if ($searchType) {
+                $listSearch  = $listSearch->join(DB::raw("(SELECT user_id, count(*) AS numrow FROM items WHERE subtype = '" . preg_replace('/[^a-z]/', '', $searchType) . "' group by user_id ) AS t1"), function ($query) {
+                    $query->on("t1.user_id", "=", "users.id")
+                        ->where('t1.numrow', ">", 0);
+                });
+            }
+            if ($searchCategory) {
+                $listSearch  = $listSearch->join(DB::raw("(SELECT user_id, count(*) AS numrow FROM items JOIN items_categories AS ic ON ic.item_id = items.id  WHERE ic.category_id = '" . preg_replace('/[^0-9]/', '', $searchCategory) . "' group by user_id ) AS t2"), function ($query) {
+                    $query->on("t2.user_id", "=", "users.id")
+                        ->where('t2.numrow', ">", 0);
+                });
             }
         }
         $listSearch = $listSearch->paginate();
@@ -181,12 +196,27 @@ class PageController extends Controller
 
         $data['provinces'] = Province::orderby('name')->get();
 
-        $data['list'] = $list;
+        $data['listPaginate'] = $list->appends($request->query())->links();
+        $data['list'] = [];
+        foreach ($list as $user) {
+            $userCategories = DB::table('items')
+                ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
+                ->join('categories', 'categories.id', '=', 'items_categories.category_id')
+                ->where('items.user_id', $user->id)
+                ->groupBy('categories.id', 'categories.url', 'categories.title')
+                ->select('categories.id', 'categories.url', 'categories.title')
+                ->take(4)
+                ->get();
+            $user->categories = $userCategories;
+            $data['list'][] = $user;
+        }
+
         $data['breadcrumb'] = [
             [
                 'text' => 'Trung Tâm & Trường học'
             ]
         ];
+        $data['categories'] = Category::all();
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.school', $data);
     }
@@ -197,63 +227,150 @@ class PageController extends Controller
             ->where('users.role', UserConstants::ROLE_TEACHER)
             ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->where('users.is_test', 0)
-            ->where('users.is_child', 0);
+            ->where('users.is_child', 0)
+            ->groupBy('users.name', 'users.image', 'users.id')
+            ->select('users.name', 'users.image', 'users.id')
+            ->orderBy('users.is_hot', 'desc');
 
+        $data['hasSearch'] = false;
+        $listSearch = clone ($list);
         if ($request->get('a') == 'search') {
-            // $province = $request->get('p');
-            // $district = $request->get('d');
-            // if ($province) {
-            //     $list = $list->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
-            //     ->where('ul.province_code', $province);
-            //     if ($district) {
-            //         $list = $list->where('ul.district_code', $district);
-            //     }
-            // }
+            $data['hasSearch'] = true;
+            $searchType = $request->get('t');
+            $searchCategory = $request->get('c');
+            if ($searchType) {
+                $listSearch  = $listSearch->join(DB::raw("(SELECT user_id, count(*) AS numrow FROM items WHERE subtype = '" . preg_replace('/[^a-z]/', '', $searchType) . "' group by user_id ) AS t1"), function ($query) {
+                    $query->on("t1.user_id", "=", "users.id")
+                        ->where('t1.numrow', ">", 0);
+                });
+            }
+            if ($searchCategory) {
+                $listSearch  = $listSearch->join(DB::raw("(SELECT user_id, count(*) AS numrow FROM items JOIN items_categories AS ic ON ic.item_id = items.id  WHERE ic.category_id = '" . preg_replace('/[^0-9]/', '', $searchCategory) . "' group by user_id ) AS t2"), function ($query) {
+                    $query->on("t2.user_id", "=", "users.id")
+                        ->where('t2.numrow', ">", 0);
+                });
+            }
+        }
+        $listSearch = $listSearch->paginate();
+
+        if ($listSearch->total() == 0) {
+            $data['searchNotFound'] = true;
+            $list = $list->paginate();
+        } else {
+            $list = $listSearch;
+            $data['searchNotFound'] = false;
         }
 
-        $list = $list->groupBy('users.name', 'users.image', 'users.id')
-            ->select('users.name', 'users.image', 'users.id')
-            ->orderBy('users.is_hot', 'desc')
-            ->paginate();
+        $data['listPaginate'] = $list->appends($request->query())->links();
+        $data['list'] = [];
+        foreach ($list as $user) {
+            $userCategories = DB::table('items')
+                ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
+                ->join('categories', 'categories.id', '=', 'items_categories.category_id')
+                ->where('items.user_id', $user->id)
+                ->groupBy('categories.id', 'categories.url', 'categories.title')
+                ->select('categories.id', 'categories.url', 'categories.title')
+                ->take(4)
+                ->get();
+            $user->categories = $userCategories;
+            $data['list'][] = $user;
+        }
 
-        $data['list'] = $list;
         $data['breadcrumb'] = [
             [
                 'text' => 'Chuyên viên & Giảng Viên'
             ]
         ];
+        $data['categories'] = Category::all();
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.teacher', $data);
     }
 
-    public function classes(Request $request, $role, $id)
+    public function classes(Request $request, $role = null, $id = null)
     {
-        $data['author'] = User::find($id);
-        if (empty($data['author'])) {
-            return redirect()->back()->with('notify', 'Yêu cầu không hợp lệ');
-        }
-        $data['classes'] = Item::where('user_id', $id)
+        $classes = DB::table('items')
             ->where('type', ItemConstants::TYPE_CLASS)
             ->where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)
             ->whereNull('item_id')
+            // ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
+            // ->join('categories', 'categories.id', '=', 'items_categories.category_id')
+            // ->select('items.*', 'categories.id AS category_id', 'categories.url AS category_url', 'categories.title AS category_title')
+            ->select('items.*')
             ->orderBy('is_hot', 'desc')
-            ->paginate();
+            ->orderBy('id', 'desc');
 
-        $data['breadcrumb'] = [
-            [
-                'url' => $data['author']->role == 'school' ? '/schools' : '/teachers',
-                'text' => $data['author']->role == 'school' ? 'Trung Tâm' : 'Chuyên gia',
-            ],
-            [
-                'text' => 'Các khoá học của ' . $data['author']->name,
-            ]
-        ];
+        if ($id) {
+            $data['author'] = User::find($id);
+            if (empty($data['author'])) {
+                return redirect()->back()->with('notify', 'Yêu cầu không hợp lệ');
+            }
+            $classes = $classes->where('user_id', $id);
+            $data['breadcrumb'] = [
+                [
+                    'url' => $data['author']->role == 'school' ? '/schools' : '/teachers',
+                    'text' => $data['author']->role == 'school' ? 'Trung Tâm' : 'Chuyên gia',
+                ],
+                [
+                    'text' => 'Các khoá học của ' . $data['author']->name,
+                ]
+            ];
+        } else {
+            $data['breadcrumb'] = [
+                [
+                    'text' => 'Các khoá học đang mở',
+                ]
+            ];
+        }
+        $data['hasSearch'] = false;
+        $listSearch = clone ($classes);
+        if ($request->get('a') == 'search') {
+            $data['hasSearch'] = true;
+            $searchType = $request->get('t');
+            $searchCategory = $request->get('c');
+            $searchPrice = $request->get('price');
+            if ($searchPrice) {
+                $listSearch  = $listSearch->where('price', '<=', $searchPrice);
+            }
+            if ($searchType) {
+                $listSearch  = $listSearch->where('subtype', $searchType);
+            }
+            if ($searchCategory) {
+                $listSearch  = $listSearch->join('items_categories AS ic', function ($query) use ($searchCategory) {
+                    $query->on('ic.item_id', '=', 'items.id')
+                        ->where('ic.category_id', $searchCategory);
+                });
+            }
+        }
+        $listSearch = $listSearch->paginate();
 
+        if ($listSearch->total() == 0) {
+            $data['searchNotFound'] = true;
+            $classes = $classes->paginate();
+        } else {
+            $classes = $listSearch;
+            $data['searchNotFound'] = false;
+        }
+
+        $data['classes'] = $classes;
+        // $data['classesPaginate'] = $classes->appends($request->query())->links();
+        // $data['classes'] = [];
+        // foreach ($classes as $class) {
+        //     $classCategories = DB::table('items_categories')
+        //         ->join('categories', 'categories.id', '=', 'items_categories.category_id')
+        //         ->where('item_id', $class->id)
+        //         ->select('categories.id', 'categories.url', 'categories.title')
+        //         ->get();
+        //     $class->categories = $classCategories;
+        //     $data['classes'][] = $class;
+        // }
+
+        $data['categories'] = Category::all();
         return view(env('TEMPLATE', '') . 'list.class', $data);
     }
 
-    public function helpcenter(Request $request) {
+    public function helpcenter(Request $request)
+    {
         echo '<p>Trang đang được xây dựng.</p>';
     }
 }
