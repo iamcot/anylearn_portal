@@ -1,4 +1,4 @@
-@if(!empty($promotions))
+@if(!empty($promotions)  && count($promotions) > 0)
 <section class="carousel3">
     <div class="row mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}" class="carousel slide" data-bs-interval="false">
