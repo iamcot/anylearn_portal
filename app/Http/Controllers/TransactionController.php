@@ -241,7 +241,7 @@ class TransactionController extends Controller
         if ($doc) {
             $this->data['term'] = $doc->value;
         }
-        return view('checkout.cart', $this->data);
+        return view(env('TEMPLATE', '') . 'checkout.cart', $this->data);
     }
 
     public function applyVoucher(Request $request)
@@ -365,7 +365,7 @@ class TransactionController extends Controller
 
         $this->data['order'] = $order;
         $this->data['detail'] = $orderDetails;
-        return view('checkout.finish', $this->data);
+        return view(env('TEMPLATE', '') . 'checkout.finish', $this->data);
     }
 
     public function paymentResult(Request $request)
@@ -409,7 +409,7 @@ class TransactionController extends Controller
         $this->data['bank'] = config('bank');
         $this->data['orderAmount'] = $order->amount;
         $this->data['orderId'] = $order->id;
-        return view('checkout.paymenthelp', $this->data);
+        return view(env('TEMPLATE', '') . 'checkout.paymenthelp', $this->data);
     }
 
     public function notify(Request $request, $payment)
