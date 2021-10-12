@@ -72,7 +72,7 @@
                 </li>
                 @endforeach
             </ul>
-            {{ $classes->appends(request()->query())->links() }}
+            {{ $classesPaginate }}
             @endif
     </div>
     <div class="col-md-3">

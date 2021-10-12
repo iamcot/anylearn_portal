@@ -9,6 +9,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemUserAction;
 use App\Models\User;
 use App\Services\ItemServices;
 use Exception;
@@ -352,18 +353,15 @@ class PageController extends Controller
             $data['searchNotFound'] = false;
         }
 
-        $data['classes'] = $classes;
-        // $data['classesPaginate'] = $classes->appends($request->query())->links();
-        // $data['classes'] = [];
-        // foreach ($classes as $class) {
-        //     $classCategories = DB::table('items_categories')
-        //         ->join('categories', 'categories.id', '=', 'items_categories.category_id')
-        //         ->where('item_id', $class->id)
-        //         ->select('categories.id', 'categories.url', 'categories.title')
-        //         ->get();
-        //     $class->categories = $classCategories;
-        //     $data['classes'][] = $class;
-        // }
+        // $data['classes'] = $classes;
+        $data['classesPaginate'] = $classes->appends($request->query())->links();
+        $data['classes'] = [];
+        $itemUserActionM = new ItemUserAction();
+        foreach ($classes as $class) {
+            
+            $class->rating = $itemUserActionM->rating($class->id);
+            $data['classes'][] = $class;
+        }
 
         $data['categories'] = Category::all();
         return view(env('TEMPLATE', '') . 'list.class', $data);
