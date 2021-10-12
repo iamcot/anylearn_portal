@@ -31,6 +31,9 @@ class PageController extends Controller
                 $this->data['popup'] = $homePopup;
             }
         }
+        $quotes = config('quotes', []);
+        $quote = $quotes[mt_rand(0, count($quotes) - 1)];
+        $this->data['quote'] = $quote;
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
