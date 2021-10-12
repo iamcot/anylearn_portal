@@ -104,6 +104,7 @@ class TransactionController extends Controller
             if ($this->data['api_token']) {
                 return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', $result);
             } else {
+                // dd($result);
                 return redirect()->back()->with('notify', $result);
             }
         }

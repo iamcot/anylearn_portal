@@ -138,8 +138,9 @@ class TransactionService
                         'quantity' => DB::raw('quantity + 1'),
                     ]);
                 } else {
-                    $status = $user->wallet_m >= $amount ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
-                    $transStatus = $user->wallet_m >= $amount ? ConfigConstants::TRANSACTION_STATUS_DONE : ConfigConstants::TRANSACTION_STATUS_PENDING;
+                    // $status = $user->wallet_m >= $amount ? OrderConstants::STATUS_DELIVERED : OrderConstants::STATUS_NEW;
+                    $status = OrderConstants::STATUS_NEW;
+                    $transStatus = ConfigConstants::TRANSACTION_STATUS_PENDING;
 
                     $openOrder = Order::create([
                         'user_id' => $childUser > 0 ? $childUser : $user->id,
@@ -363,6 +364,7 @@ class TransactionService
     public function recalculateOrderAmountWithVoucher($orderId, $value)
     {
         $order = Order::find($orderId);
+        $value = floatval($value);
         $amount = false;
         if ($value >= 1000) {
             $amount =  ($value > $order->amount) ? 0 : ($order->amount - $value);

@@ -34,7 +34,7 @@
         </header>
         @endif
         <section>
-            @include('notify', ['notify' => session('notify', '')])
+            @include('anylearn.widget.notify', ['notify' => session('notify', '')])
             <div class="container mt-5">
                 @yield('body')
             </div>

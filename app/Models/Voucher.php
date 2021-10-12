@@ -56,7 +56,7 @@ class Voucher extends Model
             ->where('vouchers.voucher', $voucher)
             ->where('vouchers.status', 1)
             ->where('vg.status', 1)
-            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount')
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vg.value')
             ->first();
         if (!$dbVoucher) {
             throw new \Exception("Voucher không có");
