@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="/cdn/anylearn/bootstrap-5.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="/cdn/anylearn/fontawesome/css/all.css" rel="stylesheet">
+    <link href="/cdn/anylearn/owl.carousel.min.css" rel="stylesheet">
     <link href="/cdn/anylearn/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     @yield('morestyle')
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
@@ -45,6 +46,7 @@
     </section>
     <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
+    <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     @yield('jscript')
 </body>
 

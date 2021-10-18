@@ -35,9 +35,9 @@ nav a {
     padding: 10px;
 }
 
-#search i {
+#search button {
     position: absolute;
-    top: 13px;
+    top: 3px;
     right: 20px;
     font-size: 24px;
 }
@@ -73,38 +73,6 @@ nav a {
 
 .carousel3 {
     min-height: 300px;
-    margin-left: -20px;
-}
-
-.carousel4 {
-    margin-left: -20px;
-}
-
-.carousel-inner .carousel-item.active,
-.carousel-inner .carousel-item-next,
-.carousel-inner .carousel-item-prev {
-    display: flex;
-}
-
-.carousel-inner .carousel-item-end.active,
-.carousel-inner .carousel-item-next {
-    transform: translateX(40%);
-}
-
-.carousel-inner .carousel-item-start.active,
-.carousel-inner .carousel-item-prev {
-    transform: translateX(-40%);
-}
-
-.carousel-inner .carousel-item-end,
-.carousel-inner .carousel-item-start {
-    transform: translateX(0);
-}
-
-.carousel4 .carousel-item .col-md-3 {
-    margin: 10px;
-    /* width: 20%; */
-    position: relative;
 }
 
 .carousel4 .class-button {
@@ -112,20 +80,7 @@ nav a {
     bottom: 0;
 }
 
-.carousel4 .card {
-    min-width: 100%;
-}
-
-.carousel3 .carousel-item .col-md-4 {
-    width: 40%;
-    margin: 10px;
-}
-
-.carousel3 .carousel-item {
-    min-height: 300px;
-}
-
-.carousel3 .carousel-item img {
+.carousel3 .card {
     min-height: 230px;
 }
 
@@ -135,7 +90,7 @@ nav a {
     background: url(./img/promotion-tag.png) top left no-repeat;
     position: absolute;
     right: 10%;
-    bottom: -20%;
+    bottom: 0px;
     color: #FF0000;
     font-size: 28px;
     line-height: 90px;
@@ -143,21 +98,6 @@ nav a {
     letter-spacing: 0.2px;
     text-align: center;
     transform: rotate(20deg);
-}
-
-.carousel-control-next {
-    width: 50px;
-    opacity: 1;
-    right: -10px;
-    top: 20px;
-}
-
-.carousel-control-icon {
-    width: 50px;
-    height: 50px;
-    color: #000;
-    line-height: 60px;
-    background-color: #fff;
 }
 
 footer {
@@ -183,7 +123,6 @@ footer h6 {
 
 .collapse-module .collapse {
     position: relative;
-    /* For ...'s content absolute positioning */
     display: block;
     overflow: hidden;
 }
@@ -257,34 +196,28 @@ footer h6 {
     overflow: hidden;
 }
 
+.owl-carousel-control-icon,
+.owl-carousel-control-icon-right {
+    position: absolute;
+    top: 40%;
+    width: 50px;
+    height: 50px;
+}
+
+.owl-carousel-control-icon {
+    left: -20px;
+}
+
+.owl-carousel-control-icon-right {
+    right: -20px;
+}
+
 @media screen and (max-width: 768px) {
     #search {
         max-width: 93%;
     }
-    .carousel3 {
-        margin-left: 0;
-        margin-right: 0;
-    }
     .quote-text {
         top: 20%;
         font-size: 0.7rem;
-    }
-    .carousel-inner .carousel-item>div {
-        /* display: none; */
-    }
-    .carousel-inner .carousel-item>div:first-child {
-        display: block;
-    }
-    .carousel3 .carousel-item .col-md-4 {
-        width: 100%;
-        min-height: 230px;
-    }
-    .carousel-control-next {
-        width: 50px;
-        opacity: 1;
-        right: 0px;
-    }
-    .carousel4 .carousel-item .col-md-3 {
-        /* width: 40% !important; */
     }
 }

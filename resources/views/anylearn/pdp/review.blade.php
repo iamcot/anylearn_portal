@@ -14,15 +14,13 @@
         <div>
             <ul class="list-unstyled">
                 @foreach($reviews as $review)
-                <li class="d-flex @if($loop->index < count($reviews) - 1)  border-bottom @endif mb-3">
-                    <div class="">
+                <li class="row @if($loop->index < count($reviews) - 1)  border-bottom @endif mb-3">
+                    <div class="col-sm-1 col-3 m-2">
                         @if ($review->user_image)
-                        <div>
-                            <img src="{{ $review->user_image }}" alt="">
-                        </div>
+                            <img class="img-fluid border rounded-circle" src="{{ $review->user_image }}" alt="">
                         @endif
                     </div>
-                    <div class="">
+                    <div class="col-9">
                         <p>{{ $review->user_name }}</p>
                         @include('anylearn.widget.rating', ['score' => $review->value ?? 0])
                         <p>{{ $review->extra_value }}</p>

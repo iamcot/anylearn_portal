@@ -81,7 +81,7 @@
                 <form action="" method="get" id="schoolsearch">
                     <h6>BỘ LỌC</h6>
                     <label for="customRange1" class="form-label">Giá</label>
-                    <input name="price" type="range" class="form-range" min="0" max="10000000" step="10000" id="priceRange" value="{{ request()->get('price') ?? 1000000 }}" oninput="onPriceChange(this)">
+                    <input name="price" type="range" class="form-range" min="0" max="20000000" step="10000" id="priceRange" value="{{ request()->get('price') ?? 1000000 }}" oninput="onPriceChange(this)">
                     <div>
                         0 - <span id="priceRangeShow">{{ number_format(request()->get('price') ?? 1000000) }}</span>
                     </div>
@@ -102,7 +102,7 @@
                         </select>
                     </div>
                     <hr>
-                    <button id="searchbtn" name="a" value="search" class="btn border-0 rounded-pill btn-success ">@lang('TÌM KIÉM')</button>
+                    <button id="searchbtn" name="a" value="search" class="btn border-0 rounded-pill btn-success ">@lang('TÌM KIẾM')</button>
 
                 </form>
 

@@ -330,9 +330,13 @@ class PageController extends Controller
         $listSearch = clone ($classes);
         if ($request->get('a') == 'search') {
             $data['hasSearch'] = true;
+            $searchTitle = $request->get('s');
             $searchType = $request->get('t');
             $searchCategory = $request->get('c');
             $searchPrice = $request->get('price');
+            if ($searchTitle) {
+                $listSearch  = $listSearch->where('title', 'LIKE', "%$searchTitle%");
+            }
             if ($searchPrice) {
                 $listSearch  = $listSearch->where('price', '<=', $searchPrice);
             }

@@ -64,9 +64,11 @@
                 <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
             </li> -->
             @endif
+            @if (count($reviews) > 0)
             <li class="nav-item" role="presentation">
                 <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">ĐÁNH GIÁ</button>
             </li>
+            @endif
         </ul>
         <div class="tab-content border border-top-0 mb-5 shadow" id="myTabContent">
             <div class="tab-pane fade show active p-2" id="content" role="tabpanel" aria-labelledby="content-tab">
@@ -83,9 +85,11 @@
             @if($author->role == 'school')
             <!-- <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div> -->
             @endif
+            @if (count($reviews) > 0)
             <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel" aria-labelledby="review-tab">
                 @include('anylearn.pdp.review')
             </div>
+            @endif
         </div>
     </div>
     <div class="mb-3">
@@ -101,6 +105,23 @@
 @section('jscript')
 @parent
 <script>
+    $('.carousel4 .owl-carousel').owlCarousel({
+        margin: 10,
+        nav: true,
+        navText: [
+            '<span class="owl-carousel-control-icon rounded-circle border p-2 bg-white shadow"><i class="fas fa-2x fa-angle-left text-secondary"></i></span>',
+            '<span class="owl-carousel-control-icon-right rounded-circle border  p-2 bg-white shadow"><i class="fas fa-2x fa-angle-right text-secondary"></i></span>'
+        ],
+        responsive: {
+            0: {
+                items: 2
+            },
+            600: {
+                items: 5
+            }
+        }
+    });
+
     $('#add2cart-action').click(function() {
         $('#pdpAdd2CartModal').modal('show');
     });

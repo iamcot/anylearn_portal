@@ -30,9 +30,9 @@
                     <li><p><a href="#" class="text-secondary text-decoration-none">Blog</a></p></li>
                 </ul>
                 <ul class="list-unstyled list-inline">
-                    <li class="list-inline-item"><a href=""><i class="fab fa-2x fa-facebook"></i></a></li>
+                    <li class="list-inline-item"><a href="https://www.facebook.com/anylearnhockhonggioihan"><i class="fab fa-2x fa-facebook"></i></a></li>
                     <li class="list-inline-item"><a href=""><i class="fab fa-2x fa-line text-success"></i></a></li>
-                    <li class="list-inline-item"><a href=""><i class="fab fa-2x fa-youtube text-danger"></i></a></li>
+                    <li class="list-inline-item"><a href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><i class="fab fa-2x fa-youtube text-danger"></i></a></li>
                 </ul>
             </div>
             <div class="col-md-3">

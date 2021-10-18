@@ -65,7 +65,7 @@
                         </select>
                     </div>
                     <hr>
-                    <button id="searchbtn" name="a" value="search" class="btn border-0 rounded-pill btn-success ">@lang('TÌM KIÉM')</button>
+                    <button id="searchbtn" name="a" value="search" class="btn border-0 rounded-pill btn-success ">@lang('TÌM KIẾM')</button>
                 </div>
             </div>
     </div>
