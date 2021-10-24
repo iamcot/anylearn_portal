@@ -323,7 +323,9 @@ class ItemServices
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
-            $this->assignCategoryToItem($itemUpdate->id, $input['categories']);
+            if (!empty($input['categories'])) {
+                $this->assignCategoryToItem($itemUpdate->id, $input['categories']);
+            }
 
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($itemUpdate, Tag::TYPE_CLASS);
