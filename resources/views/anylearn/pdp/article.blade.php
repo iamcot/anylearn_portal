@@ -14,7 +14,7 @@
             @endif
         </div>
         <div>
-            <h4 class="text-success text-center">{{ $article->title }}</h4>
+            <h4 class="text-success text-center mt-2">{{ $article->title }}</h4>
             {!! $article->content !!}
         </div>
     </div>
