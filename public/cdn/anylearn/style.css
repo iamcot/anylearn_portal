@@ -84,6 +84,10 @@ nav a {
     min-height: 230px;
 }
 
+.carousel3 img {
+    min-height: 230px;
+}
+
 .promotion-tag {
     width: 96px;
     height: 96px;
@@ -190,10 +194,15 @@ footer h6 {
     overflow: hidden;
 }
 
-.class-title {
+.class-title,
+.class-price {
     line-height: 1.5rem;
     height: 3rem;
     overflow: hidden;
+}
+
+.article-sidebar {
+    min-height: 32px;
 }
 
 .owl-carousel-control-icon,

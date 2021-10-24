@@ -135,6 +135,20 @@ class PageController extends Controller
         }
     }
 
+    public function article(Request $request, $id)
+    {
+        $article = Article::find($id);
+        if (!$article) {
+            return redirect()->to('/');
+        }
+        $data['article'] = $article;
+        $data['moreArticles'] = Article::where('status', 1)
+            ->where('id', '!=', $id)
+            ->orderby('id', 'desc')
+            ->take(10)->get();
+        return view(env('TEMPLATE', '') . 'pdp.article', $data);
+    }
+
     public function search(Request $request)
     {
         if ($request->get('a') == 'search') {
@@ -365,7 +379,7 @@ class PageController extends Controller
         $data['classes'] = [];
         $itemUserActionM = new ItemUserAction();
         foreach ($classes as $class) {
-            
+
             $class->rating = $itemUserActionM->rating($class->id);
             $data['classes'][] = $class;
         }

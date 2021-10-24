@@ -116,8 +116,10 @@ class LoginController extends Controller
         }
         else if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
             return redirect($this->redirectTo);
-        } else {
+        } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');
+        } else {
+            return redirect('/');
         }
     }
 }

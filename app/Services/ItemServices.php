@@ -7,6 +7,7 @@ use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\UserConstants;
+use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
@@ -105,6 +106,17 @@ class ItemServices
             return "";
         }
         $url = route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
+        $url = str_replace("https://api.", "https://", $url);
+        return $url;
+    }
+
+    public function articleUrl($id)
+    {
+        $item = Article::find($id);
+        if (!$item) {
+            return "";
+        }
+        $url = route('page.article', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
         $url = str_replace("https://api.", "https://", $url);
         return $url;
     }

@@ -12,7 +12,7 @@
                                 <img src="{{ $class->image }}" class="img-fluid">
                             </div>
                             <div class="class-title mt-1 fw-bold p-1">@if($class->is_hot) <span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span> @endif {{ $class->title }}</div>
-                            <div class="p-1">
+                            <div class="p-1  class-price">
                                 @if($class->org_price > 0)
                                 <span class="bg-success badge mr-1">-{{ number_format((($class->org_price - $class->price) / $class->org_price) * 100, 0,".",",") }}%</span>
                                 <span class="text-secondary text-decoration-line-through mr-1">{{ number_format($class->org_price, 0, ',', '.') }}</span>

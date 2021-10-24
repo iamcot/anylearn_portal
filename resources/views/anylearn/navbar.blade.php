@@ -1,3 +1,4 @@
+@inject('userServ','App\Services\UserServices')
 <nav class="navbar navbar-expand-lg navbar-dark bg-topbg">
     <div class="container">
         <a class="navbar-brand" href="/">
@@ -21,20 +22,22 @@
                     <a class="nav-link" href="/ref/anylearn">TẢI APP</a>
                 </li>
                 @if (@auth()->check())
-                <li class="nav-item dropdown no-arrow">
+                <li class="nav-item dropdown no-arrow d-flex">
                     <a class=" nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="me-2 text-white small">{{ Auth::user()->name }}</span>
-                        @if(Auth::user()->image)
-                        <span class=""><img class="img-fluid border rounded-circle float-end" style="max-height:24px;" src="{{ Auth::user()->image }}" alt=""></span>
-                        @endif
+
+                    </a>
+                    <a class="" href="{{ route('cart') }}">
+                        <span class="badge badge-success"><i class="fa fa-2x fa-shopping-cart"> {{ $userServ->countItemInCart(Auth::user()->id) }}</i></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                        @lang('Đăng xuất')
+                            @lang('Đăng xuất')
                             <i class="fas fa-sign-out-alt fa-sm fa-fw ms-2 text-gray-400"></i>
                         </a>
                     </div>
                 </li>
+              
                 @else
                 <li class="nav-item">
                     <a class="nav-link" href="/login">ĐĂNG NHẬP</a>

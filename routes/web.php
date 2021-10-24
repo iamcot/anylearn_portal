@@ -35,6 +35,7 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::get('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 

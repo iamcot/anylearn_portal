@@ -39,9 +39,9 @@
                     <td class="text-right">{{ number_format($item->paid_price, 0, ",", ".") }}</td>
                     <td>
                         @if($api_token)
-                        <a href="{{ route('checkout.remove2cart', ['odId' => $item->id, 'api_token' => $api_token ]) }}" class="btn btn-sm btn-danger" title="Xoá khỏi giỏ hàng"><i class="fa fa-trash"></i></a>
+                        <a href="{{ route('checkout.remove2cart', ['odId' => $item->id, 'api_token' => $api_token ]) }}" class="btn btn-sm btn-danger rounded-circle" title="Xoá khỏi giỏ hàng"><i class="fa fa-trash"></i></a>
                         @else
-                        <a href="{{ route('checkout.remove2cart', ['odId' => $item->id ]) }}" class="btn btn-sm btn-danger" title="Xoá khỏi giỏ hàng"><i class="fa fa-trash"></i></a>
+                        <a href="{{ route('checkout.remove2cart', ['odId' => $item->id ]) }}" class="btn btn-sm btn-danger rounded-circle" title="Xoá khỏi giỏ hàng "><i class="fa fa-trash"></i></a>
                         @endif
                     </td>
                 </tr>
@@ -70,7 +70,7 @@
                             <input type="text" class=" rounded-pill form-control" name="payment_voucher" value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
                         </div>
                         <div class="form-group col-lg-4">
-                            <button class="btn btn-success rounded-pill" name="cart_action" value="apply_voucher">Áp dụng</button>
+                            <button class="btn btn-success rounded-pill border-0" name="cart_action" value="apply_voucher">Áp dụng</button>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                 </ul>
                 <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
                 <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán</label></p>
-                <button class="btn btn-success rounded-pill mt-2" name="cart_action" value="pay">THANH TOÁN</button>
+                <button class="btn btn-success border-0 rounded-pill mt-2" name="cart_action" value="pay">THANH TOÁN</button>
 
             </div>
         </div>
