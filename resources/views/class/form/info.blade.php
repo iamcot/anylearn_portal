@@ -27,7 +27,7 @@
             <div class="col-md-8">
                 <select class="form-control" name="categories[]" multiple>
                     @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ in_array($category->id, $itemCategories) ? 'selected' : '' }}>{{ $category->title }}</option>
+                    <option value="{{ $category->id }}" {{ !empty($itemCategories) && in_array($category->id, $itemCategories) ? 'selected' : '' }}>{{ $category->title }}</option>
                     @endforeach
                 </select>
             <p class="small">Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)</p>

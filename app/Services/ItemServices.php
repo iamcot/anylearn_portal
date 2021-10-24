@@ -262,7 +262,9 @@ class ItemServices
 
         $newCourse = Item::create($input);
         if ($newCourse) {
-            $this->assignCategoryToItem($newCourse->id, $input['categories']);
+            if (!empty($input['categories'])) {
+                $this->assignCategoryToItem($newCourse->id, $input['categories']);
+            }
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($newCourse, Tag::TYPE_CLASS);
             // if ($newCourse->type == ItemConstants::TYPE_COURSE) {
