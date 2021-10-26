@@ -32,11 +32,16 @@ class ClassController extends Controller
         $classService = new ItemServices();
         $this->data['navText'] = __('Quản lý lớp học');
         $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
-        return view('class.list', $this->data);
+        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+            return view('class.list', $this->data);
+        } else {
+            return view(env('TEMPLATE', '') . 'me.class_list', $this->data);
+        }
     }
 
     public function create(Request $request)
     {
+        $user = Auth::user();
         $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
@@ -58,11 +63,16 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
-        return view('class.edit', $this->data);
+        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+            return view('class.list', $this->data);
+        } else {
+            return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
+        }
     }
 
     public function edit(Request $request, $courseId)
     {
+        $user = Auth::user();
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();
@@ -134,7 +144,11 @@ class ClassController extends Controller
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
 
-        return view('class.edit', $this->data);
+        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+            return view('class.list', $this->data);
+        } else {
+            return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
+        }
     }
 
     public function resourceDelete($id)

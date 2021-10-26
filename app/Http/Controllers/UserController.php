@@ -8,6 +8,7 @@ use App\Constants\UserConstants;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Notification;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Models\UserLocation;
@@ -89,7 +90,7 @@ class UserController extends Controller
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
-        return view('user.me_edit', $this->data);
+        return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
 
     public function memberEdit(Request $request, $userId)
@@ -281,7 +282,7 @@ class UserController extends Controller
         $user = Auth::user();
         $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
         $this->data['navText'] = __('Quản lý địa điểm/chi nhánh');
-        return view('user.location_list', $this->data);
+        return view(env('TEMPLATE', '') . 'me.user_location_list', $this->data);
     }
 
     public function locationEdit(Request $request, $id)
@@ -303,14 +304,14 @@ class UserController extends Controller
             } else {
                 $input['is_head'] =  0;
             }
-        
+
             try {
                 $new = UserLocation::find($id)->update($input);
             } catch (Exception $e) {
                 Log::error($e);
                 return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
             }
-            
+
             return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
         }
         $this->data['location'] = $location;
@@ -319,7 +320,7 @@ class UserController extends Controller
         $this->data['wards'] = Ward::where('parent_code', $location->district_code)->orderBy('name')->get();
         $this->data['navText'] = __('Chỉnh sửa địa điểm/chi nhánh');
         $this->data['hasBack'] = true;
-        return view('user.location_form', $this->data);
+        return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
     }
 
     public function locationCreate(Request $request)
@@ -327,34 +328,48 @@ class UserController extends Controller
         if ($request->get('save') == "save") {
             $input = $request->input();
             $input['user_id'] = Auth::user()->id;
-           
+
             $userService = new UserServices();
             $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
             if ($geoCode !== false) {
                 $input['longitude'] = $geoCode['longitude'];
                 $input['latitude'] = $geoCode['latitude'];
             }
-           
+
             if (isset($input['is_head'])) {
                 UserLocation::where('user_id', $input['user_id'])->update(['is_head' => 0]);
                 $input['is_head'] =  1;
             } else {
                 $input['is_head'] =  0;
             }
-        
+
             try {
                 $new = UserLocation::create($input);
             } catch (Exception $e) {
                 Log::error($e);
                 return redirect()->back()->with('notify',  "Tạo địa chỉ thất bại");
             }
-            
+
             return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
 
         $this->data['hasBack'] = true;
-        return view('user.location_form', $this->data);
+        return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
+    }
+
+    public function notification(Request $request) {
+        $user = Auth::user();
+        $this->data['navText'] = __('Thông báo');
+        $this->data['notifications'] = Notification::where('user_id', $user->id)->orderby('id', 'desc')->paginate();
+        return view(env('TEMPLATE', '') . 'me.notification', $this->data);
+    }
+
+    public function orders(Request $request) {
+        $user = Auth::user();
+        $this->data['navText'] = __('Đơn hàng của tôi');
+        $this->data['orders'] = Order::where('user_id', $user->id)->orderby('id', 'desc')->paginate();
+        return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 }

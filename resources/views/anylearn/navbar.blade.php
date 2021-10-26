@@ -31,9 +31,13 @@
                         <span class="badge badge-success"><i class="fa fa-2x fa-shopping-cart"> {{ $userServ->countItemInCart(Auth::user()->id) }}</i></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/me">
+                            <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-gray-400"></i>
+                            @lang('Trang Quản lý')
+                        </a>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            @lang('Đăng xuất')
                             <i class="fas fa-sign-out-alt fa-sm fa-fw ms-2 text-gray-400"></i>
+                            @lang('Đăng xuất')
                         </a>
                     </div>
                 </li>

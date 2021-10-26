@@ -35,6 +35,11 @@ class DashboardController extends Controller
         }
     }
 
+    public function meDashboard() {
+        $this->data['navText'] = __('Bảng thông tin');
+        return view(env('TEMPLATE', '') . 'me.dashboard', $this->data);
+    }
+
     public function feedback(Request $request)
     {
         $this->data['feedbacks'] = Feedback::with('user')->orderby('id', 'desc')->paginate(20);

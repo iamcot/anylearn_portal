@@ -1,5 +1,27 @@
 body {
     font-family: 'Quicksand', sans-serif;
+    background-color: #F1F1F1;
+}
+
+#wrapper #content-wrapper {
+    background-color: #F1F1F1;
+}
+
+#admin-top .sidebar .active a,
+#admin-top .sidebar .active i,
+#admin-top .page-link {
+    color: #01A652 !important;
+}
+
+#admin-top .page-item.active .page-link {
+    color: #fff !important;
+    background-color: #01A652 !important;
+    border-color: #01A652 !important;
+}
+
+.is-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .bg-topbg {

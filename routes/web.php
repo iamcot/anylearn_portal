@@ -46,15 +46,17 @@ Route::get('/payment-result', 'TransactionController@paymentResult')->name('chec
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('me')->group(function () { 
-    Route::get('/', 'DashboardController@index')->name('me.dashboard');
+    Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
     Route::get('/class', 'ClassController@list')->name('me.class');
-    Route::any('/edit', 'UserController@meEdit')->name('me.edit');
-   
     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
+   
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
 
+    Route::any('/edit', 'UserController@meEdit')->name('me.edit');
+    Route::any('/orders', 'UserController@orders')->name('me.orders');
+    Route::any('/notification', 'UserController@notification')->name('me.notification');
 });
 
 Route::middleware(['auth'])->group(function () {

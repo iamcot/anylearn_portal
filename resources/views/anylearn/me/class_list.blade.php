@@ -1,0 +1,75 @@
+@inject('userServ','App\Services\UserServices')
+@inject('itemServ','App\Services\ItemServices')
+@extends('anylearn.me.layout')
+
+@section('rightFixedTop')
+<div class="col-xs-2 mr-1">
+    <a class="btn btn-success btn-sm border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus"> </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
+</div>
+@endsection
+
+@section('body')
+@if(sizeof($courseList) == 0)
+<div class="text-center mt-5 pt-5">
+    @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('me.class.create')])
+</div>
+@else
+<form class="pb-3">
+    <div class="d-flex ">
+        <div>
+            <input value="{{ app('request')->input('s') }}" type="text" class="rounded-pill form-control" name="s" placeholder="{{ __('Tìm kiếm lớp học') }}" />
+        </div>
+        <div class="ms-1">
+            <button class="btn btn-success btn border-0 rounded-circle"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+</form>
+<div class="card shadow">
+    <div class="card-body p-0 table-responsive">
+        <table class="table table-hover">
+            <thead class="table-secondary text-secondary">
+                <tr class="">
+                    <th class="text-center fw-normal border-0">ID</th>
+                    <th class="fw-normal border-0">KHOÁ HỌC</th>
+                    <th class="fw-normal border-0">THỜI GIAN</th>
+                    <th class="fw-normal border-0">HỌC PHÍ</th>
+                    <!-- <th>Quan tâm</th> -->
+                    <th class="fw-normal border-0">ĐĂNG KÝ</th>
+                    <th class="fw-normal border-0">LẦN SỬA CUỐI</th>
+                    <th class="fw-normal border-0">THAO TÁC</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($courseList as $course)
+                <tr class="text-secondary">
+                    <th class="text-center">{{ $course->id }}</th>
+                    <td class="fw-bold">[{{ $course->subtype }}] {{ $course->title }}</td>
+                    <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
+                        <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell  text-success"></i></a>
+                    </td>
+                    <td>{{ number_format($course->price) }}</td>
+                    <!-- <td></td> -->
+                    <td>{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell text-success"></i></a></td>
+                    <td>{{ date('H:i d/m/y', strtotime($course->updated_at)) }}</td>
+                    <td>
+                        
+                        <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link text-success"></i></a>
+                        <a class="btn btn-success btn-sm border-0" href="{{ route('me.class.edit', ['id' => $course->id]) }}"><i class="fas fa-pen"></i> </a>
+                        {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
+                        <!-- {!! $itemServ->typeOperation($course) !!} -->
+
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+            </thead>
+        </table>
+        <div class="text-success me-2 float-right">{{ $courseList->links() }}</div>
+    </div>
+
+</div>
+
+@endif
+
+@endsection
