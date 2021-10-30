@@ -453,15 +453,15 @@ class UserApi extends Controller
             // approve author transaction
             if ($trans) {
                 $transService->approveWalletcTransaction($trans->id);
+                // approve foundation transaction
+                DB::table('transactions')
+                    ->where('transactions.order_id', $trans->order_id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                    ->update([
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                    ]);
             }
-            // approve foundation transaction
-            DB::table('transactions')
-                ->where('transactions.order_id', $trans->order_id)
-                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
-                ->update([
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE
-                ]);
         } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
             $configM = new Configuration();
             $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);

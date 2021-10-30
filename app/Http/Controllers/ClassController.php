@@ -145,7 +145,7 @@ class ClassController extends Controller
         $this->data['courseId'] = $courseId;
 
         if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
-            return view('class.list', $this->data);
+            return view('class.edit', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }

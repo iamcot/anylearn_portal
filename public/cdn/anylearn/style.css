@@ -1,15 +1,14 @@
 body {
     font-family: 'Quicksand', sans-serif;
-    background-color: #F1F1F1;
+    /* background-color: #F1F1F1; */
 }
 
 #wrapper #content-wrapper {
     background-color: #F1F1F1;
 }
 
-#admin-top .sidebar .active a,
-#admin-top .sidebar .active i,
-#admin-top .page-link {
+#admin-top .page-link,
+#admin-top .nav-link.active {
     color: #01A652 !important;
 }
 

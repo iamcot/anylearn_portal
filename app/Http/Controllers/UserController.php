@@ -9,6 +9,7 @@ use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Notification;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Models\UserLocation;
@@ -368,8 +369,10 @@ class UserController extends Controller
 
     public function orders(Request $request) {
         $user = Auth::user();
-        $this->data['navText'] = __('Đơn hàng của tôi');
-        $this->data['orders'] = Order::where('user_id', $user->id)->orderby('id', 'desc')->paginate();
+        $this->data['navText'] = __('Khoá học của tôi');
+        $orderDetailM = new OrderDetail();
+        $this->data['orders'] = $orderDetailM->userRegistered($user->id);
+        // dd($this->data['orders']);
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 }

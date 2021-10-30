@@ -1,14 +1,7 @@
 @inject('userService', 'App\Services\UserServices')
 <!-- Sidebar -->
 @php ( $route = app('router')->getRoutes()->match(app('request'))->getName() )
-<ul class="navbar-nav sidebar sidebar-light accordion d-print-none shadow rounded bg-white me-4" id="accordionSidebar">
-    
-    <a class="sidebar-brand d-flex align-items-center justify-content-center mb-3" href="{{ route('me.dashboard') }}">
-        <div class="sidebar-brand-icon p-3">
-            <img src="/cdn/img/logo.png" alt="" class="img-fluid">
-        </div>
-        <div class="sidebar-brand-text mx-3 text-success">anyLEARN</div>
-    </a>
+<ul class="navbar-nav sidebar sidebar-dark accordion d-print-none shadow rounded bg-success me-4 pt-4" id="accordionSidebar">
     <div class="sidebar-heading">
         @lang('Lớp học của tôi')
     </div>
@@ -34,7 +27,7 @@
     <li class="nav-item {{ $route == 'me.orders' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.orders') }}">
             <i class="fas fa-fw fa-shopping-cart"></i>
-            <span>@lang('Đơn hàng của tôi')</span></a>
+            <span>@lang('Khoá học của tôi')</span></a>
     </li>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

@@ -1,12 +1,13 @@
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-print-none">
         <div class="container">
-
+            <a class="navbar-brand" href="{{ route('me.dashboard') }}">
+                <img src="/cdn/img/logo.png" alt="" width="30" height="30" class="d-block d-sm-none">
+                <img src="/cdn/img/logo-full.png" alt="" width="120" height="30" class="d-none d-sm-block">
+            </a>
             <!-- Sidebar Toggle (Topbar) -->
             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                 <i class="fa fa-bars"></i>
             </button>
-
-
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -14,7 +15,7 @@
                         @yield('rightFixedTop')
                     </div>
                 </li>
-                <li class="nav-item ">
+                <li class="nav-item d-none d-md-inline">
                     <a class="nav-link" href="#">
                         @if(Auth::user()->image)
                         <span class=""><img class="img-fluid border rounded-circle float-end" style="height:32px;width:32px;" src="{{ Auth::user()->image }}" alt=""></span>
