@@ -21,7 +21,7 @@
             <dd class="col-sm-9">{{ number_format($orderAmount, 0, ",", ".") }}</dd>
         </dl>
 
-        <p class="small">* Các khoá học của quý khách sẽ tự động xác nhận sau khi Công ty xác nhận chuyển khoản.</p>
+        <p class="small">* Các khóa học của quý khách sẽ tự động xác nhận Đăng ký thành công sau khi anyLEARN nhận đủ học phí thanh toán qua chuyển khoản.</p>
     </div>
 
 </div>

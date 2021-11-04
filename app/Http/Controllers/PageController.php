@@ -256,6 +256,15 @@ class PageController extends Controller
             $data['hasSearch'] = true;
             $searchType = $request->get('t');
             $searchCategory = $request->get('c');
+            $province = $request->get('p');
+            $district = $request->get('d');
+            if ($province) {
+                $listSearch = $listSearch->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
+                    ->where('ul.province_code', $province);
+                if ($district) {
+                    $listSearch = $listSearch->where('ul.district_code', $district);
+                }
+            }
             if ($searchType) {
                 $listSearch  = $listSearch->join(DB::raw("(SELECT user_id, count(*) AS numrow FROM items WHERE subtype = '" . preg_replace('/[^a-z]/', '', $searchType) . "' group by user_id ) AS t1"), function ($query) {
                     $query->on("t1.user_id", "=", "users.id")
@@ -299,6 +308,7 @@ class PageController extends Controller
                 'text' => 'Chuyên viên & Giảng Viên'
             ]
         ];
+        $data['provinces'] = Province::orderby('name')->get();
         $data['categories'] = Category::all();
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.teacher', $data);
@@ -307,16 +317,16 @@ class PageController extends Controller
     public function classes(Request $request, $role = null, $id = null)
     {
         $classes = DB::table('items')
-            ->where('type', ItemConstants::TYPE_CLASS)
-            ->where('status', ItemConstants::STATUS_ACTIVE)
-            ->where('user_status', ItemConstants::STATUS_ACTIVE)
-            ->whereNull('item_id')
+            ->where('items.type', ItemConstants::TYPE_CLASS)
+            ->where('items.status', ItemConstants::STATUS_ACTIVE)
+            ->where('items.user_status', ItemConstants::STATUS_ACTIVE)
+            ->whereNull('items.item_id')
             // ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
             // ->join('categories', 'categories.id', '=', 'items_categories.category_id')
             // ->select('items.*', 'categories.id AS category_id', 'categories.url AS category_url', 'categories.title AS category_title')
             ->select('items.*')
-            ->orderBy('is_hot', 'desc')
-            ->orderBy('id', 'desc');
+            ->orderBy('items.is_hot', 'desc')
+            ->orderBy('items.id', 'desc');
 
         if ($id) {
             $data['author'] = User::find($id);

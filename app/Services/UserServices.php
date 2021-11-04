@@ -8,6 +8,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
+use App\Models\Contract;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -305,5 +306,49 @@ class UserServices
     
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' trước' : 'vừa mới';
+    }
+
+    public function saveContract($user, $contract) {
+        $contract['user_id'] = $user->id;
+        $contract['type'] = $user->role;
+        $contract['status'] = UserConstants::CONTRACT_SIGNED;
+
+
+        $result = DB::transaction(function () use ($user, $contract) {
+            try {
+                Contract::where('user_id', $user->id)->update([
+                    'status' => UserConstants::CONTRACT_DELETED,
+                ]);
+                $newContract = Contract::create($contract);
+                if ($newContract) {
+                    $dataUpdate = [
+                        "is_signed" => UserConstants::CONTRACT_SIGNED,
+                        "email" => $contract['email'],
+                        "address" => $contract['address'],
+                    ];
+                    if ($user->role == UserConstants::ROLE_TEACHER) {
+                        $dataUpdate['dob'] = $contract['dob'];
+                    } else {
+                        $dataUpdate['title'] = $contract['ref'];
+                    }
+                    User::find($user->id)->update($dataUpdate);
+                }
+                return true;
+            } catch (Exception $e) {
+                DB::rollback();
+                Log::error($e);
+                return "Có lỗi xảy ra khi tạo hợp đồng mới, vui lòng thử lại.";
+            }
+        });
+        return $result;
+    }
+
+    public function contractStatusText($status) {
+        switch($status) {
+            case UserConstants::CONTRACT_NEW: return 'Mới tạo';
+            case UserConstants::CONTRACT_SIGNED: return 'Bạn đã ký';
+            case UserConstants::CONTRACT_APPROVED: return 'Công ty đã duyệt';
+            default: return '';
+        }
     }
 }

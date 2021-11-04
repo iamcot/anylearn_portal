@@ -1,6 +1,6 @@
 @if(!empty($promotions) && count($promotions) > 0)
 @inject('itemServ','App\Services\ItemServices')
-<section class="carousel3">
+<section id="promotion" class="carousel3">
     <div id="{{ $carouselId }}" class="mx-auto my-auto">
         <h5 class="m-2 fw-bold text-uppercase">{{ $title }}</h5>
         <div class="owl-carousel owl-theme">

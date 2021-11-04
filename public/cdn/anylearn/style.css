@@ -101,6 +101,10 @@ nav a {
     bottom: 0;
 }
 
+#promotion.carousel3 .card {
+    min-height: 280px;
+}
+
 .carousel3 .card {
     min-height: 230px;
 }

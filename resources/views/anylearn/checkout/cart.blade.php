@@ -108,7 +108,7 @@
                     @endforeach
                 </ul>
                 <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
-                <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán</label></p>
+                <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán và <a target="_BLANK" href="/privacy">chính sách bảo mật</a> của Công ty</label></p>
                 <button class="btn btn-success border-0 rounded-pill mt-2" name="cart_action" value="pay">THANH TOÁN</button>
 
             </div>

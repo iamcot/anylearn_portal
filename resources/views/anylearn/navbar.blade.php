@@ -10,13 +10,13 @@
         <div class="navbar-collapse collapse" id="navbar10">
             <ul class="navbar-nav nav-fill w-100">
                 <li class="nav-item">
-                    <a class="nav-link" href="/schools">TRUNG TÂM</a>
+                    <a class="nav-link" href="/schools">anySCHOOL</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/teachers">CHUYÊN GIA</a>
+                    <a class="nav-link" href="/teachers">anyPROFESSOR</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/classes">KHOÁ HỌC</a>
+                    <a class="nav-link" href="/classes">anyCOURSE</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/ref/anylearn">TẢI APP</a>
@@ -27,16 +27,16 @@
                         <span class="me-2 text-white small">{{ Auth::user()->name }}</span>
 
                     </a>
-                    <a class="" href="{{ route('cart') }}">
-                        <span class="badge badge-success"><i class="fa fa-2x fa-shopping-cart"> {{ $userServ->countItemInCart(Auth::user()->id) }}</i></span>
+                    <a class=" nav-link" href="{{ route('cart') }}">
+                    <i class="fa fa-shopping-cart text-white  position-relative"><span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle">{{ $userServ->countItemInCart(Auth::user()->id) }}</span></i> 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="/me">
-                            <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-gray-400"></i>
+                            <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-secondary"></i>
                             @lang('Trang Quản lý')
                         </a>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                            <i class="fas fa-sign-out-alt fa-sm fa-fw ms-2 text-gray-400"></i>
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw ms-2 text-secondary"></i>
                             @lang('Đăng xuất')
                         </a>
                     </div>

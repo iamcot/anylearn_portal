@@ -5,10 +5,10 @@
                 <p><img src="/cdn/anylearn/img/logo-color.svg" class="img-fluid" alt=""></p>
             </div>
             <div class="col-md-4 d-md-block d-none">
-                <h6 class="fw-bold">THÔNG TIN</h6>
+                <h6 class="fw-bold">LIÊN KẾT</h6>
             </div>
             <div class="col-md-3 d-md-block d-none">
-                <h6 class="fw-bold">CHĂM SÓC KHÁCH HÀNG</h6>
+                <h6 class="fw-bold">THÔNG TIN</h6>
             </div>
         </div>
         <div class="row">
@@ -22,10 +22,10 @@
                 </ul>
             </div>
             <div class="col-md-4">
-                <h6 class="fw-bold d-md-none d-sm-block">THÔNG TIN</h6>
+                <h6 class="fw-bold d-md-none d-sm-block">LIÊN KẾT</h6>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Trung tâm đào tạo</a></p></li>
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Đối tác giảng dạy</a></p></li>
+                    <li><p><a href="/school" class="text-secondary text-decoration-none">Trung tâm đào tạo</a></p></li>
+                    <li><p><a href="/teacher" class="text-secondary text-decoration-none">Đối tác giảng dạy</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Chuyên mục Học và Hỏi</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Blog</a></p></li>
                 </ul>
@@ -36,9 +36,9 @@
                 </ul>
             </div>
             <div class="col-md-3">
-                <h6 class="fw-bold d-md-none d-sm-block">CHĂM SÓC KHÁCH HÀNG</h6>
+                <h6 class="fw-bold d-md-none d-sm-block">THÔNG TIN</h6>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Hỗ trợ</a></p></li>
+                    <li><p><a href="#" class="text-secondary text-decoration-none">Hỗ trợ khách hàng</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Hướng dẫn thanh toán</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Liên hệ chúng tôi</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Chính sách bảo mật</a></p></li>

@@ -50,6 +50,25 @@
                 <div class="card-body">
                     <h6>BỘ LỌC</h6>
                     <div class="form-group mb-2">
+                        <select class="form-control location-tree rounded-pill text-secondary" data-next-level="district" name="p">
+                            <option value="">Tỉnh/Thành Phố</option>
+                            @foreach($provinces as $province)
+                            <option value="{{ $province->code }}" {{ !empty($location) && $province->code == $location->province_code ? "selected" : ""}}>{{ $province->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-2">
+                        <select class="form-control location-tree rounded-pill text-secondary" id="select-district" name="d">
+                            @if(empty($wards))
+                            <option value="">Quận/Huyện</option>
+                            @else
+                            @foreach($wards as $ward)
+                            <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>
+                            @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    <div class="form-group mb-2">
                         <select class="form-control location-tree rounded-pill text-secondary" id="select-type" name="t">
                             <option value="">Hình thức</option>
                             <option value="online" {{ request()->get('t') == 'online' ? 'selected' : '' }}>Học trực tuyến</option>
@@ -75,4 +94,5 @@
 @endsection
 @section('jscript')
 @parent
+<script src="/cdn/js/location-tree.js"></script>
 @endsection

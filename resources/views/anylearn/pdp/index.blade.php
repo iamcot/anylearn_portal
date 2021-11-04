@@ -14,7 +14,10 @@
                 <div class="col-lg-8 col-md-6 text-secondary">
                     @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
                     <h2 class="text-dark fw-bold">{{ $item->title }}</h2>
-                    <p class="">{{ $author->name }}</p>
+                    <p class=""><i class=" text-success fa fa-{{ $author->role == 'teacher' ? 'user' : 'university'}}"></i> <a href="{{ route('classes', [
+                        'role' => $author->role,
+                        'id' => $author->id,
+                    ]) }}" class="text-decoration-none text-success">{{ $author->name }}</a></p>
                     <div>
                         <ul class="list-unstyled list-inline">
                             @foreach($categories as $category)

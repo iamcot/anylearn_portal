@@ -8,12 +8,12 @@ anyLEARN - HỌC không giới hạn
 </section>
 <section class="text-center">
     <h1 class="mt-3 fw-bold">
-        Chào mừng bạn đến với <span class="text-success">anyLEARN</span>
+        Chào mừng bạn đến với <span class="text-success">any</span><span class="text-primary">LEARN</span>
     </h1>
     <div class="mt-3 text-center" id="search">
         <form action="/classes" method="get" id="schoolsearch">
             <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>
-            <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="Hôm nay bạn muốn học gì ?">
+            <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="Tìm khoá học...">
         </form>
     </div>
     <div id="quote" class="mt-3">

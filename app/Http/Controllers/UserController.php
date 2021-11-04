@@ -360,19 +360,94 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
     }
 
-    public function notification(Request $request) {
+    public function notification(Request $request)
+    {
         $user = Auth::user();
         $this->data['navText'] = __('Thông báo');
         $this->data['notifications'] = Notification::where('user_id', $user->id)->orderby('id', 'desc')->paginate();
         return view(env('TEMPLATE', '') . 'me.notification', $this->data);
     }
 
-    public function orders(Request $request) {
+    public function orders(Request $request)
+    {
         $user = Auth::user();
         $this->data['navText'] = __('Khoá học của tôi');
         $orderDetailM = new OrderDetail();
         $this->data['orders'] = $orderDetailM->userRegistered($user->id);
         // dd($this->data['orders']);
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
+    }
+
+    public function contract(Request $request)
+    {
+        $user = Auth::user();
+        if ($request->get('save') == 'contract') {
+            $inputs = $request->input();
+            $userServ = new UserServices();
+            $result = $userServ->saveContract($user, $inputs);
+
+            if ($result === true) {
+                return redirect()->back()->with('notify', 'Cập nhật thông tin doanh nghiêp thành công, vui lòng chờ anyLEARN tiếp nhận và xử lí nhé.');
+            } else {
+                return response()->back()->with('notify', $result);
+            }
+        }
+        $contract = Contract::where('user_id', $user->id)
+            ->orderby('id', 'desc')->first();
+        $configM = new Configuration();
+        if ($contract->type == UserConstants::ROLE_TEACHER) {
+            $key = ConfigConstants::CONTRACT_TEACHER;
+            $template = $configM->get($key);
+            $contract->template = Contract::makeContent($template, $user, $contract);
+        } else {
+            $key = ConfigConstants::CONTRACT_SCHOOL;
+            $template = $configM->get($key);
+            $contract->template = Contract::makeContent($template, $user, $contract);
+        }
+        // dd($contract);
+        $this->data['contract'] = $contract;
+        $this->data['navText'] = __('Quản lý Hợp đồng');
+        return view(env('TEMPLATE', '') . 'me.contract', $this->data);
+    }
+
+    public function certificate(Request $request)
+    {
+        $user = Auth::user();
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $fileService = new FileServices();
+            $fileuploaded = $fileService->doUploadImage($request, 'file');
+            if ($fileuploaded === false) {
+                return redirect()->back()->with('notify', 'Tải lên chứng chỉ không thành công.');
+            }
+            $userDocM = new UserDocument();
+            $userDocM->addDocWeb($fileuploaded, $user);
+            return redirect()->back()->with('notify', 'Tải lên chứng chỉ thành công.');
+        }
+
+        $this->data['files'] = UserDocument::where('user_id', $user->id)->get();
+        $this->data['navText'] = __('Quản lý Chứng chỉ');
+        return view(env('TEMPLATE', '') . 'me.certificate', $this->data);
+    }
+
+    public function removeCert(Request $request, $fileId)
+    {
+        $user = Auth::user();
+        $file = UserDocument::find($fileId);
+        if (!$file) {
+            return response("Tài liệu không có", 404);
+        }
+        if ($file->user_id != $user->id) {
+            return response("Bạn không có quyền", 400);
+        }
+        $fileService = new FileServices();
+        $oldImageUrl = $file->data;
+        $fileService->deleteUserOldImageOnS3($oldImageUrl);
+
+        $rs = UserDocument::find($fileId)->delete();
+        $docs = UserDocument::where('user_id', $user->id)->get();
+        if (count($docs) == 0) {
+            User::find($user->id)->update(['update_doc' => 0]);
+        }
+        return redirect()->back()->with('notify', 'Xoá chứng chỉ thành công.');
     }
 }
