@@ -171,6 +171,7 @@ class PageController extends Controller
             ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->where('users.is_test', 0)
             ->where('users.is_child', 0)
+            ->where('users.is_signed', UserConstants::CONTRACT_APPROVED)
             ->groupBy('users.name', 'users.image', 'users.id')
             ->select('users.name', 'users.image', 'users.id')
             ->orderBy('users.is_hot', 'desc');
@@ -246,6 +247,7 @@ class PageController extends Controller
             ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->where('users.is_test', 0)
             ->where('users.is_child', 0)
+            ->where('users.is_signed', UserConstants::CONTRACT_APPROVED)
             ->groupBy('users.name', 'users.image', 'users.id')
             ->select('users.name', 'users.image', 'users.id')
             ->orderBy('users.is_hot', 'desc');

@@ -10,7 +10,7 @@
                 @if (!empty($contract))
                 <div>Trạng thái Hợp đồng: <span class="p-1 rounded-pill baddge text-white bg-{{ $contract->status == 99 ? 'success' : 'warning' }}">{{ $userServ->contractStatusText($contract->status) }}</span> <a data-bs-toggle="modal" data-bs-target="#contractModal" class="text-success text-decoration-none float-md-end" href="#">XEM HỢP ĐỒNG</a></div>
                 @else
-                <p>Bạn chưa có hợp đồng nào, hãy bắt đầu bằng việc cập nhật thông tin doanh nghiệp dưới đây.</p>
+                <p>Bạn chưa có hợp đồng nào, hãy bắt đầu bằng việc cập nhật thông tin kinh doanh dưới đây.</p>
                 @endif
             </div>
             <div class="card-body">
@@ -23,23 +23,38 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="cert_id" class="col-md-4 col-form-label text-md-right">{{ __('Số ĐKKD') }}</label>
+                    <label for="cert_id" class="col-md-4 col-form-label text-md-right">{{ Auth::user()->role == 'school' ? __('Số ĐKKD') : __('Số CCCD') }}</label>
                     <div class="col-md-8">
                         <input id="cert_id" type="text" class="form-control" name="cert_id" value="{{ old('cert_id', !empty($contract) ? $contract->cert_id : '') }}" required>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="cert_date" class="col-md-4 col-form-label text-md-right">{{ __('Ngày cấp DKKD') }}</label>
+                    <label for="cert_date" class="col-md-4 col-form-label text-md-right">{{ Auth::user()->role == 'school' ? __('Ngày cấp DKKD') : __('Ngày cấp CCCD') }}</label>
                     <div class="col-md-8">
                         <input id="cert_date" type="date" class="form-control" name="cert_date" value="{{ old('cert_date', !empty($contract) ? $contract->cert_date : '') }}" required>
                     </div>
                 </div>
+                @if (Auth::user()->role == 'teacher')
+                <div class="form-group row">
+                    <label for="cert_place" class="col-md-4 col-form-label text-md-right">{{ __('Nơi cấp CCCD') }}</label>
+                    <div class="col-md-8">
+                        <input id="cert_place" type="text" class="form-control" name="cert_place" value="{{ old('cert_place', !empty($contract) ? $contract->cert_place : '') }}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="dob" class="col-md-4 col-form-label text-md-right">{{  __('Ngày sinh') }}</label>
+                    <div class="col-md-8">
+                        <input id="dob" type="date" class="form-control" name="dob" value="{{ old('dob', !empty($contract) ? $contract->dob : '') }}" required>
+                    </div>
+                </div>
+                @endif
                 <div class="form-group row">
                     <label for="tax" class="col-md-4 col-form-label text-md-right">{{ __('Mã số thuế') }}</label>
                     <div class="col-md-8">
                         <input id="tax" type="text" class="form-control" name="tax" value="{{ old('tax', !empty($contract) ? $contract->tax : '') }}" required>
                     </div>
                 </div>
+                @if (Auth::user()->role == 'school')
                 <div class="form-group row">
                     <label for="ref" class="col-md-4 col-form-label text-md-right">{{ __('Người đại diện') }}</label>
                     <div class="col-md-8">
@@ -52,6 +67,7 @@
                         <input id="ref_title" type="text" class="form-control" name="ref_title" value="{{ old('ref_title', !empty($contract) ? $contract->ref_title : '') }}" required>
                     </div>
                 </div>
+                @endif
                 <div class="form-group row">
                     <label for="address" class="col-md-4 col-form-label text-md-right">{{ __('Địa chỉ') }}</label>
                     <div class="col-md-8">

@@ -389,21 +389,24 @@ class UserController extends Controller
             if ($result === true) {
                 return redirect()->back()->with('notify', 'Cập nhật thông tin doanh nghiêp thành công, vui lòng chờ anyLEARN tiếp nhận và xử lí nhé.');
             } else {
-                return response()->back()->with('notify', $result);
+                return redirect()->back()->withInput()->with('notify', $result);
             }
         }
         $contract = Contract::where('user_id', $user->id)
             ->orderby('id', 'desc')->first();
-        $configM = new Configuration();
-        if ($contract->type == UserConstants::ROLE_TEACHER) {
-            $key = ConfigConstants::CONTRACT_TEACHER;
-            $template = $configM->get($key);
-            $contract->template = Contract::makeContent($template, $user, $contract);
-        } else {
-            $key = ConfigConstants::CONTRACT_SCHOOL;
-            $template = $configM->get($key);
-            $contract->template = Contract::makeContent($template, $user, $contract);
+        if (!empty($contract)) {
+            $configM = new Configuration();
+            if ($contract->type == UserConstants::ROLE_TEACHER) {
+                $key = ConfigConstants::CONTRACT_TEACHER;
+                $template = $configM->get($key);
+                $contract->template = Contract::makeContent($template, $user, $contract);
+            } else {
+                $key = ConfigConstants::CONTRACT_SCHOOL;
+                $template = $configM->get($key);
+                $contract->template = Contract::makeContent($template, $user, $contract);
+            }
         }
+
         // dd($contract);
         $this->data['contract'] = $contract;
         $this->data['navText'] = __('Quản lý Hợp đồng');

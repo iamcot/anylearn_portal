@@ -324,6 +324,7 @@ class UserApi extends Controller
             ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('is_test', 0)
+            ->where('is_signed', UserConstants::CONTRACT_APPROVED)
             ->orderby('is_hot', 'desc')
             ->orderby('boost_score', 'desc')
             ->orderby('first_name')
