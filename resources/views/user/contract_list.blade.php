@@ -44,7 +44,7 @@
                     <th class="text-center" scope="row">{{ $contract->id }}</th>
                     <td>{{ $contract->name }}</td>
                     <td>{{ $contract->phone }}</td>
-                    <td><label class="badge badge-info">{{ $userServ->contractStatus($contract->status)  }}</label></td>
+                    <td><label class="badge badge-{{ $userServ->contractColor($contract->status) }}">{{ $userServ->contractStatus($contract->status)  }}</label></td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($contract->updated_at)) }}</td>
                     <td class="text-right">
                         <a class="btn btn-sm btn-primary" href="{{ route('user.contract.info', ['id' => $contract->id]) }}"><i class="fas fa-edit"></i> Xem</a>
