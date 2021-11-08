@@ -24,8 +24,8 @@
             <div class="col-md-4">
                 <h6 class="fw-bold d-md-none d-sm-block">LIÊN KẾT</h6>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="/school" class="text-secondary text-decoration-none">Trung tâm đào tạo</a></p></li>
-                    <li><p><a href="/teacher" class="text-secondary text-decoration-none">Đối tác giảng dạy</a></p></li>
+                    <li><p><a href="/schools" class="text-secondary text-decoration-none">Trung tâm đào tạo</a></p></li>
+                    <li><p><a href="/teachers" class="text-secondary text-decoration-none">Đối tác giảng dạy</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Chuyên mục Học và Hỏi</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Blog</a></p></li>
                 </ul>
@@ -38,10 +38,10 @@
             <div class="col-md-3">
                 <h6 class="fw-bold d-md-none d-sm-block">THÔNG TIN</h6>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Hỗ trợ khách hàng</a></p></li>
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Hướng dẫn thanh toán</a></p></li>
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Liên hệ chúng tôi</a></p></li>
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Chính sách bảo mật</a></p></li>
+                    <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">Hỗ trợ khách hàng</a></p></li>
+                    <li><p><a href="/helpcenter?tab=checkout" class="text-secondary text-decoration-none">Hướng dẫn thanh toán</a></p></li>
+                    <li><p><a href="" class="text-secondary text-decoration-none">Liên hệ chúng tôi</a></p></li>
+                    <li><p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách bảo mật</a></p></li>
                 </ul>
             </div>
         </div>

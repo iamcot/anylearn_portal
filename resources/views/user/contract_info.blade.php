@@ -9,7 +9,7 @@
 </p>
 <form method="post" class="row">
     @csrf
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header">
                 Thông tin hợp đồng
@@ -33,8 +33,34 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card shadow">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                Các chứng chỉ
+            </div>
+            <div class="card-body row">
+                @foreach($files as $file)
+                <div class="col-4 position-relative">
+                    <!-- <a href="{{ route('me.remove-cert', ['fileId' => $file->id ]) }}" class="btn btn-danger rounded-circle position-absolute " style="z-index:100;"><i class="fa fa-trash"></i></a> -->
+
+                    <a href="#" class="d-block mb-4 imagebox" data-toggle="modal" data-target="#imageModal" data-image="{{ $file->data }}">
+                        <img class="img-fluid img-thumbnail w-100" src="{{ $file->data }}" alt="">
+                    </a>
+                </div>
+                @endforeach
+            </div>
+            <div class="card-footer">
+                @if($contract->status == \App\Constants\UserConstants::CONTRACT_DELETED)
+                <div class="text-danger">Hợp đồng đã bị huỷ</div>
+                @else
+                    @if($contract->status == \App\Constants\UserConstants::CONTRACT_SIGNED)
+                    <button class="btn btn-sm btn-success float-right" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_APPROVED }}">Duyệt</button>
+                    @endif
+                    <button class="btn btn-sm btn-danger float-right mr-1" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_DELETED }}">Từ chối</button>
+                @endif
+            </div>
+        </div>
+        <!-- <div class="card shadow">
             <div class="card-header">
                 Chữ ký
                 @if($contract->status == \App\Constants\UserConstants::CONTRACT_SIGNED)
@@ -51,7 +77,30 @@
             <div class="card-footer">
                 <button class="btn btn-sm btn-danger float-right" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_DELETED }}">Từ chối hợp đồng</button>
             </div>
-        </div>
+        </div> -->
     </div>
 </form>
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="cert-image" class="img-fluid w-100" src="" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary  rounded-pill border-0" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('jscript')
+@parent
+<script>
+    $('#imageModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var image = button.data('image')
+        var modalImage = $(this).find('#cert-image')
+        modalImage.attr('src', image)
+    })
+</script>
 @endsection

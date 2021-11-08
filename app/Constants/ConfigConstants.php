@@ -15,6 +15,8 @@ class ConfigConstants
     const GUIDE_TOC_TEACHER = 'guide_toc_teacher';
     const GUIDE_TOC_SCHOOL = 'guide_toc_school';
     const GUIDE_PRIVACY = 'guide_privacy';
+    const GUIDE_CHECKOUT = 'guide_checkout';
+
     const CONTRACT_TEACHER = 'contract_teacher';
     const CONTRACT_SCHOOL = 'contract_school';
 
@@ -64,6 +66,7 @@ class ConfigConstants
         self::GUIDE_MEMBER => 'HDSD cho Thành viên',
         self::GUIDE_TEACHER => 'HDSD cho Giảng viên',
         self::GUIDE_SCHOOL => 'HDSD cho Trung tâm',
+        self::GUIDE_CHECKOUT => 'HDSD Thanh Toán',
         self::GUIDE_ABOUT => 'Giới thiệu',
         self::GUIDE_TOC_SCHOOL => 'Chính sách cho trung tâm',
         self::GUIDE_TOC_TEACHER => 'Chính sách cho giảng viên',

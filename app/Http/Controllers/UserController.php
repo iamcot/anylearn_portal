@@ -193,9 +193,14 @@ class UserController extends Controller
                     $list = $list->where('users.name', 'like', '%' . $request->input('s') . '%');
                     break;
             }
+           
         }
-        $list = $list->where('contracts.status', '>', 0)
-            ->orderBy('contracts.id', 'desc')
+        if ($request->input('ic') == 'on') {
+            $list = $list->where('contracts.status', '>=', 0);
+        } else {
+            $list = $list->where('contracts.status', '>', 0);
+        }
+        $list = $list->orderBy('contracts.id', 'desc')
             ->select('users.name', 'users.phone', 'contracts.*')
             ->paginate(20);
         $this->data['list'] = $list;
@@ -215,7 +220,7 @@ class UserController extends Controller
             ->where('contracts.id', $id)
             ->select('users.name', 'users.phone', 'contracts.*')
             ->first();
-        if ($request->get('action')) {
+        if ($request->get('action') != null) {    
             $notifM = new Notification();
             if ($request->get('action') == UserConstants::CONTRACT_APPROVED) {
                 Contract::find($id)->update(['status' => UserConstants::CONTRACT_APPROVED]);
@@ -236,7 +241,7 @@ class UserController extends Controller
                 return redirect()->route('user.contract')->with('notify', 'Đã từ chối hợp đồng với ' . $contract->name);
             }
         }
-
+        $this->data['files'] = UserDocument::where('user_id', $contract->user_id)->get();
         $this->data['contract']  = $contract;
         $this->data['hasBack'] = route('user.contract');
         $this->data['navText'] = __('Hợp đồng với ' . $contract->name);

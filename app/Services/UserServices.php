@@ -348,6 +348,17 @@ class UserServices
             case UserConstants::CONTRACT_NEW: return 'Mới tạo';
             case UserConstants::CONTRACT_SIGNED: return 'Bạn đã ký';
             case UserConstants::CONTRACT_APPROVED: return 'Công ty đã duyệt';
+            case UserConstants::CONTRACT_DELETED: return 'Bị từ chối';
+            default: return '';
+        }
+    }
+
+    public function contractColor($status) {
+        switch($status) {
+            case UserConstants::CONTRACT_NEW: return 'warning';
+            case UserConstants::CONTRACT_SIGNED: return 'warning';
+            case UserConstants::CONTRACT_APPROVED: return 'success';
+            case UserConstants::CONTRACT_DELETED: return 'danger';
             default: return '';
         }
     }

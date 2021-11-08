@@ -8,7 +8,7 @@
         <div class="card shadow">
             <div class="card-header p-3">
                 @if (!empty($contract))
-                <div>Trạng thái Hợp đồng: <span class="p-1 rounded-pill baddge text-white bg-{{ $contract->status == 99 ? 'success' : 'warning' }}">{{ $userServ->contractStatusText($contract->status) }}</span> <a data-bs-toggle="modal" data-bs-target="#contractModal" class="text-success text-decoration-none float-md-end" href="#">XEM HỢP ĐỒNG</a></div>
+                <div>Trạng thái Hợp đồng: <span class="p-1 rounded-pill baddge text-white bg-{{ $userServ->contractColor($contract->status) }}">{{ $userServ->contractStatusText($contract->status) }}</span> <a data-bs-toggle="modal" data-bs-target="#contractModal" class="text-success text-decoration-none float-md-end" href="#">XEM HỢP ĐỒNG</a></div>
                 @else
                 <p>Bạn chưa có hợp đồng nào, hãy bắt đầu bằng việc cập nhật thông tin kinh doanh dưới đây.</p>
                 @endif

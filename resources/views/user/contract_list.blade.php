@@ -1,24 +1,29 @@
 @inject('userServ','App\Services\UserServices')
 @extends('layout')
 
-@section('rightFixedTop')
-<form class="row">
-    <div class="col-xs-4 mr-1">
-        <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'name' ? 'selected' : '' }} value="name">Tên Thành viên</option>
-            <option {{ app('request')->input('t') == 'phone' ? 'selected' : '' }} value="phone">Số điện thoại</option>
-        </select>
-    </div>
-    <div class="col-xs-7 mr-1">
-        <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
-    </div>
-    <div class="col-xs-1">
-        <button class="btn btn-primary btn"><i class="fas fa-search"></i></button>
-    </div>
-</form>
-@endsection
-
 @section('body')
+<div class="card shadow">
+    <div class="card-body">
+        <form class="row">
+            <div class="col-xs-12 col-lg-2 mr-1 mb-1">
+                <input type="checkbox" class="" name="ic" id="is_cancel" {{ app('request')->input('ic') == 'on' ? 'checked' : '' }}>
+                <label for="is_cancel">Hiện HD Đã Huỷ</label>
+            </div>
+            <div class="col-xs-12 col-lg-3 mr-1 mb-1">
+                <select class="form-control" name="t" id="">
+                    <option {{ app('request')->input('t') == 'name' ? 'selected' : '' }} value="name">Tên Thành viên</option>
+                    <option {{ app('request')->input('t') == 'phone' ? 'selected' : '' }} value="phone">Số điện thoại</option>
+                </select>
+            </div>
+            <div class="col-xs-12 col-lg-5 mr-1 mb-1">
+                <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
+            </div>
+            <div class="col-xs-12 col-lg-1 mr-1 mb-1">
+                <button class="btn btn-primary btn form-control"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
