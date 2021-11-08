@@ -39,7 +39,7 @@
     <li class="nav-item {{ $route == 'me.orders' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.orders') }}">
             <i class="fas fa-fw fa-shopping-cart"></i>
-            <span>@lang('Khoá học của tôi')</span></a>
+            <span>@lang('Khoá học tôi tham gia')</span></a>
     </li>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
