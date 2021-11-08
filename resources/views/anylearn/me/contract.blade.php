@@ -8,7 +8,7 @@
         <div class="card shadow">
             <div class="card-header p-3">
                 @if (!empty($contract))
-                <div>Trạng thái Hợp đồng: <span class="p-1 rounded-pill baddge text-white bg-{{ $userServ->contractColor($contract->status) }}">{{ $userServ->contractStatusText($contract->status) }}</span> <a data-bs-toggle="modal" data-bs-target="#contractModal" class="text-success text-decoration-none float-md-end" href="#">XEM HỢP ĐỒNG</a></div>
+                <div>Trạng thái Hợp đồng: <span class="p-1 rounded-pill baddge text-white bg-{{ $userServ->contractColor($contract->status) }}">{{ $userServ->contractStatusText($contract->status) }}</span> <a data-bs-toggle="modal" data-bs-target="#contractModal" class="text-success text-decoration-none float-md-end" href="#">XEM/KÝ HỢP ĐỒNG</a></div>
                 @else
                 <p>Bạn chưa có hợp đồng nào, hãy bắt đầu bằng việc cập nhật thông tin kinh doanh dưới đây.</p>
                 @endif
@@ -108,7 +108,7 @@
             <div class="card-footer text-center">
                 <p class="small text-danger">Mọi thay đổi trên thông tin doanh nghiệp đều ảnh hưởng đến trạng thái của hợp đồng và cần anyLEARN kiểm tra lại</p>
                 <button class="btn btn-success  border-0 rounded-pill" id="saveButton" name="save" value="contract">
-                    <i class="fas fa-cloud-upload-alt"></i> Đồng ý ký và cập nhật hợp đồng
+                    <i class="fas fa-cloud-upload-alt"></i> Cập nhật thông tin hợp đồng
                 </button>
             </div>
         </div>
@@ -124,7 +124,8 @@
             <div class="modal-body">
                 {!! $contract->template !!}
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer text-center">
+                <a class="btn btn-success rounded-pill border-0" href="{{ route('me.contract.sign', ['id' => $contract->id ]) }}">ĐÃ ĐỌC VÀ ĐỒNG Ý KÝ HỢP ĐỒNG</a>
                 <button type="button" class="btn btn-secondary  rounded-pill border-0" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>

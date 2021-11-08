@@ -247,13 +247,14 @@ class UserServices
         }
     }
 
-    public function getUserLocationGeo($address) {
+    public function getUserLocationGeo($address)
+    {
         try {
             $code = Geocoder::geocode($address)->get();
             if (empty($code[0])) {
                 return false;
             }
-    
+
             $rs = $code[0];
             // dd($rs);
             $data = [
@@ -261,32 +262,33 @@ class UserServices
                 'latitude' => $rs->getCoordinates()->getLatitude()
             ];
             return $data;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::error($e);
         }
         return false;
-       
     }
 
-    public function countItemInCart($userId) {
+    public function countItemInCart($userId)
+    {
         $openOrder = Order::where('user_id', $userId)
-        ->where('status', OrderConstants::STATUS_NEW)
-        ->orderby('id', 'desc')
-        ->first();
+            ->where('status', OrderConstants::STATUS_NEW)
+            ->orderby('id', 'desc')
+            ->first();
         if (!$openOrder) {
             return 0;
         }
         return OrderDetail::where('order_id', $openOrder->id)->count();
     }
 
-    public function timeAgo($datetime, $full = false) {
+    public function timeAgo($datetime, $full = false)
+    {
         $now = new \DateTime;
         $ago = new \DateTime($datetime);
         $diff = $now->diff($ago);
-    
+
         $diff->w = floor($diff->d / 7);
         $diff->d -= $diff->w * 7;
-    
+
         $string = array(
             'y' => 'năm',
             'm' => 'tháng',
@@ -303,26 +305,28 @@ class UserServices
                 unset($string[$k]);
             }
         }
-    
+
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' trước' : 'vừa mới';
     }
 
-    public function saveContract($user, $contract) {
+    public function saveContract($user, $contract)
+    {
         $contract['user_id'] = $user->id;
         $contract['type'] = $user->role;
-        $contract['status'] = UserConstants::CONTRACT_SIGNED;
+        $contract['status'] = UserConstants::CONTRACT_NEW;
 
 
         $result = DB::transaction(function () use ($user, $contract) {
             try {
-                Contract::where('user_id', $user->id)->update([
+                Contract::where('user_id', $user->id)
+                ->where('status', '!=', UserConstants::CONTRACT_APPROVED)
+                ->update([
                     'status' => UserConstants::CONTRACT_DELETED,
                 ]);
                 $newContract = Contract::create($contract);
                 if ($newContract) {
                     $dataUpdate = [
-                        "is_signed" => UserConstants::CONTRACT_SIGNED,
                         "email" => $contract['email'],
                         "address" => $contract['address'],
                     ];
@@ -343,23 +347,55 @@ class UserServices
         return $result;
     }
 
-    public function contractStatusText($status) {
-        switch($status) {
-            case UserConstants::CONTRACT_NEW: return 'Mới tạo';
-            case UserConstants::CONTRACT_SIGNED: return 'Bạn đã ký';
-            case UserConstants::CONTRACT_APPROVED: return 'Công ty đã duyệt';
-            case UserConstants::CONTRACT_DELETED: return 'Bị từ chối';
-            default: return '';
+    public function signContract($user, $contractId)
+    {
+        $result = DB::transaction(function () use ($user, $contractId) {
+            try {
+                Contract::find($contractId)->update([
+                    'status' => UserConstants::CONTRACT_SIGNED,
+                ]);
+                User::find($user->id)->update([
+                    "is_signed" => 0,
+                ]);
+                return true;
+            } catch (Exception $e) {
+                DB::rollback();
+                Log::error($e);
+                return "Có lỗi xảy ra khi tạo hợp đồng mới, vui lòng thử lại.";
+            }
+        });
+        return $result;
+    }
+
+    public function contractStatusText($status)
+    {
+        switch ($status) {
+            case UserConstants::CONTRACT_NEW:
+                return 'Mới tạo';
+            case UserConstants::CONTRACT_SIGNED:
+                return 'Bạn đã ký';
+            case UserConstants::CONTRACT_APPROVED:
+                return 'Công ty đã duyệt';
+            case UserConstants::CONTRACT_DELETED:
+                return 'Bị từ chối';
+            default:
+                return '';
         }
     }
 
-    public function contractColor($status) {
-        switch($status) {
-            case UserConstants::CONTRACT_NEW: return 'warning';
-            case UserConstants::CONTRACT_SIGNED: return 'warning';
-            case UserConstants::CONTRACT_APPROVED: return 'success';
-            case UserConstants::CONTRACT_DELETED: return 'danger';
-            default: return '';
+    public function contractColor($status)
+    {
+        switch ($status) {
+            case UserConstants::CONTRACT_NEW:
+                return 'warning';
+            case UserConstants::CONTRACT_SIGNED:
+                return 'warning';
+            case UserConstants::CONTRACT_APPROVED:
+                return 'success';
+            case UserConstants::CONTRACT_DELETED:
+                return 'danger';
+            default:
+                return '';
         }
     }
 }

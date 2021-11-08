@@ -383,6 +383,18 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
+    public function contractSign($id) {
+        $userServ = new UserServices();
+        $user = Auth::user();
+        $result = $userServ->signContract($user, $id);
+
+            if ($result === true) {
+                return redirect()->back()->with('notify', 'Đã ký hợp đồng, vui lòng chờ anyLEARN tiếp nhận và xử lí nhé.');
+            } else {
+                return redirect()->back()->withInput()->with('notify', $result);
+            }
+    }
+
     public function contract(Request $request)
     {
         $user = Auth::user();
@@ -392,7 +404,7 @@ class UserController extends Controller
             $result = $userServ->saveContract($user, $inputs);
 
             if ($result === true) {
-                return redirect()->back()->with('notify', 'Cập nhật thông tin doanh nghiêp thành công, vui lòng chờ anyLEARN tiếp nhận và xử lí nhé.');
+                return redirect()->back()->with('notify', 'Cập nhật thông tin doanh nghiêp thành công, vui lòng đọc lại hợp đồng và xác nhận KÝ.');
             } else {
                 return redirect()->back()->withInput()->with('notify', $result);
             }

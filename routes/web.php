@@ -58,6 +58,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/orders', 'UserController@orders')->name('me.orders');
     Route::any('/notification', 'UserController@notification')->name('me.notification');
     Route::any('/contract', 'UserController@contract')->name('me.contract');
+    Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
     Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
     Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
 });
