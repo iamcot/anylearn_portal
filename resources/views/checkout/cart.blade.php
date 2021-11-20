@@ -73,10 +73,10 @@
     <div class="card-body">
         <label for="" class="font-weight-bold text-success">Mã giảm giá</label>
         <div class="row">
-            <div class="form-group col-lg-6">
+            <div class="form-group col-6">
                 <input type="text" class="form-control" name="payment_voucher" value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
             </div>
-            <div class="form-group col-lg-4">
+            <div class="form-group col-4">
                 @if (empty($voucherUsed))
                 <button class="btn btn-success" name="cart_action" value="apply_voucher">Áp dụng</button>
                 @else
