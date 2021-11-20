@@ -40,7 +40,7 @@ class ItemServices
         $item = $item->makeVisible(['content']);
         // $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
-        $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT]);
+        $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_DISABLE_ANYPOINT]);
         $author = User::find($item->user_id);
 
         $userService = new UserServices();
@@ -83,6 +83,7 @@ class ItemServices
             ->get();
         return [
             'commission' => $commission,
+            'disable_anypoint' => (int)$configs[ConfigConstants::CONFIG_DISABLE_ANYPOINT],
             'author' => $author,
             'item' => $item,
             'num_schedule' => $numSchedule,

@@ -198,6 +198,7 @@ class UserApi extends Controller
 
         $configM = new Configuration();
         $user->ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_IOS_TRANSACTION);
+        $user->disable_anypoint = (int)$configM->get(ConfigConstants::CONFIG_DISABLE_ANYPOINT);
         $user->children = User::where('user_id', $user->id)
             ->where('is_child', 1)
             ->get();
@@ -632,11 +633,21 @@ class UserApi extends Controller
         return response()->json($data);
     }
 
-    public function getContract(Request $request)
+    public function getContract(Request $request, $contractId = 0)
     {
         $user = $request->get('_user');
-        $lastContract = Contract::where('user_id', $user->id)
-            ->orderby('id', 'desc')->first();
+        if ($contractId == -1) {
+            $lastContract = Contract::where('user_id', $user->id)
+                ->where('status', 99)
+                ->orderby('id', 'desc')->first();
+        } else if ($contractId == 0) {
+            $lastContract = Contract::where('user_id', $user->id)
+                ->where('status', '!=', 0)
+                ->orderby('id', 'desc')->first();
+        } else {
+            $lastContract = Contract::find($contractId);
+        }
+
         $configM = new Configuration();
         if ($lastContract->type == UserConstants::ROLE_TEACHER) {
             $key = ConfigConstants::CONTRACT_TEACHER;
@@ -670,30 +681,16 @@ class UserApi extends Controller
         }
     }
 
-    public function signContract(Request $request)
+    public function signContract(Request $request, $contractId)
     {
         $user = $request->get('_user');
-        $fileService = new FileServices();
-        $fileuploaded = $fileService->doUploadImage($request, 'image');
-        if ($fileuploaded === false) {
-            return response('Upload file không thành công.', 500);
+        $userServ = new UserServices();
+        $result = $userServ->signContract($user, $contractId);
+        if ($result === true) {
+            return response()->json(['result' => true]);
+        } else {
+            return response($result, 400);
         }
-        $lastContract = Contract::where('user_id', $user->id)
-            ->orderby('id', 'desc')->first();
-        $oldImageUrl = $lastContract->signed;
-        if ($oldImageUrl) {
-            $fileService->deleteUserOldImageOnS3($oldImageUrl);
-        }
-
-        Contract::find($lastContract->id)->update([
-            'signed' => $fileuploaded['url'],
-            'status' => UserConstants::CONTRACT_SIGNED,
-        ]);
-
-        User::find($lastContract->user_id)->update([
-            'is_signed' => UserConstants::CONTRACT_SIGNED
-        ]);
-        return response($fileuploaded['url'], 200);
     }
 
     public function listChildren(Request $request)

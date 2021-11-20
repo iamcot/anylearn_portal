@@ -361,7 +361,7 @@ class UserServices
             } catch (Exception $e) {
                 DB::rollback();
                 Log::error($e);
-                return "Có lỗi xảy ra khi tạo hợp đồng mới, vui lòng thử lại.";
+                return "Có lỗi xảy ra khi ký hợp đồng, vui lòng thử lại.";
             }
         });
         return $result;

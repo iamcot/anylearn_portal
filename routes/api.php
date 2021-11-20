@@ -28,6 +28,7 @@ Route::get('/event/{month}', 'Apis\ConfigApi@event');
 Route::get('/search', 'Apis\ConfigApi@search');
 Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
+Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
 Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
 Route::get('/foundation', 'Apis\ConfigApi@foundation');
 Route::get('/doc/{key}', 'Apis\ConfigApi@getDoc');
@@ -57,9 +58,9 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/notification', 'Apis\UserApi@notification');
     Route::get('/user/notification/{id}', 'Apis\UserApi@notifRead');
     Route::get('/user/all-friends', 'Apis\UserApi@allFriends');
-    Route::get('/user/contract', 'Apis\UserApi@getContract');
-    Route::post('/user/contract', 'Apis\UserApi@saveContract');
-    Route::post('/user/contract/sign', 'Apis\UserApi@signContract');
+    Route::get('/user/contract/{contractId?}', 'Apis\UserApi@getContract');
+    Route::any('/user/contract', 'Apis\UserApi@saveContract');
+    Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
 
     Route::get('/transaction/history', 'Apis\TransactionApi@history');

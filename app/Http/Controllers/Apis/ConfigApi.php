@@ -28,6 +28,56 @@ use League\OAuth1\Client\Server\Trello;
 
 class ConfigApi extends Controller
 {
+    public function homeV2($role = 'guest') {
+        $newBanners = [];
+        $dbNewBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
+        if ($dbNewBanners) {
+            $newBanners = array_values(json_decode($dbNewBanners->value, true));
+        }
+        $homeConfig = config('home_config');
+        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
+        if (!empty($lastConfig)) {
+            $homePopup = json_decode($lastConfig->value, true);
+            if ($homePopup['status'] == 1) {
+                $homeConfig['popup'] = $homePopup;
+            }
+        }
+        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        $homeClasses = [];
+        if ($homeClassesDb) {
+            foreach (json_decode($homeClassesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->where('status', 1)
+                    ->where('user_status', 1)
+                    ->get();
+                $homeClasses[] = [
+                    'title' => $block['title'],
+                    'classes' => $items
+                ];
+            }
+        }
+        $promotions = Article::where('type', Article::TYPE_PROMOTION)
+        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+        $events = Article::where('type', Article::TYPE_EVENT)
+            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+
+        return response()->json([
+            'new_banners' => $newBanners,
+            'articles' => Article::where('status', 1)
+                ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
+                ->orderby('id', 'desc')
+                ->take(5)->get()->makeHidden(['content']),
+         
+            'configs' => $homeConfig,
+            'home_classes' => $homeClasses,
+            'promotions' => $promotions,
+            'events' => $events,
+        ]);
+    }
+
     public function home($role = 'guest')
     {
         $fileService = new FileServices();

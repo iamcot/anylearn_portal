@@ -21,6 +21,7 @@ class ConfigConstants
     const CONTRACT_SCHOOL = 'contract_school';
 
     const CONFIG_IOS_TRANSACTION = 'ios_transaction';
+    const CONFIG_DISABLE_ANYPOINT = 'disable_anypoint';
     const CONFIG_FRIEND_TREE = 'friend_tree';
     const CONFIG_NUM_COURSE = 'num_course';
     const CONFIG_NUM_TEACHER = 'num_teacher';

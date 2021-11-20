@@ -7,9 +7,9 @@ anyLEARN - HỌC không giới hạn
     <img class="img-fluid" src="/cdn/anylearn/img/banner_1.svg" alt="">
 </section>
 <section class="text-center">
-    <h1 class="mt-3 fw-bold">
-        Chào mừng bạn đến với <span class="text-success">any</span><span class="text-primary">LEARN</span>
-    </h1>
+    <h5 class="mt-3 fw-bold text-secondary">
+        Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online
+    </h5>
     <div class="mt-3 text-center" id="search">
         <form action="/classes" method="get" id="schoolsearch">
             <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>

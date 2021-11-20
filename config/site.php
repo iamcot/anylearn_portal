@@ -9,6 +9,12 @@ return [
         'type' => 'number',
         'value' => 0
     ],
+    ConfigConstants::CONFIG_DISABLE_ANYPOINT => [
+        'title' => 'Ẩn anyPoint',
+        'hint' => 'Ẩn các thông tin về anyPoint trên giao diện người dùng. 1: tắt; 0: mở',
+        'type' => 'number',
+        'value' => 0
+    ],
     ConfigConstants::CONFIG_FRIEND_TREE => [
         'title' => 'Số cấp của cây thành viên',
         'hint' => 'Chỉ đếm gián tiếp',

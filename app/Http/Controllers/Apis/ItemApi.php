@@ -133,7 +133,7 @@ class ItemApi extends Controller
 
     public function userItems(Request $request, $userId)
     {
-        $user = User::find($userId);
+        $user = User::find($userId)->makeVisible(['full_content']);
         if (!$user) {
             return response('Trang không tồn tại', 404);
         }
