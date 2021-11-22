@@ -34,13 +34,13 @@ class UserRegistered extends Mailable
     {
         $userId = $this->data['userid'];
         $user = User::find($userId);
-        $eventEmail = null;
+        $eventEmail = "";
         if (date("Ymd") == '20211031' || date("Ymd") == '20211030') {
             $eventEmail = 'user_register_20211031';
         }
         if ($user->role == UserConstants::ROLE_MEMBER) {
-            return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')->view('email.' . $eventEmail ?? 'user_member_register')->with($this->data);
+            return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')->view('email.' . $eventEmail != "" ? $eventEmail : 'user_member_register')->with($this->data);
         }
-        return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')->view('email.' . $eventEmail ?? 'user_register')->with($this->data);
+        return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')->view('email.' . $eventEmail != "" ? $eventEmail : 'user_register')->with($this->data);
     }
 }
