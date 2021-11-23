@@ -66,10 +66,10 @@
                 <div class="p-3">
                     <label for="" class="fw-bold text-secondary">Mã giảm giá</label>
                     <div class="row">
-                        <div class="form-group col-lg-4">
+                        <div class="form-group col-8 col-lg-4">
                             <input type="text" class=" rounded-pill form-control" name="payment_voucher" value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
                         </div>
-                        <div class="form-group col-lg-4">
+                        <div class="form-group col-4">
                             <button class="btn btn-success rounded-pill border-0" name="cart_action" value="apply_voucher">Áp dụng</button>
                         </div>
                     </div>
