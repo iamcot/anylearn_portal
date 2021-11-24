@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Models\Configuration;
+use App\Models\Tag;
 use App\Models\Voucher;
 use App\Models\VoucherEvent;
 use App\Models\VoucherGroup;
@@ -228,7 +229,6 @@ class ConfigController extends Controller
                 VoucherEvent::find($input['id'])->update($data);
                 return redirect()->route('config.voucherevent')->with('notify', 'Thao tác thành công.');
             }
-            
         }
         if (!empty($eventId)) {
             $this->data['event'] = VoucherEvent::find($eventId);
@@ -407,7 +407,7 @@ class ConfigController extends Controller
         }
         $config = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $this->data['configs'] = [
-            [], [], [], [], [],//5
+            [], [], [], [], [], //5
         ];
         if ($config) {
             $values = json_decode($config->value, true);
@@ -443,5 +443,23 @@ class ConfigController extends Controller
     {
 
         // return response()->json($data);
+    }
+
+    public function tagsManager(Request $request)
+    {
+        $this->data['tags'] = Tag::select(DB::raw('distinct tag'), 'status')
+            ->where('type', 'class')
+            ->get();
+        $this->data['navText'] = __('Quản lý TAGs');
+        return view('config.tags', $this->data);
+    }
+
+    public function touchTagStatus($tag) {
+        $rs = Tag::where('tag', $tag)->update(
+            [
+                'status' => DB::raw('1 - status')
+            ]
+        );
+        return redirect()->back();
     }
 }

@@ -126,6 +126,11 @@
             <i class="fas fa-fw fa-cogs"></i>
             <span>@lang('Các thông số')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'config.tag' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('config.tag') }}">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>@lang('Các thẻ tag')</span></a>
+    </li>
     <li class="nav-item {{ $route == 'config.banner' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('config.banner') }}">
             <i class="fas fa-fw fa-images"></i>

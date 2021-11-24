@@ -104,6 +104,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::any('/config/voucher-event/{id}', 'ConfigController@voucherEventEdit')->name('config.voucherevent.edit');
     Route::get('/config/voucher-event/{id}/log', 'ConfigController@voucherEventLog')->name('config.voucherevent.log');
     Route::any('/config/voucher-event/{id}/close', 'ConfigController@voucherEventClose')->name('config.voucherevent.close');
+    Route::any('/config/tags', 'ConfigController@tagsManager')->name('config.tag');
+    Route::any('/config/tags/touch/{tag}', 'ConfigController@touchTagStatus')->name('config.tag.statustouch');
    
     Route::any('/user/update-doc', 'UserController@updateDoc')->name('user.update_doc');
     

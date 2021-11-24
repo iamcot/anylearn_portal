@@ -336,6 +336,7 @@ class ConfigApi extends Controller
     {
         $db = Tag::select('tag')
             ->where('type', 'class')
+            ->where('status', 1)
             ->distinct()->get();
         $data = [];
         foreach ($db as $tag) {
