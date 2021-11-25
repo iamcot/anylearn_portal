@@ -100,9 +100,9 @@ class User extends Authenticatable
                 ConfigConstants::CONFIG_COMMISSION_AUTHOR,
                 ConfigConstants::CONFIG_COMMISSION_SCHOOL
             ]);
-            $obj['commission_rate'] = $data['role'] == UserConstants::ROLE_TEACHER 
-            ? $configs[ConfigConstants::CONFIG_COMMISSION_AUTHOR] 
-            : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
+            $obj['commission_rate'] = $data['role'] == UserConstants::ROLE_TEACHER
+                ? $configs[ConfigConstants::CONFIG_COMMISSION_AUTHOR]
+                : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
         }
 
         $newMember = $this->create($obj);
@@ -119,6 +119,7 @@ class User extends Authenticatable
             // }
         }
         $this->updateUpTree($newMember->user_id);
+        $newMember->commission_rate = (float)$newMember->commission_rate;
         return $newMember;
     }
 
