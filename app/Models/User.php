@@ -178,6 +178,10 @@ class User extends Authenticatable
         }
         $obj['first_name'] = in_array($input['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($input['name']) : $input['name'];
 
+        if (!empty($input['is_signed'])) {
+            $obj['is_signed'] = $input['is_signed'];
+        }
+
         $fileService = new FileServices();
         $avatar = $fileService->doUploadImage($request, 'image');
         $banner = $fileService->doUploadImage($request, 'banner');

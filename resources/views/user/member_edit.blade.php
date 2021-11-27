@@ -85,6 +85,16 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="is_signned" class="col-md-2 col-form-label text-md-right">{{ __('Trạng thái hợp đồng') }}</label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="is_signed" id="is_signned">
+                            @foreach([0 => 'ĐÃ HUỶ',1 => 'MỚI',10 => 'THÀNH VIÊN KÝ',99 => 'CÔNG TY DUYỆT'] as $k => $status)
+                            <option value="{{ $k }}" {{ !empty($user) && $user->is_signed  == (int)$k ? 'selected' : '' }}>{{ $status }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="password" class="col-md-2 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
                     <div class="col-md-8">
                         <input id="password" type="password" class="form-control" name="password" value="" {{ empty($user) ? 'required' : '' }}>
@@ -96,23 +106,23 @@
                 <div class="form-group row">
                     <label for="phone" class="col-md-2 col-form-label text-md-right">{{ __('Avatar') }}</label>
                     <div class="col-md-4">
-                    <input name="image" type="file" id="image"  />
+                        <input name="image" type="file" id="image" />
                     </div>
-                    <div class="col-md-4" >
-                    @if($user->image)
+                    <div class="col-md-4">
+                        @if($user->image)
                         <img src="{{ $user->image }}" alt="" style="height: 50px;">
-                    @endif
+                        @endif
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="phone" class="col-md-2 col-form-label text-md-right">{{ __('Banner') }}</label>
                     <div class="col-md-4">
-                    <input name="banner" type="file" id="image"  />
+                        <input name="banner" type="file" id="image" />
                     </div>
-                    <div class="col-md-4" >
-                    @if($user->banner)
+                    <div class="col-md-4">
+                        @if($user->banner)
                         <img src="{{ $user->banner }}" alt="" style="height: 50px;">
-                    @endif
+                        @endif
                     </div>
                 </div>
                 <div class="form-group row">
