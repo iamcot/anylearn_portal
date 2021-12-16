@@ -573,8 +573,8 @@ div.preheader {
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
         <h1 class="size-15" style="Margin-top: 0;Margin-bottom: 20px;font-style: normal;font-weight: normal;color: #fff;font-size: 15px;line-height: 23px;text-align: center;" lang="x-size-15"><span style="color:#1a7aba"><strong>Ch&#224;o m&#7915;ng&nbsp;{{ !empty($username) ? $username : "" }} &#273;&#7871;n v&#7899;i &#7913;ng d&#7909;ng anyLEARN.&nbsp;</strong><br>
-Ch&#250;c m&#7915;ng b&#7841;n &#273;&#227; nh&#7853;n &#273;&#432;&#7907;c B&#7897; H&#7885;c B&#7893;ng tr&#7883; gi&#225; 2.984k khi t&#7843;i app anyLEARN.<br>
-<strong><em>H&#7841;n &#273;&#259;ng k&#253; v&#224; s&#7917; d&#7909;ng: </em></strong></span><span style="color:#f72525"><strong><em>&#273;&#7871;n h&#7871;t ng&#224;y 31.10.2021</em></strong></span></h1>
+Ch&#250;c m&#7915;ng b&#7841;n &#273;&#227; nh&#7853;n &#273;&#432;&#7907;c B&#7897; H&#7885;c B&#7893;ng tr&#7883; gi&#225; 2.474K khi t&#7843;i app anyLEARN.<br>
+<strong><em>H&#7841;n &#273;&#259;ng k&#253; v&#224; s&#7917; d&#7909;ng: </em></strong></span><span style="color:#f72525"><strong><em>&#273;&#7871;n h&#7871;t ng&#224;y 31.12.2021</em></strong></span></h1>
       </div>
     </div>
             
@@ -599,7 +599,7 @@ Ch&#250;c m&#7915;ng b&#7841;n &#273;&#227; nh&#7853;n &#273;&#432;&#7907;c B&#7
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;">
             
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
-          <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otujljd-l-y/"><img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;display: block;height: auto;width: 100%;max-width: 900px;" alt="College students hanging out" width="600" src="https://i1.createsend1.com/ei/y/E0/1C9/1B9/010444/csfinal/PosteruianyLEARN1-07-9900000000079e3c.jpg"></a>
+          <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #1bc1b6;" href="https://anylearns2.s3.ap-southeast-1.amazonaws.com/z3026276003747_8293a884ba5c0faa024705a6ef0c68d7.jpg"></a>
         </div>
       
               <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 20px;">

@@ -35,7 +35,7 @@ class UserRegistered extends Mailable
         $userId = $this->data['userid'];
         $user = User::find($userId);
         $eventEmail = "";
-        if (date("Ymd") == '20211031' || date("Ymd") == '20211030') {
+        if (date("Ymd") <= '20211231') {
             $eventEmail = 'user_register_20211031';
         }
         if ($user->role == UserConstants::ROLE_MEMBER) {
