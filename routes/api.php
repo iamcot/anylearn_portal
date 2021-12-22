@@ -29,6 +29,7 @@ Route::get('/search', 'Apis\ConfigApi@search');
 Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
+Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
 Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
 Route::get('/foundation', 'Apis\ConfigApi@foundation');
 Route::get('/doc/{key}', 'Apis\ConfigApi@getDoc');

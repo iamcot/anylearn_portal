@@ -8,6 +8,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Feedback;
 use App\Models\Item;
@@ -28,7 +29,8 @@ use League\OAuth1\Client\Server\Trello;
 
 class ConfigApi extends Controller
 {
-    public function homeV2($role = 'guest') {
+    public function homeV2(Request $request, $role = 'guest')
+    {
         $newBanners = [];
         $dbNewBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
         if ($dbNewBanners) {
@@ -60,9 +62,12 @@ class ConfigApi extends Controller
             }
         }
         $promotions = Article::where('type', Article::TYPE_PROMOTION)
-        ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
         $events = Article::where('type', Article::TYPE_EVENT)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+
+        $catM = new Category();
+        $categories = $catM->buildCatWithItems($request, null);
 
         return response()->json([
             'new_banners' => $newBanners,
@@ -70,12 +75,19 @@ class ConfigApi extends Controller
                 ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
                 ->orderby('id', 'desc')
                 ->take(5)->get()->makeHidden(['content']),
-         
+
             'configs' => $homeConfig,
             'home_classes' => $homeClasses,
             'promotions' => $promotions,
             'events' => $events,
+            'categories' => $categories,
         ]);
+    }
+
+    public function category(Request $request, $catId = 0) {
+        $catM = new Category();
+        $categories = $catM->buildCatWithItems($request, $catId);
+        return response()->json($categories);
     }
 
     public function home($role = 'guest')
@@ -85,7 +97,7 @@ class ConfigApi extends Controller
         $banners = [];
         $dbBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
         if ($dbBanners) {
-            foreach(array_values(json_decode($dbBanners->value, true)) as $row) {
+            foreach (array_values(json_decode($dbBanners->value, true)) as $row) {
                 $banners[] = is_array($row) ? $row['file'] : $row;
             }
         } else {
