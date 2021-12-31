@@ -1,11 +1,11 @@
 <section class="mt-5 mb-5">
-    <div class="container carousel3 text-center">
+    <div class="container text-center">
         <p class="fs-4 ">Ban cố vấn và đội ngũ chuyên gia</p>
         <div class="owl-carousel owl-theme">
             @foreach($teachers as $teacher)
             <div class="">
                 <div class="p-5 imagebox">
-                <img src="{{ $teacher->image }}" class="img-fluid rounded-circle">
+                <img src="{{ $teacher->image }}" class="rounded-circle">
                 </div>
                 <p class="fw-bold">{{ $teacher->name }}</p>
                 <p class="text-black-50">{{ $teacher->introduce }}</p>
