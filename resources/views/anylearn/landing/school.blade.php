@@ -3,7 +3,7 @@
         <div id="carouselSchools" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 @foreach($schools as $school)
-                <button type="button" data-bs-target="#carouselReviews" data-bs-slide-to="{{ $loop->index }}" class="bg-black {{ $loop->index == 0 ? 'active' : '' }}" aria-current="{{ $loop->index == 0 ? 'true' : '' }}"></button>
+                <button type="button" data-bs-target="#carouselSchools" data-bs-slide-to="{{ $loop->index }}" class="bg-black {{ $loop->index == 0 ? 'active' : '' }}" aria-current="{{ $loop->index == 0 ? 'true' : '' }}"></button>
                 @endforeach
             </div>
 
