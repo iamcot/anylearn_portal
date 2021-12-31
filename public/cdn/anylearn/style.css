@@ -40,6 +40,10 @@ body {
     background-color: #01A652 !important;
 }
 
+.btn-primary {
+    background-color: rgb(0, 91, 168) !important;
+}
+
 nav a {
     font-weight: 700;
 }
@@ -246,6 +250,61 @@ footer h6 {
     right: -20px;
 }
 
+#landing-banner {
+    background: rgb(0, 91, 168) url("./img/landing_banner.png") no-repeat center;
+    background-size: cover;
+    height: 600px;
+}
+
+#landing-banner>div {
+    padding-top: 170px;
+}
+
+#landing-number {
+    background: #fff url("./img/landing_numberbg.png") no-repeat center;
+    background-size: cover;
+    height: 305px;
+}
+
+#landing-number>div {
+    background: #fff;
+    opacity: 0.9;
+    height: 100%;
+    position: relative;
+}
+
+.landing-number-item {
+    top: 40%;
+    position: absolute;
+}
+
+.school-logo {
+    list-style-type: none;
+    margin: auto;
+    padding: 0;
+}
+
+.school-logo li {
+    max-height: 100px;
+    display: inline-block;
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+}
+
+.school-logo li img {
+    max-height: 80px;
+}
+
+.carousel button.active {
+    background-color: #01A652 !important;
+}
+
+
+/* #landing-number div {
+    opacity: 1;
+} */
+
 @media screen and (max-width: 768px) {
     #search {
         max-width: 93%;
@@ -253,5 +312,11 @@ footer h6 {
     .quote-text {
         top: 20%;
         font-size: 0.7rem;
+    }
+    #landing-banner {
+        height: 400px;
+    }
+    #landing-banner>div {
+        padding-top: 100px;
     }
 }

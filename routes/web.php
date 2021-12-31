@@ -14,8 +14,12 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::group( [ 'domain' => 'landing.anylearn' ], function () {
+    Route::get('/', 'HomeController@landing' );
+});
 
 Route::get('/', 'PageController@home');
+Route::get('/landing', 'PageController@landing');
 Route::get('/ref/{code}', 'PageController@ref')->name('refpage');
 Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');
 

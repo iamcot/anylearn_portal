@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\ItemUserAction;
 use App\Models\User;
 use App\Services\ItemServices;
+use App\Services\UserServices;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -21,6 +22,16 @@ use Vanthao03596\HCVN\Models\Province;
 
 class PageController extends Controller
 {
+    public function landing()
+    {
+        $userService = new UserServices();
+        $hotSchools = $userService->hotUsers(UserConstants::ROLE_SCHOOL);
+        $hotTeachers = $userService->hotUsers(UserConstants::ROLE_TEACHER);
+        $this->data['schools'] = $hotSchools['list'];
+        $this->data['teachers'] = $hotTeachers['list'];
+        $this->data['categories'] = Category::where('status', 1)->get();
+        return view(env('TEMPLATE', '') . 'landing', $this->data);
+    }
 
     public function home()
     {
@@ -410,7 +421,7 @@ class PageController extends Controller
         if (!$request->session()->get('tab') && $request->get('tab')) {
             $request->session()->flash('tab', $request->get('tab'));
         }
-        
+
         return view(env('TEMPLATE', '') . 'helpcenter.index', $data);
     }
 }
