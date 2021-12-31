@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-sm-7 pt-sm-5 mt-sm-5">
                             <p class="fs-4">{{ $school->name }} hân hạnh đồng hành cũng anyLEARN</p>
-                            <p class="text-black-50">{{ $school->short_content }}</p>
+                            <p class="text-black-50">{{ $school->introduce }}</p>
                             <p class="">{{ $school->name }} - đối tác anyLEARN</p>
                         </div>
                     </div>
