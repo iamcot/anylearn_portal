@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
-    Route::get('/', 'HomeController@landing' );
+    Route::get('/', 'PageController@landing' );
 });
 
 Route::get('/', 'PageController@home');
