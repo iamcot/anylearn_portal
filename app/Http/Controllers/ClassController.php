@@ -143,7 +143,7 @@ class ClassController extends Controller
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
-
+        
         if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
             return view('class.edit', $this->data);
         } else {

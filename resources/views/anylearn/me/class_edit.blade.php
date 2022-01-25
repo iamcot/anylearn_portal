@@ -5,6 +5,9 @@
 @endsection
 
 @section('body')
+@if(!empty($course) && $course['info']->subtype == 'offline' && count($userLocations) == 0) 
+<p class="bg-danger p-2 text-white">Bạn chưa khởi tạo một địa chỉ cho khoá học offline, Vui lòng <a class="text-white" href="/location/create">cập nhật tại đây</a></p>
+@endif
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id" value="{{ !empty($courseId) ? $courseId : 0 }}">
