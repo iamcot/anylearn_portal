@@ -17,6 +17,11 @@ class ConfigConstants
     const GUIDE_PRIVACY = 'guide_privacy';
     const GUIDE_CHECKOUT = 'guide_checkout';
 
+    const SUPPORT_SCHOOL = 'support_school';
+    const SUPPORT_TEACHER = 'support_teacher';
+    const SUPPORT_MEMBER = 'support_member';
+    const FAQ = 'faq';
+
     const CONTRACT_TEACHER = 'contract_teacher';
     const CONTRACT_SCHOOL = 'contract_school';
 
@@ -75,5 +80,9 @@ class ConfigConstants
         self::GUIDE_PAYMENT_TERM => 'Chính sách thanh toán',
         self::CONTRACT_TEACHER => 'Mẫu HĐ Giảng Viên',
         self::CONTRACT_SCHOOL => 'Mẫu HĐ Trường Học',
+        self::SUPPORT_MEMBER => 'Hỗ trợ thành viên',
+        self::SUPPORT_SCHOOL => 'Hỗ trợ trường học',
+        self::SUPPORT_TEACHER => 'Hỗ trợ chuyên gia',
+        self::FAQ => 'FAQ',
     ];
 }

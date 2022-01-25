@@ -47,6 +47,8 @@ Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('c
 Route::get('/payment-return/{payment}', 'TransactionController@return')->name('checkout.return');
 Route::get('/payment-result', 'TransactionController@paymentResult')->name('checkout.result');
 
+Route::get('/guide', 'PageController@guide')->name('guide');
+
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('me')->group(function () { 

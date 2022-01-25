@@ -424,4 +424,20 @@ class PageController extends Controller
 
         return view(env('TEMPLATE', '') . 'helpcenter.index', $data);
     }
+
+    public function guide(Request $request)
+    {
+        $page = $request->get('p');
+        if (!$page) {
+            return redirect('/');
+        }
+        $configM = new Configuration();
+        $configData = $configM->getDoc($page);
+        if ($configData) {
+            $data['guide'] = $configData['value'];
+        } else {
+            $data['guide'] = "";
+        }
+        return view(env('TEMPLATE', '') . 'helpcenter.guide', $data);
+    }
 }
