@@ -54,8 +54,9 @@ class TransactionController extends Controller
         }
         $this->data['orders'] = DB::table('orders')
             ->join('users', 'users.id', '=', 'orders.user_id')
-            ->where('orders.status', OrderConstants::STATUS_NEW)
-            ->select('orders.*', 'users.name', 'users.phone')
+            ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
+            ->select('orders.*', 'users.name', 'users.phone', 
+            DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes"))
             ->paginate();
         $this->data['navText'] = __('Đơn hàng chờ xác nhận');
         return view('transaction.order_open', $this->data);
@@ -69,7 +70,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $order = Order::find($orderId);
-        if ($order->status != OrderConstants::STATUS_NEW) {
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
@@ -295,11 +296,19 @@ class TransactionController extends Controller
             $user = Auth::user();
             $this->data['api_token'] = null;
         }
-
-        if ($request->get('payment') == 'atm') {
-            return redirect()->route('checkout.paymenthelp', ['order_id' => $request->input('order_id')]);
-        }
         $payment = $request->get('payment');
+        $orderId = $request->input('order_id');
+        $transService = new TransactionService();
+
+        $res = $transService->verifyVoucherInOrderBeforePayment($orderId);
+        if (!$res) {
+            return redirect()->back()->with('notify', 'Mã voucher trong đơn hàng không còn hợp lệ .');
+        }
+
+        if ($payment == 'atm') {
+            $transService->paymentPending($orderId);
+            return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
+        }
         $processor = Processor::getProcessor($payment);
 
         if (!$processor) {

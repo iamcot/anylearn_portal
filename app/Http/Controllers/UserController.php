@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\ConfigConstants;
 use App\Constants\NotifConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Configuration;
 use App\Models\Contract;
@@ -193,7 +194,6 @@ class UserController extends Controller
                     $list = $list->where('users.name', 'like', '%' . $request->input('s') . '%');
                     break;
             }
-           
         }
         if ($request->input('ic') == 'on') {
             $list = $list->where('contracts.status', '>=', 0);
@@ -220,7 +220,7 @@ class UserController extends Controller
             ->where('contracts.id', $id)
             ->select('users.name', 'users.phone', 'contracts.*')
             ->first();
-        if ($request->get('action') != null) {    
+        if ($request->get('action') != null) {
             $notifM = new Notification();
             if ($request->get('action') == UserConstants::CONTRACT_APPROVED) {
                 Contract::find($id)->update(['status' => UserConstants::CONTRACT_APPROVED]);
@@ -373,6 +373,20 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.notification', $this->data);
     }
 
+    public function pendingOrders(Request $request)
+    {
+        $user = Auth::user();
+        $this->data['orders'] = DB::table('orders')
+            ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
+            ->where('orders.user_id', $user->id )
+            ->select(
+                'orders.*',
+                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+            )
+            ->paginate();
+        return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
+    }
+
     public function orders(Request $request)
     {
         $user = Auth::user();
@@ -383,16 +397,17 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
-    public function contractSign($id) {
+    public function contractSign($id)
+    {
         $userServ = new UserServices();
         $user = Auth::user();
         $result = $userServ->signContract($user, $id);
 
-            if ($result === true) {
-                return redirect()->back()->with('notify', 'Đã ký hợp đồng, vui lòng chờ anyLEARN tiếp nhận và xử lí nhé.');
-            } else {
-                return redirect()->back()->withInput()->with('notify', $result);
-            }
+        if ($result === true) {
+            return redirect()->back()->with('notify', 'Đã ký hợp đồng, vui lòng chờ anyLEARN tiếp nhận và xử lí nhé.');
+        } else {
+            return redirect()->back()->withInput()->with('notify', $result);
+        }
     }
 
     public function contract(Request $request)

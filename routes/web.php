@@ -60,6 +60,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 
     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
     Route::any('/orders', 'UserController@orders')->name('me.orders');
+    Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
     Route::any('/notification', 'UserController@notification')->name('me.notification');
     Route::any('/contract', 'UserController@contract')->name('me.contract');
     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');

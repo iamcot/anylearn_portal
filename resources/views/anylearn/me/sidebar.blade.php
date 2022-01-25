@@ -41,6 +41,11 @@
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>@lang('Khoá học tôi tham gia')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'me.pendingorders' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.pendingorders') }}">
+            <i class="fas fa-fw fa-shopping-cart"></i>
+            <span>@lang('Chờ thanh toán')</span></a>
+    </li>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

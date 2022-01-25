@@ -178,7 +178,7 @@ class TransactionService
                 'paid_price' => $item->price,
                 'status' => $status,
             ]);
-            
+
             if ($dbVoucher && $dbVoucher->type == VoucherGroup::TYPE_PAYMENT) {
                 $voucherM->useVoucherPayment($user->id, $openOrder->id, $dbVoucher);
             }
@@ -361,6 +361,27 @@ class TransactionService
         return true;
     }
 
+    public function verifyVoucherInOrderBeforePayment($orderId)
+    {
+        $voucherInOrder = VoucherUsed::where('order_id', $orderId)->first();
+        if (!$voucherInOrder) {
+            return true;
+        }
+        $voucherDb = DB::table('vouchers')
+            ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
+            ->where('vouchers.id', $voucherInOrder->voucher_id)
+            ->where('vouchers.status', 1)
+            ->where('vg.status', 1)
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vg.value')
+            ->first();
+        if (!$voucherDb) {
+            VoucherUsed::find($voucherInOrder->id)->delete();
+            $this->recalculateOrderAmount($orderId);
+            return false;
+        }
+        return true;
+    }
+
     public function recalculateOrderAmountWithVoucher($orderId, $value)
     {
         $order = Order::find($orderId);
@@ -437,7 +458,7 @@ class TransactionService
     public function approveRegistrationAfterWebPayment($orderId)
     {
         $openOrder = Order::find($orderId);
-        if ($openOrder->status != OrderConstants::STATUS_NEW) {
+        if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING ) {
             return false;
         }
         $user = User::find($openOrder->user_id);
@@ -484,6 +505,22 @@ class TransactionService
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
         // $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, []);
+        return true;
+    }
+
+    public function paymentPending($orderId)
+    {
+        $openOrder = Order::find($orderId);
+        if ($openOrder->status != OrderConstants::STATUS_NEW) {
+            return false;
+        }
+        OrderDetail::where('order_id', $openOrder->id)->update([
+            'status' => OrderConstants::STATUS_PAY_PENDING
+        ]);
+        Order::find($openOrder->id)->update([
+            'status' => OrderConstants::STATUS_PAY_PENDING
+        ]);
+        Log::debug("Update order to pending", ["orderId" => $openOrder->id]);
         return true;
     }
 }

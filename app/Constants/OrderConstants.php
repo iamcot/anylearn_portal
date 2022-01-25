@@ -1,6 +1,7 @@
 <?php namespace App\Constants;
 class OrderConstants {
     const STATUS_NEW = 'new';
+    const STATUS_PAY_PENDING = 'pay_pending';
     const STATUS_PAID = 'paid';
     const STATUS_SHIPED = 'shiped';
     const STATUS_DELIVERED = 'delivered';

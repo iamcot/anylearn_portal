@@ -26,6 +26,7 @@
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th class="text-center">User (SDT)</th>
+                    <th>Khoá học</th>
                     <th class="text-center">Số tiền</th>
                     <th class="text-center">Ngày</th>
                     <th width="15%" class="text-right" scope="col">Thao tác</th>
@@ -37,6 +38,7 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
                     <td class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
+                    <td>{{ $row->classes }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->created_at }}</td>
                     <td class="text-right">
