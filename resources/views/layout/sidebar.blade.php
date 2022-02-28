@@ -101,6 +101,30 @@
     <div class="sidebar-heading">
         @lang('Quản lý hệ thống')
     </div>
+    <li class="nav-item {{ strpos($route, 'knowledge') !== false ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKnowledge" 
+        aria-expanded="{{ strpos($route, 'knowledge') !== false ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-book"></i>
+            <span>@lang('Trung tâm hỗ trợ')</span>
+        </a>
+        <div id="collapseKnowledge" class="collapse {{ strpos($route, 'knowledge') !== false ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ $route == 'knowledge.category' ? 'active' : '' }}" href="{{ route('knowledge.category') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Thư mục</span>
+                </a>
+                <a class="collapse-item {{ $route == 'knowledge.topic' ? 'active' : '' }}" href="{{ route('knowledge.topic') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Chủ đề</span>
+                </a>
+                <a class="collapse-item {{ $route == 'knowledge' ? 'active' : '' }}" href="{{ route('knowledge') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Knowledge</span>
+                </a>
+            </div>
+        </div>
+    </li>
+
     <li class="nav-item {{ $route == 'config.voucher' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('config.voucher') }}">
             <i class="fas fa-fw fa-tags"></i>

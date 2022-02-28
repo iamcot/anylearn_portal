@@ -1,0 +1,51 @@
+@extends('layout')
+@section('body')
+<form method="POST">
+    @csrf
+    <input type="hidden" name="id" value="{{ !empty($article) ? $article->id : null }}">
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="title" class="col-md-2 col-form-label text-md-right">{{ __('Tiêu đề') }}</label>
+                <div class="col-md-6">
+                    <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', !empty($article) ? $article->title : '') }}"  required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="category_id" class="col-md-2 col-form-label text-md-right">{{ __('Thư mục') }}</label>
+                <div class="col-md-6">
+                    <select name="knowledge_category_id" id="category_id" required class="form-control">
+                        @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ isset($article) && $cat->id == $article->knowledge_category_id ? 'selected' : ''}}>{{ $cat->title }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                    <label for="editor" class="col-md-2 col-form-label text-md-right @error('content') is-invalid @enderror">{{ __('Nội dung') }}</label>
+                    <div class="col-md-8">
+                        <textarea id="editor" name="content">{!! old('content', !empty($article) ? $article->content : '') !!}</textarea>
+                    </div>
+            </div>
+            <div class="form-group row">
+                    <label for="editor_bot" class="col-md-2 col-form-label text-md-right @error('content_bot') is-invalid @enderror">{{ __('Nội dung riêng cho bot') }}
+                        <p class="small">Bỏ trống nếu giống nội dung chính</p></label>
+                    <div class="col-md-8">
+                        <textarea id="editor_bot" name="content_bot">{!! old('content_bot', !empty($article) ? $article->content_bot : '') !!}</textarea>
+                    </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button name="save" value="save" class="btn btn-primary }}"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+        </div>
+    </div>
+</form>
+@endsection
+@section('jscript')
+@parent
+<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor_bot');
+</script>
+@endsection

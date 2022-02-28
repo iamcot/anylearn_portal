@@ -38,7 +38,7 @@
             <div class="col-md-3">
                 <h6 class="fw-bold d-md-none d-sm-block">THÔNG TIN</h6>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="/guide?p=faq" class="text-secondary text-decoration-none">Những câu hỏi thường gặp</a></p></li>
+                    <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">Trung tâm hỗ trợ</a></p></li>
                     <li><p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách</a></p></li>
                     <li><p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều khoản</a></p></li>
                     <li><p><a href="#" class="text-secondary text-decoration-none">Liên hệ chúng tôi</a></p></li>

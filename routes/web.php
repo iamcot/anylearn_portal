@@ -49,6 +49,10 @@ Route::get('/payment-result', 'TransactionController@paymentResult')->name('chec
 
 Route::get('/guide', 'PageController@guide')->name('guide');
 
+Route::get('/helpcenter', 'HelpcenterController@index')->name('helpcenter');
+Route::get('/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
+Route::get('/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
+
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('me')->group(function () { 
@@ -167,6 +171,14 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('category', 'ClassController@category')->name('category');
     Route::any('category-edit/{id?}', 'ClassController@categoryEdit')->name('category.edit');
     Route::get('/service/touch-status/{table}/{id}', 'Controller@touchStatus')->name('service.touch.status');
+
+    Route::get('/knowledge/category', 'KnowledgeController@category')->name('knowledge.category');
+    Route::any('/knowledge/category/edit/{id?}', 'KnowledgeController@categoryEdit')->name('knowledge.category.edit');
+    Route::get('/knowledge/article', 'KnowledgeController@knowledge')->name('knowledge');
+    Route::any('/knowledge/article/edit/{id?}', 'KnowledgeController@knowledgeEdit')->name('knowledge.edit');
+    Route::get('/knowledge/topic', 'KnowledgeController@topic')->name('knowledge.topic');
+    Route::any('/knowledge/topic/edit/{id?}', 'KnowledgeController@topicEdit')->name('knowledge.topic.edit');
+    Route::any('/knowledge/topic/{id}/category', 'KnowledgeController@topicCategory')->name('knowledge.topic.category');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

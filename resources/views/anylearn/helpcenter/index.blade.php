@@ -3,33 +3,45 @@
 @extends('anylearn.layout')
 
 @section('body')
-<ul class="nav nav-tabs" id="classtab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link text-secondary {{ session('tab', 'done') == 'done' ? 'active' : '' }}" id="done-tab" data-bs-toggle="tab" data-bs-target="#done" type="button" role="tab" aria-controls="done" aria-selected="true">anyMEMBER</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link text-secondary {{ session('tab', 'done') == 'open' ? 'active' : '' }}" id="open-tab" data-bs-toggle="tab" data-bs-target="#open" type="button" role="tab" aria-controls="open" aria-selected="true">anyCENTER</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link text-secondary {{ session('tab', 'done') == 'fav' ? 'active' : '' }}" id="fav-tab" data-bs-toggle="tab" data-bs-target="#fav" type="button" role="tab" aria-controls="fav" aria-selected="true">anyPROFESSOR</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link text-secondary {{ session('tab', 'done') == 'checkout' ? 'active' : '' }}" id="checkout-tab" data-bs-toggle="tab" data-bs-target="#checkout" type="button" role="tab" aria-controls="checkout" aria-selected="true">Thanh toán</button>
-    </li>
-</ul>
-
-<div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
-    <div class="tab-pane fade {{ session('tab', 'done') == 'done' ? 'show active' : '' }} p-2" id="done" role="tabpanel" aria-labelledby="done-tab">
-        {!! $member->value ?? "" !!}
-    </div>
-    <div class="tab-pane fade {{ session('tab', 'done') == 'open' ? 'show active' : '' }} p-2" id="open" role="tabpanel" aria-labelledby="open-tab">
-        {!! $school->value ?? "" !!}
-    </div>
-    <div class="tab-pane fade {{ session('tab', 'done') == 'fav' ? 'show active' : '' }} p-2" id="fav" role="tabpanel" aria-labelledby="fav-tab">
-        {!! $teacher->value ?? "" !!}
-    </div>
-    <div class="tab-pane fade {{ session('tab', 'done') == 'checkout' ? 'show active' : '' }} p-2" id="checkout" role="tabpanel" aria-labelledby="checkout-tab">
-        {!! $checkout->value ?? "" !!}
-    </div>
+@include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
+<div class="mb-5">
+    <section class="text-center">
+        <h5 class="mt-3 fw-bold text-secondary">
+            Xin chào, anyLEARN giúp gì được cho bạn?
+        </h5>
+        <div class="mt-3 text-center" id="search">
+            <form action="/helpcenter/s" method="get" id="helpcenterSearch">
+                <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>
+                <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="Làm sao để mua hàng, Làm sao để thanh toán...">
+            </form>
+        </div>
+    </section>
+    <section class="mt-5">
+        <h5>Các câu hỏi được quan tâm</h5>
+        <ul  class="row">
+            @foreach($topKnowledge as $knowledge)
+            <li class="col-xs-12 col-md-6"><a class="text-decoration-none text-black"  href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url ]) }}">{{  $knowledge->title }}</a></li>
+            @endforeach
+        </ul>
+    </section>
+    <section class="mt-5">
+        <h5>Các chủ đề</h5>
+        <div class="row">
+            @foreach($topics as $topic)
+            <div class="col-xs-6 col-md-3">
+                <div class="border rounded-3 p-5 text-center">
+                    <a class="fw-bold text-success text-decoration-none" href="{{ route('helpcenter.topic', ['url' => $topic->url]) }}">{{ $topic->title }}</a>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </section>
+    <section class="text-center mt-5">
+        <h5 class="mt-3 fw-bold text-secondary">
+            Bạn vẫn cần trợ giúp ?
+        </h5>
+        <p>anyLEAR sẽ có đội ngũ hỗ trợ bạn mọi lúc</p>
+        <button class="btn btn-success border-0 rounded-pill">Trò chuyện ngay</button>
+    </section>
 </div>
 @endsection
