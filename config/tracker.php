@@ -350,7 +350,7 @@ return [
     /*
      * Stats Panel template path
      */
-    'stats_template_path' => '/templates/sb-admin-2',
+    'stats_template_path' => '/cdn/sb-admin-2',
 
     /*
      * Stats Panel base uri.
