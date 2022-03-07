@@ -41,7 +41,11 @@
             Bạn vẫn cần trợ giúp ?
         </h5>
         <p>anyLEAR sẽ có đội ngũ hỗ trợ bạn mọi lúc</p>
-        <button class="btn btn-success border-0 rounded-pill">Trò chuyện ngay</button>
+        <button class="btn btn-success border-0 rounded-pill" onclick="botmanChatWidget.open()">Trò chuyện ngay</button>
     </section>
 </div>
+@endsection
+@section('jscript')
+@parent
+<script src='/cdn/anylearn/chatbot/js/widget.js'></script>
 @endsection

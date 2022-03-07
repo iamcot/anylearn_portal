@@ -55,6 +55,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getIsAdminAttribute()
+    {
+        return true;
+    }
+
     public function refuser()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');

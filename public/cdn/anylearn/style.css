@@ -305,6 +305,10 @@ footer h6 {
     background-color: #01A652 !important;
 }
 
+.mobile-closed-message-avatar {
+    display: none !important;
+}
+
 
 /* #landing-number div {
     opacity: 1;

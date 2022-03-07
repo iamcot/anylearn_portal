@@ -23,6 +23,11 @@ Route::get('/landing', 'PageController@landing');
 Route::get('/ref/{code}', 'PageController@ref')->name('refpage');
 Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');
 
+Route::any('/bot', function() {
+    app('botman')->listen();
+});
+Route::get('/bot/chat', 'HelpcenterController@chatbot');
+
 Route::get('/search', 'PageController@search')->name('search');
 Route::get('/schools', 'PageController@schools')->name('schools');
 Route::get('/classes', 'PageController@classes')->name('allclasses');

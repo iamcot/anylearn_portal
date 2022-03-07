@@ -97,4 +97,10 @@ class HelpcenterController extends Controller
         ];
         return view(env('TEMPLATE', '') . 'helpcenter.knowledge', $this->data);
     }
+
+    public function chatbot() 
+    {
+        $this->data['greetingCard'] = view(env('TEMPLATE', '') . 'helpcenter.chatbot.greetingcard')->render();
+        return view(env('TEMPLATE', '') . 'helpcenter.chatbot', $this->data);
+    }
 }
