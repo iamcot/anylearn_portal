@@ -384,6 +384,6 @@ class ConfigApi extends Controller
         $report['TongSoDonHangThanhCong'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->count();
         $report['TongSoDongHangKhongThanhCong'] = $report['SoLuongGiaoDich'] - $report['TongSoDonHangThanhCong'];
         $report['TongGiaTriGiaoDich'] = Order::sum('amount');
-        print_r($report);
+        return response()->json($report);
     }
 }
