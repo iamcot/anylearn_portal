@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Feedback;
 use App\Models\Item;
+use App\Models\Order;
 use App\Models\Schedule;
 use App\Models\Tag;
 use App\Models\Transaction;
@@ -355,5 +356,34 @@ class ConfigApi extends Controller
             $data[] = $tag->tag;
         }
         return response()->json($data);
+    }
+
+    public function reportEcommerce(Request $request) {
+        $credential = $request->json()->all();
+        $username = isset($credential['UserName']) ? $credential['UserName'] : '';
+        $password = isset($credential['PassWord']) ? $credential['PassWord'] : '';
+        if ($username != 'bct' || $password != '@nyLEARN!@#') {
+            return response()->json([
+                'result' => false,
+                'msg' => 'Thông tin đăng nhập không đúng.'
+            ]);  
+        }
+        $to = now();
+        $from = strtotime(date( 'Y' ) . '-01-01 00:00:00');
+        $fromInText = date('Y-m-d H:i:s', $from);
+  
+        $report = [];
+        $diffinSec = $to->getTimestamp() - $from;
+        // print_r($diffinSec);
+        $report['SoLuongTruyCap'] = \Tracker::sessions($diffinSec)->count();
+        $report['SoNguoiBan'] = User::whereIn('role', ['teacher', 'school'])->count();
+        $report['SoNguoiBanMoi'] = User::whereIn('role', ['teacher', 'school'])->where('created_at', '>', $fromInText)->count();
+        $report['TongSoSanPham'] = Item::count();
+        $report['SoSanPhamMoi'] = Item::where('created_at', '>', $fromInText)->count();
+        $report['SoLuongGiaoDich'] = Order::count();
+        $report['TongSoDonHangThanhCong'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->count();
+        $report['TongSoDongHangKhongThanhCong'] = $report['SoLuongGiaoDich'] - $report['TongSoDonHangThanhCong'];
+        $report['TongGiaTriGiaoDich'] = Order::sum('amount');
+        print_r($report);
     }
 }

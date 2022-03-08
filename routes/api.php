@@ -44,6 +44,8 @@ Route::get('/quote', 'Apis\ArticleApi@quote');
 Route::get('/ask/list', 'Apis\AskApi@getList');
 Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
+Route::post('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
+
 Route::middleware(['api.user'])->group(function () {
     Route::get('/user', 'Apis\UserApi@userInfo');
     Route::get('/user-less', 'Apis\UserApi@userInfoLess');
