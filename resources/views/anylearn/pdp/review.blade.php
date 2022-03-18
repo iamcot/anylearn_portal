@@ -21,7 +21,7 @@
                         @endif
                     </div>
                     <div class="col-9">
-                        <p>{{ $review->user_name == 'Admin' ? 'anyLEARN Học không giới hạn' : $review->user_name }}</p>
+                        <p>{{ $review->user_name }}</p>
                         @include('anylearn.widget.rating', ['score' => $review->value ?? 0])
                         <p>{{ $review->extra_value }}</p>
                     </div>

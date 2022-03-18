@@ -79,7 +79,7 @@ class ItemServices
             ->join('users', 'users.id', '=', 'iua.user_id')
             ->where('iua.item_id', $itemId)
             ->where('iua.type', ItemUserAction::TYPE_RATING)
-            ->select('iua.*', 'users.name AS user_name', 'users.id AS user_id', 'users.image AS user_image')
+            ->select('iua.*', DB::raw('(CASE WHEN users.name = \'Admin\' THEN \'anyLEARN\' ELSE users.name END) AS user_name'), 'users.id AS user_id', 'users.image AS user_image')
             ->get();
         return [
             'commission' => $commission,
