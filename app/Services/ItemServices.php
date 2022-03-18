@@ -151,7 +151,8 @@ class ItemServices
             ->orderby('id', 'desc')
             ->select(
                 'items.*',
-                DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg')
+                DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg'),
+                DB::raw('(select count(*) from item_user_actions where item_user_actions.item_id = items.id AND item_user_actions.type=\'rating\') AS sum_rating')
             )
             ->with('series', 'user')
             ->paginate(self::PP);

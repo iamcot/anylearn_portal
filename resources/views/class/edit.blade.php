@@ -19,6 +19,7 @@
                 <a class="shadow nav-link {{ session('tab') == 'teachers' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-teachers-tab" data-toggle="pill" href="#v-pills-teachers" role="tab" aria-controls="v-pills-teachers" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-chalkboard-teacher"></i> <span class="mobile-no-text">@lang('Giảng viên')</span></a>
                 @endif
                 <a class="shadow nav-link {{ session('tab') == 'seo' ? 'active' : '' }}" id="v-pills-seo-tab" data-toggle="pill" href="#v-pills-seo" role="tab" aria-controls="v-pills-seo" aria-selected="false"><i class="fa fa-link"></i> <span class="mobile-no-text">@lang('SEO')</span></a>
+                <a class="shadow nav-link {{ session('tab') == 'rating' ? 'active' : '' }}" id="v-pills-rating-tab" data-toggle="pill" href="#v-pills-rating" role="tab" aria-controls="v-pills-rating" aria-selected="false"><i class="fa fa-star"></i> <span class="mobile-no-text">@lang('Đánh giá')</span></a>
             </div>
         </div>
         <div class="col-10 pl-0 mb-3">
@@ -40,6 +41,9 @@
                     @include('class.form.teachers')
                 </div>
                 @endif
+                <div class="tab-pane fade {{ session('tab') == 'rating' ? 'show active' : '' }}" id="v-pills-rating" role="tabpanel" aria-labelledby="v-pills-rating-tab">
+                    @include('class.form.rating')
+                </div>
             </div>
         </div>
     </div>

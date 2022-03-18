@@ -69,7 +69,7 @@
                         {!! $itemServ->statusOperation($course->id, $course->status) !!}
                         <!-- {!! $itemServ->typeOperation($course) !!} -->
                         @endif
-
+                        <a class="ratingFormClick" href="#" data-class-id="{{ $course->id }}"><i class="fa fa-star"></i>({{ $course->sum_rating }})</a>
                     </td>
                 </tr>
                 @endforeach
@@ -84,4 +84,15 @@
 
 @endif
 
+@endsection
+@include('dialog.rating')
+@section('jscript')
+@parent
+<script>
+    $('.ratingFormClick').click(function() {
+        var classId = $(this).data("class-id");
+        $("#rating_class_id").val(classId);
+        $('#ratingFormModal').modal('show');
+    });
+</script>
 @endsection

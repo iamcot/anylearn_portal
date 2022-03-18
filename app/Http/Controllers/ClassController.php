@@ -29,6 +29,17 @@ class ClassController extends Controller
     public function list(Request $request)
     {
         $user = Auth::user();
+        if ($request->get('action') == 'rating') {
+            $itemId = $request->get('class-id', 0);
+            $rating = $request->get('rating', 5);
+            $comment = $request->get('comment', '');
+            if ($itemId <= 0) {
+                return redirect()->back()->with(['notify' => 'Khóa học không tồn tại.']);
+            }
+            $itemUserActionM = new ItemUserAction();
+            $rs = $itemUserActionM->saveRating($itemId, $user->id, $rating, $comment);
+            return redirect()->back()->with(['notify' => $rs]);
+        }
         $classService = new ItemServices();
         $this->data['navText'] = __('Quản lý lớp học');
         $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
@@ -138,6 +149,12 @@ class ClassController extends Controller
         foreach ($itemCats as $cat) {
             $this->data['itemCategories'][] = $cat->category_id;
         }
+
+        $this->data['ratings'] = DB::table('item_user_actions')
+        ->join('users', 'users.id', '=', 'item_user_actions.user_id')
+        ->where('type', 'rating')->where('item_id', $courseId)
+        ->select('users.name', 'item_user_actions.*')
+        ->get();
 
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');

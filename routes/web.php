@@ -150,7 +150,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/notif/remind-confirm/{id}', 'CourseController@remindConfirm')->name('notif.remind_confirm');
     Route::get('/notif/remind-join/{id}', 'CourseController@remindJoin')->name('notif.remind_join');
 
-    Route::get('/class', 'ClassController@list')->name('class');
+    Route::any('/class', 'ClassController@list')->name('class');
     Route::any('/class/create', 'ClassController@create')->name('class.create');
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
