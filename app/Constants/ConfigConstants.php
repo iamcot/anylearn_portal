@@ -62,6 +62,14 @@ class ConfigConstants
     const TRANSACTION_DEPOSIT_REFUND = 'deposit_refund';
     const TRANSACTION_COMMISSION_ADD = 'commission_add';
 
+    const TRANSACTION_FIN_SALARY =  'fin_salary';
+    const TRANSACTION_FIN_FIXED_FEE =  'fin_fixed_fee';
+    const TRANSACTION_FIN_VARIABLE_FEE =  'fin_variable_fee';
+    const TRANSACTION_FIN_MARKETING =  'fin_marketing';
+    const TRANSACTION_FIN_EVENT =  'fin_event';
+    const TRANSACTION_FIN_ASSETS =  'fin_assets';
+    const TRANSACTION_FIN_OTHERS =  'fin_others';
+
     const TRANSACTION_STATUS_PENDING = 0;
     const TRANSACTION_STATUS_DONE = 1;
     const TRANSACTION_STATUS_REJECT = 99;

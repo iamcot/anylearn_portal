@@ -13,94 +13,106 @@
     </a>
     @if($userService->haveAccess(Auth::user()->role, 'school'))
     <hr class="sidebar-divider d-none d-md-block">
-     <div class="sidebar-heading">
-        @lang('Quản lý khóa/lớp học')
-    </div>
-    <li class="nav-item {{ in_array($route, ['category', 'category.edit']) ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('category') }}">
-            <i class="fas fa-fw fa-layer-group"></i>
-            <span>@lang('Chuyên mục')</span></a>
-    </li>
     <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('class') }}">
             <i class="fas fa-fw fa-university"></i>
-            <span>@lang('Chỉnh sửa Lớp học')</span></a>
+            <span>@lang('Quản lý Lớp học')</span></a>
     </li>
-    <!-- <li class="nav-item {{ $route == 'confirm' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('confirm') }}">
-            <i class="fas fa-fw fa-check-double"></i>
-            <span>@lang('Xác nhận tham gia')</span></a>
-    </li> -->
     @endif
-    <!-- @if($userService->haveAccess(Auth::user()->role, 'school'))
-    <hr class="sidebar-divider d-none d-md-block">
-    <div class="sidebar-heading">
-        @lang('Quản lý sản phẩm')
-    </div>
-    <li class="nav-item {{ $route == 'product' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('product') }}">
-            <i class="fas fa-fw fa-boxes"></i>
-            <span>@lang('Chỉnh sửa sản phẩm')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'order' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('order') }}">
-            <i class="fas fa-fw fa-shopping-cart"></i>
-            <span>@lang('Quản lý đơn hàng')</span></a>
-    </li>
-    @endif -->
     @if($userService->haveAccess(Auth::user()->role, 'admin'))
-    <hr class="sidebar-divider d-none d-md-block">
-    <div class="sidebar-heading">
-        @lang('Quản lý người dùng')
-    </div>
     <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.members') }}">
             <i class="fas fa-fw fa-users-cog"></i>
             <span>@lang('Quản lý thành viên')</span></a>
-    </li>
-    <li class="nav-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('user.noprofile') }}">
-            <i class="fas fa-fw fa-fire"></i>
-            <span>@lang('Nhắc cập nhật profile')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'user.contract' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('user.contract') }}">
-            <i class="fas fa-fw fa-certificate"></i>
-            <span>@lang('Quản lý hợp đồng')</span></a>
-    </li>
-    <hr class="sidebar-divider d-none d-md-block">
-    <div class="sidebar-heading">
-        @lang('Quản lý APP')
-    </div>
-    <li class="nav-item {{ $route == 'transaction' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('transaction') }}">
-            <i class="fas fa-fw fa-money-check-alt"></i>
-            <span>@lang('Duyệt giao dịch')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'order.open' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('order.open') }}">
-            <i class="fas fa-fw fa-money-check-alt"></i>
-            <span>@lang('Duyệt đơn hàng')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'transaction.commission' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('transaction.commission') }}">
-            <i class="fas fa-fw fa-money-check-alt"></i>
-            <span>@lang('Lịch sử nhận hoa hồng')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'feedback' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('feedback') }}">
-            <i class="fas fa-fw fa-comments"></i>
-            <span>@lang('Xem feedback')</span></a>
     </li>
     <li class="nav-item {{ $route == 'article' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('article') }}">
             <i class="fas fa-fw fa-comments"></i>
             <span>@lang('Viết bài Học & Hỏi')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'feedback' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('feedback') }}">
+            <i class="fas fa-fw fa-comments"></i>
+            <span>@lang('Xem feedback')</span></a>
+    </li>
+
+    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVoucher" 
+        aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-book"></i>
+            <span>@lang('Thao tác người dùng')</span>
+        </a>
+        <div id="collapseVoucher" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}" href="{{ route('user.noprofile') }}">
+                    <i class="fas fa-fw fa-fire"></i>
+                    <span>Nhắc cập nhật profile</span>
+                </a>
+                <a class="collapse-item {{ $route == 'user.contract' ? 'active' : '' }}" href="{{ route('user.contract') }}">
+                    <i class="fas fa-fw fa-certificate"></i>
+                    <span>@lang('Quản lý hợp đồng')</span></a>
+                </a>
+                <a class="collapse-item {{ $route == 'transaction' ? 'active' : '' }}" href="{{ route('transaction') }}">
+                    <i class="fas fa-fw fa-money-check-alt"></i>
+                    <span>@lang('Duyệt giao dịch')</span></a>
+                </a>
+                <a class="collapse-item {{ $route == 'order.open' ? 'active' : '' }}" href="{{ route('order.open') }}">
+                    <i class="fas fa-fw fa-money-check-alt"></i>
+                    <span>@lang('Duyệt đơn hàng')</span></a>
+                </a>
+                <a class="collapse-item {{ $route == 'transaction.commission' ? 'active' : '' }}" href="{{ route('transaction.commission') }}">
+                    <i class="fas fa-fw fa-money-check-alt"></i>
+                    <span>@lang('Lịch sử nhận hoa hồng')</span></a>
+                </a>
+              
+            </div>
+        </div>
+    </li>
+  
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
-        @lang('Quản lý hệ thống')
+        @lang('Hệ thống')
     </div>
+    <li class="nav-item {{ in_array($route, ['fin.expenditures', 'fin.salereport']) ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFin" 
+        aria-expanded="{{ in_array($route, ['fin.expenditures', 'fin.salereport']) ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-coins"></i>
+            <span>@lang('Tài chính')</span>
+        </a>
+        <div id="collapseFin" class="collapse {{ in_array($route, ['fin.expenditures', 'fin.salereport']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ strpos($route, 'expenditures') !== false ? 'active' : '' }}" href="{{ route('fin.expenditures') }}">
+                    <i class="fas fa-fw fa-file-invoice"></i>
+                    <span>Chi tiêu</span>
+                </a>
+                <a class="collapse-item {{ $route == 'fin.salereport' ? 'active' : '' }}" href="{{ route('fin.salereport') }}">
+                    <i class="fas fa-fw fa-chart-line"></i>
+                    <span>@lang('Báo cáo kinh doanh')</span></a>
+                </a>
+              
+            </div>
+        </div>
+    </li>
+    <li class="nav-item {{ strpos($route, 'voucher') !== false ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVoucher" 
+        aria-expanded="{{ strpos($route, 'voucher') !== false ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-book"></i>
+            <span>@lang('Voucher')</span>
+        </a>
+        <div id="collapseVoucher" class="collapse {{ strpos($route, 'voucher') !== false ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ $route == 'config.voucher' ? 'active' : '' }}" href="{{ route('config.voucher') }}">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>Mã Voucher</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.voucherevent' ? 'active' : '' }}" href="{{ route('config.voucherevent') }}">
+                    <i class="fas fa-fw fa-gifts"></i>
+                    <span>@lang('Sự kiện phát')</span></a>
+                </a>
+              
+            </div>
+        </div>
+    </li>
     <li class="nav-item {{ strpos($route, 'knowledge') !== false ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKnowledge" 
         aria-expanded="{{ strpos($route, 'knowledge') !== false ? true : false }}" aria-controls="collapsePages">
@@ -124,49 +136,43 @@
             </div>
         </div>
     </li>
+    <li class="nav-item {{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConfig" 
+        aria-expanded="{{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-book"></i>
+            <span>@lang('Thông số hệ thống')</span>
+        </a>
+        <div id="collapseConfig" class="collapse {{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ $route == 'category' ? 'active' : '' }}" href="{{ route('category') }}">
+                    <i class="fas fa-fw fa-layer-group"></i>
+                    <span>@lang('Chuyên mục')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.homepopup' ? 'active' : '' }}" href="{{ route('config.homepopup') }}">
+                    <i class="fas fa-fw fa-fire"></i>
+                    <span>@lang('Thông báo trang chủ')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.homeclasses' ? 'active' : '' }}" href="{{ route('config.homeclasses') }}">
+                    <i class="fas fa-fw fa-fire"></i>
+                    <span>@lang('Khoá học tiểu biểu')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.site' ? 'active' : '' }}" href="{{ route('config.site') }}">
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span>@lang('Các thông số')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.tag' ? 'active' : '' }}" href="{{ route('config.tag') }}">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>@lang('Các thẻ tag')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.banner' ? 'active' : '' }}" href="{{ route('config.banner') }}">
+                    <i class="fas fa-fw fa-images"></i>
+                    <span>@lang('Banners')</span>
+                </a>
 
-    <li class="nav-item {{ $route == 'config.voucher' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.voucher') }}">
-            <i class="fas fa-fw fa-tags"></i>
-            <span>@lang('Voucher')</span></a>
+            </div>
+        </div>
     </li>
-    <li class="nav-item {{ $route == 'config.voucherevent' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.voucherevent') }}">
-            <i class="fas fa-fw fa-gifts"></i>
-            <span>@lang('Sự kiện phát Voucher')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'config.homepopup' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.homepopup') }}">
-            <i class="fas fa-fw fa-fire"></i>
-            <span>@lang('Thông báo trang chủ')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'config.homeclasses' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.homeclasses') }}">
-            <i class="fas fa-fw fa-fire"></i>
-            <span>@lang('Khoá học tiểu biểu')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'config.site' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.site') }}">
-            <i class="fas fa-fw fa-cogs"></i>
-            <span>@lang('Các thông số')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'config.tag' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.tag') }}">
-            <i class="fas fa-fw fa-tags"></i>
-            <span>@lang('Các thẻ tag')</span></a>
-    </li>
-    <li class="nav-item {{ $route == 'config.banner' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('config.banner') }}">
-            <i class="fas fa-fw fa-images"></i>
-            <span>@lang('Banners')</span></a>
-    </li>
-    @if($userService->haveAccess(Auth::user()->role, 'root'))
-    <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('user.mods') }}">
-            <i class="fas fa-fw fa-user-shield"></i>
-            <span>@lang('Quản lý Mods')</span></a>
-    </li>
-    @endif
+
     <li class="nav-item {{ $route == 'config.guide' ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="{{ $route == 'config.guide' ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
@@ -181,6 +187,13 @@
                 @endforeach
             </div>
         </div>
+    </li>
+    @endif
+    @if($userService->haveAccess(Auth::user()->role, 'root'))
+    <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.mods') }}">
+            <i class="fas fa-fw fa-user-shield"></i>
+            <span>@lang('Quản lý Mods')</span></a>
     </li>
     @endif
     <!-- Sidebar Toggler (Sidebar) -->

@@ -226,9 +226,9 @@ class TransactionService
 
             $directCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
-            User::find($user->id)->update([
-                'wallet_c' => DB::raw('wallet_c + ' . $directCommission),
-            ]);
+            // User::find($user->id)->update([
+            //     'wallet_c' => DB::raw('wallet_c + ' . $directCommission),
+            // ]);
 
             Transaction::create([
                 'user_id' => $user->id,

@@ -167,6 +167,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/order-approve/{orderId}', 'TransactionController@approveOrder')->name('order.approve');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
+
+    Route::any('/fin/expenditures', 'TransactionController@finExpenditures')->name('fin.expenditures');
+    Route::any('/fin/salereport', 'TransactionController@finSaleReport')->name('fin.salereport');
     
     Route::get('/article', 'ArticleController@list')->name('article');
     Route::post('/article/create', 'ArticleController@create')->name('article.create');

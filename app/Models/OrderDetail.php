@@ -42,7 +42,7 @@ class OrderDetail extends Model
             ->leftJoin('item_user_actions AS iua', function ($query) {
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
-            ->where('od.user_id', $userId)
+            ->where('orders.user_id', $userId)
             ->where('items.status', '>', 0)
             ->where('users.status', '>', 0)
             ->where('items.user_status', '>', 0)

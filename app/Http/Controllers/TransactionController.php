@@ -467,4 +467,30 @@ class TransactionController extends Controller
         }
         return redirect(env('CALLBACK_SERVER'));
     }
+
+    public function finExpenditures(Request $request) {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $this->data['transaction'] = Transaction::whereIn('type', [
+            ConfigConstants::TRANSACTION_FIN_ASSETS, 
+            ConfigConstants::TRANSACTION_FIN_EVENT,
+            ConfigConstants::TRANSACTION_FIN_FIXED_FEE,
+            ConfigConstants::TRANSACTION_FIN_MARKETING,
+            ConfigConstants::TRANSACTION_FIN_OTHERS,
+            ConfigConstants::TRANSACTION_FIN_SALARY,
+            ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE,
+            ])
+            ->orderby('id', 'desc')
+            ->with('user')
+            ->paginate(20);
+        $this->data['navText'] = __('Quản lý Chi tiền');
+        return view('transaction.expenditures', $this->data);
+    }
+
+    public function finSaleReport(Request $request) {
+        
+    }
 }
