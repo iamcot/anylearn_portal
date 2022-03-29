@@ -37,12 +37,12 @@
     </li>
 
     <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVoucher" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" 
         aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thao tác người dùng')</span>
         </a>
-        <div id="collapseVoucher" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}" href="{{ route('user.noprofile') }}">
                     <i class="fas fa-fw fa-fire"></i>

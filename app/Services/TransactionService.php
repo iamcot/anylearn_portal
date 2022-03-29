@@ -523,4 +523,67 @@ class TransactionService
         Log::debug("Update order to pending", ["orderId" => $openOrder->id]);
         return true;
     }
+
+    public function grossRevenue($from = null, $to = null, $isAll = true) {
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
+        $value = DB::table('transactions')
+        ->where('created_at', '>', $from)
+        ->where('created_at', '<', $to)
+        ->where('type', 'order')
+        ->where('status', '<', 99)
+        ->sum('amount');
+        return $value * -1;
+    }
+
+    public function netRevenue($from = null, $to = null, $isAll = true) {
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
+        $grossRevenue = $this->grossRevenue($from, $to, $isAll);
+        $sellerComm = DB::table('transactions')
+        ->where('created_at', '>', $from)
+        ->where('created_at', '<', $to)
+        ->where('type', 'commission')
+        ->where('content', 'like', 'Nhận điểm từ bán khóa học%')
+        ->where('status', '<', 99)
+        ->sum('amount');
+        return $grossRevenue - ($sellerComm * 1000);
+    }
+
+    public function grossProfit($from = null, $to = null, $isAll = true) {
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
+        $netRevenue = $this->netRevenue($from, $to, $isAll);
+        $otherCommission = DB::table('transactions')
+        ->where('created_at', '>', $from)
+        ->where('created_at', '<', $to)
+        ->where('type', 'commission')
+        ->where('content', 'not like', 'Nhận điểm từ bán khóa học%')
+        ->where('status', '<', 99)
+        ->sum('amount');
+        $foundation = DB::table('transactions')
+        ->where('created_at', '>', $from)
+        ->where('created_at', '<', $to)
+        ->where('type', 'foundation')
+        ->where('status', '<', 99)
+        ->sum('amount');
+        return $netRevenue - $foundation - ($otherCommission * 1000);
+    }
+
+    public function netProfit($from = null, $to = null, $isAll = true) {
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
+        $grossProfit = $this->grossProfit($from, $to, $isAll);
+        $expend = DB::table('transactions')
+        ->where('created_at', '>', $from)
+        ->where('created_at', '<', $to)
+        ->whereIn('type', [
+            'fin_salary',
+            'fin_fixed_fee',
+        ])
+        ->where('status', '<', 99)
+        ->sum('amount');
+        return $grossProfit - $expend;
+    }
+
 }

@@ -55,8 +55,12 @@ class TransactionController extends Controller
         $this->data['orders'] = DB::table('orders')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
-            ->select('orders.*', 'users.name', 'users.phone', 
-            DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes"))
+            ->select(
+                'orders.*',
+                'users.name',
+                'users.phone',
+                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+            )
             ->paginate();
         $this->data['navText'] = __('Đơn hàng chờ xác nhận');
         return view('transaction.order_open', $this->data);
@@ -468,21 +472,43 @@ class TransactionController extends Controller
         return redirect(env('CALLBACK_SERVER'));
     }
 
-    public function finExpenditures(Request $request) {
+    public function finExpenditures(Request $request)
+    {
         $userService = new UserServices();
         $user = Auth::user();
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
+        if ($request->get('action') == 'saveFinExpend') {
+            $expend = $request->get('expend');
+            $obj = [
+                'user_id' => $user->id,
+                'content' => $expend['title'],
+                'type' => $expend['type'],
+                'amount' => $expend['amount'],
+                'ref_user_id' => $expend['ref_user_id'],
+                'pay_method' => $expend['pay_method'],
+                'pay_info' => $expend['comment'],
+                'created_at' => $expend['date'],
+                'status' => 1,
+            ];
+            if ($request->get('expendid') == "") {
+                Transaction::create($obj);
+            } else {
+                Transaction::find($request->get('expendid'))->update($obj);
+            }
+            return redirect()->back()->with(['notify' => 1]);
+        }
+
         $this->data['transaction'] = Transaction::whereIn('type', [
-            ConfigConstants::TRANSACTION_FIN_ASSETS, 
+            ConfigConstants::TRANSACTION_FIN_ASSETS,
             ConfigConstants::TRANSACTION_FIN_EVENT,
             ConfigConstants::TRANSACTION_FIN_FIXED_FEE,
             ConfigConstants::TRANSACTION_FIN_MARKETING,
             ConfigConstants::TRANSACTION_FIN_OTHERS,
             ConfigConstants::TRANSACTION_FIN_SALARY,
             ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE,
-            ])
+        ])
             ->orderby('id', 'desc')
             ->with('user')
             ->paginate(20);
@@ -490,7 +516,21 @@ class TransactionController extends Controller
         return view('transaction.expenditures', $this->data);
     }
 
-    public function finSaleReport(Request $request) {
-        
+    public function finSaleReport(Request $request)
+    {
+        $from = $request->get('from') ? date('Y-m-d 00:00:00', strtotime($request->get('from'))) : date('Y-m-d 00:00:00', strtotime("-390 days"));
+        $to = $request->get('to') ? date('Y-m-d 23:59:59', strtotime($request->get('to'))) : date('Y-m-d H:i:s');
+        $transService = new TransactionService();
+        $this->data['grossRevenue'] = $transService->grossRevenue($from, $to);
+        $this->data['netRevenue'] = $transService->netRevenue($from, $to);
+        $this->data['grossProfit'] = $transService->grossProfit($from, $to);
+        $this->data['netProfit'] = $transService->netProfit($from, $to);
+        $this->data['transaction'] = Transaction::where('created_at', '>', $from)
+        ->where('created_at', '<', $to)
+        ->where('status', '<', 99)
+        ->orderby('id', 'desc')
+        ->paginate();
+        $this->data['navText'] = __('Báo cáo doanh thu');
+        return view('transaction.salereport', $this->data);
     }
 }
