@@ -565,12 +565,14 @@ class TransactionService
             ->where('content', 'not like', '%bán khóa học%')
             ->where('status', '<', 99)
             ->sum('amount');
+            echo 'otherComm=' . $otherCommission;
         $foundation = DB::table('transactions')
             ->where('created_at', '>', $from)
             ->where('created_at', '<', $to)
             ->where('type', 'foundation')
             ->where('status', '<', 99)
             ->sum('amount');
+            echo '@foundation='.$foundation;
         return $netRevenue - $foundation - ($otherCommission * 1000);
     }
 
