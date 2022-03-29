@@ -527,7 +527,8 @@ class TransactionController extends Controller
         $this->data['netProfit'] = $transService->netProfit($from, $to);
         $this->data['transaction'] = Transaction::where('created_at', '>', $from)
         ->where('created_at', '<', $to)
-        ->where('status', '<', 99)
+        ->where('status', 1)
+        ->where('content', '!=', 'Thanh toán trực tuyến')
         ->orderby('id', 'desc')
         ->paginate();
         $this->data['navText'] = __('Báo cáo doanh thu');

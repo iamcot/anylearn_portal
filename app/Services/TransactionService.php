@@ -533,7 +533,7 @@ class TransactionService
             ->where('created_at', '<', $to)
             ->where('type', 'order')
             ->where('content', '!=', 'Thanh toán trực tuyến')
-            ->where('status', '<', 99)
+            ->where('status', 1)
             ->sum('amount');
         return $value * -1;
     }
@@ -548,7 +548,7 @@ class TransactionService
             ->where('created_at', '<', $to)
             ->where('type', 'commission')
             ->where('content', 'like', 'Nhận điểm từ bán khóa học%')
-            ->where('status', '<', 99)
+            ->where('status', 1)
             ->sum('amount');
         return $grossRevenue - ($sellerComm * 1000);
     }
@@ -563,13 +563,13 @@ class TransactionService
             ->where('created_at', '<', $to)
             ->where('type', 'commission')
             ->where('content', 'not like', 'Nhận điểm từ bán khóa học%')
-            ->where('status', '<', 99)
+            ->where('status', 1)
             ->sum('amount');
         $foundation = DB::table('transactions')
             ->where('created_at', '>', $from)
             ->where('created_at', '<', $to)
             ->where('type', 'foundation')
-            ->where('status', '<', 99)
+            ->where('status', 1)
             ->sum('amount');
         return $netRevenue - $foundation - ($otherCommission * 1000);
     }
@@ -586,7 +586,7 @@ class TransactionService
                 'fin_salary',
                 'fin_fixed_fee',
             ])
-            ->where('status', '<', 99)
+            ->where('status', 1)
             ->sum('amount');
         return $grossProfit - $expend;
     }
