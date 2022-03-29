@@ -547,7 +547,7 @@ class TransactionService
             ->where('created_at', '>', $from)
             ->where('created_at', '<', $to)
             ->where('type', 'commission')
-            ->where('content', 'like', 'Nhận điểm từ bán khóa học%')
+            ->where('content', 'like', '%bán khóa học%')
             ->where('status', '<', 99)
             ->sum('amount');
         return $grossRevenue - ($sellerComm * 1000);
@@ -562,7 +562,7 @@ class TransactionService
             ->where('created_at', '>', $from)
             ->where('created_at', '<', $to)
             ->where('type', 'commission')
-            ->where('content', 'not like', 'Nhận điểm từ bán khóa học%')
+            ->where('content', 'not like', '%bán khóa học%')
             ->where('status', '<', 99)
             ->sum('amount');
         $foundation = DB::table('transactions')
@@ -585,6 +585,11 @@ class TransactionService
             ->whereIn('type', [
                 'fin_salary',
                 'fin_fixed_fee',
+                'fin_variable_fee',
+                'fin_marketing',
+                'fin_event',
+                'fin_assets',
+                'fin_others'
             ])
             ->where('status', '<', 99)
             ->sum('amount');
