@@ -526,7 +526,7 @@ class TransactionService
 
     public function grossRevenue($from = null, $to = null, $isAll = true)
     {
-        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
         $value = DB::table('transactions')
             ->where('created_at', '>', $from)
@@ -540,7 +540,7 @@ class TransactionService
 
     public function netRevenue($from = null, $to = null, $isAll = true)
     {
-        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
         $grossRevenue = $this->grossRevenue($from, $to, $isAll);
         $sellerComm = DB::table('transactions')
@@ -555,7 +555,7 @@ class TransactionService
 
     public function grossProfit($from = null, $to = null, $isAll = true)
     {
-        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
         $netRevenue = $this->netRevenue($from, $to, $isAll);
         $otherCommission = DB::table('transactions')
@@ -578,7 +578,7 @@ class TransactionService
 
     public function netProfit($from = null, $to = null, $isAll = true)
     {
-        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
         $grossProfit = $this->grossProfit($from, $to, $isAll);
         $expend = DB::table('transactions')

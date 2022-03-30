@@ -518,7 +518,7 @@ class TransactionController extends Controller
 
     public function finSaleReport(Request $request)
     {
-        $from = $request->get('from') ? date('Y-m-d 00:00:00', strtotime($request->get('from'))) : date('Y-m-d 00:00:00', strtotime("-90 days"));
+        $from = $request->get('from') ? date('Y-m-d 00:00:00', strtotime($request->get('from'))) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $request->get('to') ? date('Y-m-d 23:59:59', strtotime($request->get('to'))) : date('Y-m-d H:i:s');
         $transService = new TransactionService();
         $this->data['grossRevenue'] = $transService->grossRevenue($from, $to);
