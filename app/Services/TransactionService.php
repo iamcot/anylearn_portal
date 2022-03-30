@@ -528,12 +528,10 @@ class TransactionService
     {
         $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
-        $value = DB::table('transactions')
+        $value = DB::table('orders')
             ->where('created_at', '>', $from)
             ->where('created_at', '<', $to)
-            ->where('type', 'order')
-            ->where('amount', '<', 0)
-            ->where('status', '<', 99)
+            ->whereIn('status', [OrderConstants::STATUS_NEW, OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_DELIVERED])
             ->sum('amount');
         return abs($value);
     }
