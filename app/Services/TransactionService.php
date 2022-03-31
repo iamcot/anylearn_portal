@@ -524,61 +524,83 @@ class TransactionService
         return true;
     }
 
-    public function grossRevenue($from = null, $to = null, $isAll = true)
+    public function grossRevenue($from = null, $to = null, $partner = null, $isAll = true)
     {
         $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
-        $value = DB::table('orders')
-            ->where('created_at', '>', $from)
-            ->where('created_at', '<', $to)
-            ->whereIn('status', [OrderConstants::STATUS_NEW, OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_DELIVERED])
-            ->sum('amount');
+        $value = DB::table('order_details')
+            ->where('order_details.created_at', '>', $from)
+            ->where('order_details.created_at', '<', $to)
+            ->whereIn('order_details.status', [OrderConstants::STATUS_NEW, OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_DELIVERED]);
+        if ($partner) {
+            $value = $value->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('items.user_id', $partner);
+        }
+        $value = $value->sum('order_details.paid_price');
         return abs($value);
     }
 
-    public function netRevenue($from = null, $to = null, $isAll = true)
+    public function netRevenue($from = null, $to = null, $partner = null, $isAll = true)
     {
         $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
-        $grossRevenue = $this->grossRevenue($from, $to, $isAll);
+        $grossRevenue = $this->grossRevenue($from, $to, $partner, $isAll);
         $sellerComm = DB::table('transactions')
-            ->where('created_at', '>', $from)
-            ->where('created_at', '<', $to)
-            ->where('type', 'commission')
-            ->where('content', 'like', '%bán khóa học%')
-            ->where('status', '<', 99)
-            ->sum('amount');
+            ->where('transactions.created_at', '>', $from)
+            ->where('transactions.created_at', '<', $to)
+            ->where('transactions.type', 'commission')
+            ->where('transactions.content', 'like', '%bán khóa học%')
+            ->where('transactions.status', '<', 99);
+        if ($partner) {
+            $sellerComm = $sellerComm
+                ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('items.user_id', $partner);
+        }
+        $sellerComm =  $sellerComm->sum('transactions.amount');
         return $grossRevenue - ($sellerComm * 1000);
     }
 
-    public function grossProfit($from = null, $to = null, $isAll = true)
+    public function grossProfit($from = null, $to = null, $partner = null, $isAll = true)
     {
         $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
-        $netRevenue = $this->netRevenue($from, $to, $isAll);
+        $netRevenue = $this->netRevenue($from, $to, $partner, $isAll);
         $otherCommission = DB::table('transactions')
-            ->where('created_at', '>', $from)
-            ->where('created_at', '<', $to)
-            ->where('type', 'commission')
-            ->where('content', 'not like', '%bán khóa học%')
-            ->where('status', '<', 99)
-            ->sum('amount');
-            // echo 'otherComm=' . $otherCommission;
+            ->where('transactions.created_at', '>', $from)
+            ->where('transactions.created_at', '<', $to)
+            ->where('transactions.type', 'commission')
+            ->where('transactions.content', 'not like', '%bán khóa học%')
+            ->where('transactions.status', '<', 99);
+        if ($partner) {
+            $otherCommission = $otherCommission
+                ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('items.user_id', $partner);
+        }
+        $otherCommission = $otherCommission->sum('amount');
+        // echo 'otherComm=' . $otherCommission;
         $foundation = DB::table('transactions')
-            ->where('created_at', '>', $from)
-            ->where('created_at', '<', $to)
-            ->where('type', 'foundation')
-            ->where('status', '<', 99)
-            ->sum('amount');
-            // echo '@foundation='.$foundation;
+            ->where('transactions.created_at', '>', $from)
+            ->where('transactions.created_at', '<', $to)
+            ->where('transactions.type', 'foundation')
+            ->where('transactions.status', '<', 99);
+        if ($partner) {
+            $foundation = $foundation
+                ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('items.user_id', $partner);
+        }
+        $foundation = $foundation->sum('transactions.amount');
+        // echo '@foundation='.$foundation;
         return $netRevenue - $foundation - ($otherCommission * 1000);
     }
 
-    public function netProfit($from = null, $to = null, $isAll = true)
+    public function netProfit($from = null, $to = null, $partner = null, $isAll = true)
     {
         $from = $from ? date('Y-m-d 00:00:00', strtotime($from)) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $to ? date('Y-m-d 23:59:59', strtotime($to)) : date('Y-m-d H:i:s');
-        $grossProfit = $this->grossProfit($from, $to, $isAll);
+        $grossProfit = $this->grossProfit($from, $to, $partner, $isAll);
         $expend = DB::table('transactions')
             ->where('created_at', '>', $from)
             ->where('created_at', '<', $to)

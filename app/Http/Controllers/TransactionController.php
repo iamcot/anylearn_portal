@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
+use App\Constants\UserConstants;
 use App\DataObjects\ServiceResponse;
 use App\Models\Configuration;
 use App\Models\Notification;
@@ -520,17 +521,29 @@ class TransactionController extends Controller
     {
         $from = $request->get('from') ? date('Y-m-d 00:00:00', strtotime($request->get('from'))) : date('Y-m-d 00:00:00', strtotime("-30 days"));
         $to = $request->get('to') ? date('Y-m-d 23:59:59', strtotime($request->get('to'))) : date('Y-m-d H:i:s');
+        $partner = $request->get('partner');
         $transService = new TransactionService();
-        $this->data['grossRevenue'] = $transService->grossRevenue($from, $to);
-        $this->data['netRevenue'] = $transService->netRevenue($from, $to);
-        $this->data['grossProfit'] = $transService->grossProfit($from, $to);
-        $this->data['netProfit'] = $transService->netProfit($from, $to);
-        $this->data['transaction'] = Transaction::where('created_at', '>', $from)
-        ->where('created_at', '<', $to)
-        ->where('status', '<', 99)
-        ->where('content', '!=', 'Thanh toán trực tuyến')
-        ->orderby('id', 'desc')
+        $this->data['grossRevenue'] = $transService->grossRevenue($from, $to, $partner);
+        $this->data['netRevenue'] = $transService->netRevenue($from, $to, $partner);
+        $this->data['grossProfit'] = $transService->grossProfit($from, $to, $partner);
+        $this->data['netProfit'] = $transService->netProfit($from, $to, $partner);
+        $this->data['transaction'] = Transaction::where('transactions.created_at', '>', $from)
+        ->where('transactions.created_at', '<', $to)
+        ->where('transactions.status', '<', 99)
+        ->where('transactions.content', '!=', 'Thanh toán trực tuyến');
+        if ($partner) {
+            $this->data['transaction'] = $this->data['transaction']
+            ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where('items.user_id', $partner);
+        }
+        $this->data['transaction'] = $this->data['transaction']
+        ->select('transactions.*')
+        ->orderby('transactions.id', 'desc')
         ->paginate();
+        $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+        ->orderby('first_name')
+        ->get();
         $this->data['navText'] = __('Báo cáo doanh thu');
         return view('transaction.salereport', $this->data);
     }

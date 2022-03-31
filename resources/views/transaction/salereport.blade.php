@@ -10,6 +10,14 @@
     <div class="col-xs-6 col-sm-2">
         <input type="date" name="to" class="form-control" value="{{ @request('to') }}">
     </div>
+    <div class="col-xs-6 col-sm-4">
+        <select name="partner" class="form-control">
+            <option value="">- ALL -</option>
+            @foreach($partners as $partner)
+                <option value="{{ $partner->id }}" {{ @request('partner') == $partner->id ? 'selected' : '' }}>{{ $partner->name }}</option>
+            @endforeach
+        </select>
+    </div>
     <button class="btn btn-success btn-sm"><i class="fa fa-search"></i></button>
 </div>
 </form>
