@@ -20,7 +20,7 @@
         <h5>Các câu hỏi được quan tâm</h5>
         <ul  class="row">
             @foreach($topKnowledge as $knowledge)
-            <li class="col-xs-12 col-md-6"><a class="text-decoration-none text-black"  href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url ]) }}">{{  $knowledge->title }}</a></li>
+            <li class="col-xs-12 col-md-6"><a class=" text-black"  href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url ]) }}">{{  $knowledge->title }}</a></li>
             @endforeach
         </ul>
     </section>

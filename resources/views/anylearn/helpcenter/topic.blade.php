@@ -8,7 +8,7 @@
         @foreach($catWithKnowledge as $item)
         <h5 class="mt-3">{{ $item['cat'] }}</h5>
             @foreach($item['knowledges'] as $knowledge)
-                <li class=""><a class="text-decoration-none text-black"  href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url ]) }}">{{  $knowledge->title }}</a></li>
+                <li class=""><a class=" text-black"  href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url ]) }}">{{  $knowledge->title }}</a></li>
             @endforeach
         @endforeach
     </div>

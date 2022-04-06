@@ -29,7 +29,7 @@
                 <tr>
                     <th class="text-center">{{ $category->id }}</th>
                     <td>{{ $category->title }}
-                        <a href="{{ route('knowledge.category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
+                        <a href="{{ route('knowledge.topic.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
                     </td>
                     <td>{{ $category->updated_at }}</td>
                     <td>
