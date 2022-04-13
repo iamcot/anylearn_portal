@@ -40,7 +40,7 @@
                     <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">Trung tâm hỗ trợ</a></p></li>
                     <li><p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách</a></p></li>
                     <li><p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều khoản</a></p></li>
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Liên hệ chúng tôi</a></p></li>
+                    <li><p><a href="https://info.anylearn.vn" class="text-secondary text-decoration-none">Giới thiệu</a></p></li>
                 </ul>
             </div>
         </div>

@@ -165,6 +165,9 @@ class Notification extends Model
         $nearestSchedule = Schedule::where('item_id', $itemId)
             ->where('date', '>=', $nowInDay)
             ->first();
+        if (!$nearestSchedule) {
+            return 'Không tìm thấy lịch học cho khóa ID=' . $itemId;
+        }
         $diff = null;
         foreach ($registers as $register) {
             if ($diff == null) {
@@ -195,6 +198,7 @@ class Notification extends Model
                 ]);
             }
         }
+        return true;
     }
     public function notifRemindConfirm($userId, $userName, $itemName)
     {

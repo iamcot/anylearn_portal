@@ -40,7 +40,7 @@
         <h5 class="mt-3 fw-bold text-secondary">
             Bạn vẫn cần trợ giúp ?
         </h5>
-        <p>anyLEAR sẽ có đội ngũ hỗ trợ bạn mọi lúc</p>
+        <p>anyLEARN sẽ có đội ngũ hỗ trợ bạn mọi lúc</p>
         <button class="btn btn-success border-0 rounded-pill" >Trò chuyện ngay</button>
     </section>
 </div>
