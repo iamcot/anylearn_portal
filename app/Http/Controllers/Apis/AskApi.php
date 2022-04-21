@@ -222,8 +222,8 @@ class AskApi extends Controller
         ]);
     }
 
-    public function touchStatus(Request $request, $askId, $status)
-    {
-        $user = $request->get('_user');
-    }
+    // public function touchStatus(Request $request, $askId, $status)
+    // {
+    //     $user = $request->get('_user');
+    // }
 }
