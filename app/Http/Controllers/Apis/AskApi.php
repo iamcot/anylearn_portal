@@ -141,7 +141,7 @@ class AskApi extends Controller
                 }
             }
 
-            return response()->json(['new_ask' => $newAsk->id]);
+            return response()->json(['result' => true]);
         }
         return response('Không thể tạo mới, vui lòng thử lại.', 500);
     }
