@@ -22,7 +22,7 @@ anyLEARN - HỌC không giới hạn
     </div>
 </section>
 @include('anylearn.home.promotions', [
-'title' => 'ƯU ĐÃI HOT',
+'title' =>  $promotions_title,
 'carouselId' => 'promotions'
 ])
 @foreach($classes as $classBlock)
@@ -33,7 +33,7 @@ anyLEARN - HỌC không giới hạn
 ])
 @if(count($classes) == 1 || $loop->index == floor(count($classes) / 2) - 1 )
 @include('anylearn.home.articles', [
-'title' => 'SỰ KIỆN SẮP DIỄN RA',
+'title' => $events_title,
 'carouselId' => 'events',
 'data' => $events
 ])

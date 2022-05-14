@@ -48,6 +48,8 @@ class PageController extends Controller
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+        $this->data['promotions_title'] = env('PROMOTIONS_TITLE', 'Ưu đãi độc quyền');
+        $this->data['events_title'] = env('EVENTS_TITLE', 'Sự kiện nổi bật');
         $this->data['events'] = Article::where('type', Article::TYPE_EVENT)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
         $this->data['articles'] = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])

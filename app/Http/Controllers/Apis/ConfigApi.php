@@ -82,6 +82,8 @@ class ConfigApi extends Controller
             'promotions' => $promotions,
             'events' => $events,
             'categories' => $categories,
+            'promotions_title' => env('PROMOTIONS_TITLE', 'Ưu đãi độc quyền'),
+            'events_title' => env('EVENTS_TITLE', 'Sự kiện nổi bật'),
         ]);
     }
 
