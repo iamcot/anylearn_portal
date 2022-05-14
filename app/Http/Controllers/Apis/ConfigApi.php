@@ -209,6 +209,7 @@ class ConfigApi extends Controller
             'value' => (int) $foundation,
             'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
             'history' => Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
+                ->where('amount', '>', 0)
                 ->orderby('id', 'desc')->take(20)->get(),
             'news' => DB::table('tags')->where('tags.type', Tag::TYPE_ARTICLE)
                 ->where('tags.tag', ConfigConstants::FOUNDATION_TAG)
