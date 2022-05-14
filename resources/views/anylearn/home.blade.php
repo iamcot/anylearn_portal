@@ -57,6 +57,7 @@ anyLEARN - HỌC không giới hạn
             nav:true,
             loop: true,
             autoplay: true,
+            autoplayTimeout: 3000,
             navText: [
                 '<span class="owl-carousel-control-icon rounded-circle border p-2 bg-white shadow"><i class="fas fa-2x fa-angle-left text-secondary"></i></span>',
                 '<span class="owl-carousel-control-icon-right rounded-circle border  p-2 bg-white shadow"><i class="fas fa-2x fa-angle-right text-secondary"></i></span>'
