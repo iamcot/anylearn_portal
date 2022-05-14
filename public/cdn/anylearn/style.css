@@ -96,6 +96,19 @@ nav a {
     color: #fff;
 }
 
+.classBox {
+    text-decoration: none;
+}
+
+#banners {
+    max-height: 400px !important;
+}
+
+#banners img {
+    max-width: 100%;
+    max-height: 400px;
+}
+
 .carousel3 {
     min-height: 300px;
 }

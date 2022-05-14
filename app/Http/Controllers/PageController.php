@@ -70,7 +70,13 @@ class PageController extends Controller
             }
         }
         $this->data['classes'] = $homeClasses;
-
+        $dbNewBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
+        $newBanners = [];
+        if ($dbNewBanners) {
+            $newBanners = array_values(json_decode($dbNewBanners->value, true));
+        }
+        $this->data['banners'] = $newBanners;
+        // dd($this->data['banners']);
         return view(env('TEMPLATE', '') . 'home', $this->data);
     }
 

@@ -1,3 +1,4 @@
+@inject('itemServ', 'App\Services\ItemServices')
 <footer>
     <div class="container p-5">
         <div class="row">
@@ -22,12 +23,11 @@
                 </ul>
             </div>
             <div class="col-md-4">
-                <h6 class="fw-bold d-md-none d-sm-block">HỖ TRỢ</h6>
+                <h6 class="fw-bold d-md-none d-sm-block">TIN TỨC MỚI NHẤT</h6>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="/guide?p=support_school" class="text-secondary text-decoration-none">Dành cho Trường học / Trung tâm đào tạo</a></p></li>
-                    <li><p><a href="/guide?p=support_teacher" class="text-secondary text-decoration-none">Dành cho Chuyên gia / Giảng viên</a></p></li>
-                    <li><p><a href="/guide?p=support_member" class="text-secondary text-decoration-none">Dành cho khách hàng</a></p></li>
-                    <li><p><a href="#" class="text-secondary text-decoration-none">Tin tức </a></p></li>
+                    @foreach($itemServ->footerNews() as $news)
+                    <li><p><a href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p></li>
+                    @endforeach
                 </ul>
                 <ul class="list-unstyled list-inline">
                     <li class="list-inline-item"><a href="https://www.facebook.com/anylearnhockhonggioihan"><i class="fab fa-2x fa-facebook"></i></a></li>

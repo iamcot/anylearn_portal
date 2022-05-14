@@ -31,6 +31,10 @@ class ItemServices
 {
     const PP = 20;
 
+    public function footerNews() {
+        return Article::where('status', 1)->orderby('id', 'desc')->take(4)->get();
+    }
+
     public function pdpData($itemId, $user)
     {
         $item = Item::find($itemId);

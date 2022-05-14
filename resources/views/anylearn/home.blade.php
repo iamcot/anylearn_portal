@@ -3,9 +3,7 @@
 anyLEARN - HỌC không giới hạn
 @endsection
 @section('body')
-<section id="banners">
-    <img class="img-fluid" src="/cdn/anylearn/img/banner_1.svg" alt="">
-</section>
+@include('anylearn.home.banners')
 <section class="text-center">
     <h5 class="mt-3 fw-bold text-secondary">
         Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online
@@ -54,6 +52,20 @@ anyLEARN - HỌC không giới hạn
 @section('jscript')
 <script>
     $(document).ready(function() {
+        $('#banners .owl-carousel').owlCarousel({
+            margin: 10,
+            nav:true,
+            loop: true,
+            navText: [
+                '<span class="owl-carousel-control-icon rounded-circle border p-2 bg-white shadow"><i class="fas fa-2x fa-angle-left text-secondary"></i></span>',
+                '<span class="owl-carousel-control-icon-right rounded-circle border  p-2 bg-white shadow"><i class="fas fa-2x fa-angle-right text-secondary"></i></span>'
+            ],
+            responsive: {
+                0: {
+                    items: 1
+                },
+            }
+        });
         $('.carousel3 .owl-carousel').owlCarousel({
             margin: 10,
             nav:true,
