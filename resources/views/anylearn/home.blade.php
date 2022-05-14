@@ -56,6 +56,7 @@ anyLEARN - HỌC không giới hạn
             margin: 10,
             nav:true,
             loop: true,
+            autoplay: true,
             navText: [
                 '<span class="owl-carousel-control-icon rounded-circle border p-2 bg-white shadow"><i class="fas fa-2x fa-angle-left text-secondary"></i></span>',
                 '<span class="owl-carousel-control-icon-right rounded-circle border  p-2 bg-white shadow"><i class="fas fa-2x fa-angle-right text-secondary"></i></span>'
