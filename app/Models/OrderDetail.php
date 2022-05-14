@@ -62,6 +62,7 @@ class OrderDetail extends Model
                 'items.nolimit_time',
                 'u2.id AS child_id',
                 'u2.name AS child_name',
+                'items.image',
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('schedules.date')
@@ -81,7 +82,7 @@ class OrderDetail extends Model
             ->where('items.user_status', '>', 0)
             ->where('iua.type', ItemUserAction::TYPE_FAV)
             ->where('iua.value', ItemUserAction::FAV_ADDED)
-            ->select('items.id AS item_id', 'items.subtype as item_subtype', 'items.title', 'items.date_start as date', 'items.time_start as time')
+            ->select('items.id AS item_id', 'items.subtype as item_subtype', 'items.title', 'items.date_start as date', 'items.time_start as time', 'items.image')
             ->orderBy('iua.id', 'desc')
             ->get();
         return [

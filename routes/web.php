@@ -19,6 +19,7 @@ Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
 });
 
 Route::get('/', 'PageController@home');
+Route::get('/info', 'PageController@landing');
 Route::get('/landing', 'PageController@landing');
 Route::get('/ref/{code}', 'PageController@ref')->name('refpage');
 Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');

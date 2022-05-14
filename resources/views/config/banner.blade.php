@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                <p class="small"><i class="fas fa-info-circle"></i> Các đường dẫn /pdp /teacher /school video</p>
+                <p class="small"><i class="fas fa-info-circle"></i> Các đường dẫn /pdp /items/teacher /items/school</p>
                 <p class="small"><i class="fas fa-info-circle"></i> Tham số là ID tương ứng của đường dẫn </p>
                 <p class="small"><i class="fas fa-info-circle"></i> File trùng tên sẽ không upload được. Các banner nên có chung 1 size để đảm bảo thẩm mĩ.</p>
                     <button type="button" class="btn  btn-sm btn-{{ env('MAIN_COLOR', 'primary') }}" id="saveButton" onclick="submit()">
