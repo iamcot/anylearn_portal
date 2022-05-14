@@ -6,10 +6,10 @@
                 <p><img src="/cdn/anylearn/img/logo-color.svg" class="img-fluid" alt=""></p>
             </div>
             <div class="col-md-4 d-md-block d-none">
-                <h6 class="fw-bold">HỖ TRỢ</h6>
+                <h6 class="fw-bold">TIN TỨC MỚI NHẤT</h6>
             </div>
             <div class="col-md-3 d-md-block d-none">
-                <h6 class="fw-bold">THÔNG TIN</h6>
+                <h6 class="fw-bold">THÔNG TIN HỖ TRỢ</h6>
             </div>
         </div>
         <div class="row">
@@ -35,7 +35,7 @@
                 </ul>
             </div>
             <div class="col-md-3">
-                <h6 class="fw-bold d-md-none d-sm-block">THÔNG TIN</h6>
+                <h6 class="fw-bold d-md-none d-sm-block">THÔNG TIN HỖ TRỢ</h6>
                 <ul class="list-unstyled text-secondary">
                     <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">Trung tâm hỗ trợ</a></p></li>
                     <li><p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách</a></p></li>
