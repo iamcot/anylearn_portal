@@ -55,4 +55,8 @@ class NotifConstants
     const VOUCHER_PARTNER_SENT = 'voucher_partner_sent';
 
     const SYSTEM_NOTIF = 'system_notif';
+
+    const SMS = 'sms';
+
+    const SMS_OTP = 'sms_otp';
 }

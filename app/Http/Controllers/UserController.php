@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\UserDocument;
 use App\Models\UserLocation;
 use App\Services\FileServices;
+use App\Services\SmsServices;
 use App\Services\UserServices;
 use Exception;
 use Illuminate\Http\Request;
@@ -369,7 +370,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['navText'] = __('Thông báo');
-        $this->data['notifications'] = Notification::where('user_id', $user->id)->orderby('id', 'desc')->paginate();
+        $this->data['notifications'] = Notification::where('user_id', $user->id)->where('type', '!=', SmsServices::SMS)->orderby('id', 'desc')->paginate();
         return view(env('TEMPLATE', '') . 'me.notification', $this->data);
     }
 

@@ -20,6 +20,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
+use App\Services\SmsServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
 use Exception;
@@ -611,6 +612,7 @@ class UserApi extends Controller
     {
         $user = $request->get('_user');
         $notif = Notification::where('user_id', $user->id)
+            ->where('type', '!=', SmsServices::SMS)
             ->orderby('id', 'desc')
             ->paginate(Notification::PAGESIZE);
         return response()->json($notif);
@@ -743,5 +745,46 @@ class UserApi extends Controller
             return response()->json(['result' => true]);
         }
         return response('Mật khẩu không đúng', 400);
+    }
+
+    public function sentOtpResetPass(Request $request)
+    {
+        $phone = $request->get('phone');
+        $smsServ = new SmsServices();
+        $result = $smsServ->smsOTP($phone);
+        if (!$result) {
+            return response('Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại', 400);
+        } else {
+            return response()->json([
+                'result' => true,
+                'phone' => $phone,
+            ]);
+        }
+    }
+
+    public function resetPassOtp(Request $request)
+    {
+        $phone = $request->get('phone');
+        $otp = $request->get('otp');
+        $password = $request->get('password');
+        $passwordConfirm = $request->get('password_confirmation');
+        if ($password != $passwordConfirm) {
+            return response('Vui lòng nhập lại mật khẩu', 400);
+        }
+        $smsServ = new SmsServices();
+        try {
+            $result = $smsServ->verifyOTP($phone, $otp);
+            if ($result) {
+                User::where('phone', $phone)->update([
+                    'password' => Hash::make($password)
+                ]);
+                return response()->json([
+                    'result' => true,
+                ]);
+            }
+        } catch (\Exception $ex) {
+            return response($ex->getMessage(), 400);
+        }
+        return response('Có lỗi xảy ra và không thể cập nhật mật khẩu, Vui lòng thử lại', 400);
     }
 }

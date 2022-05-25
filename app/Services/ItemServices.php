@@ -49,6 +49,14 @@ class ItemServices
 
         $userService = new UserServices();
         $authorCommissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
+        if ($item->company_commission != null) {
+            $overrideConfigs = json_decode($item->company_commission, true);
+            foreach ($overrideConfigs as $key => $value) {
+                if ($value != null) {
+                    $configs[$key] = $value;
+                }
+            }
+        }
         $commission = $userService->calcCommission($item->price, $authorCommissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
         $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)

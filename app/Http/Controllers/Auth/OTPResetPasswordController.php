@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\SmsServices;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+class OTPResetPasswordController  extends Controller
+{
+    public function showOtpRequestForm(Request $request)
+    {
+        if ($request->get('phone')) {
+            $phone = $request->get('phone');
+            $smsServ = new SmsServices();
+            $result = $smsServ->smsOTP($phone);
+            if (!$result) {
+                return redirect()->back()->withErrors([
+                    'phone' => 'Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại'
+                ]);
+            } else {
+                return redirect()->route('password.resetotp')->withInput(['phone' => $phone]);
+            }
+        }
+        return view('auth.passwords.otp');
+    }
+
+    public function sendOtp(Request $request)
+    {
+        return view('auth.passwords.otp_reset');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $phone = $request->get('phone');
+        $otp = $request->get('otp');
+        $password = $request->get('password');
+        $passwordConfirm = $request->get('password_confirmation');
+        if ($password != $passwordConfirm) {
+            return redirect()->back()->withInput()->withErrors([
+                'password' => 'Vui lòng nhập lại mật khẩu'
+            ]);
+        }
+        $smsServ = new SmsServices();
+        try {
+            $result = $smsServ->verifyOTP($phone, $otp);
+            if ($result) {
+                User::where('phone', $phone)->update([
+                    'password' => Hash::make($password)
+                ]);
+                return redirect()->to('login')->with('notify', 'Mật khẩu đã được cập nhật, Vui lòng đăng nhập.');
+            }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withInput()->withErrors([
+                'phone' => $ex->getMessage()
+            ]);
+        }
+        return redirect()->back()->withInput()->withErrors([
+            'phone' => 'Có lỗi xảy ra và không thể cập nhật mật khẩu, Vui lòng thử lại'
+        ]);
+    }
+}

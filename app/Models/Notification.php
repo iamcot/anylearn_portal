@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
+use App\Services\SmsServices;
 use DateTime;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -156,7 +158,7 @@ class Notification extends Model
         $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
-            // ->select('users.id', 'users.name', 'items.title', 'items.date_start', 'items.time_start')
+            // ->select('users.id', 'users.nae', 'items.title', 'items.date_start', 'items.time_start')
             ->select('users.id', 'users.name', 'items.title')
             ->get();
         $now = new DateTime('now');

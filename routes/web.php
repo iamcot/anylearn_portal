@@ -59,6 +59,10 @@ Route::get('/helpcenter', 'HelpcenterController@index')->name('helpcenter');
 Route::get('/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
 Route::get('/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
 
+Route::any('/password/otp', 'Auth\OTPResetPasswordController@showOtpRequestForm')->name('password.otp');
+Route::any('/password/otp/reset', 'Auth\OTPResetPasswordController@sendOtp')->name('password.resetotp');
+Route::any('/password/update', 'Auth\OTPResetPasswordController@updatePassword')->name('password.updateotp');
+
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('me')->group(function () { 

@@ -19,6 +19,8 @@ Route::post('/login/apple', 'Apis\UserApi@loginApple');
 Route::get('/logout', 'Apis\UserApi@logout');
 Route::post('/register', 'Apis\UserApi@register');
 Route::any('/simple-register', 'Apis\UserApi@simpleRegister');
+Route::get('/password/otp', 'Apis\UserApi@sentOtpResetPass');
+Route::post('/password/reset', 'Apis\UserApi@resetPassOtp');
 
 Route::get('/users/{role}', 'Apis\UserApi@usersList');
 Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
