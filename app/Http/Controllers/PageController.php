@@ -33,6 +33,11 @@ class PageController extends Controller
         return view(env('TEMPLATE', '') . 'landing', $this->data);
     }
 
+    public function partner()
+    {
+        return view(env('TEMPLATE', '') . 'partner', $this->data);
+    }
+
     public function home()
     {
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
