@@ -61,7 +61,7 @@ class TransactionController extends Controller
                 'users.name',
                 'users.phone',
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
-            )
+            )->orderby('orders.id', 'desc')
             ->paginate();
         $this->data['navText'] = __('Đơn hàng chờ xác nhận');
         return view('transaction.order_open', $this->data);
@@ -85,7 +85,7 @@ class TransactionController extends Controller
             'users.name',
             'users.phone',
             DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
-        )
+        )->orderby('orders.id', 'desc')
             ->paginate();
         $this->data['navText'] = __('Đơn hàng đã đặt');
         return view('transaction.order_all', $this->data);
