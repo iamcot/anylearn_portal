@@ -106,6 +106,7 @@ class TransactionService
             $childUserDB = $childUser > 0 ? User::find($childUser) : null;
             $dbVoucher = null;
             $voucherM = new Voucher();
+            $saleId = $this->findSaleIdFromBuyerOrItem($user->id, $item->id);
             if (!empty($voucher)) {
                 try {
                     $dbVoucher = $voucherM->getVoucherData($user->id, $voucher);
@@ -117,6 +118,7 @@ class TransactionService
                             'quantity' => 1,
                             'status' => $status,
                             'payment' => UserConstants::VOUCHER,
+                            'sale_id' => $saleId,
                         ]);
                         $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
                     }
@@ -148,6 +150,7 @@ class TransactionService
                         'quantity' => 1,
                         'status' => $status,
                         'payment' => UserConstants::WALLET_M,
+                        'sale_id' => $saleId,
                     ]);
                 }
 
@@ -315,6 +318,22 @@ class TransactionService
             return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? $openOrder->id : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
         return $result;
+    }
+
+    public function findSaleIdFromBuyerOrItem($buyerId, $itemId) {
+        $buyer = User::find($buyerId);
+        if ($buyer->sale_id) {
+            return $buyer->sale_id;
+        }
+        $item = Item::find($itemId);
+        if ($item->sale_id) {
+            return $item->sale_id;
+        }
+        $author = User::find($item->user_id);
+        if ($author->sale_id) {
+            return $author->sale_id;
+        }
+        return null;
     }
 
     public function remove2Cart($od, $order, $user)

@@ -34,7 +34,8 @@ class User extends Authenticatable
         'expire', 'wallet_m', 'wallet_c', 'commission_rate', 'is_hot', 'image', 'introduce',
         'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
-        'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child'
+        'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
+        'sale_id'
     ];
 
     /**
@@ -91,6 +92,7 @@ class User extends Authenticatable
             'status' => UserConstants::STATUS_ACTIVE,
             'update_doc' => UserConstants::STATUS_ACTIVE,
             'refcode' => $data['phone'],
+            'sale_id' => $data['sale_id'],
 
         ];
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
@@ -134,6 +136,7 @@ class User extends Authenticatable
             'name' => $input['name'],
             'email' => $input['email'],
             'phone' => $input['phone'],
+            'refcode' => $input['phone'],
             'role' => $input['role'],
             'password' => Hash::make($input['password']),
             'status' => UserConstants::STATUS_ACTIVE,
@@ -174,6 +177,7 @@ class User extends Authenticatable
             'phone' => $input['phone'],
             'role' => $input['role'],
             'user_id' => $input['user_id'],
+            'sale_id' => $input['sale_id'],
             'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
 

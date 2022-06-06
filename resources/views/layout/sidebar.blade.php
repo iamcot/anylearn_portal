@@ -2,6 +2,7 @@
 @inject('userService', 'App\Services\UserServices')
 <!-- Sidebar -->
 @php ( $route = app('router')->getRoutes()->match(app('request'))->getName() )
+@php ( $role = Auth::user()->role )
 <ul class="navbar-nav bg-gradient-{{ env('MAIN_COLOR', 'primary') }} sidebar sidebar-dark accordion d-print-none" id="accordionSidebar">
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
@@ -11,7 +12,7 @@
         </div>
         <div class="sidebar-brand-text mx-3">{{ env('APP_NAME') }}</div>
     </a>
-    @if($userService->haveAccess(Auth::user()->role, 'school'))
+    @if($userService->haveAccess($role, 'class'))
     <hr class="sidebar-divider d-none d-md-block">
     <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('class') }}">
@@ -19,23 +20,42 @@
             <span>@lang('Quản lý Lớp học')</span></a>
     </li>
     @endif
-    @if($userService->haveAccess(Auth::user()->role, 'admin'))
+    @if($userService->haveAccess($role, 'user.members'))
     <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.members') }}">
             <i class="fas fa-fw fa-users-cog"></i>
             <span>@lang('Quản lý thành viên')</span></a>
     </li>
+    @endif
+    @if($userService->haveAccess($role, 'article'))
     <li class="nav-item {{ $route == 'article' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('article') }}">
             <i class="fas fa-fw fa-comments"></i>
             <span>@lang('Viết bài Học & Hỏi')</span></a>
     </li>
+    @endif
+    @if($userService->haveAccess($role, 'feedback'))
     <li class="nav-item {{ $route == 'feedback' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('feedback') }}">
             <i class="fas fa-fw fa-comments"></i>
             <span>@lang('Xem feedback')</span></a>
     </li>
-
+    @endif
+    @if($userService->haveAccess($role, 'transaction'))
+    <li class="nav-item {{ $route == 'transaction' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('transaction') }}">
+            <i class="fas fa-fw fa-money-check-alt"></i>
+            <span>@lang('Duyệt giao dịch')</span></a>
+    </li>
+    @endif
+    @if($userService->haveAccess($role, 'order.open'))
+    <li class="nav-item {{ $route == 'order.open' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('order.open') }}">
+            <i class="fas fa-fw fa-money-check-alt"></i>
+            <span>@lang('Duyệt đơn hàng')</span></a>
+    </li>
+    @endif
+    @if($userService->haveAccess($role, 'useractions'))
     <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" 
         aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
@@ -52,14 +72,6 @@
                     <i class="fas fa-fw fa-certificate"></i>
                     <span>@lang('Quản lý hợp đồng')</span></a>
                 </a>
-                <a class="collapse-item {{ $route == 'transaction' ? 'active' : '' }}" href="{{ route('transaction') }}">
-                    <i class="fas fa-fw fa-money-check-alt"></i>
-                    <span>@lang('Duyệt giao dịch')</span></a>
-                </a>
-                <a class="collapse-item {{ $route == 'order.open' ? 'active' : '' }}" href="{{ route('order.open') }}">
-                    <i class="fas fa-fw fa-money-check-alt"></i>
-                    <span>@lang('Duyệt đơn hàng')</span></a>
-                </a>
                 <a class="collapse-item {{ $route == 'transaction.commission' ? 'active' : '' }}" href="{{ route('transaction.commission') }}">
                     <i class="fas fa-fw fa-money-check-alt"></i>
                     <span>@lang('Lịch sử nhận hoa hồng')</span></a>
@@ -68,11 +80,12 @@
             </div>
         </div>
     </li>
-  
+    @endif
     <hr class="sidebar-divider d-none d-md-block">
     <div class="sidebar-heading">
         @lang('Hệ thống')
     </div>
+    @if($userService->haveAccess($role, 'fin.expenditures'))
     <li class="nav-item {{ in_array($route, ['fin.expenditures', 'fin.salereport']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFin" 
         aria-expanded="{{ in_array($route, ['fin.expenditures', 'fin.salereport']) ? true : false }}" aria-controls="collapsePages">
@@ -93,6 +106,8 @@
             </div>
         </div>
     </li>
+    @endif
+    @if($userService->haveAccess($role, 'voucher'))
     <li class="nav-item {{ strpos($route, 'voucher') !== false ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVoucher" 
         aria-expanded="{{ strpos($route, 'voucher') !== false ? true : false }}" aria-controls="collapsePages">
@@ -113,6 +128,8 @@
             </div>
         </div>
     </li>
+    @endif
+    @if($userService->haveAccess($role, 'helpcenter'))
     <li class="nav-item {{ strpos($route, 'knowledge') !== false ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKnowledge" 
         aria-expanded="{{ strpos($route, 'knowledge') !== false ? true : false }}" aria-controls="collapsePages">
@@ -136,6 +153,8 @@
             </div>
         </div>
     </li>
+    @endif
+    @if($userService->haveAccess($role, 'config'))
     <li class="nav-item {{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConfig" 
         aria-expanded="{{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ? true : false }}" aria-controls="collapsePages">
@@ -172,7 +191,8 @@
             </div>
         </div>
     </li>
-
+    @endif
+    @if($userService->haveAccess($role, 'config.guide'))
     <li class="nav-item {{ $route == 'config.guide' ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="{{ $route == 'config.guide' ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
@@ -189,7 +209,7 @@
         </div>
     </li>
     @endif
-    @if($userService->haveAccess(Auth::user()->role, 'root'))
+    @if($userService->haveAccess(Auth::user()->role, 'admin'))
     <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.mods') }}">
             <i class="fas fa-fw fa-user-shield"></i>

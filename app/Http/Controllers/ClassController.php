@@ -15,6 +15,7 @@ use App\Models\Schedule;
 use App\Models\User;
 use App\Models\UserLocation;
 use App\Services\ItemServices;
+use App\Services\UserServices;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,9 +42,10 @@ class ClassController extends Controller
             return redirect()->back()->with(['notify' => $rs]);
         }
         $classService = new ItemServices();
+        $userService = new UserServices();
         $this->data['navText'] = __('Quản lý lớp học');
         $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
-        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+        if ($userService->isMod()) {
             return view('class.list', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_list', $this->data);
@@ -74,7 +76,8 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
-        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+        $userService = new UserServices();
+        if ($userService->isMod()) {
             return view('class.list', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
@@ -151,17 +154,18 @@ class ClassController extends Controller
         }
 
         $this->data['ratings'] = DB::table('item_user_actions')
-        ->join('users', 'users.id', '=', 'item_user_actions.user_id')
-        ->where('type', 'rating')->where('item_id', $courseId)
-        ->select('users.name', 'item_user_actions.*')
-        ->get();
+            ->join('users', 'users.id', '=', 'item_user_actions.user_id')
+            ->where('type', 'rating')->where('item_id', $courseId)
+            ->select('users.name', 'item_user_actions.*')
+            ->get();
 
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
-        
-        if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+
+        $userService = new UserServices();
+        if ($userService->isMod()) {
             return view('class.edit', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
@@ -224,5 +228,20 @@ class ClassController extends Controller
         $itemUserActionM = new ItemUserAction();
         $rs = $itemUserActionM->touchFav($itemId, $user->id);
         return redirect()->back();
+    }
+
+    public function specsList(Request $request, $type)
+    {
+        return view('specs.list');
+    }
+
+    public function specsEdit(Request $request, $type, $specId)
+    {
+        return view('specs.edit');
+    }
+
+    public function specsLink(Request $request, $type, $objId)
+    {
+        return view('specs.links');
     }
 }

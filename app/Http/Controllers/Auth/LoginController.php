@@ -6,6 +6,7 @@ use App\Constants\UserConstants;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
+use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -111,10 +112,11 @@ class LoginController extends Controller
         }
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());
+        $userService = new UserServices();
         if ($request->session()->get('cb')) {
             return redirect()->to($request->session()->get('cb'));
         }
-        else if ($user->role == UserConstants::ROLE_ADMIN || $user->role == UserConstants::ROLE_MOD) {
+        else if ($userService->isMod()) {
             return redirect($this->redirectTo);
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');

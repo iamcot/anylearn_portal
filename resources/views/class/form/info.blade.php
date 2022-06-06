@@ -14,7 +14,7 @@
         <div class="form-group row">
             <label for="subtype" class="col-md-3 col-form-label text-md-right ">{{ __('Loại khoá học') }}</label>
             <div class="col-md-8">
-                <select class="form-control" name="subtype" required @if(!empty($course) && count($course['schedule']) > 0) disabled @endif>
+                <select class="form-control" name="subtype" required @if(!empty($course) && count($course['schedule'])> 0) disabled @endif>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>Khoá học Tại trung tâm</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>Khoá học Online</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>Mã code Ứng dụng khác</option>
@@ -30,7 +30,7 @@
                     <option value="{{ $category->id }}" {{ !empty($itemCategories) && in_array($category->id, $itemCategories) ? 'selected' : '' }}>{{ $category->title }}</option>
                     @endforeach
                 </select>
-            <p class="small">Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)</p>
+                <p class="small">Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)</p>
             </div>
         </div>
 
@@ -67,7 +67,15 @@
                 <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
             </div>
         </div>
-
+        @if($userServ->haveAccess(Auth::user()->role, 'user.sale'))
+        <div class="form-group row">
+            <label for="sale_id" class="col-md-3 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
+            <div class="col-md-8">
+                <input id="sale_id" type="text" class="form-control @error('sale_id') is-invalid @enderror" name="sale_id" value="{{ old('sale_id', !empty($course) ? $course['info']->sale_id : '') }}">
+                <small>Có thể tham khảo ID ngoài danh sách nhân viên.</small>
+            </div>
+        </div>
+        @endif
         @if($userServ->isMod())
         <div class="form-group row">
             <label for="company_rate" class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng công ty') }}</label>
@@ -127,7 +135,7 @@
         </div>
 
         <div class="text-center">
-        <button class="btn btn-success border-0 rounded" name="tab" value="info"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+            <button class="btn btn-success border-0 rounded" name="tab" value="info"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </div>
     </div>
 </div>

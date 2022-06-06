@@ -2,11 +2,7 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('layout')
 
-@section('rightFixedTop')
-<div class="col-xs-2 mr-1">
-    <a class="btn btn-success btn-sm" href="{{ route('class.create') }}"><i class="fas fa-plus"> </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
-</div>
-@endsection
+
 
 @section('body')
 @if(sizeof($courseList) == 0)

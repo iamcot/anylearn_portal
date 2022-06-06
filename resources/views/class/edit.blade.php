@@ -1,8 +1,5 @@
 @extends('layout')
 
-@section('rightFixedTop')
-<a class="btn btn-sm btn-success" href="{{ route('class.create') }}"><i class="fas fa-plus"></i> <span class="mobile-no-text">@lang('Thêm mới')</span></a>
-@endsection
 
 @section('body')
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">

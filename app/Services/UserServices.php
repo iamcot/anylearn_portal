@@ -24,18 +24,29 @@ class UserServices
 {
     private $roles = [
         UserConstants::ROLE_ADMIN => [],
-        UserConstants::ROLE_MOD => [],
-        UserConstants::ROLE_TEACHER => [
-            'school',
+        UserConstants::ROLE_MOD => [
         ],
-        UserConstants::ROLE_SCHOOL => [
-            'school'
+        UserConstants::ROLE_SALE => [
+            'class',
+            'user.members',
+        ],
+        UserConstants::ROLE_CONTENT => [
+            'class',
+            'article',
+            'config.guide',
+            'helpcenter'
+        ],
+        UserConstants::ROLE_FIN => [
+            'fin.expenditures',
+            'transaction',
+            'voucher',
+            'order.open'
         ],
     ];
 
     private $blocked = [
         UserConstants::ROLE_MOD => [
-            'root',
+            'admin',
         ],
     ];
 

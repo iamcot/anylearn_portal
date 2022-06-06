@@ -54,7 +54,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'root')) {
+        if (!$userService->haveAccess($user->role, 'admin')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)
@@ -68,7 +68,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'user.members')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $userM = new User();
@@ -101,7 +101,7 @@ class UserController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.member')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
@@ -155,7 +155,7 @@ class UserController extends Controller
         }
         $userService = new UserServices();
         $user = Auth::user();
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'root')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         } else {
             $this->data['user'] = User::find($userId);
@@ -170,7 +170,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'root')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $rs = User::find($userId)->update(['status' => DB::raw('1 - status')]);

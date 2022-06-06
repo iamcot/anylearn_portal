@@ -8,7 +8,7 @@
         </div>
         <div class="row mt-5 ml-5 mr-5 text-center index_block">
             <div class="col-lg-4 mb-3">
-                <a href="?r=member">
+                <a href="?r=member&s={{ request('sale') }}">
                     <img src="/cdn/img/register/index_member.png">
                 </a>
             </div>

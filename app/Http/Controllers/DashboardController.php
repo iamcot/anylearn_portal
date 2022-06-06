@@ -19,12 +19,12 @@ class DashboardController extends Controller
     public function index()
     {
         $userM = new User();
-        if ($userM->needUpdateDocs()) {
-            $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
-        }
+        // if ($userM->needUpdateDocs()) {
+        //     $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
+        // }
         $this->data['navText'] = __('Bảng thông tin');
         $userServ = new UserServices();
-        if ($userServ->haveAccess(Auth::user()->role, 'admin')) {
+        if ($userServ->isMod()) {
             $dashServ = new DashboardServices();
             $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByDay());
             $this->data['topUsers'] = $dashServ->topUser();

@@ -6,6 +6,9 @@ class UserConstants
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_MOD = 'mod';
+    const ROLE_CONTENT = 'content';
+    const ROLE_SALE = 'sale';
+    const ROLE_FIN = 'fin';
     const ROLE_MEMBER = 'member';
     const ROLE_TEACHER = 'teacher';
     const ROLE_SCHOOL = 'school';
@@ -20,7 +23,7 @@ class UserConstants
     const PP = 20;
 
     public static $memberRoles = [self::ROLE_MEMBER, self::ROLE_TEACHER, self::ROLE_SCHOOL];
-    public static $modRoles = [self::ROLE_MOD, self::ROLE_ADMIN];
+    public static $modRoles = [self::ROLE_MOD, self::ROLE_ADMIN, self::ROLE_SALE, self::ROLE_CONTENT, self::ROLE_FIN];
 
     public static $statusText = [
         self::STATUS_ACTIVE => 'Hoạt động',
@@ -31,4 +34,5 @@ class UserConstants
     const CONTRACT_NEW = 1;
     const CONTRACT_SIGNED = 10;
     const CONTRACT_APPROVED = 99;
+
 }

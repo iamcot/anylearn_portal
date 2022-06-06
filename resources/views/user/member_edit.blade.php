@@ -61,6 +61,15 @@
                         <small>Có thể tham khảo ID ngoài danh sách thành viên.</small>
                     </div>
                 </div>
+                @if($userServ->haveAccess(Auth::user()->role, 'user.sale'))
+                <div class="form-group row">
+                    <label for="sale_id" class="col-md-2 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
+                    <div class="col-md-8">
+                        <input id="sale_id" type="text" class="form-control @error('sale_id') is-invalid @enderror" name="sale_id" value="{{ old('sale_id', !empty($user) ? $user->sale_id : '') }}">
+                        <small>Có thể tham khảo ID ngoài danh sách nhân viên.</small>
+                    </div>
+                </div>
+                @endif
                 <div class="form-group row">
                     <label for="email" class="col-md-2 col-form-label text-md-right">{{ __('Email') }}</label>
                     <div class="col-md-8">

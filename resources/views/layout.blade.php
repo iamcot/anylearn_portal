@@ -1,3 +1,4 @@
+@inject('userServ','App\Services\UserServices')
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,7 +23,7 @@
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
-        @if (auth()->user()->role == 'admin')
+        @if ($userServ->isMod())
             @include('layout.sidebar')
         @else
          @include('layout.me_sidebar')

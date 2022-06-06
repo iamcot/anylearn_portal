@@ -58,6 +58,7 @@ class RegisterController extends Controller
         $data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
+        $data['sale_id'] = $request->get('s');
 
         $data['role'] = $request->get('r');
         if ($data['role'] == 'member') {
