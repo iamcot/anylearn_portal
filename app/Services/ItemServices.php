@@ -31,7 +31,8 @@ class ItemServices
 {
     const PP = 20;
 
-    public function footerNews() {
+    public function footerNews()
+    {
         return Article::where('status', 1)->orderby('id', 'desc')->take(4)->get();
     }
 
@@ -158,6 +159,11 @@ class ItemServices
                     $courses = $courses->where('title', 'like', '%' . $request->input('s') . '%');
                     break;
             }
+        }
+        $requester = Auth::user();
+        if ($requester->role == UserConstants::ROLE_SALE) {
+            $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
+                ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
         }
         $courses = $courses->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')

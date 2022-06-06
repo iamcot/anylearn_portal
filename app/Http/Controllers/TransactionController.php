@@ -67,6 +67,31 @@ class TransactionController extends Controller
         return view('transaction.order_open', $this->data);
     }
 
+    public function allOrder(Request $request)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->haveAccess($user->role, 'order.all')) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $orders = DB::table('orders')
+            ->join('users', 'users.id', '=', 'orders.user_id')
+            ->where('orders.status', OrderConstants::STATUS_PAY_PENDING);
+
+        if (Auth::user()->role == UserConstants::ROLE_SALE) {
+            $orders = $orders->where('orders.sale_id', $user->id);
+        }
+        $this->data['orders'] = $orders->select(
+            'orders.*',
+            'users.name',
+            'users.phone',
+            DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+        )
+            ->paginate();
+        $this->data['navText'] = __('Đơn hàng đã đặt');
+        return view('transaction.order_all', $this->data);
+    }
+
     public function approveOrder($orderId)
     {
         $userService = new UserServices();
@@ -120,7 +145,7 @@ class TransactionController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->isMod($user->role)) {
+        if (!$userService->haveAccess($user->role, 'commission')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['transaction'] = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
@@ -528,22 +553,22 @@ class TransactionController extends Controller
         $this->data['grossProfit'] = $transService->grossProfit($from, $to, $partner);
         $this->data['netProfit'] = $transService->netProfit($from, $to, $partner);
         $this->data['transaction'] = Transaction::where('transactions.created_at', '>', $from)
-        ->where('transactions.created_at', '<', $to)
-        ->where('transactions.status', '<', 99)
-        ->where('transactions.content', '!=', 'Thanh toán trực tuyến');
+            ->where('transactions.created_at', '<', $to)
+            ->where('transactions.status', '<', 99)
+            ->where('transactions.content', '!=', 'Thanh toán trực tuyến');
         if ($partner) {
             $this->data['transaction'] = $this->data['transaction']
-            ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
-            ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->where('items.user_id', $partner);
+                ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('items.user_id', $partner);
         }
         $this->data['transaction'] = $this->data['transaction']
-        ->select('transactions.*')
-        ->orderby('transactions.id', 'desc')
-        ->paginate();
+            ->select('transactions.*')
+            ->orderby('transactions.id', 'desc')
+            ->paginate();
         $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
-        ->orderby('first_name')
-        ->get();
+            ->orderby('first_name')
+            ->get();
         $this->data['navText'] = __('Báo cáo doanh thu');
         return view('transaction.salereport', $this->data);
     }

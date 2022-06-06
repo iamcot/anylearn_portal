@@ -248,6 +248,10 @@ class User extends Authenticatable
                     break;
             }
         }
+        $requester = Auth::user();
+        if ($requester->role == UserConstants::ROLE_SALE) {
+            $members = $members->where('sale_id', $requester->id);
+        }
         $members = $members
             ->orderby('is_hot', 'desc')
             ->orderby('boost_score', 'desc')

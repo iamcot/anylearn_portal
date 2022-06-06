@@ -29,6 +29,7 @@ class UserServices
         UserConstants::ROLE_SALE => [
             'class',
             'user.members',
+            'order.all'
         ],
         UserConstants::ROLE_CONTENT => [
             'class',

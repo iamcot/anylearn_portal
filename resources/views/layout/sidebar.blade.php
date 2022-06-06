@@ -55,6 +55,13 @@
             <span>@lang('Duyệt đơn hàng')</span></a>
     </li>
     @endif
+    @if($userService->haveAccess($role, 'order.all'))
+    <li class="nav-item {{ $route == 'order.all' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('order.all') }}">
+            <i class="fas fa-fw fa-shopping-cart"></i>
+            <span>@lang('Xem đơn hàng')</span></a>
+    </li>
+    @endif
     @if($userService->haveAccess($role, 'useractions'))
     <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" 

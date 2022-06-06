@@ -170,6 +170,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::get('/transaction', 'TransactionController@transaction')->name('transaction');
     Route::get('/order-open', 'TransactionController@orderOpen')->name('order.open');
+    Route::get('/order-all', 'TransactionController@allOrder')->name('order.all');
     Route::get('/order-approve/{orderId}', 'TransactionController@approveOrder')->name('order.approve');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
