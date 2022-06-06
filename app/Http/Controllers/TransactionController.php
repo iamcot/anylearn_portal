@@ -75,8 +75,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $orders = DB::table('orders')
-            ->join('users', 'users.id', '=', 'orders.user_id')
-            ->where('orders.status', OrderConstants::STATUS_PAY_PENDING);
+            ->join('users', 'users.id', '=', 'orders.user_id');
 
         if (Auth::user()->role == UserConstants::ROLE_SALE) {
             $orders = $orders->where('orders.sale_id', $user->id);
