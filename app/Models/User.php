@@ -92,7 +92,7 @@ class User extends Authenticatable
             'status' => UserConstants::STATUS_ACTIVE,
             'update_doc' => UserConstants::STATUS_ACTIVE,
             'refcode' => $data['phone'],
-            'sale_id' => $data['sale_id'],
+            'sale_id' => isset($data['sale_id']) ? $data['sale_id'] : null,
 
         ];
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
@@ -177,7 +177,7 @@ class User extends Authenticatable
             'phone' => $input['phone'],
             'role' => $input['role'],
             'user_id' => $input['user_id'],
-            'sale_id' => $input['sale_id'],
+            'sale_id' => isset($input['sale_id']) ? $input['sale_id'] : null,
             'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
 
