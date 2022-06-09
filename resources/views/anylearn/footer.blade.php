@@ -15,6 +15,7 @@
         <div class="row">
             <div class="col-md-4">
                 <ul class="list-unstyled text-secondary">
+                    <li><i class="fas fa-briefcase text-success m-2"></i>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN</li>
                     <li><i class="fas fa-briefcase text-success m-2"></i>MSKD: 0316363793</li>
                     <li><i class="fas fa-envelope text-success m-2"></i>info@anylearn.vn</li>
                     <li><i class="fas fa-phone text-success m-2"></i>+84 37 490 0344</li>

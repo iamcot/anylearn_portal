@@ -328,6 +328,9 @@ footer h6 {
 } */
 
 @media screen and (max-width: 768px) {
+    #banners img {
+        max-height: 200px;
+    }
     #search {
         max-width: 93%;
     }
