@@ -132,6 +132,10 @@ class User extends Authenticatable
 
     public function createNewMod($input)
     {
+        $exits = $this->where('phone', $input['phone'])->first();
+        if ($exits) {
+            return 0;
+        }
         $obj = [
             'name' => $input['name'],
             'email' => $input['email'],
