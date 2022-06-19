@@ -165,6 +165,10 @@ footer {
     min-height: 300px;
 }
 
+.topic_box {
+    height: 200px;
+}
+
 #footer_call {
     position: fixed;
     bottom: 0;

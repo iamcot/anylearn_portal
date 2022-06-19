@@ -28,8 +28,8 @@
         <h5>Các chủ đề</h5>
         <div class="row">
             @foreach($topics as $topic)
-            <div class="col-xs-6 col-md-3">
-                <div class="border rounded-3 p-5 text-center">
+            <div class="col-xs-6 col-md-3 text-center mb-2">
+                <div class="border rounded-3 text-center p-5 topic_box d-flex align-items-center  justify-content-center">
                     <a class="fw-bold text-success text-decoration-none" href="{{ route('helpcenter.topic', ['url' => $topic->url]) }}">{{ $topic->title }}</a>
                 </div>
             </div>
