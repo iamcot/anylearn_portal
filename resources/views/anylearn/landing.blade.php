@@ -30,6 +30,7 @@
 </head>
 
 <body>
+<script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
     <section>
         <header>
             @include('anylearn.navbar')
