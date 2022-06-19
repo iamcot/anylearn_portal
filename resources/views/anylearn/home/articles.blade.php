@@ -3,7 +3,7 @@
 <section class="carousel3 mt-3">
     <div class="mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}">
-            <h5 class="m-2 fw-bold text-uppercase">{{ $title }}</h5>
+            <h2 class="m-2 fw-bold text-uppercase">{{ $title }}</h2>
             <div class="owl-carousel owl-theme" role="listbox">
                 @foreach($data as $article)
                 <div class="p-1">

@@ -58,7 +58,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">@lang('Có chắc bạn buồn đăng xuất?')</h5>
+                <h2 class="modal-title" id="exampleModalLabel">@lang('Có chắc bạn buồn đăng xuất?')</h2>
                 <button class=" btn-close close" type="button" data-bs-dismiss="modal" aria-label="Close">
                 </button>
             </div>

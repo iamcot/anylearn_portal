@@ -1,5 +1,10 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('anylearn.layout')
+@section('title')
+Các Chuyên Gia & Giảng Viên Hàng Đầu - anyLEARN
+@endsection
+@section('description')
+Các chuyên gia & giảng viên tại anyLEARN là những cá nhân thành công trong công việc và ngành nghề của họ. Tại anyLEARN, họ mong muốn dùng kinh nghiệm của mình để truyền đạt và tạo ra giá trị cho học viên.@endsection
 @section('body')
 <div class="row">
     <div class="col-md-9">
@@ -21,7 +26,7 @@
                                 <img class="img-fluid" src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}">
                             </div>
                             <div class="description">
-                                <h6 class="fw-bold">{{ $school->name }}</h6>
+                                <h3 class="fw-bold">{{ $school->name }}</h3>
                                 <div>
                                     <ul class="list-unstyled list-inline">
                                         @foreach($school->categories as $category)

@@ -3,33 +3,19 @@ body {
     /* background-color: #F1F1F1; */
 }
 
-h2 {
-    font-size: 1.25rem;
-}
-
-.blink_me {
-    animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
-}
-
 #wrapper #content-wrapper {
-    background-color: #F1F1F1;
+    background-color: rgb(247, 247, 247);
 }
 
 #admin-top .page-link,
 #admin-top .nav-link.active {
-    color: #01A652 !important;
+    color: rgb(75, 163, 91) !important;
 }
 
 #admin-top .page-item.active .page-link {
     color: #fff !important;
-    background-color: #01A652 !important;
-    border-color: #01A652 !important;
+    background-color: rgb(75, 163, 91) !important;
+    border-color: rgb(75, 163, 91) !important;
 }
 
 .is-content {
@@ -38,7 +24,7 @@ h2 {
 }
 
 .bg-topbg {
-    background: rgb(0, 91, 168);
+    background: rgb(42, 63, 131);
 }
 
 .container {
@@ -46,16 +32,16 @@ h2 {
 }
 
 .text-success {
-    color: #01A652 !important;
+    color: rgb(75, 163, 91) !important;
 }
 
 .bg-success,
 .btn-success {
-    background-color: #01A652 !important;
+    background-color: rgb(75, 163, 91) !important;
 }
 
 .btn-primary {
-    background-color: rgb(0, 91, 168) !important;
+    background-color: rgb(42, 63, 131) !important;
 }
 
 nav a {
@@ -165,7 +151,7 @@ footer {
     min-height: 300px;
 }
 
-footer .head_text {
+footer h6 {
     line-height: 80px;
     vertical-align: bottom;
     font-size: 20px;

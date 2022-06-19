@@ -1,5 +1,10 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('anylearn.layout')
+@section('title')
+Hệ Thống Các Khóa Học về Kĩ Năng Mềm, Kĩ Năng Cứng và các Chương Trình Học - anyLEARN
+@endsection
+@section('description')
+Tổng hợp các khóa học, chương trình học được kiểm duyệt và đánh giá bởi các chuyên gia tại anyLEARN. @endsection
 @section('body')
 @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
 @if(!empty($author))
@@ -79,7 +84,7 @@
         <div class="card shadow">
             <div class="card-body">
                 <form action="" method="get" id="schoolsearch">
-                    <h6>BỘ LỌC</h6>
+                    <h2>BỘ LỌC</h2>
                     <label for="customRange1" class="form-label">Giá</label>
                     <input name="price" type="range" class="form-range" min="0" max="20000000" step="10000" id="priceRange" value="{{ request()->get('price') ?? 1000000 }}" oninput="onPriceChange(this)">
                     <div>

@@ -1,13 +1,15 @@
 @extends('anylearn.layout')
 @section('title')
-anyLEARN - HỌC không giới hạn
+Trang Web Tổng Hợp và Chi Tiết Các Trường Học, Khóa Học Online và Offline Đáng Tin Cậy - anyLEARN
 @endsection
+@section('description')
+anyLEARN là trang web tổng hợp chi tiết các trường học, khóa học online và offline, được đánh giá bởi những chuyên gia hàng đầu của chúng tôi là những hiệu trưởng, giáo sư của các trường đại học. Do đó tạo ra một hệ thống tìm kiếm khóa học đáng tin cậy cho khách hàng của mình.@endsection
 @section('body')
 @include('anylearn.home.banners')
 <section class="text-center">
-    <h5 class="mt-3 fw-bold text-secondary">
+    <h2 class="mt-3 fw-bold text-secondary">
         Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online
-    </h5>
+    </h2>
     <div class="mt-3 text-center" id="search">
         <form action="/classes" method="get" id="schoolsearch">
             <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>

@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="anyLEARN là nền tảng cung cấp dịch vụ trong lĩnh vực Giáo dục - Đào tạo, đi đầu về chuyển đổi số trong ngành giáo dục tại Việt Nam.">
     <meta name="author" content="">
-    <title>anyLEARN - HỌC không giới hạn</title>
+    <title>Về Chúng Tôi - anyLEARN Trang Web Tổng Hợp và Chi Tiết Các Trường Học, Khóa Học Online và Offline</title>
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link href="/cdn/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">

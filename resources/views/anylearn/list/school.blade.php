@@ -1,5 +1,10 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('anylearn.layout')
+@section('title')
+Hệ Thống Các Trường Học, Các Khóa Đào Tạo - anyLEARN
+@endsection
+@section('description')
+Hệ Thống Các Trường Học, Các Khóa Đào Tạo tại anyLEARN được đánh giá dựa vào các tiêu chí và quy định về trường học đạt chuẩn.@endsection
 @section('body')
 @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
 <div class="row">
@@ -20,7 +25,7 @@
                                 <img class="img-fluid" src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}">
                             </div>
                             <div class="description">
-                                <h6 class="fw-bold">{{ $school->name }}</h6>
+                                <h3 class="fw-bold">{{ $school->name }}</h3>
                                 <div>
                                     <ul class="list-unstyled list-inline">
                                         @foreach($school->categories as $category)
