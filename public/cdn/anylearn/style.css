@@ -165,6 +165,20 @@ footer {
     min-height: 300px;
 }
 
+#footer_call {
+    position: fixed;
+    bottom: 0;
+    height: 40px;
+    background: #000;
+    width: 100%;
+    text-align: center;
+}
+
+#footer_call a {
+    text-decoration: none !important;
+    color: #fff !important;
+}
+
 footer .head_text {
     line-height: 80px;
     vertical-align: bottom;

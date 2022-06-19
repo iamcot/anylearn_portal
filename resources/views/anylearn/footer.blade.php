@@ -18,7 +18,7 @@
                     <li><i class="fas fa-briefcase text-success m-2"></i>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN</li>
                     <li><i class="fas fa-briefcase text-success m-2"></i>MSKD: 0316363793</li>
                     <li><i class="fas fa-envelope text-success m-2"></i>info@anylearn.vn</li>
-                    <li><i class="fas fa-phone text-success m-2 blink_me"></i><a href="tel:0374900344">+84 37 490 0344</a></li>
+                    <li><i class="fas fa-phone text-success m-2"></i><a href="tel:0374900344">+84 37 490 0344</a></li>
                     <li><i class="fas fa-map-marker-alt text-success m-2"></i>352/28A Nguyễn Tất Thành, P.13, Q.4,<br> TP Hồ Chí Minh, Việt Nam
                     </li>
                 </ul>
@@ -48,3 +48,4 @@
         </div>
     </div>
 </footer>
+<div id="footer_call"><i class="fas fa-phone text-success m-2 blink_me"></i><a href="tel:0374900344">+84 37 490 0344</a></div>
