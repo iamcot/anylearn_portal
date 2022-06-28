@@ -50,7 +50,12 @@ class Notification extends Model
         //email
         if (isset($config['email'])) {
             if (!empty($user->email)) {
-                Mail::to($user->email)->send(new $config['email']($data));
+                try {
+                    Mail::to($user->email)->send(new $config['email']($data));
+                } catch(\Exception $ex) {
+                    Log::error($ex);
+                }
+                
             }
         }
         if (!$user->notif_token) {
