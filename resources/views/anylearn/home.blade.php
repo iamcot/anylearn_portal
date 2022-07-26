@@ -4,6 +4,7 @@ Trang booking trường học Quốc tế, học viện, chuyên gia uy tín - a
 @endsection
 @section('description')
 anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải quyết được vấn đề tìm trường học Quốc tế, khóa học, chuyên gia chất lượng cho con. Được thẩm định qua 4 bước chọn lọc. Khách quan, nhiều lợi ích tích điểm để tiết kiệm chi phí học tập lâu dài.
+@endsection
 @section('body')
 @include('anylearn.home.banners')
 <section class="text-center">
