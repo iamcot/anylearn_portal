@@ -226,6 +226,7 @@ class TransactionController extends Controller
             $user = Auth::user();
             $this->data['api_token'] = null;
         }
+        $this->data['user'] = $user;
 
         $this->detectUserAgent($request);
 
@@ -245,12 +246,18 @@ class TransactionController extends Controller
                 ->get();
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
-            $voucherUsed = DB::table('vouchers_used')
-                ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
-                ->select('vouchers_used.id', 'vouchers.voucher')
+            $pointUsed = Transaction::where('type', ConfigConstants::TRANSACTION_EXCHANGE)
                 ->where('order_id', $openOrder->id)->first();
-            if ($voucherUsed) {
-                $this->data['voucherUsed'] = $voucherUsed;
+            if ($pointUsed) {
+                $this->data['pointUsed'] = $pointUsed;
+            } else {
+                $voucherUsed = DB::table('vouchers_used')
+                    ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
+                    ->select('vouchers_used.id', 'vouchers.voucher')
+                    ->where('order_id', $openOrder->id)->first();
+                if ($voucherUsed) {
+                    $this->data['voucherUsed'] = $voucherUsed;
+                }
             }
         } else {
             $this->data['order'] = null;
@@ -268,10 +275,73 @@ class TransactionController extends Controller
         }
         $configM = new Configuration();
         $doc = $configM->getDoc(ConfigConstants::GUIDE_PAYMENT_TERM);
+        $this->data['bonusRate'] = $configM->get(ConfigConstants::CONFIG_BONUS_RATE);
         if ($doc) {
             $this->data['term'] = $doc->value;
         }
         return view(env('TEMPLATE', '') . 'checkout.cart', $this->data);
+    }
+
+    public function exchangePoint(Request $request)
+    {
+        if ($request->get('_user')) {
+            $user = $request->get('_user');
+            $this->data['api_token'] = $user->api_token;
+        } else {
+            $user = Auth::user();
+            $this->data['api_token'] = null;
+        }
+        $orderId = $request->get('order_id');
+        $order = Order::find($orderId);
+        if (empty($order)) {
+            return redirect()->back()->with('notify', 'Đơn hàng không hợp lệ.');
+        }
+
+        if ($request->get('cart_action') == 'exchangePoint') {
+            $point = $request->get('payment_point');
+
+            $configM = new Configuration();
+            $bonusRate = $configM->get(ConfigConstants::CONFIG_BONUS_RATE);
+            $pointRequired = $order->amount / $bonusRate;
+            $pointRequired = $pointRequired > 1 ? $pointRequired : 1;
+            if (!$point || $point < 0 || $pointRequired < $point) {
+                return redirect()->back()->with('notify', 'Số anyPoint không phù hợp.');
+            }
+            try {
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'type' => ConfigConstants::TRANSACTION_EXCHANGE,
+                    'amount' => $point,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'pay_info' => '',
+                    'content' => 'Đổi ' . $point . ' cho đơn #' . $order->id,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'order_id' => $order->id
+                ]);
+                User::find($user->id)->update([
+                    'wallet_c' => ($user->wallet_c - $point)
+                ]);
+            } catch (Exception $ex) {
+                return redirect()->back()->with('notify', $ex->getMessage());
+            }
+
+            $transService = new TransactionService();
+            $res = $transService->recalculateOrderAmountWithAnyPoint($orderId, $point, $bonusRate);
+            if (!$res) {
+                return redirect()->back()->with('notify', 'Có lỗi khi sử dụng anyPoint. Vui vòng thử lại hoặc liên hệ bộ phận hỗ trợ.');
+            }
+
+            return redirect()->back()->with('notify', 'Sử dụng anyPoint thành công.');
+        } else if ($request->get('cart_action') == 'remove_point') {
+            $tnx = Transaction::find($request->get('point_used_id'));
+            User::find($user->id)->update([
+                'wallet_c' => ($user->wallet_c + $tnx->amount)
+            ]);
+            $tnx->delete();
+            $transService = new TransactionService();
+            $res = $transService->recalculateOrderAmount($orderId);
+            return redirect()->back()->with('notify', 'Đã huỷ đổi điểm.');
+        }
     }
 
     public function applyVoucher(Request $request)
@@ -334,6 +404,12 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Mã voucher trong đơn hàng không còn hợp lệ .');
         }
 
+        if ($payment == 'free') {
+            $transService = new TransactionService();
+            $transService->approveRegistrationAfterWebPayment($orderId);
+            return redirect()->route('checkout.finish', ['order_id' => $orderId]);
+        }
+        
         if ($payment == 'atm') {
             $transService->paymentPending($orderId);
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);

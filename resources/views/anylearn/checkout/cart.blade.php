@@ -1,4 +1,5 @@
 @inject('itemServ','App\Services\ItemServices')
+@inject('transServ','App\Services\TransactionService')
 @extends('anylearn.layout')
 @if(empty($order))
 @section('body')
@@ -50,11 +51,44 @@
 
             </thead>
         </table>
+        @if(empty($voucherUsed))
         @if($api_token)
-        <form method="POST" action="{{ route('applyvoucher', ['api_token' => $api_token]) }}" id="cartvoucher">
-            @else
-            <form method="POST" action="{{ route('applyvoucher') }}" id="cartvoucher">
+            <form method="POST" action="{{ route('exchangePoint', ['api_token' => $api_token]) }}" id="exchangePoint">
+        @else
+            <form method="POST" action="{{ route('exchangePoint') }}" id="exchangePoint">
+        @endif
+                @csrf
+                <input type="hidden" name="order_id" value="{{ $order->id }}">
+                @if(!empty($pointUsed))
+                <p class="ps-3 fw-bold text-secondary">Đã đổi: <span class="text-success">{{ $pointUsed->amount }} anyPoint</span>
+                    <input type="hidden" name="point_used_id" value="{{ $pointUsed->id }}">
+                    <button class="btn-close" name="cart_action" value="remove_point"></button>
+                </p>
+                @else
+                <div class="p-3">
+                    <label for="" class="fw-bold text-secondary">Bạn đang có <strong class="text-success">{{ $user->wallet_c }}</strong> anyPoint.
+                    Bạn có thể sử dụng tối đa <strong class="text-danger">{{ $transServ->calRequiredPoint($order->amount, $user->wallet_c, $bonusRate) }}</strong> anyPoint cho đơn hàng này.
+                    <a href="javascript:$('#payment_point_input').val({{ $transServ->calRequiredPoint($order->amount, $user->wallet_c, $bonusRate) }})">Dùng hết</a>
+                </label>
+                    <div class="row">
+                        <div class="form-group col-8 col-lg-4">
+                            <input type="number" min=0 max="{{ $transServ->calRequiredPoint($order->amount, $user->wallet_c, $bonusRate) }}" class=" rounded-pill form-control" id="payment_point_input" name="payment_point" value="{{ !empty($pointUsed) ? $pointUsed->amount : '' }}">
+                        </div>
+                        <div class="form-group col-4">
+                            <button class="btn btn-success rounded-pill border-0" name="cart_action" value="exchangePoint">Sử dụng anyPoint</button>
+                        </div>
+                    </div>
+                </div>
                 @endif
+            </form>
+        @endif
+        
+        @if(empty($pointUsed))
+        @if($api_token)
+            <form method="POST" action="{{ route('applyvoucher', ['api_token' => $api_token]) }}" id="cartvoucher">
+        @else
+            <form method="POST" action="{{ route('applyvoucher') }}" id="cartvoucher">
+        @endif
                 @csrf
                 <input type="hidden" name="order_id" value="{{ $order->id }}">
                 @if(!empty($voucherUsed))
@@ -76,6 +110,7 @@
                 </div>
                 @endif
             </form>
+        @endif
     </div>
 
     <div class="card-footer">
@@ -97,22 +132,30 @@
         @if(!empty($order))
         <input type="hidden" name="order_id" value="{{ $order->id }}">
         @endif
+
+       
         <div class="card mt-3 mb-5 border-left-success shadow">
             <div class="card-header">
                 <h5 class="modal-title m-0 text-secondary"><i class="fa fa-wallet text-success"></i> Phương thức Thanh toán</h5>
             </div>
+            
             <div class="card-body">
+            @if ($order->amount > 0)
                 <ul class="list-unstyled">
                     @foreach($payments as $key => $payment)
                     <li><input required type="radio" name="payment" value="{{ $key }}" id="radio_{{ $key }}"> <label for="radio_{{ $key }}"><strong>{{ $payment['title'] }}</strong></label></li>
                     @endforeach
                 </ul>
+            @else 
+            <input  type="hidden" name="payment" value="free">
+            @endif
                 <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
-                <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán và <a target="_BLANK" href="/privacy">chính sách bảo mật</a> của Công ty</label></p>
+                <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" checked required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán và <a target="_BLANK" href="/privacy">chính sách bảo mật</a> của Công ty</label></p>
                 <button class="btn btn-success border-0 rounded-pill mt-2" name="cart_action" value="pay">THANH TOÁN</button>
 
             </div>
         </div>
+      
     </form>
     @endsection
     @section('jscript')

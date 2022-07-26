@@ -203,6 +203,14 @@ return [
         'title' => 'Đăng ký học đã được xác nhận thanh toán',
         'template' => 'Khoá học bạn đăng ký đã được thanh toán. Vui lòng kiểm tra lịch học.',
         'route' => '/account/calendar',
+        // 'email' => 'App\Mail\OrderSuccess',
+    ],
+
+    NotifConstants::COURSE_REGISTER_PENDING =>  [
+        'title' => 'Khóa học đang chờ được thanh toán',
+        'template' => 'Có một khóa học đang chờ được thanh toán, vui lòng kiểm tra email hoặc trên website để biết thêm thông tin nhé.',
+        'route' => '',
+        // 'email' => 'App\Mail\OrderPending',
     ],
 
     NotifConstants::SYSTEM_NOTIF =>  [

@@ -320,7 +320,8 @@ class TransactionService
         return $result;
     }
 
-    public function findSaleIdFromBuyerOrItem($buyerId, $itemId) {
+    public function findSaleIdFromBuyerOrItem($buyerId, $itemId)
+    {
         $buyer = User::find($buyerId);
         if ($buyer->sale_id) {
             return $buyer->sale_id;
@@ -351,6 +352,8 @@ class TransactionService
                 'amount' => DB::raw('amount - ' . $od->paid_price),
                 'quantity' => DB::raw('quantity - 1'),
             ]);
+            
+            $this->removeExchangePoint($user->id, $order->id);
             if ($order->quantity == 1) {
                 Transaction::where('order_id', $order->id)->delete();
                 VoucherUsed::where('order_id', $order->id)->delete();
@@ -364,6 +367,28 @@ class TransactionService
                 }
             }
         });
+        return true;
+    }
+
+    public function removeExchangePoint($userId, $orderId)
+    {
+        try {
+            $tnx = Transaction::where('type', ConfigConstants::TRANSACTION_EXCHANGE)
+                ->where('order_id', $orderId)
+                ->where('user_id', $userId)
+                ->first();
+
+            dd($userId, $orderId, $tnx);
+            if (!$tnx) {
+                return false;
+            }
+            User::find($userId)->update([
+                'wallet_c' => DB::raw('wallet_c + ' . $tnx->amount),
+            ]);
+            Transaction::find($tnx->id)->delete();
+        } catch (\Exception $ex) {
+            return false;
+        }
         return true;
     }
 
@@ -414,6 +439,20 @@ class TransactionService
         if ($amount === false) {
             return false;
         }
+
+        Order::find($orderId)->update(
+            ['amount' => $amount],
+        );
+        return true;
+    }
+
+    public function recalculateOrderAmountWithAnyPoint($orderId, $pointAmount, $bonusRate)
+    {
+        $order = Order::find($orderId);
+
+        $amount = false;
+        $amount = $order->amount - ($pointAmount * ($bonusRate ?? 0));
+        $amount = $amount > 0 ? $amount : 0;
 
         Order::find($orderId)->update(
             ['amount' => $amount],
@@ -523,7 +562,11 @@ class TransactionService
             ]);
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
-        // $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, []);
+        $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
+            'name' => '',
+            'class' => '',
+            'school' => '',
+        ]);
         return true;
     }
 
@@ -540,6 +583,13 @@ class TransactionService
             'status' => OrderConstants::STATUS_PAY_PENDING
         ]);
         Log::debug("Update order to pending", ["orderId" => $openOrder->id]);
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::COURSE_REGISTER_PENDING, $openOrder->user_id, [
+            'name' => '',
+            'class' => '',
+            'school' => '',
+            'orderId' => $openOrder->id
+        ]);
         return true;
     }
 
@@ -635,5 +685,12 @@ class TransactionService
             ->where('status', '<', 99)
             ->sum('amount');
         return $grossProfit - $expend;
+    }
+
+    public function calRequiredPoint($orderAmount, $wallet, $rate)
+    {
+        $pointForOrder = $orderAmount / $rate;
+        $pointForOrder = $pointForOrder > 1 ? $pointForOrder : 1;
+        return ceil($wallet > $pointForOrder ? $pointForOrder : $wallet);
     }
 }

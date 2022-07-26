@@ -1,9 +1,9 @@
 @extends('anylearn.layout')
 @section('title')
-Trang Web Tổng Hợp và Chi Tiết Các Trường Học, Khóa Học Online và Offline Đáng Tin Cậy - anyLEARN
+Trang booking trường học Quốc tế, học viện, chuyên gia uy tín - anyLEARN
 @endsection
 @section('description')
-anyLEARN là trang web tổng hợp chi tiết các trường học, khóa học online và offline, được đánh giá bởi những chuyên gia hàng đầu của chúng tôi là những hiệu trưởng, giáo sư của các trường đại học. Do đó tạo ra một hệ thống tìm kiếm khóa học đáng tin cậy cho khách hàng của mình.@endsection
+anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải quyết được vấn đề tìm trường học Quốc tế, khóa học, chuyên gia chất lượng cho con. Được thẩm định qua 4 bước chọn lọc. Khách quan, nhiều lợi ích tích điểm để tiết kiệm chi phí học tập lâu dài.
 @section('body')
 @include('anylearn.home.banners')
 <section class="text-center">
