@@ -57,12 +57,12 @@ class OrderDetail extends Model
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
-                'items.location',
+                DB::raw('ifnull(items.location, "") AS location'),
                 'items.id as item_id',
                 'items.nolimit_time',
                 'u2.id AS child_id',
                 'u2.name AS child_name',
-                DB::raw('ifnull(items.image, "")'),
+                DB::raw('ifnull(items.image, "") AS image'),
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('schedules.date')
