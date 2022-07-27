@@ -49,7 +49,7 @@ class OrderDetail extends Model
             ->select(
                 'schedules.id',
                 'items.title',
-                'ifnull(items.subtype, "") as item_subtype',
+                DB::raw('ifnull(items.subtype, "") as item_subtype'),
                 'schedules.date as date',
                 'schedules.time_start as time',
                 'schedules.time_end',
