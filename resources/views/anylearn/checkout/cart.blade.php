@@ -157,31 +157,4 @@
         </div>
       
     </form>
-    @endsection
-    @section('jscript')
-    @parent
-    <script>
-        $("#cartsubmit").on("submit", function(event) {
-            event.preventDefault();
-            @if(!empty($order))
-            gtag("event", "purchase", {
-                "transaction_id": "{{ $order->id }}",
-                "currency": "VND",
-                "value": "{{ $order -> amount }}",
-                "items": [
-                    @foreach($detail as $item) {
-                        "id": "{{ $item->item_id }}",
-                        "name": "{{ $item->class_name ?? $item->title }}",
-                        "price": "{{ $item -> paid_price }}",
-                        "quantity": 1,
-                        "currency": "VND"
-                    }
-                    @endforeach
-                ]
-            });
-            $(this).unbind('submit').submit();
-            @endif
-        });
-    </script>
-    @endsection
-    @endif
+@endif
