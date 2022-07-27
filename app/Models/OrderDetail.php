@@ -62,7 +62,7 @@ class OrderDetail extends Model
                 'items.nolimit_time',
                 'u2.id AS child_id',
                 'u2.name AS child_name',
-                'items.image',
+                DB::raw('ifnull(items.image, "")'),
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('schedules.date')
