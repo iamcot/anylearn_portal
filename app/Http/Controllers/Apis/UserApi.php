@@ -426,6 +426,8 @@ class UserApi extends Controller
         $refUser = User::find($user->user_id);
         if ($refUser) {
             $inDirectCommission = DB::table('transactions')
+                ->join('orders', 'orders.id', '=', 'transactions.order_id')
+                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
                 ->where('transactions.order_id', $directCommission->order_id)
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
                 ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
@@ -446,6 +448,7 @@ class UserApi extends Controller
                         ->where('od.user_id', '=', $user->id);
                 })
                 ->join('orders', 'orders.id', '=', 'od.order_id')
+                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
                 ->where('orders.user_id', $joinedUserId)
                 ->where('od.item_id', $item->id)
                 ->where('transactions.user_id', $author->id)
@@ -475,6 +478,7 @@ class UserApi extends Controller
                 //get ALL transaction relate order id & item
                 $allTrans = DB::table('transactions')
                     ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
                     ->where('od.item_id', $item->id)
                     ->where('transactions.user_id', $author->id)
                     ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
@@ -492,6 +496,7 @@ class UserApi extends Controller
                 DB::table('transactions')
                     ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
                     ->where('od.item_id', $item->id)
+                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
                     ->where('transactions.user_id', $author->id)
                     ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
                     ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
