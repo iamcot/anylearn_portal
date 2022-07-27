@@ -42,7 +42,7 @@
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->created_at }}</td>
                     <td class="text-right">
-                        <a href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm">Duyệt đơn</a>
+                        <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve">Duyệt đơn</a>
                     </td>
                 </tr>
                 @endforeach
@@ -55,4 +55,24 @@
         <div>{{ $orders->links() }}</div>
     </div>
 </div>
+@endsection
+@section('jscript')
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NKEYYJ92SP', { 'send_page_view': false });
+    $(".admin-approve").on("click", function(event) {
+            var orderId = $(this).data('orderid');
+            var orderAmount = $(this).data('orderamount');
+            gtag("event", "purchase", {
+                "transaction_id": orderId,
+                "currency": "VND",
+                "value": orderAmount,
+                "items": []
+            });
+            return;
+        });
+</script>
 @endsection
