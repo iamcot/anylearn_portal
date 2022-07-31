@@ -57,12 +57,12 @@
 </div>
 @endsection
 @section('jscript')
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-170883972-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-NKEYYJ92SP', { 'send_page_view': false });
+    gtag('config', 'UA-170883972-1', { 'send_page_view': false });
     $(".admin-approve").on("click", function(event) {
             var orderId = $(this).data('orderid');
             var orderAmount = $(this).data('orderamount');

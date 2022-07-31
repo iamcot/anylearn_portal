@@ -18,12 +18,12 @@
     <link href="/cdn/anylearn/owl.carousel.min.css" rel="stylesheet">
     <link href="/cdn/anylearn/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     @yield('morestyle')
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170883972-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-NKEYYJ92SP');
+    gtag('config', 'UA-170883972-1');
     </script>
 </head>
 
