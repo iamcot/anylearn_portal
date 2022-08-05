@@ -19,6 +19,7 @@ class AddUserBanks extends Migration
             $table->string('token_num');
             $table->string('token_exp')->nullable();
             $table->string('card_type')->nullable();
+            $table->string('card_uid')->nullable()->index();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

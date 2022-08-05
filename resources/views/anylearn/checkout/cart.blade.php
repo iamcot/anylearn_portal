@@ -36,6 +36,9 @@
                         @else
                         {{ $item->title }}
                         @endif
+                        @if ($item->childId != $user->id)
+                        ({{ $item->childName }})
+                        @endif
                     </td>
                     <td class="text-right">{{ number_format($item->paid_price, 0, ",", ".") }}</td>
                     <td>
@@ -142,17 +145,22 @@
             <div class="card-body">
             @if ($order->amount > 0)
                 <ul class="list-unstyled">
-                    @foreach($payments as $key => $payment)
-                    <li><input required type="radio" name="payment" value="{{ $key }}" id="radio_{{ $key }}"> <label for="radio_{{ $key }}"><strong>{{ $payment['title'] }}</strong></label></li>
-                    @endforeach
+                    <li class="p-2"><input required type="radio" name="payment" value="atm" id="radio_atm"> <label for="radio_atm"><strong>Chuyển khoản ngân hàng</strong></label></li>
+                    @if(empty($saveBanks))
+                    <li class="p-2"><input required type="radio" name="payment" value="onepaylocal" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>Thanh toán trực tuyến bằng thẻ</strong></label></li>
+                    @else 
+                        @foreach($saveBanks as $bank)
+                        <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src = "{{ $bank['logo'] }}"> <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
+                        @endforeach
+                        <li class="p-2"><input required type="radio" name="payment" value="onepaylocal" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>Thanh toán bằng thẻ trực tuyến MỚI</strong></label></li>
+                    @endif
                 </ul>
+                <p class="fw-bold" style="display: none;"  id="save_card_block"><input type="checkbox" name="save_card" id="save_card"> <label for="save_card">Lưu thông tin thẻ cho lần thanh toán sau.</label></p>
             @else 
             <input  type="hidden" name="payment" value="free">
             @endif
-                <!-- <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div> -->
+                <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
                 <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" checked required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán và <a target="_BLANK" href="/privacy">chính sách bảo mật</a> của Công ty</label></p>
-                <p class="fw-bold" style="display: none;"  id="save_card_block"><input type="checkbox" name="save_card" id="save_card"> <label for="save_card">Lưu thông tin thẻ cho lần thanh toán sau.</label></p>
-                
                 <button class="btn btn-success border-0 rounded-pill mt-2" name="cart_action" value="pay">THANH TOÁN</button>
 
             </div>

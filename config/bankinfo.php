@@ -1,4 +1,12 @@
 <?php return [
+    'VC' => [
+        'name' => 'VISA CARD',
+        'logo' => 'https://mtf.onepay.vn/paygate/assets/img/VS.svg',
+    ],
+    'MC' => [
+        'name' => 'MASTER CARD',
+        'logo' => 'https://mtf.onepay.vn/paygate/assets/img/MC.svg',
+    ],
     '970425' => [
         'name' => 'ANBINH BANK',
         'logo' => 'https://mtf.onepay.vn/paygate/assets/img/banklogo/15_logo_full.svg',

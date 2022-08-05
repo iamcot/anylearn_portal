@@ -34,8 +34,8 @@ class OnepayLocal implements PaymentInterface
         $this->ip = $ip;
 
         $this->saveToken = isset($input['save_card']) ? $input['save_card'] : false;
-        $this->existsToken = isset($input['existsToken']) ? $input['existsToken'] : false;
-        $this->existsTokenExp = isset($input['existsTokenExp']) ? $input['existsTokenExp'] : false;
+        $this->existsToken = isset($input['token_num']) ? $input['token_num'] : false;
+        $this->existsTokenExp = isset($input['token_exp']) ? $input['token_exp'] : false;
 
         if ($this->saveToken || $this->existsToken) {
             $this->userId = isset($input['user_id']) ? $input['user_id'] : false;
@@ -103,6 +103,7 @@ class OnepayLocal implements PaymentInterface
             $data['newTokenNum'] = $response['vpc_TokenNum'];
             $data['newTokenExp'] = isset($response['vpc_TokenExp']) ? $response['vpc_TokenExp'] : '';
             $data['newCardType'] = isset($response['vpc_Card']) ? $response['vpc_Card'] : '';
+            $data['newCardUid'] = isset($response['vpc_CardUid']) ? $response['vpc_CardUid'] : '';
         }
 
         if (!$this->checkHash($response)) {

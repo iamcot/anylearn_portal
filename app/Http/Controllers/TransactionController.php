@@ -241,9 +241,10 @@ class TransactionController extends Controller
         if ($openOrder) {
             $orderDetails = DB::table('order_details AS od')
                 ->join('items', 'items.id', '=', 'od.item_id')
+                ->join('users AS u2', 'u2.id', '=', 'od.user_id')
                 ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
                 ->where('od.order_id', $openOrder->id)
-                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
+                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
                 ->get();
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
@@ -280,6 +281,25 @@ class TransactionController extends Controller
         if ($doc) {
             $this->data['term'] = $doc->value;
         }
+        $saveBanks = UserBank::where('user_id', $user->id)->where('status', 1)->get();
+        $this->data['saveBanks'] = [];
+        foreach($saveBanks as $bank) {
+            $config = config('bankinfo.' . $bank->card_type);
+            if (empty($config)) {
+                $config = [
+                    'name' => 'ATM',
+                    'logo' => 'https://mtf.onepay.vn/paygate/assets/img/atm_logo.png',
+                ];
+            }
+            $this->data['saveBanks'][] = [
+                'id' => $bank->id,
+                'tokenNum' => $bank->token_num,
+                'tokenExp' => $bank->token_exp,
+                'name' => $config['name'],
+                'logo' => $config['logo'],
+            ];
+        }
+
         return view(env('TEMPLATE', '') . 'checkout.cart', $this->data);
     }
 
@@ -399,6 +419,8 @@ class TransactionController extends Controller
         $payment = $request->get('payment');
         $orderId = $request->input('order_id');
         $saveCard = $request->get('save_card') == 'on' ? true : false;
+        $tokenNum = false;
+        $tokenExp = false;
         $transService = new TransactionService();
 
         $res = $transService->verifyVoucherInOrderBeforePayment($orderId);
@@ -416,6 +438,16 @@ class TransactionController extends Controller
             $transService->paymentPending($orderId);
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
+        if ($payment != 'onepaylocal') {
+            $existsBank = UserBank::where('id', $payment)->where('user_id', $user->id)->first();
+            if (!$existsBank) {
+                return redirect()->back()->with('notify', 'Phương thức thanh toán không tồn tại');
+            }
+            $payment = 'onepaylocal';
+            $saveCard = false;
+            $tokenNum = $existsBank->token_num;
+            $tokenExp = $existsBank->token_exp;
+        }
         $processor = Processor::getProcessor($payment);
         if ($processor === null) {
             return redirect()->back()->with('notify', 'Phương thức thanh toán không hợp lệ');
@@ -432,6 +464,8 @@ class TransactionController extends Controller
             'orderid' => $openOrder->id,
             'ip' => $request->ip(),
             'save_card' => $saveCard,
+            'token_num' => $tokenNum,
+            'token_exp' => $tokenExp,
             'user_id' => $user->id,
         ];
 
@@ -506,13 +540,15 @@ class TransactionController extends Controller
                 $newToken = $result['newTokenNum'];
                 $newTokenExp = !empty($result['newTokenExp']) ? $result['newTokenExp'] : '';
                 $newCardType = !empty($result['newCardType']) ? $result['newCardType'] : '';
-                $exists = UserBank::where('token_num')->where('user_id', $user->id)->count();
+                $newCardUid = !empty($result['newCardUid']) ? $result['newCardUid'] : '';
+                $exists = UserBank::where('card_uid', $newCardUid)->where('user_id', $user->id)->count();
                 if ($exists == 0) {
                     UserBank::create([
                         'user_id' => $user->id,
                         'token_num' => $newToken,
                         'token_exp' => $newTokenExp,
-                        'card_type' => $newCardType
+                        'card_type' => $newCardType,
+                        'card_uid' => $newCardUid,
                     ]);
                 }
             }
