@@ -149,8 +149,10 @@
             @else 
             <input  type="hidden" name="payment" value="free">
             @endif
-                <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
+                <!-- <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div> -->
                 <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" checked required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán và <a target="_BLANK" href="/privacy">chính sách bảo mật</a> của Công ty</label></p>
+                <p class="fw-bold" style="display: none;"  id="save_card_block"><input type="checkbox" name="save_card" id="save_card"> <label for="save_card">Lưu thông tin thẻ cho lần thanh toán sau.</label></p>
+                
                 <button class="btn btn-success border-0 rounded-pill mt-2" name="cart_action" value="pay">THANH TOÁN</button>
 
             </div>
@@ -159,3 +161,19 @@
     </form>
 @endsection
 @endif
+@section('jscript')
+    @parent
+    <script>
+        
+        $("input[name=payment]").on("click", function(event) {
+            var value = $(this).val();
+            if (value == "onepaylocal") {
+                $("#save_card").prop("checked", true);
+                $("#save_card_block").show();
+            } else {
+                $("#save_card_block").hide();
+                $("#save_card").prop("checked", false);
+            }
+        });
+    </script>
+@endsection

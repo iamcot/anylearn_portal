@@ -90,9 +90,10 @@ class TransactionService
         $alreadyRegister = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->whereIn('orders.status', [OrderConstants::STATUS_DELIVERED, OrderConstants::STATUS_NEW])
-            ->where('orders.user_id', ($childUser > 0 ? $childUser : $user->id))
+            ->where('od.user_id', ($childUser > 0 ? $childUser : $user->id))
             ->where('od.item_id', $itemId)
             ->count();
+
         if ($alreadyRegister > 0) {
             return 'Bạn đã đăng ký khóa học này';
         }
@@ -113,7 +114,7 @@ class TransactionService
                     if ($dbVoucher->type == VoucherGroup::TYPE_CLASS) {
                         $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $dbVoucher);
                         $openOrder = Order::create([
-                            'user_id' => $childUser > 0 ? $childUser : $user->id,
+                            'user_id' => $user->id,
                             'amount' => $item->price,
                             'quantity' => 1,
                             'status' => $status,
@@ -145,7 +146,7 @@ class TransactionService
                     $transStatus = ConfigConstants::TRANSACTION_STATUS_PENDING;
 
                     $openOrder = Order::create([
-                        'user_id' => $childUser > 0 ? $childUser : $user->id,
+                        'user_id' => $user->id,
                         'amount' => $amount,
                         'quantity' => 1,
                         'status' => $status,
@@ -163,7 +164,7 @@ class TransactionService
                     'amount' => (0 - $amount),
                     'pay_method' => UserConstants::WALLET_M,
                     'pay_info' => '',
-                    'content' => 'Thanh toán khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
+                    'content' => 'Thanh toán đơn hàng #' . $openOrder->id,
                     'status' => $transStatus,
                     'order_id' => $openOrder->id
                 ]);
@@ -175,7 +176,7 @@ class TransactionService
             //save order details
             $orderDetail = OrderDetail::create([
                 'order_id' => $openOrder->id,
-                'user_id' => $user->id,
+                'user_id' => ($childUser > 0 ? $childUser : $user->id),
                 'item_id' => $item->id,
                 'unit_price' => $item->price,
                 'paid_price' => $item->price,

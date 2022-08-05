@@ -32,8 +32,8 @@ class OrderDetail extends Model
         $query = DB::table('order_details AS od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->join('items', 'items.id', '=', 'od.item_id')
-            ->join('users', 'users.id', '=', 'od.user_id') //this join is for main user
-            ->join('users AS u2', 'u2.id', '=', 'orders.user_id') //this join is for child user
+            ->join('users', 'users.id', '=', 'orders.user_id') //this join is for main user
+            ->join('users AS u2', 'u2.id', '=', 'od.user_id') //this join is for child user
             ->join('schedules', 'schedules.item_id', '=', 'od.item_id')
             ->leftJoin('participations AS pa', function ($join) {
                 $join->on('pa.schedule_id', '=', 'schedules.id')
@@ -78,7 +78,6 @@ class OrderDetail extends Model
             ->leftJoin('order_details AS od', 'od.item_id', '=', 'iua.item_id')
             ->whereNull('od.id')
             ->where('iua.user_id', $userId)
-            ->where('items.status', '>', 0)
             ->where('items.user_status', '>', 0)
             ->where('iua.type', ItemUserAction::TYPE_FAV)
             ->where('iua.value', ItemUserAction::FAV_ADDED)

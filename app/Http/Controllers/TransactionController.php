@@ -14,6 +14,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\UserBank;
 use App\Models\Voucher;
 use App\Models\VoucherGroup;
 use App\Models\VoucherUsed;
@@ -397,6 +398,7 @@ class TransactionController extends Controller
         }
         $payment = $request->get('payment');
         $orderId = $request->input('order_id');
+        $saveCard = $request->get('save_card') == 'on' ? true : false;
         $transService = new TransactionService();
 
         $res = $transService->verifyVoucherInOrderBeforePayment($orderId);
@@ -409,14 +411,13 @@ class TransactionController extends Controller
             $transService->approveRegistrationAfterWebPayment($orderId);
             return redirect()->route('checkout.finish', ['order_id' => $orderId]);
         }
-        
+
         if ($payment == 'atm') {
             $transService->paymentPending($orderId);
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
         $processor = Processor::getProcessor($payment);
-
-        if (!$processor) {
+        if ($processor === null) {
             return redirect()->back()->with('notify', 'Phương thức thanh toán không hợp lệ');
         }
         $openOrder = Order::where('status', OrderConstants::STATUS_NEW)
@@ -430,6 +431,8 @@ class TransactionController extends Controller
             'amount' => $openOrder->amount,
             'orderid' => $openOrder->id,
             'ip' => $request->ip(),
+            'save_card' => $saveCard,
+            'user_id' => $user->id,
         ];
 
         $validate = $processor->validate($input);
@@ -498,6 +501,21 @@ class TransactionController extends Controller
             $orderId = $result['orderId'];
             $transService = new TransactionService();
             $transService->approveRegistrationAfterWebPayment($orderId);
+
+            if (!empty($result['newTokenNum'])) {
+                $newToken = $result['newTokenNum'];
+                $newTokenExp = !empty($result['newTokenExp']) ? $result['newTokenExp'] : '';
+                $newCardType = !empty($result['newCardType']) ? $result['newCardType'] : '';
+                $exists = UserBank::where('token_num')->where('user_id', $user->id)->count();
+                if ($exists == 0) {
+                    UserBank::create([
+                        'user_id' => $user->id,
+                        'token_num' => $newToken,
+                        'token_exp' => $newTokenExp,
+                        'card_type' => $newCardType
+                    ]);
+                }
+            }
             return redirect()->route('checkout.finish', ['order_id' => $orderId]);
         }
 
