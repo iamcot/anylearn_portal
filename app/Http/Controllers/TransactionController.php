@@ -591,7 +591,7 @@ class TransactionController extends Controller
             Log::info("[NOTIFY RESULT]:", ['data' => $request->fullUrl()]);
             $query = $request->getQueryString();
 
-            $result = $processor->processFeedbackData($request->all());
+            $result = $processor->processFeedbackData($query);
             if ($result['status'] == 1) {
                 $orderId = $result['orderId'];
                 $transService = new TransactionService();
