@@ -4,6 +4,7 @@ namespace App\PaymentGateway;
 
 use App\DataObjects\ServiceResponse;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 
 class OnepayLocal implements PaymentInterface
 {
@@ -65,9 +66,10 @@ class OnepayLocal implements PaymentInterface
         return $response;
     }
 
-    public function processReturnData($response)
+    public function processReturnData($str)
     {
-        $data = $this->processFeedbackData($response);
+       
+        $data = $this->processFeedbackData($str);
 
         return $this->buildUrl($data);
     }
@@ -79,8 +81,13 @@ class OnepayLocal implements PaymentInterface
         return $data;
     }
 
-    public function processFeedbackData($response)
+    public function processFeedbackData($str)
     {
+        $response = [];
+        foreach (explode('&', $str) as $couple) {
+            list($key, $val) = explode('=', $couple);
+            $response[$key] = $val;
+        }
         $data = [
             'status' => 0,
             'message' => '',
@@ -128,7 +135,7 @@ class OnepayLocal implements PaymentInterface
         return env('CALLBACK_SERVER') . '?' . implode("&", $flatdata);
     }
 
-    private function checkHash($input)
+    public function checkHash($input)
     {
         if (
             strlen(env('PAYMENT_ONEPAY_LOCAL_SECRET')) > 0
@@ -137,16 +144,17 @@ class OnepayLocal implements PaymentInterface
         ) {
             $hash = isset($input['vpc_SecureHash']) ? $input['vpc_SecureHash'] : '';
             ksort($input);
-            $arrayHash = [];
+            $stringHashData = "";
 
             foreach ($input as $key => $value) {
                 if ($key != "vpc_SecureHash" && (strlen($value) > 0) && ((substr($key, 0, 4) == "vpc_") || (substr($key, 0, 5) == "user_"))) {
-                    $arrayHash[] = $key . "=" . $value;
+                    $stringHashData .= $key . "=" . $value . "&";
                 }
             }
-            $stringHashData = implode("&", $arrayHash);
-
-            if (strtoupper($hash) == strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_ONEPAY_LOCAL_SECRET'))))) {
+            $stringHashData = rtrim($stringHashData, "&");
+            $stringHashData = urldecode($stringHashData);
+            $checkedHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_ONEPAY_LOCAL_SECRET'))));
+            if (hash_equals($hash, $checkedHash)) {
                 return true;
             }
         }

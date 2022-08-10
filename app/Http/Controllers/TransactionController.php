@@ -295,6 +295,7 @@ class TransactionController extends Controller
                 'id' => $bank->id,
                 'tokenNum' => $bank->token_num,
                 'tokenExp' => $bank->token_exp,
+                'type' => $bank->card_type,
                 'name' => $config['name'],
                 'logo' => $config['logo'],
             ];
@@ -588,6 +589,8 @@ class TransactionController extends Controller
         }
         try {
             Log::info("[NOTIFY RESULT]:", ['data' => $request->fullUrl()]);
+            $query = $request->getQueryString();
+
             $result = $processor->processFeedbackData($request->all());
             if ($result['status'] == 1) {
                 $orderId = $result['orderId'];
@@ -617,7 +620,8 @@ class TransactionController extends Controller
         }
 
         try {
-            $url = $processor->processReturnData($request->all());
+            $query = $request->getQueryString();
+            $url = $processor->processReturnData($query);
             if (!empty($url)) {
                 return redirect($url);
             }

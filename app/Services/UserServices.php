@@ -41,7 +41,8 @@ class UserServices
             'fin.expenditures',
             'transaction',
             'voucher',
-            'order.open'
+            'order.open',
+            'order.all'
         ],
     ];
 

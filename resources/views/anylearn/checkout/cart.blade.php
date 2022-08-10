@@ -150,7 +150,7 @@
                     <li class="p-2"><input required type="radio" name="payment" value="onepaylocal" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>Thanh toán trực tuyến bằng thẻ</strong></label></li>
                     @else 
                         @foreach($saveBanks as $bank)
-                        <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src = "{{ $bank['logo'] }}" style="height: 16px;"> <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
+                        <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src = "{{ $bank['logo'] }}" style="height: 20px;"> <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
                         @endforeach
                         <li class="p-2"><input required type="radio" name="payment" value="onepaylocal" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>Thanh toán bằng thẻ trực tuyến MỚI</strong></label></li>
                     @endif

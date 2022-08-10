@@ -29,5 +29,6 @@
         <server name="MAIL_DRIVER" value="array"/>
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
+        <env name="PAYMENT_ONEPAY_LOCAL_SECRET" value="6D0870CDE5F24F34F3915FB0045120D6" force="true" />
     </php>
 </phpunit>
