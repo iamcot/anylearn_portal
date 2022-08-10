@@ -551,6 +551,11 @@ class TransactionController extends Controller
                         'card_type' => $newCardType,
                         'card_uid' => $newCardUid,
                     ]);
+                } else {
+                    UserBank::where('card_uid', $newCardUid)->where('user_id', $user->id)->update([
+                        'token_num' => $newToken,
+                        'token_exp' => $newTokenExp,
+                    ]);
                 }
             }
             return redirect()->route('checkout.finish', ['order_id' => $orderId]);
