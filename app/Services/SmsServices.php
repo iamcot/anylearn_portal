@@ -125,7 +125,7 @@ class SmsServices
      */
     public function smsOTP($phone)
     {
-        $otp = substr(str_shuffle(MD5(microtime())), 0, 6);
+        $otp = mt_rand(100000,999999);//substr(str_shuffle(MD5(microtime())), 0, 6);
         try {
             $config = $this->template[self::SMS_OTP];
             $result = $this->smsNotif($phone, $this->_buildContent($config['template'], [
