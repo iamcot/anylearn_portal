@@ -580,7 +580,7 @@ class TransactionController extends Controller
             }
         }
 
-        $this->data['bank'] = config('bank');
+        $this->data['banks'] = config('bank');
         $this->data['orderAmount'] = $order->amount;
         $this->data['orderId'] = $order->id;
         return view(env('TEMPLATE', '') . 'checkout.paymenthelp', $this->data);

@@ -89,13 +89,13 @@ class TransactionService
 
         $alreadyRegister = DB::table('order_details as od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
-            ->whereIn('orders.status', [OrderConstants::STATUS_DELIVERED, OrderConstants::STATUS_NEW])
+            ->whereIn('orders.status', [OrderConstants::STATUS_DELIVERED, OrderConstants::STATUS_NEW, OrderConstants::STATUS_PAY_PENDING])
             ->where('od.user_id', ($childUser > 0 ? $childUser : $user->id))
             ->where('od.item_id', $itemId)
             ->count();
 
         if ($alreadyRegister > 0) {
-            return 'Bạn đã đăng ký khóa học này';
+            return 'Bạn đã đăng ký khóa học này hoặc khóa học đang chờ thanh toán.';
         }
         $voucher = $request->get('voucher', '');
 

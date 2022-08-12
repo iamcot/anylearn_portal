@@ -1,8 +1,10 @@
 @extends('anylearn.layout')
 @section('body')
+
+<h5 class="mb-5 font-weight-bold text-success">Để hoàn tất thanh toán, quý khách vui lòng chuyển khoản theo thông tin sau.</h5>
+@foreach($banks as $bank)
 <div class="card shadow mb-5 border-left-success">
     <div class="card-body">
-        <h5 class="mb-5 font-weight-bold text-success">Để hoàn tất thanh toán, quý khách vui lòng chuyển khoản theo thông tin sau.</h5>
         <dl class="row">
             <dt class="col-sm-3">Ngân hàng</dt>
             <dd class="col-sm-9">{{ $bank['bank_name'] }}</dd>
@@ -20,9 +22,11 @@
             <dt class="col-sm-3">Số tiền</dt>
             <dd class="col-sm-9">{{ number_format($orderAmount, 0, ",", ".") }}</dd>
         </dl>
-
-        <p class="small">* Các khoá học của quý khách sẽ tự động xác nhận sau khi Công ty xác nhận chuyển khoản.</p>
     </div>
-
 </div>
+
+@endforeach
+
+<p class="small">* Các khoá học của quý khách sẽ tự động xác nhận sau khi Công ty xác nhận chuyển khoản.</p>
+
 @endsection
