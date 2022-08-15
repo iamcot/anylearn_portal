@@ -62,7 +62,7 @@
 
                     <div class="col-md-8">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
+                        <p class="small">*Tối thiểu 8 ký tự</p>
                         @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
