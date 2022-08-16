@@ -5,28 +5,48 @@
 
 
 @section('body')
-@if(sizeof($courseList) == 0)
-<div class="text-center mt-5 pt-5">
-    @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('class.create')])
-</div>
-@else
-<div class="card shadow mb-1">
-    <div class="card-body">
-        <form class="row">
-            <div class="col-xs-2 mr-1">
-                <select class="form-control" name="t" id="">
-                    <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tên lớp học</option>
-                </select>
+<form>
+    <div class="card shadow mb-2">
+        <div class="card-body row">
+            <div class="col-xs-6 col-lg-4 ">
+                <div class="form-group row">
+                    <label class="col-12" for="">ID(s) <span class="small">Để trống đến ID nếu chỉ tìm 1</span></label>
+                    <div class="col-lg-6 mb-1">
+                        <input value="{{ app('request')->input('id_f') }}" type="text" class="form-control" name="id_f" placeholder="từ ID " />
+                    </div>
+                    <div class="col-lg-6">
+                        <input value="{{ app('request')->input('id_t') }}" type="text" class="form-control" name="id_t" placeholder="đến ID" />
+                    </div>
+                </div>
+
             </div>
-            <div class="col-xs-4 mr-1">
-                <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">Tên khóa học</label>
+                    <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên khóa học" />
+                </div>
             </div>
-            <div class="col-xs-1">
-                <button class="btn btn-primary btn"><i class="fas fa-search"></i></button>
+           
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">ID Tác giả</label>
+                    <input value="{{ app('request')->input('ref_id') }}" type="text" class="form-control" name="ref_id" placeholder="ID tác giả" />
+                </div>
             </div>
-        </form>
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">Thời gian tạo từ</label>
+                    <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <!-- <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button> -->
+            <button class="btn btn-warning btn-sm" name="action" value="clear"> Xóa tìm kiếm</button>
+        </div>
     </div>
-</div>
+</form>
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">
         <table class="table table-bordered table-striped">
@@ -77,8 +97,6 @@
         {{ $courseList->links() }}
     </div>
 </div>
-
-@endif
 
 @endsection
 @include('dialog.rating')

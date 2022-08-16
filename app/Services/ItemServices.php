@@ -141,25 +141,25 @@ class ItemServices
         if ($userId) {
             $courses = $courses->where('user_id', $userId);
         }
-        if (!empty($request->input('s'))) {
-            switch ($request->input('t')) {
-                case "series":
-                    $serieseId = '';
-                    if (is_numeric($request->input('s'))) {
-                        $serieseId = $request->input('s');
-                    } else {
-                        $seriesDB = CourseSeries::where('title', $request->input('s'))->first();
-                        if ($seriesDB) {
-                            $serieseId = $seriesDB->id;
-                        }
-                    }
-                    $courses = $courses->where('series_id', $serieseId);
-                    break;
-                default:
-                    $courses = $courses->where('title', 'like', '%' . $request->input('s') . '%');
-                    break;
+        if ($request->input('id_f') > 0) {
+            if ($request->input('id_t') > 0) {
+                $courses = $courses->where('id', '>=', $request->input('id_f'))->where('id', '<=', $request->input('id_t'));
+            } else {
+                $courses = $courses->where('id', $request->input('id_f'));
             }
         }
+        if ($request->input('name')) {
+            $courses = $courses->where('title', 'like', '%' . $request->input('name') . '%');
+        }
+
+        if ($request->input('ref_id') > 0) {
+            $courses = $courses->where('user_id', $request->input('ref_id'));
+        }
+
+        if ($request->input('date')) {
+            $courses = $courses->whereDate('created_at', '>', $request->input('date'));
+        }
+
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
             $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')

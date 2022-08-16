@@ -236,32 +236,55 @@ class User extends Authenticatable
             && $user->update_doc == UserConstants::STATUS_INACTIVE ? true : false;
     }
 
-    public function searchMembers(Request $request)
+    public function searchMembers(Request $request, $file = false)
     {
-        $members = User::whereIn('role', UserConstants::$memberRoles);
-        if (!empty($request->input('s'))) {
-            switch ($request->input('t')) {
-                case "phone":
-                    $members = $members->where('phone', $request->input('s'));
-                    break;
-                case "role":
-                    $members = $members->where('role', $request->input('s'));
-                    break;
-                default:
-                    $members = $members->where('name', 'like', '%' . $request->input('s') . '%');
-                    break;
+        $members = DB::table('users')->whereIn('users.role', UserConstants::$memberRoles);
+        if ($request->input('id_f') > 0) {
+            if ($request->input('id_t') > 0) {
+                $members = $members->where('users.id', '>=', $request->input('id_f'))->where('users.id', '<=', $request->input('id_t'));
+            } else {
+                $members = $members->where('users.id', $request->input('id_f'));
             }
+        }
+        if ($request->input('phone')) {
+            $members = $members->where('users.phone', $request->input('phone'));
+        }
+        if ($request->input('role')) {
+            $members = $members->where('users.role', $request->input('role'));
+        }
+        if ($request->input('name')) {
+            $members = $members->where('users.name', 'like', '%' . $request->input('name') . '%');
+        }
+        if ($request->input('ref_id')) {
+            $members = $members->where('users.user_id', $request->input('ref_id'));
+        }
+        if ($request->input('date')) {
+            $members = $members->whereDate('users.created_at', '>', $request->input('date'));
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
-            $members = $members->where('sale_id', $requester->id);
+            $members = $members->where('users.sale_id', $requester->id);
         }
         $members = $members
-            ->orderby('is_hot', 'desc')
-            ->orderby('boost_score', 'desc')
-            ->orderby('id', 'desc')
-            ->with('refuser')
-            ->paginate(UserConstants::PP);
+            ->orderby('users.is_hot', 'desc')
+            ->orderby('users.boost_score', 'desc')
+            ->orderby('users.id', 'desc')
+            ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
+            ->select('users.id', 'users.phone', 'users.role', 'users.status',
+            'users.name', 'users.commission_rate', 'users.wallet_c', 'u2.name AS refname', 'u2.phone AS refphone',
+            'users.updated_at', 'users.update_doc', 'users.is_hot','users.boost_score',
+        );
+
+        if (!$file) {
+            $members = $members->paginate(UserConstants::PP);
+        } else {
+            $members = $members->get();
+            if ($members) {
+                $members = json_decode(json_encode($members->toArray()), true);
+            } else {
+                $members = [];
+            }
+        }
 
         return $members;
     }

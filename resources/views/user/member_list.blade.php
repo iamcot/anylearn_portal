@@ -1,25 +1,66 @@
 @inject('userServ','App\Services\UserServices')
 @extends('layout')
 
-@section('rightFixedTop')
-<form class="row">
-    <div class="col-xs-4 mr-1">
-        <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'name' ? 'selected' : '' }} value="name">Tên Thành viên</option>
-            <option {{ app('request')->input('t') == 'phone' ? 'selected' : '' }} value="phone">Số điện thoại</option>
-            <option {{ app('request')->input('t') == 'role' ? 'selected' : '' }} value="role">Loại thành viên</option>
-        </select>
-    </div>
-    <div class="col-xs-7 mr-1">
-        <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
-    </div>
-    <div class="col-xs-1">
-        <button class="btn btn-primary btn"><i class="fas fa-search"></i></button>
+@section('body')
+<form>
+    <div class="card shadow mb-2">
+        <div class="card-body row">
+            <div class="col-xs-6 col-lg-4 ">
+                <div class="form-group row">
+                    <label class="col-12" for="">ID(s) <span class="small">Để trống đến ID nếu chỉ tìm 1</span></label>
+                    <div class="col-lg-6 mb-1">
+                        <input value="{{ app('request')->input('id_f') }}" type="text" class="form-control" name="id_f" placeholder="từ ID " />
+                    </div>
+                    <div class="col-lg-6">
+                        <input value="{{ app('request')->input('id_t') }}" type="text" class="form-control" name="id_t" placeholder="đến ID" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">Tên thành viên</label>
+                    <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên thành viên" />
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">Vai trò</label>
+                    <select class="form-control" name="role" id="">
+                        <option value="">---</option>
+                        <option {{ app('request')->input('role') == 'member' ? 'selected' : '' }} value="member">Thành viên</option>
+                        <option {{ app('request')->input('role') == 'school' ? 'selected' : '' }} value="school">Trung tâm</option>
+                        <option {{ app('request')->input('role') == 'teacher' ? 'selected' : '' }} value="teacher">Chuyên gia</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">SDT</label>
+                    <input value="{{ app('request')->input('phone') }}" type="text" class="form-control" name="phone" placeholder="SDT" />
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">ID Người giới thiệu</label>
+                    <input value="{{ app('request')->input('ref_id') }}" type="text" class="form-control" name="ref_id" placeholder="ID người giới thiệu" />
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">Thời gian tạo từ</label>
+                    <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button>
+            <button class="btn btn-warning btn-sm" name="action" value="clear"> Xóa tìm kiếm</button>
+        </div>
     </div>
 </form>
-@endsection
 
-@section('body')
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
@@ -31,7 +72,6 @@
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="10%" scope="col">SDT</th>
-                    <th>Ví M</th>
                     <th>Ví C</th>
                     <th width="10%" scope="col">Người G/T</th>
                     <th width="5%" scope="col">H/H</th>
@@ -50,16 +90,15 @@
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
-                    <td>{{ number_format($user->wallet_m) }}</td>
                     <td>{{ number_format($user->wallet_c) }}</td>
-                    <td>{{ $user->refuser ? $user->refuser->name . ' (' . $user->refuser->phone . ')' : '' }}</td>
+                    <td>{{ $user->refname ? $user->refname . ' (' . $user->refphone . ')' : '' }}</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>
                     <td class="text-center">{!! $userServ->requiredDocIcon($user) !!}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($user->updated_at)) }}</td>
                     <td class="text-right">
                         @if($user->id != 1)
                         {!! $userServ->statusOperation($user->id, $user->status) !!}
-                        <a class="btn btn-sm btn-info" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
+                        <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
                         @endif
                     </td>
                 </tr>
@@ -69,9 +108,9 @@
         </table>
         <div class="small ml-3">
             <p><i class="fas fa-fire text-danger" title="Nổi bật"></i> Thành viên nổi bật. <i class="fas fa-check-circle text-success"></i> Thành viên đang hoạt động. <i class="fas fa-stop-circle text-danger"></i> Thành viên đang bị khóa.
-            <i class="fas fa-cloud-upload-alt text-gray"></i> Giấy tờ chưa hợp lệ. <i class="fas fa-cloud-upload-alt text-success"></i> Đã cập nhật chứng chỉ, giấy tờ >>> Click để xem chi tiết. 
-            
-        </p>
+                <i class="fas fa-cloud-upload-alt text-gray"></i> Giấy tờ chưa hợp lệ. <i class="fas fa-cloud-upload-alt text-success"></i> Đã cập nhật chứng chỉ, giấy tờ >>> Click để xem chi tiết.
+
+            </p>
         </div>
 
     </div>

@@ -44,6 +44,9 @@ class ClassController extends Controller
         $classService = new ItemServices();
         $userService = new UserServices();
         $this->data['navText'] = __('Quản lý lớp học');
+        if ($request->input('action') == 'clear') {
+            return redirect()->route('class');
+        }
         $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
         if ($userService->isMod()) {
             return view('class.list', $this->data);

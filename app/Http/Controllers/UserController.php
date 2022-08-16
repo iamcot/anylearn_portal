@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
@@ -72,7 +73,38 @@ class UserController extends Controller
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $userM = new User();
-        $this->data['members'] = $userM->searchMembers($request);
+        if ($request->input('action') == 'clear') {
+            return redirect()->route('user.members');
+        }
+
+
+        if ($request->input('action') == 'file') {
+            $members = $userM->searchMembers($request, true);
+            if (!$members) {
+                return redirect()->route('user.members');
+            }
+            $headers = [
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=anylearn_member_" . now() . ".csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+
+            $callback = function () use ($members) {
+                $file = fopen('php://output', 'w');
+               
+                fputcsv($file, array_keys($members[0]));
+                foreach ($members as $row) {
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+            };
+            return response()->stream($callback, 200, $headers);
+        } else {
+            $members = $userM->searchMembers($request);
+        }
+        $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
@@ -379,7 +411,7 @@ class UserController extends Controller
         $user = Auth::user();
         $this->data['orders'] = DB::table('orders')
             ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
-            ->where('orders.user_id', $user->id )
+            ->where('orders.user_id', $user->id)
             ->select(
                 'orders.*',
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
