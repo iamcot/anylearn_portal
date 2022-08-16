@@ -94,7 +94,7 @@
         </table>
     </div>
     <div class="card-footer">
-        {{ $courseList->links() }}
+        {{ $courseList->appends(request()->query())->links() }}
     </div>
 </div>
 

@@ -115,7 +115,7 @@
 
     </div>
     <div class="card-footer">
-        <div>{{ $members->links() }}</div>
+        <div>{{ $members->appends(request()->query())->links() }}</div>
     </div>
 </div>
 @include('dialog.user_doc')
