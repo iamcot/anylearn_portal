@@ -84,8 +84,8 @@ class UserController extends Controller
                 return redirect()->route('user.members');
             }
             $headers = [
-                "Content-Encoding" => "UTF-8",
-                "Content-type" => "text/csv; charset=UTF-8",
+                // "Content-Encoding" => "UTF-8",
+                "Content-type" => "text/csv",
                 "Content-Disposition" => "attachment; filename=anylearn_member_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
@@ -94,9 +94,10 @@ class UserController extends Controller
 
             $callback = function () use ($members) {
                 $file = fopen('php://output', 'w');
-               
+                fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
                 fputcsv($file, array_keys($members[0]));
                 foreach ($members as $row) {
+                    mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
                     fputcsv($file, $row);
                 }
                 fclose($file);
