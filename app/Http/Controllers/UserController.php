@@ -84,7 +84,8 @@ class UserController extends Controller
                 return redirect()->route('user.members');
             }
             $headers = [
-                "Content-type" => "text/csv",
+                "Content-Encoding" => "UTF-8",
+                "Content-type" => "text/csv; charset=UTF-8",
                 "Content-Disposition" => "attachment; filename=anylearn_member_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",

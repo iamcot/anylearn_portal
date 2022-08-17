@@ -42,7 +42,9 @@ class UserServices
             'transaction',
             'voucher',
             'order.open',
-            'order.all'
+            'order.all',
+            'user.contract',
+            'user.members',
         ],
     ];
 
