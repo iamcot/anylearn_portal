@@ -70,7 +70,7 @@ class User extends Authenticatable
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            // 'email' => [ 'email', 'max:255'],
+            'email' => [ 'email', 'max:255'],
             'phone' => ['required', 'min:10', 'max:10', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
