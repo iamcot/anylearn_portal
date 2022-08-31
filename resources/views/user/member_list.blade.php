@@ -40,16 +40,22 @@
                     <input value="{{ app('request')->input('phone') }}" type="text" class="form-control" name="phone" placeholder="SDT" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-4">
+            <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">ID Người giới thiệu</label>
                     <input value="{{ app('request')->input('ref_id') }}" type="text" class="form-control" name="ref_id" placeholder="ID người giới thiệu" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-4">
+            <div class="col-xs-6 col-lg-3">
                 <div class="form-group">
                     <label for="">Thời gian tạo từ</label>
                     <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-3">
+                <div class="form-group">
+                    <label for="">Thời gian tạo đến</label>
+                    <input value="{{ app('request')->input('datet') }}" type="date" class="form-control" name="datet" placeholder="Thời gian tạo đến" />
                 </div>
             </div>
         </div>
@@ -72,6 +78,7 @@
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="10%" scope="col">SDT</th>
+                    <th width="10%" scope="col">Email</th>
                     <th>Ví C</th>
                     <th width="10%" scope="col">Người G/T</th>
                     <th width="5%" scope="col">H/H</th>
@@ -90,6 +97,7 @@
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
+                    <td>{{ $user->email }}</td>
                     <td>{{ number_format($user->wallet_c) }}</td>
                     <td>{{ $user->refname ? $user->refname . ' (' . $user->refphone . ')' : '' }}</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>

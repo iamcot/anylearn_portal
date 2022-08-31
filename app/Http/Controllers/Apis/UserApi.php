@@ -206,6 +206,8 @@ class UserApi extends Controller
 
         $userServ = new UserServices();
         $user->cartcount = $userServ->countItemInCart($user->id);
+        $transServ = new TransactionService();
+        $user->hasPendingOrder = $transServ->hasPendingOrders($user->id);
 
         return response()->json($user, 200);
     }
