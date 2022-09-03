@@ -5,7 +5,7 @@ return [
     /*
      * Enable it?
      */
-    'enabled' => true,
+    'enabled' => false,
 
     /*
      * Enable cache?
@@ -62,7 +62,7 @@ return [
     /*
      * When an IP is not trackable, show a message in log.
      */
-    'log_untrackable_sessions' => true,
+    'log_untrackable_sessions' => false,
 
     /*
      * Log every single access?
