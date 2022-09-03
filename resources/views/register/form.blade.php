@@ -88,7 +88,7 @@
                 <div class="form-group row mb-0">
                     <div class="text-center">
                         <div class="register_btn">
-                            <button>
+                            <button onclick="this.disabled=true;this.value='Đang gửi...'; this.form.submit();">
                                 <img src="/cdn/img/register/register_btn.png" alt="">
                             </button>
                         </div>
