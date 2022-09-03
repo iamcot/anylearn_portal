@@ -716,12 +716,15 @@ class UserApi extends Controller
         $user = $request->get('_user');
         $id = $request->get('id');
         $name = $request->get('name');
+        $dob = $request->get('dob', '');
+        $child = null;
         if ($id == 0) {
             $phoneByTime = $user->phone . time();
-            $newChild = User::create([
+            $child = User::create([
                 'is_child' => 1,
                 'user_id' => $user->id,
                 'name' => $name,
+                'dob' => $dob,
                 'phone' => $phoneByTime,
                 'refcode' => $phoneByTime,
                 'password' => Hash::make($user->phone),
@@ -733,11 +736,12 @@ class UserApi extends Controller
             if ($child->is_child == 1 && $child->user_id == $user->id) {
                 $child->update([
                     'name' => $name,
+                    'dob' => $dob,
                 ]);
             }
         }
         return response()->json([
-            'result' => true
+            'result' => $child != null ? $child->id : 0
         ]);
     }
 
