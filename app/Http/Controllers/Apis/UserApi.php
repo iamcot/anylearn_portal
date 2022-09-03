@@ -716,7 +716,7 @@ class UserApi extends Controller
         $user = $request->get('_user');
         $id = $request->get('id');
         $name = $request->get('name');
-        $dob = $request->get('dob', '');
+        $dob = $request->get('dob', null);
         $child = null;
         if ($id == 0) {
             $phoneByTime = $user->phone . time();
