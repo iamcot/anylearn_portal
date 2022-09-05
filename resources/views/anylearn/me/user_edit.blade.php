@@ -29,7 +29,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if(!empty($user->sex)&&$user->sex=="male") echo"checked='checked'" ?>>
+                                    <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if(empty($user->sex)||$user->sex=="male") echo"checked='checked'" ?>>
                                     <label class="form-check-label" for="male">
                                         Male
                                     </label>
@@ -131,16 +131,15 @@
             <div class="">
             <h6><b>Danh Sách Bạn Bè</b></h6>
             <div class="form-group row">
-            <p class="p-2">Bạn chưa có bạn bè</p>
-                    
-                    <!-- @if( auth()->user()->user_id != null)
-                    <div class="col-md-8">
-                        <input id="name" type="text" class="form-control" name="name" value="{{ auth()->user()->user_id }}" readonly>
+            <!-- <p class="p-2">Bạn chưa có bạn bè</p> -->
+                    @foreach($userselect as $userselect)
+                    @if($userselect->user_id == auth()->user()->id)
+                    <div class="col-md-10">
+                    <i class="fas fa-user-alt"> {{ $userselect->name }}</i>
+                        <!-- <input id="name" type="text" class="form-control" name="name" value="{{ $userselect->name }}" readonly> -->
                     </div>
-                    @else
-                    <p class="p-2">Bạn chưa có bạn bè</p>
                     @endif
-                     -->
+                    @endforeach
                 </div>
             </div>
         </div>

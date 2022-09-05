@@ -124,6 +124,9 @@ class UserController extends Controller
             $rs = $userM->saveMember($request, $input);
             return redirect()->route('me.edit')->with('notify', $rs);
         }
+        $userselect = User::all();
+        $this->data['userselect'] = $userselect;
+        
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
