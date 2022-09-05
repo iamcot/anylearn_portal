@@ -29,7 +29,7 @@
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
-        @lang('Thông tin của tôi')
+        
     </div>
     <li class="nav-item {{ $route == 'me.edit' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.edit') }}">
@@ -38,13 +38,23 @@
     </li>
     <li class="nav-item {{ $route == 'me.orders' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.orders') }}">
-            <i class="fas fa-fw fa-shopping-cart"></i>
+            <i class="fas fa-fw fa-calendar"></i>
             <span>@lang('Khoá học tôi tham gia')</span></a>
     </li>
     <li class="nav-item {{ $route == 'me.pendingorders' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.pendingorders') }}">
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>@lang('Chờ thanh toán')</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link">
+            <i class="fas fa-fw fa-lock"></i>
+            <span>@lang('Đổi mật khẩu')</span></a>
+    </li>
+    <li class="nav-item ">
+        <a class="nav-link">
+            <i class="fas fa-fw fa-child"></i>
+            <span>@lang('Quản lý tài khoản con')</span></a>
     </li>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

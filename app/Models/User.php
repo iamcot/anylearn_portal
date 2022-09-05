@@ -35,7 +35,7 @@ class User extends Authenticatable
         'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
-        'sale_id'
+        'sale_id','cert_id','sex','cert_exp','cert_location'
     ];
 
     /**
@@ -174,17 +174,21 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'refcode' => $input['refcode'],
-            'title' => $input['title'],
+            // 'title' => $input['title'],
+            'sex' => $input['sex'],
             'introduce' => $input['introduce'],
-            'full_content' => $input['full_content'],
+            'dob' => $input['dob'],
+            'cert_id' => $input['cert_id'],
+            // 'full_content' => $input['full_content'],
             'email' => $input['email'],
             'phone' => $input['phone'],
             'role' => $input['role'],
+            'address'=> $input['address'],
             'user_id' => $input['user_id'],
             'sale_id' => isset($input['sale_id']) ? $input['sale_id'] : null,
             'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
-
+            
         ];
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);

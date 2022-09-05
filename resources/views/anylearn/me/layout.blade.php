@@ -34,6 +34,7 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content" class="mb-4">
                 @include('anylearn.me.topbar')
+                @include('anylearn.me.avatar')
                 <div class="container">
                 @include('anylearn.widget.notify', ['notify' => session('notify', '')])
                     <div class="d-flex">

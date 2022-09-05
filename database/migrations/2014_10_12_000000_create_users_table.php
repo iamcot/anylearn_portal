@@ -40,12 +40,16 @@ class CreateUsersTable extends Migration
             $table->string('title')->nullable();
             $table->date('dob')->nullable();
             $table->text('address')->nullable();
+            $table->bigInteger('cert_id')->nullable();
+            $table->string('sex')->nullable();
+            $table->date('cert_exp')->nullable();
+            $table->text('cert_location')->nullable();
             $table->string('country')->nullable();
             $table->integer('num_friends')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-        });
+        }); 
 
         Schema::create('user_documents', function (Blueprint $table) {
             $table->bigIncrements('id');
