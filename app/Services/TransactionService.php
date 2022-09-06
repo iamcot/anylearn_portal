@@ -38,6 +38,14 @@ class TransactionService
         }
     }
 
+    public function hasPendingOrders($userId)
+    {
+        $count = Order::where('user_id', $userId)
+            ->where('status', OrderConstants::STATUS_PAY_PENDING)
+            ->count();
+        return $count;
+    }
+
     public function approveWalletcTransaction($id)
     {
         // update transaction
@@ -353,7 +361,7 @@ class TransactionService
                 'amount' => DB::raw('amount - ' . $od->paid_price),
                 'quantity' => DB::raw('quantity - 1'),
             ]);
-            
+
             $this->removeExchangePoint($user->id, $order->id);
             if ($order->quantity == 1) {
                 Transaction::where('order_id', $order->id)->delete();

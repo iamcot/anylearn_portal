@@ -19,6 +19,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
+use App\Services\TransactionService;
 use App\Services\UserServices;
 use DateTime;
 use Illuminate\Http\Request;
@@ -69,7 +70,7 @@ class ConfigApi extends Controller
 
         $catM = new Category();
         $categories = $catM->buildCatWithItems($request, null);
-
+ 
         return response()->json([
             'new_banners' => $newBanners,
             'articles' => Article::where('status', 1)
@@ -87,7 +88,8 @@ class ConfigApi extends Controller
         ]);
     }
 
-    public function category(Request $request, $catId = 0) {
+    public function category(Request $request, $catId = 0)
+    {
         $catM = new Category();
         $categories = $catM->buildCatWithItems($request, $catId);
         return response()->json($categories);
@@ -361,7 +363,8 @@ class ConfigApi extends Controller
         return response()->json($data);
     }
 
-    public function reportEcommerce(Request $request) {
+    public function reportEcommerce(Request $request)
+    {
         $credential = $request->json()->all();
         $username = isset($credential['UserName']) ? $credential['UserName'] : '';
         $password = isset($credential['PassWord']) ? $credential['PassWord'] : '';
@@ -369,12 +372,12 @@ class ConfigApi extends Controller
             return response()->json([
                 'result' => false,
                 'msg' => 'Thông tin đăng nhập không đúng.'
-            ]);  
+            ]);
         }
         $to = now();
-        $from = strtotime(date( 'Y' ) . '-01-01 00:00:00');
+        $from = strtotime(date('Y') . '-01-01 00:00:00');
         $fromInText = date('Y-m-d H:i:s', $from);
-  
+
         $report = [];
         $diffinSec = $to->getTimestamp() - $from;
         // print_r($diffinSec);

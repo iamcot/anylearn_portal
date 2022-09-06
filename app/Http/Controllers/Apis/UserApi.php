@@ -206,6 +206,8 @@ class UserApi extends Controller
 
         $userServ = new UserServices();
         $user->cartcount = $userServ->countItemInCart($user->id);
+        $transServ = new TransactionService();
+        $user->hasPendingOrder = $transServ->hasPendingOrders($user->id);
 
         return response()->json($user, 200);
     }
@@ -714,9 +716,10 @@ class UserApi extends Controller
         $user = $request->get('_user');
         $id = $request->get('id');
         $name = $request->get('name');
+        $child = null;
         if ($id == 0) {
             $phoneByTime = $user->phone . time();
-            $newChild = User::create([
+            $child = User::create([
                 'is_child' => 1,
                 'user_id' => $user->id,
                 'name' => $name,
@@ -736,6 +739,40 @@ class UserApi extends Controller
         }
         return response()->json([
             'result' => true
+        ]);
+    }
+
+    public function saveChildrenV2(Request $request)
+    {
+        $user = $request->get('_user');
+        $id = $request->get('id');
+        $name = $request->get('name');
+        $dob = $request->get('dob', null);
+        $child = null;
+        if ($id == 0) {
+            $phoneByTime = $user->phone . time();
+            $child = User::create([
+                'is_child' => 1,
+                'user_id' => $user->id,
+                'name' => $name,
+                'dob' => $dob,
+                'phone' => $phoneByTime,
+                'refcode' => $phoneByTime,
+                'password' => Hash::make($user->phone),
+                'role' => UserConstants::ROLE_MEMBER,
+                'status' => UserConstants::STATUS_ACTIVE,
+            ]);
+        } else {
+            $child = User::find($id);
+            if ($child->is_child == 1 && $child->user_id == $user->id) {
+                $child->update([
+                    'name' => $name,
+                    'dob' => $dob,
+                ]);
+            }
+        }
+        return response()->json([
+            'result' => $child != null ? $child->id : 0
         ]);
     }
 

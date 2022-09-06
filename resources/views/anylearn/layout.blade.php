@@ -1,3 +1,4 @@
+@inject('transServ','App\Services\TransactionService')
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,6 +35,11 @@
         <header>
             @include('anylearn.navbar')
         </header>
+        @if(Route::currentRouteName() != 'checkout.paymenthelp' && @auth()->check() && $transServ->hasPendingOrders(Auth::user()->id))
+        <section>
+            <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i> Bạn có đơn hàng đang chờ thanh toán. <a href="{{ route('me.pendingorders') }}" class="text-danger strong">Thanh toán ngay!</a></p>
+        </section>
+        @endif
         @endif
         <section>
             @include('anylearn.widget.notify', ['notify' => session('notify', '')])

@@ -430,6 +430,7 @@ class UserController extends Controller
         $user = Auth::user();
         $this->data['navText'] = __('Khoá học của tôi');
         $orderDetailM = new OrderDetail();
+        
         $this->data['orders'] = $orderDetailM->userRegistered($user->id);
         // dd($this->data['orders']);
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);

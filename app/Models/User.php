@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -71,7 +72,7 @@ class User extends Authenticatable
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => [ 'email', 'max:255'],
-            'phone' => ['required', 'min:10', 'max:10', 'unique:users'],
+            'phone' => ['required', 'min:10', 'max:10', 'unique:users','regex:/[0-9]{10}/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
@@ -113,20 +114,25 @@ class User extends Authenticatable
         }
 
         $newMember = $this->create($obj);
-        if ($newMember) {
-            $notifM = new Notification();
-            $notifM->notifNewUser($newMember->id, $newMember->name);
-            if ($newMember->user_id > 0) {
-                $notifM->notifNewFriend($newMember->user_id, $newMember->name);
+        try {
+            if ($newMember) {
+                $notifM = new Notification();
+                $notifM->notifNewUser($newMember->id, $newMember->name);
+                if ($newMember->user_id > 0) {
+                    $notifM->notifNewFriend($newMember->user_id, $newMember->name);
+                }
+    
+                // if (!empty($newMember->user_id)) {
+                $voucherEvent = new VoucherEventLog();
+                $voucherEvent->useEvent(VoucherEvent::TYPE_REGISTER, $newMember->id, $newMember->user_id ?? 0);
+                // }
             }
-
-            // if (!empty($newMember->user_id)) {
-            $voucherEvent = new VoucherEventLog();
-            $voucherEvent->useEvent(VoucherEvent::TYPE_REGISTER, $newMember->id, $newMember->user_id ?? 0);
-            // }
+            $this->updateUpTree($newMember->user_id);
+            $newMember->commission_rate = (float)$newMember->commission_rate;
+        } catch (\Exception $ex){
+            Log::error($ex);
         }
-        $this->updateUpTree($newMember->user_id);
-        $newMember->commission_rate = (float)$newMember->commission_rate;
+        
         return $newMember;
     }
 
@@ -263,7 +269,10 @@ class User extends Authenticatable
             $members = $members->where('users.user_id', $request->input('ref_id'));
         }
         if ($request->input('date')) {
-            $members = $members->whereDate('users.created_at', '>', $request->input('date'));
+            $members = $members->whereDate('users.created_at', '>=', $request->input('date'));
+        }
+        if ($request->input('datet')) {
+            $members = $members->whereDate('users.created_at', '<=', $request->input('datet'));
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
@@ -274,7 +283,7 @@ class User extends Authenticatable
             ->orderby('users.boost_score', 'desc')
             ->orderby('users.id', 'desc')
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
-            ->select('users.id', 'users.phone', 'users.role', 'users.status',
+            ->select('users.id', 'users.phone', 'users.role', 'users.status', 'users.email',
             'users.name', 'users.commission_rate', 'users.wallet_c', 'u2.name AS refname', 'u2.phone AS refphone',
             'users.updated_at', 'users.update_doc', 'users.is_hot','users.boost_score',
         );
