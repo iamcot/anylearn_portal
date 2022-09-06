@@ -8,9 +8,7 @@
                   <img src="{{ auth()->user()->banner }}" alt="">
               </div>
               @else
-              <div class="fb-timeline-img" style="background:#777;">
-                  <img src="http://anylearn.vn/cdn/anylearn/img/logo-white.svg" alt="">
-              </div>
+              
               @endif
             </div>
             <div class="panel-body">

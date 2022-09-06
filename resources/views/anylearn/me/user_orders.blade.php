@@ -1,5 +1,6 @@
 @inject('userServ','App\Services\UserServices')
 @inject('itemServ','App\Services\ItemServices')
+
 @extends('anylearn.me.layout')
 
 @section('body')
@@ -18,24 +19,50 @@
 <div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
     <div class="tab-pane fade {{ session('tab', 'open') == 'done' ? 'show active' : '' }} p-2" id="done" role="tabpanel" aria-labelledby="done-tab">
         @if(empty($orders['done'])  || count($orders['done']) == 0)
-        <p class="p-2">Bạn chưa có khoá học nào hoàn thành.</p>
-        @else
-        <form action="" method="#">
+        <form action="" method="">
             <div class="input-group">
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
-                            <select class="custom-select" id="inputGroupSelect04">
-                                <option selected>Tài khoản học</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                                <option value="all">All</option>
+                                @foreach($childuser as $item)
+                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                @endforeach
                             </select>
+                           
                         </div>
                         &nbsp&nbsp
                         <a type="reset" href="" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
+                    </div>
+                </div>
+            </div>  
+        </form>
+        <table class="table  text-secondary table-hover">
+            <tr>
+                <p class="p-2">Không tìm thấy khóa học nào</p>
+            </tr>
+        </table>
+        @else
+        <form name="myform" action="" method="">
+            <div class="input-group">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                                <option value="all">All</option>
+                                @foreach($childuser as $item)
+                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                @endforeach
+                            </select>
+                           
+                        </div>
+                        &nbsp&nbsp
+                        <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;" name="reset" value="Reset" id="reset123" onclick="customReset();">xóa bộ lọc</a>
                     </div>
                 </div>
             </div>  
@@ -66,31 +93,20 @@
     </div>
     <div class="tab-pane fade {{ session('tab', 'open') == 'open' ? 'show active' : '' }} p-2" id="open" role="tabpanel" aria-labelledby="open-tab">
         @if(empty($orders['open']) || count($orders['open']) == 0)
-        <p class="p-2">Bạn không có khoá học nào đang diễn ra.</p>
-        @else
-        <form action="" method="#">
+        <form action="" method="">
             <div class="input-group">
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
-                            <select class="custom-select" id="inputGroupSelect04">
-                                @foreach( as $item)
-                                
-                                @if($item->id == 1)    // Any Id
-                                    {
-                                        $selected ='';
-                                        $selected = 'selected="selected"';
-                                    }
-                                @endif
-
-                                <option value="{{ $item->name }} {{$selected}}">
-                                    {{ $item->name }}
-                                </option>
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                                <option value="all">All</option>
+                                @foreach($childuser as $item)
+                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
                                 @endforeach
-                                
                             </select>
+                           
                         </div>
                         &nbsp&nbsp
                         <a type="reset" href="" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
@@ -100,6 +116,35 @@
         </form>
         <table class="table  text-secondary table-hover">
             <tr>
+                <p class="p-2">Không tìm thấy khóa học nào</p>
+            </tr>
+        </table>
+        @else
+        <form action="" method="">
+            <div class="input-group">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                                <option value="all">All</option>
+                                @foreach($childuser as $item)
+                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                @endforeach
+                            </select>
+                           
+                        </div>
+                        &nbsp&nbsp
+                        <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
+                        
+                    </div>
+                </div>
+            </div>  
+        </form>
+        <table class="table  text-secondary table-hover">
+            <tr>
+                
                 <td>Ngày đăng ký</td>
                 <td>Tên khóa học</td>
                 <td>Tài khoản học</td>
@@ -112,6 +157,7 @@
                 </td>
                 <td>
                     <div class="">{{ auth()->user()->name }}</div>
+                    
                 </td>
             </tr>
             @endforeach
@@ -132,7 +178,6 @@
             </tr>
             @foreach($orders['fav'] as $item)
             <tr>
-               
                 <td>
                     <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
                 </td>
@@ -146,3 +191,10 @@
     </div>
 </div>
 @endsection
+<script>
+function customReset()
+{
+    document.getElementById("name").value = "";
+    document.getElementById("country").value = "";
+}
+</script>

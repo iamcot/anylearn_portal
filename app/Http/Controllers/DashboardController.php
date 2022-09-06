@@ -35,8 +35,25 @@ class DashboardController extends Controller
         }
     }
 
-    public function meDashboard() {
-        $this->data['navText'] = __('Bảng thông tin');
+    public function meDashboard(Request $request) {
+        $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
+        $editUser = Auth::user();
+        if ($request->input('save')) {
+            $input = $request->all();
+            $input['role'] = $editUser->role;
+            $input['user_id'] = $editUser->user_id;
+            $input['boost_score'] = $editUser->boost_score;
+            $input['commission_rate'] = $editUser->commission_rate;
+            $userM = new User();
+            $rs = $userM->saveMember($request, $input);
+            return redirect()->route('me.edit')->with('notify', $rs);
+        }
+        $userselect = User::all();
+        $this->data['userselect'] = $userselect;
+        
+        $this->data['user'] = $editUser;
+       // $this->data['navText'] = __('Thông tin');
+        $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.dashboard', $this->data);
     }
 

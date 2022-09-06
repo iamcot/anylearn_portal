@@ -31,8 +31,8 @@
     <div class="sidebar-heading">
         
     </div>
-    <li class="nav-item {{ $route == 'me.edit' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('me.edit') }}">
+    <li class="nav-item {{ $route == 'me.dashboard' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.dashboard') }}">
             <i class="fas fa-fw fa-user-edit"></i>
             <span>@lang('Thông tin chung')</span></a>
     </li>

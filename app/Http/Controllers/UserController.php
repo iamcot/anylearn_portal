@@ -12,6 +12,7 @@ use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
+use App\Models\Item;
 use App\Models\UserDocument;
 use App\Models\UserLocation;
 use App\Services\FileServices;
@@ -110,7 +111,6 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
-
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -122,11 +122,11 @@ class UserController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            return redirect()->route('me.edit')->with('notify', $rs);
+            return redirect()->route('me.dashboard')->with('notify', $rs);
         }
         $userselect = User::all();
         $this->data['userselect'] = $userselect;
-        
+
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
@@ -305,7 +305,7 @@ class UserController extends Controller
                 ->orWhereNull('introduce')
                 ->orWhereNull('full_content');
         })
-            ->select(DB::raw("users.*, (SELECT notifications.created_at 
+            ->select(DB::raw("users.*, (SELECT notifications.created_at
         FROM notifications WHERE notifications.user_id = users.id AND type = '" . NotifConstants::UPDATE_INFO_REMIND . "'  order by notifications.id desc limit 1) AS last_notif"))
             ->orderBy('users.id', 'desc')
             ->paginate(20);
@@ -429,10 +429,28 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['navText'] = __('Khoá học của tôi');
+        $input = $request->input('search');
+        $item = Item::all()->where('title','LIKE', '%' . $input . '%');
+        $inputselect = $request->input('myselect');
         $orderDetailM = new OrderDetail();
-        
-        $this->data['orders'] = $orderDetailM->userRegistered($user->id);
-        // dd($this->data['orders']);
+        $id = auth()->user()->id;
+        $childuser = DB::table('users')->where('is_child', $id)->orWhere('id',$id)->get();
+        $this->data['childuser'] = $childuser;
+        // $reset = $request ->input('reset');
+        // if($reset != null){
+        //     $input = null;
+        //     $inputselect ='all';
+        // }
+        if ($input ==null && ($inputselect =='all' || $inputselect==null )) {
+            $this->data['orders'] = $orderDetailM->userRegistered($user->id);
+        }
+        elseif($input != null && $inputselect =='all'){
+            $this->data['orders'] = $orderDetailM->searchNoSelect($user->id,$input);
+        }else{
+            
+            $this->data['orders'] = $orderDetailM->searchSelect($user->id,$input,$inputselect);
+            
+        }
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 

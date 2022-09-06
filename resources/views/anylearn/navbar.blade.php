@@ -31,7 +31,7 @@
                     <i class="fa fa-shopping-cart text-white  position-relative"><span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle">{{ $userServ->countItemInCart(Auth::user()->id) }}</span></i> 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/me/edit">
+                        <a class="dropdown-item" href="/me">
                             <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-secondary"></i>
                             @lang('Trang Quản lý')
                         </a>
