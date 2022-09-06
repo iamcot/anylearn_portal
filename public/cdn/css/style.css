@@ -37,7 +37,8 @@
     color: #e74a3b;
 }
 
-.form-control, .card {
+.form-control,
+.card {
     /* border-radius: 0; */
 }
 
@@ -137,26 +138,45 @@
     margin-bottom: 10px;
 }
 
-#fixed_menu{position: fixed; z-index:999; bottom:10%; right: 0;display: block;} #fixed_menu ul {list-style-type: none;}#fixed_menu ul li{display: block; padding: 5px; margin: 5px 0 5px 0;background: #ddd; border: #0076af; text-align: center; border-top-left-radius: 10px; border-bottom-left-radius: 10px;}
+#fixed_menu {
+    position: fixed;
+    z-index: 999;
+    bottom: 10%;
+    right: 0;
+    display: block;
+}
+
+#fixed_menu ul {
+    list-style-type: none;
+}
+
+#fixed_menu ul li {
+    display: block;
+    padding: 5px;
+    margin: 5px 0 5px 0;
+    background: #ddd;
+    border: #0076af;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
 
 .anylearn_rating li {
     display: inline;
 }
 
-
 @media (max-width: 768px) {
     .mobile-no-text {
         display: none;
     }
-
     .grid {
         grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 
- .grid-box {
-     min-height: 300px;
- }
+.grid-box {
+    min-height: 300px;
+}
 
 .grid {
     margin: 0 auto;
@@ -165,12 +185,11 @@
     grid-auto-rows: 1fr;
     grid-column-gap: 15px;
     grid-row-gap: 15;
-
 }
 
 .grid_title {
-    line-height:1.5em;
-    height:4.5em;
+    line-height: 1.5em;
+    height: 4.5em;
     overflow: hidden;
     font-weight: bold;
 }
@@ -182,17 +201,23 @@
 .imagebox:after {
     content: "";
     display: block;
-    padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
-  }
+    padding-bottom: 100%;
+    /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
+}
 
 .imagebox img {
-    position: absolute; /* Take your picture out of the flow */
+    position: absolute;
+    /* Take your picture out of the flow */
     top: 0;
     bottom: 0;
     left: 0;
-    right: 0; /* Make the picture taking the size of it's parent */
-    width: 100%; /* This if for the object-fit */
-    height: 100%; /* This if for the object-fit */
-    object-fit: cover; /* Equivalent of the background-size: cover; of a background-image */
+    right: 0;
+    /* Make the picture taking the size of it's parent */
+    width: 100%;
+    /* This if for the object-fit */
+    height: 100%;
+    /* This if for the object-fit */
+    object-fit: cover;
+    /* Equivalent of the background-size: cover; of a background-image */
     object-position: center;
 }
