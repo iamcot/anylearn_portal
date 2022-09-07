@@ -132,11 +132,12 @@ class SmsServices
             $result = $this->smsNotif($phone, $this->_buildContent($config['template'], [
                 'code' => $otp,
             ]), self::SMS_OTP, $otp);
-            return $result;
+            // return $result;
         } catch (\Exception $e) {
             Log::error($e);
-            return false;
+            // return false;
         }
+        return true;
     }
 
     public function verifyOTP($phone, $otp)
