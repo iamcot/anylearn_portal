@@ -128,14 +128,14 @@
     <div class="col-md-3">
     <div class="card shadow">
         <div class="card-body">
-            <div class="">
+            <div>
             <h6><b>Danh Sách Bạn Bè</b></h6>
             <div class="form-group row">
             <!-- <p class="p-2">Bạn chưa có bạn bè</p> -->
                     @foreach($userselect as $userselect)
                     @if($userselect->user_id == auth()->user()->id)
-                    <div class="col-md-10">
-                    <i class="fas fa-user-alt"> {{ $userselect->name }}</i>
+                    <div>
+                    <i class="fas fa-user-alt p-2 m-2"> {{ $userselect->name }}</i>
                         <!-- <input id="name" type="text" class="form-control" name="name" value="{{ $userselect->name }}" readonly> -->
                     </div>
                     @endif

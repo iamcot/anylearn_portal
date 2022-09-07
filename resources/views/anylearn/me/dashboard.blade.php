@@ -18,7 +18,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="text-center">
-                                <button name="save" value="save" class="right btn-info rounded-pill  border-0"><i class="fas fa-edit" style="color:white;"></i> <a href="/me/edit" style="color:white;">@lang('Sửa thông tin')</a> </button>
+                               <a href="/me/edit"><i class="fas fa-edit"></i>@lang('Sửa thông tin')</a>
                             </div>
                         </div>
 
@@ -145,8 +145,13 @@
             <!-- <p class="p-2">Bạn chưa có bạn bè</p> -->
                     @foreach($userselect as $userselect)
                     @if($userselect->user_id == auth()->user()->id)
-                    <div class="col-md-10">
-                    <i class="fas fa-user-alt"> {{ $userselect->name }}</i>
+                    <div>
+                    @if($userselect->image !=null)
+                    <img class="avatar avatar-sm avatar-img circle" src="{{ $userselect->image }}" alt="">
+                    @else
+                    <img class="avatar avatar-sm avatar-img circle" src="http://anylearn.vn/cdn/anylearn/img/logo-color.svg" alt="">
+                    @endif
+                    <span class="mt-3 ml-2">{{ $userselect->name }}</span> 
                         <!-- <input id="name" type="text" class="form-control" name="name" value="{{ $userselect->name }}" readonly> -->
                     </div>
                     @endif

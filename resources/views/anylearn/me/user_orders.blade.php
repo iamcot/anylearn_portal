@@ -35,7 +35,7 @@
                            
                         </div>
                         &nbsp&nbsp
-                        <a type="reset" href="" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
+                        <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
                     </div>
                 </div>
             </div>  
@@ -68,13 +68,16 @@
             </div>  
         </form>
         <table class="table text-secondary table-hover table-borderless">
+        <thead class="table-secondary text-secondary">
             <tr>
-                <td>Ngày đăng ký</td>
-                <td>Ngày hoàn thành</td>
-                <td>Tên khóa học</td>
-                <td>Tài khoản học</td>
+                <th class="border-0">Ngày đăng ký</th>
+                 <th class="border-0">Ngày hoàn thành</th>
+                 <th class="border-0">Tên khóa học</th>
+                 <th class="border-0">Tài khoản học</th>
             </tr>
-            @foreach($orders['done'] as $item)
+        </thead>
+        <tbody>
+        @foreach($orders['done'] as $item)
             <tr>
                 <td>{{ date("d/m", strtotime($item->date) ) }}</td>
                 <td>{{ date("d/m", strtotime($item->date_end) ) }}</td>
@@ -88,6 +91,8 @@
                 </td>
             </tr>
             @endforeach
+        </tbody>  
+            
         </table>
         @endif
     </div>
@@ -143,15 +148,17 @@
             </div>  
         </form>
         <table class="table  text-secondary table-hover">
+        <thead class="table-secondary text-secondary">
             <tr>
-                
-                <td>Ngày đăng ký</td>
-                <td>Tên khóa học</td>
-                <td>Tài khoản học</td>
+                 <th class="border-0">Ngày đăng ký</th>
+                 <th class="border-0">Tên khóa học</th>
+                 <th class="border-0">Tài khoản học</th>
             </tr>
+        </thead>
+        <tbody>
             @foreach($orders['open'] as $item)
             <tr>
-                <td width="15%">{{ date("d/m", strtotime($item->date) ) }}  {{ $item->time }}</td>
+                <td width="18%">{{ date("d/m", strtotime($item->date) ) }}  {{ $item->time }}</td>
                 <td>
                     <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
                 </td>
@@ -161,6 +168,8 @@
                 </td>
             </tr>
             @endforeach
+        </tbody>
+            
         </table>
         @endif
     </div>
@@ -170,12 +179,13 @@
         @else
         
         <table class="table text-secondary table-hover">
+        <thead class="table-secondary text-secondary">
             <tr>
-                
                 <td>Tên khóa học</td>
                 <td>Hành động</td>
-
             </tr>
+        </thead>
+        <tbody>
             @foreach($orders['fav'] as $item)
             <tr>
                 <td>
@@ -186,6 +196,8 @@
                 </td>
             </tr>
             @endforeach
+        </tbody>
+            
         </table>
         @endif
     </div>

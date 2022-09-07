@@ -36,7 +36,7 @@ class DashboardController extends Controller
     }
 
     public function meDashboard(Request $request) {
-        $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
+        // $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
         $editUser = Auth::user();
         if ($request->input('save')) {
             $input = $request->all();

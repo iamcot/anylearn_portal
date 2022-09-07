@@ -8,7 +8,9 @@
                   <img src="{{ auth()->user()->banner }}" alt="">
               </div>
               @else
-              
+              <div class="fb-timeline-img" style="background:#777;">
+                  <img src="http://anylearn.vn/cdn/anylearn/img/logo-white.svg" alt="">
+              </div>
               @endif
             </div>
             <div class="panel-body">
@@ -18,10 +20,10 @@
               </div>
               <h2 style="margin-top:5px"><a class="text-black" >{{ Auth::user()->name }}</a></h2>
               @else
-              <!-- <div class="profile-thumb" style="background:#777;">
+              <div class="profile-thumb" style="background:#777;">
                   <img src="http://anylearn.vn/cdn/anylearn/img/logo-white.svg" alt="">
               </div>
-              <h2 ><a class="text-black" >{{ Auth::user()->name }}</a></h2> -->
+              <h2 ><a class="text-black" >{{ Auth::user()->name }}</a></h2>
             @endif
             </div>
         </div>

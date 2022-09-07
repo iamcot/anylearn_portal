@@ -171,7 +171,17 @@ class User extends Authenticatable
         }
         return $this->find($input['id'])->update($obj);
     }
-
+    public function changePassword(Request $request, $input)
+    {
+        if (empty($input['id'])) {
+            return 0;
+        }
+        if (!empty($input)) {
+            $obj['password'] = Hash::make($input['newpassword']);
+        }
+        $rs = $this->find($input['id'])->update($obj);
+        return $rs;
+    }
     public function saveMember(Request $request, $input)
     {
         if (empty($input['id'])) {

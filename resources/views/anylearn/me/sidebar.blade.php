@@ -47,7 +47,7 @@
             <span>@lang('Chờ thanh toán')</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link">
+        <a class="nav-link" href="{{ route('me.resetpassword') }}">
             <i class="fas fa-fw fa-lock"></i>
             <span>@lang('Đổi mật khẩu')</span></a>
     </li>

@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Hash;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
@@ -128,9 +129,45 @@ class UserController extends Controller
         $this->data['userselect'] = $userselect;
 
         $this->data['user'] = $editUser;
-        $this->data['navText'] = __('Chỉnh sửa Thông tin');
+        // $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
+    }
+
+    public function mePassword(Request $request)
+    {
+        $editUser = Auth::user();
+        // $validator = Validator::make($request->all(), [
+
+        // ]
+        if ($request->input('save')) {
+            $input = $request->all();
+            $newpass = $request->input('newpassword');
+            $oldpass = $request->input('password');
+            $input['role'] = $editUser->role;
+            $input['user_id'] = $editUser->user_id;
+            $input['boost_score'] = $editUser->boost_score;
+            $input['commission_rate'] = $editUser->commission_rate;
+            $userM = new User();
+            if (Hash::check($oldpass, $editUser->password)) {
+                if($request->input('newpassword') != $request->input('repassword')){
+                    return redirect()->back()->with('errormk', 'Mật khẩu không trùng khớp');  
+                }
+                else{
+                    $userM = new User();
+                    $rs = $userM->changePassword($request, $input);
+                    return redirect()->route('me.dashboard')->with('notify', $rs);
+                }
+                
+            }
+            else{
+                //return redirect()->route('me.resetpassword')->with('notify', 'error');
+                return redirect()->back()->with('error', 'Mật Khẩu không chính xác');  
+            }
+        }
+        $this->data['user'] = $editUser;
+        $this->data['navText'] = __('Đổi Mật Khẩu');
+        return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 
     public function memberEdit(Request $request, $userId)
