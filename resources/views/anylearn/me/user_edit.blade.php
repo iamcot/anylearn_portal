@@ -135,7 +135,12 @@
                     @foreach($userselect as $userselect)
                     @if($userselect->user_id == auth()->user()->id)
                     <div>
-                    <i class="fas fa-user-alt p-2 m-2"> {{ $userselect->name }}</i>
+                    @if($userselect->image !=null)
+                    <img class="avatar avatar-sm avatar-img circle" src="{{ $userselect->image }}" alt="">
+                    @else
+                    <img class="avatar avatar-sm avatar-img circle" src="http://anylearn.vn/cdn/anylearn/img/logo-color.svg" alt="">
+                    @endif
+                    <span class="p-2 m-2"> {{ $userselect->name }}</span>
                         <!-- <input id="name" type="text" class="form-control" name="name" value="{{ $userselect->name }}" readonly> -->
                     </div>
                     @endif
