@@ -804,6 +804,24 @@ class UserApi extends Controller
         }
     }
 
+    public function otpCheck(Request $request)
+    {
+        $phone = $request->get('phone');
+        $otp = $request->get('otp');
+        $smsServ = new SmsServices();
+        try {
+            $result = $smsServ->verifyOTP($phone, $otp, false);
+            if ($result) {
+                return response()->json([
+                    'result' => true,
+                ]);
+            }
+        } catch (\Exception $ex) {
+            Log::error($ex);
+        }
+        return response("Không thể xác thực OTP", 400);
+    }
+
     public function resetPassOtp(Request $request)
     {
         $phone = $request->get('phone');

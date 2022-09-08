@@ -126,7 +126,7 @@ class SmsServices
     public function smsOTP($phone)
     {
         //@TODO: prevent resend sameday
-        $otp = mt_rand(100000,999999);//substr(str_shuffle(MD5(microtime())), 0, 6);
+        $otp = mt_rand(100000, 999999); //substr(str_shuffle(MD5(microtime())), 0, 6);
         try {
             $config = $this->template[self::SMS_OTP];
             $result = $this->smsNotif($phone, $this->_buildContent($config['template'], [
@@ -140,7 +140,7 @@ class SmsServices
         return true;
     }
 
-    public function verifyOTP($phone, $otp)
+    public function verifyOTP($phone, $otp, $setRead = true)
     {
         if (!class_exists("App\Models\Notification")) {
             throw new \Exception("Hiện tại chưa hỗ trợ tính năng này.");
@@ -159,9 +159,12 @@ class SmsServices
         if (!$haveNotif) {
             throw new \Exception("OTP không đúng");
         }
-        Notification::find($haveNotif->id)->update([
-            'read' => DB::raw('NOW()')
-        ]);
+        if ($setRead) {
+            Notification::find($haveNotif->id)->update([
+                'read' => DB::raw('NOW()')
+            ]);
+        }
+
         return true;
     }
 
