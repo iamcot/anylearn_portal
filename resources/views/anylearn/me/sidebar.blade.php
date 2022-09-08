@@ -46,13 +46,13 @@
             <i class="fas fa-fw fa-shopping-cart"></i>
             <span>@lang('Chờ thanh toán')</span></a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item {{ $route == 'me.resetpassword' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.resetpassword') }}">
             <i class="fas fa-fw fa-lock"></i>
             <span>@lang('Đổi mật khẩu')</span></a>
     </li>
-    <li class="nav-item ">
-        <a class="nav-link">
+    <li class="nav-item {{ $route == 'me.child' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.child') }}">
             <i class="fas fa-fw fa-child"></i>
             <span>@lang('Quản lý tài khoản con')</span></a>
     </li>

@@ -78,7 +78,23 @@ class User extends Authenticatable
             'role' => ['required', 'in:member,teacher,school'],
         ]);
     }
-
+    public function createChild($input)
+    {
+        $phoneByTime = auth()->user()->phone . time();
+        $obj =[
+            'name'=>isset($input['username']) ? $input['username'] : null,
+            'dob'=>isset($input['dob']) ? $input['dob'] : null,
+            'phone' => $phoneByTime,
+            'refcode' => $phoneByTime,
+            'password' => Hash::make(auth()->user()->phone),
+            'role' =>'child',
+            'sex'=>$input['sex'],
+            'is_child'=>auth()->user()->id,
+            'introduce'=>$input['introduce'],
+        ];
+        $newChild = $this->create($obj);
+        return $newChild;
+    }
     public function createNewMember($data)
     {
         $obj = [
@@ -255,7 +271,6 @@ class User extends Authenticatable
         return ($user->role == UserConstants::ROLE_TEACHER || $user->role == UserConstants::ROLE_SCHOOL)
             && $user->update_doc == UserConstants::STATUS_INACTIVE ? true : false;
     }
-
     public function searchMembers(Request $request, $file = false)
     {
         $members = DB::table('users')->whereIn('users.role', UserConstants::$memberRoles);

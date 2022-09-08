@@ -112,6 +112,7 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
+    
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -133,7 +134,79 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
+    public function meChild(Request $request)
+    {
+        $id = auth()->user()->id;
+        $childuser = DB::table('users')->where('is_child', $id)->get();
+        $this->data['childuser'] = $childuser;
+        $editChild = Auth::user();
+        if ($request->input('delete')) {
+            $input = $request->all();
+            $res=User::find($input['childid']);
+            $res->delete();
+            return redirect()->route('me.child')->with('notify', 'Xóa Thành Công');
+        }
+        if($request->input('childid')){
+            $input=$request->all();
+            $id = $input['childid'];
+            $userC = User::find($id);
+            $this->data['userC'] = $userC;
+            $this->data['navText'] = __('Quản lý tài khoản con');
+            if($request->input('save')){
+                $input=$request->all();
+                $this->data['navText'] = __('Quản lý tài khoản con');
+                $userC->name = $input['username'];
+                $userC->dob = $input['dob'];
+                $userC->sex = $input['sex'];
+                $userC->introduce = $input['introduce'];
 
+                $userC -> save($input);
+                $this->data['userC'] = $userC;
+                return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+            }
+            $this->data['navText'] = __('Quản lý tài khoản con');
+            return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+
+            // return redirect()->route('me.editchild')->with([ 'id' => $id ]);
+        }
+        
+        if ($request->input('create')) {
+            $input = $request->all();
+            $userChild = new User();
+            $userChild -> createChild($input);
+            return redirect()->route('me.child')->with('notify', 'Tạo tài khoản mới thành công');
+        }
+        if($request->input('search')){
+            $input = $request->all();
+            $s = $input['inputsearch'];
+            $searchChild = DB::table('users')->where('is_child',$id)
+            ->where('name','like','%'.$s.'%')->get();
+            $this->data['search'] =$s;
+            $this->data['childuser'] = $searchChild;
+            return view(env('TEMPLATE', '') . 'me.child', $this->data);
+        }
+        $this->data['navText'] = __('Quản lý tài khoản con');
+        return view(env('TEMPLATE', '') . 'me.child', $this->data);
+    }
+    // public function meChildEdit(Request $request)
+    // {
+    //     $id = session()->get('id');
+    //     $userC = User::find($id);
+    //     $this->data['userC'] = $userC;
+    //     $this->data['navText'] = __('Quản lý tài khoản con');
+    //     if($request->input('save')){
+    //         $input=$request->all();
+    //         $this->data['navText'] = __('Quản lý tài khoản con');
+    //         $userC->name = $input['username'];
+    //         $userC->dob = $input['dob'];
+    //         $userC->sex = $input['sex'];
+    //         $userC->introduce = $input['introduce'];
+    //         $userC -> save($input);
+    //         $this->data['userC'] = $userC;
+    //         return redirect()->route('me.editchild')->with([ 'id' => $id ]);
+    //     }
+    //     return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+    // }
     public function mePassword(Request $request)
     {
         $editUser = Auth::user();

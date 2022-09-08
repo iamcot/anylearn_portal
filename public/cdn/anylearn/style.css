@@ -456,6 +456,14 @@ body {
     z-index: 1;
 }
 
+.ms-n5 {
+    margin-left: -40px;
+}
+
+.btn-hidden {
+    display: none;
+}
+
 .avatar-group.avatar-group-lg .avatar {
     font-size: .95rem;
     width: 3.25rem;
