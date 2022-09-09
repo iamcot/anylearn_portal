@@ -1,4 +1,4 @@
-
+<!-- 
 <div class="container">
     <div class="row">
         <div class="panel">
@@ -20,13 +20,13 @@
               </div>
               <h2 style="margin-top:5px"><a class="text-black" >{{ Auth::user()->name }}</a></h2>
               @else
-              <!-- <div class="profile-thumb">
+              <div class="profile-thumb">
                   <img src="http://anylearn.vn/cdn/anylearn/img/logo-color.svg" alt="">
               </div>
-              <h2 ><a class="text-black" >{{ Auth::user()->name }}</a></h2> -->
+              <h2 ><a class="text-black" >{{ Auth::user()->name }}</a></h2>
             @endif
             </div>
         </div>
   </div>
 </div>
-<p>
+<p> -->

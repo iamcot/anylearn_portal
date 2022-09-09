@@ -43,6 +43,13 @@
                         </div>
                         <div class="text-secondary is-content">
                             <h1 class="h5 text-gray-800 mb-3">
+                            @if($hasBack ?? false)
+                                @if ($hasBack === true)
+                                <a href="javascript:window.history.back()"><i class="fas  fa-arrow-left"></i></a>
+                                @else 
+                                <a href="{{ $hasBack }}"><i class="fas  fa-arrow-left"></i></a>
+                                @endif
+                            @endif
                                 {{ $navText ?? '' }}
                             </h1>
                             @yield('body')

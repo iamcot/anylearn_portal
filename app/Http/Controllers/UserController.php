@@ -140,16 +140,18 @@ class UserController extends Controller
         $childuser = DB::table('users')->where('is_child', $id)->get();
         $this->data['childuser'] = $childuser;
         $editChild = Auth::user();
-        if ($request->input('delete')) {
-            $input = $request->all();
-            $res=User::find($input['childid']);
-            $res->delete();
-            return redirect()->route('me.child')->with('notify', 'Xóa Thành Công');
-        }
-        if($request->input('childid')){
+        if($request->input('childedit')){
             $input=$request->all();
             $id = $input['childid'];
             $userC = User::find($id);
+            $courses = DB::table('orders')
+                                ->join('order_details', 'orders.user_id', '=', 'order_details.user_id')
+                                ->join('items', 'order_details.item_id', '=', 'items.id')
+                                ->where('orders.user_id',$id)
+                                ->orderBy('order_details.created_at', 'desc')->take(4)
+                                ->get();
+            $this->data['courses'] = $courses;
+            $this->data['hasBack'] = route('me.child');
             $this->data['userC'] = $userC;
             $this->data['navText'] = __('Quản lý tài khoản con');
             if($request->input('save')){
@@ -159,10 +161,12 @@ class UserController extends Controller
                 $userC->dob = $input['dob'];
                 $userC->sex = $input['sex'];
                 $userC->introduce = $input['introduce'];
-
                 $userC -> save($input);
                 $this->data['userC'] = $userC;
                 return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+            }
+            if ($request->input('more')) {
+                return redirect()->route('me.orders');
             }
             $this->data['navText'] = __('Quản lý tài khoản con');
             return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
@@ -175,15 +179,6 @@ class UserController extends Controller
             $userChild = new User();
             $userChild -> createChild($input);
             return redirect()->route('me.child')->with('notify', 'Tạo tài khoản mới thành công');
-        }
-        if($request->input('search')){
-            $input = $request->all();
-            $s = $input['inputsearch'];
-            $searchChild = DB::table('users')->where('is_child',$id)
-            ->where('name','like','%'.$s.'%')->get();
-            $this->data['search'] =$s;
-            $this->data['childuser'] = $searchChild;
-            return view(env('TEMPLATE', '') . 'me.child', $this->data);
         }
         $this->data['navText'] = __('Quản lý tài khoản con');
         return view(env('TEMPLATE', '') . 'me.child', $this->data);
@@ -539,6 +534,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['navText'] = __('Khoá học của tôi');
+        
         $input = $request->input('search');
         $item = Item::all()->where('title','LIKE', '%' . $input . '%');
         $inputselect = $request->input('myselect');
@@ -560,6 +556,9 @@ class UserController extends Controller
             
             $this->data['orders'] = $orderDetailM->searchSelect($user->id,$input,$inputselect);
             
+        }
+        if($request->input('reset')){
+            return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
         }
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }

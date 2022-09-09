@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="">
                 <div class="form-group row">
-                    <label for="name" class=" col-md-3 col-form-label text-md-right">{{ __('Mật Khẩu*') }}</label>
+                    <label for="name" class=" col-md-3 col-form-label text-md-left">{{ __('Mật Khẩu*') }}</label>
                     <div class="col-md-8">
                         <div class="input-group mb-3">
                             <input type="password" name="password" id="password" class="@error('password') is-invalid @enderror form-control" placeholder="Nhập mật khẩu hiện tại" aria-label="Nhập mật khẩu hiện tại" aria-describedby="button-addon2" required>
@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="name" class="  col-md-3 col-form-label text-md-right">{{ __('Mật Khẩu Mới*') }}</label>
+                    <label for="name" class="  col-md-3 col-form-label text-md-left">{{ __('Mật Khẩu Mới*') }}</label>
                     <div class="col-md-8">
                         <div class="input-group mb-3">
                             <input type="password" name="newpassword" id="newpassword" class="@error('password') is-invalid @enderror form-control" placeholder="Nhập mật khẩu mới" aria-label="Nhập mật khẩu mới" aria-describedby="button-addon2" required>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-group row">
                      
-                    <label for="name" class="  col-md-3 col-form-label text-md-right">{{ __('Xác Nhận Mật Khẩu*') }}</label>
+                    <label for="name" class="  col-md-3 col-form-label text-md-left">{{ __('Xác Nhận Mật Khẩu*') }}</label>
                     <div class="col-md-8">
                         <div class="input-group mb-3">
                             <input type="password" name="repassword" id="repassword" class="@error('password') is-invalid @enderror form-control" placeholder="Xác nhận mật khẩu" aria-label="Xác nhận mật khẩu" aria-describedby="button-addon2" required>

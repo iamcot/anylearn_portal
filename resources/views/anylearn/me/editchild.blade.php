@@ -83,8 +83,7 @@
         <!-- Form  -->
         <form method="POST">
             @csrf
-            <div class="card shadow">
-                <div class="card-body">
+            
                     <div class="">
                         <div class="form-group row">
                             <h6><b>Thông tin cá nhân</b></h6>
@@ -133,8 +132,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 <button type="Submit" class="btn btn-success" name="save" value="save">Lưu</button>
@@ -153,43 +151,23 @@
             <div class="card-body">
                 <div class="">
                     <div class="form-group row">
+                        @if(count($courses) > 0)
+                        <a href="{{route('me.orders')}}" value="more" name="more" class="text-end"><i class="fas fa-angle-double-right"></i>@lang('Xem thêm...')</a>
+                        <!-- <a class="text-end" href="{{route('me.orders')}}">Xem thêm...</a> -->
+                        @else
+                        <p class="p-2">Tài khoản con này chưa tham gia bất kì khóa học nào</p>
+                        @endif
                         <div class="row">
+                            @foreach($courses as $item)
                             <div class="col-md-3">
                                 <div class="card-img">
                                     <div class="imagebox">
-                                    <img src="https://s3-ap-southeast-1.amazonaws.com/anylearns2/items/714/HRHsMSrMSH1662562998.jpg" class="img-fluid">
+                                    <img src="{{ $item->image }}" class="img-fluid">
                                     </div>
-                                    <div class="class-title mt-1 fw-bold p-1 text-success"> Cách ba mẹ truyền cảm hứng học tập cho con</div>                          
+                                    <div class="class-title mt-1 fw-bold p-1 text-success">{{ $item->title }}</div>                          
                                 </div>
-                                
                             </div>
-                            <div class="col-md-3">
-                                <div class="card-img">
-                                    <div class="imagebox">
-                                    <img src="https://s3-ap-southeast-1.amazonaws.com/anylearns2/items/714/HRHsMSrMSH1662562998.jpg" class="img-fluid">
-                                    </div>
-                                    <div class="class-title mt-1 fw-bold p-1 text-success"> Cách ba mẹ truyền cảm hứng học tập cho con</div>                          
-                                </div>
-                                
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card-img">
-                                    <div class="imagebox">
-                                    <img src="https://s3-ap-southeast-1.amazonaws.com/anylearns2/items/714/HRHsMSrMSH1662562998.jpg" class="img-fluid">
-                                    </div>
-                                    <div class="class-title mt-1 fw-bold p-1 text-success"> Cách ba mẹ truyền cảm hứng học tập cho con</div>                          
-                                </div>
-                                
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card-img">
-                                    <div class="imagebox">
-                                    <img src="https://s3-ap-southeast-1.amazonaws.com/anylearns2/items/714/HRHsMSrMSH1662562998.jpg" class="img-fluid">
-                                    </div>
-                                    <div class="class-title mt-1 fw-bold p-1 text-success"> Cách ba mẹ truyền cảm hứng học tập cho con</div>                          
-                                </div>
-                                
-                            </div>
+                            @endforeach
                             
                         </div>
                     </div>

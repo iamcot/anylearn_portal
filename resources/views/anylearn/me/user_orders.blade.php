@@ -23,9 +23,22 @@
             <div class="input-group">
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        <div class="row mr-1">
+                            <div class="mx-auto">
+                                    <div class="input-group">
+                                         <!-- <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input"> -->
+                                        <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                        <span class="input-group-append">
+                                            <!-- <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit"> -->
+                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                    </div>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
+                             &nbsp
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
                                 <option value="all">All</option>
                                 @foreach($childuser as $item)
@@ -35,7 +48,8 @@
                            
                         </div>
                         &nbsp&nbsp
-                        <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
+                        <!-- <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a> -->
+                        <a type="reset" href="{{route('me.orders')}}" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
                     </div>
                 </div>
             </div>  
@@ -50,9 +64,20 @@
             <div class="input-group">
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        <div class="row mr-1">
+                            <div class="mx-auto">
+                                    <div class="input-group">
+                                         <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                        <span class="input-group-append">
+                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                    </div>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
+                             &nbsp
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
                                 <option value="all">All</option>
                                 @foreach($childuser as $item)
@@ -62,7 +87,7 @@
                            
                         </div>
                         &nbsp&nbsp
-                        <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;" name="reset" value="Reset" id="reset123" onclick="customReset();">xóa bộ lọc</a>
+                        <a type="reset" href="{{route('me.orders')}}" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
                     </div>
                 </div>
             </div>  
@@ -102,9 +127,20 @@
             <div class="input-group">
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                    <div class="row mr-1">
+                            <div class="mx-auto">
+                                    <div class="input-group">
+                                         <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                        <span class="input-group-append">
+                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                    </div>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
+                            <!--  &nbsp -->
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
                                 <option value="all">All</option>
                                 @foreach($childuser as $item)
@@ -114,7 +150,7 @@
                            
                         </div>
                         &nbsp&nbsp
-                        <a type="reset" href="" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
+                        <a type="reset" href="{{route('me.orders')}}" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
                     </div>
                 </div>
             </div>  
@@ -129,9 +165,21 @@
             <div class="input-group">
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="text" name="search" class="form-control" placeholder="Tìm khóa học" aria-label="Tìm khóa học" aria-describedby="basic-addon2">
+                        
+                    <div class="row mr-1">
+                            <div class="mx-auto">
+                                    <div class="input-group">
+                                         <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                        <span class="input-group-append">
+                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                    </div>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>&nbsp
+                             &nbsp
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
                                 <option value="all">All</option>
                                 @foreach($childuser as $item)
@@ -141,8 +189,8 @@
                            
                         </div>
                         &nbsp&nbsp
-                        <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
-                        
+                        <!-- <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a> -->
+                        <a type="reset" href="{{route('me.orders')}}" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a>
                     </div>
                 </div>
             </div>  
