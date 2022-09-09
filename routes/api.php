@@ -21,6 +21,7 @@ Route::post('/register', 'Apis\UserApi@register');
 Route::any('/simple-register', 'Apis\UserApi@simpleRegister');
 Route::get('/password/otp', 'Apis\UserApi@sentOtpResetPass');
 Route::post('/password/reset', 'Apis\UserApi@resetPassOtp');
+Route::post('/otp/check', 'Apis\UserApi@otpCheck');
 
 Route::get('/users/{role}', 'Apis\UserApi@usersList');
 Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
