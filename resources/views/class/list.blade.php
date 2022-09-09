@@ -48,6 +48,9 @@
     </div>
 </form>
 <div class="card shadow">
+    <div class="card-header">
+        Tổng tìm kiếm: <strong class="text-danger">{{ $courseList->total() }}</strong>
+    </div>
     <div class="card-body p-0 table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
