@@ -68,7 +68,7 @@
                         <div class="form-group row">
                             <label for="title" class="col-md-3 col-form-label text-md-right">{{ __('Ngày sinh*') }}</label>
                             <div class="col-md-8">
-                                <input id="title" type="date" class="form-control @error('dob') is-invalid @enderror" name="dob" >
+                                <input id="title" type="date" class="form-control @error('dob') is-invalid @enderror" name="dob" required >
                             </div>
                         </div>
                         <div class="form-group row">
@@ -77,7 +77,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" value="male" name="sex" id="sex" >
+                                            <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if(empty($userC->sex)||$userC->sex=="male") echo"checked='checked'" ?>>
                                             <label class="form-check-label" for="male">
                                                 Nam
                                             </label>
@@ -85,7 +85,7 @@
                                         </div>
                                         <div class="col-md-4">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" value="female" name="sex" id="sex">
+                                            <input class="form-check-input" type="radio" value="female" name="sex" id="sex" <?php if(!empty($userC->sex)&&$userC->sex=="female") echo"checked='checked'"; ?>>
                                             <label class="form-check-label" for="female">
                                                 Nữ
                                             </label>

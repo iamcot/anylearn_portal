@@ -18,6 +18,8 @@ use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\SmsServices;
 use App\Services\UserServices;
+use App\Services\TransactionService;
+use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -134,6 +136,17 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
+    public function meHistory(Request $request)
+    {
+        $trans = new Transaction();
+        $sum = Transaction::where('pay_method','=','wallet_c')->where('user_id', auth()->user()->id)->sum('amount');
+        $this->data['anyPoint'] = abs($sum);
+        // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
+        $this->data['WALLETM'] = $trans->history(auth()->user()->id,'wallet_m');
+        $this->data['WALLETC'] = $trans->history(auth()->user()->id,'wallet_c');
+        $this->data['navText'] = __('Giao dịch của tôi');
+        return  view(env('TEMPLATE', '').'me.history', $this->data);
+    }
     public function meChild(Request $request)
     {
         $id = auth()->user()->id;
@@ -141,13 +154,13 @@ class UserController extends Controller
         $this->data['childuser'] = $childuser;
         $editChild = Auth::user();
         if($request->input('childedit')){
+            
             $input=$request->all();
             $id = $input['childid'];
             $userC = User::find($id);
-            $courses = DB::table('orders')
-                                ->join('order_details', 'orders.user_id', '=', 'order_details.user_id')
+            $courses = DB::table('order_details')
                                 ->join('items', 'order_details.item_id', '=', 'items.id')
-                                ->where('orders.user_id',$id)
+                                ->where('order_details.user_id',$id)
                                 ->orderBy('order_details.created_at', 'desc')->take(4)
                                 ->get();
             $this->data['courses'] = $courses;
@@ -527,6 +540,7 @@ class UserController extends Controller
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
             )
             ->paginate();
+            $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
@@ -542,11 +556,9 @@ class UserController extends Controller
         $id = auth()->user()->id;
         $childuser = DB::table('users')->where('is_child', $id)->orWhere('id',$id)->get();
         $this->data['childuser'] = $childuser;
-        // $reset = $request ->input('reset');
-        // if($reset != null){
-        //     $input = null;
-        //     $inputselect ='all';
-        // }
+        $this->data['inputselect']=$inputselect;
+        $this->data['input']=$request->input('search');
+
         if ($input ==null && ($inputselect =='all' || $inputselect==null )) {
             $this->data['orders'] = $orderDetailM->userRegistered($user->id);
         }
@@ -554,7 +566,7 @@ class UserController extends Controller
             $this->data['orders'] = $orderDetailM->searchNoSelect($user->id,$input);
         }else{
             
-            $this->data['orders'] = $orderDetailM->searchSelect($user->id,$input,$inputselect);
+            $this->data['orders'] = $orderDetailM->searchSelect($inputselect,$input,$inputselect);
             
         }
         if($request->input('reset')){

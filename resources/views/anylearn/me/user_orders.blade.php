@@ -26,11 +26,12 @@
                         <div class="row mr-1">
                             <div class="mx-auto">
                                     <div class="input-group">
-                                         <!-- <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input"> -->
-                                        <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                    <!-- <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input"> -->
+                                         <!-- <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input"> -->
+                                        <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input">
                                         <span class="input-group-append">
                                             <!-- <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit"> -->
-                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                            <button id="sm" class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                         </span>
@@ -40,9 +41,9 @@
                         <div class="input-group-append">
                              &nbsp
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
-                                <option value="all">All</option>
+                                <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
-                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
                                 @endforeach
                             </select>
                            
@@ -67,9 +68,9 @@
                         <div class="row mr-1">
                             <div class="mx-auto">
                                     <div class="input-group">
-                                         <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                         <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input">
                                         <span class="input-group-append">
-                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                            <button id="sm" class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                         </span>
@@ -79,9 +80,9 @@
                         <div class="input-group-append">
                              &nbsp
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
-                                <option value="all">All</option>
+                                <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
-                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
                                 @endforeach
                             </select>
                            
@@ -130,9 +131,9 @@
                     <div class="row mr-1">
                             <div class="mx-auto">
                                     <div class="input-group">
-                                         <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                         <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input">
                                         <span class="input-group-append">
-                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                            <button id="sm" class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                         </span>
@@ -142,9 +143,10 @@
                         <div class="input-group-append">
                             <!--  &nbsp -->
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
-                                <option value="all">All</option>
+                                <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
-                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
+
                                 @endforeach
                             </select>
                            
@@ -169,9 +171,9 @@
                     <div class="row mr-1">
                             <div class="mx-auto">
                                     <div class="input-group">
-                                         <input class="form-control border-end-0 border" name="search" type="search" placeholder="Tìm Khóa học" id="example-search-input">
+                                         <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input">
                                         <span class="input-group-append">
-                                            <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
+                                            <button id="sm" class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                         </span>
@@ -181,9 +183,9 @@
                         <div class="input-group-append">
                              &nbsp
                             <select name="myselect" class="custom-select" id="inputGroupSelect04">
-                                <option value="all">All</option>
+                                <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
-                                <option value="{{ $item->id }}"> {{ $item->name}}</option>
+                                <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
                                 @endforeach
                             </select>
                            
@@ -211,7 +213,7 @@
                     <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
                 </td>
                 <td>
-                    <div class="">{{ auth()->user()->name }}</div>
+                    <div class="">{{ $item->name }}</div>
                     
                 </td>
             </tr>
@@ -252,8 +254,10 @@
 </div>
 @endsection
 <script>
+        
 function customReset()
 {
+
     document.getElementById("name").value = "";
     document.getElementById("country").value = "";
 }

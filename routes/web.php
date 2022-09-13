@@ -80,6 +80,8 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
     Route::any('/ischild', 'UserController@meChild')->name('me.child');
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    Route::any('/history', 'UserController@meHistory')->name('me.history');
+
 
 
     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');

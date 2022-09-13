@@ -49,6 +49,7 @@ class OrderDetail extends Model
             ->select(
                 'schedules.id',
                 'items.title',
+                'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
                 'schedules.date as date',
                 'schedules.time_start as time',
@@ -142,6 +143,7 @@ class OrderDetail extends Model
             ->select(
                 'schedules.id',
                 'items.title',
+                'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
                 'schedules.date as date',
                 'schedules.time_start as time',
@@ -234,6 +236,7 @@ class OrderDetail extends Model
             ->select(
                 'schedules.id',
                 'items.title',
+                'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
                 'schedules.date as date',
                 'schedules.time_start as time',

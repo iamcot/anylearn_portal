@@ -56,6 +56,11 @@
             <i class="fas fa-fw fa-child"></i>
             <span>@lang('Quản lý tài khoản con')</span></a>
     </li>
+    <li class="nav-item {{ $route == 'me.history' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.history') }}">
+            <i class="fas fa-fw fa-wallet"></i>
+            <span>@lang('Giao dịch của tôi')</span></a>
+    </li>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
