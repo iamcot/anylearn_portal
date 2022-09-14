@@ -30,7 +30,10 @@ class PageController extends Controller
         $this->data['schools'] = $hotSchools['list'];
         $this->data['teachers'] = $hotTeachers['list'];
         $this->data['categories'] = Category::where('status', 1)->get();
-        return view(env('TEMPLATE', '') . 'landing', $this->data);
+        $quotes = config('quotes', []);
+        $quote = $quotes[mt_rand(0, count($quotes) - 1)];
+        $this->data['quote'] = $quote;
+        return view(env('TEMPLATE', '') . 'landing2', $this->data);
     }
 
     public function partner()
