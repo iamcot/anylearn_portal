@@ -106,7 +106,7 @@
             @foreach($orders['done'] as $item)
             <tr>
                 <td>{{ date("d/m", strtotime($item->date) ) }}</td>
-                <!-- <td>{{ date("d/m", strtotime($item->date) ) }}</td> -->
+                 <td>{{ date("d/m", strtotime($item->date_end) ) }}</td>
                 <td>
                     <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
                 </td>

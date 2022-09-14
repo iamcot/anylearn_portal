@@ -141,6 +141,7 @@ class OrderDetail extends Model
         ->select(
             'schedules.id',
             'items.title',
+            'items.date_end',
             'users.name',
             DB::raw('ifnull(items.subtype, "") as item_subtype'),
             'schedules.date as date',
@@ -221,6 +222,7 @@ class OrderDetail extends Model
         ->select(
             'schedules.id',
             'items.title',
+            'items.date_end',
             'users.name',
             DB::raw('ifnull(items.subtype, "") as item_subtype'),
             'schedules.date as date',
