@@ -152,8 +152,7 @@
                 <div class="">
                     <div class="form-group row">
                         @if(count($courses) > 0)
-                        <a href="{{route('me.orders')}}" value="more" name="more" class="text-end"><i class="fas fa-angle-double-right"></i>@lang('Xem thêm...')</a>
-                        <!-- <a class="text-end" href="{{route('me.orders')}}">Xem thêm...</a> -->
+                        <a href="{{route('me.orders','search=&myselect='.$userC->id)}}" value="more" name="more" class="text-end"><i class="fas fa-angle-double-right"></i>@lang('Xem thêm...')</a>
                         @else
                         <p class="p-2">Tài khoản con này chưa tham gia bất kì khóa học nào</p>
                         @endif

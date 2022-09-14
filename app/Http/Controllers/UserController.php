@@ -559,15 +559,14 @@ class UserController extends Controller
         $this->data['inputselect']=$inputselect;
         $this->data['input']=$request->input('search');
 
-        if ($input ==null && ($inputselect =='all' || $inputselect==null )) {
-            $this->data['orders'] = $orderDetailM->userRegistered($user->id);
+        if ($inputselect =='all' || $inputselect==null ) {
+            $this->data['orders'] = $orderDetailM->searchall($user->id,$input);
         }
-        elseif($input != null && $inputselect =='all'){
-            $this->data['orders'] = $orderDetailM->searchNoSelect($user->id,$input);
-        }else{
-            
-            $this->data['orders'] = $orderDetailM->searchSelect($inputselect,$input,$inputselect);
-            
+        elseif($inputselect == $user->id){
+            $this->data['orders'] = $orderDetailM->searchparents($user->id,$input);
+        }
+        else{
+            $this->data['orders'] = $orderDetailM->searchall($inputselect,$input);
         }
         if($request->input('reset')){
             return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);

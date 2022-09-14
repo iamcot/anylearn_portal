@@ -40,10 +40,10 @@
                     </div>
                         <div class="input-group-append">
                              &nbsp
-                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04" onchange="this.form.submit()">
                                 <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
-                                <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
+                                <option <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
                                 @endforeach
                             </select>
                            
@@ -79,7 +79,7 @@
                     </div>
                         <div class="input-group-append">
                              &nbsp
-                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04" onchange="this.form.submit()">
                                 <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
                                 <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
@@ -103,17 +103,15 @@
             </tr>
         </thead>
         <tbody>
-        @foreach($orders['done'] as $item)
+            @foreach($orders['done'] as $item)
             <tr>
                 <td>{{ date("d/m", strtotime($item->date) ) }}</td>
-                <td>{{ date("d/m", strtotime($item->date_end) ) }}</td>
+                <!-- <td>{{ date("d/m", strtotime($item->date) ) }}</td> -->
                 <td>
                     <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
-
                 </td>
                 <td>
-                    
-                    <div class="">{{ $item->user_id }}</div>
+                    <div class="">{{ $item->name }}</div>
                 </td>
             </tr>
             @endforeach
@@ -142,7 +140,7 @@
                     </div>
                         <div class="input-group-append">
                             <!--  &nbsp -->
-                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04" onchange="this.form.submit()">
                                 <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
                                 <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
@@ -182,7 +180,7 @@
                     </div>
                         <div class="input-group-append">
                              &nbsp
-                            <select name="myselect" class="custom-select" id="inputGroupSelect04">
+                            <select name="myselect" class="custom-select" id="inputGroupSelect04" onchange="this.form.submit()">
                                 <option value="all">Tất cả tài khoản học</option>
                                 @foreach($childuser as $item)
                                 <option   <?php if($inputselect == $item->id) echo"selected='selected'" ?> value="{{ $item->id }}"> {{ $item->name}}</option>
@@ -254,10 +252,9 @@
 </div>
 @endsection
 <script>
-        
+
 function customReset()
 {
-
     document.getElementById("name").value = "";
     document.getElementById("country").value = "";
 }

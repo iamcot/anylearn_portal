@@ -532,16 +532,16 @@ class TransactionService
         $user->update([
             'wallet_m' => DB::raw('wallet_m + ' . $openOrder->amount)
         ]);
-        Transaction::create([
-            'user_id' => $user->id,
-            'type' => ConfigConstants::TRANSACTION_ORDER,
-            'amount' => $openOrder->amount,
-            'pay_method' => UserConstants::WALLET_M,
-            'pay_info' => '',
-            'content' => 'Thanh toán trực tuyến',
-            'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-            'order_id' => $openOrder->id
-        ]);
+            // Transaction::update([
+            //     'user_id' => $user->id,
+            //     'type' => ConfigConstants::TRANSACTION_ORDER,
+            //     'amount' => $openOrder->amount,
+            //     'pay_method' => UserConstants::WALLET_M,
+            //     'pay_info' => '',
+            //     'content' => 'Thanh toán trực tuyến',
+            //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+            //     'order_id' => $openOrder->id
+            // ]);
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([

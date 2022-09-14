@@ -153,7 +153,9 @@ class PageController extends Controller
                     'text' => 'Khoá học',
                 ]
             ];
-            return view(env('TEMPLATE', '') . 'pdp.index', $data);
+            $child = DB::table('users')->where('is_child', auth()->user()->id)->get();
+            $this->data['child'] = $child;
+            return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
         } catch (Exception $e) {
             echo $e->getMessage();
         }

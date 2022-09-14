@@ -127,15 +127,29 @@
 
     $('#add2cart-action').click(function() {
         $('#pdpAdd2CartModal').modal('show');
+        
     });
-
+    $('#add2cartchild').click(function() {
+        $('#pdpAdd2CartModal').modal('show');
+    });
     function offVoucher() {
         $("#add2cartvoucher").hide();
+        $('#textvorcher').show();
         $("input[name=voucher]").val("");
     }
-
+    function offChild() {
+        $("#add2cartchild").hide();
+        $('#textchild').show();
+        $("input[name=child]").val("");
+    }
     function onVoucher() {
         $("#add2cartvoucher").show();
+        $('#textvorcher').hide();
+    }
+    function onChild() {
+        $("#add2cartchild").show();
+        $('#textchild').hide();
+
     }
 
     $("#pdpAdd2Cart").on("submit", function(event) {
