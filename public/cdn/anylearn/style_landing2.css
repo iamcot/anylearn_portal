@@ -341,6 +341,22 @@ footer .head_text {
     right: -20px;
 }
 
+.frame {
+    /* Frame 2115 */
+    height: 200px;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.bg-img {
+    position: absolute;
+    left: 22.74px;
+    top: 9.45px;
+    border-radius: 20px;
+}
+
 #landing-banner {
     background: rgb(0, 91, 168) url("./img/banner-landing2.png") no-repeat center;
     background-size: cover;
@@ -427,6 +443,114 @@ footer .head_text {
     right: -10%;
     width: 45%;
     min-height: 200px;
+}
+
+.content-bcv {
+    /* Auto layout */
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 22px;
+    width: 339.97px;
+    height: 99px;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.content-bcv h5 {
+    /* Hoàng Nam Tiến */
+    width: 318.04px;
+    height: 31px;
+    font-family: 'Sarabun';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 97%;
+    /* identical to box height, or 31px */
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.vector {
+    /* Vector */
+    position: absolute;
+    left: 63.64%;
+    right: 0%;
+    top: -15%;
+    bottom: 26.19%;
+}
+
+.content-bcv p {
+    width: 339.97px;
+    height: 46px;
+    font-family: 'Sarabun';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 97%;
+    /* or 23px */
+    display: flex;
+    color: #FFFFFF;
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.text-title {
+    font-family: 'Sarabun';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 97%;
+    /* or 62px */
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.review-bcv {
+    position: absolute;
+    right: -55%;
+    width: 70%;
+    min-height: 200px;
+}
+
+.box-change {
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 22px;
+    position: absolute;
+    width: 134.63px;
+    height: 64px;
+    left: 486.47px;
+    top: 411.52px;
+    background: #726c6c;
+    border-radius: 0px 10px;
+    z-index: 999999;
+}
+
+.bcv {
+    width: auto;
+    min-height: 200px;
+    border-radius: 20px;
 }
 
 .review-avatar img {

@@ -22,7 +22,7 @@
 
 <body>
 <script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
-    <section>
+    <section class="container-fluid">
         <header>
             @include('anylearn.navbar2')
         </header>
@@ -32,7 +32,9 @@
         @include('anylearn.landing2.number')
         @include('anylearn.landing2.partner')
         @include('anylearn.landing2.review')
+        @include('anylearn.landing2.newspapers')
         @include('anylearn.landing2.teacher')
+        @include('anylearn.landing2.foundingteam')
         @include('anylearn.footer2')
     </section>
     <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
