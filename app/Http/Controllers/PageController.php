@@ -347,7 +347,7 @@ class PageController extends Controller
         $classes = DB::table('items')
             ->where('items.type', ItemConstants::TYPE_CLASS)
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
-            ->where('items.user_status', ItemConstants::STATUS_ACTIVE)
+            ->where('items.user_status', '>', ItemConstants::STATUS_INACTIVE)
             ->whereNull('items.item_id')
             // ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
             // ->join('categories', 'categories.id', '=', 'items_categories.category_id')
