@@ -153,11 +153,14 @@ class PageController extends Controller
                     'text' => 'Khoá học',
                 ]
             ];
-            $child = DB::table('users')->where('is_child', auth()->user()->id)->get();
-            $this->data['child'] = $child;
+            $children = [];
+            if ($user) {
+                $children = DB::table('users')->where('is_child', $user->id)->get();
+            }
+            $this->data['children'] = $children;
             return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
         } catch (Exception $e) {
-            echo $e->getMessage();
+            return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
         }
     }
 
