@@ -1,6 +1,6 @@
 @extends('anylearn.me.layout')
 @section('body')
-    <div class="card p-3">
+    <div class="card p-3 mb-3">
         <div class="strong">anyPoint:</div>
         <div class="row">
             <div class="col-md-8">
