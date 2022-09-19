@@ -149,8 +149,8 @@ class UserController extends Controller
     }
     public function meChild(Request $request)
     {
-        $id = auth()->user()->id;
-        $childuser = DB::table('users')->where('is_child', $id)->get();
+        $id = Auth::user()->id;
+        $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
         $this->data['childuser'] = $childuser;
         $editChild = Auth::user();
         if($request->input('childedit')){

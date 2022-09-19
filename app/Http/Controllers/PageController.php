@@ -155,7 +155,7 @@ class PageController extends Controller
             ];
             $children = [];
             if ($user) {
-                $children = DB::table('users')->where('is_child', $user->id)->get();
+                $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
             $this->data['children'] = $children;
             return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
