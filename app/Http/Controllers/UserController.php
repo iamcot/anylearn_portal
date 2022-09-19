@@ -98,7 +98,7 @@ class UserController extends Controller
 
             $callback = function () use ($members) {
                 $file = fopen('php://output', 'w');
-                fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
                 fputcsv($file, array_keys($members[0]));
                 foreach ($members as $row) {
                     mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
@@ -114,7 +114,7 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
-    
+
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -139,42 +139,42 @@ class UserController extends Controller
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
-        $sum = Transaction::where('pay_method','=','wallet_c')->where('user_id', auth()->user()->id)->sum('amount');
+        $sum = Transaction::where('pay_method', '=', 'wallet_c')->where('user_id', auth()->user()->id)->sum('amount');
         $this->data['anyPoint'] = abs($sum);
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
-        $this->data['WALLETM'] = $trans->history(auth()->user()->id,'wallet_m');
-        $this->data['WALLETC'] = $trans->history(auth()->user()->id,'wallet_c');
+        $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
+        $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
         $this->data['navText'] = __('Giao dịch của tôi');
-        return  view(env('TEMPLATE', '').'me.history', $this->data);
+        return  view(env('TEMPLATE', '') . 'me.history', $this->data);
     }
     public function meChild(Request $request)
     {
         $id = Auth::user()->id;
         $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
         $this->data['childuser'] = $childuser;
-        $editChild = Auth::user();
-        if($request->input('childedit')){
-            
-            $input=$request->all();
+        $parent = Auth::user();
+        if ($request->input('childedit')) {
+
+            $input = $request->all();
             $id = $input['childid'];
             $userC = User::find($id);
             $courses = DB::table('order_details')
-                                ->join('items', 'order_details.item_id', '=', 'items.id')
-                                ->where('order_details.user_id',$id)
-                                ->orderBy('order_details.created_at', 'desc')->take(4)
-                                ->get();
+                ->join('items', 'order_details.item_id', '=', 'items.id')
+                ->where('order_details.user_id', $id)
+                ->orderBy('order_details.created_at', 'desc')->take(4)
+                ->get();
             $this->data['courses'] = $courses;
             $this->data['hasBack'] = route('me.child');
             $this->data['userC'] = $userC;
             $this->data['navText'] = __('Quản lý tài khoản con');
-            if($request->input('save')){
-                $input=$request->all();
+            if ($request->input('save')) {
+                $input = $request->all();
                 $this->data['navText'] = __('Quản lý tài khoản con');
                 $userC->name = $input['username'];
                 $userC->dob = $input['dob'];
                 $userC->sex = $input['sex'];
                 $userC->introduce = $input['introduce'];
-                $userC -> save($input);
+                $userC->save($input);
                 $this->data['userC'] = $userC;
                 return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
             }
@@ -186,11 +186,11 @@ class UserController extends Controller
 
             // return redirect()->route('me.editchild')->with([ 'id' => $id ]);
         }
-        
+
         if ($request->input('create')) {
             $input = $request->all();
             $userChild = new User();
-            $userChild -> createChild($input);
+            $userChild->createChild($parent, $input);
             return redirect()->route('me.child')->with('notify', 'Tạo tài khoản mới thành công');
         }
         $this->data['navText'] = __('Quản lý tài khoản con');
@@ -231,19 +231,16 @@ class UserController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             if (Hash::check($oldpass, $editUser->password)) {
-                if($request->input('newpassword') != $request->input('repassword')){
-                    return redirect()->back()->with('errormk', 'Mật khẩu không trùng khớp');  
-                }
-                else{
+                if ($request->input('newpassword') != $request->input('repassword')) {
+                    return redirect()->back()->with('errormk', 'Mật khẩu không trùng khớp');
+                } else {
                     $userM = new User();
                     $rs = $userM->changePassword($request, $input);
                     return redirect()->route('me.dashboard')->with('notify', $rs);
                 }
-                
-            }
-            else{
+            } else {
                 //return redirect()->route('me.resetpassword')->with('notify', 'error');
-                return redirect()->back()->with('error', 'Mật Khẩu không chính xác');  
+                return redirect()->back()->with('error', 'Mật Khẩu không chính xác');
             }
         }
         $this->data['user'] = $editUser;
@@ -540,7 +537,7 @@ class UserController extends Controller
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
             )
             ->paginate();
-            $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
+        $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
@@ -548,27 +545,25 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['navText'] = __('Khoá học của tôi');
-        
+
         $input = $request->input('search');
-        $item = Item::all()->where('title','LIKE', '%' . $input . '%');
+        $item = Item::all()->where('title', 'LIKE', '%' . $input . '%');
         $inputselect = $request->input('myselect');
         $orderDetailM = new OrderDetail();
         $id = auth()->user()->id;
-        $childuser = DB::table('users')->where('is_child', $id)->orWhere('id',$id)->get();
+        $childuser = DB::table('users')->where('is_child', $id)->orWhere('id', $id)->get();
         $this->data['childuser'] = $childuser;
-        $this->data['inputselect']=$inputselect;
-        $this->data['input']=$request->input('search');
+        $this->data['inputselect'] = $inputselect;
+        $this->data['input'] = $request->input('search');
 
-        if ($inputselect =='all' || $inputselect==null ) {
-            $this->data['orders'] = $orderDetailM->searchall($user->id,$input);
+        if ($inputselect == 'all' || $inputselect == null) {
+            $this->data['orders'] = $orderDetailM->searchall($user->id, $input);
+        } elseif ($inputselect == $user->id) {
+            $this->data['orders'] = $orderDetailM->searchparents($user->id, $input);
+        } else {
+            $this->data['orders'] = $orderDetailM->searchall($inputselect, $input);
         }
-        elseif($inputselect == $user->id){
-            $this->data['orders'] = $orderDetailM->searchparents($user->id,$input);
-        }
-        else{
-            $this->data['orders'] = $orderDetailM->searchall($inputselect,$input);
-        }
-        if($request->input('reset')){
+        if ($request->input('reset')) {
             return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
         }
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
