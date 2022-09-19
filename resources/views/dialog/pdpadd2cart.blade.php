@@ -54,7 +54,7 @@
                                         <select name="child" class="form-select"
                                             id="inputGroupSelect04">
                                             <option value="">Chọn thành viên<nav></nav></option>
-                                            @if(!count($children) > 0)
+                                            @if(count($children) > 0)
                                                 @foreach ($children as $child)
                                                     <option value="{{ $child->id }}"> {{ $child->name }}</option>
                                                 @endforeach
