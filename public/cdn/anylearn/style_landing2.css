@@ -4,6 +4,10 @@ body {
     /* background-color: #F1F1F1; */
 }
 
+.container-fluid {
+    padding-left: 0px;
+}
+
 h2 {
     font-size: 1.25rem;
 }

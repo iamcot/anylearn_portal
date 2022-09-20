@@ -3,7 +3,7 @@
         <div id="carouselExampleInterval" class="carousel slide carousel-fade" data-bs-ride="carousel">
             <div class="carousel-inner">
                 @foreach ($teachers as $teacher)
-                    <div class="carousel-item" data-bs-interval="2000">
+                    <div class="carousel-item <?php if($teachers[0] == $teacher) echo'active' ?>" data-bs-interval="2000">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div style="position: relative;"

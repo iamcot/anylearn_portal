@@ -8,8 +8,8 @@
                 <div class="col-md-4">
                     <div class="card border-0">
                         <div class="card-body">
-                            <img src="/cdn/anylearn/img/mrthang.png" alt="">
-                            <img class="bg-img" src="/cdn/anylearn/img/thang.png" alt="">
+                            <img src="/cdn/anylearn/img/mrThang.png" alt="">
+                            <img class="bg-img" src="/cdn/anylearn/img/Thang.png" alt="">
                         </div>
                         <div class="card-footer border-0 text-center">
                             <div class="fs-5 fw-bold">Mr. Trương Công Thắng</div>
@@ -20,8 +20,8 @@
                 <div class="col-md-4">
                     <div class="card border-0">
                         <div class="card-body">
-                            <img src="/cdn/anylearn/img/mrthang.png" alt="">
-                            <img class="bg-img" src="/cdn/anylearn/img/trinh.png" alt="">
+                            <img src="/cdn/anylearn/img/mrThang.png" alt="">
+                            <img class="bg-img" src="/cdn/anylearn/img/Trinh.png" alt="">
                         </div>
                         <div class="card-footer border-0 text-center">
                             <div class="fs-5 fw-bold">Ms. Đặng Thị Hoài Trinh</div>
@@ -32,7 +32,7 @@
                 <div class="col-md-4">
                     <div class="card border-0">
                         <div class="card-body">
-                            <img src="/cdn/anylearn/img/mrthang.png" alt="">
+                            <img src="/cdn/anylearn/img/mrThang.png" alt="">
                             <img class="bg-img" src="/cdn/anylearn/img/msNhu.png" alt="">
                         </div>
                         <div class="card-footer border-0 text-center">
