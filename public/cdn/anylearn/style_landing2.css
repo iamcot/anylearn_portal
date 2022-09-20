@@ -526,11 +526,22 @@ footer .head_text {
     flex-grow: 0;
 }
 
+.review-bcv-wrapper {
+    position: relative;
+    padding-top: 20px;
+    min-height: 430px;
+}
+
 .review-bcv {
     position: absolute;
     right: -55%;
     width: 70%;
     min-height: 200px;
+}
+
+.img-cus {
+    width: 370px !important;
+    height: 350px !important;
 }
 
 .box-change {
@@ -558,6 +569,10 @@ footer .head_text {
 }
 
 .review-avatar img {
+    border-radius: 20px;
+}
+
+.review-bcv img {
     border-radius: 20px;
 }
 
@@ -648,6 +663,9 @@ footer .head_text {
         padding-top: 100px;
     }
     .review-avatar {
+        width: 75%;
+    }
+    .review-bcv {
         width: 75%;
     }
 }
