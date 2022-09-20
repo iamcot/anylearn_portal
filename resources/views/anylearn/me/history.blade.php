@@ -23,7 +23,7 @@
         </li>
     </ul>
     <div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
-        <div class="tab-pane fade {{ session('tab', 'open') == 'done' ? 'show active' : '' }} p-2" id="done"
+        <div class="tab-pane fade show active p-2" id="done"
             role="tabpanel" aria-labelledby="done-tab">
             <table class="table text-secondary table-hover">
                 <tbody>
@@ -43,9 +43,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="tab-pane fade {{ session('tab', 'open') == 'open' ? 'show active' : '' }} p-2" id="open"
+        <div class="tab-pane fade p-2" id="open"
             role="tabpanel" aria-labelledby="open-tab">
-
             <table class="table  text-secondary table-hover">
                 
                 <tbody>

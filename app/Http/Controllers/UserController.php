@@ -139,7 +139,7 @@ class UserController extends Controller
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
-        $sum = Transaction::where('pay_method','=','wallet_c')->where('user_id', auth()->user()->id)->sum('amount');
+        $sum = Transaction::where('pay_method','=','wallet_c')->where('status',1)->where('user_id', auth()->user()->id)->sum('amount');
         $this->data['anyPoint'] = abs($sum);
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id,'wallet_m');
