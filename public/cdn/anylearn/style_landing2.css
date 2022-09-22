@@ -529,7 +529,7 @@ footer .head_text {
 .review-bcv-wrapper {
     position: relative;
     padding-top: 20px;
-    min-height: 430px;
+    height: 430px;
 }
 
 .review-bcv {
@@ -542,6 +542,14 @@ footer .head_text {
 .img-cus {
     width: 370px !important;
     height: 350px !important;
+}
+
+.img-cus2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 45px !important;
+    height: 36px !important;
 }
 
 .box-change {
