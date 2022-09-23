@@ -87,6 +87,13 @@ class ClassController extends Controller
         }
     }
 
+    public function del(Request $request, $courseId)
+    {
+        Schedule::where('item_id', $courseId)->delete();
+        Item::find($courseId)->delete();
+        return redirect()->back();
+    }
+
     public function edit(Request $request, $courseId)
     {
         $user = Auth::user();

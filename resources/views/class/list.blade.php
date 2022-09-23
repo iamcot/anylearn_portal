@@ -26,7 +26,7 @@
                     <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên khóa học" />
                 </div>
             </div>
-           
+
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
                     <label for="">ID Tác giả</label>
@@ -69,7 +69,11 @@
             <tbody>
                 @foreach($courseList as $course)
                 <tr>
-                    <th class="text-center">{{ $course->id }}</th>
+                    <th class="text-center">{{ $course->id }}
+                        @if($userServ->isMod())
+                        <a href="{{route('class.del', ['id' => $course->id]) }}"><i class="fa fa-trash text-danger"></i></a>
+                        @endif
+                    </th>
                     @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">{!! $userServ->hotIcon($course->is_hot) !!}</a></td>@endif
                     @if($userServ->isMod()) <td class="text-center">
                         {{ $course->user->name }}
