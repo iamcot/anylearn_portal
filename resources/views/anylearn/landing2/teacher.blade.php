@@ -5,8 +5,7 @@
                 @foreach ($teachers as $teacher)
                     <div class="carousel-item <?php if($teachers[0] == $teacher) echo'active' ?>" data-bs-interval="3000">
                         <div class="row">
-                            
-                            <div class="col-sm-7">
+                            <div class="col-sm-6 d-none d-lg-block">
                                 <div style="position: relative;"
                                     class="review-bcv-wrapper bg-success rounded p-2 text-white text-end">
                                     <div class="review-bcv mt-5">
@@ -20,16 +19,37 @@
                                                 alt="...">
                                         </div>
                                     </div>
-                                    <div class="fw-bold fs-1 text-start p-5 pb-3 text-title mb-0"> Ban cố vấn & <br> chuyên gia</div>
+                                    <div class="fw-bold fs-1 text-start p-5 pb-3 text-title mb-0"> Ban cố vấn & chuyên gia</div>
                                     
                                     <div class="content-bcv text-start">
                                         {{-- <img src="{{ $teacher->image }}" class="d-block d-lg-none img-cus2 bcv mt-0"> --}}
-                                        <p class="text-white mr-2 card-body">
-                                        <h5>{{ $teacher->name }}</h5>{{ substr($teacher->introduce,0,222) }}</p>    
+                                        <p class="text-white">
+                                        <h5 class="fs-2 fw-light">{{ $teacher->name }}</h5>{{ substr($teacher->introduce,0,222) }}</p>    
                                     </div>
                                     <a href="/ref/anylearn?r=teacher" style="position: absolute; left:50px; bottom:15px"
                                             class="border rounded rounded-pill border-white btn btn-outline-success fw-bold text-white">ĐĂNG
                                             KÝ LÀM CHUYÊN GIA <i class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 d-block d-lg-none">
+                                <div class="card bg-success text-white ">
+                                    <div class="card-hearder booder-0 ">
+                                        <h5 class="text-center p5 fs-2 fw-bold">Ban Cố Vấn & Chuyên Gia</h5>
+                                    </div>
+                                    <div class="card-body booder-0 text-center ">
+                                        <img src="{{ $teacher->image }}" class="img-cus2"
+                                        alt="...">
+                                    </div>
+                                    <div class="text-center">
+                                        {{-- <img src="{{ $teacher->image }}" class="d-block d-lg-none img-cus2 bcv mt-0"> --}}
+                                        <p class="text-white p-2">
+                                        <h5 class="fs-2 fw-light">{{ $teacher->name }}</h5 class="ml-5 mr-5 mb-2" >{{ $teacher->introduce }}</p>    
+                                    </div>
+                                </div>
+                                <div class="card-footer booder-0 text-center">
+                                    <a href="/ref/anylearn?r=teacher"
+                                    class="btn btn-outline-success fw-bold text-success">ĐĂNG
+                                    KÝ LÀM CHUYÊN GIA <i class="fas fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
