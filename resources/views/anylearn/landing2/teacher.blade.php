@@ -27,7 +27,7 @@
                                         <p class="text-white mr-2 card-body">
                                         <h5>{{ $teacher->name }}</h5>{{ substr($teacher->introduce,0,222) }}</p>    
                                     </div>
-                                    <a href="/ref/anylearn?role=teacher" style="position: absolute; left:50px; bottom:15px"
+                                    <a href="/ref/anylearn?r=teacher" style="position: absolute; left:50px; bottom:15px"
                                             class="border rounded rounded-pill border-white btn btn-outline-success fw-bold text-white">ĐĂNG
                                             KÝ LÀM CHUYÊN GIA <i class="fas fa-arrow-right"></i></a>
                                 </div>
