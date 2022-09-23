@@ -541,7 +541,7 @@ class ItemServices
     {
         return Validator::make($data, [
             'title' => ['required', 'string', 'max:250'],
-            'price' => ['required', 'integer'],
+            'price' => ['required','numeric','min:0'],
             'date_start' => ['required'],
         ]);
     }
