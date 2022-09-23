@@ -208,12 +208,15 @@ class ConfigApi extends Controller
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION]);
 
         $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
+            ->where('amount', '>', 0)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
             ->sum('amount');
         $data = [
             'value' => (int) $foundation,
             'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
             'history' => Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
                 ->where('amount', '>', 0)
+                ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
                 ->orderby('id', 'desc')->take(20)->get(),
             'news' => DB::table('tags')->where('tags.type', Tag::TYPE_ARTICLE)
                 ->where('tags.tag', ConfigConstants::FOUNDATION_TAG)
