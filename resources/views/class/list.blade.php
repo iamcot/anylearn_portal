@@ -70,7 +70,7 @@
                 @foreach($courseList as $course)
                 <tr>
                     <th class="text-center">{{ $course->id }}
-                        @if($userServ->isMod())
+                        @if($userServ->isMod() &&  $course->sum_reg == 0)
                         <a href="{{route('class.del', ['id' => $course->id]) }}"><i class="fa fa-trash text-danger"></i></a>
                         @endif
                     </th>
