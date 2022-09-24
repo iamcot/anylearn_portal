@@ -847,4 +847,19 @@ class UserApi extends Controller
         }
         return response('Có lỗi xảy ra và không thể cập nhật mật khẩu, Vui lòng thử lại', 400);
     }
+
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->get('_user');
+        $userServ = new UserServices();
+        try {
+            $rs = $userServ->deleteAccount($user->phone);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response('Không thể xử lí yêu cầu. Vui lòng liên hệ với hotline để hỗ trợ.', 400);
+        }
+        return response()->json([
+            'result' => true,
+        ]);
+    }
 }

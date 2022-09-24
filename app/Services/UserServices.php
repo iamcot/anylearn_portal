@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
 use App\Models\Contract;
+use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -24,8 +26,7 @@ class UserServices
 {
     private $roles = [
         UserConstants::ROLE_ADMIN => [],
-        UserConstants::ROLE_MOD => [
-        ],
+        UserConstants::ROLE_MOD => [],
         UserConstants::ROLE_SALE => [
             'class',
             'user.members',
@@ -337,10 +338,10 @@ class UserServices
         $result = DB::transaction(function () use ($user, $contract) {
             try {
                 Contract::where('user_id', $user->id)
-                ->where('status', '!=', UserConstants::CONTRACT_APPROVED)
-                ->update([
-                    'status' => UserConstants::CONTRACT_DELETED,
-                ]);
+                    ->where('status', '!=', UserConstants::CONTRACT_APPROVED)
+                    ->update([
+                        'status' => UserConstants::CONTRACT_DELETED,
+                    ]);
                 $newContract = Contract::create($contract);
                 if ($newContract) {
                     $dataUpdate = [
@@ -414,5 +415,32 @@ class UserServices
             default:
                 return '';
         }
+    }
+
+    public function deleteAccount($phone)
+    {
+        $user = User::where('phone', $phone)->first();
+        if (!$user) {
+            throw new Exception("User không đúng");
+        }
+        //@TODO correct order detail of children
+        OrderDetail::where('user_id', $user->id)->where('status', OrderConstants::STATUS_NEW)->delete();
+        Order::where('user_id', $user->id)->where('status', OrderConstants::STATUS_NEW)->delete();
+        Transaction::where('user_id', $user->id)->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)->delete();
+        Item::where('user_id', $user->id)->update([
+            'status' => ItemConstants::STATUS_INACTIVE,
+            'user_status' => ItemConstants::STATUS_INACTIVE
+        ]);
+        User::find($user->id)->update([
+            'phone' => 'DEL-' . $user->phone . '-' . now(),
+            'name' => 'DEL-' . $user->name,
+            'status' => UserConstants::STATUS_INACTIVE,
+            'email' => null,
+            'api_token' => null,
+            'notif_token' => null,
+            'refcode' => now(),
+            '3rd_token' => null,
+        ]);
+        return true;
     }
 }
