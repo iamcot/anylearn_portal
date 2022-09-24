@@ -8,9 +8,11 @@ use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
+use App\Models\Ask;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Item;
+use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -431,6 +433,8 @@ class UserServices
             'status' => ItemConstants::STATUS_INACTIVE,
             'user_status' => ItemConstants::STATUS_INACTIVE
         ]);
+        ItemUserAction::where('user_id', $user->id)->delete();
+        Ask::where('user_id', $user->id)->update(['status' => 0]);
         User::find($user->id)->update([
             'phone' => 'DEL-' . $user->phone . '-' . now(),
             'name' => 'DEL-' . $user->name,
