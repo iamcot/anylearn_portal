@@ -114,7 +114,7 @@
 
     </div>
     <div class="card-footer">
-        <div>{{ $orders->links() }}</div>
+        <div>{{ $orders->appends(request()->query())->links() }}</div>
     </div>
 </div>
 @endsection
