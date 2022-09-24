@@ -45,6 +45,8 @@ class UserServices
             'order.all',
             'user.contract',
             'user.members',
+            'transaction.commission',
+            'useractions'
         ],
     ];
 

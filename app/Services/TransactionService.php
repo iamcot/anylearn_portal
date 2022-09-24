@@ -522,7 +522,7 @@ class TransactionService
         }
     }
 
-    public function approveRegistrationAfterWebPayment($orderId)
+    public function approveRegistrationAfterWebPayment($orderId, $payment = OrderConstants::PAYMENT_ONEPAY)
     {
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
@@ -542,13 +542,14 @@ class TransactionService
             //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
             //     'order_id' => $openOrder->id
             // ]);
-        Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId]);
+        Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
             'status' => OrderConstants::STATUS_DELIVERED
         ]);
         Order::find($openOrder->id)->update([
-            'status' => OrderConstants::STATUS_DELIVERED
+            'status' => OrderConstants::STATUS_DELIVERED,
+            'payment' => $payment
         ]);
 
         Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
@@ -589,7 +590,8 @@ class TransactionService
             'status' => OrderConstants::STATUS_PAY_PENDING
         ]);
         Order::find($openOrder->id)->update([
-            'status' => OrderConstants::STATUS_PAY_PENDING
+            'status' => OrderConstants::STATUS_PAY_PENDING,
+            'payment' => OrderConstants::PAYMENT_ATM,
         ]);
         Log::debug("Update order to pending", ["orderId" => $openOrder->id]);
         $notifServ = new Notification();
@@ -701,5 +703,15 @@ class TransactionService
         $pointForOrder = $orderAmount / $rate;
         $pointForOrder = $pointForOrder > 1 ? $pointForOrder : 1;
         return ceil($wallet > $pointForOrder ? $pointForOrder : $wallet);
+    }
+
+    public function colorStatus($status) {
+        if ($status == OrderConstants::STATUS_PAY_PENDING) {
+            return 'warning';
+        }
+        if ($status == OrderConstants::STATUS_DELIVERED) {
+            return 'success';
+        }
+        return 'secondary';
     }
 }

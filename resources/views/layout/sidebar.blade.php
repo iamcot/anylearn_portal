@@ -48,13 +48,13 @@
             <span>@lang('Duyệt giao dịch')</span></a>
     </li>
     @endif
-    @if($userService->haveAccess($role, 'order.open'))
+    <!-- @if($userService->haveAccess($role, 'order.open'))
     <li class="nav-item {{ $route == 'order.open' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('order.open') }}">
             <i class="fas fa-fw fa-money-check-alt"></i>
             <span>@lang('Duyệt đơn hàng')</span></a>
     </li>
-    @endif
+    @endif -->
     @if($userService->haveAccess($role, 'order.all'))
     <li class="nav-item {{ $route == 'order.all' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('order.all') }}">
@@ -63,13 +63,13 @@
     </li>
     @endif
     @if($userService->haveAccess($role, 'useractions'))
-    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ?  'active' : '' }}">
+    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'transaction.commission']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" 
         aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thao tác người dùng')</span>
         </a>
-        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction',  'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}" href="{{ route('user.noprofile') }}">
                     <i class="fas fa-fw fa-fire"></i>

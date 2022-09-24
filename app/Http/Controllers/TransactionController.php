@@ -75,18 +75,60 @@ class TransactionController extends Controller
         if (!$userService->haveAccess($user->role, 'order.all')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
+        if ($request->input('action') == 'clear') {
+            return redirect()->route('order.all');
+        }
         $orders = DB::table('orders')
             ->join('users', 'users.id', '=', 'orders.user_id');
 
         if (Auth::user()->role == UserConstants::ROLE_SALE) {
             $orders = $orders->where('orders.sale_id', $user->id);
         }
-        $this->data['orders'] = $orders->select(
-            'orders.*',
-            'users.name',
-            'users.phone',
-            DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
-        )->orderby('orders.id', 'desc')
+
+        if ($request->input('id_f') > 0) {
+            if ($request->input('id_t') > 0) {
+                $orders = $orders->where('orders.id', '>=', $request->input('id_f'))->where('orders.id', '<=', $request->input('id_t'));
+            } else {
+                $orders = $orders->where('orders.id', $request->input('id_f'));
+            }
+        }
+        if ($request->input('name')) {
+            $orders = $orders->where('users.name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        if ($request->input('phone')) {
+            $orders = $orders->where('users.phone', $request->input('phone'));
+        }
+
+        if ($request->input('status')) {
+            $orders = $orders->where('orders.status', $request->input('status'));
+        } else {
+            $orders = $orders->where('orders.status', '!=', 'new');
+        }
+
+        if ($request->input('date')) {
+            $orders = $orders->whereDate('orders.created_at', '>=', $request->input('date'));
+        }
+
+        if ($request->input('datet')) {
+            $orders = $orders->whereDate('orders.created_at', '<=', $request->input('datet'));
+        }
+
+        $this->data['orders'] = $orders->leftJoin('vouchers_used', 'vouchers_used.order_id', '=', 'orders.id')
+            ->leftJoin('vouchers', 'vouchers_used.voucher_id', '=', 'vouchers.id')
+            ->leftJoin('transactions', function ($query) {
+                $query->on('transactions.order_id', '=', 'orders.id')
+                    ->where('transactions.type', '=', ConfigConstants::TRANSACTION_EXCHANGE);
+            })
+            ->select(
+                'orders.*',
+                'users.name',
+                'users.phone',
+                'vouchers.voucher',
+                'vouchers.value AS voucher_value',
+                'transactions.amount AS anypoint',
+                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+            )->orderby('orders.id', 'desc')
             ->paginate();
         $this->data['navText'] = __('Đơn hàng đã đặt');
         return view('transaction.order_all', $this->data);
@@ -104,7 +146,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
-        $transService->approveRegistrationAfterWebPayment($orderId);
+        $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ATM);
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
@@ -145,7 +187,7 @@ class TransactionController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'commission')) {
+        if (!$userService->haveAccess($user->role, 'transaction.commission')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['transaction'] = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
@@ -283,7 +325,7 @@ class TransactionController extends Controller
         }
         $saveBanks = UserBank::where('user_id', $user->id)->where('status', 1)->get();
         $this->data['saveBanks'] = [];
-        foreach($saveBanks as $bank) {
+        foreach ($saveBanks as $bank) {
             $config = config('bankinfo.' . $bank->card_type);
             if (empty($config)) {
                 $config = [
@@ -431,7 +473,7 @@ class TransactionController extends Controller
 
         if ($payment == 'free') {
             $transService = new TransactionService();
-            $transService->approveRegistrationAfterWebPayment($orderId);
+            $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_FREE);
             return redirect()->route('checkout.finish', ['order_id' => $orderId]);
         }
 
@@ -535,7 +577,7 @@ class TransactionController extends Controller
         if ($result['status'] == 1) {
             $orderId = $result['orderId'];
             $transService = new TransactionService();
-            $transService->approveRegistrationAfterWebPayment($orderId);
+            $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
 
             if (!empty($result['newTokenNum'])) {
                 $newToken = $result['newTokenNum'];
@@ -600,7 +642,7 @@ class TransactionController extends Controller
             if ($result['status'] == 1) {
                 $orderId = $result['orderId'];
                 $transService = new TransactionService();
-                $rs = $transService->approveRegistrationAfterWebPayment($orderId);
+                $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $result['orderId'], 'result' => $rs]);
             }
             $data = $processor->prepareNotifyResponse($request->all(), $result);

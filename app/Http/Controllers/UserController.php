@@ -333,7 +333,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'user.contract')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $list = DB::table('contracts')

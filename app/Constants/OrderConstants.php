@@ -8,4 +8,8 @@ class OrderConstants {
     const STATUS_FAIL = 'fail';
     const STATUS_CANCER_BUYER = 'cancer_buyer';
     const STATUS_CANCER_SELLER = 'cancer_sellere';
+
+    const PAYMENT_ATM = 'atm';
+    const PAYMENT_ONEPAY = 'onepaylocal';
+    const PAYMENT_FREE = 'free';
 }
