@@ -4,6 +4,10 @@ body {
     /* background-color: #F1F1F1; */
 }
 
+.container-fluid {
+    padding-left: 0px;
+}
+
 h2 {
     font-size: 1.25rem;
 }
@@ -447,37 +451,16 @@ footer .head_text {
 
 .content-bcv {
     /* Auto layout */
+    max-width: 400px;
     margin-left: 50px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 0px;
-    gap: 22px;
-    width: 339.97px;
-    height: 99px;
-    /* Inside auto layout */
-    flex: none;
-    order: 0;
-    flex-grow: 0;
 }
 
 .content-bcv h5 {
     /* Hoàng Nam Tiến */
-    width: 318.04px;
-    height: 31px;
-    font-family: 'Sarabun';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 28px;
-    line-height: 97%;
-    /* identical to box height, or 31px */
-    display: flex;
-    align-items: center;
-    color: #FFFFFF;
-    /* Inside auto layout */
-    flex: none;
-    order: 0;
-    flex-grow: 0;
+    position: relative;
 }
 
 .vector {
@@ -490,20 +473,9 @@ footer .head_text {
 }
 
 .content-bcv p {
-    width: 339.97px;
-    height: 46px;
+    text-overflow: clip;
     font-family: 'Sarabun';
     font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 97%;
-    /* or 23px */
-    display: flex;
-    color: #FFFFFF;
-    /* Inside auto layout */
-    flex: none;
-    order: 1;
-    flex-grow: 0;
 }
 
 .text-title {
@@ -522,11 +494,28 @@ footer .head_text {
     flex-grow: 0;
 }
 
+.review-bcv-wrapper {
+    position: relative;
+    padding-top: 20px;
+    height: 430px;
+}
+
 .review-bcv {
     position: absolute;
-    right: -55%;
+    right: -60%;
     width: 70%;
     min-height: 200px;
+}
+
+.img-cus {
+    width: 370px !important;
+    height: 350px !important;
+}
+
+.img-cus2 {
+    border-radius: 20px;
+    width: 240px !important;
+    height: 220px !important;
 }
 
 .box-change {
@@ -554,6 +543,10 @@ footer .head_text {
 }
 
 .review-avatar img {
+    border-radius: 20px;
+}
+
+.review-bcv img {
     border-radius: 20px;
 }
 
@@ -644,6 +637,9 @@ footer .head_text {
         padding-top: 100px;
     }
     .review-avatar {
+        width: 75%;
+    }
+    .review-bcv {
         width: 75%;
     }
 }
