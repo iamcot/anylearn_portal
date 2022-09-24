@@ -300,6 +300,7 @@ class UserApi extends Controller
         }
         $friends = User::where('user_id', $userId)
             ->where('is_child', 0)
+            ->where('status', 1)
             ->orderby('first_name')
             ->select(
                 'id',
