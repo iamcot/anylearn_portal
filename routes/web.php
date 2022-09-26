@@ -18,7 +18,7 @@ Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
 
-Route::get('/', 'PageController@home');
+Route::get('/', 'PageController@home')->name('home');
 Route::get('/info', 'PageController@landing');
 Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
