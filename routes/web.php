@@ -17,10 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
-// Route::get('/{locale}', function ($locale) {
-//     App::setLocale($locale);
-//     return $locale; 
-// });
+
 Route::get('/', 'PageController@home');
 Route::get('/info', 'PageController@landing');
 Route::get('/partner', 'PageController@partner');

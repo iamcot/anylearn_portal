@@ -34,6 +34,15 @@
                         <i class="fas fa-bell fa-fw mr-2 text-success"></i>
                     </a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-globe"></i>
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi'}}">Vietnamese</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en'}}">English</a></li>
+                      </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class="fas fa-sign-out-alt fa-fw mr-2  text-danger"></i>

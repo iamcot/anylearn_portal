@@ -20,7 +20,7 @@
                                 <span class=" text-secondary">{{ $class->short_content }}</span>
                             </div>
                             <div class="p-2 text-center mb-2">
-                                <button class="btn btn-white rounded-pill shadow border-0 w-75 text-success fw-bold">CHI TIẾT</button>
+                                <button class="btn btn-white rounded-pill shadow border-0 w-75 text-success fw-bold">@lang('CHI TIẾT')</button>
                             </div>
                         </div>
                     </div>

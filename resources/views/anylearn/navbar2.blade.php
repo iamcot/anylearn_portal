@@ -52,10 +52,10 @@
 
                 @else
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">ĐĂNG NHẬP</a>
+                    <a class="nav-link" href="/login">@lang('ĐĂNG NHẬP')</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">ĐĂNG KÝ</a>
+                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">@lang('ĐĂNG KÝ')</a>
                 </li>
                 @endif
             </ul>

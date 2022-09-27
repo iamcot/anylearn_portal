@@ -19,7 +19,7 @@
                     <a class="nav-link" href="/classes">anyCOURSE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ref/anylearn">TẢI APP</a>
+                    <a class="nav-link" href="/ref/anylearn">@lang('TẢI APP')</a>
                 </li>
                 @if (@auth()->check())
                 <li class="nav-item dropdown no-arrow d-flex">
@@ -40,14 +40,32 @@
                             @lang('Đăng xuất')
                         </a>
                     </div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-globe fa-lg"></i>
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi'}}">Vietnamese</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en'}}">English</a></li>
+                          </ul>
+                    </li>
                 </li>
               
                 @else
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">ĐĂNG NHẬP</a>
+                    <a class="nav-link" href="/login">@lang('ĐĂNG NHẬP')</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">ĐĂNG KÝ</a>
+                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">@lang('ĐĂNG KÝ')</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-globe fa-lg"></i>
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi'}}">Vietnamese</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en'}}">English</a></li>
+                      </ul>
                 </li>
                 @endif
             </ul>

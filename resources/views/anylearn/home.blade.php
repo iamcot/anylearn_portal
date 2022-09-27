@@ -9,7 +9,7 @@ anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải 
 @include('anylearn.home.banners')
 <section class="text-center">
     <h2 class="mt-3 fw-bold text-secondary">
-        Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online
+        @lang('Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online')
     </h2>
     <div class="mt-3 text-center" id="search">
         <form action="/classes" method="get" id="schoolsearch">
