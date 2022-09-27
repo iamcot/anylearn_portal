@@ -23,7 +23,7 @@ class DashboardServices
     public function userCreatedByWeek() {
         $last3m = date('Ym', strtotime('-3 month'));
         
-        $sql = "SELECT  yearweek(created_at) AS week, count(*) AS num FROM anylearn.users
+        $sql = "SELECT  yearweek(created_at) AS week, count(*) AS num FROM users
         where created_at is not null
         and yearweek(created_at) >= ?
         group by yearweek(created_at);
@@ -45,7 +45,7 @@ class DashboardServices
 
     public function userCreatedByDay() {
         $last3m = date('Y-m-d', strtotime('-30 days'));
-        $sql = "SELECT  DATE(created_at) AS `day`, count(*) AS num FROM anylearn.users
+        $sql = "SELECT  DATE(created_at) AS `day`, count(*) AS num FROM users
         where created_at is not null
         and DATE(created_at) >= ?
         group by DATE(created_at);
