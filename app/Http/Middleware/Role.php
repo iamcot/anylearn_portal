@@ -19,7 +19,7 @@ class Role
         // if (Auth::check()) {
         //     return redirect('login');
         // }
-        if (auth()->user()->role =="admin" || auth()->user()->role =="mod") {
+        if (auth()->user()->role =="admin" || auth()->user()->role =="mod" || auth()->user()->role =="content" ||auth()->user()->role =="sale" ||auth()->user()->role =="fin") {
             return $next($request);
         }
         return redirect('me');
