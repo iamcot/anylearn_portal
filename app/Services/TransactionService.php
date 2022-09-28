@@ -522,6 +522,29 @@ class TransactionService
         }
     }
 
+    public function rejectRegistration($orderId)
+    {
+        $openOrder = Order::find($orderId);
+        if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
+            return false;
+        }
+        // $user = User::find($openOrder->user_id);
+        $notifServ = new Notification();
+        OrderDetail::where('order_id', $openOrder->id)->update([
+            'status' => OrderConstants::STATUS_CANCER_SELLER
+        ]);
+        Order::find($openOrder->id)->update([
+            'status' => OrderConstants::STATUS_CANCER_SELLER,
+        ]);
+        Transaction::where('order_id', $openOrder->id)
+            ->update([
+                'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
+            ]);
+        Log::debug("Seller cancel transaction & orders", ["orderId" => $openOrder->id]);
+        $notifServ->createNotif(NotifConstants::COURSE_REGISTER_REJECT, $openOrder->user_id, []);
+        return true;
+    }
+
     public function approveRegistrationAfterWebPayment($orderId, $payment = OrderConstants::PAYMENT_ONEPAY)
     {
         $openOrder = Order::find($orderId);
@@ -532,16 +555,16 @@ class TransactionService
         $user->update([
             'wallet_m' => DB::raw('wallet_m + ' . $openOrder->amount)
         ]);
-            // Transaction::update([
-            //     'user_id' => $user->id,
-            //     'type' => ConfigConstants::TRANSACTION_ORDER,
-            //     'amount' => $openOrder->amount,
-            //     'pay_method' => UserConstants::WALLET_M,
-            //     'pay_info' => '',
-            //     'content' => 'Thanh toán trực tuyến',
-            //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-            //     'order_id' => $openOrder->id
-            // ]);
+        // Transaction::update([
+        //     'user_id' => $user->id,
+        //     'type' => ConfigConstants::TRANSACTION_ORDER,
+        //     'amount' => $openOrder->amount,
+        //     'pay_method' => UserConstants::WALLET_M,
+        //     'pay_info' => '',
+        //     'content' => 'Thanh toán trực tuyến',
+        //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+        //     'order_id' => $openOrder->id
+        // ]);
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -705,7 +728,8 @@ class TransactionService
         return ceil($wallet > $pointForOrder ? $pointForOrder : $wallet);
     }
 
-    public function colorStatus($status) {
+    public function colorStatus($status)
+    {
         if ($status == OrderConstants::STATUS_PAY_PENDING) {
             return 'warning';
         }

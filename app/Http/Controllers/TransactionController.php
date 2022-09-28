@@ -150,6 +150,22 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
+    public function rejectOrder($orderId)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $order = Order::find($orderId);
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
+        }
+        $transService = new TransactionService();
+        $transService->rejectRegistration($orderId);
+        return redirect()->back()->with('notify', 'Thao tác thành công');
+    }
+
     public function add2cart(Request $request)
     {
         if ($request->get('_user')) {

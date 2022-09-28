@@ -7,7 +7,7 @@ class OrderConstants {
     const STATUS_DELIVERED = 'delivered';
     const STATUS_FAIL = 'fail';
     const STATUS_CANCER_BUYER = 'cancer_buyer';
-    const STATUS_CANCER_SELLER = 'cancer_sellere';
+    const STATUS_CANCER_SELLER = 'cancer_seller';
 
     const PAYMENT_ATM = 'atm';
     const PAYMENT_ONEPAY = 'onepaylocal';

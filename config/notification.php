@@ -206,6 +206,13 @@ return [
         // 'email' => 'App\Mail\OrderSuccess',
     ],
 
+    NotifConstants::COURSE_REGISTER_REJECT =>  [
+        'title' => 'Đơn hàng bạn đang ký đã bị từ chối',
+        'template' => 'Đơn hàng bạn đặt đã bị từ chối. Vui lòng thử lại hoặc liên hệ với hotline để được hỗ trợ.',
+        'route' => '',
+        // 'email' => 'App\Mail\OrderSuccess',
+    ],
+
     NotifConstants::COURSE_REGISTER_PENDING =>  [
         'title' => 'Khóa học đang chờ được thanh toán',
         'template' => 'Có một khóa học đang chờ được thanh toán, vui lòng kiểm tra email hoặc trên website để biết thêm thông tin nhé.',
