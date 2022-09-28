@@ -205,16 +205,18 @@ class TransactionController extends Controller
             $transaction = $transaction->where('type', $request->input('type'));
         }
         if ($request->input('name')) {
-            $transaction = $transaction->whereHas('user',fn($query)=>
-                $query->where('name','like','%' . $request->input('name') . '%')
+            $transaction = $transaction->whereHas('user',function($query) use ($request){
+                $query->where('name','like','%' . $request->input('name') . '%');
+            }
+                
             );
 
         }
         if ($request->input('phone')) {
-            $transaction = $transaction->whereHas('user',fn($query)=>
-            $query->where('phone',$request->input('phone'))
+            $transaction = $transaction->whereHas('user',function($query) use ($request){
+                $query->where('phone',$request->input('phone'));
+            }
             );
-
         }
         if ($request->input('date')) {
             $transaction = $transaction->whereDate('created_at', '>=', $request->input('date'));
