@@ -69,6 +69,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
     Route::get('/user/delete', 'Apis\UserApi@deleteAccount');
+    Route::get('/user/pending-orders', 'Apis\UserApi@pendingOrders');
 
     Route::get('/transaction/history', 'Apis\TransactionApi@history');
     Route::post('/transaction/deposit', 'Apis\TransactionApi@saveDeposit');
