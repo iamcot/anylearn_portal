@@ -45,7 +45,7 @@
                             <i class="fas fa-globe fa-lg"></i>
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi'}}">Vietnamese</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi'}}">Tiếng Việt</a></li>
                             <li><a class="dropdown-item" href="{{ url('/') . '?language=en'}}">English</a></li>
                           </ul>
                     </li>

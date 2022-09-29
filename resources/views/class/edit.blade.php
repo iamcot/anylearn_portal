@@ -52,7 +52,8 @@
 <script src="/cdn/vendor/jquery/jquery.mask.js"></script>
 <script src="/cdn/vendor/jquery/speakingurl.min.js"></script>
 <script>
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editorvi');
+    CKEDITOR.replace('editoren');
     $('.time').mask('00:00');
 
     function formatSlug(field, id) {

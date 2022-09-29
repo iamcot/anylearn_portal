@@ -11,6 +11,7 @@ use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
+use App\models\I18nContent;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
@@ -234,6 +235,23 @@ class ItemServices
             return false;
         }
         // $item->image = $this->itemImageUrl($item->image);
+        $i18nModel = new I18nContent();
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    $item->$col =  [I18nContent::DEFAULT => $item->$col];
+                }
+            } else {
+                $item18nData = $i18nModel->i18nItem($courseId, $locale);
+                $supportCols = array_keys(I18nContent::$itemCols);
+
+                foreach ($item18nData as $col => $i18nContent) {
+                    if (in_array($col, $supportCols)) {
+                        $item->$col =  $item->$col + [$locale => $i18nContent];
+                    }
+                }
+            }
+        }
 
         $data['info'] = $item;
         $data['resource'] = $this->itemResources($courseId);
@@ -255,6 +273,13 @@ class ItemServices
     public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
         $user = $userApi ?? Auth::user();
+
+        $orgInputs = $input;
+
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = $input[$col][I18nContent::DEFAULT];
+        }
+
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -281,7 +306,19 @@ class ItemServices
         }
 
         $newCourse = Item::create($input);
+
         if ($newCourse) {
+            $i18nModel = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    continue;
+                }
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    if (isset($orgInputs[$col][$locale])) {
+                        $i18nModel->i18nSave($locale, 'items', $newCourse->id, $col, $orgInputs[$col][$locale]);
+                    }
+                }
+            }
             if (!empty($input['categories'])) {
                 $this->assignCategoryToItem($newCourse->id, $input['categories']);
             }
@@ -306,6 +343,12 @@ class ItemServices
         if (!in_array($user->role, UserConstants::$modRoles) && $user->id != $itemUpdate->user_id) {
             return false;
         }
+        $orgInputs = $input;
+
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = $input[$col][I18nContent::DEFAULT];
+        }
+
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -343,6 +386,17 @@ class ItemServices
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
+            $i18nModel = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    continue;
+                }
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    if (isset($orgInputs[$col][$locale])) {
+                        $i18nModel->i18nSave($locale, 'items', $itemUpdate->id, $col, $orgInputs[$col][$locale]);
+                    }
+                }
+            }
             if (!empty($input['categories'])) {
                 $this->assignCategoryToItem($itemUpdate->id, $input['categories']);
             }
@@ -541,7 +595,7 @@ class ItemServices
     {
         return Validator::make($data, [
             'title' => ['required', 'string', 'max:250'],
-            'price' => ['required','numeric','min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
             'date_start' => ['required'],
         ]);
     }

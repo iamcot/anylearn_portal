@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\models\I18nContent;
 use Closure;
 use Cookie;
 use Illuminate\Http\Request;
@@ -19,7 +20,10 @@ class Localization
     public function handle($request, Closure $next)
     {
         if ($request->has('language')) {
-            $path= $request->path();
+            if (!in_array($request->get('language'), I18nContent::$supports)) {
+                return $next($request);
+            }
+            $path = $request->path();
             // $locale = $request->get('language'); 
             // # save locale 
             // Cookie::queue(Cookie::make(
