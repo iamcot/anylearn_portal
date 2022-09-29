@@ -863,4 +863,18 @@ class UserApi extends Controller
             'result' => true,
         ]);
     }
+
+    public function pendingOrders(Request $request)
+    {
+        $user = $request->get('_user');
+        $orders = DB::table('orders')
+            ->where('orders.user_id', $user->id)
+            ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
+            ->select(
+                'orders.*',
+                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+            )->orderby('orders.id', 'desc')
+            ->get();
+        return response()->json($orders);
+    }
 }

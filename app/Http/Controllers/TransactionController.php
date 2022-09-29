@@ -150,6 +150,22 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
+    public function rejectOrder($orderId)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $order = Order::find($orderId);
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
+        }
+        $transService = new TransactionService();
+        $transService->rejectRegistration($orderId);
+        return redirect()->back()->with('notify', 'Thao tác thành công');
+    }
+
     public function add2cart(Request $request)
     {
         if ($request->get('_user')) {
@@ -187,13 +203,49 @@ class TransactionController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
+
+        $transaction = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+        ->orderby('id', 'desc')
+        ->with('user');
+        if ($request->input('action') == 'clear') {
+            return redirect()->route('transaction.commission');
+        }
+        if ($request->input('id_f') > 0) {
+            if ($request->input('id_t') > 0) {
+                $transaction = $transaction->where('id', '>=', $request->input('id_f'))->where('id', '<=', $request->input('id_t'));
+            } else {
+                $transaction = $transaction->where('id', $request->input('id_f'));
+            }
+        }
+        if ($request->input('type')) {
+            $transaction = $transaction->where('type', $request->input('type'));
+        }
+        if ($request->input('name')) {
+            $transaction = $transaction->whereHas('user',function($query) use ($request){
+                $query->where('name','like','%' . $request->input('name') . '%');
+            }
+                
+            );
+
+        }
+        if ($request->input('phone')) {
+            $transaction = $transaction->whereHas('user',function($query) use ($request){
+                $query->where('phone',$request->input('phone'));
+            }
+            );
+        }
+        if ($request->input('date')) {
+            $transaction = $transaction->whereDate('created_at', '>=', $request->input('date'));
+
+        }
+        if ($request->input('datet')) {
+            $transaction = $transaction->whereDate('created_at', '<=', $request->input('datet'));
+
+        }
         if (!$userService->haveAccess($user->role, 'transaction.commission')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['transaction'] = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
-            ->orderby('id', 'desc')
-            ->with('user')
-            ->paginate(20);
+        $this->data['transaction'] = $transaction->paginate();
         $this->data['navText'] = __('Lịch sử nhận hoa hồng');
         return view('transaction.commission', $this->data);
     }

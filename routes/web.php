@@ -18,7 +18,7 @@ Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
 
-Route::get('/', 'PageController@home');
+Route::get('/', 'PageController@home')->name('home');
 Route::get('/info', 'PageController@landing');
 Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
@@ -181,6 +181,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/order-open', 'TransactionController@orderOpen')->name('order.open');
     Route::get('/order-all', 'TransactionController@allOrder')->name('order.all');
     Route::get('/order-approve/{orderId}', 'TransactionController@approveOrder')->name('order.approve');
+    Route::get('/order-reject/{orderId}', 'TransactionController@rejectOrder')->name('order.reject');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
 
