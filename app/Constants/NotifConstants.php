@@ -25,6 +25,7 @@ class NotifConstants
     const COURSE_SHARE = 'course_share';
     const COURSE_REGISTER_APPROVE = 'course_register_approve';
     const COURSE_REGISTER_PENDING = 'course_register_pending';
+    const COURSE_REGISTER_REJECT = 'course_register_reject';
 
     /** Transaction */
     const TRANS_DEPOSIT_SENT = 'trans_deposit_sent';

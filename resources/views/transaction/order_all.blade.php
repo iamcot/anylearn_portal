@@ -102,6 +102,7 @@
                     <td class="text-center" scope="row"><span class="badge badge-{{ $transServ->colorStatus($row->status) }}">{{ $row->status }}</span>
                         @if($row->status == App\Constants\OrderConstants::STATUS_PAY_PENDING)
                         <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve">Duyệt đơn</a>
+                        <a href="{{ route('order.reject', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm">Từ chối</a>
                         @endif
                     </td>
                     <td class="text-center" scope="row">{{ $row->created_at }}</td>
