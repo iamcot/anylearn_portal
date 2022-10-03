@@ -2,7 +2,7 @@
     <div class="container">
         <div class="col-xs-12">
             <h2 class="default_section_heading text-center font-600 text-blue">
-                Ban cố vấn và đội ngũ chuyên gia
+                @lang('Ban cố vấn và đội ngũ chuyên gia')
             </h2>
             <hr class="default_divider default_divider_blue default_divider_big">
             <ul class="teacher_list">

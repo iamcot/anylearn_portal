@@ -4,19 +4,19 @@
 
 <div class="card mb-2 border-left-primary shadow">
     <div class="card-header">
-        <h5 class="modal-title m-0 font-weight-bold text-primary"><i class="fa fa-shopping-cart"></i> Đơn hàng của bạn</h5>
+        <h5 class="modal-title m-0 font-weight-bold text-primary"><i class="fa fa-shopping-cart"></i> @lang('Đơn hàng của bạn')</h5>
     </div>
     <div class="card-body p-0">
         @if(empty($order))
-        <p class="p-2">Bạn không có đơn hàng nào. Nhấn nút quay lại và tìm hiểu thêm về các khoá học của anyLEARN nhé.</p>
+        <p class="p-2">@lang('Bạn không có đơn hàng nào. Nhấn nút quay lại và tìm hiểu thêm về các khoá học của anyLEARN nhé.')</p>
         @else
         <table class="table table-stripped">
             <thead>
                 <tr>
                     <th>#</th>
                     <th></th>
-                    <th width="55%">Khoá học</th>
-                    <th class="text-right">Học phí</th>
+                    <th width="55%">@lang('Khoá học')</th>
+                    <th class="text-right">@lang('Học phí')</th>
                     <th></th>
                 </tr>
             <tbody>

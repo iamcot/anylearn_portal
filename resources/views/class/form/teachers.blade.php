@@ -14,7 +14,7 @@
             @endforeach
         </ul>
         @else
-        <p>Trường chưa có giảng viên nào đăng ký</p>
+        <p>@lang('Trường chưa có giảng viên nào đăng ký')</p>
         @endif
     </div>
 </div>

@@ -74,7 +74,7 @@
 
         <div class="col-md-8">
             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-            <p class="small">*Tối thiểu 8 ký tự</p>
+            <p class="small">@lang('*Tối thiểu 8 ký tự')</p>
             @error('password')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -106,14 +106,14 @@
             <button type="submit" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}">
                 <i class="fas fa-sign-in-alt"></i> {{ __('Đăng ký') }}
             </button>
-            <a href="?has-account=1">Tôi đã đăng ký</a>
+            <a href="?has-account=1">@lang('Tôi đã đăng ký')</a>
         </div>
     </div>
     @if(env('LOGIN_3RD_ENABLE', 0))
     <div class="form-group row mb-0">
         <div class="col-md-8 offset-md-4">
             <a class="btn btn-primary mt-2" href="/login/facebook?ref={{ !empty($user) ? $user->refcode : old('ref') }}">
-                <i class="fab fa-facebook-f"></i> Đăng nhập bằng Facebook
+                <i class="fab fa-facebook-f"></i> @lang('Đăng nhập bằng Facebook')
             </a>
         </div>
     </div>

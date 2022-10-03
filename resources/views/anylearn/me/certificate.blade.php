@@ -10,23 +10,23 @@
                     @csrf
                     <div class="form-group">
                         <input name="file" type="file" id="imgInp" multiple />
-                        <p class="small">Chỉ hỗ trợ file hình ảnh</p>
+                        <p class="small">@lang('Chỉ hỗ trợ file hình ảnh')</p>
                         <div id="newsImages" style="max-width:300px"></div>
                     </div>
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn  btn-sm btn-success  border-0 rounded-pill" id="saveButton" onclick="submit()">
-                        <i class="fas fa-cloud-upload-alt"></i> Tải lên</button>
+                        <i class="fas fa-cloud-upload-alt"></i> @lang('Tải lên')</button>
                 </div>
             </div>
         </form>
     </div>
     <div class="col-12">
         <div class="card mb-2 shadow">
-            <div class="card-header">Các chứng chỉ của bạn</div>
+            <div class="card-header">@lang('Các chứng chỉ của bạn')</div>
             <div class="card-body">
                 @if (empty($files) || count($files) == 0)
-                <p class="p-2">Bạn chưa tải lên chứng chỉ nào.</p>
+                <p class="p-2">@lang('Bạn chưa tải lên chứng chỉ nào.')</p>
                 @else
                 <div class="row">
                     @foreach($files as $file)
@@ -52,7 +52,7 @@
                 <img id="cert-image" class="img-fluid w-100" src="" alt="">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary  rounded-pill border-0" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary  rounded-pill border-0" data-bs-dismiss="modal">@lang('Đóng')</button>
             </div>
         </div>
     </div>

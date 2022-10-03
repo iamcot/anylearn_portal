@@ -13,6 +13,7 @@ use App\Models\ItemUserAction;
 use App\Models\User;
 use App\Services\ItemServices;
 use App\Services\UserServices;
+use App\Models\I18nContent;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -160,6 +161,7 @@ class PageController extends Controller
             if ($user) {
                 $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
+            
             $this->data['children'] = $children;
             return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
         } catch (Exception $e) {
@@ -173,6 +175,7 @@ class PageController extends Controller
         if (!$article) {
             return redirect()->to('/');
         }
+        
         $data['article'] = $article;
         $data['moreArticles'] = Article::where('status', 1)
             ->where('id', '!=', $id)
@@ -361,7 +364,6 @@ class PageController extends Controller
             ->select('items.*')
             ->orderBy('items.is_hot', 'desc')
             ->orderBy('items.id', 'desc');
-
         if ($id) {
             $data['author'] = User::find($id);
             if (empty($data['author'])) {
@@ -417,7 +419,21 @@ class PageController extends Controller
             $classes = $listSearch;
             $data['searchNotFound'] = false;
         }
-
+        $locale = \App::getLocale();
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                foreach ($classes as $row) {
+                    // dd($row);
+                    $item18nData = $i18->i18nItem($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$itemCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols)) {
+                            $row->$col = $content;
+                        }
+                    }
+                }     
+            }
         // $data['classes'] = $classes;
         $data['classesPaginate'] = $classes->appends($request->query())->links();
         $data['classes'] = [];

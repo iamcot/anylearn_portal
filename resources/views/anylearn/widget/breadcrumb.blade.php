@@ -3,9 +3,9 @@
     <li class="breadcrumb-item"><a href="/"><i class="fa fa-home text-success"></i></a></li>
     @for($i = 0; $i < count($breadcrumb); $i++)
         @if ($i == count($breadcrumb) - 1)
-            <li class="breadcrumb-item active text-secondary" aria-current="page">{{ $breadcrumb[$i]['text'] }}</li>
+            <li class="breadcrumb-item active text-secondary" aria-current="page">{{ __($breadcrumb[$i]['text']) }}</li>
         @else
-            <li class="breadcrumb-item active"><a href="{{ $breadcrumb[$i]['url'] }}" class="text-success text-decoration-none">{{ $breadcrumb[$i]['text'] }}</a></li>
+            <li class="breadcrumb-item active"><a href="{{ $breadcrumb[$i]['url'] }}" class="text-success text-decoration-none">{{ __($breadcrumb[$i]['text']) }}</a></li>
         @endif
     @endfor
   </ol>

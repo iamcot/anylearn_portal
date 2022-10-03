@@ -17,7 +17,7 @@
             @endforeach
         </ul>
         @else
-        <p>Khóa học chưa có đánh giá nào</p>
+        <p>@lang('Khóa học chưa có đánh giá nào')</p>
         @endif
     </div>
 </div>

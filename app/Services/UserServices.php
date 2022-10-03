@@ -7,7 +7,6 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
-use App\Constants\UserDocConstants;
 use App\Models\Ask;
 use App\Models\Configuration;
 use App\Models\Contract;
@@ -386,7 +385,38 @@ class UserServices
         });
         return $result;
     }
-
+    public function userInfo($uid)
+    {
+        $user = User::find($uid)->makeVisible(['content']);
+        if (!$user) {
+            return false;
+        } else{
+            $i18n = I18nContent::All()->where('content_id',$uid);
+            if($i18n->isEmpty()){
+                $i18 = new I18nContent();
+                $locale = \App::getLocale();
+                $i18->i18nSave($locale,'users', $uid,"introduce", $user->introduce);
+                $i18->i18nSave($locale,'users', $uid, "full_content", $user->full_content);
+            }
+        }
+        $i18nModel = new I18nContent();
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$userCols as $col => $type) {
+                    $user->$col =  [I18nContent::DEFAULT => $user->$col];
+                }
+            } else {
+                $item18nData = $i18nModel->i18nItem($uid, $locale);
+                $supportCols = array_keys(I18nContent::$userCols);
+                foreach ($item18nData as $col => $i18nContent) {
+                    if (in_array($col, $supportCols)) {
+                        $user->$col =  $user->$col + [$locale => $i18nContent];
+                    }
+                }
+            }
+        }
+        return $user;
+    }
     public function contractStatusText($status)
     {
         switch ($status) {

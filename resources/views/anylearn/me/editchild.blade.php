@@ -10,7 +10,7 @@
                 <div class="form-group row">
                     <div class="row">
                         <div class="col-md-8">
-                            <h6><b>Thông tin cá nhân</b></h6>
+                            <h6><b>@lang('Thông tin cá nhân')</b></h6>
                         </div>
                         <div class="col-md-4">
                             <div class="text-center">
@@ -37,7 +37,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if (empty($userC->sex) || $userC->sex == "male") echo "checked='checked'" ?> disabled>
                                     <label class="form-check-label" for="male">
-                                        Nam
+                                        @lang('Nam')
                                     </label>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" value="female" name="sex" id="sex" <?php if (!empty($userC->sex) && $userC->sex == "female") echo "checked='checked'"; ?> disabled>
                                     <label class="form-check-label" for="female">
-                                        Nữ
+                                        @lang('Nữ')
                                     </label>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="form-group row ">
-                        <h6><b>Thông tin khác</b></h6>
+                        <h6><b>@lang('Thông tin khác')</b></h6>
                         <label for="introduce" class="text-start col-md-3 col-form-label text-md-right @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
                         <br>
                         <div class="col-md-8">
@@ -68,7 +68,7 @@
     </div>
 </form>
 
-<h5 class="mt-3 strong">Khóa Học Đã Tham Gia</h5>
+<h5 class="mt-3 strong">@lang('Khóa Học Đã Tham Gia')</h5>
 <div class="card shadow">
     <div class="card-body">
         <div class="">
@@ -76,7 +76,7 @@
                 @if(count($courses) > 0)
                 <a href="{{route('me.orders','search=&myselect='.$userC->id)}}" value="more" name="more" class="text-end"><i class="fas fa-angle-double-right"></i>@lang('Xem thêm...')</a>
                 @else
-                <p class="p-2">Tài khoản con này chưa tham gia bất kì khóa học nào</p>
+                <p class="p-2">@lang('Tài khoản con này chưa tham gia bất kì khóa học nào')</p>
                 @endif
                 <div class="row">
                     @foreach($courses as $item)
@@ -100,7 +100,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title center" id="exampleModalLabel">Tạo tài khoản con</h5>
+                <h5 class="modal-title center" id="exampleModalLabel">@lang('Tạo tài khoản con')</h5>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
@@ -110,7 +110,7 @@
 
                     <div class="">
                         <div class="form-group row">
-                            <h6><b>Thông tin cá nhân</b></h6>
+                            <h6><b>@lang('Thông tin cá nhân')</b></h6>
                             <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Họ và tên*') }}</label>
                             <div class="col-md-8">
                                 <input id="name" value="{{ !empty($userC) ? $userC->name : null }}" name="username" type="text" class="form-control @error('name') is-invalid @enderror" required>
@@ -130,7 +130,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if (empty($userC->sex) || $userC->sex == "male") echo "checked='checked'" ?>>
                                             <label class="form-check-label" for="male">
-                                                Nam
+                                                @lang('Nam')
                                             </label>
                                         </div>
                                     </div>
@@ -138,7 +138,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" value="female" name="sex" id="sex" <?php if (!empty($userC->sex) && $userC->sex == "female") echo "checked='checked'"; ?>>
                                             <label class="form-check-label" for="female">
-                                                Nữ
+                                                @lang('Nữ')
                                             </label>
                                         </div>
                                     </div>
@@ -148,7 +148,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <h6><b>Thông tin khác</b></h6>
+                                <h6><b>@lang('Thông tin khác')</b></h6>
                                 <label for="introduce" class="col-md-4 col-form-label text-md-right @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
                                 <br>
                                 <div class="col-md-12">
@@ -158,8 +158,8 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="Submit" class="btn btn-success" name="save" value="save">Lưu</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('Hủy')</button>
+                            <button type="Submit" class="btn btn-success" name="save" value="save">@lang('Lưu')</button>
                         </div>
                 </form>
             </div>

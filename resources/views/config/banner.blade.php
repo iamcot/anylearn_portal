@@ -9,11 +9,11 @@
                 <div class="card-body">
                     @csrf
                     <div class="form-group">
-                        <label for="" class="">Đường dẫn trên app</label>
+                        <label for="" class="">@lang('Đường dẫn trên app')</label>
                         <input type="text" class="form-control" name="route">
                     </div>
                     <div class="form-group">
-                        <label for="" class="">Tham số đường dẫn</label>
+                        <label for="" class="">@lang('Tham số đường dẫn')</label>
                         <input type="text" class="form-control" name="arg">
                     </div>
                     <div class="form-group">
@@ -22,11 +22,11 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                <p class="small"><i class="fas fa-info-circle"></i> Các đường dẫn /pdp /items/teacher /items/school</p>
-                <p class="small"><i class="fas fa-info-circle"></i> Tham số là ID tương ứng của đường dẫn </p>
-                <p class="small"><i class="fas fa-info-circle"></i> File trùng tên sẽ không upload được. Các banner nên có chung 1 size để đảm bảo thẩm mĩ.</p>
+                <p class="small"><i class="fas fa-info-circle"></i> @lang('Các đường dẫn /pdp /items/teacher /items/school')</p>
+                <p class="small"><i class="fas fa-info-circle"></i> @lang('Tham số là ID tương ứng của đường dẫn') </p>
+                <p class="small"><i class="fas fa-info-circle"></i> @lang('File trùng tên sẽ không upload được. Các banner nên có chung 1 size để đảm bảo thẩm mĩ.')</p>
                     <button type="button" class="btn  btn-sm btn-{{ env('MAIN_COLOR', 'primary') }}" id="saveButton" onclick="submit()">
-                        <i class="fas fa-cloud-upload-alt"></i> Upload</button>
+                        <i class="fas fa-cloud-upload-alt"></i> @lang('Upload')</button>
                 </div>
             </div>
         </form>
@@ -39,7 +39,7 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('config.banner.del', ['index' => $index ]) }}" class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash-alt"></i> Xóa banner {{ $index }}</a>
+                    <i class="fas fa-trash-alt"></i> @lang('Xóa banner') {{ $index }}</a>
             </div>
         </div>
         @endforeach

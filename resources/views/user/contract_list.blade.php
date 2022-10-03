@@ -7,12 +7,12 @@
         <form class="row">
             <div class="col-xs-12 col-lg-2 mr-1 mb-1">
                 <input type="checkbox" class="" name="ic" id="is_cancel" {{ app('request')->input('ic') == 'on' ? 'checked' : '' }}>
-                <label for="is_cancel">Hiện HD Đã Huỷ</label>
+                <label for="is_cancel">@lang('Hiện HD Đã Huỷ')</label>
             </div>
             <div class="col-xs-12 col-lg-3 mr-1 mb-1">
                 <select class="form-control" name="t" id="">
-                    <option {{ app('request')->input('t') == 'name' ? 'selected' : '' }} value="name">Tên Thành viên</option>
-                    <option {{ app('request')->input('t') == 'phone' ? 'selected' : '' }} value="phone">Số điện thoại</option>
+                    <option {{ app('request')->input('t') == 'name' ? 'selected' : '' }} value="name">@lang('Tên Thành viên')</option>
+                    <option {{ app('request')->input('t') == 'phone' ? 'selected' : '' }} value="phone">@lang('Số điện thoại')</option>
                 </select>
             </div>
             <div class="col-xs-12 col-lg-5 mr-1 mb-1">
@@ -30,11 +30,11 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
-                    <th>Thành viên</th>
-                    <th>SDT</th>
-                    <th>Trạng thái</th>
-                    <th class="text-center">Cập nhật</th>
-                    <th class="text-right" scope="col">Thao tác</th>
+                    <th>@lang('Thành viên')</th>
+                    <th>@lang('SDT')</th>
+                    <th>@lang('Trạng thái')</th>
+                    <th class="text-center">@lang('Cập nhật')</th>
+                    <th class="text-right" scope="col">@lang('Thao tác')</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,7 +47,7 @@
                     <td><label class="badge badge-{{ $userServ->contractColor($contract->status) }}">{{ $userServ->contractStatus($contract->status)  }}</label></td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($contract->updated_at)) }}</td>
                     <td class="text-right">
-                        <a class="btn btn-sm btn-primary" href="{{ route('user.contract.info', ['id' => $contract->id]) }}"><i class="fas fa-edit"></i> Xem</a>
+                        <a class="btn btn-sm btn-primary" href="{{ route('user.contract.info', ['id' => $contract->id]) }}"><i class="fas fa-edit"></i> @lang('Xem')</a>
                     </td>
                 </tr>
                 @endforeach

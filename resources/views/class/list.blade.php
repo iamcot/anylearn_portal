@@ -10,7 +10,7 @@
         <div class="card-body row">
             <div class="col-xs-6 col-lg-4 ">
                 <div class="form-group row">
-                    <label class="col-12" for="">ID(s) <span class="small">Để trống đến ID nếu chỉ tìm 1</span></label>
+                    <label class="col-12" for="">ID(s) <span class="small">@lang('Để trống đến ID nếu chỉ tìm 1')</span></label>
                     <div class="col-lg-6 mb-1">
                         <input value="{{ app('request')->input('id_f') }}" type="text" class="form-control" name="id_f" placeholder="từ ID " />
                     </div>
@@ -22,28 +22,28 @@
             </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">Tên khóa học</label>
+                    <label for="">@lang('Tên khóa học')</label>
                     <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên khóa học" />
                 </div>
             </div>
 
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">ID Tác giả</label>
+                    <label for="">@lang('ID Tác giả')</label>
                     <input value="{{ app('request')->input('ref_id') }}" type="text" class="form-control" name="ref_id" placeholder="ID tác giả" />
                 </div>
             </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">Thời gian tạo từ</label>
+                    <label for="">@lang('Thời gian tạo từ')</label>
                     <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
                 </div>
             </div>
         </div>
         <div class="card-footer">
-            <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> @lang('Tìm kiếm')</button>
             <!-- <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button> -->
-            <button class="btn btn-warning btn-sm" name="action" value="clear"> Xóa tìm kiếm</button>
+            <button class="btn btn-warning btn-sm" name="action" value="clear"> @lang('Xóa tìm kiếm')</button>
         </div>
     </div>
 </form>
@@ -58,13 +58,13 @@
                     <th class="text-center">#</th>
                     @if($userServ->isMod()) <th width="5%" class="text-center">Hot</th>@endif
                     @if($userServ->isMod()) <th width="5%" class="text-center">Trường</th>@endif
-                    <th>Khóa học</th>
-                    <th>Thời gian</th>
-                    <th>Học phí</th>
+                    <th>@lang('Khóa học')</th>
+                    <th>@lang('Thời gian')</th>
+                    <th>@lang('Học phí')</th>
                     <!-- <th>Quan tâm</th> -->
-                    <th>Đăng ký</th>
-                    <th>Lần sửa cuối</th>
-                    <th>Thao tác</th>
+                    <th>@lang('Đăng ký')</th>
+                    <th>@lang('Lần sửa cuối')</th>
+                    <th>@lang('Thao tác')</th>
                 </thead>
             <tbody>
                 @foreach($courseList as $course)

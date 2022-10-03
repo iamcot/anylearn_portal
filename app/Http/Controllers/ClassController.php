@@ -13,6 +13,7 @@ use App\Models\ItemResource;
 use App\Models\ItemUserAction;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\I18nContent;
 use App\Models\UserLocation;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -47,7 +48,22 @@ class ClassController extends Controller
         if ($request->input('action') == 'clear') {
             return redirect()->route('class');
         }
-        $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+        $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+        $locale = \App::getLocale();
+        if($locale!=I18nContent::DEFAULT){
+            $i18 = new I18nContent();
+            foreach ($courseList as $row) {
+                $item18nData = $i18->i18nItem($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$itemCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols)) {
+                        $row->$col = $content;
+                    }
+                }
+            }     
+        }
+        $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
             return view('class.list', $this->data);
         } else {

@@ -25,11 +25,11 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
-                    <th class="text-center">User (SDT)</th>
-                    <th>Khoá học</th>
-                    <th class="text-center">Số tiền</th>
-                    <th class="text-center">Ngày</th>
-                    <th width="15%" class="text-right" scope="col">Thao tác</th>
+                    <th class="text-center">@lang('User (SDT)')</th>
+                    <th>@lang('Khoá học')</th>
+                    <th class="text-center">@lang('Số tiền')</th>
+                    <th class="text-center">@lang('Ngày')</th>
+                    <th width="15%" class="text-right" scope="col">@lang('Thao tác')</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +42,7 @@
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->created_at }}</td>
                     <td class="text-right">
-                        <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve">Duyệt đơn</a>
+                        <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve">@lang('Duyệt đơn')</a>
                     </td>
                 </tr>
                 @endforeach

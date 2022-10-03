@@ -15,7 +15,7 @@
                 <i class="fab fa-facebook-f"></i></a>
         </div>
         <br>
-        <p class="text-light text-center">--- HOẶC ---</p>
+        <p class="text-light text-center">@lang('--- HOẶC ---')</p>
         @endif
         <div class="col-12 p1 text-light">
             <form method="POST" id="register_form">
@@ -62,7 +62,7 @@
 
                     <div class="col-md-8">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-                        <p class="small">*Tối thiểu 8 ký tự</p>
+                        <p class="small">@lang('*Tối thiểu 8 ký tự')</p>
                         @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -92,7 +92,7 @@
                                 <img src="/cdn/img/register/register_btn.png" alt="">
                             </button>
                         </div>
-                        <a href="{{ url()->full() }}&has-account=1">Tôi đã đăng ký</a>
+                        <a href="{{ url()->full() }}&has-account=1">@lang('Tôi đã đăng ký')</a>
                     </div>
                 </div>
             </form>
@@ -100,7 +100,7 @@
         @else
         <div class="col-lg-6 offset-lg-3 register_form">
             <div class="row p1 text-center" style="margin-top:100px;">
-                <h5 class="text-light text-center">Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</h5>
+                <h5 class="text-light text-center">@lang('Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!')</h5>
                 <div class="col-md-6" style="padding: 30px;">
                     <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
                         <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
@@ -114,7 +114,7 @@
                 <p>
                 <form action="{{ route('logout') }}" method="POST" class="text-center">
                     {{ csrf_field() }}
-                    <a href="/"><i class="fa fa-home"></i> Về trang chủ</a> <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit">@lang('Đăng xuất')</button>
+                    <a href="/"><i class="fa fa-home"></i> @lang('Về trang chủ')</a> <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit">@lang('Đăng xuất')</button>
                 </form>
                 </p>
             </div>

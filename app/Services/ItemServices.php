@@ -44,6 +44,21 @@ class ItemServices
             throw new Exception("Trang không tồn tại", 404);
         }
         $item = $item->makeVisible(['content']);
+        $locale = \App::getLocale();
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                
+                    // dd($row);
+                    $item18nData = $i18->i18nItem($item->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$itemCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols)) {
+                            $item->$col = $content;
+                        }
+                    }     
+            }
+        
         // $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_DISABLE_ANYPOINT]);
@@ -66,7 +81,20 @@ class ItemServices
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
-
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                foreach ($hotItems as $row) {
+                    // dd($row);
+                    $item18nData = $i18->i18nItem($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$itemCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols)) {
+                            $row->$col = $content;
+                        }
+                    }
+                }     
+            }
         $numSchedule = Schedule::where('item_id', $itemId)->count();
 
         $itemUserActionM = new ItemUserAction();
@@ -80,6 +108,7 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
+        
         $teachers = DB::table('users')
             ->join('class_teachers AS ct', function ($join) use ($item) {
                 $join->on('ct.user_id', '=', 'users.id')
@@ -233,6 +262,15 @@ class ItemServices
         $item = Item::find($courseId)->makeVisible(['content']);
         if (!$item) {
             return false;
+        } else{
+            $i18n = I18nContent::All()->where('content_id',$courseId);
+            if($i18n->isEmpty()){
+                $i18 = new I18nContent();
+                $locale = \App::getLocale();
+                $i18->i18nSave($locale,'items', $courseId,"title", $item->title);
+                $i18->i18nSave($locale,'items', $courseId, "short_content", $item->short_content);
+                $i18->i18nSave($locale,'items', $courseId, "content", $item->content);
+            }
         }
         // $item->image = $this->itemImageUrl($item->image);
         $i18nModel = new I18nContent();
@@ -244,7 +282,6 @@ class ItemServices
             } else {
                 $item18nData = $i18nModel->i18nItem($courseId, $locale);
                 $supportCols = array_keys(I18nContent::$itemCols);
-
                 foreach ($item18nData as $col => $i18nContent) {
                     if (in_array($col, $supportCols)) {
                         $item->$col =  $item->$col + [$locale => $i18nContent];

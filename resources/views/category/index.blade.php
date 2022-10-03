@@ -20,9 +20,9 @@
             <thead>
                 <thead>
                     <th class="text-center">#ID</th>
-                    <th>Tiêu đề</th>
-                    <th>Tạo lúc</th>
-                    <th>Thao tác</th>
+                    <th>@lang('Tiêu đề')</th>
+                    <th>@lang('Tạo lúc')</th>
+                    <th>@lang('Thao tác')</th>
                 </thead>
             <tbody>
                 @foreach($categories as $category)

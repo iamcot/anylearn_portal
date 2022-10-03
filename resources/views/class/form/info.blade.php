@@ -15,9 +15,9 @@
             <label for="subtype" class="col-md-3 col-form-label text-md-right ">{{ __('Loại khoá học') }}</label>
             <div class="col-md-8">
                 <select class="form-control" name="subtype" required @if(!empty($course) && count($course['schedule'])> 0) disabled @endif>
-                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>Khoá học Tại trung tâm</option>
-                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>Khoá học Online</option>
-                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>Mã code Ứng dụng khác</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Khoá học Tại trung tâm')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Khoá học Online')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>@lang('Mã code Ứng dụng khác')</option>
                 </select>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     <option value="{{ $category->id }}" {{ !empty($itemCategories) && in_array($category->id, $itemCategories) ? 'selected' : '' }}>{{ $category->title }}</option>
                     @endforeach
                 </select>
-                <p class="small">Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)</p>
+                <p class="small">@lang('Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)')</p>
             </div>
         </div>
 
@@ -72,7 +72,7 @@
             <label for="sale_id" class="col-md-3 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
             <div class="col-md-8">
                 <input id="sale_id" type="text" class="form-control @error('sale_id') is-invalid @enderror" name="sale_id" value="{{ old('sale_id', !empty($course) ? $course['info']->sale_id : '') }}">
-                <small>Có thể tham khảo ID ngoài danh sách nhân viên.</small>
+                <small>@lang('Có thể tham khảo ID ngoài danh sách nhân viên.')</small>
             </div>
         </div>
         @endif
@@ -139,7 +139,7 @@
             <label for="commission_rate" class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng người bán') }}</label>
             <div class="col-md-8">
                 <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($course) ? $course['info']->commission_rate : '') }}">
-                <div class="small">Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong hợp đồng.</div>
+                <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong hợp đồng.')</div>
             </div>
         </div>
 
