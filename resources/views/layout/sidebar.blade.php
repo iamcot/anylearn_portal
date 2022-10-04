@@ -222,6 +222,11 @@
             <i class="fas fa-fw fa-user-shield"></i>
             <span>@lang('Quản lý Mods')</span></a>
     </li>
+    <li class="nav-item {{ strpos($route, 'devtools.change-test') !== false ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('devtools.change-test') }}">
+            <i class="fas fa-fw fa-cogs"></i>
+            <span>@lang('Môi trường test')</span></a>
+    </li>
     @endif
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

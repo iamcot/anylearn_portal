@@ -204,6 +204,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/knowledge/topic', 'KnowledgeController@topic')->name('knowledge.topic');
     Route::any('/knowledge/topic/edit/{id?}', 'KnowledgeController@topicEdit')->name('knowledge.topic.edit');
     Route::any('/knowledge/topic/{id}/category', 'KnowledgeController@topicCategory')->name('knowledge.topic.category');
+
+    Route::middleware('access.mod')->any('/devtools/change-test', 'DevToolsController@changeTestBranch')->name('devtools.change-test');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');
