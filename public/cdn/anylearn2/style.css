@@ -18,6 +18,10 @@ body {
     border-color: rgb(75, 163, 91) !important;
 }
 
+.omi-w-intro-img-container>img {
+    display: none;
+}
+
 .is-content {
     flex: 1;
     min-width: 0;
