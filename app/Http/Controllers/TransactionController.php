@@ -236,7 +236,11 @@ class TransactionController extends Controller
 
         $transaction = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
         ->orderby('id', 'desc')
-        ->with('user');
+        ->with('user')
+        ->with('order')
+        ->whereHas('order',function($query){
+            $query->where('status','delivered');
+        });
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
         }
@@ -254,9 +258,7 @@ class TransactionController extends Controller
             $transaction = $transaction->whereHas('user',function($query) use ($request){
                 $query->where('name','like','%' . $request->input('name') . '%');
             }
-                
             );
-
         }
         if ($request->input('phone')) {
             $transaction = $transaction->whereHas('user',function($query) use ($request){
