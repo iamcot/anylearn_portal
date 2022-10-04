@@ -43,7 +43,7 @@ class ClassController extends Controller
         }
         $classService = new ItemServices();
         $userService = new UserServices();
-        $this->data['navText'] = __('Quản lý lớp học');
+        $this->data['navText'] = __('Lớp học của tôi');
         if ($request->input('action') == 'clear') {
             return redirect()->route('class');
         }
