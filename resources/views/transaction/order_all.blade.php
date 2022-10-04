@@ -94,9 +94,9 @@
                 @foreach($orders as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
-                    <td class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
-                    <td>{{ $row->classes }}</td>
-                    <td class="text-center" scope="row">{{ number_format($row->amount) }} </td>
+                    <td width="15%" class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
+                    <td width="25%">{{ $row->classes }}</td>
+                    <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td>
                         @if(!empty($row->voucher))
                         {{ $row->voucher }}

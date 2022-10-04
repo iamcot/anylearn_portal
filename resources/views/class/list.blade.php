@@ -75,17 +75,17 @@
                         @endif
                     </th>
                     @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">{!! $userServ->hotIcon($course->is_hot) !!}</a></td>@endif
-                    @if($userServ->isMod()) <td class="text-center">
+                    @if($userServ->isMod()) <td class="text-center" width="15%" >
                         {{ $course->user->name }}
                     </td>@endif
-                    <td><a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
+                    <td width="20%"><a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
                         <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
                     </td>
                     <td>{{ number_format($course->price) }}</td>
                     <!-- <td></td> -->
                     <td>{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a></td>
-                    <td>{{ $course->updated_at }}</td>
+                    <td width="15%">{{ $course->updated_at }}</td>
                     <td>
                         <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link"></i></a>
                         @if($userServ->isMod(\Auth::user()->role))
