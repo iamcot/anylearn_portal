@@ -21,15 +21,18 @@
     @yield('morestyle')
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170883972-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-170883972-1');
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-170883972-1');
     </script>
 </head>
 
 <body>
-<script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
+    <script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
     <section>
         @if(empty($isApp) || !$isApp)
         <header>
@@ -56,5 +59,10 @@
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     @yield('jscript')
 </body>
+<style>
+    .omi-w-intro-img-container {
+        display: none !important;
+    }
+</style>
 
 </html>
