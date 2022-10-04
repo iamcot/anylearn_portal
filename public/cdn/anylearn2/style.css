@@ -18,8 +18,8 @@ body {
     border-color: rgb(75, 163, 91) !important;
 }
 
-.omi-w-intro-img-container>img {
-    display: none;
+.omi-w-intro-img-container {
+    display: none !important;
 }
 
 .is-content {
