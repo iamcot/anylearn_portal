@@ -202,10 +202,11 @@ class ConfigApi extends Controller
         return response()->json($config);
     }
 
-    public function foundation()
+    public function foundation(Request $request)
     {
         $configM = new Configuration();
-        $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION]);
+        
+        // $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION]);
 
         $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
             ->where('amount', '>', 0)
@@ -213,7 +214,7 @@ class ConfigApi extends Controller
             ->sum('amount');
         $data = [
             'value' => (int) $foundation,
-            'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
+            'ios_transaction' => $configM->disableIOSTrans($request),
             'history' => Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
                 ->where('amount', '>', 0)
                 ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)

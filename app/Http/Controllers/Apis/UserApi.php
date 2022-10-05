@@ -198,7 +198,7 @@ class UserApi extends Controller
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
 
         $configM = new Configuration();
-        $user->ios_transaction = (int)$configM->get(ConfigConstants::CONFIG_IOS_TRANSACTION);
+        $user->ios_transaction = $configM->disableIOSTrans($request);
         $user->disable_anypoint = (int)$configM->get(ConfigConstants::CONFIG_DISABLE_ANYPOINT);
         $user->children = User::where('user_id', $user->id)
             ->where('is_child', 1)
