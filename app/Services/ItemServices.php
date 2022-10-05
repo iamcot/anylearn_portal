@@ -189,9 +189,9 @@ class ItemServices
     public function userStatusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
-        } else {
             return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
+        } else {
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
         }
     }
 

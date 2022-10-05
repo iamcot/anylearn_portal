@@ -40,6 +40,19 @@
                     </select>
                 </div>
             </div>
+            <div class="col-xs-6 col-lg-2">
+                <div class="form-group">
+                    <label for="">Thanh toán</label>
+                    <select class="form-control" name="payment" id="">
+                        <option value="">---TẤT CẢ---</option>
+                        <option {{ app('request')->input('payment') == App\Constants\OrderConstants::PAYMENT_ONEPAY ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::PAYMENT_ONEPAY }}">Onepaylocal</option>
+                        <option {{ app('request')->input('payment') == App\Constants\OrderConstants::PAYMENT_ATM ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::PAYMENT_ATM }}">ATM</option>
+                        <option {{ app('request')->input('payment') == App\Constants\OrderConstants::PAYMENT_FREE ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::PAYMENT_FREE }}">Free</option>
+                        <option {{ app('request')->input('payment') == 'wallet_m' ? 'selected' : '' }} value="wallet_m">Wallet_m</option>
+                        <option {{ app('request')->input('payment') == 'wallet_c' ? 'selected' : '' }} value="wallet_c">Wallet_c</option>
+                    </select>
+                </div>
+            </div>
             <div class="col-xs-6 col-lg-3">
                 <div class="form-group">
                     <label for="">Thời gian tạo từ</label>
@@ -55,7 +68,7 @@
         </div>
         <div class="card-footer">
             <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
-            <!-- <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button> -->
+            <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button>
             <button class="btn btn-warning btn-sm" name="action" value="clear"> Xóa tìm kiếm</button>
         </div>
     </div>
@@ -98,11 +111,21 @@
                         {{ $row->anypoint }}(~{{ $row->anypoint * 1000 }})
                         @endif
                     </td>
-                    <td class="text-center" scope="row">{{ $row->payment }}</td>
+                    <td class="text-center" scope="row">{{ $row->payment }} <br> <span class="tooltiptext">
+                    @if($row->payment =='atm')
+                    Thanh toán bằng hình thức chuyển khoản
+                    @elseif($row->payment =='onepaylocal')
+                    Thanh toán thông qua onepay 
+                    @elseif($row->payment =='free')
+                    Thanh toán sử dụng voucher hoặc đổi điểm anypoint
+                    @else
+                    Chưa có chú thích cho phần này
+                    @endif   
+                    </span></td>
                     <td class="text-center" scope="row"><span class="badge badge-{{ $transServ->colorStatus($row->status) }}">{{ $row->status }}</span>
                         @if($row->status == App\Constants\OrderConstants::STATUS_PAY_PENDING)
-                        <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve">Duyệt đơn</a>
-                        <a href="{{ route('order.reject', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm">Từ chối</a>
+                        <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve col-10">Duyệt đơn</a>
+                        <a href="{{ route('order.reject', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm mt-1 col-10">Từ chối</a>
                         @endif
                     </td>
                     <td class="text-center" scope="row">{{ $row->created_at }}</td>

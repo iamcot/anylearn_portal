@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Response;
 
 class TransactionController extends Controller
 {
@@ -105,7 +106,9 @@ class TransactionController extends Controller
         } else {
             $orders = $orders->where('orders.status', '!=', 'new');
         }
-
+        if ($request->input('payment')) {
+            $orders = $orders->where('orders.payment', $request->input('payment'));
+        }
         if ($request->input('date')) {
             $orders = $orders->whereDate('orders.created_at', '>=', $request->input('date'));
         }
@@ -113,7 +116,34 @@ class TransactionController extends Controller
         if ($request->input('datet')) {
             $orders = $orders->whereDate('orders.created_at', '<=', $request->input('datet'));
         }
-
+        $exOrder = new Order();
+        if ($request->input('action') == 'file') {
+            $order = $exOrder -> searchOrders($request, true);
+            if (!$order) {
+                return redirect()->route('transaction.order_all');
+            }
+            $headers = [
+                // "Content-Encoding" => "UTF-8",
+                "Content-type" => "text/csv", 
+                "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+            $callback = function () use ($order) {
+                $file = fopen('php://output', 'w');
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                fputcsv($file, array_keys($order[0]));
+                foreach ($order as $row) {
+                    mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+            };
+            // dd($callback);
+             return response()->stream($callback, 200, $headers);
+            // return response()->download($callback, 200, $headers);
+        }
         $this->data['orders'] = $orders->leftJoin('vouchers_used', 'vouchers_used.order_id', '=', 'orders.id')
             ->leftJoin('vouchers', 'vouchers_used.voucher_id', '=', 'vouchers.id')
             ->leftJoin('transactions', function ($query) {
