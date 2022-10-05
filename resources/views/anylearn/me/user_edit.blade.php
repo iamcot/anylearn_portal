@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <h6><b>Thông tin cá nhân</b></h6>
+                            <h6><b>@lang('Thông tin cá nhân')</b></h6>
                             <label for="name" class="col-md-3 col-form-label text-md-right text-start">{{ __('Họ và tên*') }}</label>
                             <div class="col-md-8">
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required>
@@ -143,6 +143,13 @@
                         </div>
                         <div class="form-group row">
                             <h6><b>@lang('Thông tin khác')</b></h6>
+                            <label for="introduce" class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <h6><b>@lang('Thông tin khác (Tiếng Anh)')</b></h6>
                             <label for="introduce" class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
                             <div class="col-md-8">
                                 <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>

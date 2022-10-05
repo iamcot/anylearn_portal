@@ -353,6 +353,7 @@ class PageController extends Controller
 
     public function classes(Request $request, $role = null, $id = null)
     {
+        $itemService = new ItemServices();
         $classes = DB::table('items')
             ->where('items.type', ItemConstants::TYPE_CLASS)
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
@@ -365,10 +366,23 @@ class PageController extends Controller
             ->orderBy('items.is_hot', 'desc')
             ->orderBy('items.id', 'desc');
         if ($id) {
-            $data['author'] = User::find($id);
-            if (empty($data['author'])) {
+            $author = User::find($id);
+            if (empty($author)) {
                 return redirect()->back()->with('notify', 'Yêu cầu không hợp lệ');
             }
+            $locale = \App::getLocale();
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                    $item18nData = $i18->i18nUser($author->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$userCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols)) {
+                            $author->$col = $content;
+                        }
+                    }
+            }
+            $data['author'] = $author;
             $classes = $classes->where('user_id', $id);
             $data['breadcrumb'] = [
                 [
@@ -376,7 +390,7 @@ class PageController extends Controller
                     'text' => $data['author']->role == 'school' ? 'Trung Tâm' : 'Chuyên gia',
                 ],
                 [
-                    'text' => 'Các khoá học của ' . $data['author']->name,
+                    'text' => __('Các khoá học của ') . $data['author']->name,
                 ]
             ];
         } else {
@@ -439,7 +453,6 @@ class PageController extends Controller
         $data['classes'] = [];
         $itemUserActionM = new ItemUserAction();
         foreach ($classes as $class) {
-
             $class->rating = $itemUserActionM->rating($class->id);
             $data['classes'][] = $class;
         }

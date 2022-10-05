@@ -268,8 +268,8 @@ class ItemServices
                 $i18 = new I18nContent();
                 $locale = \App::getLocale();
                 $i18->i18nSave($locale,'items', $courseId,"title", $item->title);
-                $i18->i18nSave($locale,'items', $courseId, "short_content", $item->short_content);
-                $i18->i18nSave($locale,'items', $courseId, "content", $item->content);
+                $i18->i18nSave($locale,'items', $courseId, "short_content", "Đang cập nhật");
+                $i18->i18nSave($locale,'items', $courseId, "content", "Đang cập nhật");
             }
         }
         // $item->image = $this->itemImageUrl($item->image);

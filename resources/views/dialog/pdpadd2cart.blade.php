@@ -11,8 +11,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="fw-bold text-success }}">{{ $class->title }}</h3>
-                    <p>{{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
+                    <h3 class="fw-bold text-success">{{ $class->title }}</h3>
+                    <p>{{ $author->role == 'teacher' ? __('Giảng viên') : __('Trung tâm') }}: {{ $author->name }}</p>
                     <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($class->date_start)) }}
                         {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
                     <p>@lang('Học phí:')' <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
