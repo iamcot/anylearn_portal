@@ -139,7 +139,7 @@ class PageController extends Controller
         $itemService = new ItemServices();
         $user = Auth::user();
         try {
-            $data = $itemService->pdpData($request,$itemId, $user);
+            $data = $itemService->pdpData($request, $itemId, $user);
             // dd($data);
             $data['breadcrumb'] = [
                 [
