@@ -86,7 +86,7 @@
                         <div class="form-group mb-2">
                             <select class="form-control location-tree rounded-pill text-secondary" id="select-type"
                                 name="t">
-                                <option value="">Hình thức</option>
+                                <option value="">@lang('Hình thức')</option>
                                 <option value="online" {{ request()->get('t') == 'online' ? 'selected' : '' }}>
                                     @lang('Học trực tuyến')</option>
                                 <option value="offline" {{ request()->get('t') == 'offline' ? 'selected' : '' }}>

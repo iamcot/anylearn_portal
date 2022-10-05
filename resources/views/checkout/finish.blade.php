@@ -38,7 +38,7 @@
     </div>
     <div class="card-footer">
         <div class="font-weight-bold float-right">
-            TỔNG TIỀN:
+            @lang('TỔNG TIỀN:')
             <span class="text-danger">{{ number_format($order->amount, 0, ",", ".") }}</span>
         </div>
     </div>

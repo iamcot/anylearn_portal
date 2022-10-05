@@ -54,7 +54,7 @@
             @if(!empty($voucherUsed))
                 <span class="text-success">( Áp dụng Mã giảm giá: {{ $voucherUsed->voucher }} )</span>
             @endif
-            TỔNG TIỀN:
+            @lang('TỔNG TIỀN:')
             <span class="text-danger">{{ number_format($order->amount, 0, ",", ".") }}</span>
         </div>
         @endif

@@ -138,7 +138,7 @@
             <div class="card-footer">
                 @if (!empty($order))
                     <div class="fw-bold text-secondary">
-                        TỔNG TIỀN:
+                        @lang('TỔNG TIỀN:')
                         <span class="text-danger">{{ number_format($order->amount, 0, ',', '.') }}</span>
                     </div>
                 @endif
