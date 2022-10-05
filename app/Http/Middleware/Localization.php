@@ -2,11 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\models\I18nContent;
+use App\Models\I18nContent;
 use Closure;
-use Cookie;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Application;
 
 class Localization
 {
@@ -23,9 +20,6 @@ class Localization
             if (!in_array($request->get('language'), I18nContent::$supports)) {
                 return $next($request);
             }
-            $path = $request->path();
-            dd($path);
-            // $locale = $request->get('language'); 
             // # save locale 
             // Cookie::queue(Cookie::make(
             //     'language', $locale, 1440 // 24h
@@ -35,7 +29,7 @@ class Localization
                 auth()->user()->save();
             }
             \App::setLocale($request->language);
-            return redirect($path);
+            return redirect()->back();
         } elseif (auth()->user()) {
             \App::setLocale(auth()->user()->language);
         }
