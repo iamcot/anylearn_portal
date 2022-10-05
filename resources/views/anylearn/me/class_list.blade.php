@@ -26,49 +26,40 @@
                 </div>
             </div>
 
-        </form>
-        <div class="card shadow">
-            <div class="card-body p-0 table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-secondary text-secondary">
-                        <tr class="">
-                            <th class="text-center fw-normal border-0">ID</th>
-                            <th class="fw-normal border-0">@lang('KHOÁ HỌC')</th>
-                            <th class="fw-normal border-0">@lang('THỜI GIAN')</th>
-                            <th class="fw-normal border-0">@lang('HỌC PHÍ')</th>
-                            <!-- <th>Quan tâm</th> -->
-                            <th class="fw-normal border-0">@lang('ĐĂNG KÝ')</th>
-                            <th class="fw-normal border-0">@lang('LẦN SỬA CUỐI')</th>
-                            <th class="fw-normal border-0">@lang('THAO TÁC')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($courseList as $course)
-                            <tr class="text-secondary">
-                                <th class="text-center">{{ $course->id }}</th>
-                                <td class="fw-bold">[{{ $course->subtype }}] {{ $course->title }}</td>
-                                <td>{{ date('d/m/y', strtotime($course->date_start)) }} @if ($course->date_end)
-                                        - {{ date('d/m/y', strtotime($course->date_end)) }}
-                                    @endif
-                                    <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i
-                                            class="fas fa-bell  text-success"></i></a>
-                                </td>
-                                <td>{{ number_format($course->price) }}</td>
-                                <!-- <td></td> -->
-                                <td>{{ $course->sum_reg }} <a
-                                        href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i
-                                            class="fas fa-bell text-success"></i></a></td>
-                                <td>{{ date('H:i d/m/y', strtotime($course->updated_at)) }}</td>
-                                <td>
-
-                                    <a
-                                        href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i
-                                            class="fa fa-link text-success"></i></a>
-                                    <a class="btn btn-success btn-sm border-0"
-                                        href="{{ route('me.class.edit', ['id' => $course->id]) }}"><i
-                                            class="fas fa-pen"></i> </a>
-                                    {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
-                                    <!-- {!! $itemServ->typeOperation($course) !!} -->
+</form>
+<div class="card shadow">
+    <div class="card-body p-0 table-responsive">
+        <table class="table table-hover">
+            <thead class="table-secondary text-secondary">
+                <tr class="">
+                    <th class="text-center fw-normal border-0">ID</th>
+                    <th class="fw-normal border-0 text-center">KHOÁ HỌC</th>
+                    <th class="fw-normal border-0 text-center">THỜI GIAN</th>
+                    <th class="fw-normal border-0 text-center">HỌC PHÍ</th>
+                    <!-- <th>Quan tâm</th> -->
+                    <th class="fw-normal border-0 text-center">HỌC VIÊN</th>
+                    <th class="fw-normal border-0 text-center">LẦN SỬA CUỐI</th>
+                    <th class="fw-normal border-0 text-center">THAO TÁC</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($courseList as $course)
+                <tr class="text-secondary">
+                    <th class="text-center">{{ $course->id }}</th>
+                    <td class="fw-bold">[{{ $course->subtype }}] {{ $course->title }}</td>
+                    <td class="text-center col-2">{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
+                        <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell  text-success"></i></a>
+                    </td>
+                    <td class="text-center col-1">{{ number_format($course->price) }}</td>
+                    <!-- <td></td> -->
+                    <td class="text-center col-2">{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell text-success"></i></a></td>
+                    <td class="text-center col-2">{{ date('H:i d/m/y', strtotime($course->updated_at)) }}</td>
+                    <td class="text-center col-2" >
+                        
+                        <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link text-success"></i></a>
+                        <a class="btn btn-success btn-sm border-0" href="{{ route('me.class.edit', ['id' => $course->id]) }}"><i class="fas fa-pen"></i> </a>
+                        {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
+                        <!-- {!! $itemServ->typeOperation($course) !!} -->
 
                                 </td>
                             </tr>
