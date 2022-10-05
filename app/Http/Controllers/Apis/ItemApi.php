@@ -170,7 +170,7 @@ class ItemApi extends Controller
         $itemService = new ItemServices();
         $user = $this->isAuthedApi($request);
         try {
-            $data = $itemService->pdpData($itemId, $user);
+            $data = $itemService->pdpData($request, $itemId, $user);
             return response()->json($data);
         } catch (Exception $e) {
             return response($e->getMessage(), $e->getCode());
