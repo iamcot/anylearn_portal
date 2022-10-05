@@ -2,7 +2,7 @@
 @extends('layout')
 @section('rightFixedTop')
 <form>
-    <a href="#" class="btn btn-success btn-sm finExpendClick" data-expend-id="">Thêm</a>
+    <a href="#" class="btn btn-success btn-sm finExpendClick" data-expend-id="">@lang('Thêm')</a>
 </form>
 @endsection
 @section('body')
@@ -13,11 +13,11 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="10%" scope="col">#ID</th>
-                    <th class="text-center">User (SDT)</th>
-                    <th class="text-center">Loại</th>
-                    <th class="text-center">Số tiền</th>
-                    <th class="text-center">Nội dung</th>
-                    <th class="text-center">Ngày</th>
+                    <th class="text-center">@lang('User (SDT)')</th>
+                    <th class="text-center">@lang('Loại')</th>
+                    <th class="text-center">@lang('Số tiền')</th>
+                    <th class="text-center">@lang('Nội dung')</th>
+                    <th class="text-center">@lang('Ngày')</th>
                 </tr>
             </thead>
             <tbody>

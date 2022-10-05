@@ -3,7 +3,7 @@
 
 @section('body')
 @if(empty($notifications))
-<p>Bạn chưa có thông báo nào!</p>
+<p>@lang('Bạn chưa có thông báo nào!')</p>
 @else
 <div class="card shadow">
 <table class="table table-borderless table-striped">

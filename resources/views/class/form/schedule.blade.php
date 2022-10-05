@@ -7,22 +7,22 @@
         <div class="row">
             <div class="col-md-8 ">
                 <div class="card shadow">
-                    <div class="card-header font-weight-bold">Các khai giảng
+                    <div class="card-header font-weight-bold">@lang('Các khai giảng')
                         <a class="float-right" href="?tab=schedule&a=create-opening"><i class="fas fa-plus"></i> @lang('Tạo khai giảng')</a>
                     </div>
                     <div class="card-body p-4">
                         @if(empty($openings) || count($openings) == 0 )
-                        <p class=""><i class="fa fa-info-circle"></i> Khoá học này đang sử dụng lịch khai giảng mặc định. Bạn có thể tạo lịch học cho lịch khai giảng mặc định này bên dưới.</p>
-                        <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> Bạn chỉ tạo được khai giảng khi khoá học chưa có học viên đăng ký.</p>
-                        <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> Lịch học gắn với khai giảng mặc định đã tạo sẽ bị xoá bỏ và bạn cần tạo lại lịch học tương ứng cho mỗi đợt khai giảng.</p>
-                        <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> Lịch khai giảng tạo ra không thể xoá, chỉ có thể chỉnh sửa hoặc tắt/mở.</p>
+                        <p class=""><i class="fa fa-info-circle"></i> @lang('Khoá học này đang sử dụng lịch khai giảng mặc định. Bạn có thể tạo lịch học cho lịch khai giảng mặc định này bên dưới.')</p>
+                        <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> @lang('Bạn chỉ tạo được khai giảng khi khoá học chưa có học viên đăng ký.')</p>
+                        <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> @lang('Lịch học gắn với khai giảng mặc định đã tạo sẽ bị xoá bỏ và bạn cần tạo lại lịch học tương ứng cho mỗi đợt khai giảng.')</p>
+                        <p class="text-danger"><i class="fa fa-exclamation-triangle"></i> @lang('Lịch khai giảng tạo ra không thể xoá, chỉ có thể chỉnh sửa hoặc tắt/mở.')</p>
                         @else
                         <table class="table table-striped">
                             <thead>
                                 <th>ID</th>
-                                <th>Tiêu đề</th>
-                                <th>Địa chỉ</th>
-                                <th>Ngày</th>
+                                <th>@lang('Tiêu đề')</th>
+                                <th>@lang('Địa chỉ')</th>
+                                <th>@lang('Ngày')</th>
                                 <th></th>
                             </thead>
                             <tbody>
@@ -36,7 +36,7 @@
                                     <td>{{ date('d/m/Y', strtotime( $op->date_start )) }}</td>
                                     
                                     <td class="text-right">
-                                        <a href="?tab=schedule&op={{ $op->id }}#schedule" class="btn btn-info btn-sm">Lịch học</a>
+                                        <a href="?tab=schedule&op={{ $op->id }}#schedule" class="btn btn-info btn-sm">@lang('Lịch học')</a>
                                     {!! $itemServ->userStatusOperation($op->id, $op->user_status) !!}
                                 </td>
                                 </tr>
@@ -68,7 +68,7 @@
                             <label for="province" class=" form-label text-md-right">{{ __('Địa chỉ / Chi nhánh') }}</label>
                             <div class="">
                                 @if (empty($userLocations) || count($userLocations) == 0)
-                                <p>Bạn chưa khởi tạo địa chỉ. <a href="{{ route('location.create') }}">Tạo địa chỉ</a></p>
+                                <p>@lang('Bạn chưa khởi tạo địa chỉ.')' <a href="{{ route('location.create') }}">@lang('Tạo địa chỉ')</a></p>
                                 @else
                                 <select class="form-control" name="opening[location_id]" required>
                                     @foreach($userLocations as $location)
@@ -102,9 +102,9 @@
                     <div class="card-body p-0 table-responsive">
                         @if(empty($course['schedule']) || count($course['schedule']) == 0)
                             @if (!empty($openings) && count($openings) > 0 && empty($opening)) 
-                            <p class="p-2 text-danger">Vui lòng chọn một khai giảng để tạo lịch học</p>
+                            <p class="p-2 text-danger">@lang('Vui lòng chọn một khai giảng để tạo lịch học')</p>
                             @else
-                            <p class="text-danger p-2">Chưa có lịch học được tạo. Vui lòng sử dụng tính năng <strong>"Tạo/Cập nhật tự động"</strong> để khởi tạo lịch học cho khai giảng này.</p>
+                            <p class="text-danger p-2">@lang('Chưa có lịch học được tạo. Vui lòng sử dụng tính năng') <strong>@lang('"Tạo/Cập nhật tự động"')</strong> @lang('để khởi tạo lịch học cho khai giảng này.')</p>
                             @endif
                         @endif
                         <table class="table table-striped ">
@@ -112,7 +112,7 @@
                                 <tr>
                                     <th>@lang('Ngày')</th>
                                     <th>@lang('Giờ bắt đầu')</th>
-                                    <th>Ghi chú</th>
+                                    <th>@lang('Ghi chú')</th>
                                 </tr>
                             </thead>
                             <tbody id="schedule_result">
@@ -144,12 +144,12 @@
                             </tbody>
                         </table>
                         @if(!empty($course['info']) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE)
-                        <p class="text-secondary ml-2"><i class="fa fa-info-circle"></i> Nếu bạn muốn cập nhật đường link cho từng lịch học, Lưu lịch học trước.</p>
+                        <p class="text-secondary ml-2"><i class="fa fa-info-circle"></i> @lang('Nếu bạn muốn cập nhật đường link cho từng lịch học, Lưu lịch học trước.')</p>
                         @endif
                     </div>
                     <div class="card-footer">
                         @if(!empty($course['schedule']))
-                        <a href="{{ route('class.del.schedule', ['id' => !empty($opening) ? $opening->id : $course['info']->id ]) }}" class="text-danger">Xóa toàn bộ lịch học</a>
+                        <a href="{{ route('class.del.schedule', ['id' => !empty($opening) ? $opening->id : $course['info']->id ]) }}" class="text-danger">@lang('Xóa toàn bộ lịch học')</a>
                         @endif
                         <button class="btn btn-sm btn-primary float-right" name="tab" value="schedule"><i class="fas fa-save"></i> @lang('Lưu')</button>
                     </div>
@@ -158,14 +158,14 @@
             <div class="col-md-4 mt-1">
                 <div class="card shadow">
                     <div class="card-header font-weight-bold">
-                        Tạo/Cập nhật tự động
-                        <a href="#schedule" id="schedule_generate" class="btn btn-sm btn-warning float-right" data-type="{{  isset($course['schedule']) && sizeof($course['schedule']) > 0 ? 'update' : 'create' }}">Tạo</a>
+                        @lang('Tạo/Cập nhật tự động')
+                        <a href="#schedule" id="schedule_generate" class="btn btn-sm btn-warning float-right" data-type="{{  isset($course['schedule']) && sizeof($course['schedule']) > 0 ? 'update' : 'create' }}">@lang('Tạo')</a>
                     </div>
                     <div class="card-body" id="schedule_auto">
                         <div class="form-group">
                             <label for="num" class="form-label font-weight-bold">{{ __('Số buổi') }}</label>
                             <input id="num" type="number" class="form-control" {{ isset($course['schedule']) && sizeof($course['schedule']) > 0 ? 'readonly' : ''}} value="{{ isset($course['schedule']) && sizeof($course['schedule']) > 0 ? sizeof($course['schedule']) : ''}}">
-                            <small><i class="fas fa-info-circle"></i> Lưu ý: Số buổi chỉ được khởi tạo 1 lần duy nhất</small>
+                            <small><i class="fas fa-info-circle"></i> @lang('Lưu ý: Số buổi chỉ được khởi tạo 1 lần duy nhất')</small>
                         </div>
                         <div class="form-group">
                             <label for="weekdays" class="form-label  font-weight-bold">{{ __('Ngày trong tuần') }}</label>

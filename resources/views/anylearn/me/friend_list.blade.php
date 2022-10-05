@@ -1,7 +1,7 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="">
-            <h6><b>Danh Sách Bạn Bè</b></h6>
+            <h6><b>@lang('Danh Sách Bạn Bè')</b></h6>
             <div class="form-group row">
                 <!-- <p class="p-2">Bạn chưa có bạn bè</p> -->
                 @foreach($userselect as $userselect)

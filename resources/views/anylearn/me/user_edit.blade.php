@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <h6><b>Thông tin cá nhân</b></h6>
+                            <h6><b>@lang('Thông tin cá nhân')</b></h6>
                             <label for="name" class="col-md-3 col-form-label text-md-right text-start">{{ __('Họ và tên*') }}</label>
                             <div class="col-md-8">
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required>
@@ -63,7 +63,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if (empty($user->sex) || $user->sex == "male") echo "checked='checked'" ?>>
                                             <label class="form-check-label" for="male">
-                                                Male
+                                                @lang('Nam')
                                             </label>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" value="female" name="sex" id="sex" <?php if (!empty($user->sex) && $user->sex == "female") echo "checked='checked'"; ?>>
                                             <label class="form-check-label" for="female">
-                                                Female
+                                                @lang('Nữ')
                                             </label>
                                         </div>
                                     </div>
@@ -79,7 +79,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" value="other" name="sex" id="sex" <?php if (!empty($user->sex) && $user->sex == "other") echo "checked='checked'" ?>>
                                             <label class="form-check-label" for="other">
-                                                Other
+                                                @lang('Khác')
                                             </label>
                                         </div>
                                     </div>
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <h6><b>Thông tin liên hệ</b></h6>
+                            <h6><b>@lang('Thông tin liên hệ')</b></h6>
                             <label for="email" class="col-md-3 col-form-label text-md-right text-start">{{ __('Email') }}</label>
                             <div class="col-md-8">
                                 <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}">
@@ -142,13 +142,19 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <h6><b>Thông tin khác</b></h6>
+                            <h6><b>@lang('Thông tin khác')</b></h6>
                             <label for="introduce" class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
                             <div class="col-md-8">
                                 <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
                             </div>
                         </div>
-
+                        <div class="form-group row">
+                            <h6><b>@lang('Thông tin khác (Tiếng Anh)')</b></h6>
+                            <label for="introduce" class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer text-center">

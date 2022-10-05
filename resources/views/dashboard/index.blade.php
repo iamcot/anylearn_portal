@@ -17,7 +17,7 @@
     <div class="col-md-6">
         <div class="card border-bottom-primary shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">Người dùng đăng ký mới</h6>
+                <h6 class="m-0 font-weight-bold text-primary">@lang('Người dùng đăng ký mới')</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <canvas id="myAreaChart"></canvas>
@@ -27,7 +27,7 @@
     <div class="col-md-3">
         <div class="card border-bottom-success shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">Top GV/Trường được mua</h6>
+                <h6 class="m-0 font-weight-bold text-primary">@lang('Top GV/Trường được mua')</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
@@ -46,7 +46,7 @@
     <div class="col-md-3">
         <div class="card border-bottom-danger shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">Top Khóa học được mua</h6>
+                <h6 class="m-0 font-weight-bold text-primary">@lang('Top Khóa học được mua')</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">

@@ -7,7 +7,7 @@
         <div class="card-body row">
             <div class="col-xs-6 col-lg-4 ">
                 <div class="form-group row">
-                    <label class="col-12" for="">ID(s) <span class="small">Để trống đến ID nếu chỉ tìm 1</span></label>
+                    <label class="col-12" for="">ID(s) <span class="small">@lang('Để trống đến ID nếu chỉ tìm 1')</span></label>
                     <div class="col-lg-6 mb-1">
                         <input value="{{ app('request')->input('id_f') }}" type="text" class="form-control" name="id_f" placeholder="từ ID " />
                     </div>
@@ -19,20 +19,20 @@
             </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">Tên thành viên</label>
+                    <label for="">@lang('Tên thành viên')</label>
                     <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên thành viên" />
                 </div>
             </div>
 
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">SDT</label>
+                    <label for="">@lang('SDT')</label>
                     <input value="{{ app('request')->input('phone') }}" type="text" class="form-control" name="phone" placeholder="SDT" />
                 </div>
             </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">Loại</label>
+                    <label for="">@lang('Loại')</label>
                     <select class="form-control" name="type" id="">
                         <option value="">---</option>
                         <option {{ app('request')->input('type') == 'commission' ? 'selected' : '' }} value="commission">Commission</option>
@@ -50,21 +50,21 @@
             </div>
             <div class="col-xs-6 col-lg-3">
                 <div class="form-group">
-                    <label for="">Thời gian tạo từ</label>
+                    <label for="">@lang('Thời gian tạo từ')</label>
                     <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
                 </div>
             </div>
             <div class="col-xs-6 col-lg-3">
                 <div class="form-group">
-                    <label for="">Thời gian tạo đến</label>
+                    <label for="">@lang('Thời gian tạo đến')</label>
                     <input value="{{ app('request')->input('datet') }}" type="date" class="form-control" name="datet" placeholder="Thời gian tạo đến" />
                 </div>
             </div>
         </div>
         <div class="card-footer">
-            <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> @lang('Tìm kiếm')</button>
             <!-- <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button> -->
-            <button class="btn btn-warning btn-sm" name="action" value="clear"> Xóa tìm kiếm</button>
+            <button class="btn btn-warning btn-sm" name="action" value="clear"> @lang('Xóa tìm kiếm')</button>
         </div>
     </div>
 </form>

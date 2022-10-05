@@ -16,11 +16,11 @@
             <thead class="table-secondary text-secondary">
                 <tr class="">
                     <th class="text-center fw-normal border-0">ID</th>
-                    <th  class="fw-normal border-0" width="10%" scope="col">HỘI SỞ</th>
-                    <th class="fw-normal border-0">TÊN VĂN PHÒNG</th>
-                    <th class="fw-normal border-0" width="40%">ĐỊA CHỈ</th>
-                    <th class="fw-normal border-0">GEO</th>
-                    <th class="fw-normal border-0 text-right" scope="col">THAO TÁC</th>
+                    <th  class="fw-normal border-0" width="10%" scope="col">@lang('HỘI SỞ')</th>
+                    <th class="fw-normal border-0">@lang('TÊN VĂN PHÒNG')</th>
+                    <th class="fw-normal border-0" width="40%">@lang('ĐỊA CHỈ')</th>
+                    <th class="fw-normal border-0">@lang('GEO')</th>
+                    <th class="fw-normal border-0 text-right" scope="col">@lang('THAO TÁC')</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                     <td>{{ $location->title }}</td>
                     <td>{{ $location->address }}, {{ $location->ward_path}}</td>
                     <td>
-                        <a href="https://www.google.com/maps/search/?api=1&query={{ $location->latitude }},{{ $location->longitude }}" target="_blank" rel="noopener noreferrer">Xem bản đồ</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ $location->latitude }},{{ $location->longitude }}" target="_blank" rel="noopener noreferrer">@lang('Xem bản đồ')</a>
                     </td>
                     <td class="text-right">
                         <a class="btn btn-success btn-sm border-0" href="{{ route('location.edit', ['id' => $location->id ]) }}"><i class="fa fa-edit"></i></a>

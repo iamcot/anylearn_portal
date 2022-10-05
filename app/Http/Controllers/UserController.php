@@ -18,14 +18,13 @@ use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\SmsServices;
 use App\Services\UserServices;
-use App\Services\TransactionService;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
+use App\Models\I18nContent;
 use Illuminate\Support\Facades\Hash;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
@@ -529,7 +528,7 @@ class UserController extends Controller
     public function pendingOrders(Request $request)
     {
         $user = Auth::user();
-        $this->data['orders'] = DB::table('orders')
+         $data = DB::table('orders')
             ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
             ->where('orders.user_id', $user->id)
             ->select(
@@ -537,6 +536,8 @@ class UserController extends Controller
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
             )
             ->paginate();
+        
+        $this->data['orders'] = $data;
         $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }

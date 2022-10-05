@@ -11,15 +11,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="fw-bold text-success }}">{{ $class->title }}</h3>
-                    <p>{{ $author->role == 'teacher' ? 'Giảng viên' : 'Trung tâm' }}: {{ $author->name }}</p>
-                    <p>Khai giảng: {{ date('d/m/Y', strtotime($class->date_start)) }}
+                    <h3 class="fw-bold text-success">{{ $class->title }}</h3>
+                    <p>{{ $author->role == 'teacher' ? __('Giảng viên') : __('Trung tâm') }}: {{ $author->name }}</p>
+                    <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($class->date_start)) }}
                         {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
-                    <p>Học phí: <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
-                    <p>Bạn sẽ nhận <strong>{{ number_format($commission, 0, ',', '.') }}</strong> anyPoint cho giao dịch
-                        này</p>
+                    <p>@lang('Học phí:')' <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
+                    <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong>
+                        @lang('anyPoint cho giao dịch này')</p>
                     @if (count($item->openings) > 0)
-                        <p class="text-danger">Chọn lịch khai giảng</p>
+                        <p class="text-danger">@lang('Chọn lịch khai giảng')</p>
                         <ul class="list-unstyled">
                             @foreach ($item->openings as $opening)
                                 <li>
@@ -31,13 +31,13 @@
                         </ul>
                     @endif
                     <div>
-                        <p id="textvorcher"><a class="text-primary" href="javascript:onVoucher()"><strong>TÔI CÓ MÃ QUÀ TẶNG / GIẢM
-                                    GIÁ</strong></a></p>
+                        <p id="textvorcher"><a class="text-primary"
+                                href="javascript:onVoucher()"><strong>@lang('TÔI CÓ MÃ QUÀ TẶNG / GIẢM GIÁ')</strong></a></p>
                         <div id="add2cartvoucher" style="display: none;">
                             <div class="row mb-2">
                                 <div class="col-9">
-                                    <input type="text" placeholder="Mã Khuyến Mãi Khóa Học" class="form-control"
-                                        name="voucher">
+                                    <input type="text" placeholder="{{ __('Mã Khuyến Mãi Khóa Học') }}"
+                                        class="form-control" name="voucher">
                                 </div>
                                 <div class="col-3 mt-1">
                                     <button onclick="offVoucher()" type="button" class="form-control btn-close"
@@ -46,15 +46,15 @@
                             </div>
                         </div>
                         <div>
-                            <p id="textchild"><a class="text-primary" href="javascript:onChild()"><strong>TÔI MUỐN ĐĂNG KÝ TÀI KHOẢN
-                                        CON</strong></a></p>
+                            <p id="textchild"><a class="text-primary"
+                                    href="javascript:onChild()"><strong>@lang('TÔI MUỐN ĐĂNG KÝ TÀI KHOẢN CON')</strong></a></p>
                             <div id="add2cartchild" class="input-group-append mb-2" style="display: none;">
                                 <div class="row mt-1">
                                     <div class="col-md-8">
-                                        <select name="child" class="form-select"
-                                            id="inputGroupSelect04">
-                                            <option value="">Chọn thành viên<nav></nav></option>
-                                            @if(count($children) > 0)
+                                        <select name="child" class="form-select" id="inputGroupSelect04">
+                                            <option value="">@lang('Chọn thành viên')<nav></nav>
+                                            </option>
+                                            @if (count($children) > 0)
                                                 @foreach ($children as $child)
                                                     <option value="{{ $child->id }}"> {{ $child->name }}</option>
                                                 @endforeach
@@ -62,7 +62,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-1 mt-1">
-                                        <a class="text-black" href="{{ route('me.child') }}"><i class="fas fa-user-plus"></i></a>
+                                        <a class="text-black" href="{{ route('me.child') }}"><i
+                                                class="fas fa-user-plus"></i></a>
                                     </div>
                                     <div class="col-md-1 mt-1">
                                         <button onclick="offChild()" type="button" class="form-control btn-close"

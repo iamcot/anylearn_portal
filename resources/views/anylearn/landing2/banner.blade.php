@@ -2,11 +2,11 @@
     <div class="container">
         <div class="text-white fs-2 fw-bold">Tìm kiếm trường học, lớp học phù hợp</div>
         <div class="mt-2 text-white w-100 d-lg-none ">
-            <div>{{ $quote['quoteText'] }}</div>
+            <div>{{ __($quote['quoteText']) }}</div>
             <p class="text-end">- {{ $quote['quoteAuthor'] }}</p>
         </div>
         <div class="mt-3 text-white w-50 d-none d-lg-block">
-            <div>{{ $quote['quoteText'] }}</div>
+            <div>{{ __($quote['quoteText']) }}</div>
             <p class="text-end">- {{ $quote['quoteAuthor'] }}</p>
         </div>
         <div class="mt-3" id="search">

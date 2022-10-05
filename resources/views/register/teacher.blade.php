@@ -1,9 +1,9 @@
 @extends('register.form')
 @section('header1')
-Cùng anyLEARN xây dựng cộng đồng học tập không giới hạn
+@lang('Cùng anyLEARN xây dựng cộng đồng học tập không giới hạn')
 @endsection
 @section('header2')
-Đăng ký anyPROFESSOR
+@lang('Đăng ký anyPROFESSOR')
 @endsection
 @section('introduce')
 <div>

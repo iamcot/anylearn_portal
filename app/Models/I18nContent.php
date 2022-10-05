@@ -13,7 +13,10 @@ class I18nContent extends Model
         'short_content' => 'textarea',
         'content' => 'editor',
     ];
-    static $userCols = [];
+    static $userCols = [
+        'introduce' =>'textarea',
+        'full_content' =>'textarea',
+    ];
 
 
     protected $table = 'i18n_contents';

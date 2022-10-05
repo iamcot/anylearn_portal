@@ -6,20 +6,19 @@
             <div class="col-md-8">
                 <h3 class="text-danger fs-3">{{ $anyPoint }}</h3>
             </div>
-            <div class="col-md-4 text-end"><a target="_blank" href="https://anylearn.vn/helpcenter/tich-luy-diem">anyPoint là
-                    gì?</a></div>
+            <div class="col-md-4 text-end"><a target="_blank" href="https://anylearn.vn/helpcenter/tich-luy-diem">@lang('anyPoint là gì?')</a></div>
         </div>
     </div>
     <ul class="nav nav-tabs" id="classtab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary active" id="done-tab"
                 data-bs-toggle="tab" data-bs-target="#done" type="button" role="tab" aria-controls="done"
-                aria-selected="true">Lịch sử thanh toán</button>
+                aria-selected="true">@lang('Lịch sử thanh toán')</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary" id="open-tab"
                 data-bs-toggle="tab" data-bs-target="#open" type="button" role="tab" aria-controls="open"
-                aria-selected="true">Lịch sử anyPoint</button>
+                aria-selected="true">@lang('Lịch sử anyPoint')</button>
         </li>
     </ul>
     <div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
@@ -32,9 +31,9 @@
                         <td class="text-start" scope="col-md-6"><b>{{ $row->content }}</b><br>
                             {{ $row->created_at }} <br>
                             @if ($row->status == 0)
-                                <b>Đang chờ</b>
+                                <b>@lang('Đang chờ')</b>
                             @else
-                                <b class="text-danger">Đã xác nhận</b>
+                                <b class="text-danger">@lang('Đã xác nhận')</b>
                             @endif
                         </td>
                         <td class="text-end text-danger" scope="col-md-6"><br>{{ abs($row->amount) }}</td>
@@ -53,9 +52,9 @@
                         <td class="text-start" scope="col-md-6"><b>{{ $row->content }}</b><br>
                             {{ $row->created_at }} <br>
                             @if ($row->status == 0)
-                                <b>Đang chờ</b>
+                                <b>@lang('Đang chờ')</b>
                             @else
-                                <b class="text-danger">Đã xác nhận</b>
+                                <b class="text-danger">@lang('Đã xác nhận')</b>
                             @endif
                         </td>
                         @if ($row->amount >= 0)

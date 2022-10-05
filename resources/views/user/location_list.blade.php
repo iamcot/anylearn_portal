@@ -17,10 +17,10 @@
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th width="5%" scope="col">Head</th>
-                    <th>Tên văn phòng</th>
-                    <th>Địa chỉ</th>
+                    <th>@lang('Tên văn phòng')</th>
+                    <th>@lang('Địa chỉ')</th>
                     <th>GEO</th>
-                    <th class="text-right" scope="col">Thao tác</th>
+                    <th class="text-right" scope="col">@lang('Thao tác')</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                     <td>{{ $location->title }}</td>
                     <td>{{ $location->address }}, {{ $location->ward_path}}</td>
                     <td>
-                        <a href="https://www.google.com/maps/search/?api=1&query={{ $location->latitude }},{{ $location->longitude }}" target="_blank" rel="noopener noreferrer">Xem bản đồ</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ $location->latitude }},{{ $location->longitude }}" target="_blank" rel="noopener noreferrer">@lang('Xem bản đồ')</a>
                     </td>
                     <td class="text-right">
                         <a href="{{ route('location.edit', ['id' => $location->id ]) }}"><i class="fa fa-edit"></i></a>
