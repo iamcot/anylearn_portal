@@ -24,6 +24,7 @@ class Localization
                 return $next($request);
             }
             $path = $request->path();
+            dd($path);
             // $locale = $request->get('language'); 
             // # save locale 
             // Cookie::queue(Cookie::make(

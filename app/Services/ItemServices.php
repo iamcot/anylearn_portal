@@ -11,7 +11,7 @@ use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
-use App\models\I18nContent;
+use App\Models\I18nContent;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
