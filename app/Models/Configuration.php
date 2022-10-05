@@ -92,6 +92,6 @@ class Configuration extends Model
     {
         $appVer = $request->get('v');
         $configVer = env('APP_VERSION_REVIEW', 'NOT_DEFINED');
-        return $appVer == $configVer ? 1 : 0;
+        return $appVer != $configVer ? 1 : 0;
     }
 }
