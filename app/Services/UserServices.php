@@ -46,6 +46,7 @@ class UserServices
             'order.open',
             'order.all',
             'user.contract',
+            'user.contract.info',
             'user.members',
             'transaction.commission',
             'useractions'

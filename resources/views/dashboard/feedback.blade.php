@@ -21,7 +21,7 @@
                 <tr>
                     <th class="text-center">{{ $feedback->id }}</th>
                     <td>{{ $feedback->user->name }}</td>
-                    <td>{{ $feedback->content }}</td>
+                    <td width="25%">{{ $feedback->content }}</td>
                     <td><img class="view-image" data-url="{{ $feedback->file }}" style="height: 50px;" src="{{ $feedback->file }}" alt=""></td>
                     <td>{{ $feedback->created_at }}</td>
                 </tr>
