@@ -36,7 +36,7 @@ class ItemServices
         return Article::where('status', 1)->orderby('id', 'desc')->take(4)->get();
     }
 
-    public function pdpData($itemId, $user)
+    public function pdpData(Request $request, $itemId, $user)
     {
         $item = Item::find($itemId);
         if (!$item) {
@@ -100,7 +100,7 @@ class ItemServices
             'author' => $author,
             'item' => $item,
             'num_schedule' => $numSchedule,
-            'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
+            'ios_transaction' => $configM->disableIOSTrans($request),
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
             'categories' => $categories,
             'teachers' => $teachers,
