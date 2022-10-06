@@ -1,6 +1,6 @@
 <section id="landing-banner">
     <div class="container">
-        <div class="text-white fs-2 fw-bold">Tìm kiếm trường học, lớp học phù hợp</div>
+        <div class="text-white fs-2 fw-bold">@lang('Tìm kiếm trường học, lớp học phù hợp')</div>
         <div class="mt-2 text-white w-100 d-lg-none ">
             <div>{{ __($quote['quoteText']) }}</div>
             <p class="text-end">- {{ $quote['quoteAuthor'] }}</p>
@@ -12,7 +12,7 @@
         <div class="mt-3" id="search">
             <form action="/classes" method="get" id="schoolsearch">
                 <button class="border-0" name="a" value="search"><i class="fa fa-search text-white"></i></button>
-                <input type="text" name="s" class="form-control rounded-pill border-0 " placeholder="Tìm khoá học...">
+                <input type="text" name="s" class="form-control rounded-pill border-0 " placeholder="{{ __('Tìm khoá học...') }}">
             </form>
         </div>
     </div>

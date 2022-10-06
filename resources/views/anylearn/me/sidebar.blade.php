@@ -26,11 +26,11 @@
             <i class="fas fa-fw fa-scroll"></i>
             <span>@lang('Quản lý chứng chỉ')</span></a>
     </li>
-    <li class="nav-item ">
+    {{-- <li class="nav-item ">
         <a class="nav-link" href="">
             <i class="fas fa-fw fa-scroll"></i>
             <span>@lang('Quản lý tài chính')</span></a>
-    </li>
+    </li> --}}
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">

@@ -1,7 +1,7 @@
 <section class="mt-5 mb-5">
     <div class="container">
         <h1 class="text-black">
-            Đội ngũ sáng lập
+            @lang('Đội ngũ sáng lập')
         </h1>
         <div class="text-center">
             <div class="row mt-4">

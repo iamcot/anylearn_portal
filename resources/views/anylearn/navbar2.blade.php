@@ -15,7 +15,7 @@
         <div class="navbar-collapse collapse  p-2" id="navbar10">
             <ul class="navbar-nav nav-fill w-100 text-bold">
                 <li class="nav-item active">
-                    <a class="nav-link " href="/info">Giới thiệu</a>
+                    <a class="nav-link " href="/info">@lang('Giới thiệu')</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/schools">anySCHOOL</a>
@@ -27,7 +27,7 @@
                     <a class="nav-link" href="/classes">anyCOURSE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ref/anylearn">TẢI APP</a>
+                    <a class="nav-link" href="/ref/anylearn">@lang('TẢI APP')</a>
                 </li>
                 @if (@auth()->check())
                 <li class="nav-item dropdown no-arrow d-flex">
