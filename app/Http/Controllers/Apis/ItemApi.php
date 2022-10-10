@@ -139,6 +139,8 @@ class ItemApi extends Controller
         }
         $pageSize = $request->get('pageSize', 9999);
         // DB::enableQueryLog(); 
+        $configM = new Configuration();
+        $isDisableIosTrans = $configM->disableIOSTrans($request);
 
         $items = DB::table('items')
             ->where(function($query) use ($userId) {
@@ -146,6 +148,7 @@ class ItemApi extends Controller
                 ->orWhereRaw('items.id in (SELECT class_id from class_teachers AS ct where ct.user_id = ?)', [$userId]);
             })
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
+            ->whereNotIn("user_id", $isDisableIosTrans ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
             ->where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', '>', ItemConstants::STATUS_INACTIVE)
             ->whereNull('items.item_id')

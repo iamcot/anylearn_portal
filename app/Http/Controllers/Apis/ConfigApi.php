@@ -54,6 +54,7 @@ class ConfigApi extends Controller
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->whereNotIn("user_id", explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')))
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
@@ -321,6 +322,8 @@ class ConfigApi extends Controller
         if (empty($query)) {
             return response()->json(null);
         }
+        $configM = new Configuration();
+        $isDisableIosTrans = $configM->disableIOSTrans($request);
         $result = null;
         if ($type == 'user') {
             $result = User::where('status', 1);
@@ -328,12 +331,14 @@ class ConfigApi extends Controller
                 $result = $result->where('role', $screen);
             }
             $result = $result->where('name', 'like', "%$query%")
+                ->whereNotIn("id", $isDisableIosTrans ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                 ->orderby('boost_score', 'desc')
                 ->orderby('is_hot', 'desc')
                 ->orderby('first_name')
                 ->get();
         } else {
             $querydb = DB::table('items')
+                ->whereNotIn("items.user_id", $isDisableIosTrans ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                 ->where('items.status', 1)
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');
