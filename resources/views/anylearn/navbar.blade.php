@@ -45,18 +45,19 @@
                             </a>
                         </div>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" style="margin-top:-2px;" href="#" id="navbarDropdownMenuLink" role="button"
+                        <a class="nav-link dropdown-toggle" style="margin-top: -5px;"  href="#" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             @if (Session::get('locale') == null || Session::get('locale') == 'vi')
-                                <img src="..\cdn\img\flag\vn.svg" width="30">
+                            <span class="locale_flag-vi"></span>
                             @else
-                                <img src="..\cdn\img\flag\en.svg" width="30">
+                               <span class="locale_flag-en"></span>
                             @endif
+                            
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"><img
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"><img class="flag"
                                         src="..\cdn\img\flag\vn.svg" width="30"> Việt Nam</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"><img
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"><img class="flag"
                                         src="..\cdn\img\flag\en.svg" width="30"> English</a></li>
                         </ul>
                     </li>
@@ -72,9 +73,9 @@
                         <a class="nav-link dropdown-toggle" style="margin-top:-2px;" href="#" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             @if (Session::get('locale') == null || Session::get('locale') == 'vi')
-                                <img src="..\cdn\img\flag\vn.svg" width="30">
+                            <span class="locale_flag-vi"></span>
                             @else
-                                <img src="..\cdn\img\flag\en.svg" width="30">
+                               <span class="locale_flag-en"></span>
                             @endif
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

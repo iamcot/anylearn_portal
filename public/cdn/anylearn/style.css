@@ -906,6 +906,26 @@ footer .head_text {
     /* You need to reset the height when not collapsed */
 }
 
+.locale_flag-vi {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    border-radius: 50%;
+    display: inline-block;
+    background: url("../img/flag/vn.svg");
+    background-position: center;
+}
+
+.locale_flag-en {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    border-radius: 50%;
+    display: inline-block;
+    background: url("../img/flag/en.svg");
+    background-position: center;
+}
+
 .collapse-module .collapse.show:before {
     display: none;
 }
