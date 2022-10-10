@@ -40,6 +40,15 @@ class UserServices
             'config.guide',
             'helpcenter'
         ],
+        UserConstants::ROLE_SALE_CONTENT => [
+            'class',
+            'user.members',
+            'order.all',
+            'class',
+            'article',
+            'config.guide',
+            'helpcenter'
+        ],
         UserConstants::ROLE_FIN => [
             'fin.expenditures',
             'transaction',
