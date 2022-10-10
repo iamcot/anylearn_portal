@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\OrderConstants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -72,13 +73,13 @@ class OrderDetail extends Model
             ->orderBy('schedules.time_start');
         $query2 = clone $query;
         // $done = $query->where('items.date_start', '<', $today)->get();
-        $done = $query->where(function ($q) {
+        $done = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->where(function ($q) {
             $q->whereNotNull('pa.id')
                 ->orWhere('items.user_status', '>=', 90)
                 ->orWhere('items.status', '>=', 90);
         })->get();
         // $open = $query2->where('items.date_start', '>=', $today)->get();
-        $open = $query2->whereNull('pa.id')->where('items.user_status', 1)->get();
+        $open = $query2->where('orders.status', OrderConstants::STATUS_DELIVERED )->whereNull('pa.id')->where('items.user_status', 1)->get();
 
         $fav = DB::table('item_user_actions AS iua')
             ->join('items', 'items.id', '=', 'iua.item_id')
