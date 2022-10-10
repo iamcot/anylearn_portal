@@ -36,12 +36,18 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-globe"></i>
+                        @if (Session::get('locale') == null || Session::get('locale') == 'vi')
+                        <img src="..\cdn\img\flag\vn.svg" width="30">
+                    @else
+                        <img src="..\cdn\img\flag\en.svg" width="30">
+                    @endif
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi'}}">Vietnamese</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en'}}">English</a></li>
-                      </ul>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"><img
+                                    src="..\cdn\img\flag\vn.svg" width="30"> Việt Nam</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"><img
+                                    src="..\cdn\img\flag\en.svg" width="30"> English</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
