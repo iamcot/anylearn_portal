@@ -198,7 +198,7 @@ class UserApi extends Controller
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
 
         $configM = new Configuration();
-        $user->ios_transaction = $configM->disableIOSTrans($request);
+        $user->ios_transaction = $configM->enableIOSTrans($request);
         $user->disable_anypoint = (int)$configM->get(ConfigConstants::CONFIG_DISABLE_ANYPOINT);
         $user->children = User::where('user_id', $user->id)
             ->where('is_child', 1)
@@ -325,7 +325,10 @@ class UserApi extends Controller
             return response('Yêu cầu không đúng', 400);
         }
         $pageSize = $request->get('pageSize', 9999);
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
         $list = DB::table('users')->where('role', $role)
+            ->whereNotIn("id",  $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
             ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('is_test', 0)
@@ -345,8 +348,8 @@ class UserApi extends Controller
                 DB::raw("(select avg(iua.value) from item_user_actions AS iua WHERE type = 'rating' AND iua.item_id in (select items.id from items where items.user_id = users.id) ) AS rating")
             )
             ->paginate($pageSize);
-        $configM = new Configuration();
-        $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
+
+            $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
         return response()->json([
             'banner' => $banner,
             'list' => $list,

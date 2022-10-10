@@ -88,7 +88,7 @@ class Configuration extends Model
         return $data;
     }
 
-    public function disableIOSTrans(Request $request)
+    public function enableIOSTrans(Request $request)
     {
         $appVer = $request->get('v');
         $configVer = env('APP_VERSION_REVIEW', 'NOT_DEFINED');
