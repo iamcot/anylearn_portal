@@ -132,17 +132,13 @@
                
                 <div class="form-group row">
                     <h6><b>@lang('Giới Thiệu Ngắn (Bio)')</b></h6>
-                    <label for="introduce"
-                        class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới Thiệu Ngắn (Bio)') }}</label>
-                    <div class="col-md-8">
+                    <div class="col-md-11">
                         <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
                     </div>
                 </div>
                 <div class="form-group row">
                     <h6><b>@lang('Thông tin giới thiệu')</b></h6>
-                    <label for="full_content"
-                        class="col-md-3 col-form-label text-md-right text-start @error('full_content') is-invalid @enderror">{{ __('Thông tin giới thiệu') }}</label>
-                    <div class="col-md-8">
+                    <div class="col-md-11">
                         <textarea class="form-control" id="full_content" name="full_content">{!! old('full_content', !empty($user) ? $user->full_content : '') !!}</textarea>
                     </div>
                 </div>
