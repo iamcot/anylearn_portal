@@ -100,7 +100,7 @@ class ItemServices
             'author' => $author,
             'item' => $item,
             'num_schedule' => $numSchedule,
-            'ios_transaction' => $configM->disableIOSTrans($request),
+            'ios_transaction' => $configM->enableIOSTrans($request),
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
             'categories' => $categories,
             'teachers' => $teachers,

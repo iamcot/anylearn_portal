@@ -198,7 +198,7 @@ class UserApi extends Controller
         $user->reflink = "https://anylearn.vn/ref/" . $user->refcode;
 
         $configM = new Configuration();
-        $user->ios_transaction = $configM->disableIOSTrans($request);
+        $user->ios_transaction = $configM->enableIOSTrans($request);
         $user->disable_anypoint = (int)$configM->get(ConfigConstants::CONFIG_DISABLE_ANYPOINT);
         $user->children = User::where('user_id', $user->id)
             ->where('is_child', 1)
@@ -326,9 +326,9 @@ class UserApi extends Controller
         }
         $pageSize = $request->get('pageSize', 9999);
         $configM = new Configuration();
-        $isDisableIosTrans = $configM->disableIOSTrans($request);
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
         $list = DB::table('users')->where('role', $role)
-            ->whereNotIn("id",  $isDisableIosTrans ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
+            ->whereNotIn("id",  $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
             ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->where('status', UserConstants::STATUS_ACTIVE)
             ->where('is_test', 0)
