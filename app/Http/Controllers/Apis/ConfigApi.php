@@ -46,6 +46,8 @@ class ConfigApi extends Controller
                 $homeConfig['popup'] = $homePopup;
             }
         }
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
         if ($homeClassesDb) {
@@ -54,7 +56,7 @@ class ConfigApi extends Controller
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
-                    ->whereNotIn("user_id", explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')))
+                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
