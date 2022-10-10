@@ -46,7 +46,7 @@
                 <div class="form-group row">
                     <div class="row">
                         <div class="col-md-8">
-                            <h6><b>Thông tin cá nhân</b></h6>
+                            <h6><b>@lang('Thông tin cá nhân')</b></h6>
                         </div>
                         <div class="col-md-4">
                             <div class="text-center">
@@ -131,10 +131,19 @@
                 </div>
                
                 <div class="form-group row">
-                <h6><b>Thông tin khác</b></h6>
-                    <label for="introduce" class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
+                    <h6><b>@lang('Giới Thiệu Ngắn (Bio)')</b></h6>
+                    <label for="introduce"
+                        class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới Thiệu Ngắn (Bio)') }}</label>
                     <div class="col-md-8">
-                        <textarea class="form-control" id="introduce" name="introduce" disabled>{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
+                        <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h6><b>@lang('Thông tin giới thiệu')</b></h6>
+                    <label for="full_content"
+                        class="col-md-3 col-form-label text-md-right text-start @error('full_content') is-invalid @enderror">{{ __('Thông tin giới thiệu') }}</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="full_content" name="full_content">{!! old('full_content', !empty($user) ? $user->full_content : '') !!}</textarea>
                     </div>
                 </div>
                 
