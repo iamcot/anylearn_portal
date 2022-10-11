@@ -154,6 +154,7 @@ class TransactionController extends Controller
                 'orders.*',
                 'users.name',
                 'users.phone',
+                'users.address',
                 'vouchers.voucher',
                 'vouchers.value AS voucher_value',
                 'transactions.amount AS anypoint',

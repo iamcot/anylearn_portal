@@ -417,7 +417,7 @@ class UserServices
                     $user->$col =  [I18nContent::DEFAULT => $user->$col];
                 }
             } else {
-                $item18nData = $i18nModel->i18nItem($uid, $locale);
+                $item18nData = $i18nModel->i18nUser($uid, $locale);
                 $supportCols = array_keys(I18nContent::$userCols);
                 foreach ($item18nData as $col => $i18nContent) {
                     if (in_array($col, $supportCols)) {
@@ -426,7 +426,7 @@ class UserServices
                 }
             }
         }
-        // dd($user);
+        //  dd($user);
         $data['info'] = $user;
         return $data;
     }

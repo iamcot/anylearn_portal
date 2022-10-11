@@ -79,14 +79,15 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
-                    <th class="text-center">@lang('User (SDT)')</th>
-                    <th>@lang('Khoá học')</th>
-                    <th class="text-center">@lang('Số tiền')</th>
-                    <th class="text-center">@lang('Ưu đãi')</th>
-                    <th class="text-center">@lang('Giảm giá')</th>
-                    <th class="text-center">@lang('Thanh toán')</th>
-                    <th class="text-center">@lang('Trạng Thái')</th>
-                    <th class="text-center">@lang('Ngày')</th>
+                    <th class="text-center">User (SDT)</th>
+                    <th class="text-center">Địa chỉ</th>
+                    <th>Khoá học</th>
+                    <th class="text-center">Số tiền</th>
+                    <th class="text-center">Ưu đãi</th>
+                    <th class="text-center">Giảm giá</th>
+                    <th class="text-center">Thanh toán</th>
+                    <th class="text-center">Trạng Thái</th>
+                    <th class="text-center">Ngày</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,6 +96,7 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
                     <td width="15%" class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
+                    <td width="15%" class="text-center" scope="row">{{ $row->address }}</td>
                     <td width="25%">{{ $row->classes }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td>

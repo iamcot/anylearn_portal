@@ -134,7 +134,7 @@ class UserController extends Controller
         }
         $userselect = User::all();
         $UserDT = $userService->userInfo(auth()->user()->id);
-        dd($UserDT['info']->full_content);
+        // dd($UserDT['info']->full_content);
         $this->data['userDT'] = $UserDT;
         $this->data['userselect'] = $userselect;
 

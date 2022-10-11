@@ -80,8 +80,9 @@
                     <th class="text-center">Boost</th>
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
-                    <th width="10%" scope="col">SDT</th>
-                    <th width="10%" scope="col">Email</th>
+                    <th width="5%" scope="col">SDT</th>
+                    <th width="5%%" scope="col">Email</th>
+                    <th width="10%" scope="col">Address</th>
                     <th>Ví C</th>
                     <th width="10%" scope="col">Người G/T</th>
                     <th width="5%" scope="col">H/H</th>
@@ -101,6 +102,7 @@
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->address }}</td>
                     <td>{{ number_format($user->wallet_c) }}</td>
                     <td>{{ $user->refname ? $user->refname . ' (' . $user->refphone . ')' : '' }}</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>

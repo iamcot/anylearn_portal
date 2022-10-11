@@ -315,6 +315,7 @@ class User extends Authenticatable
                 'users.id',
                 'users.phone',
                 'users.role',
+                'users.address',
                 'users.status',
                 'users.email',
                 'users.name',
