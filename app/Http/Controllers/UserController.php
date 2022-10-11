@@ -117,17 +117,25 @@ class UserController extends Controller
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
+        $userService = new UserServices();
         if ($request->input('save')) {
             $input = $request->all();
+            // dd($input['introduce']['vi']);
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
+                $i18 = new I18nContent();
+                $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
+                $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('me.dashboard')->with('notify', $rs);
         }
         $userselect = User::all();
+        $UserDT = $userService->userInfo(auth()->user()->id);
+        //  dd($UserDT['info']->full_content);
+        $this->data['userDT'] = $UserDT;
         $this->data['userselect'] = $userselect;
 
         $this->data['user'] = $editUser;

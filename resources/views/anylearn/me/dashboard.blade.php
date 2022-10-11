@@ -131,10 +131,15 @@
                 </div>
                
                 <div class="form-group row">
-                <h6><b>@lang('Thông tin khác')</b></h6>
-                    <label for="introduce" class="col-md-3 col-form-label text-md-right text-start @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
-                    <div class="col-md-8">
+                    <h6><b>@lang('Giới Thiệu Ngắn (Bio)')</b></h6>
+                    <div class="col-md-11">
                         <textarea class="form-control" id="introduce" name="introduce" disabled>{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <h6><b>@lang('Thông tin giới thiệu')</b></h6>
+                    <div class="col-md-11">
+                        <textarea class="form-control" id="full_content" name="full_content" disabled>{!! old('full_content', !empty($user) ? $user->full_content : '') !!}</textarea>
                     </div>
                 </div>
                 

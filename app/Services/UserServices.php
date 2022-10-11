@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\I18nContent;
 use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Auth;
@@ -420,12 +421,14 @@ class UserServices
                 $supportCols = array_keys(I18nContent::$userCols);
                 foreach ($item18nData as $col => $i18nContent) {
                     if (in_array($col, $supportCols)) {
-                        $user->$col =  $user->$col + [$locale => $i18nContent];
+                        $user->$col = $user->$col + [$locale => $i18nContent];
                     }
                 }
             }
         }
-        return $user;
+        // dd($user);
+        $data['info'] = $user;
+        return $data;
     }
     public function contractStatusText($status)
     {
