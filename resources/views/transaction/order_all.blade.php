@@ -80,6 +80,7 @@
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th class="text-center">User (SDT)</th>
+                    <th class="text-center">Địa chỉ</th>
                     <th>Khoá học</th>
                     <th class="text-center">Số tiền</th>
                     <th class="text-center">Ưu đãi</th>
@@ -95,6 +96,7 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
                     <td width="15%" class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
+                    <td width="15%" class="text-center" scope="row">{{ $row->address }}</td>
                     <td width="25%">{{ $row->classes }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td>
