@@ -211,6 +211,7 @@ class User extends Authenticatable
             // 'title' => $input['title'],
             'sex' => isset($input['sex']) ? $input['sex'] : null,
             'introduce' => $input['introduce'],
+            'full_content' => $input['full_content'],
             'dob' => isset($input['dob']) ? $input['dob'] : null,
             'cert_id' => isset($input['cert_id']) ? $input['cert_id'] : null,
             // 'full_content' => $input['full_content'],
