@@ -124,7 +124,7 @@
             <div class="modal-body">
                 {!! $contract->template !!}
             </div>
-            <div class="modal-footer text-center">
+            <div class="modal-footer text-center pb-5">
                 @if($contract->status == \App\Constants\UserConstants::CONTRACT_NEW)
                 <a class="btn btn-success rounded-pill border-0" href="{{ route('me.contract.sign', ['id' => $contract->id ]) }}">ĐÃ ĐỌC VÀ ĐỒNG Ý KÝ HỢP ĐỒNG</a>
                 @endif
