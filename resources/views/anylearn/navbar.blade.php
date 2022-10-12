@@ -55,10 +55,10 @@
                             
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"><img class="flag"
-                                        src="..\cdn\img\flag\vn.svg" width="30"> Việt Nam</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"><img class="flag"
-                                        src="..\cdn\img\flag\en.svg" width="30"> English</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                                <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Việt Nam</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                                <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
                         </ul>
                     </li>
                     </li>
@@ -79,10 +79,10 @@
                             @endif
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"><img
-                                        src="..\cdn\img\flag\vn.svg" width="30"> Việt Nam</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"><img
-                                        src="..\cdn\img\flag\en.svg" width="30"> English</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                                <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Việt Nam</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                                <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
                         </ul>
                     </li>
                 @endif

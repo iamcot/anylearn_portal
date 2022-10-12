@@ -94,6 +94,7 @@
             </ul>
             <div class="tab-content border border-top-0 mb-5 shadow" id="myTabContent">
                 <div class="tab-pane fade show active p-2" id="content" role="tabpanel" aria-labelledby="content-tab">
+                    @if(\App::getLocale()=='vi')
                     <div class="collapse-module pb-4">
                         <div class="collapse" id="contentCollapse">
                             {!! $item->content !!}
@@ -104,6 +105,18 @@
                                 aria-controls="contentCollapse">
                         </div>
                     </div>
+                    @else
+                    <div class="collapse-module-en pb-4">
+                        <div class="collapse" id="contentCollapse">
+                            {!! $item->content !!}
+                        </div>
+                        <div class="text-center">
+                            <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#contentCollapse" aria-expanded="false"
+                                aria-controls="contentCollapse">
+                        </div>
+                    </div>
+                    @endif
 
                 </div>
                 @if ($author->role == 'school')

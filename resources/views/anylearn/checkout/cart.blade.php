@@ -33,9 +33,17 @@
                                 <td>
                                     @if ($item->class_name)
                                         {{ $item->class_name }}
+                                        @if(\App::getLocale()=='vi')
                                         <span class="small text-danger">({{ $item->title }} )</span>
+                                        @else
+                                        <span class="small text-danger">({{ $item->i18n_content }} )</span>
+                                        @endif
                                     @else
+                                        @if(\App::getLocale()=='vi')
                                         {{ $item->title }}
+                                        @else
+                                        {{ $item->i18n_content }}
+                                        @endif
                                     @endif
                                     @if ($item->childId != $user->id)
                                         ({{ $item->childName }})
@@ -76,7 +84,7 @@
                         </p>
                     @else
                         <div class="p-3">
-                            <label for="" class="fw-bold text-secondary">Bạn đang có <strong
+                            <label for="" class="fw-bold text-secondary">@lang('Bạn đang có') <strong
                                     class="text-success">{{ $user->wallet_c }}</strong> anyPoint.
                                 @lang('Bạn có thể sử dụng tối đa') <strong
                                     class="text-danger">{{ $transServ->calRequiredPoint($order->amount, $user->wallet_c, $bonusRate) }}</strong>
@@ -189,7 +197,7 @@
                 @else
                     <input type="hidden" name="payment" value="free">
                 @endif
-                <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
+                <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! __($term) !!}</div>
                 <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" checked
                         required> <label for="accept_term">@lang('Tôi đồng ý với điều khoản thanh toán và') <a target="_BLANK"
                             href="/privacy">@lang('chính sách bảo mật')</a> @lang('của Công ty')</label></p>

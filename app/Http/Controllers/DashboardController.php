@@ -38,6 +38,8 @@ class DashboardController extends Controller
     public function meDashboard(Request $request) {
         // $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
         $editUser = Auth::user();
+        $userService = new UserServices();
+
         if ($request->input('save')) {
             $input = $request->all();
             $input['role'] = $editUser->role;
@@ -46,11 +48,15 @@ class DashboardController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
+            $i18 = new I18nContent();
+                $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
+                $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('me.edit')->with('notify', $rs);
         }
         $userselect = User::all();
+        $UserDT = $userService->userInfo(auth()->user()->id);
         $this->data['userselect'] = $userselect;
-        
+        $this->data['userDT'] = $UserDT;
         $this->data['user'] = $editUser;
        // $this->data['navText'] = __('Thông tin');
         $this->data['type'] = 'member';
