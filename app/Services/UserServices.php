@@ -265,7 +265,7 @@ class UserServices
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return "Mới tạo";
+                return __("Mới tạo");
             case UserConstants::CONTRACT_SIGNED:
                 return "Thành viên ký";
             case UserConstants::CONTRACT_APPROVED:
@@ -434,7 +434,7 @@ class UserServices
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return 'Mới tạo';
+                return __('Mới tạo');
             case UserConstants::CONTRACT_SIGNED:
                 return 'Bạn đã ký';
             case UserConstants::CONTRACT_APPROVED:

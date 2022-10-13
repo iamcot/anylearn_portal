@@ -33,13 +33,13 @@
             <thead class="table-secondary text-secondary">
                 <tr class="">
                     <th class="text-center fw-normal border-0">ID</th>
-                    <th class="fw-normal border-0 text-center">KHOÁ HỌC</th>
-                    <th class="fw-normal border-0 text-center">THỜI GIAN</th>
-                    <th class="fw-normal border-0 text-center">HỌC PHÍ</th>
+                    <th class="fw-normal border-0 text-center">@lang('KHOÁ HỌC')</th>
+                    <th class="fw-normal border-0 text-center">@lang('THỜI GIAN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('HỌC PHÍ')</th>
                     <!-- <th>Quan tâm</th> -->
-                    <th class="fw-normal border-0 text-center">HỌC VIÊN</th>
-                    <th class="fw-normal border-0 text-center">LẦN SỬA CUỐI</th>
-                    <th class="fw-normal border-0 text-center">THAO TÁC</th>
+                    <th class="fw-normal border-0 text-center">@lang('HỌC VIÊN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('LẦN SỬA CUỐI')</th>
+                    <th class="fw-normal border-0 text-center">@lang('THAO TÁC')</th>
                 </tr>
             </thead>
             <tbody>

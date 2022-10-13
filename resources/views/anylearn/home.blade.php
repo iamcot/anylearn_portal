@@ -45,7 +45,7 @@
 
 
 @include('anylearn.home.articles', [
-'title' => 'HỌC VÀ HỎI',
+'title' => __('HỌC VÀ HỎI'),
 'carouselId' => 'asks',
 'data' => $articles
 ])

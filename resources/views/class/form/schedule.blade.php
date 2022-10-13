@@ -51,7 +51,7 @@
             <div class="col-md-4 mt-1">
                 @if(request()->get('a') == 'create-opening' || !empty($opening))
                 <div class="card shadow {{ request()->get('a') == 'create-opening' ? 'border border-danger' : '' }}">
-                    <div class="card-header font-weight-bold">{{ !empty($opening) ? 'Cập nhật' : 'Tạo mới'  }}
+                    <div class="card-header font-weight-bold">{{ !empty($opening) ? __('Cập nhật') : __('Tạo mới')  }}
                         <button class="btn btn-sm btn-primary float-right" name="tab" value="opening"><i class="fas fa-save"></i> @lang('Lưu khai giảng')</button>
                     </div>
                     <div class="card-body">
@@ -98,7 +98,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="card shadow">
-                    <div class="card-header font-weight-bold">Lịch đã tạo</div>
+                    <div class="card-header font-weight-bold">{{__('Lịch đã tạo')}}</div>
                     <div class="card-body p-0 table-responsive">
                         @if(empty($course['schedule']) || count($course['schedule']) == 0)
                             @if (!empty($openings) && count($openings) > 0 && empty($opening)) 
@@ -170,7 +170,7 @@
                         <div class="form-group">
                             <label for="weekdays" class="form-label  font-weight-bold">{{ __('Ngày trong tuần') }}</label>
                             <ul class="list-inline">
-                                @for($i=0; $i<=6; $i++) <li class="list-inline-item"><input type="checkbox" name="d{{ $i }}" id="d{{ $i}}"> <label for="d{{  $i }}">{{ $i == 0 ? 'Chủ Nhật' : "Thứ " . ($i + 1) }}</label> </li>
+                                @for($i=0; $i<=6; $i++) <li class="list-inline-item"><input type="checkbox" name="d{{ $i }}" id="d{{ $i}}"> <label for="d{{  $i }}">{{ $i == 0 ? __('Chủ Nhật') : __("Thứ " . ($i + 1)) }}</label> </li>
                                     @endfor
                             </ul>
                         </div>
