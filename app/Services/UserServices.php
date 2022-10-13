@@ -32,7 +32,7 @@ class UserServices
         UserConstants::ROLE_SALE => [
             'class',
             'user.members',
-            'order.all'
+            // 'order.all'
         ],
         UserConstants::ROLE_CONTENT => [
             'class',
@@ -43,7 +43,7 @@ class UserServices
         UserConstants::ROLE_SALE_CONTENT => [
             'class',
             'user.members',
-            'order.all',
+            // 'order.all',
             'class',
             'article',
             'config.guide',
@@ -92,6 +92,7 @@ class UserServices
             }
             return true;
         }
+
         if (in_array($routeName, $grantAccess)) {
             return true;
         }

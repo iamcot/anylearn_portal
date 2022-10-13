@@ -304,7 +304,10 @@ class User extends Authenticatable
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
-            $members = $members->where('users.sale_id', $requester->id);
+            $members = $members->where(function ($query) use ($requester) {
+                return $query->where('users.sale_id', $requester->id)
+                    ->orWhere('users.user_id', $requester->id);
+            });
         }
         $members = $members
             ->orderby('users.is_hot', 'desc')

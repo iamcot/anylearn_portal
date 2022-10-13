@@ -110,6 +110,11 @@ class UserController extends Controller
         } else {
             $members = $userM->searchMembers($request);
         }
+        $this->data['isSale'] = false;
+        if ($user->role == UserConstants::ROLE_SALE) {
+            $this->data['isSale'] = true;
+        }
+
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
@@ -139,7 +144,7 @@ class UserController extends Controller
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
-        $sum = Transaction::where('pay_method','=','wallet_c')->where('status',1)->where('user_id', auth()->user()->id)->sum('amount');
+        $sum = Transaction::where('pay_method', '=', 'wallet_c')->where('status', 1)->where('user_id', auth()->user()->id)->sum('amount');
         $this->data['anyPoint'] = abs($sum);
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
@@ -248,12 +253,26 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 
+    public function memberSale(Request $request, $userId)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.members')) {
+            return redirect()->route('user.members')->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $saleUser = User::find($userId);
+        if ($user->role == UserConstants::ROLE_SALE && $saleUser->user_id != $user->id && $saleUser->sale_id != $user->id) {
+            return redirect()->route('user.members')->with('notify', __('Bạn không có quyền với user này'));
+        }
+    }
+
     public function memberEdit(Request $request, $userId)
     {
         $userService = new UserServices();
         $user = Auth::user();
 
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.member')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.members')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 

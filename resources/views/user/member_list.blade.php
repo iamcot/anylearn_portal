@@ -76,8 +76,11 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
+                    <th class="text-center">Thao tác</th>
+                    @if(!$isSale)
                     <th class="text-center">Hot</th>
                     <th class="text-center">Boost</th>
+                    @endif
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="5%" scope="col">SDT</th>
@@ -88,7 +91,7 @@
                     <th width="5%" scope="col">H/H</th>
                     <th class="text-center" width="5%" scope="col">C/T</th>
                     <th class="text-center">Cập nhật</th>
-                    <th class="text-right" scope="col">Thao tác</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -96,8 +99,21 @@
                 @foreach($members as $user)
                 <tr>
                     <th class="text-center" scope="row">{{ $user->id }}</th>
+
+                    <td class="text-right">
+                        @if(!$isSale)
+                            @if($user->id != 1)
+                            {!! $userServ->statusOperation($user->id, $user->status) !!}
+                            <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
+                            @endif
+                        @endif
+                        <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('user.members.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i></a>
+                    </td>
+
+                    @if(!$isSale)
                     <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'users', 'id' =>  $user->id ]) }}">{!! $userServ->hotIcon($user->is_hot) !!}</a></td>
                     <td>{{ $user->boost_score }}</td>
+                    @endif
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }}</td>
@@ -108,12 +124,6 @@
                     <td>{{ $user->commission_rate * 100 }}%</td>
                     <td class="text-center">{!! $userServ->requiredDocIcon($user) !!}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($user->updated_at)) }}</td>
-                    <td class="text-right">
-                        @if($user->id != 1)
-                        {!! $userServ->statusOperation($user->id, $user->status) !!}
-                        <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
-                        @endif
-                    </td>
                 </tr>
                 @endforeach
                 @endif

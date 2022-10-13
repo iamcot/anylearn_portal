@@ -70,15 +70,29 @@
                 @foreach($courseList as $course)
                 <tr>
                     <th class="text-center">{{ $course->id }}
-                        @if($userServ->isMod() &&  $course->sum_reg == 0)
+                        @if($userServ->isMod() && $course->sum_reg == 0 &&!$isSale)
                         <a href="{{route('class.del', ['id' => $course->id]) }}"><i class="fa fa-trash text-danger"></i></a>
                         @endif
                     </th>
-                    @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">{!! $userServ->hotIcon($course->is_hot) !!}</a></td>@endif
-                    @if($userServ->isMod()) <td class="text-center" width="15%" >
+                    @if($userServ->isMod()) <td class="text-center">
+                        @if(!$isSale)
+                        <a href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' =>  $course->id ]) }}">
+                            {!! $userServ->hotIcon($course->is_hot) !!}</a>
+                        @else
+                        {!! $userServ->hotIcon($course->is_hot) !!}
+                        @endif
+                    </td>
+                    @endif
+                    @if($userServ->isMod()) <td class="text-center" width="15%">
                         {{ $course->user->name }}
                     </td>@endif
-                    <td width="20%"><a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
+                    <td width="20%">
+                        @if(!$isSale)
+                        <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a>
+                        @else 
+                        <a target="_blank" href="{{ $itemServ->classUrl($course->id)  }}">{{ $course->title }}</a>
+                        @endif
+                    </td>
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
                         <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
                     </td>
@@ -88,7 +102,7 @@
                     <td width="15%">{{ $course->updated_at }}</td>
                     <td>
                         <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link"></i></a>
-                        @if($userServ->isMod(\Auth::user()->role))
+                        @if($userServ->isMod(\Auth::user()->role) && !$isSale)
                         {!! $itemServ->statusOperation($course->id, $course->status) !!}
                         <!-- {!! $itemServ->typeOperation($course) !!} -->
                         @endif
