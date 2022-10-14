@@ -24,6 +24,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -176,22 +177,30 @@ class ItemServices
             ->paginate(self::PP);
         return $courses;
     }
+    public function statusText($status)
+    {
+        if ($status == ItemConstants::STATUS_ACTIVE) {
+            return '<span class="text-success">Đã duyệt</span>';
+        } else {
+            return '<span class="text-danger">Chờ duyệt</span>';
+        }
+    }
 
     public function statusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
         } else {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         }
     }
 
     public function userStatusOperation($itemId, $status)
     {
-        if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
+        if ($status == ItemConstants::STATUS_INACTIVE) {
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         } else {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
         }
     }
 
@@ -541,7 +550,7 @@ class ItemServices
     {
         return Validator::make($data, [
             'title' => ['required', 'string', 'max:250'],
-            'price' => ['required','numeric','min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
             'date_start' => ['required'],
         ]);
     }

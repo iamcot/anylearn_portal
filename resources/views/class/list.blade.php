@@ -64,6 +64,7 @@
                     <!-- <th>Quan tâm</th> -->
                     <th>Đăng ký</th>
                     <th>Lần sửa cuối</th>
+                    <th>Trạng thái đối tác</th>
                     <th>Thao tác</th>
                 </thead>
             <tbody>
@@ -100,6 +101,9 @@
                     <!-- <td></td> -->
                     <td>{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a></td>
                     <td width="15%">{{ $course->updated_at }}</td>
+                    <td class="text-center ">
+                        {!! $itemServ->statusText($course->user_status) !!}
+                    </td>
                     <td>
                         <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link"></i></a>
                         @if($userServ->isMod(\Auth::user()->role) && !$isSale)
