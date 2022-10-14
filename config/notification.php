@@ -221,7 +221,7 @@ return [
     ],
     NotifConstants::COURSE_CREATED =>  [
         'title' => 'Khóa học mới trên anyLEARN',
-        'template' => '{author} vừa tạo khóa học {class} trên anyLEARN với giá {price}. Vui lòng chờ một chút để đối tác hoàn thiện thông tin để vào xem nhé.',
+        'template' => 'Đối tác {author} vừa tạo khóa học {class} trên anyLEARN với giá {price}. Xem ngay nhé.',
         'route' => '/pdp',
         'args' => true,
         'email' => 'App\Mail\NewClassCreated',

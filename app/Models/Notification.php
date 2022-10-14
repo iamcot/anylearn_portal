@@ -156,8 +156,8 @@ class Notification extends Model
                 'name' => $user->name,
                 'author' => $item->author,
                 'class' => $item->title,
-                'price' => $item->price,
-                'orgprice' => $item->org_price,
+                'price' => number_format($item->price, 0, ',', '.'),
+                'orgprice' => number_format($item->org_price, 0, ',', '.'),
                 'args' => $item->id,
                 'url' => $itemServ->classUrl($item->id),
             ]);
