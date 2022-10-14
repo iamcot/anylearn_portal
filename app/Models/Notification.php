@@ -150,7 +150,6 @@ class Notification extends Model
     public function notifCourseCreated($item)
     {
         $receivers = User::whereIn('role', [UserConstants::ROLE_SALE, UserConstants::ROLE_SALE_CONTENT])->get();
-        Log::debug($receivers);
         $itemServ = new ItemServices();
         foreach ($receivers as $user) {
             $this->createNotif(NotifConstants::COURSE_CREATED, $user->id, [
