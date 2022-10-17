@@ -158,7 +158,7 @@ class User extends Authenticatable
     {
         $exits = $this->where('phone', $input['phone'])->first();
         if ($exits) {
-            return 0;
+            return "Trùng số điện thoại";
         }
         $obj = [
             'name' => $input['name'],
