@@ -59,7 +59,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'user.mods')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)

@@ -166,7 +166,7 @@ class User extends Authenticatable
             'phone' => $input['phone'],
             'refcode' => $input['phone'],
             'role' => $input['role'],
-            'password' => Hash::make($input['password']),
+            'password' => Hash::make(empty($input['password']) ? $input['phone'] : $input['password']),
             'status' => UserConstants::STATUS_ACTIVE,
         ];
         return $this->create($obj) ? 1 : 0;

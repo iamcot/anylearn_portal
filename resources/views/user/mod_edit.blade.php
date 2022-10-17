@@ -13,13 +13,13 @@
         <div class="card-body">
             <div class="col-lg-6">
                 <div class="form-group row">
-                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Họ và tên') }}</label>
+                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Họ và tên') }}*</label>
                     <div class="col-md-8">
                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', !empty($user) ? $user->name : '') }}" required >
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Số điện thoại') }}</label>
+                    <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Số điện thoại') }}*</label>
                     <div class="col-md-8">
                         <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', !empty($user) ? $user->phone : '') }}" required>
                     </div>
@@ -27,11 +27,11 @@
                 <div class="form-group row">
                     <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Email') }}</label>
                     <div class="col-md-8">
-                        <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}" required>
+                        <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Vai trò') }}</label>
+                    <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Vai trò') }}*</label>
                     <div class="col-md-8">
                         <select class="form-control" name="role" id="role">
                             @foreach($type == 'mod' ? \App\Constants\UserConstants::$modRoles : \App\Constants\UserConstants::$memberRoles  as $role)
@@ -43,7 +43,7 @@
                 <div class="form-group row">
                     <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
                     <div class="col-md-8">
-                        <input id="password" type="password" class="form-control" name="password" value="" {{ empty($user) ? 'required' : '' }}>
+                        <input id="password" type="password" class="form-control" name="password" value="">
                         @if(!empty($user))
                             <span class="small">*Để trống nếu không thay đổi</span>
                         @endif
