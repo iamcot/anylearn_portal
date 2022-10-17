@@ -18,6 +18,7 @@
                     <th class="text-center">Số tiền</th>
                     <th class="text-center">Nội dung</th>
                     <th class="text-center">Ngày</th>
+                    <th class="text-center">Ghi Chú</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,7 @@
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->content }}</td>
                     <td class="text-center">{{ date('d/m/y', strtotime($row->created_at)) }}</td>
+                    <td>{{ $row->pay_info }}</td>
                 </tr>
                 @endforeach
                 @endif
