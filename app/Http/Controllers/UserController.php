@@ -326,7 +326,7 @@ class UserController extends Controller
         }
         $userService = new UserServices();
         $user = Auth::user();
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.mods')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         } else {
             $this->data['user'] = User::find($userId);
