@@ -26,9 +26,8 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}
                         <a href="#" class="finExpendClick" data-expend-id="{{ $row->id }}" data-title="{{ $row->content }}" data-date="{{ $row->created_at }}" data-ref_user_id="{{ $row->ref_user_id }}" data-amount="{{ $row->amount }}" data-type="{{ $row->type }}" data-pay_method="{{ $row->pay_method }}" data-comment="{{ $row->pay_info }}"><i class="fa fa-edit"></i></a>
-
                     </th>
-                    <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
+                    <td class="text-center" scope="row">@if(!empty($row->refUser)) {{ $row->refUser->name }} ({{ $row->refUser->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->content }}</td>

@@ -59,7 +59,8 @@ class UserServices
             'user.contract.info',
             'user.members',
             'transaction.commission',
-            'useractions'
+            'useractions',
+            'user.mods'
         ],
     ];
 

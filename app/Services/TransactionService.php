@@ -634,7 +634,7 @@ class TransactionService
         $value = DB::table('order_details')
             ->where('order_details.created_at', '>', $from)
             ->where('order_details.created_at', '<', $to)
-            ->whereIn('order_details.status', [OrderConstants::STATUS_NEW, OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_DELIVERED]);
+            ->whereIn('order_details.status', [OrderConstants::STATUS_DELIVERED]);
         if ($partner) {
             $value = $value->join('items', 'items.id', '=', 'order_details.item_id')
                 ->where('items.user_id', $partner);
@@ -653,7 +653,7 @@ class TransactionService
             ->where('transactions.created_at', '<', $to)
             ->where('transactions.type', 'commission')
             ->where('transactions.content', 'like', '%bán khóa học%')
-            ->where('transactions.status', '<', 99);
+            ->where('transactions.status', '=', ConfigConstants::TRANSACTION_STATUS_DONE);
         if ($partner) {
             $sellerComm = $sellerComm
                 ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
@@ -674,7 +674,7 @@ class TransactionService
             ->where('transactions.created_at', '<', $to)
             ->where('transactions.type', 'commission')
             ->where('transactions.content', 'not like', '%bán khóa học%')
-            ->where('transactions.status', '<', 99);
+            ->where('transactions.status', '=', ConfigConstants::TRANSACTION_STATUS_DONE);
         if ($partner) {
             $otherCommission = $otherCommission
                 ->join('order_details', 'order_details.id', '=', 'transactions.order_id')

@@ -64,7 +64,7 @@ class ConfigConstants
 
     const TRANSACTION_FIN_SALARY =  'fin_salary';
     const TRANSACTION_FIN_FIXED_FEE =  'fin_fixed_fee';
-    const TRANSACTION_FIN_VARIABLE_FEE =  'fin_variable_fee';
+    const TRANSACTION_FIN_OFFICE_FEE =  'fin_office_fee';
     const TRANSACTION_FIN_MARKETING =  'fin_marketing';
     const TRANSACTION_FIN_EVENT =  'fin_event';
     const TRANSACTION_FIN_ASSETS =  'fin_assets';
