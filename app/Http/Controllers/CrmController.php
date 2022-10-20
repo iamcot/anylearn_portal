@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\UserConstants;
-use App\models\SaleActivity;
+use App\Models\SaleActivity;
 use App\Models\User;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
