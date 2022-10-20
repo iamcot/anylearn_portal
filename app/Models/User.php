@@ -36,7 +36,8 @@ class User extends Authenticatable
         'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
-        'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location'
+        'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
+        'omicall_id', 'omicall_pwd', 'contact_phone',
     ];
 
     /**
@@ -156,6 +157,10 @@ class User extends Authenticatable
 
     public function createNewMod($input)
     {
+        if ($input['role'] == UserConstants::ROLE_FIN_PARTNER) {
+            $input['contact_phone'] = $input['phone'];
+            $input['phone'] = md5(now());
+        }
         $exits = $this->where('phone', $input['phone'])->first();
         if ($exits) {
             return "Trùng số điện thoại";
@@ -164,6 +169,9 @@ class User extends Authenticatable
             'name' => $input['name'],
             'email' => $input['email'],
             'phone' => $input['phone'],
+            'contact_phone' => $input['contact_phone'],
+            'omicall_id' => $input['omicall_id'],
+            'omicall_pwd' => $input['omicall_pwd'],
             'refcode' => $input['phone'],
             'role' => $input['role'],
             'password' => Hash::make(empty($input['password']) ? $input['phone'] : $input['password']),
@@ -180,10 +188,16 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone' => $input['phone'],
+            // 'phone' => $input['phone'],
             'role' => $input['role'],
+            'contact_phone' => $input['phone'],
+            'omicall_id' => $input['omicall_id'],
+            'omicall_pwd' => $input['omicall_pwd'],
 
         ];
+        if ($input['role'] != UserConstants::ROLE_FIN_PARTNER) {
+            $obj['phone'] = $input['phone'];
+        }
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }

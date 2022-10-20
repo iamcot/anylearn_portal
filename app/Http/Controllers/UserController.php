@@ -253,20 +253,6 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 
-    public function memberSale(Request $request, $userId)
-    {
-        $userService = new UserServices();
-        $user = Auth::user();
-
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.members')) {
-            return redirect()->route('user.members')->with('notify', __('Bạn không có quyền cho thao tác này'));
-        }
-        $saleUser = User::find($userId);
-        if ($user->role == UserConstants::ROLE_SALE && $saleUser->user_id != $user->id && $saleUser->sale_id != $user->id) {
-            return redirect()->route('user.members')->with('notify', __('Bạn không có quyền với user này'));
-        }
-    }
-
     public function memberEdit(Request $request, $userId)
     {
         $userService = new UserServices();

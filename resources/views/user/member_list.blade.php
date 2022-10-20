@@ -84,7 +84,7 @@
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="5%" scope="col">SDT</th>
-                    <th width="5%%" scope="col">Email</th>
+                    <th width="5%" scope="col">Email</th>
                     <th width="10%" scope="col">Address</th>
                     <th>Ví C</th>
                     <th width="10%" scope="col">Người G/T</th>
@@ -107,7 +107,7 @@
                             <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
                             @endif
                         @endif
-                        <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('user.members.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i></a>
+                        <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i></a>
                     </td>
 
                     @if(!$isSale)

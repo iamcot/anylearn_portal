@@ -144,10 +144,16 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/user/mods', 'UserController@mods')->name('user.mods');
 
     Route::get('/user/members', 'UserController@members')->name('user.members');
-    Route::any('/user/members/sale/{userId}', 'UserController@memberSale')->name('user.members.sale');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
     Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
+
+    Route::any('/crm/sale/{userId}', 'CrmController@memberSale')->name('crm.sale');
+    Route::any('/crm/save-note', 'CrmController@saveNote')->name('crm.save-note');
+    Route::any('/crm/save-call', 'CrmController@saveCall')->name('crm.save-call');
+    Route::any('/crm/save-chat', 'CrmController@saveChat')->name('crm.save-chat');
+    Route::any('/crm/activity-del/{id}', 'CrmController@delActivity')->name('crm.activity.del');
+    Route::get('/crm/activity/{id}', 'CrmController@viewActivityContent')->name('crm.activity');
 
     Route::any('/user/no-profile', 'UserController@userNoProfile')->name('user.noprofile');
     Route::any('/user/remind-profile/{userId}', 'UserController@remindProfile')->name('user.noprofile.remind');

@@ -227,6 +227,13 @@ td:hover .tooltiptext {
     font-weight: bold;
 }
 
+.crm .imagebox {
+    max-width: 50px;
+    max-height: 50px;
+    text-align: center;
+    line-height: 60px;
+}
+
 .imagebox {
     position: relative;
 }

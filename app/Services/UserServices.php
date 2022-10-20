@@ -16,6 +16,7 @@ use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Participation;
 use App\Models\Transaction;
 use App\Models\User;
 use Exception;
@@ -458,5 +459,38 @@ class UserServices
             '3rd_token' => null,
         ]);
         return true;
+    }
+
+    public function orderStats($userId)
+    {
+        $data['gmv'] = DB::table('orders')
+            ->where('orders.user_id', $userId)
+            ->where('status', OrderConstants::STATUS_DELIVERED)
+            ->sum('amount');
+
+        $data['registered'] = DB::table('orders')
+            ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
+            ->where('orders.user_id', $userId)
+            ->count('od.id');
+
+        $data['complete'] = Participation::where('participant_user_id', $userId)
+            ->groupby('item_id')
+            ->count();
+
+        $data['pending'] = DB::table('orders')
+            ->where('orders.user_id', $userId)
+            ->whereIn('status', [OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_NEW])
+            ->sum('amount');
+
+        $data['anyPoint'] = Transaction::where('user_id', $userId)
+            ->where('type', ConfigConstants::TRANSACTION_EXCHANGE)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
+            ->sum('amount');
+
+        $data['voucher'] = DB::table('vouchers_used')
+            ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
+            ->where('vouchers_used.user_id', $userId)
+            ->sum('vouchers.value');
+        return $data;
     }
 }
