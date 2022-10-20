@@ -69,7 +69,10 @@
 <form method="post" enctype="multipart/form-data">
     @csrf
     <div class="card shadow mb-3">
-        <div class="card-header">Phân khách cho sale</div>
+        <div class="card-header">Phân khách cho sale
+        <a href="/cdn/anylearn/example_saleassign.csv" download>File mẫu</a>
+
+        </div>
         <div class="card-body">
             <div>
                 <input type="file" name="saleassign" class="">
