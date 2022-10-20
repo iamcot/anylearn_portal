@@ -66,6 +66,18 @@
         </div>
     </div>
 </form>
+<form method="post" enctype="multipart/form-data">
+    @csrf
+    <div class="card shadow mb-3">
+        <div class="card-header">Phân khách cho sale</div>
+        <div class="card-body">
+            <div>
+                <input type="file" name="saleassign" class="">
+                <button class="btn btn-success btn-sm" name="action" value="saleassign">Tải lên</button>
+            </div>
+        </div>
+    </div>
+</form>
 
 <div class="card shadow">
     <div class="card-header">
@@ -102,10 +114,10 @@
 
                     <td class="text-right">
                         @if(!$isSale)
-                            @if($user->id != 1)
-                            {!! $userServ->statusOperation($user->id, $user->status) !!}
-                            <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
-                            @endif
+                        @if($user->id != 1)
+                        {!! $userServ->statusOperation($user->id, $user->status) !!}
+                        <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
+                        @endif
                         @endif
                         <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i></a>
                     </td>

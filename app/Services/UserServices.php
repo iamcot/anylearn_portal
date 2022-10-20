@@ -48,7 +48,9 @@ class UserServices
             'class',
             'article',
             'config.guide',
-            'helpcenter'
+            'helpcenter',
+            'user.contract',
+            'user.contract.info',
         ],
         UserConstants::ROLE_FIN => [
             'fin.expenditures',

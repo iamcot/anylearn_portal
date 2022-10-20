@@ -81,6 +81,39 @@ class UserController extends Controller
             return redirect()->route('user.members');
         }
 
+        if ($request->input('action') == 'saleassign') {
+            if ($request->hasFile('saleassign') && $request->file('saleassign')->isValid()) {
+                $csvFile = $request->file('saleassign');
+
+                $fileHandle = fopen($csvFile, 'r');
+                $rows = [];
+                $header = [];
+                while (!feof($fileHandle)) {
+                    if (empty($header)) {
+                        $header = fgetcsv($fileHandle, 0, ',');
+                    } else {
+                        $csvRaw = fgetcsv($fileHandle, 0, ',');
+                        $row = [];
+                        foreach ($header as $k => $col) {
+                            $row[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
+                        }
+                        $rows[] = $row;
+                    }
+                }
+                fclose($fileHandle);
+
+                $count = 0;
+                foreach ($rows as $row) {
+                    if (!empty($row['user_id'])) {
+                        $data['user_id'] = $row['user_id'];
+                    } else if (!empty($row['sale_id'])) {
+                        $data['sale_id'] = $row['sale_id'];
+                    }
+                    $count += User::where('phone', $row['phone'])->update($data);
+                }
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $count . '/' . count($rows));
+            }
+        }
 
         if ($request->input('action') == 'file') {
             $members = $userM->searchMembers($request, true);
