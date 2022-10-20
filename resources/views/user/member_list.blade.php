@@ -66,6 +66,7 @@
         </div>
     </div>
 </form>
+@if(!$isSale)
 <form method="post" enctype="multipart/form-data">
     @csrf
     <div class="card shadow mb-3">
@@ -81,7 +82,7 @@
         </div>
     </div>
 </form>
-
+@endif
 <div class="card shadow">
     <div class="card-header">
         Tổng tìm kiếm: <strong class="text-danger">{{ $members->total() }}</strong>
