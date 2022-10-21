@@ -22,7 +22,7 @@
                             <a class="ml-2 phonecall" href="#" data-phone="{{ $memberProfile->phone }}" title="{{ $memberProfile->phone }}"><i class="fa fa-phone"></i></a>
 
                         </h3>
-                        <div>Thành viên từ: {{ date('d/m/Y', strtotime($memberProfile->created_at)) }}</div>
+                        <div>Thành viên từ: {{ $memberProfile->is_registered == 0 ? "Chưa đăng ký" : date('d/m/Y', strtotime($memberProfile->created_at)) }}</div>
                         <div>anyPoint: <strong class="text-danger">{{ number_format($memberProfile->wallet_c, 0, ',', '.') }}</strong></div>
                     </div>
                 </div>

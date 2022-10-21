@@ -101,17 +101,38 @@ class UserController extends Controller
                     }
                 }
                 fclose($fileHandle);
-
-                $count = 0;
+                // dd($header, $rows);
+                $countUpdate = 0;
+                $countCreate = 0;
                 foreach ($rows as $row) {
                     if (!empty($row['user_id'])) {
                         $data['user_id'] = $row['user_id'];
                     } else if (!empty($row['sale_id'])) {
                         $data['sale_id'] = $row['sale_id'];
                     }
-                    $count += User::where('phone', $row['phone'])->update($data);
+                    $exists = User::where('phone', $row['phone'])->first();
+                    if ($exists) {
+                        $countUpdate += User::where('phone', $row['phone'])->update($data);
+                    } else {
+                        try {
+                            User::create([
+                                'name' => $row['name'],
+                                'phone' => $row['phone'],
+                                'sale_id' => $row['sale_id'],
+                                'is_registered' => 0,
+                                'source' => isset($row['source']) ? $row['source'] : '',
+                                'role' => UserConstants::ROLE_MEMBER,
+                                'password' => Hash::make($row['phone']),
+                                'status' => UserConstants::STATUS_INACTIVE,
+                                'refcode' => $row['phone'],
+                            ]);
+                            $countCreate++;
+                        } catch (Exception $ex) {
+                            Log::error($ex);
+                        }
+                    }
                 }
-                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $count . '/' . count($rows));
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows));
             }
         }
 
