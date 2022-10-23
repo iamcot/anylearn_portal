@@ -23,12 +23,12 @@ class DashboardController extends Controller
         //     $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
         // }
         $this->data['navText'] = __('Bảng thông tin');
+        $this->data['user'] = Auth::user();
         $userServ = new UserServices();
-        if ($userServ->isMod()) {
-            $dashServ = new DashboardServices();
-            $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByDay());
-            $this->data['topUsers'] = $dashServ->topUser();
-            $this->data['topItems'] = $dashServ->topItem();
+        if ($userServ->isSale()) {
+            return view('dashboard.sale', $this->data);
+        }
+        else if ($userServ->isMod()) {
             return view('dashboard.index', $this->data);
         } else {
             return view('dashboard.member', $this->data);

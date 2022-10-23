@@ -1,16 +1,43 @@
 @inject('dashServ','App\Services\DashboardServices')
+@php
+$dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @request('dateT'));
+@endphp
 
 @extends('layout')
+@section('rightFixedTop')
+<form>
+    <div class="d-flex flex-row pt-3">
+        <div class="form-group mr-2">
+            <input type="date" class="form-control" name="dateF" value="{{ @request('dateF') ?? date('Y-m-d', strtotime('-30 days')) }}" placeholder="Từ">
+        </div>
+        <div class="form-grou mr-2">
+            <input type="date" class="form-control" name="dateT" value="{{ @request('dateT') ?? date('Y-m-d') }}" placeholder="Đến">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success">Xem</button>
+        </div>
+    </div>
+</form>
+@endsection
 @section('body')
 <div class="row">
-    @include('dashboard.count_box', ['title' => 'Khóa học', 'data' => $dashServ->itemCount(),
+@include('dashboard.count_box', ['title' => 'Khóa học trong kỳ', 'data' => $dashServ->itemCount(false),
     'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Thành viên', 'data' => $dashServ->userCount('member'),
+    @include('dashboard.count_box', ['title' => 'Thành viên trong kỳ', 'data' => $dashServ->userCount('member', false),
     'icon' => 'fa-users', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Trường học', 'data' => $dashServ->userCount('school'),
-    'icon' => 'fa-university', 'color' => 'warning'])
-    @include('dashboard.count_box', ['title' => 'Giảng Viên', 'data' => $dashServ->userCount('teacher'),
+    @include('dashboard.count_box', ['title' => 'Doanh thu trong kỳ', 'data' => $dashServ->gmv(false),
+    'icon' => 'fa-dollar-sign', 'color' => 'primary' ])
+    @include('dashboard.count_box', ['title' => 'Tổng Giảng Viên', 'data' => $dashServ->userCount('teacher'),
     'icon' => 'fa-chalkboard-teacher', 'color' => 'info'])
+
+    @include('dashboard.count_box', ['title' => 'Tổng Khóa học', 'data' => $dashServ->itemCount(),
+    'icon' => 'fa-fire', 'color' => 'danger'])
+    @include('dashboard.count_box', ['title' => 'Tổng Thành viên', 'data' => $dashServ->userCount('member'),
+    'icon' => 'fa-users', 'color' => 'success' ])
+    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => $dashServ->gmv(),
+    'icon' => 'fa-dollar-sign', 'color' => 'primary' ])
+    @include('dashboard.count_box', ['title' => 'Tổng Trường học', 'data' => $dashServ->userCount('school'),
+    'icon' => 'fa-university', 'color' => 'info'])
 
 </div>
 <div class="row">
@@ -32,7 +59,7 @@
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
                     <tbody>
-                        @foreach($topUsers as $user)
+                        @foreach($dashServ->topUser() as $user)
                         <tr>
                             <th>{{ $user->name }}</th>
                             <td>{{ $user->reg_num }}</td>
@@ -51,7 +78,7 @@
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
                     <tbody>
-                        @foreach($topItems as $item)
+                        @foreach($dashServ->topItem() as $item)
                         <tr>
                             <th>{{ $item->title }}</th>
                             <td>{{ $item->reg_num }}</td>
@@ -69,7 +96,7 @@
 @section('jscript')
 <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
 <script>
-    var chartData = JSON.parse("{{ $newUserChartData }}".replace(/&quot;/g, '"'));
+    var chartData = JSON.parse("{{ json_encode($dashServ->userCreatedByDay()) }}".replace(/&quot;/g, '"'));
     var ctx = document.getElementById("myAreaChart");
     var myLineChart = new Chart(ctx, {
         type: 'line',

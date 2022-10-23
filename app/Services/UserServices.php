@@ -84,6 +84,12 @@ class UserServices
         return in_array($user->role, UserConstants::$modRoles);
     }
 
+    public function isSale()
+    {
+        $user = Auth::user();
+        return in_array($user->role, UserConstants::$saleRoles);
+    }
+
     public function haveAccess($role, $routeName)
     {
         if (!isset($this->roles[$role])) {
