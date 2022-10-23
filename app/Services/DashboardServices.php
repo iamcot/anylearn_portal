@@ -203,11 +203,15 @@ class DashboardServices
         }
         return $query->sum('orders.quantity');
     }
-    public function saleTopBuyer($num = 5)
+    public function saleTopBuyer($saleId, $num = 5)
     {
         $query = DB::table('users')
             ->join('orders', 'orders.user_id', 'users.id')
             ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->where(function ($where) use ($saleId) {
+                $where->where('users.user_id', $saleId)
+                    ->orWhere('users.sale_id', $saleId);
+            })
             ->where('orders.status', OrderConstants::STATUS_DELIVERED);
 
         if ($this->dateF) {
@@ -224,12 +228,16 @@ class DashboardServices
         return $query;
     }
 
-    public function saleTopItems($num = 5)
+    public function saleTopItems($saleId, $num = 5)
     {
         $query = DB::table('users')
             ->join('orders', 'orders.user_id', 'users.id')
             ->join('order_details', 'order_details.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where(function ($where) use ($saleId) {
+                $where->where('users.user_id', $saleId)
+                    ->orWhere('users.sale_id', $saleId);
+            })
             ->where('orders.status', OrderConstants::STATUS_DELIVERED);
 
         if ($this->dateF) {
