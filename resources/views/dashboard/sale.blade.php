@@ -23,14 +23,18 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 @extends('layout')
 @section('body')
 <div class="row">
+    @php
+    $saleActivities = $dashServ->saleActivities($user->id);
+    $saleAsigned = $dashServ->userCount(null,true,$user->id);
+    @endphp
 
-    @include('dashboard.count_box', ['title' => 'Tổng khách tiếp cận', 'data' => $dashServ->saleActivities($user->id),
+    @include('dashboard.count_box', ['title' => 'Tổng khách tiếp cận', 'data' => $saleActivities,
     'icon' => 'fa-briefcase', 'color' => 'success' ])
     @include('dashboard.count_box', ['title' => 'Tổng Khóa học bán', 'data' => $dashServ->saleCount($user->id),
     'icon' => 'fa-fire', 'color' => 'danger'])
     @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => $dashServ->gmv(true, $user->id),
     'icon' => 'fa-dollar-sign', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Tập khách hàng', 'data' => $dashServ->userCount(null,true,$user->id),
+    @include('dashboard.count_box', ['title' => 'Tập khách hàng', 'data' => $saleAsigned,
     'icon' => 'fa-users', 'color' => 'danger'])
 
     @include('dashboard.count_box', ['title' => 'Khách tiếp cận trong kì', 'data' => $dashServ->saleActivities($user->id, false),
@@ -39,9 +43,10 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     'icon' => 'fa-fire', 'color' => 'danger'])
     @include('dashboard.count_box', ['title' => 'Doanh thu trong kì', 'data' => $dashServ->gmv(false, $user->id),
     'icon' => 'fa-dollar-sign', 'color' => 'success' ])
+
     @include('dashboard.count_box', ['title' => 'Tỉ lệ tiếp cận',
     'type' => '%',
-    'data' => ($dashServ->saleActivities($user->id) / $dashServ->userCount(null,true,$user->id)) * 100,
+    'data' => $saleAsigned > 0 ? ($saleActivities / $saleAsigned ) * 100 : 0,
     'icon' => 'fa-users', 'color' => 'danger'])
 
 </div>
@@ -83,7 +88,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
                     <tbody>
-                    @foreach($dashServ->saleTopItems($user->id) as $item)
+                        @foreach($dashServ->saleTopItems($user->id) as $item)
                         <tr>
                             <th>{{ $item->title }}</th>
                             <td>{{ number_format($item->num, 0, ',', '.') }}</td>
