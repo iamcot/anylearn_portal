@@ -95,7 +95,7 @@ class UserController extends Controller
                         $csvRaw = fgetcsv($fileHandle, 0, ';');
                         $rowcsv = [];
                         foreach ($header as $k => $col) {
-                            $rowcsv[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
+                            $rowcsv[] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
                         }
                         $rows[] = $rowcsv;
                     }
@@ -105,26 +105,31 @@ class UserController extends Controller
                 $countUpdate = 0;
                 $countCreate = 0;
                 foreach ($rows as $row) {
+                    if (empty($row[1])) {
+                        continue;
+                    }
                     try {
-                        if (!empty($row['user_id'])) {
-                            $data['user_id'] = $row['user_id'];
-                        } else if (!empty($row['sale_id'])) {
-                            $data['sale_id'] = $row['sale_id'];
-                        }
-                        $exists = User::where('phone', $row['phone'])->first();
+                        $exists = User::where('phone', $row[1])->first();
                         if ($exists) {
-                            $countUpdate += User::where('phone', $row['phone'])->update($data);
+                            if (!empty($row[2])) {
+                                $data['user_id'] = $row[2];
+                            } else if (!empty($row[3])) {
+                                $data['sale_id'] = $row[3];
+                            }
+                            $countUpdate += User::where('phone', $row[1])->update($data);
                         } else {
+                           
+                            Log::debug($row);
                             User::create([
-                                'name' => $row['name'],
-                                'phone' => $row['phone'],
-                                'sale_id' => $row['sale_id'],
+                                'name' => $row[0],
+                                'phone' => $row[1],
+                                'sale_id' => $row[3],
                                 'is_registered' => 0,
-                                'source' => isset($row['source']) ? $row['source'] : '',
+                                'source' => isset($row[4]) ? $row[4] : '',
                                 'role' => UserConstants::ROLE_MEMBER,
-                                'password' => Hash::make($row['phone']),
+                                'password' => Hash::make($row[1]),
                                 'status' => UserConstants::STATUS_INACTIVE,
-                                'refcode' => $row['phone'],
+                                'refcode' => $row[1],
                             ]);
                             $countCreate++;
                         }
@@ -132,7 +137,7 @@ class UserController extends Controller
                         Log::error($ex);
                     }
                 }
-                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows));
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
             }
         }
 
