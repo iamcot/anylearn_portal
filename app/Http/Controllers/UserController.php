@@ -93,11 +93,11 @@ class UserController extends Controller
                         $header = fgetcsv($fileHandle, 0, ',');
                     } else {
                         $csvRaw = fgetcsv($fileHandle, 0, ',');
-                        $row = [];
+                        $rowcsv = [];
                         foreach ($header as $k => $col) {
-                            $row[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
+                            $rowcsv[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
                         }
-                        $rows[] = $row;
+                        $rows[] = $rowcsv;
                     }
                 }
                 fclose($fileHandle);
@@ -105,16 +105,16 @@ class UserController extends Controller
                 $countUpdate = 0;
                 $countCreate = 0;
                 foreach ($rows as $row) {
-                    if (!empty($row['user_id'])) {
-                        $data['user_id'] = $row['user_id'];
-                    } else if (!empty($row['sale_id'])) {
-                        $data['sale_id'] = $row['sale_id'];
-                    }
-                    $exists = User::where('phone', $row['phone'])->first();
-                    if ($exists) {
-                        $countUpdate += User::where('phone', $row['phone'])->update($data);
-                    } else {
-                        try {
+                    try {
+                        if (!empty($row['user_id'])) {
+                            $data['user_id'] = $row['user_id'];
+                        } else if (!empty($row['sale_id'])) {
+                            $data['sale_id'] = $row['sale_id'];
+                        }
+                        $exists = User::where('phone', $row['phone'])->first();
+                        if ($exists) {
+                            $countUpdate += User::where('phone', $row['phone'])->update($data);
+                        } else {
                             User::create([
                                 'name' => $row['name'],
                                 'phone' => $row['phone'],
@@ -127,9 +127,9 @@ class UserController extends Controller
                                 'refcode' => $row['phone'],
                             ]);
                             $countCreate++;
-                        } catch (Exception $ex) {
-                            Log::error($ex);
                         }
+                    } catch (\Exception $ex) {
+                        Log::error($ex);
                     }
                 }
                 return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows));
