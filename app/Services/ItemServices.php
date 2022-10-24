@@ -162,10 +162,10 @@ class ItemServices
         }
 
         $requester = Auth::user();
-        if ($requester->role == UserConstants::ROLE_SALE) {
-            $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
-                ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
-        }
+        // if ($requester->role == UserConstants::ROLE_SALE) {
+        //     $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
+        //         ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
+        // }
         $courses = $courses->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->select(
