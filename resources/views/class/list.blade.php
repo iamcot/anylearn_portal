@@ -2,8 +2,6 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('layout')
 
-
-
 @section('body')
 <form>
     <div class="card shadow mb-2">
@@ -88,11 +86,8 @@
                         {{ $course->user->name }}
                     </td>@endif
                     <td width="20%">
-                        @if(!$isSale)
-                        <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a>
-                        @else 
+                        <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i></a>
                         <a target="_blank" href="{{ $itemServ->classUrl($course->id)  }}">{{ $course->title }}</a>
-                        @endif
                     </td>
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
                         <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>

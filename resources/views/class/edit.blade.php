@@ -1,9 +1,12 @@
+@inject('userServ','App\Services\UserServices')
+
 @extends('layout')
 
-
 @section('body')
+@if(!$userServ->isSale())
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
     @csrf
+@endif
     <input type="hidden" name="id" value="{{ !empty($courseId) ? $courseId : 0 }}">
     <input type="hidden" name="action" value="{{ empty($courseId) ? 'create' : 'update' }}">
     <div class="row nav-pills-custom">
@@ -44,8 +47,9 @@
             </div>
         </div>
     </div>
-
+@if(!$userServ->isSale())
 </form>
+@endif
 @endsection
 @section('jscript')
 <script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
