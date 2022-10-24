@@ -6,7 +6,7 @@
                 <span class="carousel-control-icon rounded-circle border"><i class="fas fa-2x fa-angle-right text-secondary"></i></span>
             </a>
             <div class="carousel-inner" role="listbox">
-                <h5 class="m-2 fw-bold text-uppercase">{{ $title }}</h5>
+                <h5 class="m-2 fw-bold text-uppercase">{{ __($title) }}</h5>
                 @foreach($promotions as $promotion)
                 <div class="carousel-item {{ $loop->index == 0 ? 'active' : '' }}">
                     <div class="col-md-4">
