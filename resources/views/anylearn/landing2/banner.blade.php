@@ -7,7 +7,7 @@
         </div>
         <div class="mt-3 text-white w-50 d-none d-lg-block">
             <div>{{ __($quote['quoteText']) }}</div>
-            <p class="text-end">- {{ $quote['quoteAuthor'] }}</p>
+            <p class="text-end">- {{ __($quote['quoteAuthor']) }}</p>
         </div>
         <div class="mt-3" id="search">
             <form action="/classes" method="get" id="schoolsearch">
