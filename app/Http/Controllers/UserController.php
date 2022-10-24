@@ -118,8 +118,7 @@ class UserController extends Controller
                             }
                             $countUpdate += User::where('phone', $row[1])->update($data);
                         } else {
-                           
-                            Log::debug($row);
+                            // Log::debug($row);
                             User::create([
                                 'name' => $row[0],
                                 'phone' => $row[1],
