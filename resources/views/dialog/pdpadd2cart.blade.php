@@ -15,7 +15,7 @@
                     <p>{{ $author->role == 'teacher' ? __('Giảng viên') : __('Trung tâm') }}: {{ $author->name }}</p>
                     <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($class->date_start)) }}
                         {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
-                    <p>@lang('Học phí:')' <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
+                    <p>@lang('Học phí:')<strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
                     <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong>
                         @lang('anyPoint cho giao dịch này')</p>
                     @if (count($item->openings) > 0)

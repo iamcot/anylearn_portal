@@ -216,7 +216,7 @@
         </div>
     </li>
     @endif
-    @if($userService->haveAccess(Auth::user()->role, 'admin'))
+    @if($userService->haveAccess(Auth::user()->role, 'user.mods'))
     <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.mods') }}">
             <i class="fas fa-fw fa-user-shield"></i>

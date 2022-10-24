@@ -219,6 +219,13 @@ return [
         'route' => '',
         // 'email' => 'App\Mail\OrderPending',
     ],
+    NotifConstants::COURSE_CREATED =>  [
+        'title' => 'Khóa học mới trên anyLEARN',
+        'template' => 'Đối tác {author} vừa tạo khóa học {class} trên anyLEARN với giá {price}. Xem ngay nhé.',
+        'route' => '/pdp',
+        'args' => true,
+        'email' => 'App\Mail\NewClassCreated',
+    ],
 
     NotifConstants::SYSTEM_NOTIF =>  [
         'title' => 'Thông báo từ anyLEARN',

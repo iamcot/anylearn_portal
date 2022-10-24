@@ -15,6 +15,7 @@ use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Participation;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\I18nContent;
@@ -32,7 +33,7 @@ class UserServices
         UserConstants::ROLE_SALE => [
             'class',
             'user.members',
-            'order.all'
+            // 'order.all'
         ],
         UserConstants::ROLE_CONTENT => [
             'class',
@@ -43,11 +44,13 @@ class UserServices
         UserConstants::ROLE_SALE_CONTENT => [
             'class',
             'user.members',
-            'order.all',
+            // 'order.all',
             'class',
             'article',
             'config.guide',
-            'helpcenter'
+            'helpcenter',
+            'user.contract',
+            'user.contract.info',
         ],
         UserConstants::ROLE_FIN => [
             'fin.expenditures',
@@ -59,7 +62,8 @@ class UserServices
             'user.contract.info',
             'user.members',
             'transaction.commission',
-            'useractions'
+            'useractions',
+            'user.mods'
         ],
     ];
 
@@ -80,6 +84,12 @@ class UserServices
         return in_array($user->role, UserConstants::$modRoles);
     }
 
+    public function isSale()
+    {
+        $user = Auth::user();
+        return in_array($user->role, UserConstants::$saleRoles);
+    }
+
     public function haveAccess($role, $routeName)
     {
         if (!isset($this->roles[$role])) {
@@ -92,6 +102,7 @@ class UserServices
             }
             return true;
         }
+
         if (in_array($routeName, $grantAccess)) {
             return true;
         }
@@ -265,7 +276,7 @@ class UserServices
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return "Mới tạo";
+                return __("Mới tạo");
             case UserConstants::CONTRACT_SIGNED:
                 return "Thành viên ký";
             case UserConstants::CONTRACT_APPROVED:
@@ -434,7 +445,7 @@ class UserServices
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return 'Mới tạo';
+                return __('Mới tạo');
             case UserConstants::CONTRACT_SIGNED:
                 return 'Bạn đã ký';
             case UserConstants::CONTRACT_APPROVED:
@@ -489,5 +500,38 @@ class UserServices
             '3rd_token' => null,
         ]);
         return true;
+    }
+
+    public function orderStats($userId)
+    {
+        $data['gmv'] = DB::table('orders')
+            ->where('orders.user_id', $userId)
+            ->where('status', OrderConstants::STATUS_DELIVERED)
+            ->sum('amount');
+
+        $data['registered'] = DB::table('orders')
+            ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
+            ->where('orders.user_id', $userId)
+            ->count('od.id');
+
+        $data['complete'] = Participation::where('participant_user_id', $userId)
+            ->groupby('item_id')
+            ->count();
+
+        $data['pending'] = DB::table('orders')
+            ->where('orders.user_id', $userId)
+            ->whereIn('status', [OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_NEW])
+            ->sum('amount');
+
+        $data['anyPoint'] = Transaction::where('user_id', $userId)
+            ->where('type', ConfigConstants::TRANSACTION_EXCHANGE)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
+            ->sum('amount');
+
+        $data['voucher'] = DB::table('vouchers_used')
+            ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
+            ->where('vouchers_used.user_id', $userId)
+            ->sum('vouchers.value');
+        return $data;
     }
 }

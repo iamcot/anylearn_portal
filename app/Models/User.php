@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Services\FileServices;
+use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -36,7 +37,8 @@ class User extends Authenticatable
         'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
-        'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location'
+        'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
+        'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source',
     ];
 
     /**
@@ -72,7 +74,7 @@ class User extends Authenticatable
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['email', 'max:255'],
-            'phone' => ['required', 'min:10', 'max:10', 'unique:users', 'regex:/[0-9]{10}/'],
+            'phone' => ['required', 'min:10', 'max:10', new UniquePhone(), 'regex:/[0-9]{10}/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
@@ -131,7 +133,16 @@ class User extends Authenticatable
                 : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
         }
 
-        $newMember = $this->create($obj);
+        $exists = User::where('phone', $obj['phone'])->where('is_registered', 0)->first();
+        if ($exists) {
+            unset($obj['sale_id']);
+            $obj['is_registered'] = 1;
+            User::find($exists->id)->update($obj);
+            $newMember = User::find($exists->id);
+        } else {
+            $newMember = $this->create($obj);
+        }
+
         try {
             if ($newMember) {
                 $notifM = new Notification();
@@ -156,17 +167,24 @@ class User extends Authenticatable
 
     public function createNewMod($input)
     {
+        if ($input['role'] == UserConstants::ROLE_FIN_PARTNER) {
+            $input['contact_phone'] = $input['phone'];
+            $input['phone'] = md5(now());
+        }
         $exits = $this->where('phone', $input['phone'])->first();
         if ($exits) {
-            return 0;
+            return "Trùng số điện thoại";
         }
         $obj = [
             'name' => $input['name'],
             'email' => $input['email'],
             'phone' => $input['phone'],
+            'contact_phone' => $input['contact_phone'],
+            'omicall_id' => $input['omicall_id'],
+            'omicall_pwd' => $input['omicall_pwd'],
             'refcode' => $input['phone'],
             'role' => $input['role'],
-            'password' => Hash::make($input['password']),
+            'password' => Hash::make(empty($input['password']) ? $input['phone'] : $input['password']),
             'status' => UserConstants::STATUS_ACTIVE,
         ];
         return $this->create($obj) ? 1 : 0;
@@ -180,10 +198,16 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone' => $input['phone'],
+            // 'phone' => $input['phone'],
             'role' => $input['role'],
+            'contact_phone' => $input['phone'],
+            'omicall_id' => $input['omicall_id'],
+            'omicall_pwd' => $input['omicall_pwd'],
 
         ];
+        if ($input['role'] != UserConstants::ROLE_FIN_PARTNER) {
+            $obj['phone'] = $input['phone'];
+        }
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
@@ -304,13 +328,21 @@ class User extends Authenticatable
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
-            $members = $members->where('users.sale_id', $requester->id);
+            $members = $members->where(function ($query) use ($requester) {
+                return $query->where('users.sale_id', $requester->id)
+                    ->orWhere('users.user_id', $requester->id);
+            });
+            $members = $members
+                ->orderBy('lastsa.last_contact')
+                ->orderBy('id');
+        } else {
+            $members = $members->orderby('users.is_hot', 'desc')
+                ->orderby('users.boost_score', 'desc')
+                ->orderby('users.id', 'desc');
         }
         $members = $members
-            ->orderby('users.is_hot', 'desc')
-            ->orderby('users.boost_score', 'desc')
-            ->orderby('users.id', 'desc')
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
+            ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
             ->select(
                 'users.id',
                 'users.phone',
@@ -327,6 +359,9 @@ class User extends Authenticatable
                 'users.update_doc',
                 'users.is_hot',
                 'users.boost_score',
+                'lastsa.last_contact',
+                'users.is_registered',
+                'users.source',
             );
 
         if (!$file) {

@@ -14,12 +14,17 @@
                         <input id="form_title" type="text" class="form-control" name="expend[title]" value="" required>
                     </div>
                     <div class="form-group">
-                        <label>{{ __('ID người liên quan') }}</label>
-                        <input  id="form_ref_user_id" type="text" class="form-control" name="expend[ref_user_id]" value="">
+                        <label>{{ __('ID người liên quan') }} <a target="_blank" href="{{ route('user.mods.create') }}"><i class="fa fa-plus"></i></a></label>
+                        <select name="expend[ref_user_id]" id="form_ref_user_id" class="form-control" required>
+                        @foreach($mods as $mod)
+                            <option value="{{ $mod->id }}">{{ $mod->name }}</option>
+                        @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>{{ __('Loại chi phí') }}</label>
                         <select name="expend[type]" id="form_type" class="form-control" required>
+<<<<<<< HEAD
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY }}">@lang('Lương/Thưởng')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_FIXED_FEE }}">@lang('Phí cố định')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE }}">@lang('Phí biến đổi')</option>
@@ -27,6 +32,14 @@
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_EVENT }}">@lang('Sự kiện')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_ASSETS }}">@lang('Tài sản')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OTHERS }}">@lang('Chi khác')</option>
+=======
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY }}">Lương/Thưởng</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_FIXED_FEE }}">Phí cố định</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OFFICE_FEE }}">Phí văn phòng</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_MARKETING }}">Marketing</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_ASSETS }}">Tài sản</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OTHERS }}">Chi khác</option>
+>>>>>>> origin/master
                         </select>
                     </div>
                     <div class="form-group">

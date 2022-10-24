@@ -33,13 +33,20 @@
             <thead class="table-secondary text-secondary">
                 <tr class="">
                     <th class="text-center fw-normal border-0">ID</th>
-                    <th class="fw-normal border-0 text-center">KHOÁ HỌC</th>
-                    <th class="fw-normal border-0 text-center">THỜI GIAN</th>
-                    <th class="fw-normal border-0 text-center">HỌC PHÍ</th>
+                    <th class="fw-normal border-0 text-center">@lang('KHOÁ HỌC')</th>
+                    <th class="fw-normal border-0 text-center">@lang('THỜI GIAN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('HỌC PHÍ')</th>
                     <!-- <th>Quan tâm</th> -->
+<<<<<<< HEAD
+                    <th class="fw-normal border-0 text-center">@lang('HỌC VIÊN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('LẦN SỬA CUỐI')</th>
+                    <th class="fw-normal border-0 text-center">@lang('THAO TÁC')</th>
+=======
                     <th class="fw-normal border-0 text-center">HỌC VIÊN</th>
                     <th class="fw-normal border-0 text-center">LẦN SỬA CUỐI</th>
+                    <th class="fw-normal border-0 text-center">TRẠNG THÁI ANYLEARN</th>
                     <th class="fw-normal border-0 text-center">THAO TÁC</th>
+>>>>>>> origin/master
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +61,9 @@
                     <!-- <td></td> -->
                     <td class="text-center col-2">{{ $course->sum_reg }} <a href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i class="fas fa-bell text-success"></i></a></td>
                     <td class="text-center col-2">{{ date('H:i d/m/y', strtotime($course->updated_at)) }}</td>
+                    <td class="text-center col-2">
+                        {!! $itemServ->statusText($course->status) !!}
+                    </td>
                     <td class="text-center col-2" >
                         
                         <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link text-success"></i></a>

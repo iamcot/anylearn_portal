@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <h6><b>Thông tin cá nhân</b></h6>
+                                <h6><b>{{__('Thông tin cá nhân') }}</b></h6>
                                 <label for="name"
                                     class="col-md-3 col-form-label text-md-right text-start">{{ __('Họ và tên*') }}</label>
                                 <div class="col-md-8">
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <h6><b>Thông tin liên hệ</b></h6>
+                                <h6><b>{{__('Thông tin liên hệ')}}</b></h6>
                                 <label for="email"
                                     class="col-md-3 col-form-label text-md-right text-start">{{ __('Email') }}</label>
                                 <div class="col-md-8">

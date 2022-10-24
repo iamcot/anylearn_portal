@@ -65,6 +65,10 @@ class ClassController extends Controller
         }
         $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
+            $this->data['isSale'] = false;
+            if ($user->role == UserConstants::ROLE_SALE) {
+                $this->data['isSale'] = true;
+            }
             return view('class.list', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_list', $this->data);

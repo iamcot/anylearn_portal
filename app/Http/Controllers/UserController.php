@@ -58,7 +58,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'user.mods')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)
@@ -80,6 +80,60 @@ class UserController extends Controller
             return redirect()->route('user.members');
         }
 
+        if ($request->input('action') == 'saleassign') {
+            if ($request->hasFile('saleassign') && $request->file('saleassign')->isValid()) {
+                $csvFile = $request->file('saleassign');
+
+                $fileHandle = fopen($csvFile, 'r');
+                $rows = [];
+                $header = [];
+                while (!feof($fileHandle)) {
+                    if (empty($header)) {
+                        $header = fgetcsv($fileHandle, 0, ',');
+                    } else {
+                        $csvRaw = fgetcsv($fileHandle, 0, ',');
+                        $row = [];
+                        foreach ($header as $k => $col) {
+                            $row[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
+                        }
+                        $rows[] = $row;
+                    }
+                }
+                fclose($fileHandle);
+                // dd($header, $rows);
+                $countUpdate = 0;
+                $countCreate = 0;
+                foreach ($rows as $row) {
+                    if (!empty($row['user_id'])) {
+                        $data['user_id'] = $row['user_id'];
+                    } else if (!empty($row['sale_id'])) {
+                        $data['sale_id'] = $row['sale_id'];
+                    }
+                    $exists = User::where('phone', $row['phone'])->first();
+                    if ($exists) {
+                        $countUpdate += User::where('phone', $row['phone'])->update($data);
+                    } else {
+                        try {
+                            User::create([
+                                'name' => $row['name'],
+                                'phone' => $row['phone'],
+                                'sale_id' => $row['sale_id'],
+                                'is_registered' => 0,
+                                'source' => isset($row['source']) ? $row['source'] : '',
+                                'role' => UserConstants::ROLE_MEMBER,
+                                'password' => Hash::make($row['phone']),
+                                'status' => UserConstants::STATUS_INACTIVE,
+                                'refcode' => $row['phone'],
+                            ]);
+                            $countCreate++;
+                        } catch (Exception $ex) {
+                            Log::error($ex);
+                        }
+                    }
+                }
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows));
+            }
+        }
 
         if ($request->input('action') == 'file') {
             $members = $userM->searchMembers($request, true);
@@ -109,6 +163,11 @@ class UserController extends Controller
         } else {
             $members = $userM->searchMembers($request);
         }
+        $this->data['isSale'] = false;
+        if ($user->role == UserConstants::ROLE_SALE) {
+            $this->data['isSale'] = true;
+        }
+
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
@@ -146,7 +205,7 @@ class UserController extends Controller
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
-        $sum = Transaction::where('pay_method','=','wallet_c')->where('status',1)->where('user_id', auth()->user()->id)->sum('amount');
+        $sum = Transaction::where('pay_method', '=', 'wallet_c')->where('status', 1)->where('user_id', auth()->user()->id)->sum('amount');
         $this->data['anyPoint'] = abs($sum);
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
@@ -260,7 +319,7 @@ class UserController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.member')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.members')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
@@ -314,7 +373,7 @@ class UserController extends Controller
         }
         $userService = new UserServices();
         $user = Auth::user();
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.mods')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         } else {
             $this->data['user'] = User::find($userId);

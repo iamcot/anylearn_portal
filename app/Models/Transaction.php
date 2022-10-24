@@ -17,6 +17,10 @@ class Transaction extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
+    public function refUser()
+    {
+        return $this->belongsTo('App\Models\User', 'ref_user_id', 'id');
+    }
     public function order()
     {
         return $this->belongsTo('App\Models\Order', 'order_id', 'id');

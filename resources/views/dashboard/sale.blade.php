@@ -19,32 +19,42 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     </div>
 </form>
 @endsection
+
+@extends('layout')
 @section('body')
 <div class="row">
-@include('dashboard.count_box', ['title' => 'Khóa học trong kỳ', 'data' => $dashServ->itemCount(false),
-    'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Thành viên trong kỳ', 'data' => $dashServ->userCount('member', false),
-    'icon' => 'fa-users', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Doanh thu trong kỳ', 'data' => $dashServ->gmv(false),
-    'icon' => 'fa-dollar-sign', 'color' => 'primary' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Giảng Viên', 'data' => $dashServ->userCount('teacher'),
-    'icon' => 'fa-chalkboard-teacher', 'color' => 'info'])
+    @php
+    $saleActivities = $dashServ->saleActivities($user->id);
+    $saleAsigned = $dashServ->userCount(null,true,$user->id);
+    @endphp
 
-    @include('dashboard.count_box', ['title' => 'Tổng Khóa học', 'data' => $dashServ->itemCount(),
+    @include('dashboard.count_box', ['title' => 'Tổng khách tiếp cận', 'data' => $saleActivities,
+    'icon' => 'fa-briefcase', 'color' => 'success' ])
+    @include('dashboard.count_box', ['title' => 'Tổng Khóa học bán', 'data' => $dashServ->saleCount($user->id),
     'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Tổng Thành viên', 'data' => $dashServ->userCount('member'),
-    'icon' => 'fa-users', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => $dashServ->gmv(),
-    'icon' => 'fa-dollar-sign', 'color' => 'primary' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Trường học', 'data' => $dashServ->userCount('school'),
-    'icon' => 'fa-university', 'color' => 'info'])
+    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => $dashServ->gmv(true, $user->id),
+    'icon' => 'fa-dollar-sign', 'color' => 'success' ])
+    @include('dashboard.count_box', ['title' => 'Tập khách hàng', 'data' => $saleAsigned,
+    'icon' => 'fa-users', 'color' => 'danger'])
+
+    @include('dashboard.count_box', ['title' => 'Khách tiếp cận trong kì', 'data' => $dashServ->saleActivities($user->id, false),
+    'icon' => 'fa-briefcase', 'color' => 'success' ])
+    @include('dashboard.count_box', ['title' => 'Khóa học bán trong kì', 'data' => $dashServ->saleCount($user->id, false),
+    'icon' => 'fa-fire', 'color' => 'danger'])
+    @include('dashboard.count_box', ['title' => 'Doanh thu trong kì', 'data' => $dashServ->gmv(false, $user->id),
+    'icon' => 'fa-dollar-sign', 'color' => 'success' ])
+
+    @include('dashboard.count_box', ['title' => 'Tỉ lệ tiếp cận',
+    'type' => '%',
+    'data' => $saleAsigned > 0 ? ($saleActivities / $saleAsigned ) * 100 : 0,
+    'icon' => 'fa-users', 'color' => 'danger'])
 
 </div>
 <div class="row">
     <div class="col-md-6">
         <div class="card border-bottom-primary shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">@lang('Người dùng đăng ký mới')</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Tiếp cận theo ngày</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <canvas id="myAreaChart"></canvas>
@@ -52,17 +62,17 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card border-bottom-success shadow">
+        <div class="card border-bottom-primary shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">@lang('Top GV/Trường được mua')</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Top khách hàng</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
                     <tbody>
-                        @foreach($dashServ->topUser() as $user)
+                        @foreach($dashServ->saleTopBuyer($user->id) as $buyer)
                         <tr>
-                            <th>{{ $user->name }}</th>
-                            <td>{{ $user->reg_num }}</td>
+                            <th>{{ $buyer->name }}</th>
+                            <td>{{ number_format($buyer->gmv, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -71,17 +81,17 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card border-bottom-danger shadow">
+        <div class="card border-bottom-primary shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">@lang('Top Khóa học được mua')</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Top Khóa học bán</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <table class="table">
                     <tbody>
-                        @foreach($dashServ->topItem() as $item)
+                        @foreach($dashServ->saleTopItems($user->id) as $item)
                         <tr>
                             <th>{{ $item->title }}</th>
-                            <td>{{ $item->reg_num }}</td>
+                            <td>{{ number_format($item->num, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -96,27 +106,38 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 @section('jscript')
 <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
 <script>
-    var chartData = JSON.parse("{{ json_encode($dashServ->userCreatedByDay()) }}".replace(/&quot;/g, '"'));
+    var chartData = JSON.parse("{{ json_encode($dashServ->saleActivitiesByDay($user->id)) }}".replace(/&quot;/g, '"'));
     var ctx = document.getElementById("myAreaChart");
     var myLineChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: chartData['labels'],
             datasets: [{
-                label: "Người dùng mới",
-                lineTension: 0.3,
-                backgroundColor: "rgba(78, 115, 223, 0.05)",
-                borderColor: "rgba(78, 115, 223, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointBorderColor: "rgba(78, 115, 223, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-                data: chartData['data'],
-            }],
+                    label: "Khách hàng tiếp cận",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 1,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 1,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 1,
+                    data: chartData['data'],
+                    type: 'line',
+                },
+                {
+                    label: 'Doanh thu (x1000)',
+                    data: chartData['gmv'],
+                    type: 'bar',
+                    backgroundColor: "rgba(78, 115, 223, 0.5)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    // this dataset is drawn below
+                    order: 2
+                }
+            ],
         },
         options: {
             maintainAspectRatio: false,
@@ -159,7 +180,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                 }],
             },
             legend: {
-                display: false
+                display: true
             },
             tooltips: {
                 backgroundColor: "rgb(255,255,255)",

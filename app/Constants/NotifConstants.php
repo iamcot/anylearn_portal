@@ -15,6 +15,7 @@ class NotifConstants
     const REGISTER_CLASS_REMIND = 'register_class_remind';
 
     /** Course process */
+    const COURSE_CREATED = 'course_created';
     const COURSE_APPROVED = 'course_approved';
     const COURSE_REJECTED = 'course_rejected';
     const COURSE_REGISTERED = 'course_registered';

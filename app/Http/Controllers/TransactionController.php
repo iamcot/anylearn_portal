@@ -794,18 +794,18 @@ class TransactionController extends Controller
             }
             return redirect()->back()->with(['notify' => 1]);
         }
+        $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)->get();
 
         $this->data['transaction'] = Transaction::whereIn('type', [
             ConfigConstants::TRANSACTION_FIN_ASSETS,
-            ConfigConstants::TRANSACTION_FIN_EVENT,
             ConfigConstants::TRANSACTION_FIN_FIXED_FEE,
             ConfigConstants::TRANSACTION_FIN_MARKETING,
             ConfigConstants::TRANSACTION_FIN_OTHERS,
             ConfigConstants::TRANSACTION_FIN_SALARY,
-            ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE,
+            ConfigConstants::TRANSACTION_FIN_OFFICE_FEE,
         ])
             ->orderby('id', 'desc')
-            ->with('user')
+            ->with('refUser')
             ->paginate(20);
         $this->data['navText'] = __('Quản lý Chi tiền');
         return view('transaction.expenditures', $this->data);
@@ -823,7 +823,7 @@ class TransactionController extends Controller
         $this->data['netProfit'] = $transService->netProfit($from, $to, $partner);
         $this->data['transaction'] = Transaction::where('transactions.created_at', '>', $from)
             ->where('transactions.created_at', '<', $to)
-            ->where('transactions.status', '<', 99)
+            ->where('transactions.status', '', ConfigConstants::TRANSACTION_STATUS_DONE)
             ->where('transactions.content', '!=', 'Thanh toán trực tuyến');
         if ($partner) {
             $this->data['transaction'] = $this->data['transaction']

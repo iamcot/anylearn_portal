@@ -8,6 +8,7 @@ use App\Services\DashboardServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\I18nContent;
 
 class DashboardController extends Controller
 {
@@ -23,12 +24,12 @@ class DashboardController extends Controller
         //     $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
         // }
         $this->data['navText'] = __('Bảng thông tin');
+        $this->data['user'] = Auth::user();
         $userServ = new UserServices();
-        if ($userServ->isMod()) {
-            $dashServ = new DashboardServices();
-            $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByDay());
-            $this->data['topUsers'] = $dashServ->topUser();
-            $this->data['topItems'] = $dashServ->topItem();
+        if ($userServ->isSale()) {
+            return view('dashboard.sale', $this->data);
+        }
+        else if ($userServ->isMod()) {
             return view('dashboard.index', $this->data);
         } else {
             return view('dashboard.member', $this->data);
@@ -39,6 +40,7 @@ class DashboardController extends Controller
         // $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
         $editUser = Auth::user();
         $userService = new UserServices();
+        $i18 = new I18nContent();
 
         if ($request->input('save')) {
             $input = $request->all();
@@ -48,11 +50,13 @@ class DashboardController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            $i18 = new I18nContent();
+            // $i18 = new I18nContent();
                 $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
                 $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('me.edit')->with('notify', $rs);
         }
+        $i18->i18Check('en','users', auth()->user()->id,"introduce");
+        $i18->i18Check('en','users', auth()->user()->id,"full_content");
         $userselect = User::all();
         $UserDT = $userService->userInfo(auth()->user()->id);
         $this->data['userselect'] = $userselect;
