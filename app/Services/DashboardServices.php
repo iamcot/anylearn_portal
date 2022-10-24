@@ -256,27 +256,33 @@ class DashboardServices
     public function saleActivitiesByDay($saleId)
     {
         $query = DB::table('sale_activities')
-            ->where('sale_id', $saleId)
-            ->whereNotNull('created_at');
+            ->leftjoin('orders', function ($join) {
+                $join->on('orders.user_id', '=', 'sale_activities.member_id')
+                    ->whereRaw('DATE(sale_activities.created_at) = DATE(orders.created_at)');
+            })
+            ->leftjoin('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->where('sale_activities.sale_id', $saleId);
         if ($this->dateF) {
-            $query = $query->where('created_at', '>=', $this->dateF);
+            $query = $query->where('sale_activities.created_at', '>=', $this->dateF);
         } else {
-            $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
+            $query = $query->where('sale_activities.created_at', '>=', date('Y-m-d', strtotime('-30 days')));
         }
         if ($this->dateT) {
-            $query = $query->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+            $query = $query->where('sale_activities.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
         }
-        $results = $query->selectRaw('DATE(created_at) AS day, count(distinct member_id) AS num')
-            ->groupBy(DB::raw('DATE(created_at)'))
+        $results = $query->selectRaw('DATE(sale_activities.created_at) AS day, count(distinct sale_activities.member_id) AS num, IFNULL(SUM(order_details.unit_price), 0) / 1000 AS gmv')
+            ->groupBy(DB::raw('DATE(sale_activities.created_at)'))
             ->get();
 
         $chartDataset = [
             'labels' => [],
-            'data' => []
+            'data' => [],
+            'gmv' => []
         ];
         foreach ($results as $row) {
             $chartDataset['labels'][] = date('d/m', strtotime($row->day));
             $chartDataset['data'][] = $row->num;
+            $chartDataset['gmv'][] = $row->gmv;
         }
         return $chartDataset;
     }

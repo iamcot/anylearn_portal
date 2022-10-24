@@ -109,24 +109,35 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     var chartData = JSON.parse("{{ json_encode($dashServ->saleActivitiesByDay($user->id)) }}".replace(/&quot;/g, '"'));
     var ctx = document.getElementById("myAreaChart");
     var myLineChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: chartData['labels'],
             datasets: [{
-                label: "Khách hàng tiếp cận",
-                lineTension: 0.3,
-                backgroundColor: "rgba(78, 115, 223, 0.05)",
-                borderColor: "rgba(78, 115, 223, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointBorderColor: "rgba(78, 115, 223, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-                data: chartData['data'],
-            }],
+                    label: "Khách hàng tiếp cận",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 1,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 1,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 1,
+                    data: chartData['data'],
+                    type: 'line',
+                },
+                {
+                    label: 'Doanh thu (x1000)',
+                    data: chartData['gmv'],
+                    type: 'bar',
+                    backgroundColor: "rgba(78, 115, 223, 0.5)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    // this dataset is drawn below
+                    order: 2
+                }
+            ],
         },
         options: {
             maintainAspectRatio: false,
@@ -169,7 +180,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                 }],
             },
             legend: {
-                display: false
+                display: true
             },
             tooltips: {
                 backgroundColor: "rgb(255,255,255)",
