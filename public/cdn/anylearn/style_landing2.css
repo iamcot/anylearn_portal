@@ -7,7 +7,34 @@ body {
 .container-fluid {
     padding-left: 0px;
 }
+.locale_flag-vi {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    border-radius: 50%;
+    display: inline-block;
+    background: url("../img/flag/vn.svg");
+    background-position: center;
+}
 
+.locale_icon-vi {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    display: inline-block;
+    background: url("../img/flag/vn.svg");
+    background-position: center;
+}
+
+.locale_flag-en {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    border-radius: 50%;
+    display: inline-block;
+    background: url("../img/flag/en.svg");
+    background-position: center;
+}
 h2 {
     font-size: 1.25rem;
 }
