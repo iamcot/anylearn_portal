@@ -614,6 +614,10 @@ footer .head_text {
     display: none !important;
 }
 
+.omi-w-intro-img-container {
+    display: none !important;
+}
+
 
 /* #landing-number div {
     opacity: 1;
