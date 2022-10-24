@@ -37,16 +37,10 @@
                     <th class="fw-normal border-0 text-center">@lang('THỜI GIAN')</th>
                     <th class="fw-normal border-0 text-center">@lang('HỌC PHÍ')</th>
                     <!-- <th>Quan tâm</th> -->
-<<<<<<< HEAD
                     <th class="fw-normal border-0 text-center">@lang('HỌC VIÊN')</th>
                     <th class="fw-normal border-0 text-center">@lang('LẦN SỬA CUỐI')</th>
+                    <th class="fw-normal border-0 text-center">@lang('TRẠNG THÁI ANYLEARN')</th>
                     <th class="fw-normal border-0 text-center">@lang('THAO TÁC')</th>
-=======
-                    <th class="fw-normal border-0 text-center">HỌC VIÊN</th>
-                    <th class="fw-normal border-0 text-center">LẦN SỬA CUỐI</th>
-                    <th class="fw-normal border-0 text-center">TRẠNG THÁI ANYLEARN</th>
-                    <th class="fw-normal border-0 text-center">THAO TÁC</th>
->>>>>>> origin/master
                 </tr>
             </thead>
             <tbody>
