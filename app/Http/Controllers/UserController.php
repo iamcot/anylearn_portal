@@ -90,9 +90,9 @@ class UserController extends Controller
                 $header = [];
                 while (!feof($fileHandle)) {
                     if (empty($header)) {
-                        $header = fgetcsv($fileHandle, 0, ',');
+                        $header = fgetcsv($fileHandle, 0, ';');
                     } else {
-                        $csvRaw = fgetcsv($fileHandle, 0, ',');
+                        $csvRaw = fgetcsv($fileHandle, 0, ';');
                         $rowcsv = [];
                         foreach ($header as $k => $col) {
                             $rowcsv[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
