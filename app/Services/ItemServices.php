@@ -209,11 +209,22 @@ class ItemServices
     }
     public function statusText($status)
     {
-        if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<span class="text-success">Đã duyệt</span>';
-        } else {
-            return '<span class="text-danger">Chờ duyệt</span>';
+        $locale = \App::getLocale();
+        if($locale =="vi"){
+            if ($status == ItemConstants::STATUS_ACTIVE) {
+                return '<span class="text-success">Đã duyệt</span>';
+            } else {
+                return '<span class="text-danger">Chờ duyệt</span>';
+            }
         }
+        else{
+            if ($status == ItemConstants::STATUS_ACTIVE) {
+                return '<span class="text-success">Approved</span>';
+            } else {
+                return '<span class="text-danger">Pending</span>';
+            }
+        }
+       
     }
 
     public function statusOperation($itemId, $status)
