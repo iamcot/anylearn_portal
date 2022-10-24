@@ -13,20 +13,12 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="10%" scope="col">#ID</th>
-<<<<<<< HEAD
                     <th class="text-center">@lang('User (SDT)')</th>
                     <th class="text-center">@lang('Loại')</th>
                     <th class="text-center">@lang('Số tiền')</th>
                     <th class="text-center">@lang('Nội dung')</th>
                     <th class="text-center">@lang('Ngày')</th>
-=======
-                    <th class="text-center">User (SDT)</th>
-                    <th class="text-center">Loại</th>
-                    <th class="text-center">Số tiền</th>
-                    <th class="text-center">Nội dung</th>
-                    <th class="text-center">Ngày</th>
-                    <th class="text-center">Ghi Chú</th>
->>>>>>> origin/master
+                    <th class="text-center">@lang('Ghi Chú')</th>
                 </tr>
             </thead>
             <tbody>

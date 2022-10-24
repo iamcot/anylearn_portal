@@ -24,7 +24,6 @@
                     <div class="form-group">
                         <label>{{ __('Loại chi phí') }}</label>
                         <select name="expend[type]" id="form_type" class="form-control" required>
-<<<<<<< HEAD
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY }}">@lang('Lương/Thưởng')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_FIXED_FEE }}">@lang('Phí cố định')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE }}">@lang('Phí biến đổi')</option>
@@ -32,14 +31,6 @@
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_EVENT }}">@lang('Sự kiện')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_ASSETS }}">@lang('Tài sản')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OTHERS }}">@lang('Chi khác')</option>
-=======
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY }}">Lương/Thưởng</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_FIXED_FEE }}">Phí cố định</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OFFICE_FEE }}">Phí văn phòng</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_MARKETING }}">Marketing</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_ASSETS }}">Tài sản</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OTHERS }}">Chi khác</option>
->>>>>>> origin/master
                         </select>
                     </div>
                     <div class="form-group">

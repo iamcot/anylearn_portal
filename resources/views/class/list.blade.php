@@ -60,16 +60,10 @@
                     <th>@lang('Thời gian')</th>
                     <th>@lang('Học phí')</th>
                     <!-- <th>Quan tâm</th> -->
-<<<<<<< HEAD
                     <th>@lang('Đăng ký')</th>
                     <th>@lang('Lần sửa cuối')</th>
+                    <th>@lang('Trạng thái đối tác')</th>
                     <th>@lang('Thao tác')</th>
-=======
-                    <th>Đăng ký</th>
-                    <th>Lần sửa cuối</th>
-                    <th>Trạng thái đối tác</th>
-                    <th>Thao tác</th>
->>>>>>> origin/master
                 </thead>
             <tbody>
                 @foreach($courseList as $course)
