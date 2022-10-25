@@ -33,15 +33,14 @@ class Localization
                 App::setLocale($request->language);
             }
             return redirect()->back();
-        } 
-        // elseif (auth()->user()) {
-        //     \App::setLocale(auth()->user()->language);
-        //     Session::put('locale', auth()->user()->language);
-        // } else {
-        //     if (Session::has('locale')) {
-        //         \App::setLocale(Session::get('locale'));
-        //     }
-        // }
+        } elseif (auth()->user()) {
+            App::setLocale(auth()->user()->language);
+            Session::put('locale', auth()->user()->language);
+        } else {
+            if (Session::has('locale')) {
+                App::setLocale(Session::get('locale'));
+            }
+        }
         // dd(Session::get('locale'));  
         return $next($request);
     }
