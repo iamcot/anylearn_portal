@@ -28,25 +28,24 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     $saleAsigned = $dashServ->userCount(null,true,$user->id);
     @endphp
 
-    @include('dashboard.count_box', ['title' => 'Tổng khách tiếp cận', 'data' => $saleActivities,
+    @include('dashboard.count_box', ['title' => 'Tổng khách tiếp cận', 'data' => number_format($saleActivities,0,',','.'),
     'icon' => 'fa-briefcase', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Khóa học bán', 'data' => $dashServ->saleCount($user->id),
+    @include('dashboard.count_box', ['title' => 'Tổng Khóa học bán', 'data' => number_format($dashServ->saleCount($user->id),0,',','.'),
     'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => $dashServ->gmv(true, $user->id),
+    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => number_format($dashServ->gmv(true, $user->id),0,',','.'),
     'icon' => 'fa-dollar-sign', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Tập khách hàng', 'data' => $saleAsigned,
+    @include('dashboard.count_box', ['title' => 'Tập khách hàng', 'data' => number_format($saleAsigned,0,',','.'),
     'icon' => 'fa-users', 'color' => 'danger'])
 
-    @include('dashboard.count_box', ['title' => 'Khách tiếp cận trong kì', 'data' => $dashServ->saleActivities($user->id, false),
+    @include('dashboard.count_box', ['title' => 'Khách tiếp cận trong kì', 'data' => number_format($dashServ->saleActivities($user->id, false),0,',','.'),
     'icon' => 'fa-briefcase', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Khóa học bán trong kì', 'data' => $dashServ->saleCount($user->id, false),
+    @include('dashboard.count_box', ['title' => 'Khóa học bán trong kì', 'data' => number_format($dashServ->saleCount($user->id, false),0,',','.'),
     'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Doanh thu trong kì', 'data' => $dashServ->gmv(false, $user->id),
+    @include('dashboard.count_box', ['title' => 'Doanh thu trong kì', 'data' => number_format($dashServ->gmv(false, $user->id),0,',','.'),
     'icon' => 'fa-dollar-sign', 'color' => 'success' ])
 
     @include('dashboard.count_box', ['title' => 'Tỉ lệ tiếp cận',
-    'type' => '%',
-    'data' => $saleAsigned > 0 ? ($saleActivities / $saleAsigned ) * 100 : 0,
+    'data' => number_format(($saleAsigned > 0 ? ($saleActivities / $saleAsigned ) * 100 : 0),0,',','.') . '%',
     'icon' => 'fa-users', 'color' => 'danger'])
 
 </div>
