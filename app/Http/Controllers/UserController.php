@@ -341,11 +341,16 @@ class UserController extends Controller
             $input = $request->all();
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
+            $i18 = new I18nContent();
+                $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
+                $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('user.members')->with('notify', $rs);
         }
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
-
+        $UserDT = $userService->userInfo(auth()->user()->id);
+        // dd($UserDT['info']->full_content);
+        $this->data['userDT'] = $UserDT;
         $this->data['user'] = $editUser;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
@@ -607,7 +612,7 @@ class UserController extends Controller
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
             )
             ->paginate();
-        
+
         $this->data['orders'] = $data;
         $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
