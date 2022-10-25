@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
-use App\models\I18nContent;
+use App\Models\I18nContent;
 use App\Services\FileServices;
 use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
