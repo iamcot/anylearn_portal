@@ -134,6 +134,14 @@ class ClassController extends Controller
     public function edit(Request $request, $courseId)
     {
         $user = Auth::user();
+        $i18n = new I18nContent();
+        foreach(I18nContent::$supports as $locale){
+            if($locale != I18nContent::DEFAULT){
+                $i18n->i18Check($locale,'items',$courseId,'title');
+                $i18n->i18Check($locale,'items',$courseId,'short_content');
+                $i18n->i18Check($locale,'items',$courseId,'content');
+            }
+        }
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();

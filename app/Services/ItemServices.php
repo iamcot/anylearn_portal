@@ -364,13 +364,14 @@ class ItemServices
         }
 
         $newCourse = Item::create($input);
-
         if ($newCourse) {
             $i18nModel = new I18nContent();
+
             foreach (I18nContent::$supports as $locale) {
                 if ($locale == I18nContent::DEFAULT) {
                     continue;
                 }
+                $i18nModel->i18nSave($locale, 'items', $newCourse->id, 'title', $newCourse['title']);
                 foreach (I18nContent::$itemCols as $col => $type) {
                     if (isset($orgInputs[$col][$locale])) {
                         $i18nModel->i18nSave($locale, 'items', $newCourse->id, $col, $orgInputs[$col][$locale]);
