@@ -4,8 +4,9 @@ namespace App\Http\Middleware;
 
 use App\Models\I18nContent;
 use Closure;
-use Session;
-use Auth;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Localization
 {
@@ -22,24 +23,25 @@ class Localization
             if (!in_array($request->get('language'), I18nContent::$supports)) {
                 return $next($request);
             }
-            if (auth()->user()) {
-                auth()->user()->language = $request->language;
-                auth()->user()->save();
-                \App::setLocale($request->language);
+            if (Auth::check()) {
+                Auth::user()->language = $request->language;
+                Auth::user()->save();
+                App::setLocale($request->language);
                 Session::put('locale', $request->language);
             } else {
                 Session::put('locale', $request->language);
-                \App::setLocale($request->language);
+                App::setLocale($request->language);
             }
             return redirect()->back();
-        } elseif (auth()->user()) {
-            \App::setLocale(auth()->user()->language);
-            Session::put('locale', auth()->user()->language);
-        } else {
-            if (Session::has('locale')) {
-                \App::setLocale(Session::get('locale'));
-            }
-        }
+        } 
+        // elseif (auth()->user()) {
+        //     \App::setLocale(auth()->user()->language);
+        //     Session::put('locale', auth()->user()->language);
+        // } else {
+        //     if (Session::has('locale')) {
+        //         \App::setLocale(Session::get('locale'));
+        //     }
+        // }
         // dd(Session::get('locale'));  
         return $next($request);
     }
