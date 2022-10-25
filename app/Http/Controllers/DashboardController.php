@@ -28,19 +28,17 @@ class DashboardController extends Controller
         $userServ = new UserServices();
         if ($userServ->isSale()) {
             return view('dashboard.sale', $this->data);
-        }
-        else if ($userServ->isMod()) {
+        } else if ($userServ->isMod()) {
             return view('dashboard.index', $this->data);
         } else {
             return view('dashboard.member', $this->data);
         }
     }
 
-    public function meDashboard(Request $request) {
-        // $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
+    public function meDashboard(Request $request)
+    {
         $editUser = Auth::user();
         $userService = new UserServices();
-        $i18 = new I18nContent();
 
         if ($request->input('save')) {
             $input = $request->all();
@@ -50,19 +48,13 @@ class DashboardController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            // $i18 = new I18nContent();
-                $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
-                $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('me.edit')->with('notify', $rs);
         }
-        $i18->i18Check('en','users', auth()->user()->id,"introduce");
-        $i18->i18Check('en','users', auth()->user()->id,"full_content");
-        $userselect = User::all();
-        $UserDT = $userService->userInfo(auth()->user()->id);
-        $this->data['userselect'] = $userselect;
-        $this->data['userDT'] = $UserDT;
-        $this->data['user'] = $editUser;
-       // $this->data['navText'] = __('Thông tin');
+
+        $friends = User::where('user_id', $editUser->id)->paginate(20);
+        $userI18n = $userService->userInfo($editUser->id);
+        $this->data['friends'] = $friends;
+        $this->data['user'] = $userI18n;
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.dashboard', $this->data);
     }

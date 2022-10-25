@@ -183,26 +183,18 @@ class UserController extends Controller
         $userService = new UserServices();
         if ($request->input('save')) {
             $input = $request->all();
-            // dd($input['introduce']['vi']);
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-                $i18 = new I18nContent();
-                $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
-                $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('me.dashboard')->with('notify', $rs);
         }
-        $userselect = User::all();
-        $UserDT = $userService->userInfo(auth()->user()->id);
-        // dd($UserDT['info']->full_content);
-        $this->data['userDT'] = $UserDT;
-        $this->data['userselect'] = $userselect;
-
+        $friends = User::where('user_id', $editUser->id)->paginate();
+        $editUser = $userService->userInfo($editUser->id);
+        $this->data['friends'] = $friends;
         $this->data['user'] = $editUser;
-        // $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
@@ -327,9 +319,9 @@ class UserController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
-        $editUser = User::find($userId);
-
         if ($request->input('moneyFix')) {
+            $editUser = User::find($userId);
+
             $result = $userService->createMoneyFix($editUser, $request->all());
             if ($result === true) {
                 return redirect()->back()->with('notify', 'Giao dịch mới đã được cập nhật.');
@@ -341,17 +333,12 @@ class UserController extends Controller
             $input = $request->all();
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            $i18 = new I18nContent();
-                $i18->i18nSave('en','users', auth()->user()->id,"introduce", $input['introduce']['en']);
-                $i18->i18nSave('en','users', auth()->user()->id, "full_content", $input['full_content']['en']);
             return redirect()->route('user.members')->with('notify', $rs);
         }
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
-        $UserDT = $userService->userInfo(auth()->user()->id);
-        // dd($UserDT['info']->full_content);
-        $this->data['userDT'] = $UserDT;
-        $this->data['user'] = $editUser;
+        $userI18n = $userService->userInfo($userId);
+        $this->data['user'] = $userI18n;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
         $this->data['type'] = 'member';
@@ -604,7 +591,7 @@ class UserController extends Controller
     public function pendingOrders(Request $request)
     {
         $user = Auth::user();
-         $data = DB::table('orders')
+        $data = DB::table('orders')
             ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
             ->where('orders.user_id', $user->id)
             ->select(

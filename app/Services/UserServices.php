@@ -413,14 +413,6 @@ class UserServices
         $user = User::find($uid)->makeVisible(['content']);
         if (!$user) {
             return false;
-        } else{
-            $i18n = I18nContent::All()->where('content_id',$uid);
-            if($i18n->isEmpty()){
-                $i18 = new I18nContent();
-                $locale = App::getLocale();
-                $i18->i18nSave($locale,'users', $uid,"introduce", $user->introduce);
-                $i18->i18nSave($locale,'users', $uid, "full_content", $user->full_content);
-            }
         }
         $i18nModel = new I18nContent();
         foreach (I18nContent::$supports as $locale) {
@@ -431,16 +423,17 @@ class UserServices
             } else {
                 $item18nData = $i18nModel->i18nUser($uid, $locale);
                 $supportCols = array_keys(I18nContent::$userCols);
-                foreach ($item18nData as $col => $i18nContent) {
-                    if (in_array($col, $supportCols)) {
-                        $user->$col = $user->$col + [$locale => $i18nContent];
+
+                foreach ($supportCols as $col) {
+                    if (empty($item18nData[$col])) {
+                        $user->$col = $user->$col + [$locale => ""];
+                    } else {
+                        $user->$col = $user->$col + [$locale => $item18nData[$col]];
                     }
                 }
             }
         }
-        //  dd($user);
-        $data['info'] = $user;
-        return $data;
+        return $user;
     }
     public function contractStatusText($status)
     {

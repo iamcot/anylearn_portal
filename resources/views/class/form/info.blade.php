@@ -119,9 +119,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="editor" class="col-12 col-form-label @error('content') is-invalid @enderror">{{ __('Thông tin chi tiết') }}  [{{ $locale }}]</label>
+                    <label for="editor{{ $locale }}" class="col-12 col-form-label @error('content') is-invalid @enderror">{{ __('Thông tin chi tiết') }}  [{{ $locale }}]</label>
                     <div class="col-md-12">
-                        <textarea id="editor{{ $locale }}" name="content[{{ $locale }}]">{!! old('content', !empty($course) ? $course['info']->content[$locale] : '') !!}</textarea>
+                        <textarea class="editor" id="editor{{ $locale }}" name="content[{{ $locale }}]">{!! old('content', !empty($course) ? $course['info']->content[$locale] : '') !!}</textarea>
                     </div>
                 </div>
             </div>

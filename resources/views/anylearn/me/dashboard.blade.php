@@ -153,7 +153,7 @@
                                     class="col-md-3 col-form-label text-md-right ">{{ __('Giới Thiệu Ngắn (Bio)') }}
                                     [{{ $locale }}]</label>
                                 <div class="col-md-8">
-                                    <textarea name="introduce[{{ $locale }}]" class="form-control" disabled>{{ old('introduce', !empty($userDT) ? $userDT['info']->introduce[$locale] : '') }}</textarea>
+                                    <textarea name="introduce[{{ $locale }}]" class="form-control" disabled>{{ old('introduce', !empty($user) ? $user->introduce[$locale] : '') }}</textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -161,7 +161,7 @@
                                     class="col-md-3 col-form-label @error('full_content') is-invalid @enderror">{{ __('Thông tin giới thiệu') }}
                                     [{{ $locale }}]</label>
                                 <div class="col-md-8">
-                                    <textarea class="form-control" id="editor{{ $locale }}" name="full_content[{{ $locale }}]" disabled>{{ old('full_content', !empty($userDT) ? $userDT['info']->full_content[$locale] : '') }}</textarea>
+                                    <textarea class="form-control" id="editor{{ $locale }}" name="full_content[{{ $locale }}]" disabled>{{ old('full_content', !empty($user) ? $user->full_content[$locale] : '') }}</textarea>
                                 </div>
                             </div>
                         </div>

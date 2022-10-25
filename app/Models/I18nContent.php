@@ -133,6 +133,7 @@ class I18nContent extends Model
             ->where('locale', $locale)
             ->get();
         $data = [];
+        
         foreach ($i18n as $row) {
             $data[$row->col] = $row->i18n_content;
         }

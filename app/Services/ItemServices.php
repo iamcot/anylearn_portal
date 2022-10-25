@@ -47,21 +47,18 @@ class ItemServices
         }
         $item = $item->makeVisible(['content']);
         $locale = App::getLocale();
-            if($locale!=I18nContent::DEFAULT){
-                $i18 = new I18nContent();
-
-                    // dd($row);
-                    $item18nData = $i18->i18nItem($item->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$itemCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
-                            $item->$col = $content;
-                        }
-                    }
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            $item18nData = $i18->i18nItem($item->id, $locale);
+            // dd($item18nData);
+            $supportCols = array_keys(I18nContent::$itemCols);
+            foreach ($item18nData as $col => $content) {
+                if (in_array($col, $supportCols)) {
+                    $item->$col = $content;
+                }
             }
+        }
 
-        // $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_DISABLE_ANYPOINT]);
         $author = User::find($item->user_id);
@@ -83,20 +80,20 @@ class ItemServices
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
-            if($locale!=I18nContent::DEFAULT){
-                $i18 = new I18nContent();
-                foreach ($hotItems as $row) {
-                    // dd($row);
-                    $item18nData = $i18->i18nItem($row->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$itemCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $content;
-                        }
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            foreach ($hotItems as $row) {
+                // dd($row);
+                $item18nData = $i18->i18nItem($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$itemCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols)) {
+                        $row->$col = $content;
                     }
                 }
             }
+        }
         $numSchedule = Schedule::where('item_id', $itemId)->count();
 
         $itemUserActionM = new ItemUserAction();
@@ -211,21 +208,19 @@ class ItemServices
     public function statusText($status)
     {
         $locale = App::getLocale();
-        if($locale =="vi"){
+        if ($locale == "vi") {
             if ($status == ItemConstants::STATUS_ACTIVE) {
                 return '<span class="text-success">Đã duyệt</span>';
             } else {
                 return '<span class="text-danger">Chờ duyệt</span>';
             }
-        }
-        else{
+        } else {
             if ($status == ItemConstants::STATUS_ACTIVE) {
                 return '<span class="text-success">Approved</span>';
             } else {
                 return '<span class="text-danger">Pending</span>';
             }
         }
-
     }
 
     public function statusOperation($itemId, $status)
@@ -283,17 +278,7 @@ class ItemServices
         $item = Item::find($courseId)->makeVisible(['content']);
         if (!$item) {
             return false;
-        } else{
-            $i18n = I18nContent::All()->where('content_id',$courseId);
-            if($i18n->isEmpty()){
-                $i18 = new I18nContent();
-                $locale = App::getLocale();
-                $i18->i18nSave($locale,'items', $courseId,"title", $item->title);
-                $i18->i18nSave($locale,'items', $courseId, "short_content", "Updating...");
-                $i18->i18nSave($locale,'items', $courseId, "content", "Updating...");
-            }
         }
-        // $item->image = $this->itemImageUrl($item->image);
         $i18nModel = new I18nContent();
         foreach (I18nContent::$supports as $locale) {
             if ($locale == I18nContent::DEFAULT) {
@@ -303,9 +288,12 @@ class ItemServices
             } else {
                 $item18nData = $i18nModel->i18nItem($courseId, $locale);
                 $supportCols = array_keys(I18nContent::$itemCols);
-                foreach ($item18nData as $col => $i18nContent) {
-                    if (in_array($col, $supportCols)) {
-                        $item->$col =  $item->$col + [$locale => $i18nContent];
+
+                foreach ($supportCols as $col) {
+                    if (empty($item18nData[$col])) {
+                        $item->$col = $item->$col + [$locale => ""];
+                    } else {
+                        $item->$col = $item->$col + [$locale => $item18nData[$col]];
                     }
                 }
             }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
+use App\models\I18nContent;
 use App\Services\FileServices;
 use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
@@ -232,13 +233,11 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'refcode' => $input['refcode'],
-            // 'title' => $input['title'],
             'sex' => isset($input['sex']) ? $input['sex'] : null,
-            'introduce' => $input['introduce']['vi'],
-            'full_content' => $input['full_content']['vi'],
+            'introduce' => $input['introduce'][I18nContent::DEFAULT],
+            'full_content' => $input['full_content'][I18nContent::DEFAULT],
             'dob' => isset($input['dob']) ? $input['dob'] : null,
             'cert_id' => isset($input['cert_id']) ? $input['cert_id'] : null,
-            // 'full_content' => $input['full_content'],
             'email' => $input['email'],
             'phone' => $input['phone'],
             'role' => $input['role'],
@@ -275,6 +274,14 @@ class User extends Authenticatable
 
         $rs = $this->find($input['id'])->update($obj);
         if ($rs) {
+            $i18 = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale != I18nContent::DEFAULT) {
+                    foreach(I18nContent::$userCols as $col => $type){
+                        $i18->i18nSave($locale, 'users', $input['id'], $col, $input[$col][$locale]);
+                    }
+                }
+            }
             $fileService->deleteFiles($needDelete);
         }
         return $rs;

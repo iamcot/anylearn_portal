@@ -50,20 +50,7 @@ class ClassController extends Controller
             return redirect()->route('class');
         }
         $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
-        $locale =App::getLocale();
-        if($locale!=I18nContent::DEFAULT){
-            $i18 = new I18nContent();
-            foreach ($courseList as $row) {
-                $item18nData = $i18->i18nItem($row->id, $locale);
-                // dd($item18nData);
-                $supportCols = array_keys(I18nContent::$itemCols);
-                foreach ($item18nData as $col => $content) {
-                    if (in_array($col, $supportCols)) {
-                        $row->$col = $content;
-                    }
-                }
-            }
-        }
+        
         $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
             $this->data['isSale'] = false;
@@ -96,21 +83,6 @@ class ClassController extends Controller
             ConfigConstants::CONFIG_COMMISSION_FOUNDATION
         ]);
         $category = Category::all();
-        $locale = App::getLocale();
-        if ($locale != I18nContent::DEFAULT) {
-        $i18nModel = new I18nContent();
-            foreach ($category as $row) {
-                    $i18nModel->i18Check($locale,'categories',$row->id,'title');
-                    $i18nModel->i18Check($locale,'categories',$row->id,'url');
-                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $i18nContent) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $i18nContent;
-                        }
-                    }
-            }
-        }
         $this->data['categories'] = $category;
         $this->data['companyCommission'] = null;
         $this->data['isSchool'] = false;
@@ -133,15 +105,6 @@ class ClassController extends Controller
 
     public function edit(Request $request, $courseId)
     {
-        $user = Auth::user();
-        $i18n = new I18nContent();
-        foreach(I18nContent::$supports as $locale){
-            if($locale != I18nContent::DEFAULT){
-                $i18n->i18Check($locale,'items',$courseId,'title');
-                $i18n->i18Check($locale,'items',$courseId,'short_content');
-                $i18n->i18Check($locale,'items',$courseId,'content');
-            }
-        }
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();
@@ -202,21 +165,7 @@ class ClassController extends Controller
             $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
         }
         $category = Category::all();
-        $locale = App::getLocale();
-        if ($locale != I18nContent::DEFAULT) {
-        $i18nModel = new I18nContent();
-            foreach ($category as $row) {
-                    $i18nModel->i18Check($locale,'categories',$row->id,'title');
-                    $i18nModel->i18Check($locale,'categories',$row->id,'url');
-                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $i18nContent) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $i18nContent;
-                        }
-                    }
-            }
-        }
+        
         $this->data['categories'] = $category;
         $itemCats = ItemCategory::where('item_id', $courseId)->get();
         $this->data['itemCategories'] = [];
