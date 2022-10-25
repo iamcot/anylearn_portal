@@ -272,21 +272,6 @@ class PageController extends Controller
             ]
         ];
         $category = Category::all();
-        $locale = App::getLocale();
-        if ($locale != I18nContent::DEFAULT) {
-        $i18nModel = new I18nContent();
-            foreach ($category as $row) {
-                    $i18nModel->i18Check($locale,'categories',$row->id,'title');
-                    $i18nModel->i18Check($locale,'categories',$row->id,'url');
-                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $i18nContent) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $i18nContent;
-                        }
-                    }
-            }
-        }
         $data['categories'] = $category;
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.school', $data);
@@ -364,21 +349,6 @@ class PageController extends Controller
         ];
         $data['provinces'] = Province::orderby('name')->get();
         $category = Category::all();
-        $locale = App::getLocale();
-        if ($locale != I18nContent::DEFAULT) {
-        $i18nModel = new I18nContent();
-            foreach ($category as $row) {
-                    $i18nModel->i18Check($locale,'categories',$row->id,'title');
-                    $i18nModel->i18Check($locale,'categories',$row->id,'url');
-                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $i18nContent) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $i18nContent;
-                        }
-                    }
-            }
-        }
         $data['categories'] = $category;
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.teacher', $data);
