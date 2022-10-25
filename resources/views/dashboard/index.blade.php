@@ -21,22 +21,22 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 @endsection
 @section('body')
 <div class="row">
-@include('dashboard.count_box', ['title' => 'Khóa học trong kỳ', 'data' => $dashServ->itemCount(false),
+@include('dashboard.count_box', ['title' => 'Khóa học trong kỳ', 'data' => number_format($dashServ->itemCount(false),0,',','.'),
     'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Thành viên trong kỳ', 'data' => $dashServ->userCount('member', false),
+    @include('dashboard.count_box', ['title' => 'Thành viên trong kỳ', 'data' => number_format($dashServ->userCount('member', false),0,',','.'),
     'icon' => 'fa-users', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Doanh thu trong kỳ', 'data' => $dashServ->gmv(false),
+    @include('dashboard.count_box', ['title' => 'Doanh thu trong kỳ', 'data' => number_format($dashServ->gmv(false),0,',','.'),
     'icon' => 'fa-dollar-sign', 'color' => 'primary' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Giảng Viên', 'data' => $dashServ->userCount('teacher'),
+    @include('dashboard.count_box', ['title' => 'Tổng Giảng Viên', 'data' => number_format($dashServ->userCount('teacher'),0,',','.'),
     'icon' => 'fa-chalkboard-teacher', 'color' => 'info'])
 
-    @include('dashboard.count_box', ['title' => 'Tổng Khóa học', 'data' => $dashServ->itemCount(),
+    @include('dashboard.count_box', ['title' => 'Tổng Khóa học', 'data' => number_format($dashServ->itemCount(),0,',','.'),
     'icon' => 'fa-fire', 'color' => 'danger'])
-    @include('dashboard.count_box', ['title' => 'Tổng Thành viên', 'data' => $dashServ->userCount('member'),
+    @include('dashboard.count_box', ['title' => 'Tổng Thành viên', 'data' => number_format($dashServ->userCount('member'),0,',','.'),
     'icon' => 'fa-users', 'color' => 'success' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => $dashServ->gmv(),
+    @include('dashboard.count_box', ['title' => 'Tổng Doanh thu', 'data' => number_format($dashServ->gmv(),0,',','.'),
     'icon' => 'fa-dollar-sign', 'color' => 'primary' ])
-    @include('dashboard.count_box', ['title' => 'Tổng Trường học', 'data' => $dashServ->userCount('school'),
+    @include('dashboard.count_box', ['title' => 'Tổng Trường học', 'data' => number_format($dashServ->userCount('school'),0,',','.'),
     'icon' => 'fa-university', 'color' => 'info'])
 
 </div>
