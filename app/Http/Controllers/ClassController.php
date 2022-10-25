@@ -19,6 +19,7 @@ use App\Services\ItemServices;
 use App\Services\UserServices;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
@@ -49,7 +50,7 @@ class ClassController extends Controller
             return redirect()->route('class');
         }
         $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
-        $locale = \App::getLocale();
+        $locale =App::getLocale();
         if($locale!=I18nContent::DEFAULT){
             $i18 = new I18nContent();
             foreach ($courseList as $row) {
@@ -61,7 +62,7 @@ class ClassController extends Controller
                         $row->$col = $content;
                     }
                 }
-            }     
+            }
         }
         $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
@@ -94,7 +95,23 @@ class ClassController extends Controller
             ConfigConstants::CONFIG_COMMISSION,
             ConfigConstants::CONFIG_COMMISSION_FOUNDATION
         ]);
-        $this->data['categories'] = Category::all();
+        $category = Category::all();
+        $locale = App::getLocale();
+        if ($locale != I18nContent::DEFAULT) {
+        $i18nModel = new I18nContent();
+            foreach ($category as $row) {
+                    $i18nModel->i18Check($locale,'categories',$row->id,'title');
+                    $i18nModel->i18Check($locale,'categories',$row->id,'url');
+                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $i18nContent) {
+                        if (in_array($col, $supportCols)) {
+                            $row->$col = $i18nContent;
+                        }
+                    }
+            }
+        }
+        $this->data['categories'] = $category;
         $this->data['companyCommission'] = null;
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
@@ -176,7 +193,23 @@ class ClassController extends Controller
             $this->data['opening'] = $op ?? null;
             $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
         }
-        $this->data['categories'] = Category::all();
+        $category = Category::all();
+        $locale = App::getLocale();
+        if ($locale != I18nContent::DEFAULT) {
+        $i18nModel = new I18nContent();
+            foreach ($category as $row) {
+                    $i18nModel->i18Check($locale,'categories',$row->id,'title');
+                    $i18nModel->i18Check($locale,'categories',$row->id,'url');
+                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $i18nContent) {
+                        if (in_array($col, $supportCols)) {
+                            $row->$col = $i18nContent;
+                        }
+                    }
+            }
+        }
+        $this->data['categories'] = $category;
         $itemCats = ItemCategory::where('item_id', $courseId)->get();
         $this->data['itemCategories'] = [];
         foreach ($itemCats as $cat) {
@@ -223,28 +256,94 @@ class ClassController extends Controller
 
     public function category()
     {
-        $this->data['categories'] = Category::paginate();
+        $data = Category::paginate();
+        $i18nModel = new I18nContent();
+
+        // change vi->en
+        foreach ($data as $row) {
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$categoryCols as $col => $type) {
+                    // dd($col);
+                    $row->$col = [I18nContent::DEFAULT => $row->$col];
+                }
+            } else {
+                $i18nModel->i18Check($locale,'categories',$row->id,'title');
+                $i18nModel->i18Check($locale,'categories',$row->id,'url');
+                $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                foreach ($item18nData as $col => $i18nContent) {
+                    if (in_array($col, $supportCols)) {
+                        $row->$col = $row->$col + [$locale => $i18nContent];
+                    }
+                }
+
+            }
+        }
+    }
+        $this->data['categories'] = $data;
         return view('category.index', $this->data);
     }
     public function categoryEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            $category = $request->get('title');
-            $url = Str::slug($category);
+            foreach(I18nContent::$supports as $locale){
+            $input = $request->all();
+            // dd($input);
+            $category = $input["title"];
+            // dd($category);
+            $url = Str::slug($category[$locale]);
             $catId = $request->get('id');
+            // dd($category);
             $data = [
-                'title' => $category,
+                'title' => $category[$locale],
                 'url' => $url,
             ];
-            if ($catId) {
-                Category::find($catId)->update($data);
-            } else {
-                Category::create($data);
+            $i18n = new I18nContent();
+                if ($catId) {
+                    if($locale != I18nContent::DEFAULT){
+                        $i18n->i18nSave($locale,'categories',$catId,'title',$category[$locale]);
+                        $i18n->i18nSave($locale,'categories',$catId,'url',$url);
+                    } else{
+                        Category::find($catId)->update($data);
+                    }
+                } else {
+                    if($locale == I18nContent::DEFAULT){
+                        $id = Category::create($data)->id;
+                    }else{
+                        $i18n->i18nSave($locale,'categories',$id,'title',$category[$locale]);
+                        $i18n->i18nSave($locale,'categories',$id,'url',$url);
+                    }
+                }
             }
             return redirect()->route('category')->with('notify', 'Thành công');
         }
         if ($id) {
-            $this->data['category'] = Category::find($id);
+            $data = Category::find($id);
+            $i18nModel = new I18nContent();
+
+        // change vi->en
+
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$categoryCols as $col => $type) {
+                    //  dd($data);
+                    $data->$col = [I18nContent::DEFAULT => $data->$col];
+                }
+            } else {
+
+                $item18nData = $i18nModel->i18nCategory($data->id, $locale);
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                foreach ($item18nData as $col => $i18nContent) {
+                    if (in_array($col, $supportCols)) {
+                        $data->$col = $data->$col + [$locale => $i18nContent];
+                    }
+                }
+
+            }
+
+    }
+            $this->data['category'] = $data;
         }
         return view('category.form', $this->data);
     }

@@ -23,6 +23,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,10 +46,10 @@ class ItemServices
             throw new Exception("Trang không tồn tại", 404);
         }
         $item = $item->makeVisible(['content']);
-        $locale = \App::getLocale();
+        $locale = App::getLocale();
             if($locale!=I18nContent::DEFAULT){
                 $i18 = new I18nContent();
-                
+
                     // dd($row);
                     $item18nData = $i18->i18nItem($item->id, $locale);
                     // dd($item18nData);
@@ -57,9 +58,9 @@ class ItemServices
                         if (in_array($col, $supportCols)) {
                             $item->$col = $content;
                         }
-                    }     
+                    }
             }
-        
+
         // $item->content = "<html><body>" . $item->content . "</body></html>";
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_DISABLE_ANYPOINT]);
@@ -94,7 +95,7 @@ class ItemServices
                             $row->$col = $content;
                         }
                     }
-                }     
+                }
             }
         $numSchedule = Schedule::where('item_id', $itemId)->count();
 
@@ -109,7 +110,7 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
-        
+
         $teachers = DB::table('users')
             ->join('class_teachers AS ct', function ($join) use ($item) {
                 $join->on('ct.user_id', '=', 'users.id')
@@ -209,7 +210,7 @@ class ItemServices
     }
     public function statusText($status)
     {
-        $locale = \App::getLocale();
+        $locale = App::getLocale();
         if($locale =="vi"){
             if ($status == ItemConstants::STATUS_ACTIVE) {
                 return '<span class="text-success">Đã duyệt</span>';
@@ -224,7 +225,7 @@ class ItemServices
                 return '<span class="text-danger">Pending</span>';
             }
         }
-       
+
     }
 
     public function statusOperation($itemId, $status)
@@ -286,7 +287,7 @@ class ItemServices
             $i18n = I18nContent::All()->where('content_id',$courseId);
             if($i18n->isEmpty()){
                 $i18 = new I18nContent();
-                $locale = \App::getLocale();
+                $locale = App::getLocale();
                 $i18->i18nSave($locale,'items', $courseId,"title", $item->title);
                 $i18->i18nSave($locale,'items', $courseId, "short_content", "Updating...");
                 $i18->i18nSave($locale,'items', $courseId, "content", "Updating...");
@@ -545,15 +546,15 @@ class ItemServices
                     commission_rate,
                     got_bonus,
                     date_start,
-                    time_start, 
+                    time_start,
                     nolimit_time,
                     company_commission,
                     `status`,
                     is_test,
                     item_id,
-                    user_location_id 
-                ) 
-                SELECT 
+                    user_location_id
+                )
+                SELECT
                     ?,
                     `type`,
                     subtype,
@@ -562,7 +563,7 @@ class ItemServices
                     commission_rate,
                     got_bonus,
                     ?,
-                    time_start, 
+                    time_start,
                     nolimit_time,
                     company_commission,
                     1,

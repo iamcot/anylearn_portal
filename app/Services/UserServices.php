@@ -21,6 +21,7 @@ use App\Models\User;
 use App\Models\I18nContent;
 use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -416,7 +417,7 @@ class UserServices
             $i18n = I18nContent::All()->where('content_id',$uid);
             if($i18n->isEmpty()){
                 $i18 = new I18nContent();
-                $locale = \App::getLocale();
+                $locale = App::getLocale();
                 $i18->i18nSave($locale,'users', $uid,"introduce", $user->introduce);
                 $i18->i18nSave($locale,'users', $uid, "full_content", $user->full_content);
             }

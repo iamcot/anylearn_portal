@@ -17,7 +17,10 @@ class I18nContent extends Model
         'introduce' =>'textarea',
         'full_content' =>'textarea',
     ];
-
+    static $categoryCols = [
+        'title' =>'input',
+        'url' =>'input',
+    ];
 
     protected $table = 'i18n_contents';
     protected $fillable = [
@@ -110,7 +113,19 @@ class I18nContent extends Model
         }
         return $data;
     }
-
+    public function i18nCategory($catId, $locale)
+    {
+        $i18n = $this->where('tbl', 'categories')
+            ->where('content_id', $catId)
+            ->where('locale', $locale)
+            ->get();
+        // dd($i18n);
+        $data = [];
+        foreach ($i18n as $row) {
+            $data[$row->col] = $row->i18n_content;
+        }
+        return $data;
+    }
     public function i18nUser($userId, $locale)
     {
         $i18n = $this->where('tbl', 'users')
