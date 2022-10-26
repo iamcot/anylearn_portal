@@ -26,25 +26,6 @@ class I18nContent extends Model
     protected $fillable = [
         'locale', 'tbl', 'col', 'content_id', 'i18n_content', 'status'
     ];
-    public function i18Check($locale,$table,$contentId,$col)
-    {
-        $exists = $this->where('tbl', $table)
-            ->where('content_id', $contentId)
-            ->where('col',$col)
-            ->where('locale', $locale)
-            ->first();
-            if (!($exists)) {
-                $this->create([
-                    'locale' => $locale,
-                    'tbl' => $table,
-                    'content_id' => $contentId,
-                    'col' => $col,
-                    'i18n_content' => ""
-                ]);
-                return;
-            }
-            else return;
-    }
     public function i18nSave($locale, $table, $contentId, $col, $content)
     {
         $exists = $this->where('tbl', $table)
@@ -133,7 +114,7 @@ class I18nContent extends Model
             ->where('locale', $locale)
             ->get();
         $data = [];
-        
+
         foreach ($i18n as $row) {
             $data[$row->col] = $row->i18n_content;
         }
