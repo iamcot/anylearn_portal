@@ -35,17 +35,17 @@
                             @if(\App::getLocale()=='vi')
                             <div class="collapse-module pb-4">
                                 <div class="text-center">
-                                    <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#contentCollapse" aria-expanded="false"
-                                        aria-controls="contentCollapse">
+                                    <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold"
+-                                        type="button" data-bs-toggle="collapse" data-bs-target="#introduceCollapse"
+-                                        aria-expanded="false" aria-controls="introduceCollapse"></button>
                                 </div>
                             </div>
                             @else
                             <div class="collapse-module-en pb-4">
                                 <div class="text-center">
-                                    <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#contentCollapse" aria-expanded="false"
-                                        aria-controls="contentCollapse">
+                                    <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold"
+-                                        type="button" data-bs-toggle="collapse" data-bs-target="#introduceCollapse"
+-                                        aria-expanded="false" aria-controls="introduceCollapse"></button>
                                 </div>
                             </div>
                             @endif
