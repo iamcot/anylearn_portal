@@ -802,7 +802,7 @@ class TransactionController extends Controller
             ConfigConstants::TRANSACTION_FIN_MARKETING,
             ConfigConstants::TRANSACTION_FIN_OTHERS,
             ConfigConstants::TRANSACTION_FIN_SALARY,
-            ConfigConstants::TRANSACTION_FIN_OFFICE_FEE,
+            ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE,
         ])
             ->orderby('id', 'desc')
             ->with('refUser')
