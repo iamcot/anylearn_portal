@@ -163,7 +163,6 @@ class PageController extends Controller
             if ($user) {
                 $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
-
             $this->data['children'] = $children;
             return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
         } catch (Exception $e) {
@@ -281,9 +280,6 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$categoryCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $content;
-                        }
                         if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
@@ -375,9 +371,6 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$categoryCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $content;
-                        }
                         if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
@@ -480,9 +473,6 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$itemCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $content;
-                        }
                         if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
@@ -506,9 +496,6 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$categoryCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
-                            $row->$col = $content;
-                        }
                         if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
