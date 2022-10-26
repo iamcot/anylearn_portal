@@ -91,6 +91,9 @@ class ItemServices
                     if (in_array($col, $supportCols)) {
                         $row->$col = $content;
                     }
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
+                    }
                 }
             }
         }

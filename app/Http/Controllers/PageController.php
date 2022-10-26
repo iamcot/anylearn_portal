@@ -284,6 +284,9 @@ class PageController extends Controller
                         if (in_array($col, $supportCols)) {
                             $row->$col = $content;
                         }
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
                     }
             }
         }
@@ -373,6 +376,9 @@ class PageController extends Controller
                     $supportCols = array_keys(I18nContent::$categoryCols);
                     foreach ($item18nData as $col => $content) {
                         if (in_array($col, $supportCols)) {
+                            $row->$col = $content;
+                        }
+                        if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
                     }
@@ -477,6 +483,9 @@ class PageController extends Controller
                         if (in_array($col, $supportCols)) {
                             $row->$col = $content;
                         }
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
                     }
                 }
             }
@@ -498,6 +507,9 @@ class PageController extends Controller
                     $supportCols = array_keys(I18nContent::$categoryCols);
                     foreach ($item18nData as $col => $content) {
                         if (in_array($col, $supportCols)) {
+                            $row->$col = $content;
+                        }
+                        if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
                     }

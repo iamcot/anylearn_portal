@@ -105,7 +105,9 @@ class I18nContent extends Model
         foreach ($i18n as $row) {
             $data[$row->col] = $row->i18n_content;
         }
+        // dd($data);
         return $data;
+
     }
     public function i18nUser($userId, $locale)
     {
