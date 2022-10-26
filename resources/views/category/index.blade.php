@@ -33,7 +33,7 @@
                     <th class="text-center">{{ $category->id }}</th>
                     @foreach(App\Models\I18nContent::$supports as $locale)
                     <td>{{ $category->title[$locale] }}
-                        <a href="{{ route('category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
+                        {{-- <a href="{{ route('category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a> --}}
                     </td>
                     @endforeach
 
@@ -42,6 +42,7 @@
                         <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'categories', 'id' => $category->id]) }}">
                             {{ $category->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>
+                        <a href="{{ route('category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
                     </td>
                 </tr>
 
