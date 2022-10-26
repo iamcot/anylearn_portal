@@ -408,7 +408,7 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$userCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
+                        if (in_array($col, $supportCols) && $content != "") {
                             $author->$col = $content;
                         }
                     }
