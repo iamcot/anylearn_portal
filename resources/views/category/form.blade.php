@@ -12,16 +12,16 @@
                 </div>
             </div>
             @endforeach --}}
-            <ul class="nav nav-tabs" id="i18ntab" role="tablist">
+            {{-- <ul class="nav nav-tabs" id="i18ntab" role="tablist">
                 @foreach(App\Models\I18nContent::$supports as $locale)
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{ $locale == App\Models\I18nContent::DEFAULT ? 'active':'' }}" id="{{ $locale }}-tab" data-toggle="tab" data-bs-toggle="tab" data-target="#{{ $locale }}box" data-bs-target="#{{ $locale }}box" type="button" role="tab" aria-controls="{{ $locale }}" aria-selected="{{ $locale == App\Models\I18nContent::DEFAULT ? 'true': 'false' }}">{{ $locale }}</button>
                 </li>
                 @endforeach
-            </ul>
+            </ul> --}}
             <div class="tab-content" id="i18ntabContent">
                 @foreach(App\Models\I18nContent::$supports as $locale)
-                <div class="p-3 tab-pane fade {{ $locale == App\Models\I18nContent::DEFAULT ? 'show active':'' }}" id="{{ $locale }}box" role="tabpanel" aria-labelledby="{{ $locale }}-tab">
+                {{-- <div class="p-3 tab-pane fade {{ $locale == App\Models\I18nContent::DEFAULT ? 'show active':'' }}" id="{{ $locale }}box" role="tabpanel" aria-labelledby="{{ $locale }}-tab"> --}}
                     <div class="form-group row">
                         <label for="title{{ $locale }}" class="col-md-3 col-form-label text-md-right ">{{ __('Tên chuyên mục') }} [{{ $locale }}]</label>
                         <div class="col-md-8">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                </div>
+                {{-- </div> --}}
                 @endforeach
             </div>
         </div>
