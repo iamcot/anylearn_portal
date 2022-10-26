@@ -262,6 +262,20 @@ class PageController extends Controller
                 ->select('categories.id', 'categories.url', 'categories.title')
                 ->take(4)
                 ->get();
+                $locale = App::getLocale();
+        foreach ($userCategories as $row) {
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                    $item18nData = $i18->i18nCategory($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
+                    }
+            }
+        }
             $user->categories = $userCategories;
             $data['list'][] = $user;
         }
@@ -352,6 +366,20 @@ class PageController extends Controller
                 ->select('categories.id', 'categories.url', 'categories.title')
                 ->take(4)
                 ->get();
+                $locale = App::getLocale();
+                foreach ($userCategories as $row) {
+                    if($locale!=I18nContent::DEFAULT){
+                        $i18 = new I18nContent();
+                            $item18nData = $i18->i18nCategory($row->id, $locale);
+                            // dd($item18nData);
+                            $supportCols = array_keys(I18nContent::$categoryCols);
+                            foreach ($item18nData as $col => $content) {
+                                if (in_array($col, $supportCols) && $content != "") {
+                                    $row->$col = $content;
+                                }
+                            }
+                    }
+                }
             $user->categories = $userCategories;
             $data['list'][] = $user;
         }
