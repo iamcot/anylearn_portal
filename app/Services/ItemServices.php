@@ -53,7 +53,7 @@ class ItemServices
             // dd($item18nData);
             $supportCols = array_keys(I18nContent::$itemCols);
             foreach ($item18nData as $col => $content) {
-                if (in_array($col, $supportCols)) {
+                if (in_array($col, $supportCols) && $content != "") {
                     $item->$col = $content;
                 }
             }
@@ -115,7 +115,7 @@ class ItemServices
                         // dd($item18nData);
                         $supportCols = array_keys(I18nContent::$categoryCols);
                         foreach ($item18nData as $col => $content) {
-                            if (in_array($col, $supportCols)) {
+                            if (in_array($col, $supportCols) && $content != "") {
                                 $row->$col = $content;
                             }
                         }
