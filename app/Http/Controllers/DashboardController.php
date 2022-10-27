@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contract;
 use App\Models\Feedback;
 use App\Models\User;
 use App\Services\DashboardServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -38,6 +40,8 @@ class DashboardController extends Controller
     public function meDashboard(Request $request) {
         // $this->data['navText'] = __('THÔNG TIN CỦA TÔI');
         $editUser = Auth::user();
+            // $input = $request->all();
+            // dd($input);
         if ($request->input('save')) {
             $input = $request->all();
             $input['role'] = $editUser->role;
@@ -50,7 +54,7 @@ class DashboardController extends Controller
         }
         $userselect = User::all();
         $this->data['userselect'] = $userselect;
-        
+
         $this->data['user'] = $editUser;
        // $this->data['navText'] = __('Thông tin');
         $this->data['type'] = 'member';

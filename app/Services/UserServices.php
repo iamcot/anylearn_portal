@@ -495,4 +495,10 @@ class UserServices
             ->sum('vouchers.value');
         return $data;
     }
+    public function bankaccount($id)
+    {
+        # code...
+        $bank = DB::table('contracts')->where('user_id',$id)->first();
+        return $bank;
+    }
 }
