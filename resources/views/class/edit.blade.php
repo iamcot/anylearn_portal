@@ -3,7 +3,7 @@
 @extends('layout')
 
 @section('body')
-@if(!$userServ->isSale())
+@if(!$userServ->isSale() || @auth()->user()->role == App\Constants\UserConstants::ROLE_SALE_CONTENT)
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
     @csrf
 @endif

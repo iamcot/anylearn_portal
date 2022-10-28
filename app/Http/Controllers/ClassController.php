@@ -51,7 +51,7 @@ class ClassController extends Controller
             return redirect()->route('class');
         }
         $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
-        
+
         $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
             $this->data['isSale'] = false;
@@ -166,7 +166,7 @@ class ClassController extends Controller
             $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
         }
         $category = Category::all();
-        
+
         $this->data['categories'] = $category;
         $itemCats = ItemCategory::where('item_id', $courseId)->get();
         $this->data['itemCategories'] = [];
@@ -236,7 +236,29 @@ class ClassController extends Controller
     public function category()
     {
         $data = Category::paginate();
-    
+        $i18nModel = new I18nContent();
+
+        // change vi->en
+        foreach ($data as $row) {
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    foreach (I18nContent::$categoryCols as $col => $type) {
+                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
+                    }
+                } else {
+                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $row->$col = $row->$col + [$locale => ""];
+                        } else {
+                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+                }
+            }
+    }
         $this->data['categories'] = $data;
         return view('category.index', $this->data);
     }
@@ -277,7 +299,26 @@ class ClassController extends Controller
         if ($id) {
             $data = Category::find($id);
             $i18nModel = new I18nContent();
-    
+
+        // change vi->en
+
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$categoryCols as $col => $type) {
+                    $data->$col = [I18nContent::DEFAULT => $data->$col];
+                }
+            } else {
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                $item18nData = $i18nModel->i18nCategory($data->id, $locale);
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $data->$col = $data->$col + [$locale => ""];
+                        } else {
+                            $data->$col = $data->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+            }
+    }
             $this->data['category'] = $data;
         }
         return view('category.form', $this->data);

@@ -55,7 +55,7 @@ class ItemServices
             // dd($item18nData);
             $supportCols = array_keys(I18nContent::$itemCols);
             foreach ($item18nData as $col => $content) {
-                if (in_array($col, $supportCols)) {
+                if (in_array($col, $supportCols) && $content != "") {
                     $item->$col = $content;
                 }
             }
@@ -90,7 +90,7 @@ class ItemServices
                 // dd($item18nData);
                 $supportCols = array_keys(I18nContent::$itemCols);
                 foreach ($item18nData as $col => $content) {
-                    if (in_array($col, $supportCols)) {
+                    if (in_array($col, $supportCols) && $content != "") {
                         $row->$col = $content;
                     }
                 }
@@ -109,7 +109,20 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
-          
+            $locale = App::getLocale();
+            foreach ($categories as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nCategory($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$categoryCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
         $teachers = DB::table('users')
             ->join('class_teachers AS ct', function ($join) use ($item) {
                 $join->on('ct.user_id', '=', 'users.id')

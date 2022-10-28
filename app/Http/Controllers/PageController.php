@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use App\Models\I18nContent;
+use App\Services\CategoryServices;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -162,7 +163,6 @@ class PageController extends Controller
             if ($user) {
                 $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
-
             $this->data['children'] = $children;
             return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
         } catch (Exception $e) {
@@ -262,6 +262,20 @@ class PageController extends Controller
                 ->select('categories.id', 'categories.url', 'categories.title')
                 ->take(4)
                 ->get();
+                $locale = App::getLocale();
+        foreach ($userCategories as $row) {
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                    $item18nData = $i18->i18nCategory($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
+                    }
+            }
+        }
             $user->categories = $userCategories;
             $data['list'][] = $user;
         }
@@ -272,6 +286,20 @@ class PageController extends Controller
             ]
         ];
         $category = Category::all();
+        $locale = App::getLocale();
+        foreach ($category as $row) {
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                    $item18nData = $i18->i18nCategory($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
+                    }
+            }
+        }
         $data['categories'] = $category;
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.school', $data);
@@ -338,6 +366,20 @@ class PageController extends Controller
                 ->select('categories.id', 'categories.url', 'categories.title')
                 ->take(4)
                 ->get();
+                $locale = App::getLocale();
+                foreach ($userCategories as $row) {
+                    if($locale!=I18nContent::DEFAULT){
+                        $i18 = new I18nContent();
+                            $item18nData = $i18->i18nCategory($row->id, $locale);
+                            // dd($item18nData);
+                            $supportCols = array_keys(I18nContent::$categoryCols);
+                            foreach ($item18nData as $col => $content) {
+                                if (in_array($col, $supportCols) && $content != "") {
+                                    $row->$col = $content;
+                                }
+                            }
+                    }
+                }
             $user->categories = $userCategories;
             $data['list'][] = $user;
         }
@@ -349,6 +391,20 @@ class PageController extends Controller
         ];
         $data['provinces'] = Province::orderby('name')->get();
         $category = Category::all();
+        $locale = App::getLocale();
+        foreach ($category as $row) {
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                    $item18nData = $i18->i18nCategory($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
+                    }
+            }
+        }
         $data['categories'] = $category;
         $data['query'] = $request->input();
         return view(env('TEMPLATE', '') . 'list.teacher', $data);
@@ -380,7 +436,7 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$userCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
+                        if (in_array($col, $supportCols) && $content != "") {
                             $author->$col = $content;
                         }
                     }
@@ -445,7 +501,7 @@ class PageController extends Controller
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$itemCols);
                     foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols)) {
+                        if (in_array($col, $supportCols) && $content != "") {
                             $row->$col = $content;
                         }
                     }
@@ -460,6 +516,21 @@ class PageController extends Controller
             $data['classes'][] = $class;
         }
         $category = Category::all();
+        $locale = App::getLocale();
+        foreach ($category as $row) {
+            if($locale!=I18nContent::DEFAULT){
+                $i18 = new I18nContent();
+                    $item18nData = $i18->i18nCategory($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
+                    }
+            }
+        }
+        // dd($category);
         $data['categories'] = $category;
         // $data['categories'] = Category::all();
         return view(env('TEMPLATE', '') . 'list.class', $data);
