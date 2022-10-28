@@ -1,12 +1,12 @@
 @inject('UserServices','App\Services\UserServices')
- <style type="text/css">
+ {{-- <style type="text/css">
        .boxbank{
 box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px; box-sizing: inherit; margin-bottom: 10px; padding: 20px; box-sizing: inherit; line-height: 1.6em; padding: 15px;">
        }
        .hidemodals{
         display: none;
        }
-   </style>
+   </style> --}}
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-print-none">
         <div class="container">
             <a class="navbar-brand" href="{{ route('me.dashboard') }}">
@@ -24,12 +24,12 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px; box-sizing: inherit; margin-bottom:
                         @yield('rightFixedTop')
                     </div>
                 </li>
-                <li class="nav-item d-none d-md-inline">
+                {{-- <li class="nav-item d-none d-md-inline">
                     <a class="nav-link" href="#">
                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">@lang('Rút tiền') </button>
                     </a>
 
-                </li>
+                </li> --}}
                 <li class="nav-item d-none d-md-inline">
                     <a class="nav-link" href="#">
                         @if(Auth::user()->image)
@@ -78,7 +78,7 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px; box-sizing: inherit; margin-bottom:
     </div>
 
     <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <form action="" method="GET">
         <div class="modal-content hidemodals" id="addbank">
@@ -200,8 +200,8 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px; box-sizing: inherit; margin-bottom:
     </form>
 
   </div>
-</div>
-<script type="text/javascript">
+</div> --}}
+{{-- <script type="text/javascript">
     function addbank() {
         document.getElementById("withdraw").style.display = "none";
         document.getElementById("addbank").style.display = "block";
@@ -298,4 +298,4 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px; box-sizing: inherit; margin-bottom:
                 }
             };
     }
-</script>
+</script> --}}
