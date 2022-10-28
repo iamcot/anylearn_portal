@@ -11,6 +11,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Feedback;
+use App\models\I18nContent;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Schedule;
@@ -73,7 +74,7 @@ class ConfigApi extends Controller
 
         $catM = new Category();
         $categories = $catM->buildCatWithItems($request, null);
- 
+
         return response()->json([
             'new_banners' => $newBanners,
             'articles' => Article::where('status', 1)
@@ -95,8 +96,31 @@ class ConfigApi extends Controller
     {
         $catM = new Category();
         $categories = $catM->buildCatWithItems($request, $catId);
+        $i18nModel = new I18nContent();
+
+        // change vi->en
+        foreach ($categories as $row) {
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    foreach (I18nContent::$categoryCols as $col => $type) {
+                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
+                    }
+                } else {
+                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $row->$col = $row->$col + [$locale => ""];
+                        } else {
+                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+                }
+            }
         return response()->json($categories);
     }
+}
 
     public function home($role = 'guest')
     {
@@ -208,7 +232,7 @@ class ConfigApi extends Controller
     public function foundation(Request $request)
     {
         $configM = new Configuration();
-        
+
         // $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION]);
 
         $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)

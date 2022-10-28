@@ -208,7 +208,8 @@ class UserApi extends Controller
         $user->cartcount = $userServ->countItemInCart($user->id);
         $transServ = new TransactionService();
         $user->hasPendingOrder = $transServ->hasPendingOrders($user->id);
-
+        $userService = new UserServices();
+        $user = $userService->userInfo($user->id);
         return response()->json($user, 200);
     }
 
@@ -220,6 +221,8 @@ class UserApi extends Controller
         $user->children = User::where('user_id', $user->id)
             ->where('is_child', 1)
             ->get();
+        $userService = new UserServices();
+        $user = $userService->userInfo($user->id);
         return response()->json($user, 200);
     }
 
@@ -445,7 +448,7 @@ class UserApi extends Controller
             }
         }
 
-        // No limit time class => just touch transaction related to approved user 
+        // No limit time class => just touch transaction related to approved user
         if ($item->nolimit_time == 1) {
             //get transaction relate order id & user & item
             $trans = DB::table('transactions')

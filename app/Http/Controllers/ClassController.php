@@ -236,39 +236,39 @@ class ClassController extends Controller
                     }
                 }
             }
-    }
+        }
         $this->data['categories'] = $data;
         return view('category.index', $this->data);
     }
     public function categoryEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            foreach(I18nContent::$supports as $locale){
-            $input = $request->all();
-            // dd($input);
-            $category = $input["title"];
-            // dd($category);
-            $url = Str::slug($category[$locale]);
-            $catId = $request->get('id');
-            // dd($category);
-            $data = [
-                'title' => $category[$locale],
-                'url' => $url,
-            ];
-            $i18n = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                $input = $request->all();
+                // dd($input);
+                $category = $input["title"];
+                // dd($category);
+                $url = Str::slug($category[$locale]);
+                $catId = $request->get('id');
+                // dd($category);
+                $data = [
+                    'title' => $category[$locale],
+                    'url' => $url,
+                ];
+                $i18n = new I18nContent();
                 if ($catId) {
-                    if($locale != I18nContent::DEFAULT){
-                        $i18n->i18nSave($locale,'categories',$catId,'title',$category[$locale]);
-                        $i18n->i18nSave($locale,'categories',$catId,'url',$url);
-                    } else{
+                    if ($locale != I18nContent::DEFAULT) {
+                        $i18n->i18nSave($locale, 'categories', $catId, 'title', $category[$locale]);
+                        $i18n->i18nSave($locale, 'categories', $catId, 'url', $url);
+                    } else {
                         Category::find($catId)->update($data);
                     }
                 } else {
-                    if($locale == I18nContent::DEFAULT){
+                    if ($locale == I18nContent::DEFAULT) {
                         $id = Category::create($data)->id;
-                    }else{
-                        $i18n->i18nSave($locale,'categories',$id,'title',$category[$locale]);
-                        $i18n->i18nSave($locale,'categories',$id,'url',$url);
+                    } else {
+                        $i18n->i18nSave($locale, 'categories', $id, 'title', $category[$locale]);
+                        $i18n->i18nSave($locale, 'categories', $id, 'url', $url);
                     }
                 }
             }
@@ -278,16 +278,16 @@ class ClassController extends Controller
             $data = Category::find($id);
             $i18nModel = new I18nContent();
 
-        // change vi->en
+            // change vi->en
 
-        foreach (I18nContent::$supports as $locale) {
-            if ($locale == I18nContent::DEFAULT) {
-                foreach (I18nContent::$categoryCols as $col => $type) {
-                    $data->$col = [I18nContent::DEFAULT => $data->$col];
-                }
-            } else {
-                $supportCols = array_keys(I18nContent::$categoryCols);
-                $item18nData = $i18nModel->i18nCategory($data->id, $locale);
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    foreach (I18nContent::$categoryCols as $col => $type) {
+                        $data->$col = [I18nContent::DEFAULT => $data->$col];
+                    }
+                } else {
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    $item18nData = $i18nModel->i18nCategory($data->id, $locale);
                     foreach ($supportCols as $col) {
                         if (empty($item18nData[$col])) {
                             $data->$col = $data->$col + [$locale => ""];
@@ -295,8 +295,8 @@ class ClassController extends Controller
                             $data->$col = $data->$col + [$locale => $item18nData[$col]];
                         }
                     }
+                }
             }
-    }
             $this->data['category'] = $data;
         }
         return view('category.form', $this->data);
