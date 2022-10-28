@@ -396,6 +396,7 @@ class ClassController extends Controller
                 'name' => $user->name,
                 'class' => $item->title,
                 'url' => $certUrl,
+                'content' => ""
             ]);
         } catch (Exception $ex) {
             Log::error($ex);

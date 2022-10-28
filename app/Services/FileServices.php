@@ -288,10 +288,14 @@ class FileServices
         if ($imgW != env('CERT_WIDTH') || $imgH != env('CERT_HEIGHT')) {
             throw new Exception("Cert mẫu phải có kích thước ". env('CERT_WIDTH') ."x". env('CERT_HEIGHT')."px, vui lòng up lại.");
         }
+        $centerX = $imgW / 2;
         $textColor = imagecolorallocate($certImg, 0, 160, 80); //green
         $text = $user->name;
         $fontSize = count(explode(" ", $text)) >= 5 ? 80 : 100;
-        $x = count(explode(" ", $text)) == 2 ? env('CERT_X') + 300 : env('CERT_X');
+
+        list($left, $bottom, $right, , , $top) = imageftbbox($fontSize, 0, $fontPath, $text);
+        $left_offset = ($right - $left) / 2;
+        $x = $centerX - $left_offset;
 
         imagettftext($certImg, $fontSize, 0, $x, env('CERT_Y'), $textColor, $fontPath, $text);
         imagejpeg($certImg, $tempFile);
