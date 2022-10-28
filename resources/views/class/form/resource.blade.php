@@ -44,7 +44,7 @@
             <textarea id="resource_desc" class="form-control" name="resource[desc]"></textarea>
         </div>
         <input name="resource_data" type="file" id="resourceInp" />
-        <p class="small">Chấp nhận các định dạng jpg, png, docx, pdf. Có thể upload nhiều lần.</p>
+        <p class="small">@lang('Chấp nhận các định dạng jpg, png, docx, pdf. Có thể upload nhiều lần.')</p>
 
     </div>
 </div>

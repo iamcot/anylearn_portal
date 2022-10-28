@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <select class="form-control location-tree" id="select-district" name="d">
                         @if(empty($wards))
-                        <option value="">--Quận/Huyện--</option>
+                        <option value="">@lang('--Quận/Huyện--')</option>
                         @else
                         @foreach($wards as $ward)
                         <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>
@@ -34,7 +34,7 @@
     <div class="col-md-9">
         @include('layout.breadcrumb', ['breadcrumb' => $breadcrumb])
         @if($hasSearch && $searchNotFound)
-        <p>Không tìm thấy trung tâm bạn đang tìm kiếm, hãy tìm thử các trung tâm dưới đây nhé.</p>
+        <p>@lang('Không tìm thấy trung tâm bạn đang tìm kiếm, hãy tìm thử các trung tâm dưới đây nhé.')</p>
         <hr>
         @endif
         @if(count($list) <= 0) 
@@ -50,7 +50,7 @@
                     <div class="mb-2">@include('pdp.rating', ['score' => 5])</div>
                     <h5 class="grid_title"><strong>{{ $school->name }}</strong></h5>
                     <div class="">
-                    <a href="{{ route('classes', ['role' => 'school', 'id' => $school->id ]) }}" class="btn btn-sm btn-primary form-control">CÁC KHOÁ HỌC <i class="fa fa-chevron-right"></i></a>
+                    <a href="{{ route('classes', ['role' => 'school', 'id' => $school->id ]) }}" class="btn btn-sm btn-primary form-control">@lang('CÁC KHOÁ HỌC') <i class="fa fa-chevron-right"></i></a>
                     </div>
                </div>
             </li>

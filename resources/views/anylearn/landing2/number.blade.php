@@ -9,7 +9,7 @@
                         </div>
                         <div class=" col-sm-7 text-start ">
                             <div class="text-success fw-bold">150+</div>
-                            <div class="text-black-50">Đối tác</div>
+                            <div class="text-black-50">@lang('Đối tác')</div>
                         </div>
                     </div>
 
@@ -21,7 +21,7 @@
                         </div>
                         <div class=" col-sm-7 text-start  ">
                             <div class="text-success fw-bold">500+</div>
-                            <div class="text-black-50">Khoá học</div>
+                            <div class="text-black-50">@lang('Khoá học')</div>
                         </div>
                     </div>
 
@@ -33,7 +33,7 @@
                         </div>
                         <div class=" col-sm-7  text-start ">
                             <div class="text-success fw-bold">200+</div>
-                            <div class="text-black-50">Chuyên gia</div>
+                            <div class="text-black-50">@lang('Chuyên gia')</div>
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                         </div>
                         <div class=" col-sm-7  text-start ">
                             <div class="text-success fw-bold">7000+</div>
-                            <div class="text-black-50">Học viên</div>
+                            <div class="text-black-50">@lang('Học viên')</div>
                         </div>
                     </div>
 

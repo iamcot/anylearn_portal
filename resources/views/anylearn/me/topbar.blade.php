@@ -49,6 +49,21 @@ box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px; box-sizing: inherit; margin-bottom:
                         <i class="fas fa-bell fa-fw mr-2 text-success"></i>
                     </a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (Session::get('locale') == null || Session::get('locale') == 'vi')
+                            <span class="locale_flag-vi"></span>
+                            @else
+                               <span class="locale_flag-en"></span>
+                            @endif
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                            <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Tiếng Việt</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                            <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class="fas fa-sign-out-alt fa-fw mr-2  text-danger"></i>

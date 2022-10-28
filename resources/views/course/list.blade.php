@@ -6,8 +6,8 @@
 <form class="row">
     <div class="col-xs-3 mr-1">
         <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tên khóa học</option>
-            <option {{ app('request')->input('t') == 'series' ? 'selected' : '' }} value="series">Chuỗi khóa học</option>
+            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">@lang('Tên khóa học')</option>
+            <option {{ app('request')->input('t') == 'series' ? 'selected' : '' }} value="series">@lang('Chuỗi khóa học')</option>
         </select>
     </div>
     <div class="col-xs-6 mr-1">
@@ -36,15 +36,15 @@
                 <thead>
                     <th class="text-center">#ID</th>
                     @if($userServ->isMod()) <th width="5%" class="text-center">Hot</th>@endif
-                    @if($userServ->isMod()) <th width="5%" class="text-center">Người tạo</th>@endif
-                    <th>Khóa học</th>
-                    <th>Chuỗi</th>
-                    <th>Thời gian</th>
-                    <th>Học phí</th>
+                    @if($userServ->isMod()) <th width="5%" class="text-center">@lang('Người tạo')</th>@endif
+                    <th>@lang('Khóa học')</th>
+                    <th>@lang('Chuỗi')</th>
+                    <th>@lang('Thời gian')</th>
+                    <th>@lang('Học phí')</th>
                     <!-- <th>Quan tâm</th> -->
-                    <th>Đăng ký</th>
-                    <th>Lần sửa cuối</th>
-                    <th>Thao tác</th>
+                    <th>@lang('Đăng ký')</th>
+                    <th>@lang('Lần sửa cuối')</th>
+                    <th>@lang('Thao tác')</th>
                 </thead>
             <tbody>
                 @foreach($courseList as $course)

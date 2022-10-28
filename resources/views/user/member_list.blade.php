@@ -93,6 +93,7 @@
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th class="text-center">Thao tác</th>
+                    <th class="text-center">Liên hệ</th>
                     @if(!$isSale)
                     <th class="text-center">Hot</th>
                     <th class="text-center">Boost</th>
@@ -123,7 +124,10 @@
                         <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
                         @endif
                         @endif
-                        <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i></a>
+                        <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i> Sale</a>
+                    </td>
+                    <td>
+                        {{ $user->last_contact ? date('d/m/y', strtotime($user->last_contact)) : "" }}
                     </td>
 
                     @if(!$isSale)
@@ -132,7 +136,7 @@
                     @endif
                     <td>{{ $user->role }}</td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
-                    <td>{{ $user->phone }}</td>
+                    <td>{{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->address }}</td>
                     <td>{{ number_format($user->wallet_c) }}</td>

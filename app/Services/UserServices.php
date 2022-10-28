@@ -7,7 +7,6 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
-use App\Constants\UserDocConstants;
 use App\Models\Ask;
 use App\Models\Configuration;
 use App\Models\Contract;
@@ -19,8 +18,10 @@ use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\I18nContent;
 use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -82,6 +83,12 @@ class UserServices
     {
         $user = Auth::user();
         return in_array($user->role, UserConstants::$modRoles);
+    }
+
+    public function isSale()
+    {
+        $user = Auth::user();
+        return in_array($user->role, UserConstants::$saleRoles);
     }
 
     public function haveAccess($role, $routeName)
@@ -270,7 +277,7 @@ class UserServices
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return "Mới tạo";
+                return __("Mới tạo");
             case UserConstants::CONTRACT_SIGNED:
                 return "Thành viên ký";
             case UserConstants::CONTRACT_APPROVED:
@@ -401,12 +408,38 @@ class UserServices
         });
         return $result;
     }
+    public function userInfo($uid)
+    {
+        $user = User::find($uid)->makeVisible(['content']);
+        if (!$user) {
+            return false;
+        }
+        $i18nModel = new I18nContent();
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$userCols as $col => $type) {
+                    $user->$col =  [I18nContent::DEFAULT => $user->$col];
+                }
+            } else {
+                $item18nData = $i18nModel->i18nUser($uid, $locale);
+                $supportCols = array_keys(I18nContent::$userCols);
 
+                foreach ($supportCols as $col) {
+                    if (empty($item18nData[$col])) {
+                        $user->$col = $user->$col + [$locale => ""];
+                    } else {
+                        $user->$col = $user->$col + [$locale => $item18nData[$col]];
+                    }
+                }
+            }
+        }
+        return $user;
+    }
     public function contractStatusText($status)
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return 'Mới tạo';
+                return __('Mới tạo');
             case UserConstants::CONTRACT_SIGNED:
                 return 'Bạn đã ký';
             case UserConstants::CONTRACT_APPROVED:

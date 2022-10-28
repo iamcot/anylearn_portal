@@ -15,7 +15,7 @@
         <div class="navbar-collapse collapse  p-2" id="navbar10">
             <ul class="navbar-nav nav-fill w-100 text-bold">
                 <li class="nav-item active">
-                    <a class="nav-link " href="/info">Giới thiệu</a>
+                    <a class="nav-link " href="/info">@lang('Giới thiệu')</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/schools">anySCHOOL</a>
@@ -27,7 +27,7 @@
                     <a class="nav-link" href="/classes">anyCOURSE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ref/anylearn">TẢI APP</a>
+                    <a class="nav-link" href="/ref/anylearn">@lang('TẢI APP')</a>
                 </li>
                 @if (@auth()->check())
                 <li class="nav-item dropdown no-arrow d-flex">
@@ -49,13 +49,45 @@
                         </a>
                     </div>
                 </li>
-
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="margin-top: -5px;"  href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (Session::get('locale') == null || Session::get('locale') == 'vi')
+                        <span class="locale_flag-vi"></span>
+                        @else
+                           <span class="locale_flag-en"></span>
+                        @endif
+                        
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                            <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Việt Nam</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                            <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
+                    </ul>
+                </li>
                 @else
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">ĐĂNG NHẬP</a>
+                    <a class="nav-link" href="/login">@lang('ĐĂNG NHẬP')</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">ĐĂNG KÝ</a>
+                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">@lang('ĐĂNG KÝ')</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="margin-top:-2px;" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (Session::get('locale') == null || Session::get('locale') == 'vi')
+                        <span class="locale_flag-vi"></span>
+                        @else
+                           <span class="locale_flag-en"></span>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                            <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Việt Nam</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                            <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
+                    </ul>
                 </li>
                 @endif
             </ul>

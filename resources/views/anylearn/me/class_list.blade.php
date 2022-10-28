@@ -1,28 +1,30 @@
-@inject('userServ','App\Services\UserServices')
-@inject('itemServ','App\Services\ItemServices')
+@inject('userServ', 'App\Services\UserServices')
+@inject('itemServ', 'App\Services\ItemServices')
 @extends('anylearn.me.layout')
 
 @section('rightFixedTop')
-<div class="col-xs-2 mr-1">
-    <a class="btn btn-success btn-sm border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus"> </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
-</div>
+    <div class="col-xs-2 mr-1">
+        <a class="btn btn-success btn-sm border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus">
+            </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
+    </div>
 @endsection
 
 @section('body')
-@if(sizeof($courseList) == 0)
-<div class="text-center mt-5 pt-5">
-    @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('me.class.create')])
-</div>
-@else
-<form class="pb-3">
-    <div class="d-flex ">
-        <div>
-            <input value="{{ app('request')->input('s') }}" type="text" class="rounded-pill form-control" name="s" placeholder="{{ __('Tìm kiếm lớp học') }}" />
+    @if (sizeof($courseList) == 0)
+        <div class="text-center mt-5 pt-5">
+            @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('me.class.create')])
         </div>
-        <div class="ms-1">
-            <button class="btn btn-success btn border-0 rounded-circle"><i class="fas fa-search"></i></button>
-        </div>
-    </div>
+    @else
+        <form class="pb-3">
+            <div class="d-flex ">
+                <div>
+                    <input value="{{ app('request')->input('s') }}" type="text" class="rounded-pill form-control"
+                        name="s" placeholder="{{ __('Tìm kiếm lớp học') }}" />
+                </div>
+                <div class="ms-1">
+                    <button class="btn btn-success btn border-0 rounded-circle"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
 
 </form>
 <div class="card shadow">
@@ -31,14 +33,14 @@
             <thead class="table-secondary text-secondary">
                 <tr class="">
                     <th class="text-center fw-normal border-0">ID</th>
-                    <th class="fw-normal border-0 text-center">KHOÁ HỌC</th>
-                    <th class="fw-normal border-0 text-center">THỜI GIAN</th>
-                    <th class="fw-normal border-0 text-center">HỌC PHÍ</th>
+                    <th class="fw-normal border-0 text-center">@lang('KHOÁ HỌC')</th>
+                    <th class="fw-normal border-0 text-center">@lang('THỜI GIAN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('HỌC PHÍ')</th>
                     <!-- <th>Quan tâm</th> -->
-                    <th class="fw-normal border-0 text-center">HỌC VIÊN</th>
-                    <th class="fw-normal border-0 text-center">LẦN SỬA CUỐI</th>
-                    <th class="fw-normal border-0 text-center">TRẠNG THÁI ANYLEARN</th>
-                    <th class="fw-normal border-0 text-center">THAO TÁC</th>
+                    <th class="fw-normal border-0 text-center">@lang('HỌC VIÊN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('LẦN SỬA CUỐI')</th>
+                    <th class="fw-normal border-0 text-center">@lang('TRẠNG THÁI ANYLEARN')</th>
+                    <th class="fw-normal border-0 text-center">@lang('THAO TÁC')</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,17 +65,16 @@
                         {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
                         <!-- {!! $itemServ->typeOperation($course) !!} -->
 
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-            </thead>
-        </table>
-        <div class="text-success me-2 float-right">{{ $courseList->links() }}</div>
-    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    </thead>
+                </table>
+                <div class="text-success me-2 float-right">{{ $courseList->links() }}</div>
+            </div>
 
-</div>
-
-@endif
+        </div>
+    @endif
 
 @endsection

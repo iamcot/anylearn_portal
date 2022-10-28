@@ -1,12 +1,13 @@
 @extends('anylearn.me.layout')
 
 @section('rightFixedTop')
-<a class="btn btn-sm btn-success border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus"></i> <span class="mobile-no-text">@lang('Thêm mới')</span></a>
+<a class="btn btn-sm btn-success border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus"></i>
+    <span class="mobile-no-text">@lang('Thêm mới')</span></a>
 @endsection
 
 @section('body')
-@if(!empty($course) && $course['info']->subtype == 'offline' && count($userLocations) == 0) 
-<p class="bg-danger p-2 text-white">Bạn chưa khởi tạo một địa chỉ cho khoá học offline, Vui lòng <a class="text-white" href="/location/create">cập nhật tại đây</a></p>
+@if (!empty($course) && $course['info']->subtype == 'offline' && count($userLocations) == 0)
+<p class="bg-danger p-2 text-white">@lang('Bạn chưa khởi tạo một địa chỉ cho khoá học offline, Vui lòng') <a class="text-white" href="/location/create">@lang('cập nhật tại đây')</a></p>
 @endif
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
     @csrf
@@ -22,7 +23,7 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Hình ảnh')</span></button>
         </li>
-        @if($isSchool)
+        @if ($isSchool)
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'teachers' ? 'active' : '' }}" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="true"><i class="fa fa-chalkboard-teacher"></i> <span class="d-none d-sm-block">@lang('Giảng viên')</span></button>
         </li>
@@ -45,7 +46,7 @@
         <div class="tab-pane fade {{ session('tab', 'info') == 'resource' ? 'show active' : '' }} p-2" id="resource" role="tabpanel" aria-labelledby="resource-tab">
             @include('class.form.resource')
         </div>
-        @if($isSchool)
+        @if ($isSchool)
         <div class="tab-pane fade {{ session('tab', 'info') == 'teachers' ? 'show active' : '' }} p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
             @include('class.form.teachers')
         </div>
@@ -65,7 +66,9 @@
 <script src="/cdn/vendor/jquery/jquery.mask.js"></script>
 <script src="/cdn/vendor/jquery/speakingurl.min.js"></script>
 <script>
-    CKEDITOR.replace('editor');
+    @foreach(App\ Models\ I18nContent::$supports as $locale)
+    CKEDITOR.replace('editor{{ $locale }}');
+    @endforeach
     $('.time').mask('00:00');
 
     function formatSlug(field, id) {
@@ -108,11 +111,17 @@
                     var month = dt.getMonth() + 1;
                     if (type == "create") {
                         html += "<tr>" +
-                            "<td><input type=\"date\" name=\"schedule[" + i + "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() + "\"/></td>" +
-                            "<td><input name=\"schedule[" + i + "][time_start]\" class=\"time form-control\" value=\"" + configStartTime + "\"/></td>" +
+                            "<td><input type=\"date\" name=\"schedule[" + i +
+                            "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (month < 10 ?
+                                "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() +
+                            "\"/></td>" +
+                            "<td><input name=\"schedule[" + i +
+                            "][time_start]\" class=\"time form-control\" value=\"" + configStartTime +
+                            "\"/></td>" +
                             "<td></td></tr>";
                     } else {
-                        $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
+                        $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (month < 10 ? "0" : "") +
+                            month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
                         if (configStartTime) {
                             $("#schedule_" + i + "_time_start").val(configStartTime);
                         }

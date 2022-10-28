@@ -18,7 +18,7 @@
                     <label for="province" class="col-md-2 col-form-label text-md-right">{{ __('Tỉnh/Thành Phố') }}</label>
                     <div class="col-md-8">
                         <select class="form-control location-tree" data-next-level="district" name="province_code" required>
-                            <option value="">--Chọn Tỉnh/Thành Phố--</option>
+                            <option value="">@lang('--Chọn Tỉnh/Thành Phố--')</option>
                             @foreach($provinces as $province)
                                 <option value="{{ $province->code }}" {{ !empty($location) && $province->code == $location->province_code ? "selected" : ""}}>{{ $province->name }}</option>
                             @endforeach
@@ -30,7 +30,7 @@
                     <div class="col-md-8">
                         <select class="form-control location-tree" id="select-district" data-next-level="ward" name="district_code" required>
                             @if(empty($districts))
-                            <option>--Vui lòng chọn Tỉnh/Thành Phố--</option>
+                            <option>@lang('--Vui lòng chọn Tỉnh/Thành Phố--')</option>
                             @else
                                 @foreach($districts as $district)
                                 <option value="{{ $district->code }}" {{ $district->code == $location->district_code ? "selected" : ""}}>{{ $district->name }}</option>
@@ -44,7 +44,7 @@
                     <div class="col-md-8">
                         <select class="form-control location-tree"  data-next-level="ward_path" id="select-ward" name="ward_code" required>
                             @if(empty($wards))
-                            <option>--Vui lòng chọn Quận/Huyện--</option>
+                            <option>@lang('--Vui lòng chọn Quận/Huyện--')</option>
                             @else
                                 @foreach($wards as $ward)
                                 <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>

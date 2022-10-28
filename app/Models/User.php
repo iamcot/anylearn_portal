@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
+use App\Models\I18nContent;
 use App\Services\FileServices;
+use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -37,7 +39,7 @@ class User extends Authenticatable
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
         'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
-        'omicall_id', 'omicall_pwd', 'contact_phone',
+        'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source',
     ];
 
     /**
@@ -73,7 +75,7 @@ class User extends Authenticatable
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['email', 'max:255'],
-            'phone' => ['required', 'min:10', 'max:10', 'unique:users', 'regex:/[0-9]{10}/'],
+            'phone' => ['required', 'min:10', 'max:10', new UniquePhone(), 'regex:/[0-9]{10}/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
@@ -132,7 +134,16 @@ class User extends Authenticatable
                 : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
         }
 
-        $newMember = $this->create($obj);
+        $exists = User::where('phone', $obj['phone'])->where('is_registered', 0)->first();
+        if ($exists) {
+            unset($obj['sale_id']);
+            $obj['is_registered'] = 1;
+            User::find($exists->id)->update($obj);
+            $newMember = User::find($exists->id);
+        } else {
+            $newMember = $this->create($obj);
+        }
+
         try {
             if ($newMember) {
                 $notifM = new Notification();
@@ -222,13 +233,11 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'refcode' => $input['refcode'],
-            // 'title' => $input['title'],
             'sex' => isset($input['sex']) ? $input['sex'] : null,
-            'introduce' => $input['introduce'],
-            'full_content' => $input['full_content'],
+            'introduce' => $input['introduce'][I18nContent::DEFAULT],
+            'full_content' => $input['full_content'][I18nContent::DEFAULT],
             'dob' => isset($input['dob']) ? $input['dob'] : null,
             'cert_id' => isset($input['cert_id']) ? $input['cert_id'] : null,
-            // 'full_content' => $input['full_content'],
             'email' => $input['email'],
             'phone' => $input['phone'],
             'role' => $input['role'],
@@ -265,6 +274,14 @@ class User extends Authenticatable
 
         $rs = $this->find($input['id'])->update($obj);
         if ($rs) {
+            $i18 = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale != I18nContent::DEFAULT) {
+                    foreach(I18nContent::$userCols as $col => $type){
+                        $i18->i18nSave($locale, 'users', $input['id'], $col, $input[$col][$locale]);
+                    }
+                }
+            }
             $fileService->deleteFiles($needDelete);
         }
         return $rs;
@@ -322,12 +339,17 @@ class User extends Authenticatable
                 return $query->where('users.sale_id', $requester->id)
                     ->orWhere('users.user_id', $requester->id);
             });
+            $members = $members
+                ->orderBy('lastsa.last_contact')
+                ->orderBy('id');
+        } else {
+            $members = $members->orderby('users.is_hot', 'desc')
+                ->orderby('users.boost_score', 'desc')
+                ->orderby('users.id', 'desc');
         }
         $members = $members
-            ->orderby('users.is_hot', 'desc')
-            ->orderby('users.boost_score', 'desc')
-            ->orderby('users.id', 'desc')
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
+            ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
             ->select(
                 'users.id',
                 'users.phone',
@@ -344,6 +366,9 @@ class User extends Authenticatable
                 'users.update_doc',
                 'users.is_hot',
                 'users.boost_score',
+                'lastsa.last_contact',
+                'users.is_registered',
+                'users.source',
             );
 
         if (!$file) {

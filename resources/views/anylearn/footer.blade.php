@@ -6,35 +6,35 @@
                 <p><img src="/cdn/anylearn/img/logo-color.svg" class="img-fluid" alt=""></p>
             </div>
             <div class="col-md-3 d-md-block d-none head_text">
-                <div class="fw-bold">THÔNG TIN HỖ TRỢ</div>
+                <div class="fw-bold">@lang('THÔNG TIN HỖ TRỢ')</div>
             </div>
             <div class="col-md-5 d-md-block d-none head_text">
-                <div class="fw-bold">TIN TỨC MỚI NHẤT</div>
+                <div class="fw-bold">@lang('TIN TỨC MỚI NHẤT')</div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <ul class="list-unstyled text-secondary">
-                    <li><i class="fas fa-briefcase text-success m-2"></i>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN</li>
+                    <li><i class="fas fa-briefcase text-success m-2"></i>@lang('CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN')</li>
                     <li><i class="fas fa-briefcase text-success m-2"></i>MSKD: 0316363793</li>
                     <li><i class="fas fa-envelope text-success m-2"></i>info@anylearn.vn</li>
                     <li><i class="fas fa-phone text-success m-2"></i><a href="tel:0374900344">+84 37 490 0344</a></li>
-                    <li><i class="fas fa-map-marker-alt text-success m-2"></i>352/28A Nguyễn Tất Thành, P.13, Q.4,<br> TP Hồ Chí Minh, Việt Nam
+                    <li><i class="fas fa-map-marker-alt text-success m-2"></i>@lang('352/28A Nguyễn Tất Thành, P.13, Q.4,<br> TP Hồ Chí Minh, Việt Nam')
                     </li>
                 </ul>
             </div>
            
             <div class="col-md-3">
-                <div class="fw-bold d-md-none d-sm-block head_text">THÔNG TIN HỖ TRỢ</div>
+                <div class="fw-bold d-md-none d-sm-block head_text">@lang('THÔNG TIN HỖ TRỢ')</div>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">Trung tâm hỗ trợ</a></p></li>
-                    <li><p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách</a></p></li>
-                    <li><p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều khoản</a></p></li>
-                    <li><p><a href="https://anylearn.vn/info" class="text-secondary text-decoration-none">Giới thiệu</a></p></li>
+                    <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">@lang('Trung tâm hỗ trợ')</a></p></li>
+                    <li><p><a href="/privacy" class="text-secondary text-decoration-none">@lang('Chính sách')</a></p></li>
+                    <li><p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">@lang('Điều khoản')</a></p></li>
+                    <li><p><a href="https://anylearn.vn/info" class="text-secondary text-decoration-none">@lang('Giới thiệu')</a></p></li>
                 </ul>
             </div>
             <div class="col-md-5">
-                <div class="fw-bold d-md-none d-sm-block head_text">TIN TỨC MỚI NHẤT</div>
+                <div class="fw-bold d-md-none d-sm-block head_text">@lang('TIN TỨC MỚI NHẤT')</div>
                 <ul class="list-unstyled text-secondary">
                     @foreach($itemServ->footerNews() as $news)
                     <li><p><a href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p></li>

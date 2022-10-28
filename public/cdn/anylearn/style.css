@@ -906,6 +906,35 @@ footer .head_text {
     /* You need to reset the height when not collapsed */
 }
 
+.locale_flag-vi {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    border-radius: 50%;
+    display: inline-block;
+    background: url("../img/flag/vn.svg");
+    background-position: center;
+}
+
+.locale_icon-vi {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    display: inline-block;
+    background: url("../img/flag/vn.svg");
+    background-position: center;
+}
+
+.locale_flag-en {
+    height: 25px;
+    width: 25px;
+    /* background-color: rgb(226, 45, 45); */
+    border-radius: 50%;
+    display: inline-block;
+    background: url("../img/flag/en.svg");
+    background-position: center;
+}
+
 .collapse-module .collapse.show:before {
     display: none;
 }
@@ -916,6 +945,44 @@ footer .head_text {
 
 .collapse-module button[aria-expanded="true"]:after {
     content: '⇳ THU GỌN';
+}
+
+
+/* collapse-module-en */
+
+.collapse-module-en .collapse,
+.collapse-module-en .collapsing {
+    height: 250px;
+    /* [NUM_OF_LINES] x [LINE_HEIGHT] */
+}
+
+.collapse-module-en .collapse {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.collapse-module-en .collapse:before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.collapse-module-en .collapse.show {
+    height: auto;
+    /* You need to reset the height when not collapsed */
+}
+
+.collapse-module-en .collapse.show:before {
+    display: none;
+}
+
+.collapse-module-en button[aria-expanded="false"]:after {
+    content: '⇳ EXTEND';
+}
+
+.collapse-module-en button[aria-expanded="true"]:after {
+    content: '⇳ COLLAPSE';
 }
 
 .imagebox:after {

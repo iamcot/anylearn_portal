@@ -5,8 +5,8 @@
 <form class="row">
     <div class="col-xs-4 mr-1">
         <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'type' ? 'selected' : '' }} value="type">Loại giao dịch (deposit, withdraw)</option>
-            <option {{ app('request')->input('t') == 'status' ? 'selected' : '' }} value="status">Trạng thái (0, 1, 99)</option>
+            <option {{ app('request')->input('t') == 'type' ? 'selected' : '' }} value="type">@lang('Loại giao dịch (deposit, withdraw)')</option>
+            <option {{ app('request')->input('t') == 'status' ? 'selected' : '' }} value="status">@lang('Trạng thái (0, 1, 99)')</option>
         </select>
     </div>
     <div class="col-xs-7 mr-1">
@@ -25,12 +25,12 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
-                    <th class="text-center">User (SDT)</th>
-                    <th class="text-center">Loại</th>
-                    <th class="text-center">Số tiền</th>
-                    <th class="text-center">Ngân hàng</th>
-                    <th class="text-center">Cập nhật</th>
-                    <th width="15%" class="text-right" scope="col">Thao tác</th>
+                    <th class="text-center">@lang('User (SDT)')</th>
+                    <th class="text-center">@lang('Loại')</th>
+                    <th class="text-center">@lang('Số tiền')</th>
+                    <th class="text-center">@lang('Ngân hàng')</th>
+                    <th class="text-center">@lang('Cập nhật')</th>
+                    <th width="15%" class="text-right" scope="col">@lang('Thao tác')</th>
                 </tr>
             </thead>
             <tbody>

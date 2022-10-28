@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                <h4>Tìm kiếm trung tâm, khoá học gần bạn</h4>
+                <h4>@lang('Tìm kiếm trung tâm, khoá học gần bạn')</h4>
                 </div>
                 <div class="modal-body">
                   
@@ -13,7 +13,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="o" id="school" value="schools" checked>
                                 <label class="form-check-label" for="school">
-                                    Trung tâm giáo dục
+                                    @lang('Trung tâm giáo dục')
                                 </label>
                             </div>
                         </div> 
@@ -30,7 +30,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <select class="form-control location-tree" data-next-level="district" name="p">
-                                    <option value="">--Chọn Tỉnh/Thành Phố--</option>
+                                    <option value="">@lang('--Chọn Tỉnh/Thành Phố--')</option>
                                     @foreach($provinces as $province)
                                     <option value="{{ $province->code }}" {{ !empty($location) && $province->code == $location->province_code ? "selected" : ""}}>{{ $province->name }}</option>
                                     @endforeach
@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <select class="form-control location-tree" id="select-district" name="d">
                                     @if(empty($wards))
-                                    <option value="">--Vui lòng chọn Quận/Huyện--</option>
+                                    <option value="">@lang('--Vui lòng chọn Quận/Huyện--')</option>
                                     @else
                                     @foreach($wards as $ward)
                                     <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>

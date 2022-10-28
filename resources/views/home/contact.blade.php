@@ -5,7 +5,7 @@
                 <div class="col-md-12 wow slideInLeft">
                     <div class="contact_form_detail  text-center">
                         <h2 class="default_section_heading text-center white_color text-green">
-                            CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN <br> <span class="text-blue">ANYLEARN JSC</span>
+                            @lang('CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN') <br> <span class="text-blue">ANYLEARN JSC</span>
                         </h2>
                         <hr class="default_divider default_divider_blue ">
                         <div class="contact_form_extra_inner clearfix center_on_mobile col-md-4">
@@ -13,7 +13,7 @@
                                 <i class="fa fa-map-marker blue_color text-center form_icon" aria-hidden="true"></i>
                             </p>
                             <p class="default_text form_text open_sans default_text_light">
-                                352/28A Nguyễn Tất Thành, P.13, Q.4, <br>TP Hồ Chí Minh, Việt Nam
+                                @lang('352/28A Nguyễn Tất Thành, P.13, Q.4, <br>TP Hồ Chí Minh, Việt Nam')
                             </p>
                         </div>
                         <div class="contact_form_extra_inner clearfix center_on_mobile col-md-4">

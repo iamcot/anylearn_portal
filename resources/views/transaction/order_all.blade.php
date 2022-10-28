@@ -7,7 +7,7 @@
         <div class="card-body row">
             <div class="col-xs-6 col-lg-4 ">
                 <div class="form-group row">
-                    <label class="col-12" for="">ID(s) <span class="small">Để trống đến ID nếu chỉ tìm 1</span></label>
+                    <label class="col-12" for="">ID(s) <span class="small">@lang('Để trống đến ID nếu chỉ tìm 1')</span></label>
                     <div class="col-lg-6 mb-1">
                         <input value="{{ app('request')->input('id_f') }}" type="text" class="form-control" name="id_f" placeholder="từ ID " />
                     </div>
@@ -19,24 +19,24 @@
             </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">Tên thành viên</label>
+                    <label for="">@lang('Tên thành viên')</label>
                     <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên thành viên" />
                 </div>
             </div>
 
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">SDT</label>
+                    <label for="">@lang('SDT')</label>
                     <input value="{{ app('request')->input('phone') }}" type="text" class="form-control" name="phone" placeholder="SDT" />
                 </div>
             </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
-                    <label for="">Trạng thái</label>
+                    <label for="">@lang('Trạng thái')</label>
                     <select class="form-control" name="status" id="">
-                        <option value="">---TẤT CẢ---</option>
-                        <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_PAY_PENDING ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_PAY_PENDING }}">Chờ thanh toán</option>
-                        <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_DELIVERED ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_DELIVERED }}">Đã thanh toán</option>
+                        <option value="">@lang('---TẤT CẢ---')</option>
+                        <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_PAY_PENDING ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_PAY_PENDING }}">@lang('Chờ thanh toán')</option>
+                        <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_DELIVERED ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_DELIVERED }}">@lang('Đã thanh toán')</option>
                     </select>
                 </div>
             </div>
@@ -55,13 +55,13 @@
             </div>
             <div class="col-xs-6 col-lg-3">
                 <div class="form-group">
-                    <label for="">Thời gian tạo từ</label>
+                    <label for="">@lang('Thời gian tạo từ')</label>
                     <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
                 </div>
             </div>
             <div class="col-xs-6 col-lg-3">
                 <div class="form-group">
-                    <label for="">Thời gian tạo đến</label>
+                    <label for="">@lang('Thời gian tạo đến')</label>
                     <input value="{{ app('request')->input('datet') }}" type="date" class="form-control" name="datet" placeholder="Thời gian tạo đến" />
                 </div>
             </div>

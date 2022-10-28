@@ -19,7 +19,7 @@
                                                 alt="...">
                                         </div>
                                     </div>
-                                    <div class="fw-bold fs-1 text-start p-5 pb-3 text-title mb-0"> Ban cố vấn & chuyên gia</div>
+                                    <div class="fw-bold fs-1 text-start p-5 pb-3 text-title mb-0"> @lang('Ban cố vấn & chuyên gia')</div>
                                     
                                     <div class="content-bcv text-start">
                                         {{-- <img src="{{ $teacher->image }}" class="d-block d-lg-none img-cus2 bcv mt-0"> --}}
@@ -27,14 +27,13 @@
                                         <h5 class="fs-2 fw-light">{{ $teacher->name }}</h5>{{ substr($teacher->introduce,0,222) }}</p>    
                                     </div>
                                     <a href="/ref/anylearn?r=teacher" style="position: absolute; left:50px; bottom:15px"
-                                            class="border rounded rounded-pill border-white btn btn-outline-success fw-bold text-white">ĐĂNG
-                                            KÝ LÀM CHUYÊN GIA <i class="fas fa-arrow-right"></i></a>
+                                            class="border rounded rounded-pill border-white btn btn-outline-success fw-bold text-white">@lang('ĐĂNG KÝ LÀM CHUYÊN GIA') <i class="fas fa-arrow-right"></i></a>
                                 </div>
                             </div>
                             <div class="col-sm-12 d-block d-lg-none">
                                 <div class="card bg-success text-white ">
                                     <div class="card-hearder booder-0 ">
-                                        <h5 class="text-center p5 fs-2 fw-bold">Ban Cố Vấn & Chuyên Gia</h5>
+                                        <h5 class="text-center p5 fs-2 fw-bold">@lang('Ban Cố Vấn & Chuyên Gia')</h5>
                                     </div>
                                     <div class="card-body booder-0 text-center ">
                                         <img src="{{ $teacher->image }}" class="img-cus2"
@@ -48,8 +47,7 @@
                                 </div>
                                 <div class="card-footer booder-0 text-center">
                                     <a href="/ref/anylearn?r=teacher"
-                                    class="btn btn-outline-success fw-bold text-success">ĐĂNG
-                                    KÝ LÀM CHUYÊN GIA <i class="fas fa-arrow-right"></i></a>
+                                    class="btn btn-outline-success fw-bold text-success">@lang('ĐĂNG KÝ LÀM CHUYÊN GIA') <i class="fas fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>

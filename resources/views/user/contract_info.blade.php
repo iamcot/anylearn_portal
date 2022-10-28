@@ -3,22 +3,22 @@
 
 @section('body')
 <p>
-    Sử dụng chính xác tên các trường thông tin kèm cặp dấu {} để đặt vào các vị trí cần đổ thông tin khi
-    <a target="_blank" href="/admin/config/guide/contract_teacher">Sửa mẫu hợp đồng Giảng viên</a>, hoặc
-    <a target="_blank" href="/admin/config/guide/contract_school">Sửa mẫu hợp đồng Trường học</a>. Ví dụ: {name}, {cert_id} ...
+    @lang('Sử dụng chính xác tên các trường thông tin kèm cặp dấu {} để đặt vào các vị trí cần đổ thông tin khi')
+    <a target="_blank" href="/admin/config/guide/contract_teacher">@lang('Sửa mẫu hợp đồng Giảng viên')</a>, @lang('hoặc')
+    <a target="_blank" href="/admin/config/guide/contract_school">@lang('Sửa mẫu hợp đồng Trường học')</a>. @lang('Ví dụ:') {name}, {cert_id} ...
 </p>
 <form method="post" class="row">
     @csrf
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header">
-                Thông tin hợp đồng
+                @lang('Thông tin hợp đồng')
             </div>
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover table-bordered">
                     <tr>
-                        <th width="40%">Trường thông tin</th>
-                        <th>Dữ liệu</th>
+                        <th width="40%">@lang('Trường thông tin')'/th>
+                        <th>@lang('Dữ liệu')</th>
                     </tr>
                     @foreach(json_decode(json_encode($contract), true) as $key => $value)
                     <tr>
@@ -36,7 +36,7 @@
     <div class="col-md-6">
         <div class="card shadow mb-4">
             <div class="card-header">
-                Các chứng chỉ
+                @lang('Các chứng chỉ')
             </div>
             <div class="card-body row">
                 @foreach($files as $file)
@@ -51,12 +51,12 @@
             </div>
             <div class="card-footer">
                 @if($contract->status == \App\Constants\UserConstants::CONTRACT_DELETED)
-                <div class="text-danger">Hợp đồng đã bị huỷ</div>
+                <div class="text-danger">@lang('Hợp đồng đã bị huỷ')</div>
                 @else
                     @if($contract->status == \App\Constants\UserConstants::CONTRACT_SIGNED)
-                    <button class="btn btn-sm btn-success float-right" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_APPROVED }}">Duyệt</button>
+                    <button class="btn btn-sm btn-success float-right" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_APPROVED }}">@lang('Duyệt')</button>
                     @endif
-                    <button class="btn btn-sm btn-danger float-right mr-1" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_DELETED }}">Từ chối</button>
+                    <button class="btn btn-sm btn-danger float-right mr-1" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_DELETED }}">@lang('Từ chối')</button>
                 @endif
             </div>
         </div>
@@ -87,7 +87,7 @@
                 <img id="cert-image" class="img-fluid w-100" src="" alt="">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary  rounded-pill border-0" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary  rounded-pill border-0" data-dismiss="modal">@lang('Đóng')</button>
             </div>
         </div>
     </div>

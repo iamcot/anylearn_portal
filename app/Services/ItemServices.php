@@ -11,6 +11,7 @@ use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
+use App\Models\I18nContent;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
@@ -22,6 +23,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -44,7 +46,19 @@ class ItemServices
             throw new Exception("Trang không tồn tại", 404);
         }
         $item = $item->makeVisible(['content']);
-        // $item->content = "<html><body>" . $item->content . "</body></html>";
+        $locale = App::getLocale();
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            $item18nData = $i18->i18nItem($item->id, $locale);
+            // dd($item18nData);
+            $supportCols = array_keys(I18nContent::$itemCols);
+            foreach ($item18nData as $col => $content) {
+                if (in_array($col, $supportCols) && $content != "") {
+                    $item->$col = $content;
+                }
+            }
+        }
+
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_DISABLE_ANYPOINT]);
         $author = User::find($item->user_id);
@@ -66,7 +80,20 @@ class ItemServices
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
-
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            foreach ($hotItems as $row) {
+                // dd($row);
+                $item18nData = $i18->i18nItem($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$itemCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
+                    }
+                }
+            }
+        }
         $numSchedule = Schedule::where('item_id', $itemId)->count();
 
         $itemUserActionM = new ItemUserAction();
@@ -80,6 +107,20 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
+            $locale = App::getLocale();
+            foreach ($categories as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nCategory($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$categoryCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
         $teachers = DB::table('users')
             ->join('class_teachers AS ct', function ($join) use ($item) {
                 $join->on('ct.user_id', '=', 'users.id')
@@ -162,10 +203,10 @@ class ItemServices
         }
 
         $requester = Auth::user();
-        if ($requester->role == UserConstants::ROLE_SALE) {
-            $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
-                ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
-        }
+        // if ($requester->role == UserConstants::ROLE_SALE) {
+        //     $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
+        //         ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
+        // }
         $courses = $courses->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->select(
@@ -179,10 +220,19 @@ class ItemServices
     }
     public function statusText($status)
     {
-        if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<span class="text-success">Đã duyệt</span>';
+        $locale = App::getLocale();
+        if ($locale == "vi") {
+            if ($status == ItemConstants::STATUS_ACTIVE) {
+                return '<span class="text-success">Đã duyệt</span>';
+            } else {
+                return '<span class="text-danger">Chờ duyệt</span>';
+            }
         } else {
-            return '<span class="text-danger">Chờ duyệt</span>';
+            if ($status == ItemConstants::STATUS_ACTIVE) {
+                return '<span class="text-success">Approved</span>';
+            } else {
+                return '<span class="text-danger">Pending</span>';
+            }
         }
     }
 
@@ -242,7 +292,25 @@ class ItemServices
         if (!$item) {
             return false;
         }
-        // $item->image = $this->itemImageUrl($item->image);
+        $i18nModel = new I18nContent();
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    $item->$col =  [I18nContent::DEFAULT => $item->$col];
+                }
+            } else {
+                $item18nData = $i18nModel->i18nItem($courseId, $locale);
+                $supportCols = array_keys(I18nContent::$itemCols);
+
+                foreach ($supportCols as $col) {
+                    if (empty($item18nData[$col])) {
+                        $item->$col = $item->$col + [$locale => ""];
+                    } else {
+                        $item->$col = $item->$col + [$locale => $item18nData[$col]];
+                    }
+                }
+            }
+        }
 
         $data['info'] = $item;
         $data['resource'] = $this->itemResources($courseId);
@@ -264,6 +332,13 @@ class ItemServices
     public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
         $user = $userApi ?? Auth::user();
+
+        $orgInputs = $input;
+
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = $input[$col][I18nContent::DEFAULT];
+        }
+
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -291,6 +366,19 @@ class ItemServices
 
         $newCourse = Item::create($input);
         if ($newCourse) {
+            $i18nModel = new I18nContent();
+
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    continue;
+                }
+                $i18nModel->i18nSave($locale, 'items', $newCourse->id, 'title', $newCourse['title']);
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    if (isset($orgInputs[$col][$locale])) {
+                        $i18nModel->i18nSave($locale, 'items', $newCourse->id, $col, $orgInputs[$col][$locale]);
+                    }
+                }
+            }
             if (!empty($input['categories'])) {
                 $this->assignCategoryToItem($newCourse->id, $input['categories']);
             }
@@ -315,6 +403,12 @@ class ItemServices
         if (!in_array($user->role, UserConstants::$modRoles) && $user->id != $itemUpdate->user_id) {
             return false;
         }
+        $orgInputs = $input;
+
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = $input[$col][I18nContent::DEFAULT];
+        }
+
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -352,6 +446,17 @@ class ItemServices
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
+            $i18nModel = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    continue;
+                }
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    if (isset($orgInputs[$col][$locale])) {
+                        $i18nModel->i18nSave($locale, 'items', $itemUpdate->id, $col, $orgInputs[$col][$locale]);
+                    }
+                }
+            }
             if (!empty($input['categories'])) {
                 $this->assignCategoryToItem($itemUpdate->id, $input['categories']);
             }
@@ -443,15 +548,15 @@ class ItemServices
                     commission_rate,
                     got_bonus,
                     date_start,
-                    time_start, 
+                    time_start,
                     nolimit_time,
                     company_commission,
                     `status`,
                     is_test,
                     item_id,
-                    user_location_id 
-                ) 
-                SELECT 
+                    user_location_id
+                )
+                SELECT
                     ?,
                     `type`,
                     subtype,
@@ -460,7 +565,7 @@ class ItemServices
                     commission_rate,
                     got_bonus,
                     ?,
-                    time_start, 
+                    time_start,
                     nolimit_time,
                     company_commission,
                     1,

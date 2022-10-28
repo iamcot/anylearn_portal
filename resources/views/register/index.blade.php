@@ -3,7 +3,7 @@
 <div class="card shadow mt-5 pb-5 mb-5 border rounded rounded-3">
     <div class="card-body">
         <div class="text-center mt-5">
-            <h1 class="primary">Chào mừng bạn đến với</h1>
+            <h1 class="primary">@lang('Chào mừng bạn đến với')</h1>
             <p><img src="/cdn/img/register/index_logo.png" class="index_logo"></p>
         </div>
         <div class="row mt-5 ml-5 mr-5 text-center index_block">

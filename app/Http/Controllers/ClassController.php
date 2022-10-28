@@ -13,11 +13,13 @@ use App\Models\ItemResource;
 use App\Models\ItemUserAction;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\I18nContent;
 use App\Models\UserLocation;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
@@ -47,7 +49,9 @@ class ClassController extends Controller
         if ($request->input('action') == 'clear') {
             return redirect()->route('class');
         }
-        $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+        $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+
+        $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
             $this->data['isSale'] = false;
             if ($user->role == UserConstants::ROLE_SALE) {
@@ -78,7 +82,8 @@ class ClassController extends Controller
             ConfigConstants::CONFIG_COMMISSION,
             ConfigConstants::CONFIG_COMMISSION_FOUNDATION
         ]);
-        $this->data['categories'] = Category::all();
+        $category = Category::all();
+        $this->data['categories'] = $category;
         $this->data['companyCommission'] = null;
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
@@ -100,7 +105,6 @@ class ClassController extends Controller
 
     public function edit(Request $request, $courseId)
     {
-        $user = Auth::user();
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();
@@ -160,7 +164,9 @@ class ClassController extends Controller
             $this->data['opening'] = $op ?? null;
             $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
         }
-        $this->data['categories'] = Category::all();
+        $category = Category::all();
+
+        $this->data['categories'] = $category;
         $itemCats = ItemCategory::where('item_id', $courseId)->get();
         $this->data['itemCategories'] = [];
         foreach ($itemCats as $cat) {
@@ -207,28 +213,91 @@ class ClassController extends Controller
 
     public function category()
     {
-        $this->data['categories'] = Category::paginate();
+        $data = Category::paginate();
+        $i18nModel = new I18nContent();
+
+        // change vi->en
+        foreach ($data as $row) {
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    foreach (I18nContent::$categoryCols as $col => $type) {
+                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
+                    }
+                } else {
+                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $row->$col = $row->$col + [$locale => ""];
+                        } else {
+                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+                }
+            }
+    }
+        $this->data['categories'] = $data;
         return view('category.index', $this->data);
     }
     public function categoryEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            $category = $request->get('title');
-            $url = Str::slug($category);
+            foreach(I18nContent::$supports as $locale){
+            $input = $request->all();
+            // dd($input);
+            $category = $input["title"];
+            // dd($category);
+            $url = Str::slug($category[$locale]);
             $catId = $request->get('id');
+            // dd($category);
             $data = [
-                'title' => $category,
+                'title' => $category[$locale],
                 'url' => $url,
             ];
-            if ($catId) {
-                Category::find($catId)->update($data);
-            } else {
-                Category::create($data);
+            $i18n = new I18nContent();
+                if ($catId) {
+                    if($locale != I18nContent::DEFAULT){
+                        $i18n->i18nSave($locale,'categories',$catId,'title',$category[$locale]);
+                        $i18n->i18nSave($locale,'categories',$catId,'url',$url);
+                    } else{
+                        Category::find($catId)->update($data);
+                    }
+                } else {
+                    if($locale == I18nContent::DEFAULT){
+                        $id = Category::create($data)->id;
+                    }else{
+                        $i18n->i18nSave($locale,'categories',$id,'title',$category[$locale]);
+                        $i18n->i18nSave($locale,'categories',$id,'url',$url);
+                    }
+                }
             }
             return redirect()->route('category')->with('notify', 'Thành công');
         }
         if ($id) {
-            $this->data['category'] = Category::find($id);
+            $data = Category::find($id);
+            $i18nModel = new I18nContent();
+
+        // change vi->en
+
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$categoryCols as $col => $type) {
+                    $data->$col = [I18nContent::DEFAULT => $data->$col];
+                }
+            } else {
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                $item18nData = $i18nModel->i18nCategory($data->id, $locale);
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $data->$col = $data->$col + [$locale => ""];
+                        } else {
+                            $data->$col = $data->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+            }
+    }
+            $this->data['category'] = $data;
         }
         return view('category.form', $this->data);
     }

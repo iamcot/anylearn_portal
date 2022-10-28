@@ -19,11 +19,11 @@
                 </div>
                 <div class="col-sm-7 pe-2">
                     <ul class="list-unstyled text-white">
-                        <li><i class="fas fa-briefcase text-success m-2"></i>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN</li>
+                        <li><i class="fas fa-briefcase text-success m-2"></i>@lang('CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN')</li>
                         <li><i class="fas fa-briefcase text-success m-2"></i>MSKD: 0316363793</li>
                         <li><i class="fas fa-envelope text-success m-2"></i>info@anylearn.vn</li>
                         <li><i class="fas fa-phone text-success m-2"></i><a class="text-white" href="tel:0374900344">+84 37 490 0344</a></li>
-                        <li><i class="fas fa-map-marker-alt text-success m-2"></i>352/28A Nguyễn Tất Thành, P.13, Q.4, TPHCM
+                        <li><i class="fas fa-map-marker-alt text-success m-2"></i>@lang('352/28A Nguyễn Tất Thành, P.13, Q.4, TPHCM')
                         </li>
                     </ul>
                 </div>
@@ -32,24 +32,24 @@
         <div class="col-sm-6 pb-5" style="background: #FAFAFA;">
             <div class="row mt-3">
                 <div class="col-sm-5 ps-5">
-                    <div class="fw-bold head_text fs-5">THÔNG TIN</div>
+                    <div class="fw-bold head_text fs-5">@lang('THÔNG TIN')</div>
                     <ul class="list-unstyled text-white">
                         <li>
-                            <p><a href="/helpcenter" class="text-secondary text-decoration-none">Trung tâm hỗ trợ</a></p>
+                            <p><a href="/helpcenter" class="text-secondary text-decoration-none">@lang('Trung tâm hỗ trợ')</a></p>
                         </li>
                         <li>
-                            <p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách</a></p>
+                            <p><a href="/privacy" class="text-secondary text-decoration-none">@lang('Chính sách')</a></p>
                         </li>
                         <li>
-                            <p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều khoản</a></p>
+                            <p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">@lang('Điều khoản')</a></p>
                         </li>
                         <li>
-                            <p><a href="https://anylearn.vn/info" class="text-secondary text-decoration-none">Giới thiệu</a></p>
+                            <p><a href="https://anylearn.vn/info" class="text-secondary text-decoration-none">@lang('Giới thiệu')</a></p>
                         </li>
                     </ul>
                 </div>
                 <div class="col-sm-7 ps-5">
-                    <div class="fw-bold head_text fs-5">TIN TỨC</div>
+                    <div class="fw-bold head_text fs-5">@lang('TIN TỨC')</div>
                     <ul class="list-unstyled text-white">
                         @foreach($itemServ->footerNews() as $news)
                         <li>

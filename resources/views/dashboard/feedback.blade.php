@@ -11,10 +11,10 @@
             <thead>
                 <thead>
                     <th class="text-center">#ID</th>
-                    <th>Thành viên</th>
-                    <th>Nội dung</th>
+                    <th>@lang('Thành viên')</th>
+                    <th>@lang('Nội dung')</th>
                     <th>Screenshot</th>
-                    <th>Thời gian</th>
+                    <th>@lang('Thời gian')</th>
                 </thead>
             <tbody>
                 @foreach($feedbacks as $feedback)
@@ -38,7 +38,7 @@
     <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title m-0 font-weight-bold text-{{ env('MAIN_COLOR', 'primary') }}">Ảnh chụp màn hình</h5>
+                <h5 class="modal-title m-0 font-weight-bold text-{{ env('MAIN_COLOR', 'primary') }}">@lang('Ảnh chụp màn hình')</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">

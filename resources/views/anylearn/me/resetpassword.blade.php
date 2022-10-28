@@ -11,7 +11,7 @@
                     <label for="name" class=" col-md-3 col-form-label text-start">{{ __('Mật Khẩu*') }}</label>
                     <div class="col-md-9">
                         <div class="input-group mb-3">
-                            <input type="password" name="password" id="password" class="@error('password') is-invalid @enderror form-control" placeholder="Nhập mật khẩu hiện tại" aria-label="Nhập mật khẩu hiện tại" aria-describedby="button-addon2" required>
+                            <input type="password" name="password" id="password" class="@error('password') is-invalid @enderror form-control" placeholder="{{ __('Nhập mật khẩu hiện tại') }}" aria-label="Nhập mật khẩu hiện tại" aria-describedby="button-addon2" required>
                             @error('password')
                             <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
@@ -27,7 +27,7 @@
                     <label for="name" class="col-md-3 col-form-label text-start">{{ __('Mật Khẩu Mới*') }}</label>
                     <div class="col-md-9">
                         <div class="input-group mb-3">
-                            <input type="password" name="newpassword" id="newpassword" class="@error('password') is-invalid @enderror form-control" placeholder="Nhập mật khẩu mới" aria-label="Nhập mật khẩu mới" aria-describedby="button-addon2" required>
+                            <input type="password" name="newpassword" id="newpassword" class="@error('password') is-invalid @enderror form-control" placeholder="{{ __('Nhập mật khẩu mới') }}" aria-label="Nhập mật khẩu mới" aria-describedby="button-addon2" required>
                             @error('password')
                             <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
@@ -39,7 +39,7 @@
                     <label for="name" class="  col-md-3 col-form-label text-start">{{ __('Xác Nhận Mật Khẩu*') }}</label>
                     <div class="col-md-9">
                         <div class="input-group mb-3">
-                            <input type="password" name="repassword" id="repassword" class="@error('password') is-invalid @enderror form-control" placeholder="Xác nhận mật khẩu" aria-label="Xác nhận mật khẩu" aria-describedby="button-addon2" required>
+                            <input type="password" name="repassword" id="repassword" class="@error('password') is-invalid @enderror form-control" placeholder="{{ __('Xác nhận mật khẩu')}}" aria-label="Xác nhận mật khẩu" aria-describedby="button-addon2" required>
                             @error('password')
                             <div class="alert alert-danger">{{ $message }}</div>
                             @enderror

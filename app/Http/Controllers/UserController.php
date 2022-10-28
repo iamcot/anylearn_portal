@@ -18,14 +18,13 @@ use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\SmsServices;
 use App\Services\UserServices;
-use App\Services\TransactionService;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
+use App\Models\I18nContent;
 use Illuminate\Support\Facades\Hash;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
@@ -90,28 +89,53 @@ class UserController extends Controller
                 $header = [];
                 while (!feof($fileHandle)) {
                     if (empty($header)) {
-                        $header = fgetcsv($fileHandle, 0, ',');
+                        $header = fgetcsv($fileHandle, 0, ';');
                     } else {
-                        $csvRaw = fgetcsv($fileHandle, 0, ',');
-                        $row = [];
+                        $csvRaw = fgetcsv($fileHandle, 0, ';');
+                        $rowcsv = [];
                         foreach ($header as $k => $col) {
-                            $row[$col] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
+                            $rowcsv[] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
                         }
-                        $rows[] = $row;
+                        $rows[] = $rowcsv;
                     }
                 }
                 fclose($fileHandle);
-
-                $count = 0;
+                // dd($header, $rows);
+                $countUpdate = 0;
+                $countCreate = 0;
                 foreach ($rows as $row) {
-                    if (!empty($row['user_id'])) {
-                        $data['user_id'] = $row['user_id'];
-                    } else if (!empty($row['sale_id'])) {
-                        $data['sale_id'] = $row['sale_id'];
+                    if (empty($row[1])) {
+                        continue;
                     }
-                    $count += User::where('phone', $row['phone'])->update($data);
+                    try {
+                        $exists = User::where('phone', $row[1])->first();
+                        if ($exists) {
+                            if (!empty($row[2])) {
+                                $data['user_id'] = $row[2];
+                            } else if (!empty($row[3])) {
+                                $data['sale_id'] = $row[3];
+                            }
+                            $countUpdate += User::where('phone', $row[1])->update($data);
+                        } else {
+                            // Log::debug($row);
+                            User::create([
+                                'name' => $row[0],
+                                'phone' => $row[1],
+                                'sale_id' => $row[3],
+                                'is_registered' => 0,
+                                'source' => isset($row[4]) ? $row[4] : '',
+                                'role' => UserConstants::ROLE_MEMBER,
+                                'password' => Hash::make($row[1]),
+                                'status' => UserConstants::STATUS_INACTIVE,
+                                'refcode' => $row[1],
+                            ]);
+                            $countCreate++;
+                        }
+                    } catch (\Exception $ex) {
+                        Log::error($ex);
+                    }
                 }
-                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $count . '/' . count($rows));
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
             }
         }
 
@@ -156,6 +180,7 @@ class UserController extends Controller
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
+        $userService = new UserServices();
         if ($request->input('save')) {
             $input = $request->all();
             $input['role'] = $editUser->role;
@@ -166,11 +191,10 @@ class UserController extends Controller
             $rs = $userM->saveMember($request, $input);
             return redirect()->route('me.dashboard')->with('notify', $rs);
         }
-        $userselect = User::all();
-        $this->data['userselect'] = $userselect;
-
+        $friends = User::where('user_id', $editUser->id)->paginate();
+        $editUser = $userService->userInfo($editUser->id);
+        $this->data['friends'] = $friends;
         $this->data['user'] = $editUser;
-        // $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
@@ -295,9 +319,9 @@ class UserController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
-        $editUser = User::find($userId);
-
         if ($request->input('moneyFix')) {
+            $editUser = User::find($userId);
+
             $result = $userService->createMoneyFix($editUser, $request->all());
             if ($result === true) {
                 return redirect()->back()->with('notify', 'Giao dịch mới đã được cập nhật.');
@@ -313,8 +337,8 @@ class UserController extends Controller
         }
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
-
-        $this->data['user'] = $editUser;
+        $userI18n = $userService->userInfo($userId);
+        $this->data['user'] = $userI18n;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
         $this->data['type'] = 'member';
@@ -567,7 +591,7 @@ class UserController extends Controller
     public function pendingOrders(Request $request)
     {
         $user = Auth::user();
-        $this->data['orders'] = DB::table('orders')
+        $data = DB::table('orders')
             ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
             ->where('orders.user_id', $user->id)
             ->select(
@@ -575,6 +599,8 @@ class UserController extends Controller
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
             )
             ->paginate();
+
+        $this->data['orders'] = $data;
         $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }

@@ -3,17 +3,17 @@
 @section('body')
 
 <div class="card mb-5 border-left-success shadow">
-    <div class="card-header"><h5 class="modal-title m-0 font-weight-bold text-success"><i class="fa fa-check-double"></i> Thanh toán thành công!</h5>
+    <div class="card-header"><h5 class="modal-title m-0 font-weight-bold text-success"><i class="fa fa-check-double"></i> @lang('Thanh toán thành công!')</h5>
 </div>
     <div class="card-body p-0">
-        <h5 class="p-3 text-primary font-weight-bold">Đơn hàng đã được thanh toán và xác nhận thành công. Bạn hãy sử dụng APP để cập nhật lịch học một cách nhanh nhất nhé.</h5>
+        <h5 class="p-3 text-primary font-weight-bold">@lang('Đơn hàng đã được thanh toán và xác nhận thành công. Bạn hãy sử dụng APP để cập nhật lịch học một cách nhanh nhất nhé.')</h5>
         <table class="table table-stripped">
             <thead>
                 <tr>
                     <th>#</th>
                     <th></th>
-                    <th width="55%">Khoá học</th>
-                    <th class="text-right">Học phí</th>
+                    <th width="55%">@lang('Khoá học')</th>
+                    <th class="text-right">@lang('Học phí')</th>
                 </tr>
                 <tbody>
                 @foreach($detail as $item)
@@ -38,7 +38,7 @@
     </div>
     <div class="card-footer">
         <div class="font-weight-bold float-right">
-            TỔNG TIỀN:
+            @lang('TỔNG TIỀN:')
             <span class="text-danger">{{ number_format($order->amount, 0, ",", ".") }}</span>
         </div>
     </div>

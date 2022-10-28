@@ -2,7 +2,7 @@
 @inject('itemServ','App\Services\ItemServices')
 <section id="promotion" class="carousel3">
     <div id="{{ $carouselId }}" class="mx-auto my-auto">
-        <h2 class="m-2 fw-bold text-uppercase">{{ $title }}</h2>
+        <h2 class="m-2 fw-bold text-uppercase">{{ __($title) }}</h2>
         <div class="owl-carousel owl-theme">
             @foreach($promotions as $promotion)
             <div class="p-1">

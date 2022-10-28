@@ -8,10 +8,10 @@
             <thead class="table-secondary text-secondary">
                 <tr>
                     <th class="text-center border-0" width="5%" scope="col">#ID</th>
-                    <th class="border-0">Khoá học</th>
-                    <th class="text-center border-0">Số tiền</th>
-                    <th class="text-center border-0">Ngày</th>
-                    <th width="15%" class="text-right border-0" scope="col">Thao tác</th>
+                    <th class="border-0">@lang('Khoá học')</th>
+                    <th class="text-center border-0">@lang('Số tiền')</th>
+                    <th class="text-center border-0">@lang('Ngày')</th>
+                    <th width="15%" class="text-right border-0" scope="col">@lang('Thao tác')</th>
                 </tr>
             </thead>
             <tbody>
