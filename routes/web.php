@@ -162,6 +162,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/item/status/{itemId}', 'CourseController@statusTouch')->name('item.status.touch');
     Route::get('/item/type/change/{itemId}/{newType}', 'CourseController@typeChange')->name('item.type.change');
 
+
     Route::get('/course', 'CourseController@list')->name('course');
     Route::any('/course/create', 'CourseController@create')->name('course.create');
     Route::middleware('access.item')->get('/course/{id}', 'CourseController@detail')->name('course.detail');
@@ -177,6 +178,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
     Route::middleware('access.item')->any('/class/{id}/del', 'ClassController@del')->name('class.del');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
+
+    Route::middleware('access.item')->any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
+
 
     Route::get('/confirm', 'Controller@developing')->name('confirm');
     Route::get('/product', 'Controller@developing')->name('product');

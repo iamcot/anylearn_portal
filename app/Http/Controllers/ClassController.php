@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Category;
 use App\Models\Configuration;
@@ -179,6 +180,27 @@ class ClassController extends Controller
             ->select('users.name', 'item_user_actions.*')
             ->get();
 
+        $this->data['students'] = DB::table('order_details')
+            // ->leftJoin('participations', 'participations.')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->where('order_details.item_id', $courseId)
+            ->select(
+                'users.name',
+                'users.id',
+                'order_details.created_at',
+                DB::raw('(SELECT count(*) FROM participations 
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
+            GROUP BY participations.item_id
+            ) AS confirm_count'),
+                DB::raw('(SELECT organizer_comment FROM participations 
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
+            and participations.organizer_comment is not null
+            LIMIT 1
+            ) AS organizer_comment')
+            )
+            ->get();
+
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
@@ -214,62 +236,39 @@ class ClassController extends Controller
     public function category()
     {
         $data = Category::paginate();
-        $i18nModel = new I18nContent();
-
-        // change vi->en
-        foreach ($data as $row) {
-        foreach (I18nContent::$supports as $locale) {
-            if ($locale == I18nContent::DEFAULT) {
-                foreach (I18nContent::$categoryCols as $col => $type) {
-                    // dd($col);
-                    $row->$col = [I18nContent::DEFAULT => $row->$col];
-                }
-            } else {
-                $i18nModel->i18Check($locale,'categories',$row->id,'title');
-                $i18nModel->i18Check($locale,'categories',$row->id,'url');
-                $item18nData = $i18nModel->i18nCategory($row->id, $locale);
-                $supportCols = array_keys(I18nContent::$categoryCols);
-                foreach ($item18nData as $col => $i18nContent) {
-                    if (in_array($col, $supportCols)) {
-                        $row->$col = $row->$col + [$locale => $i18nContent];
-                    }
-                }
-
-            }
-        }
-    }
+    
         $this->data['categories'] = $data;
         return view('category.index', $this->data);
     }
     public function categoryEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            foreach(I18nContent::$supports as $locale){
-            $input = $request->all();
-            // dd($input);
-            $category = $input["title"];
-            // dd($category);
-            $url = Str::slug($category[$locale]);
-            $catId = $request->get('id');
-            // dd($category);
-            $data = [
-                'title' => $category[$locale],
-                'url' => $url,
-            ];
-            $i18n = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                $input = $request->all();
+                // dd($input);
+                $category = $input["title"];
+                // dd($category);
+                $url = Str::slug($category[$locale]);
+                $catId = $request->get('id');
+                // dd($category);
+                $data = [
+                    'title' => $category[$locale],
+                    'url' => $url,
+                ];
+                $i18n = new I18nContent();
                 if ($catId) {
-                    if($locale != I18nContent::DEFAULT){
-                        $i18n->i18nSave($locale,'categories',$catId,'title',$category[$locale]);
-                        $i18n->i18nSave($locale,'categories',$catId,'url',$url);
-                    } else{
+                    if ($locale != I18nContent::DEFAULT) {
+                        $i18n->i18nSave($locale, 'categories', $catId, 'title', $category[$locale]);
+                        $i18n->i18nSave($locale, 'categories', $catId, 'url', $url);
+                    } else {
                         Category::find($catId)->update($data);
                     }
                 } else {
-                    if($locale == I18nContent::DEFAULT){
+                    if ($locale == I18nContent::DEFAULT) {
                         $id = Category::create($data)->id;
-                    }else{
-                        $i18n->i18nSave($locale,'categories',$id,'title',$category[$locale]);
-                        $i18n->i18nSave($locale,'categories',$id,'url',$url);
+                    } else {
+                        $i18n->i18nSave($locale, 'categories', $id, 'title', $category[$locale]);
+                        $i18n->i18nSave($locale, 'categories', $id, 'url', $url);
                     }
                 }
             }
@@ -278,28 +277,7 @@ class ClassController extends Controller
         if ($id) {
             $data = Category::find($id);
             $i18nModel = new I18nContent();
-
-        // change vi->en
-
-        foreach (I18nContent::$supports as $locale) {
-            if ($locale == I18nContent::DEFAULT) {
-                foreach (I18nContent::$categoryCols as $col => $type) {
-                    //  dd($data);
-                    $data->$col = [I18nContent::DEFAULT => $data->$col];
-                }
-            } else {
-
-                $item18nData = $i18nModel->i18nCategory($data->id, $locale);
-                $supportCols = array_keys(I18nContent::$categoryCols);
-                foreach ($item18nData as $col => $i18nContent) {
-                    if (in_array($col, $supportCols)) {
-                        $data->$col = $data->$col + [$locale => $i18nContent];
-                    }
-                }
-
-            }
-
-    }
+    
             $this->data['category'] = $data;
         }
         return view('category.form', $this->data);
@@ -329,5 +307,19 @@ class ClassController extends Controller
     public function specsLink(Request $request, $type, $objId)
     {
         return view('specs.links');
+    }
+
+    public function authorConfirmJoinCourse(Request $request, $itemId)
+    {
+        $joinUserId = $request->get('join_user');
+        $firstSchedule = Schedule::where('item_id', $itemId)->first();
+        $itemServ = new ItemServices();
+        try {
+            $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);
+        } catch (\Exception $ex) {
+            return redirect()->back()->with('notify', $ex->getMessage());
+        }
+
+        return redirect()->back()->with('notify', 'Thao tác thành công');
     }
 }

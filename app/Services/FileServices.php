@@ -225,6 +225,12 @@ class FileServices
     {
         $icon = '';
         switch ($fileExt) {
+            case 'cert':
+                $icon = '<i class="fas fa-certificate"></i>';
+                break;
+            case 'docs':
+                $icon = '<i class="fas fa-file-file"></i>';
+                break;
             case 'jpg':
             case 'png':
                 $icon = '<i class="fas fa-file-image"></i>';

@@ -36,12 +36,20 @@
         </h4>
         <hr />
         <div class="form-group">
+            <label for="resource_type" class="form-labelfont-weight-bold">{{ __('Loại') }}</label>
+            <select name="resource[type]" id="resource_type" class="form-control">
+                <option value="cert">Chứng chỉ hoàn thành</option>
+                <option value="docs">Tài liệu học tập</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="resource_title" class="form-labelfont-weight-bold">{{ __('Tiêu đề') }}</label>
             <input id="resource_title" type="text" class="form-control" name="resource[title]">
         </div>
         <div class="form-group">
-            <label for="resource_desc" class="form-label font-weight-bold">{{ __('Giới thiệu ngắn') }}</label>
+            <label for="resource_desc" class="form-label font-weight-bold">{{ __('Giới thiệu ngắn/Bố cục chứng chỉ') }}</label>
             <textarea id="resource_desc" class="form-control" name="resource[desc]"></textarea>
+            <p class="small">Nếu là chứng chỉ, sẽ là cấu trúc để điền dữ liệu.</p>
         </div>
         <input name="resource_data" type="file" id="resourceInp" />
         <p class="small">@lang('Chấp nhận các định dạng jpg, png, docx, pdf. Có thể upload nhiều lần.')</p>
