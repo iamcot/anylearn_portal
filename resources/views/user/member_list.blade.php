@@ -71,7 +71,7 @@
     @csrf
     <div class="card shadow mb-3">
         <div class="card-header">Phân khách cho sale
-        <a href="/cdn/anylearn/example_saleassign.csv" download>File mẫu</a>
+            <a href="/cdn/anylearn/example_saleassign.csv" download>File mẫu</a>
 
         </div>
         <div class="card-body">
@@ -118,11 +118,11 @@
                     <th class="text-center" scope="row">{{ $user->id }}</th>
 
                     <td class="text-right">
-                        @if(!$isSale)
                         @if($user->id != 1)
+                        @if(!$userServ->isSale())
                         {!! $userServ->statusOperation($user->id, $user->status) !!}
-                        <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
                         @endif
+                        <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
                         @endif
                         <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i> Sale</a>
                     </td>
