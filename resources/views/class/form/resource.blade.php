@@ -53,6 +53,7 @@
         </div>
         <input name="resource_data" type="file" id="resourceInp" />
         <p class="small">@lang('Chấp nhận các định dạng jpg, png, docx, pdf. Có thể upload nhiều lần.')</p>
+        <p class="small">Nếu là chứng chỉ, kích thước file yêu cầu: {{env('CERT_WIDTH')}} x {{ env('CERT_HEIGHT') }} px. Điểm bắt đầu của tên thành viên cách lề trái {{ env('CERT_X') }}px, cách đỉnh {{ env('CERT_Y') }}px</p>
 
     </div>
 </div>

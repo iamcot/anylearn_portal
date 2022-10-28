@@ -180,6 +180,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
 
     Route::middleware('access.item')->any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
+    Route::middleware('access.item')->any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
 
 
     Route::get('/confirm', 'Controller@developing')->name('confirm');
