@@ -395,7 +395,7 @@ class ClassController extends Controller
             $notifM->createNotif(NotifConstants::COURSE_CERT_SENT, $receiverId, [
                 'name' => $user->name,
                 'class' => $item->title,
-                'url' => $certUrl,
+                'cert' => $certUrl,
                 'content' => ""
             ]);
         } catch (Exception $ex) {
