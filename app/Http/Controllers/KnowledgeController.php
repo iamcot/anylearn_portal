@@ -66,7 +66,6 @@ class KnowledgeController extends Controller
                 if ($catId) {
                     if ($locale != I18nContent::DEFAULT) {
                         $i18n->i18nSave($locale, 'knowledge_categories', $catId, 'title', $category[$locale]);
-                        $i18n->i18nSave($locale, 'knowledge_categories', $catId, 'url', $url);
                     } else {
                         KnowledgeCategory::find($catId)->update($data);
                     }
@@ -75,7 +74,6 @@ class KnowledgeController extends Controller
                         $id = KnowledgeCategory::create($data)->id;
                     } else {
                         $i18n->i18nSave($locale, 'knowledge_categories', $id, 'title', $category[$locale]);
-                        $i18n->i18nSave($locale, 'knowledge_categories', $id, 'url', $url);
                     }
                 }
             }
@@ -162,7 +160,6 @@ class KnowledgeController extends Controller
                 if ($articleId) {
                     if ($locale != I18nContent::DEFAULT) {
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'title', $title[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'url', $url);
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'content', $content[$locale]);
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'content_bot', $contentBot[$locale]);
                     } else {
@@ -173,7 +170,6 @@ class KnowledgeController extends Controller
                         $id = Knowledge::create($data)->id;
                     } else {
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'title', $title[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'url', $url);
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'content', $content[$locale]);
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'content_bot', $contentBot[$locale]);
                     };
@@ -259,7 +255,6 @@ class KnowledgeController extends Controller
                 if ($catId) {
                     if ($locale != I18nContent::DEFAULT) {
                         $i18n->i18nSave($locale, 'knowledge_topics', $catId, 'title', $category[$locale]);
-                        $i18n->i18nSave($locale, 'knowledge_topics', $catId, 'url', $url);
                     } else {
                         KnowledgeTopic::find($catId)->update($data);
                     }
@@ -268,7 +263,6 @@ class KnowledgeController extends Controller
                         $id = KnowledgeTopic::create($data)->id;
                     } else {
                         $i18n->i18nSave($locale, 'knowledge_topics', $id, 'title', $category[$locale]);
-                        $i18n->i18nSave($locale, 'knowledge_topics', $id, 'url', $url);
                     }
                 }
             }
