@@ -11,7 +11,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Feedback;
-use App\models\I18nContent;
+use App\Models\I18nContent;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Schedule;

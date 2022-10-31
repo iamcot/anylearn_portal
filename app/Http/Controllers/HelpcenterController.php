@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\FileConstants;
 use App\Models\Article;
-use App\models\I18nContent;
+use App\Models\I18nContent;
 use App\Models\Knowledge;
 use App\Models\KnowledgeCategory;
 use App\Models\KnowledgeTopic;

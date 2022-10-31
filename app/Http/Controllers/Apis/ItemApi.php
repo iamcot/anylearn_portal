@@ -7,7 +7,7 @@ use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
-use App\models\I18nContent;
+use App\Models\I18nContent;
 use App\Models\Item;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
