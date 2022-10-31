@@ -169,9 +169,9 @@ class KnowledgeController extends Controller
                     if ($locale == I18nContent::DEFAULT) {
                         $id = Knowledge::create($data)->id;
                     } else {
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'title', $title[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'content', $content[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'content_bot', $contentBot[$locale]);
+                        $i18n->i18nSave($locale, 'knowledges', $id, 'title', $title[$locale]);
+                        $i18n->i18nSave($locale, 'knowledges', $id, 'content', $content[$locale]);
+                        $i18n->i18nSave($locale, 'knowledges', $id, 'content_bot', $contentBot[$locale]);
                     };
                 }
             }
