@@ -163,7 +163,7 @@ class KnowledgeController extends Controller
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'content', $content[$locale]);
                         $i18n->i18nSave($locale, 'knowledges', $articleId, 'content_bot', $contentBot[$locale]);
                     } else {
-                        Knowledge::find($catId)->update($data);
+                        Knowledge::find($articleId)->update($data);
                     }
                 } else {
                     if ($locale == I18nContent::DEFAULT) {
