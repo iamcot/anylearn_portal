@@ -408,7 +408,7 @@ class ItemServices
         $orgInputs = $input;
 
         foreach (I18nContent::$itemCols as $col => $type) {
-            $input[$col] = $input[$col][I18nContent::DEFAULT];
+            $input[$col] = isset($input[$col][I18nContent::DEFAULT]) ? $input[$col][I18nContent::DEFAULT] : "";
         }
 
         $validator = $this->validate($input);
