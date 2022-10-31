@@ -94,8 +94,8 @@ class HelpcenterController extends Controller
             $i18 = new I18nContent();
             foreach ($catsInTopic as $row) {
                 // dd($row);
-                $item18nData = $i18->i18nTopic($row->id, $locale);
-                $supportCols = array_keys(I18nContent::$knowledgetopicCols);
+                $item18nData = $i18->i18nknowledgeCategory($row->id, $locale);
+                $supportCols = array_keys(I18nContent::$knowledge_categoriesCols);
                 foreach ($item18nData as $col => $content) {
                     if (in_array($col, $supportCols) && $content != "") {
                         $row->$col = $content;
@@ -103,6 +103,7 @@ class HelpcenterController extends Controller
                 }
             }
         }
+        // dd($catsInTopic);
         $catwithKnowledge = [];
         foreach($catsInTopic as $cat) {
             $knowledges = Knowledge::where('knowledge_category_id', $cat->id)->where('status', '>', 0)
@@ -120,6 +121,7 @@ class HelpcenterController extends Controller
                     }
                 }
             }
+
             if ($knowledges) {
                 $catwithKnowledge[$cat->id] = [
                     'cat' => $cat->title,
