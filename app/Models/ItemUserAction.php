@@ -9,6 +9,7 @@ class ItemUserAction extends Model
 {
     const TYPE_FAV = 'fav';
     const TYPE_RATING = 'rating';
+    const TYPE_CERT = 'cert';
     const FAV_ADDED = 1;
     const FAV_REMOVED = 0;
 

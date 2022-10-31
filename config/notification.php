@@ -226,6 +226,12 @@ return [
         'args' => true,
         'email' => 'App\Mail\NewClassCreated',
     ],
+    NotifConstants::COURSE_CERT_SENT =>  [
+        'title' => 'Chứng chỉ hoàn thành khóa học',
+        'template' => 'Chúc mừng bạn vừa hoàn thành khóa học {class} trên anyLEARN. Chứng chỉ của bạn đã có, kiểm tra trên lịch học hoặc mail đăng ký nhé.',
+        'route' => '/account/calendar',
+        'email' => 'App\Mail\CourseCert',
+    ],
 
     NotifConstants::SYSTEM_NOTIF =>  [
         'title' => 'Thông báo từ anyLEARN',
