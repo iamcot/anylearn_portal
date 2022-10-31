@@ -405,7 +405,7 @@ class ItemServices
         }
         $orgInputs = $input;
 
-        foreach (I18nContent::$itemCols as $col => $type) {
+        foreach (I18nContent::$itemCols as $col) {
             $input[$col] = $input[$col][I18nContent::DEFAULT];
         }
 
