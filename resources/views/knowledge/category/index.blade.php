@@ -32,11 +32,12 @@
                     <th class="text-center">{{ $category->id }}</th>
                     @foreach(App\Models\I18nContent::$supports as $locale)
                     <td>{{ $category->title[$locale] }}
-                        <a href="{{ route('knowledge.category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
+
                     </td>
                     @endforeach
                     <td>{{ $category->updated_at }}</td>
                     <td>
+                        <a href="{{ route('knowledge.category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
                         <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_categories', 'id' => $category->id]) }}">
                             {{ $category->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>

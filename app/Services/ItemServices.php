@@ -407,8 +407,8 @@ class ItemServices
         }
         $orgInputs = $input;
 
-        foreach (I18nContent::$itemCols as $col) {
-            $input[$col] = $input[$col][I18nContent::DEFAULT];
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = isset($input[$col][I18nContent::DEFAULT]) ? $input[$col][I18nContent::DEFAULT] : "";
         }
 
         $validator = $this->validate($input);
@@ -727,7 +727,7 @@ class ItemServices
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
         $user = User::find($joinedUserId);
-        
+
         $schedule = Schedule::find($scheduleId);
         if (!$schedule) {
             throw new Exception("Không có lịch cho buổi học này");
@@ -808,7 +808,7 @@ class ItemServices
             }
         }
 
-        // No limit time class => just touch transaction related to approved user 
+        // No limit time class => just touch transaction related to approved user
         if ($item->nolimit_time == 1) {
             //get transaction relate order id & user & item
             $trans = DB::table('transactions')

@@ -57,6 +57,7 @@ class Controller extends BaseController
 
     public function touchStatus($table, $id)
     {
+        // dd($table);
         $rs = DB::table($table)
         ->where('id', $id)
         ->update(['status' => DB::raw('1 - status')]);
