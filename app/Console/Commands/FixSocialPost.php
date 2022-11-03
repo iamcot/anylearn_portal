@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Constants\OrderConstants;
 use App\Models\ItemUserAction;
 use App\Models\OrderDetail;
-use App\models\SocialPost;
+use App\Models\SocialPost;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
