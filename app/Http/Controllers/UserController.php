@@ -84,6 +84,7 @@ class UserController extends Controller
         }
 
         if ($request->input('action') == 'saleassign') {
+            ini_set('max_execution_time', '300');
             if ($request->hasFile('saleassign') && $request->file('saleassign')->isValid()) {
                 $csvFile = $request->file('saleassign');
 

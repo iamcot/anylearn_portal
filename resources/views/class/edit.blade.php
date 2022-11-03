@@ -3,7 +3,7 @@
 @extends('layout')
 
 @section('body')
-@if(!$userServ->isSale())
+@if(!$userServ->isSale() || @auth()->user()->role == App\Constants\UserConstants::ROLE_SALE_CONTENT)
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
     @csrf
 @endif
@@ -20,6 +20,7 @@
                 @endif
                 <a class="shadow nav-link {{ session('tab') == 'seo' ? 'active' : '' }}" id="v-pills-seo-tab" data-toggle="pill" href="#v-pills-seo" role="tab" aria-controls="v-pills-seo" aria-selected="false"><i class="fa fa-link"></i> <span class="mobile-no-text">@lang('SEO')</span></a>
                 <a class="shadow nav-link {{ session('tab') == 'rating' ? 'active' : '' }}" id="v-pills-rating-tab" data-toggle="pill" href="#v-pills-rating" role="tab" aria-controls="v-pills-rating" aria-selected="false"><i class="fa fa-star"></i> <span class="mobile-no-text">@lang('Đánh giá')</span></a>
+                <a class="shadow nav-link {{ session('tab') == 'registered' ? 'active' : '' }}" id="v-pills-registered-tab" data-toggle="pill" href="#v-pills-registered" role="tab" aria-controls="v-pills-registered" aria-selected="false"><i class="fa fa-star"></i> <span class="mobile-no-text">@lang('Học viên')</span></a>
             </div>
         </div>
         <div class="col-10 pl-0 mb-3">
@@ -43,6 +44,9 @@
                 @endif
                 <div class="tab-pane fade {{ session('tab') == 'rating' ? 'show active' : '' }}" id="v-pills-rating" role="tabpanel" aria-labelledby="v-pills-rating-tab">
                     @include('class.form.rating')
+                </div>
+                <div class="tab-pane fade {{ session('tab') == 'registered' ? 'show active' : '' }}" id="v-pills-registered" role="tabpanel" aria-labelledby="v-pills-registered-tab">
+                    @include('class.form.registered')
                 </div>
             </div>
         </div>

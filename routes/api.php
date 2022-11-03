@@ -49,6 +49,10 @@ Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
 Route::post('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
 
+Route::get('/social/profile', 'Apis\SocialController@profile');
+Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
+Route::get('/social/post/{postId}', 'Apis\SocialController@post');
+
 Route::middleware(['api.user'])->group(function () {
     Route::get('/user', 'Apis\UserApi@userInfo');
     Route::get('/user-less', 'Apis\UserApi@userInfoLess');

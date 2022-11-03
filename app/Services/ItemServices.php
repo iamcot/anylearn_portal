@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Article;
 use App\Models\ClassTeacher;
@@ -18,7 +19,9 @@ use App\Models\ItemResource;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\OrderDetail;
+use App\Models\Participation;
 use App\Models\Schedule;
+use App\Models\SocialPost;
 use App\Models\Tag;
 use App\Models\User;
 use Exception;
@@ -406,7 +409,7 @@ class ItemServices
         $orgInputs = $input;
 
         foreach (I18nContent::$itemCols as $col => $type) {
-            $input[$col] = $input[$col][I18nContent::DEFAULT];
+            $input[$col] = isset($input[$col][I18nContent::DEFAULT]) ? $input[$col][I18nContent::DEFAULT] : "";
         }
 
         $validator = $this->validate($input);
@@ -686,7 +689,7 @@ class ItemServices
             $resource = $request->get('resource');
             $db = ItemResource::create([
                 'item_id' => $courseId,
-                'type' => $file['file_ext'],
+                'type' => $resource['type'],
                 'title' => $resource['title'],
                 'desc' => $resource['desc'],
                 'data' => $file['path'],
@@ -720,5 +723,169 @@ class ItemServices
             ->orderby('date_start', 'asc')
             ->take($pageSize)->get();
         return $list;
+    }
+
+    public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
+    {
+        $user = User::find($joinedUserId);
+        
+        $schedule = Schedule::find($scheduleId);
+        if (!$schedule) {
+            throw new Exception("Không có lịch cho buổi học này");
+            // return response("Không có lịch cho buổi học này", 404);
+        }
+
+        $item = Item::find($schedule->item_id);
+        if (!$item) {
+            throw new Exception("Khóa  học không tồn tại");
+            // return response("Khóa  học không tồn tại", 404);
+        }
+        $itemId = $item->id;
+
+        $isConfirmed = Participation::where('item_id', $itemId)
+            ->where('schedule_id',  $schedule->id)
+            ->where('participant_user_id', $joinedUserId)
+            ->count();
+        if ($isConfirmed > 0) {
+            throw new Exception("Bạn đã xác nhận rồi");
+            // return response("Bạn đã xác nhận rồi", 400);
+        }
+
+        $unpaiedOrders = OrderDetail::where('item_id', $itemId)
+            ->where('user_id', $user->id)
+            ->where('status', OrderConstants::STATUS_NEW)
+            ->count();
+        if ($unpaiedOrders > 0) {
+            throw new Exception("Bạn chưa thanh toán cho khoá học này");
+
+            // return response("Bạn chưa thanh toán cho khoá học này", 400);
+        }
+
+        $rs = Participation::create([
+            'item_id' => $itemId,
+            'schedule_id' =>  $scheduleId,
+            'organizer_user_id' => $item->user_id,
+            'participant_user_id' => $joinedUserId,
+            'organizer_confirm' => 1,
+            'participant_confirm' => 1,
+        ]);
+        $author = User::find($item->user_id);
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
+            'username' => $user->name,
+            'course' => $item->title,
+        ]);
+
+        $transService = new TransactionService();
+        // approve direct and indirect commission
+        $directCommission = DB::table('transactions')
+            ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+            ->join('orders', 'orders.id', '=', 'od.order_id')
+            ->where('orders.user_id', $joinedUserId)
+            ->where('od.item_id', $item->id)
+            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+            ->where('transactions.user_id', $user->id)
+            ->select('transactions.*')
+            ->first();
+        if ($directCommission) {
+            $transService->approveWalletcTransaction($directCommission->id);
+        }
+
+        // approve up tree transaction, just 1 level
+        $refUser = User::find($user->user_id);
+        if ($refUser) {
+            $inDirectCommission = DB::table('transactions')
+                ->join('orders', 'orders.id', '=', 'transactions.order_id')
+                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+                ->where('transactions.order_id', $directCommission->order_id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.user_id', $refUser->id)
+                ->select('transactions.*')
+                ->first();
+            if ($inDirectCommission) {
+                $transService->approveWalletcTransaction($inDirectCommission->id);
+            }
+        }
+
+        SocialPost::create([
+            'type' => SocialPost::TYPE_CLASS_COMPLETE,
+            'user_id' => $user->id,
+            'ref_id' => $itemId,
+            'image' => $item->image,
+            'day' => date('Y-m-d'),
+        ]);
+
+        // No limit time class => just touch transaction related to approved user 
+        if ($item->nolimit_time == 1) {
+            //get transaction relate order id & user & item
+            $trans = DB::table('transactions')
+                ->join('order_details AS od', function ($query) use ($user) {
+                    $query->on('od.id', '=', 'transactions.order_id')
+                        ->where('od.user_id', '=', $user->id);
+                })
+                ->join('orders', 'orders.id', '=', 'od.order_id')
+                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+                ->where('orders.user_id', $joinedUserId)
+                ->where('od.item_id', $item->id)
+                ->where('transactions.user_id', $author->id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->select('transactions.*')
+                ->first();
+            // approve author transaction
+            if ($trans) {
+                $transService->approveWalletcTransaction($trans->id);
+                // approve foundation transaction
+                DB::table('transactions')
+                    ->where('transactions.order_id', $trans->order_id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                    ->update([
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                    ]);
+            }
+        } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
+            $configM = new Configuration();
+            $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
+            $totalReg = OrderDetail::where('item_id', $itemId)->count();
+            $totalConfirm = Participation::where('item_id', $itemId)->count();
+            //update author commssion when reach % of approved users
+            if ($totalConfirm / $totalReg >= $needNumConfirm) {
+                //get ALL transaction relate order id & item
+                $allTrans = DB::table('transactions')
+                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                    ->where('od.item_id', $item->id)
+                    ->where('transactions.user_id', $author->id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                    ->select('transactions.*')
+                    ->get();
+
+                // approve author transaction
+                if ($allTrans) {
+                    foreach ($allTrans as $trans) {
+                        $transService->approveWalletcTransaction($trans->id);
+                    }
+                }
+                // approve foundation transaction
+                DB::table('transactions')
+                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('od.item_id', $item->id)
+                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                    ->where('transactions.user_id', $author->id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                    ->update([
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                    ]);
+
+                Item::find($itemId)->update([
+                    'got_bonus' => 1
+                ]);
+            }
+        }
     }
 }
