@@ -150,6 +150,12 @@ class User extends Authenticatable
                 $notifM->notifNewUser($newMember->id, $newMember->name);
                 if ($newMember->user_id > 0) {
                     $notifM->notifNewFriend($newMember->user_id, $newMember->name);
+                    SocialPost::create([
+                        'type' => SocialPost::TYPE_FRIEND_NEW,
+                        'user_id' => $newMember->user_id,
+                        'ref_id' => $newMember->id,
+                        'day' => date('Y-m-d'),
+                    ]);
                 }
 
                 // if (!empty($newMember->user_id)) {
@@ -277,7 +283,7 @@ class User extends Authenticatable
             $i18 = new I18nContent();
             foreach (I18nContent::$supports as $locale) {
                 if ($locale != I18nContent::DEFAULT) {
-                    foreach(I18nContent::$userCols as $col => $type){
+                    foreach (I18nContent::$userCols as $col => $type) {
                         $i18->i18nSave($locale, 'users', $input['id'], $col, $input[$col][$locale]);
                     }
                 }

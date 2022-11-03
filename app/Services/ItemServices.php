@@ -21,6 +21,7 @@ use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Schedule;
+use App\models\SocialPost;
 use App\Models\Tag;
 use App\Models\User;
 use Exception;
@@ -807,6 +808,14 @@ class ItemServices
                 $transService->approveWalletcTransaction($inDirectCommission->id);
             }
         }
+
+        SocialPost::create([
+            'type' => SocialPost::TYPE_CLASS_COMPLETE,
+            'user_id' => $user->id,
+            'ref_id' => $itemId,
+            'image' => $item->image,
+            'day' => date('Y-m-d'),
+        ]);
 
         // No limit time class => just touch transaction related to approved user 
         if ($item->nolimit_time == 1) {

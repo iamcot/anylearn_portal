@@ -13,6 +13,7 @@ use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\models\SocialPost;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
@@ -555,16 +556,6 @@ class TransactionService
         $user->update([
             'wallet_m' => DB::raw('wallet_m + ' . $openOrder->amount)
         ]);
-        // Transaction::update([
-        //     'user_id' => $user->id,
-        //     'type' => ConfigConstants::TRANSACTION_ORDER,
-        //     'amount' => $openOrder->amount,
-        //     'pay_method' => UserConstants::WALLET_M,
-        //     'pay_info' => '',
-        //     'content' => 'Thanh toán trực tuyến',
-        //     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-        //     'order_id' => $openOrder->id
-        // ]);
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -593,6 +584,13 @@ class TransactionService
                 'username' => $author->name,
                 'course' => $item->title,
             ]);
+            SocialPost::create([
+                'type' => SocialPost::TYPE_CLASS_REGISTER,
+                'user_id' => $user->id,
+                'ref_id' => $orderItem->item_id,
+                'image' => $item->image,
+                'day' => date('Y-m-d'),
+            ]);
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
         $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
@@ -600,6 +598,7 @@ class TransactionService
             'class' => '',
             'school' => '',
         ]);
+        
         return true;
     }
 

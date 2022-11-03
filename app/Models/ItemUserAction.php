@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\models\SocialPost;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,12 @@ class ItemUserAction extends Model
             ->where('user_id', $userId)
             ->where('type', self::TYPE_FAV)->first();
         if ($exits) {
+            if ($exits->value == 1) {
+                SocialPost::where('type', SocialPost::TYPE_CLASS_FAV)
+                    ->where('user_id', $userId)
+                    ->where('ref_id', $itemId)
+                    ->delete();
+            }
             $this->where('item_id', $itemId)
                 ->where('user_id', $userId)
                 ->where('type', self::TYPE_FAV)->update([
@@ -34,6 +41,14 @@ class ItemUserAction extends Model
                 'user_id' => $userId,
                 'type' => self::TYPE_FAV,
                 'value' => self::FAV_ADDED,
+            ]);
+            $item = Item::find($itemId);
+            SocialPost::create([
+                'type' => SocialPost::TYPE_CLASS_FAV,
+                'user_id' => $userId,
+                'ref_id' => $itemId,
+                'image' => $item->image,
+                'day' => date('Y-m-d'),
             ]);
         }
 
@@ -83,6 +98,13 @@ class ItemUserAction extends Model
                     'value' => $rating,
                     'extra_value' => $comment,
                 ]);
+            SocialPost::where('type', SocialPost::TYPE_CLASS_RATING)
+                ->where('user_id', $userId)
+                ->where('ref_id', $itemId)
+                ->udpate([
+                    'content' => $rating,
+                    'day' => date('Y-m-d'),
+                ]);
         } else {
             $this->create([
                 'item_id' => $itemId,
@@ -90,6 +112,13 @@ class ItemUserAction extends Model
                 'type' => self::TYPE_RATING,
                 'value' => $rating,
                 'extra_value' => $comment,
+            ]);
+            SocialPost::create([
+                'type' => SocialPost::TYPE_CLASS_RATING,
+                'user_id' => $userId,
+                'ref_id' => $itemId,
+                'content' => $rating,
+                'day' => date('Y-m-d'),
             ]);
         }
 

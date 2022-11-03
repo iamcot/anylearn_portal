@@ -17,6 +17,7 @@ use App\Models\Schedule;
 use App\Models\User;
 use App\Models\I18nContent;
 use App\Models\Notification;
+use App\models\SocialPost;
 use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\ItemServices;
@@ -398,6 +399,20 @@ class ClassController extends Controller
                 'cert' => $certUrl,
                 'content' => ""
             ]);
+
+            $existsPost = SocialPost::where('type', SocialPost::TYPE_CLASS_CERT)
+                ->where('user_id', $receiverId)
+                ->where('ref_id', $item->id)
+                ->first();
+            if (!$existsPost) {
+                SocialPost::create([
+                    'type' => SocialPost::TYPE_CLASS_CERT,
+                    'user_id' => $user->id,
+                    'ref_id' => $item->id,
+                    'image' => $certUrl,
+                    'day' => date('Y-m-d'),
+                ]);
+            }
         } catch (Exception $ex) {
             Log::error($ex);
             return redirect()->back()->with(['tab' => 'registered', 'notify' => $ex->getMessage()]);
