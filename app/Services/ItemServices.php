@@ -21,7 +21,7 @@ use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Schedule;
-use App\models\SocialPost;
+use App\Models\SocialPost;
 use App\Models\Tag;
 use App\Models\User;
 use Exception;

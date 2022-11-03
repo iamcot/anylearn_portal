@@ -13,7 +13,7 @@ use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use App\models\SocialPost;
+use App\Models\SocialPost;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;

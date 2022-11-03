@@ -17,7 +17,7 @@ use App\Models\Schedule;
 use App\Models\User;
 use App\Models\I18nContent;
 use App\Models\Notification;
-use App\models\SocialPost;
+use App\Models\SocialPost;
 use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\ItemServices;

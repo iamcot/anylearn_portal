@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\models\SocialPost;
+use App\Models\SocialPost;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Apis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
-use App\models\SocialPost;
+use App\Models\SocialPost;
 use App\Models\User;
 
 class SocialController extends Controller
