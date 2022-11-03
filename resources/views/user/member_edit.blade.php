@@ -17,8 +17,11 @@
 @endsection
 
 @section('body')
+@if(!$userServ->isSale() || @auth()->user()->role == App\Constants\UserConstants::ROLE_SALE_CONTENT)
 <form method="POST" enctype="multipart/form-data">
     @csrf
+@endif
+
     <input type="hidden" name="id" value="{{ !empty($user) ? $user->id : null }}">
     <div class="card shadow">
         <div class="card-body">
@@ -177,7 +180,9 @@
             <button name="save" value="save" class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </div>
     </div>
+    @if(!$userServ->isSale() || @auth()->user()->role == App\Constants\UserConstants::ROLE_SALE_CONTENT)
 </form>
+@endif
 @endsection
 @include('dialog.money_fix')
 @section('jscript')

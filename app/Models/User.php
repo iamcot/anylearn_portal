@@ -249,11 +249,14 @@ class User extends Authenticatable
             'role' => $input['role'],
             'address' => isset($input['address']) ? $input['address'] : null,
             'user_id' => $input['user_id'],
-            'sale_id' => isset($input['sale_id']) ? $input['sale_id'] : null,
             'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
-
         ];
+
+        if (isset($input['sale_id'])) {
+            $obj['sale_id'] = $input['sale_id'];
+        }
+
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
