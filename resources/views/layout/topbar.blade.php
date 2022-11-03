@@ -1,3 +1,4 @@
+@inject('transServ','App\Services\TransactionService')
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-print-none">
     <!-- Sidebar Toggle (Topbar) -->
@@ -9,7 +10,7 @@
         @if($hasBack ?? false)
             @if ($hasBack === true)
             <a href="javascript:window.history.back()"><i class="fas  fa-arrow-left"></i></a>
-            @else 
+            @else
             <a href="{{ $hasBack }}"><i class="fas  fa-arrow-left"></i></a>
             @endif
         @endif
@@ -23,7 +24,7 @@
             </div>
         </li>
         <div class="topbar-divider d-none d-sm-block"></div>
-        
+
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
@@ -42,7 +43,7 @@
             </div>
 
         </li>
-        
+
     </ul>
 </nav>
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -65,3 +66,8 @@
         </div>
     </div>
 </div>
+    @if(auth()->user()->role == 'fin' && $transServ->hasPendingWithDraw())
+    <section>
+            <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Hệ thống vừa nhận được yêu cầu rút tiền mới vui lòng kiểm tra để thanh toán cho đối tác')</p>
+        </section>
+    @endif

@@ -531,7 +531,7 @@ class UserServices
     public function bankaccount($id)
     {
         # code...
-        $bank = DB::table('contracts')->where('user_id',$id)->first();
+        $bank = DB::table('contracts')->where('user_id',$id)->where('status',99)->first();
         return $bank;
     }
 }

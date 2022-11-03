@@ -25,7 +25,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
+use App\Services\TransactionService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\VarDumper\Cloner\Data;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
@@ -176,7 +179,13 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
-
+    // public function WithDraw(Request $request)
+    // {
+    //     if ($request->input('withdraw')) {
+    //         $input = $request->all();
+    //         dd($input);
+    //     }
+    // }
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -699,7 +708,21 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Chứng chỉ');
         return view(env('TEMPLATE', '') . 'me.certificate', $this->data);
     }
-
+    public function finance(Request $request)
+    {
+        if($request->input('withdraw')){
+            $user = User::find(auth()->user()->id);
+            $input = $request->all();
+            $transv = new TransactionService();
+            $anypoint = $input['anypoint'];
+            $created = $transv->withdraw($anypoint);
+            $trans = Transaction::find($created);
+            $user->wallet_c -= $anypoint;
+            $user->update();
+        return Redirect::back()->with('bignotify', 'withdraw');
+        }
+        return view(env('TEMPLATE', '') . 'me.finance', $this->data);
+    }
     public function removeCert(Request $request, $fileId)
     {
         $user = Auth::user();

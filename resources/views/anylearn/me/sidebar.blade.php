@@ -26,15 +26,15 @@
             <i class="fas fa-fw fa-scroll"></i>
             <span>@lang('Quản lý chứng chỉ')</span></a>
     </li>
-    {{-- <li class="nav-item ">
-        <a class="nav-link" href="">
+    <li class="nav-item {{ in_array($route, ['me.finance']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.finance') }}">
             <i class="fas fa-fw fa-scroll"></i>
             <span>@lang('Quản lý tài chính')</span></a>
-    </li> --}}
+    </li>
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
-        
+
     </div>
     <li class="nav-item {{ $route == 'me.dashboard' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.dashboard') }}">

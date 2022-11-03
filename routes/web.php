@@ -66,11 +66,11 @@ Route::any('/password/update', 'Auth\OTPResetPasswordController@updatePassword')
 
 Auth::routes();
 
-Route::middleware(['auth'])->prefix('me')->group(function () { 
+Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
     Route::get('/class', 'ClassController@list')->name('me.class');
     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
-   
+
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
@@ -89,6 +89,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/contract', 'UserController@contract')->name('me.contract');
     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
     Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
+    Route::any('/finance', 'UserController@finance')->name('me.finance');
     Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
 });
 
@@ -122,7 +123,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::any('/config/homeclasses', 'ConfigController@homeClasses')->name('config.homeclasses');
     Route::post('/config/guide/{type}', 'ConfigController@guideUpdate');
     Route::post('/upload/ckimage', 'FileController@ckEditorImage')->name('upload.ckimage');
-    
+
     Route::any('/config/voucher', 'ConfigController@voucher')->name('config.voucher');
     Route::any('/config/voucher/create', 'ConfigController@voucherEdit')->name('config.voucher.create');
     Route::any('/config/voucher/{id}', 'ConfigController@voucherEdit')->name('config.voucher.edit');
@@ -136,9 +137,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::any('/config/voucher-event/{id}/close', 'ConfigController@voucherEventClose')->name('config.voucherevent.close');
     Route::any('/config/tags', 'ConfigController@tagsManager')->name('config.tag');
     Route::any('/config/tags/touch/{tag}', 'ConfigController@touchTagStatus')->name('config.tag.statustouch');
-   
+
     Route::any('/user/update-doc', 'UserController@updateDoc')->name('user.update_doc');
-    
+
     Route::any('/user/mods/create', 'UserController@modCreate')->name('user.mods.create');
     Route::any('/user/mods/{userId}', 'UserController@modEdit')->name('user.mods.edit');
     Route::get('/user/mods', 'UserController@mods')->name('user.mods');
@@ -194,7 +195,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::any('/fin/expenditures', 'TransactionController@finExpenditures')->name('fin.expenditures');
     Route::any('/fin/salereport', 'TransactionController@finSaleReport')->name('fin.salereport');
-    
+
     Route::get('/article', 'ArticleController@list')->name('article');
     Route::post('/article/create', 'ArticleController@create')->name('article.create');
     Route::any('/article/{id}', 'ArticleController@edit')->name('article.edit');
