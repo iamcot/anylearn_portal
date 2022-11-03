@@ -611,7 +611,7 @@ class TransactionService
             'class' => '',
             'school' => '',
         ]);
-        
+
         return true;
     }
 
@@ -759,10 +759,7 @@ class TransactionService
             'type' => ConfigConstants::TRANSACTION_WITHDRAW,
             'amount' => ($anypoint*1000),
             'pay_method' => UserConstants::WALLET_M,
-            'pay_info' => 'Rút anyPoint từ tài khoản ' . auth()->user()->id .
-            ' Ngân Hàng: '. $bank->bank_name .
-            ' Số tài khoản: ' . $bank->bank_no .
-            ' Người hưởng thụ: '. $bank->bank_account,
+            'pay_info' => '',
             'content' => 'Rút anyPoint từ tài khoản ' . auth()->user()->id .
             ' Ngân Hàng: '. $bank->bank_name .
             ' Số tài khoản: ' . $bank->bank_no .
