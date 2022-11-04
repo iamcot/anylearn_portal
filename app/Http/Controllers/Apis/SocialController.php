@@ -22,15 +22,15 @@ class SocialController extends Controller
         if (!$user) {
             return response('Profile không tồn tại.', 400);
         }
-        $user = User::select('id', 'name', 'first_name', 'dob', 'image', 'banner', 'role', 'introduce')->find($userId);
+        $user = User::select('id', 'name', 'first_name', 'dob', 'image', 'banner', 'role', 'introduce')->find($user->id);
 
         $dbPosts = SocialPost::where('user_id', $user->id)
             ->where('status', 1)
             ->orderby('day', 'desc')
             ->paginate(self::PER_PAGE);
 
-        $dbPosts->getCollection()->transform(function ($value) use ($user) {
-            $value->title = $this->titleFromPostType($user->name, $value->type, $value->ref_id);
+        $dbPosts->getCollection()->transform(function ($value) use ($user, $userId) {
+            $value->title = $this->titleFromPostType($userId ? $user->name : __("Bạn"), $value->type, $value->ref_id);
             $value->description = "";
             $value->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $value->id)->count();
             $value->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $value->id)->count();
