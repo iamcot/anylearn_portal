@@ -19,8 +19,10 @@ class SocialPost extends Model
 
     const TYPE_FRIEND_NEW = 'friend_new';
 
+    public $timestamps = true;
+
     protected $table = 'social_posts';
     protected $fillable = [
-        'type', 'ref_id', 'user_id', 'post_id', 'content', 'image', 'status', 'day'
+        'type', 'ref_id', 'user_id', 'post_id', 'content', 'image', 'status', 'day', 'created_at'
     ];
 }

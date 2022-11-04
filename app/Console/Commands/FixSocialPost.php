@@ -56,6 +56,7 @@ class FixSocialPost extends Command
                 'ref_id' => $order->item_id,
                 'image' => $order->image,
                 'day' => date('Y-m-d', strtotime($order->updated_at)),
+                'created_at' => $order->created_at,
             ]);
             print("\nAdd " . SocialPost::TYPE_CLASS_REGISTER . " user_id:" . $order->mainUserId . ", ref_id:" . $order->item_id);
         }
@@ -64,7 +65,7 @@ class FixSocialPost extends Command
         $completes = DB::table('participations')
             ->join('items', 'items.id', '=', 'participations.item_id')
             ->groupBy('participations.item_id', 'participations.participant_user_id', 'date')
-            ->select('participations.participant_user_id', 'participations.item_id', 'items.image', DB::raw('DATE(participations.created_at) as date'))
+            ->select(DB::raw('MAX(participations.created_at) AS created_at'),'participations.participant_user_id', 'participations.item_id', 'items.image', DB::raw('DATE(participations.created_at) as date'))
             ->get();
         foreach ($completes as $complete) {
             SocialPost::updateOrCreate([
@@ -73,6 +74,7 @@ class FixSocialPost extends Command
                 'ref_id' => $complete->item_id,
                 'image' => $complete->image,
                 'day' => date('Y-m-d', strtotime($complete->date)),
+                'created_at' => $complete->created_at,
             ]);
             print("\nAdd " . SocialPost::TYPE_CLASS_COMPLETE . " user_id:" . $complete->participant_user_id . ", ref_id:" . $complete->item_id);
         }
@@ -80,7 +82,7 @@ class FixSocialPost extends Command
         // SocialPost::TYPE_CLASS_CERT & FAV & RATING
         $userActions = DB::table('item_user_actions')
             ->join('items', 'items.id', '=', 'item_user_actions.item_id')
-            ->select('item_user_actions.user_id', 'item_user_actions.type', 'item_user_actions.item_id', 'item_user_actions.value', 'items.image', 'item_user_actions.created_at')
+            ->select('item_user_actions.created_at', 'item_user_actions.user_id', 'item_user_actions.type', 'item_user_actions.item_id', 'item_user_actions.value', 'items.image', 'item_user_actions.created_at')
             ->get();
         foreach ($userActions as $action) {
             $socialType = $this->socialTypeFromUserAction($action->type);
@@ -92,6 +94,7 @@ class FixSocialPost extends Command
                     'content' => $action->type == ItemUserAction::TYPE_RATING ? $action->value : "",
                     'image' => $action->type == ItemUserAction::TYPE_CERT ? $action->value : $action->image,
                     'day' => date('Y-m-d', strtotime($action->created_at)),
+                    'created_at' => $action->created_at,
                 ]);
                 print("\nAdd " . $socialType . " user_id:" . $action->user_id . ", ref_id:" . $action->item_id);
             } else {
