@@ -14,6 +14,7 @@ class SocialPost extends Model
     const TYPE_CLASS_RATING = 'class_rating';
     
     const TYPE_ACTION_LIKE = 'action_like';
+    const TYPE_ACTION_DISLIKE = 'action_dislike';
     const TYPE_ACTION_COMMENT = 'action_comment';
     const TYPE_ACTION_SHARE = 'action_share';
 

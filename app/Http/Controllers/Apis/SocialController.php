@@ -32,7 +32,7 @@ class SocialController extends Controller
         $dbPosts->getCollection()->transform(function ($value) use ($user, $userId) {
             $value->title = $this->titleFromPostType($userId ? $user->name : __("Bạn"), $value->type, $value->ref_id);
             $value->description = "";
-            $value->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $value->id)->count();
+            $value->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)->where('post_id', $value->id)->count();
             $value->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $value->id)->count();
             $value->user = $user;
             $value->comments = [];
@@ -47,6 +47,52 @@ class SocialController extends Controller
 
     public function post(Request $request, $postId)
     {
+        $data = SocialPost::find($postId);
+        if (!$data) {
+            return response("Không có dữ liệu.", 404);
+        }
+        $user = User::select('id', 'name', 'first_name', 'dob', 'image', 'banner', 'role', 'introduce')->find($data->user_id);
+
+        $data->title = $this->titleFromPostType($user->name, $data->type, $data->ref_id);
+        $data->description = "";
+        $data->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)->where('post_id', $postId)->count();
+        $data->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $postId)->count();
+        $data->user = $user;
+        $data->comments = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $postId)->get();
+        $data->like = [];
+        return response()->json($data);
+    }
+
+    public function action(Request $request, $postId)
+    {
+        $user = $request->get('_user');
+        $actionObj = $request->all();
+        $postDB = SocialPost::find($postId);
+        if (!$postDB) {
+            return response("Post không có.", 404);
+        }
+        if (!isset($actionObj['type']) || !in_array($actionObj['type'], [SocialPost::TYPE_ACTION_LIKE, SocialPost::TYPE_ACTION_DISLIKE, SocialPost::TYPE_ACTION_COMMENT, SocialPost::TYPE_ACTION_SHARE])) {
+            return response("Action không hỗ trợ.", 400);
+        }
+        if ($actionObj['type'] == SocialPost::TYPE_ACTION_DISLIKE) {
+            SocialPost::where('post_id', $postId)
+                ->where('type', SocialPost::TYPE_ACTION_LIKE)
+                ->where('user_id', $user->id)
+                ->delete();
+            return response()->json(['result' => 1]);
+        }
+        $newAction = SocialPost::create([
+            'post_id' => $postId,
+            'ref_id' => $postId,
+            'user_id' => $user->id,
+            'type' => $actionObj['type'],
+            'content' => isset($actionObj['content']) ? $actionObj['content'] : null,
+            'day' => date('Y-m-d'),
+        ]);
+        if ($newAction) {
+            return response()->json(['result' => 1]);
+        }
+        return response("Có lỗi xảy ra, vui lòng thử lại.", 400);
     }
 
     private function titleFromPostType($userName, $action, $refId)
