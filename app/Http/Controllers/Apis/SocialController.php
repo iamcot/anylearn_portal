@@ -41,7 +41,7 @@ class SocialController extends Controller
         });
         return response()->json([
             'profile' => $user,
-            'post' => $dbPosts,
+            'posts' => $dbPosts,
         ]);
     }
 
