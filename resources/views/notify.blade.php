@@ -18,7 +18,9 @@
         </div>
     </div>
 </div>
-@elseif(!@empty($bignotify))
+
+@endif
+@if(!@empty($bignotify))
 <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form action="" method="GET">
@@ -42,10 +44,16 @@
         </form>
     </div>
 </div>
-@section
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+@section('jscript')
+@parent
 <script type="text/javascript">
-        $(window).on('load', function() {
+
+    <script src="/cdn/vendor/jquery/jquery.min.js"></script>
+    <script src="/cdn/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/cdn/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="/cdn/js/sb-admin-2.min.js"></script>
+    $(function() {
             $('#popup').modal('show');
         });
 </script>

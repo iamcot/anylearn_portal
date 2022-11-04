@@ -70,13 +70,13 @@
                             <h5 class="modal-title" id="exampleModalLabel">@lang('Rút Tiền')</button>
                         </div>
                         <div class="modal-body">
-                            <strong>@lang('Ngân hàng lựa chọn:')</strong><a
-                                id="bank">{{ $UserServices->bankaccount(auth()->user()->id)->bank_name }}</a> <br>
-                            <strong>@lang('Người hưởng thụ:')</strong><a
-                                id="Nametkselect">{{ $UserServices->bankaccount(auth()->user()->id)->bank_account }}</a><br>
-                            <strong>@lang('Số tài khoản:')</strong><a
-                                id="TKselect">{{ $UserServices->bankaccount(auth()->user()->id)->bank_no }}</a><br>
-                            <strong>@lang('Số tiền:')</strong><a id="money"></a><br>
+                            <strong>@lang('Ngân hàng lựa chọn:') </strong><a
+                                id="bank"> {{ $UserServices->bankaccount(auth()->user()->id)->bank_name }}</a> <br>
+                            <strong>@lang('Người hưởng thụ:') </strong><a
+                                id="Nametkselect"> {{ $UserServices->bankaccount(auth()->user()->id)->bank_account }}</a><br>
+                            <strong>@lang('Số tài khoản:') </strong><a
+                                id="TKselect"> {{ $UserServices->bankaccount(auth()->user()->id)->bank_no }}</a><br>
+                            <strong>@lang('Số tiền:') </strong><a id="money"></a><br>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="black()">@lang('Hủy')</button>
@@ -137,13 +137,20 @@
             </form>
         </div>
     </div>
-    @if(!empty(Session::get('bignotify')))
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-
+    @if (!empty(Session::get('bignotify')))
+    @parent
+        <!-- Bootstrap core JavaScript-->
+    <script src="/cdn/vendor/jquery/jquery.min.js"></script>
+    <script src="/cdn/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="/cdn/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="/cdn/js/sb-admin-2.min.js"></script>
         <script type="text/javascript">
-            $(window).on('load', function() {
+            $(function() {
                 $('#popup').modal('show');
             });
+
         </script>
     @endif
 
