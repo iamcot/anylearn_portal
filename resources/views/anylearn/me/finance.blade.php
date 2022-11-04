@@ -29,7 +29,7 @@
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="" method="GET">
+                <form action="" method="GET" id="myForm">
                     <div class="modal-content" id="withdraw">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">@lang('Rút Tiền')</button>
@@ -119,7 +119,7 @@
 
     <div class="modal fade text-center" id="popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form action="" method="GET">
+            <form action="" method="GET" >
                 <div class="modal-content" id="withdraw">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">@lang('Kết quả giao dịch')</button>
@@ -155,8 +155,28 @@
     @endif
 
 @endsection
+@section('jscript')
+@parent
+        <!-- Bootstrap core JavaScript-->
+ <script src="/cdn/vendor/jquery/jquery.min.js"></script>
+ <script src="/cdn/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+ <!-- Core plugin JavaScript-->
+ <script src="/cdn/vendor/jquery-easing/jquery.easing.min.js"></script>
+ <!-- Custom scripts for all pages-->
+ <script src="/cdn/js/sb-admin-2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("form").bind("keypress", function(e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+        });
+    });
+</script>
+@endsection
 
 <script type="text/javascript">
+
     function black() {
         document.getElementById("withdraw").style.display = "block";
         document.getElementById("cfwithdraw").style.display = "none";
