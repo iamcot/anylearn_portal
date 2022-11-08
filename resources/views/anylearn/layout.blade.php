@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="data-spm" content="web">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="@yield('description')">
@@ -31,7 +32,7 @@
     </script>
 </head>
 
-<body>
+<body data-spm="@yield('spmb')" >
     <script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
     <section>
         @if(empty($isApp) || !$isApp)
@@ -57,6 +58,7 @@
     <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
+    <script async src="/cdn/js/anylog.js"></script>
     @yield('jscript')
 </body>
 <style>

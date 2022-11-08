@@ -5,6 +5,9 @@
 @section('description')
 @lang('anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải quyết được vấn đề tìm trường học Quốc tế, khóa học, chuyên gia chất lượng cho con. Được thẩm định qua 4 bước chọn lọc. Khách quan, nhiều lợi ích tích điểm để tiết kiệm chi phí học tập lâu dài.')
 @endsection
+@section('spmb')
+home
+@endsection
 @section('body')
 @include('anylearn.home.banners')
 <section class="text-center">
@@ -13,7 +16,7 @@
     </h2>
     <div class="mt-3 text-center" id="search">
         <form action="/classes" method="get" id="schoolsearch">
-            <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>
+            <button class="border-0 bg-white" name="a" value="search" data-spm="web.home.search.0"><i class="fa fa-search text-success"></i></button>
             <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="@lang('Tìm khoá học...')">
         </form>
     </div>
