@@ -93,6 +93,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 
 </div>
 @endsection
+@if($dashServ != null)
 @section('jscript')
 <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
 <script>
@@ -186,3 +187,4 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     });
 </script>
 @endsection
+@endif
