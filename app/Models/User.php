@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
+use App\Models\I18nContent;
 use App\Services\FileServices;
+use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -36,7 +38,8 @@ class User extends Authenticatable
         'address', 'country', 'dob', 'update_doc', 'user_category_id', 'boost_score',
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
-        'sale_id'
+        'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
+        'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source',
     ];
 
     /**
@@ -71,14 +74,32 @@ class User extends Authenticatable
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [ 'email', 'max:255'],
-            'phone' => ['required', 'min:10', 'max:10', 'unique:users','regex:/[0-9]{10}/'],
+            'email' => ['email', 'max:255'],
+            'phone' => ['required', 'min:10', 'max:10', new UniquePhone(), 'regex:/[0-9]{10}/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
         ]);
     }
-
+    public function createChild($parent, $input)
+    {
+        $phoneByTime = $parent->phone . time();
+        $obj = [
+            'name' => isset($input['username']) ? $input['username'] : null,
+            'dob' => isset($input['dob']) ? $input['dob'] : null,
+            'phone' => $phoneByTime,
+            'refcode' => $phoneByTime,
+            'password' => Hash::make($phoneByTime),
+            'role' => UserConstants::ROLE_MEMBER,
+            'sex' => $input['sex'],
+            'user_id' => $parent->id,
+            'is_child' => 1,
+            'introduce' => $input['introduce'],
+            'status' => UserConstants::STATUS_ACTIVE,
+        ];
+        $newChild = $this->create($obj);
+        return $newChild;
+    }
     public function createNewMember($data)
     {
         $obj = [
@@ -113,15 +134,30 @@ class User extends Authenticatable
                 : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
         }
 
-        $newMember = $this->create($obj);
+        $exists = User::where('phone', $obj['phone'])->where('is_registered', 0)->first();
+        if ($exists) {
+            unset($obj['sale_id']);
+            $obj['is_registered'] = 1;
+            User::find($exists->id)->update($obj);
+            $newMember = User::find($exists->id);
+        } else {
+            $newMember = $this->create($obj);
+        }
+
         try {
             if ($newMember) {
                 $notifM = new Notification();
                 $notifM->notifNewUser($newMember->id, $newMember->name);
                 if ($newMember->user_id > 0) {
                     $notifM->notifNewFriend($newMember->user_id, $newMember->name);
+                    SocialPost::create([
+                        'type' => SocialPost::TYPE_FRIEND_NEW,
+                        'user_id' => $newMember->user_id,
+                        'ref_id' => $newMember->id,
+                        'day' => date('Y-m-d'),
+                    ]);
                 }
-    
+
                 // if (!empty($newMember->user_id)) {
                 $voucherEvent = new VoucherEventLog();
                 $voucherEvent->useEvent(VoucherEvent::TYPE_REGISTER, $newMember->id, $newMember->user_id ?? 0);
@@ -129,26 +165,33 @@ class User extends Authenticatable
             }
             $this->updateUpTree($newMember->user_id);
             $newMember->commission_rate = (float)$newMember->commission_rate;
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
         }
-        
+
         return $newMember;
     }
 
     public function createNewMod($input)
     {
+        if ($input['role'] == UserConstants::ROLE_FIN_PARTNER) {
+            $input['contact_phone'] = $input['phone'];
+            $input['phone'] = md5(now());
+        }
         $exits = $this->where('phone', $input['phone'])->first();
         if ($exits) {
-            return 0;
+            return "Trùng số điện thoại";
         }
         $obj = [
             'name' => $input['name'],
             'email' => $input['email'],
             'phone' => $input['phone'],
+            'contact_phone' => $input['contact_phone'],
+            'omicall_id' => $input['omicall_id'],
+            'omicall_pwd' => $input['omicall_pwd'],
             'refcode' => $input['phone'],
             'role' => $input['role'],
-            'password' => Hash::make($input['password']),
+            'password' => Hash::make(empty($input['password']) ? $input['phone'] : $input['password']),
             'status' => UserConstants::STATUS_ACTIVE,
         ];
         return $this->create($obj) ? 1 : 0;
@@ -162,16 +205,32 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone' => $input['phone'],
+            // 'phone' => $input['phone'],
             'role' => $input['role'],
+            'contact_phone' => $input['phone'],
+            'omicall_id' => $input['omicall_id'],
+            'omicall_pwd' => $input['omicall_pwd'],
 
         ];
+        if ($input['role'] != UserConstants::ROLE_FIN_PARTNER) {
+            $obj['phone'] = $input['phone'];
+        }
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
         return $this->find($input['id'])->update($obj);
     }
-
+    public function changePassword(Request $request, $input)
+    {
+        if (empty($input['id'])) {
+            return 0;
+        }
+        if (!empty($input)) {
+            $obj['password'] = Hash::make($input['newpassword']);
+        }
+        $rs = $this->find($input['id'])->update($obj);
+        return $rs;
+    }
     public function saveMember(Request $request, $input)
     {
         if (empty($input['id'])) {
@@ -180,18 +239,24 @@ class User extends Authenticatable
         $obj = [
             'name' => $input['name'],
             'refcode' => $input['refcode'],
-            'title' => $input['title'],
-            'introduce' => $input['introduce'],
-            'full_content' => $input['full_content'],
+            'sex' => isset($input['sex']) ? $input['sex'] : null,
+            'introduce' => $input['introduce'][I18nContent::DEFAULT],
+            'full_content' => $input['full_content'][I18nContent::DEFAULT],
+            'dob' => isset($input['dob']) ? $input['dob'] : null,
+            'cert_id' => isset($input['cert_id']) ? $input['cert_id'] : null,
             'email' => $input['email'],
             'phone' => $input['phone'],
             'role' => $input['role'],
+            'address' => isset($input['address']) ? $input['address'] : null,
             'user_id' => $input['user_id'],
-            'sale_id' => isset($input['sale_id']) ? $input['sale_id'] : null,
             'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
-
         ];
+
+        if (isset($input['sale_id'])) {
+            $obj['sale_id'] = $input['sale_id'];
+        }
+
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
@@ -218,6 +283,14 @@ class User extends Authenticatable
 
         $rs = $this->find($input['id'])->update($obj);
         if ($rs) {
+            $i18 = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale != I18nContent::DEFAULT) {
+                    foreach (I18nContent::$userCols as $col => $type) {
+                        $i18->i18nSave($locale, 'users', $input['id'], $col, $input[$col][$locale]);
+                    }
+                }
+            }
             $fileService->deleteFiles($needDelete);
         }
         return $rs;
@@ -241,7 +314,6 @@ class User extends Authenticatable
         return ($user->role == UserConstants::ROLE_TEACHER || $user->role == UserConstants::ROLE_SCHOOL)
             && $user->update_doc == UserConstants::STATUS_INACTIVE ? true : false;
     }
-
     public function searchMembers(Request $request, $file = false)
     {
         $members = DB::table('users')->whereIn('users.role', UserConstants::$memberRoles);
@@ -272,17 +344,41 @@ class User extends Authenticatable
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
-            $members = $members->where('users.sale_id', $requester->id);
+            $members = $members->where(function ($query) use ($requester) {
+                return $query->where('users.sale_id', $requester->id)
+                    ->orWhere('users.user_id', $requester->id);
+            });
+            $members = $members
+                ->orderBy('lastsa.last_contact')
+                ->orderBy('id');
+        } else {
+            $members = $members->orderby('users.is_hot', 'desc')
+                ->orderby('users.boost_score', 'desc')
+                ->orderby('users.id', 'desc');
         }
         $members = $members
-            ->orderby('users.is_hot', 'desc')
-            ->orderby('users.boost_score', 'desc')
-            ->orderby('users.id', 'desc')
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
-            ->select('users.id', 'users.phone', 'users.role', 'users.status', 'users.email',
-            'users.name', 'users.commission_rate', 'users.wallet_c', 'u2.name AS refname', 'u2.phone AS refphone',
-            'users.updated_at', 'users.update_doc', 'users.is_hot','users.boost_score',
-        );
+            ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
+            ->select(
+                'users.id',
+                'users.phone',
+                'users.role',
+                'users.address',
+                'users.status',
+                'users.email',
+                'users.name',
+                'users.commission_rate',
+                'users.wallet_c',
+                'u2.name AS refname',
+                'u2.phone AS refphone',
+                'users.updated_at',
+                'users.update_doc',
+                'users.is_hot',
+                'users.boost_score',
+                'lastsa.last_contact',
+                'users.is_registered',
+                'users.source',
+            );
 
         if (!$file) {
             $members = $members->paginate(UserConstants::PP);

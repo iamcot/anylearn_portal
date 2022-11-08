@@ -25,7 +25,7 @@
         <div class="container">
             <div class="pricing_table_section">
                 <h2 class="default_section_heading text-center ">
-                    Đăng ký và tải ứng dụng <span class="text-success">any</span><span class="text-primary">LEARN</span>
+                    @lang('Đăng ký và tải ứng dụng') <span class="text-success">any</span><span class="text-primary">LEARN</span>
                 </h2>
                 <hr class="default_divider default_divider_blue default_divider_big">
                 <div class="row">
@@ -39,7 +39,7 @@
                                         <div>
                                             Hi {{ $newUser->name }} [<form class="d-inline" action="{{ route('logout') }}" method="POST">
                                                 {{ csrf_field() }}
-                                                <a href="javascript:$('form').submit()">Đăng xuất</a>
+                                                <a href="javascript:$('form').submit()">@lang('Đăng xuất')</a>
                                             </form>]
                                         </div>
                                         @endif
@@ -57,11 +57,11 @@
                                         </div>
                                         <div class="tripi__ele-stepper">
                                             <div class="tripi__ele tripi__ele-cirle {{ isset($isReg) ? 'green': ''}}">2</div>
-                                            <div class="tripi__ele tripi__ele-title">Điền thông tin của bạn và đăng ký tài khoản</div>
+                                            <div class="tripi__ele tripi__ele-title">@lang('Điền thông tin của bạn và đăng ký tài khoản')</div>
                                         </div>
                                         <div class="tripi__ele-stepper">
                                             <div class="tripi__ele tripi__ele-cirle">3</div>
-                                            <div class="tripi__ele tripi__ele-title">Tải app anyLEARN về máy, đăng nhập lại bằng SĐT và mật khẩu của bạn
+                                            <div class="tripi__ele tripi__ele-title">@lang('Tải app anyLEARN về máy, đăng nhập lại bằng SĐT và mật khẩu của bạn')
                                             </div>
                                         </div>
                                     </div>
@@ -80,7 +80,7 @@
                         </div>
                         @else
                         <div class="row">
-                            <p>Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!</p>
+                            <p>@lang('Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!')</p>
                             <div class="col-md-6" style="padding: 30px;">
                                 <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
                                     <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">

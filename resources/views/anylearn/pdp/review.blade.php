@@ -7,7 +7,7 @@
             </div>
             <div class="pt-3 pe-3 text-end">
                 @include('anylearn.widget.rating', ['score' => $item->rating ?? 0])
-                <span class="small">{{ count($reviews) }} đánh giá</span>
+                <span class="small">{{ count($reviews) }} @lang('đánh giá')</span>
             </div>
 
         </div>

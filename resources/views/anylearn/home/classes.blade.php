@@ -2,7 +2,7 @@
 <section class="carousel4">
     <div class="mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}">
-            <h2 class="m-2 fw-bold text-uppercase">{{ $title }}</h2>
+            <h2 class="m-2 fw-bold text-uppercase">{{ __($title) }}</h2>
             <div class="owl-carousel owl-theme" >
                 @foreach($data as $class)
                 <a class="p-1 classBox" href="{{ $itemServ->classUrl($class->id) }}">
@@ -20,7 +20,7 @@
                                 <span class=" text-secondary">{{ $class->short_content }}</span>
                             </div>
                             <div class="p-2 text-center mb-2">
-                                <button class="btn btn-white rounded-pill shadow border-0 w-75 text-success fw-bold">CHI TIẾT</button>
+                                <button class="btn btn-white rounded-pill shadow border-0 w-75 text-success fw-bold">@lang('CHI TIẾT')</button>
                             </div>
                         </div>
                     </div>

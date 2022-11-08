@@ -39,28 +39,28 @@ class RootUser extends Seeder
             ]
         );
 
-        // DB::table('users')->insert(
-        //     [
-        //         'name' => 'TestSchool',
-        //         'phone' => '1900002', 
-        //         'refcode' => '1900002',
-        //         'password' => Hash::make('abc123'),
-        //         'email' => 'TestSchool@anylearn',
-        //         'role' => UserConstants::ROLE_SCHOOL,
-        //         'status' => UserConstants::STATUS_ACTIVE,
-        //     ]
-        // );
+        DB::table('users')->insert(
+            [
+                'name' => 'TestSchool',
+                'phone' => '1900002', 
+                'refcode' => '1900002',
+                'password' => Hash::make('abc123'),
+                'email' => 'TestSchool@anylearn',
+                'role' => UserConstants::ROLE_SCHOOL,
+                'status' => UserConstants::STATUS_ACTIVE,
+            ]
+        );
 
-        // DB::table('users')->insert(
-        //     [
-        //         'name' => 'TestTeacher',
-        //         'phone' => '1900003', 
-        //         'refcode' => '1900003',
-        //         'password' => Hash::make('abc123'),
-        //         'email' => 'TestSchool@anylearn',
-        //         'role' => UserConstants::ROLE_TEACHER,
-        //         'status' => UserConstants::STATUS_ACTIVE,
-        //     ]
-        // );
+        DB::table('users')->insert(
+            [
+                'name' => 'TestTeacher',
+                'phone' => '1900003', 
+                'refcode' => '1900003',
+                'password' => Hash::make('abc123'),
+                'email' => 'TestSchool@anylearn',
+                'role' => UserConstants::ROLE_TEACHER,
+                'status' => UserConstants::STATUS_ACTIVE,
+            ]
+        );
     }
 }

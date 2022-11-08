@@ -8,6 +8,7 @@ use App\Services\DashboardServices;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\I18nContent;
 
 class DashboardController extends Controller
 {
@@ -23,20 +24,38 @@ class DashboardController extends Controller
         //     $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
         // }
         $this->data['navText'] = __('Bảng thông tin');
+        $this->data['user'] = Auth::user();
         $userServ = new UserServices();
-        if ($userServ->isMod()) {
-            $dashServ = new DashboardServices();
-            $this->data['newUserChartData'] = json_encode($dashServ->userCreatedByDay());
-            $this->data['topUsers'] = $dashServ->topUser();
-            $this->data['topItems'] = $dashServ->topItem();
+        if ($userServ->isSale()) {
+            return view('dashboard.sale', $this->data);
+        } else if ($userServ->isMod()) {
             return view('dashboard.index', $this->data);
         } else {
             return view('dashboard.member', $this->data);
         }
     }
 
-    public function meDashboard() {
-        $this->data['navText'] = __('Bảng thông tin');
+    public function meDashboard(Request $request)
+    {
+        $editUser = Auth::user();
+        $userService = new UserServices();
+
+        if ($request->input('save')) {
+            $input = $request->all();
+            $input['role'] = $editUser->role;
+            $input['user_id'] = $editUser->user_id;
+            $input['boost_score'] = $editUser->boost_score;
+            $input['commission_rate'] = $editUser->commission_rate;
+            $userM = new User();
+            $rs = $userM->saveMember($request, $input);
+            return redirect()->route('me.edit')->with('notify', $rs);
+        }
+
+        $friends = User::where('user_id', $editUser->id)->paginate(20);
+        $userI18n = $userService->userInfo($editUser->id);
+        $this->data['friends'] = $friends;
+        $this->data['user'] = $userI18n;
+        $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.dashboard', $this->data);
     }
 

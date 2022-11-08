@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Constants\FileConstants;
+use App\Models\ItemUserAction;
 use DOMDocument;
+use Exception;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -225,6 +228,12 @@ class FileServices
     {
         $icon = '';
         switch ($fileExt) {
+            case 'cert':
+                $icon = '<i class="fas fa-certificate"></i>';
+                break;
+            case 'docs':
+                $icon = '<i class="fas fa-file-file"></i>';
+                break;
             case 'jpg':
             case 'png':
                 $icon = '<i class="fas fa-file-image"></i>';
@@ -254,5 +263,53 @@ class FileServices
     private function buildFullHtml($data)
     {
         return '<!DOCTYPE html><html><body>' . $data  . '</body></html>';
+    }
+
+    public function generateCert($cert, $user, $item, $disk = 's3')
+    {
+        if (!Storage::disk($disk)->exists($cert->data)) {
+            throw new Exception("Cert mẫu không tồn tại, vui lòng up lại.");
+        }
+        $ext = pathinfo($cert->data, PATHINFO_EXTENSION);
+        $tempFile = now() . '.' . $ext;
+        $fontPath = public_path('cdn/fonts/arial.ttf');
+        $storageFile = Storage::disk($disk)->get($cert->data);
+        if ($ext == 'jpg') {
+            file_put_contents($tempFile, $storageFile);
+            $certImg = imagecreatefromjpeg($tempFile);
+        } elseif ($ext == 'png') {
+            file_put_contents($tempFile, $storageFile);
+            $certImg = imagecreatefrompng($tempFile);
+        } else {
+            throw new Exception("Cert mẫu có định dạng không hỗ trợ, vui lòng up lại.");
+        }
+        $imgW = imagesx($certImg);
+        $imgH = imagesy($certImg);
+        if ($imgW != env('CERT_WIDTH') || $imgH != env('CERT_HEIGHT')) {
+            throw new Exception("Cert mẫu phải có kích thước ". env('CERT_WIDTH') ."x". env('CERT_HEIGHT')."px, vui lòng up lại.");
+        }
+        $centerX = $imgW / 2;
+        $textColor = imagecolorallocate($certImg, 0, 160, 80); //green
+        $text = $user->name;
+        $fontSize = count(explode(" ", $text)) >= 5 ? 80 : 100;
+
+        list($left, $bottom, $right, , , $top) = imageftbbox($fontSize, 0, $fontPath, $text);
+        $left_offset = ($right - $left) / 2;
+        $x = $centerX - $left_offset;
+
+        imagettftext($certImg, $fontSize, 0, $x, env('CERT_Y'), $textColor, $fontPath, $text);
+        imagejpeg($certImg, $tempFile);
+
+        $uploadedFile = Storage::disk($disk)->putFile('cert', new File($tempFile));
+        imagedestroy($certImg);
+        unlink($tempFile);
+        $newCertUrl = $this->urlFromPath('s3', $uploadedFile);
+        ItemUserAction::create([
+            'item_id' => $item->id,
+            'user_id' => $user->id,
+            'type' => ItemUserAction::TYPE_CERT,
+            'value' => $newCertUrl
+        ]);
+        return $newCertUrl;
     }
 }

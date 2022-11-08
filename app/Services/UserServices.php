@@ -3,19 +3,25 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
-use App\Constants\UserDocConstants;
+use App\Models\Ask;
 use App\Models\Configuration;
 use App\Models\Contract;
+use App\Models\Item;
+use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Participation;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\I18nContent;
 use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,18 +30,28 @@ class UserServices
 {
     private $roles = [
         UserConstants::ROLE_ADMIN => [],
-        UserConstants::ROLE_MOD => [
-        ],
+        UserConstants::ROLE_MOD => [],
         UserConstants::ROLE_SALE => [
             'class',
             'user.members',
-            'order.all'
+            // 'order.all'
         ],
         UserConstants::ROLE_CONTENT => [
             'class',
             'article',
             'config.guide',
             'helpcenter'
+        ],
+        UserConstants::ROLE_SALE_CONTENT => [
+            'class',
+            'user.members',
+            // 'order.all',
+            'class',
+            'article',
+            'config.guide',
+            'helpcenter',
+            'user.contract',
+            'user.contract.info',
         ],
         UserConstants::ROLE_FIN => [
             'fin.expenditures',
@@ -44,7 +60,11 @@ class UserServices
             'order.open',
             'order.all',
             'user.contract',
+            'user.contract.info',
             'user.members',
+            'transaction.commission',
+            'useractions',
+            'user.mods'
         ],
     ];
 
@@ -65,6 +85,12 @@ class UserServices
         return in_array($user->role, UserConstants::$modRoles);
     }
 
+    public function isSale()
+    {
+        $user = Auth::user();
+        return in_array($user->role, UserConstants::$saleRoles);
+    }
+
     public function haveAccess($role, $routeName)
     {
         if (!isset($this->roles[$role])) {
@@ -77,6 +103,7 @@ class UserServices
             }
             return true;
         }
+
         if (in_array($routeName, $grantAccess)) {
             return true;
         }
@@ -250,7 +277,7 @@ class UserServices
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return "Mới tạo";
+                return __("Mới tạo");
             case UserConstants::CONTRACT_SIGNED:
                 return "Thành viên ký";
             case UserConstants::CONTRACT_APPROVED:
@@ -335,10 +362,10 @@ class UserServices
         $result = DB::transaction(function () use ($user, $contract) {
             try {
                 Contract::where('user_id', $user->id)
-                ->where('status', '!=', UserConstants::CONTRACT_APPROVED)
-                ->update([
-                    'status' => UserConstants::CONTRACT_DELETED,
-                ]);
+                    ->where('status', '!=', UserConstants::CONTRACT_APPROVED)
+                    ->update([
+                        'status' => UserConstants::CONTRACT_DELETED,
+                    ]);
                 $newContract = Contract::create($contract);
                 if ($newContract) {
                     $dataUpdate = [
@@ -381,12 +408,38 @@ class UserServices
         });
         return $result;
     }
+    public function userInfo($uid)
+    {
+        $user = User::find($uid)->makeVisible(['content']);
+        if (!$user) {
+            return false;
+        }
+        $i18nModel = new I18nContent();
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$userCols as $col => $type) {
+                    $user->$col =  [I18nContent::DEFAULT => $user->$col];
+                }
+            } else {
+                $item18nData = $i18nModel->i18nUser($uid, $locale);
+                $supportCols = array_keys(I18nContent::$userCols);
 
+                foreach ($supportCols as $col) {
+                    if (empty($item18nData[$col])) {
+                        $user->$col = $user->$col + [$locale => ""];
+                    } else {
+                        $user->$col = $user->$col + [$locale => $item18nData[$col]];
+                    }
+                }
+            }
+        }
+        return $user;
+    }
     public function contractStatusText($status)
     {
         switch ($status) {
             case UserConstants::CONTRACT_NEW:
-                return 'Mới tạo';
+                return __('Mới tạo');
             case UserConstants::CONTRACT_SIGNED:
                 return 'Bạn đã ký';
             case UserConstants::CONTRACT_APPROVED:
@@ -412,5 +465,67 @@ class UserServices
             default:
                 return '';
         }
+    }
+
+    public function deleteAccount($phone)
+    {
+        $user = User::where('phone', $phone)->first();
+        if (!$user) {
+            throw new Exception("User không đúng");
+        }
+        //@TODO correct order detail of children
+        OrderDetail::where('user_id', $user->id)->where('status', OrderConstants::STATUS_NEW)->delete();
+        Order::where('user_id', $user->id)->where('status', OrderConstants::STATUS_NEW)->delete();
+        Transaction::where('user_id', $user->id)->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)->delete();
+        Item::where('user_id', $user->id)->update([
+            'status' => ItemConstants::STATUS_INACTIVE,
+            'user_status' => ItemConstants::STATUS_INACTIVE
+        ]);
+        ItemUserAction::where('user_id', $user->id)->delete();
+        Ask::where('user_id', $user->id)->update(['status' => 0]);
+        User::find($user->id)->update([
+            'phone' => 'DEL-' . $user->phone . '-' . now(),
+            'name' => 'DEL-' . $user->name,
+            'status' => UserConstants::STATUS_INACTIVE,
+            'email' => null,
+            'api_token' => null,
+            'notif_token' => null,
+            'refcode' => now(),
+            '3rd_token' => null,
+        ]);
+        return true;
+    }
+
+    public function orderStats($userId)
+    {
+        $data['gmv'] = DB::table('orders')
+            ->where('orders.user_id', $userId)
+            ->where('status', OrderConstants::STATUS_DELIVERED)
+            ->sum('amount');
+
+        $data['registered'] = DB::table('orders')
+            ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
+            ->where('orders.user_id', $userId)
+            ->count('od.id');
+
+        $data['complete'] = Participation::where('participant_user_id', $userId)
+            ->groupby('item_id')
+            ->count();
+
+        $data['pending'] = DB::table('orders')
+            ->where('orders.user_id', $userId)
+            ->whereIn('status', [OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_NEW])
+            ->sum('amount');
+
+        $data['anyPoint'] = Transaction::where('user_id', $userId)
+            ->where('type', ConfigConstants::TRANSACTION_EXCHANGE)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
+            ->sum('amount');
+
+        $data['voucher'] = DB::table('vouchers_used')
+            ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
+            ->where('vouchers_used.user_id', $userId)
+            ->sum('vouchers.value');
+        return $data;
     }
 }

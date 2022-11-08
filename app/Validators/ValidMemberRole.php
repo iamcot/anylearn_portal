@@ -1,5 +1,6 @@
 <?php namespace App\Validators;
 
+use App\Constants\UserConstants;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -10,7 +11,7 @@ class ValidMemberRole implements Rule
         if (empty($value)) {
             return false;
         }
-       return in_array($value, User::$memberRoles);
+       return in_array($value, UserConstants::$memberRoles);
     }
 
     public function message()

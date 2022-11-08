@@ -1,26 +1,26 @@
 @extends('anylearn.layout')
 @section('title')
-Trang booking trường học Quốc tế, học viện, chuyên gia uy tín - anyLEARN
+@lang('Trang booking trường học Quốc tế, học viện, chuyên gia uy tín - anyLEARN')
 @endsection
 @section('description')
-anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải quyết được vấn đề tìm trường học Quốc tế, khóa học, chuyên gia chất lượng cho con. Được thẩm định qua 4 bước chọn lọc. Khách quan, nhiều lợi ích tích điểm để tiết kiệm chi phí học tập lâu dài.
+@lang('anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải quyết được vấn đề tìm trường học Quốc tế, khóa học, chuyên gia chất lượng cho con. Được thẩm định qua 4 bước chọn lọc. Khách quan, nhiều lợi ích tích điểm để tiết kiệm chi phí học tập lâu dài.')
 @endsection
 @section('body')
 @include('anylearn.home.banners')
 <section class="text-center">
     <h2 class="mt-3 fw-bold text-secondary">
-        Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online
+        @lang('Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online')
     </h2>
     <div class="mt-3 text-center" id="search">
         <form action="/classes" method="get" id="schoolsearch">
             <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>
-            <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="Tìm khoá học...">
+            <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="@lang('Tìm khoá học...')">
         </form>
     </div>
     <div id="quote" class="mt-3">
         <img id="quote-top" src="/cdn/anylearn/img/quote-top.svg" class="img-fluid" alt="">
         <img src="/cdn/anylearn/img/quote.png" class="img-fluid" alt="">
-        <span class="quote-text">{{ $quote['quoteText'] }}<br>- {{ $quote['quoteAuthor'] }}</span>
+        <span class="quote-text">{{ __($quote['quoteText']) }}<br>- {{ __($quote['quoteAuthor']) }}</span>
         <img id="quote-bottom" src="/cdn/anylearn/img/quote-bottom.svg" class="img-fluid" alt="">
     </div>
 </section>
@@ -45,7 +45,7 @@ anyLEARN là nền tảng booking, tư vấn giáo dục. Giúp cha mẹ giải 
 
 
 @include('anylearn.home.articles', [
-'title' => 'HỌC VÀ HỎI',
+'title' => __('HỌC VÀ HỎI'),
 'carouselId' => 'asks',
 'data' => $articles
 ])

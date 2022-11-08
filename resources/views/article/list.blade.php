@@ -5,7 +5,7 @@
 <form class="row">
     <div class="col-xs-3 mr-1 d-none">
         <select class="form-control" name="t" id="">
-            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">Tiêu đề</option>
+            <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">@lang('Tiêu đề')</option>
         </select>
     </div>
     <div class="col-xs-6 mr-1">
@@ -34,10 +34,10 @@
                 <thead>
                     <th class="text-center">#</th>
                     <th></th>
-                    <th>Loại</th>
-                    <th>Tiêu đề</th>
-                    <th>Lần sửa cuối</th>
-                    <th>Thao tác</th>
+                    <th>@lang('Loại')</th>
+                    <th>@lang('Tiêu đề')</th>
+                    <th>@lang('Lần sửa cuối')</th>
+                    <th>@lang('Thao tác')</th>
                 </thead>
             <tbody>
                 @foreach($list as $article)

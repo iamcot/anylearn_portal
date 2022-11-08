@@ -206,11 +206,31 @@ return [
         // 'email' => 'App\Mail\OrderSuccess',
     ],
 
+    NotifConstants::COURSE_REGISTER_REJECT =>  [
+        'title' => 'Đơn hàng bạn đang ký đã bị từ chối',
+        'template' => 'Đơn hàng bạn đặt đã bị từ chối. Vui lòng thử lại hoặc liên hệ với hotline để được hỗ trợ.',
+        'route' => '',
+        // 'email' => 'App\Mail\OrderSuccess',
+    ],
+
     NotifConstants::COURSE_REGISTER_PENDING =>  [
         'title' => 'Khóa học đang chờ được thanh toán',
         'template' => 'Có một khóa học đang chờ được thanh toán, vui lòng kiểm tra email hoặc trên website để biết thêm thông tin nhé.',
         'route' => '',
         // 'email' => 'App\Mail\OrderPending',
+    ],
+    NotifConstants::COURSE_CREATED =>  [
+        'title' => 'Khóa học mới trên anyLEARN',
+        'template' => 'Đối tác {author} vừa tạo khóa học {class} trên anyLEARN với giá {price}. Xem ngay nhé.',
+        'route' => '/pdp',
+        'args' => true,
+        'email' => 'App\Mail\NewClassCreated',
+    ],
+    NotifConstants::COURSE_CERT_SENT =>  [
+        'title' => 'Chứng chỉ hoàn thành khóa học',
+        'template' => 'Chúc mừng bạn vừa hoàn thành khóa học {class} trên anyLEARN. Chứng chỉ của bạn đã có, kiểm tra trên lịch học hoặc mail đăng ký nhé.',
+        'route' => '/account/calendar',
+        'email' => 'App\Mail\CourseCert',
     ],
 
     NotifConstants::SYSTEM_NOTIF =>  [

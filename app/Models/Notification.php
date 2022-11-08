@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
+use App\Constants\UserConstants;
+use App\Services\ItemServices;
 use App\Services\SmsServices;
 use DateTime;
 use Exception;
@@ -52,10 +54,9 @@ class Notification extends Model
             if (!empty($user->email)) {
                 try {
                     Mail::to($user->email)->send(new $config['email']($data));
-                } catch(\Exception $ex) {
+                } catch (\Exception $ex) {
                     Log::error($ex);
                 }
-                
             }
         }
         if (!$user->notif_token) {
@@ -146,6 +147,23 @@ class Notification extends Model
         ]);
     }
 
+    public function notifCourseCreated($item)
+    {
+        $receivers = User::whereIn('role', [UserConstants::ROLE_SALE, UserConstants::ROLE_SALE_CONTENT])->get();
+        $itemServ = new ItemServices();
+        foreach ($receivers as $user) {
+            $this->createNotif(NotifConstants::COURSE_CREATED, $user->id, [
+                'name' => $user->name,
+                'author' => $item->author,
+                'class' => $item->title,
+                'price' => number_format($item->price, 0, ',', '.'),
+                'orgprice' => number_format($item->org_price, 0, ',', '.'),
+                'args' => $item->id,
+                'url' => $itemServ->classUrl($item->id),
+            ]);
+        }
+    }
+
     public function notifRemindConfirms($itemId)
     {
         $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
@@ -220,6 +238,17 @@ class Notification extends Model
         $itemUpdated = Item::find($itemId);
         $author = User::find($itemUpdated->user_id);
         if ($itemUpdated->status == ItemConstants::STATUS_ACTIVE) {
+            try {
+                $isExists = $this->where('type', NotifConstants::COURSE_CREATED)
+                    ->where('extra_content', $itemId)
+                    ->count();
+                if ($isExists == 0) {
+                    $itemUpdated->author = $author->name;
+                    $this->notifCourseCreated($itemUpdated);
+                }
+            } catch (Exception $ex) {
+                Log::error($ex);
+            }
             return $this->createNotif(NotifConstants::COURSE_APPROVED, $author->id, [
                 'course' => $itemUpdated->title,
             ]);

@@ -13,6 +13,7 @@ use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\SocialPost;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
@@ -522,7 +523,30 @@ class TransactionService
         }
     }
 
-    public function approveRegistrationAfterWebPayment($orderId)
+    public function rejectRegistration($orderId)
+    {
+        $openOrder = Order::find($orderId);
+        if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
+            return false;
+        }
+        // $user = User::find($openOrder->user_id);
+        $notifServ = new Notification();
+        OrderDetail::where('order_id', $openOrder->id)->update([
+            'status' => OrderConstants::STATUS_CANCER_SELLER
+        ]);
+        Order::find($openOrder->id)->update([
+            'status' => OrderConstants::STATUS_CANCER_SELLER,
+        ]);
+        Transaction::where('order_id', $openOrder->id)
+            ->update([
+                'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
+            ]);
+        Log::debug("Seller cancel transaction & orders", ["orderId" => $openOrder->id]);
+        $notifServ->createNotif(NotifConstants::COURSE_REGISTER_REJECT, $openOrder->user_id, []);
+        return true;
+    }
+
+    public function approveRegistrationAfterWebPayment($orderId, $payment = OrderConstants::PAYMENT_ONEPAY)
     {
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
@@ -532,23 +556,14 @@ class TransactionService
         $user->update([
             'wallet_m' => DB::raw('wallet_m + ' . $openOrder->amount)
         ]);
-        Transaction::create([
-            'user_id' => $user->id,
-            'type' => ConfigConstants::TRANSACTION_ORDER,
-            'amount' => $openOrder->amount,
-            'pay_method' => UserConstants::WALLET_M,
-            'pay_info' => '',
-            'content' => 'Thanh toán trực tuyến',
-            'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-            'order_id' => $openOrder->id
-        ]);
-        Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId]);
+        Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
             'status' => OrderConstants::STATUS_DELIVERED
         ]);
         Order::find($openOrder->id)->update([
-            'status' => OrderConstants::STATUS_DELIVERED
+            'status' => OrderConstants::STATUS_DELIVERED,
+            'payment' => $payment
         ]);
 
         Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
@@ -569,6 +584,13 @@ class TransactionService
                 'username' => $author->name,
                 'course' => $item->title,
             ]);
+            SocialPost::create([
+                'type' => SocialPost::TYPE_CLASS_REGISTER,
+                'user_id' => $user->id,
+                'ref_id' => $orderItem->item_id,
+                'image' => $item->image,
+                'day' => date('Y-m-d'),
+            ]);
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
         $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
@@ -576,6 +598,7 @@ class TransactionService
             'class' => '',
             'school' => '',
         ]);
+        
         return true;
     }
 
@@ -589,7 +612,8 @@ class TransactionService
             'status' => OrderConstants::STATUS_PAY_PENDING
         ]);
         Order::find($openOrder->id)->update([
-            'status' => OrderConstants::STATUS_PAY_PENDING
+            'status' => OrderConstants::STATUS_PAY_PENDING,
+            'payment' => OrderConstants::PAYMENT_ATM,
         ]);
         Log::debug("Update order to pending", ["orderId" => $openOrder->id]);
         $notifServ = new Notification();
@@ -609,7 +633,7 @@ class TransactionService
         $value = DB::table('order_details')
             ->where('order_details.created_at', '>', $from)
             ->where('order_details.created_at', '<', $to)
-            ->whereIn('order_details.status', [OrderConstants::STATUS_NEW, OrderConstants::STATUS_PAY_PENDING, OrderConstants::STATUS_DELIVERED]);
+            ->whereIn('order_details.status', [OrderConstants::STATUS_DELIVERED]);
         if ($partner) {
             $value = $value->join('items', 'items.id', '=', 'order_details.item_id')
                 ->where('items.user_id', $partner);
@@ -628,7 +652,7 @@ class TransactionService
             ->where('transactions.created_at', '<', $to)
             ->where('transactions.type', 'commission')
             ->where('transactions.content', 'like', '%bán khóa học%')
-            ->where('transactions.status', '<', 99);
+            ->where('transactions.status', '=', ConfigConstants::TRANSACTION_STATUS_DONE);
         if ($partner) {
             $sellerComm = $sellerComm
                 ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
@@ -649,7 +673,7 @@ class TransactionService
             ->where('transactions.created_at', '<', $to)
             ->where('transactions.type', 'commission')
             ->where('transactions.content', 'not like', '%bán khóa học%')
-            ->where('transactions.status', '<', 99);
+            ->where('transactions.status', '=', ConfigConstants::TRANSACTION_STATUS_DONE);
         if ($partner) {
             $otherCommission = $otherCommission
                 ->join('order_details', 'order_details.id', '=', 'transactions.order_id')
@@ -701,5 +725,16 @@ class TransactionService
         $pointForOrder = $orderAmount / $rate;
         $pointForOrder = $pointForOrder > 1 ? $pointForOrder : 1;
         return ceil($wallet > $pointForOrder ? $pointForOrder : $wallet);
+    }
+
+    public function colorStatus($status)
+    {
+        if ($status == OrderConstants::STATUS_PAY_PENDING) {
+            return 'warning';
+        }
+        if ($status == OrderConstants::STATUS_DELIVERED) {
+            return 'success';
+        }
+        return 'secondary';
     }
 }

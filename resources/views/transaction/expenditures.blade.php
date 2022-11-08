@@ -2,7 +2,7 @@
 @extends('layout')
 @section('rightFixedTop')
 <form>
-    <a href="#" class="btn btn-success btn-sm finExpendClick" data-expend-id="">Thêm</a>
+    <a href="#" class="btn btn-success btn-sm finExpendClick" data-expend-id="">@lang('Thêm')</a>
 </form>
 @endsection
 @section('body')
@@ -13,11 +13,12 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="10%" scope="col">#ID</th>
-                    <th class="text-center">User (SDT)</th>
-                    <th class="text-center">Loại</th>
-                    <th class="text-center">Số tiền</th>
-                    <th class="text-center">Nội dung</th>
-                    <th class="text-center">Ngày</th>
+                    <th class="text-center">@lang('User (SDT)')</th>
+                    <th class="text-center">@lang('Loại')</th>
+                    <th class="text-center">@lang('Số tiền')</th>
+                    <th class="text-center">@lang('Nội dung')</th>
+                    <th class="text-center">@lang('Ngày')</th>
+                    <th class="text-center">@lang('Ghi Chú')</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,13 +27,13 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}
                         <a href="#" class="finExpendClick" data-expend-id="{{ $row->id }}" data-title="{{ $row->content }}" data-date="{{ $row->created_at }}" data-ref_user_id="{{ $row->ref_user_id }}" data-amount="{{ $row->amount }}" data-type="{{ $row->type }}" data-pay_method="{{ $row->pay_method }}" data-comment="{{ $row->pay_info }}"><i class="fa fa-edit"></i></a>
-
                     </th>
-                    <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
+                    <td class="text-center" scope="row">@if(!empty($row->refUser)) {{ $row->refUser->name }} ({{ $row->refUser->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->content }}</td>
                     <td class="text-center">{{ date('d/m/y', strtotime($row->created_at)) }}</td>
+                    <td>{{ $row->pay_info }}</td>
                 </tr>
                 @endforeach
                 @endif

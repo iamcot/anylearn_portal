@@ -18,7 +18,7 @@ Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
 
-Route::get('/', 'PageController@home');
+Route::get('/', 'PageController@home')->name('home');
 Route::get('/info', 'PageController@landing');
 Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
@@ -77,6 +77,13 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 
     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
     Route::any('/orders', 'UserController@orders')->name('me.orders');
+    Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
+    Route::any('/ischild', 'UserController@meChild')->name('me.child');
+    Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    Route::any('/history', 'UserController@meHistory')->name('me.history');
+
+
+
     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
     Route::any('/notification', 'UserController@notification')->name('me.notification');
     Route::any('/contract', 'UserController@contract')->name('me.contract');
@@ -136,10 +143,17 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/user/mods/{userId}', 'UserController@modEdit')->name('user.mods.edit');
     Route::get('/user/mods', 'UserController@mods')->name('user.mods');
 
-    Route::get('/user/members', 'UserController@members')->name('user.members');
+    Route::any('/user/members', 'UserController@members')->name('user.members');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
     Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
+
+    Route::any('/crm/sale/{userId}', 'CrmController@memberSale')->name('crm.sale');
+    Route::any('/crm/save-note', 'CrmController@saveNote')->name('crm.save-note');
+    Route::any('/crm/save-call', 'CrmController@saveCall')->name('crm.save-call');
+    Route::any('/crm/save-chat', 'CrmController@saveChat')->name('crm.save-chat');
+    Route::any('/crm/activity-del/{id}', 'CrmController@delActivity')->name('crm.activity.del');
+    Route::get('/crm/activity/{id}', 'CrmController@viewActivityContent')->name('crm.activity');
 
     Route::any('/user/no-profile', 'UserController@userNoProfile')->name('user.noprofile');
     Route::any('/user/remind-profile/{userId}', 'UserController@remindProfile')->name('user.noprofile.remind');
@@ -147,6 +161,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/user/status/{userId}', 'UserController@statusTouch')->name('user.status.touch');
     Route::get('/item/status/{itemId}', 'CourseController@statusTouch')->name('item.status.touch');
     Route::get('/item/type/change/{itemId}/{newType}', 'CourseController@typeChange')->name('item.type.change');
+
 
     Route::get('/course', 'CourseController@list')->name('course');
     Route::any('/course/create', 'CourseController@create')->name('course.create');
@@ -161,7 +176,12 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/class/create', 'ClassController@create')->name('class.create');
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
+    Route::middleware('access.item')->any('/class/{id}/del', 'ClassController@del')->name('class.del');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
+
+    Route::middleware('access.item')->any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
+    Route::middleware('access.item')->any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
+
 
     Route::get('/confirm', 'Controller@developing')->name('confirm');
     Route::get('/product', 'Controller@developing')->name('product');
@@ -173,6 +193,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/order-open', 'TransactionController@orderOpen')->name('order.open');
     Route::get('/order-all', 'TransactionController@allOrder')->name('order.all');
     Route::get('/order-approve/{orderId}', 'TransactionController@approveOrder')->name('order.approve');
+    Route::get('/order-reject/{orderId}', 'TransactionController@rejectOrder')->name('order.reject');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');
 
@@ -195,6 +216,8 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/knowledge/topic', 'KnowledgeController@topic')->name('knowledge.topic');
     Route::any('/knowledge/topic/edit/{id?}', 'KnowledgeController@topicEdit')->name('knowledge.topic.edit');
     Route::any('/knowledge/topic/{id}/category', 'KnowledgeController@topicCategory')->name('knowledge.topic.category');
+
+    Route::middleware('access.mod')->any('/devtools/change-test', 'DevToolsController@changeTestBranch')->name('devtools.change-test');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

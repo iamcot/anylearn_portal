@@ -12,17 +12,20 @@ use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
+use App\Models\Item;
 use App\Models\UserDocument;
 use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\SmsServices;
 use App\Services\UserServices;
+use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
+use App\Models\I18nContent;
+use Illuminate\Support\Facades\Hash;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
@@ -55,7 +58,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'user.mods')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)
@@ -77,6 +80,65 @@ class UserController extends Controller
             return redirect()->route('user.members');
         }
 
+        if ($request->input('action') == 'saleassign') {
+            ini_set('max_execution_time', '300');
+            if ($request->hasFile('saleassign') && $request->file('saleassign')->isValid()) {
+                $csvFile = $request->file('saleassign');
+
+                $fileHandle = fopen($csvFile, 'r');
+                $rows = [];
+                $header = [];
+                while (!feof($fileHandle)) {
+                    if (empty($header)) {
+                        $header = fgetcsv($fileHandle, 0, ';');
+                    } else {
+                        $csvRaw = fgetcsv($fileHandle, 0, ';');
+                        $rowcsv = [];
+                        foreach ($header as $k => $col) {
+                            $rowcsv[] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
+                        }
+                        $rows[] = $rowcsv;
+                    }
+                }
+                fclose($fileHandle);
+                // dd($header, $rows);
+                $countUpdate = 0;
+                $countCreate = 0;
+                foreach ($rows as $row) {
+                    if (empty($row[1])) {
+                        continue;
+                    }
+                    try {
+                        $exists = User::where('phone', $row[1])->first();
+                        if ($exists) {
+                            if (!empty($row[2])) {
+                                $data['user_id'] = $row[2];
+                            } else if (!empty($row[3])) {
+                                $data['sale_id'] = $row[3];
+                            }
+                            $countUpdate += User::where('phone', $row[1])->update($data);
+                        } else {
+                            // Log::debug($row);
+                            User::create([
+                                'name' => $row[0],
+                                'phone' => $row[1],
+                                'sale_id' => $row[3],
+                                'is_registered' => 0,
+                                'source' => isset($row[4]) ? $row[4] : '',
+                                'role' => UserConstants::ROLE_MEMBER,
+                                'password' => Hash::make($row[1]),
+                                'status' => UserConstants::STATUS_INACTIVE,
+                                'refcode' => $row[1],
+                            ]);
+                            $countCreate++;
+                        }
+                    } catch (\Exception $ex) {
+                        Log::error($ex);
+                    }
+                }
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
+            }
+        }
 
         if ($request->input('action') == 'file') {
             $members = $userM->searchMembers($request, true);
@@ -94,7 +156,7 @@ class UserController extends Controller
 
             $callback = function () use ($members) {
                 $file = fopen('php://output', 'w');
-                fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
                 fputcsv($file, array_keys($members[0]));
                 foreach ($members as $row) {
                     mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
@@ -106,6 +168,11 @@ class UserController extends Controller
         } else {
             $members = $userM->searchMembers($request);
         }
+        $this->data['isSale'] = false;
+        if ($user->role == UserConstants::ROLE_SALE) {
+            $this->data['isSale'] = true;
+        }
+
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
@@ -114,6 +181,7 @@ class UserController extends Controller
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
+        $userService = new UserServices();
         if ($request->input('save')) {
             $input = $request->all();
             $input['role'] = $editUser->role;
@@ -122,12 +190,125 @@ class UserController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            return redirect()->route('me.edit')->with('notify', $rs);
+            return redirect()->route('me.dashboard')->with('notify', $rs);
         }
+        $friends = User::where('user_id', $editUser->id)->paginate();
+        $editUser = $userService->userInfo($editUser->id);
+        $this->data['friends'] = $friends;
         $this->data['user'] = $editUser;
-        $this->data['navText'] = __('Chỉnh sửa Thông tin');
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
+    }
+    public function meHistory(Request $request)
+    {
+        $trans = new Transaction();
+        $sum = Transaction::where('pay_method', '=', 'wallet_c')->where('status', 1)->where('user_id', auth()->user()->id)->sum('amount');
+        $this->data['anyPoint'] = abs($sum);
+        // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
+        $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
+        $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
+        $this->data['navText'] = __('Giao dịch của tôi');
+        return  view(env('TEMPLATE', '') . 'me.history', $this->data);
+    }
+    public function meChild(Request $request)
+    {
+        $id = Auth::user()->id;
+        $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
+        $this->data['childuser'] = $childuser;
+        $parent = Auth::user();
+        if ($request->input('childedit')) {
+
+            $input = $request->all();
+            $id = $input['childid'];
+            $userC = User::find($id);
+            $courses = DB::table('order_details')
+                ->join('items', 'order_details.item_id', '=', 'items.id')
+                ->where('order_details.user_id', $id)
+                ->orderBy('order_details.created_at', 'desc')->take(4)
+                ->get();
+            $this->data['courses'] = $courses;
+            $this->data['hasBack'] = route('me.child');
+            $this->data['userC'] = $userC;
+            $this->data['navText'] = __('Quản lý tài khoản con');
+            if ($request->input('save')) {
+                $input = $request->all();
+                $this->data['navText'] = __('Quản lý tài khoản con');
+                $userC->name = $input['username'];
+                $userC->dob = $input['dob'];
+                $userC->sex = $input['sex'];
+                $userC->introduce = $input['introduce'];
+                $userC->save($input);
+                $this->data['userC'] = $userC;
+                return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+            }
+            if ($request->input('more')) {
+                return redirect()->route('me.orders');
+            }
+            $this->data['navText'] = __('Quản lý tài khoản con');
+            return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+
+            // return redirect()->route('me.editchild')->with([ 'id' => $id ]);
+        }
+
+        if ($request->input('create')) {
+            $input = $request->all();
+            $userChild = new User();
+            $userChild->createChild($parent, $input);
+            return redirect()->route('me.child')->with('notify', 'Tạo tài khoản mới thành công');
+        }
+        $this->data['navText'] = __('Quản lý tài khoản con');
+        return view(env('TEMPLATE', '') . 'me.child', $this->data);
+    }
+    // public function meChildEdit(Request $request)
+    // {
+    //     $id = session()->get('id');
+    //     $userC = User::find($id);
+    //     $this->data['userC'] = $userC;
+    //     $this->data['navText'] = __('Quản lý tài khoản con');
+    //     if($request->input('save')){
+    //         $input=$request->all();
+    //         $this->data['navText'] = __('Quản lý tài khoản con');
+    //         $userC->name = $input['username'];
+    //         $userC->dob = $input['dob'];
+    //         $userC->sex = $input['sex'];
+    //         $userC->introduce = $input['introduce'];
+    //         $userC -> save($input);
+    //         $this->data['userC'] = $userC;
+    //         return redirect()->route('me.editchild')->with([ 'id' => $id ]);
+    //     }
+    //     return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
+    // }
+    public function mePassword(Request $request)
+    {
+        $editUser = Auth::user();
+        // $validator = Validator::make($request->all(), [
+
+        // ]
+        if ($request->input('save')) {
+            $input = $request->all();
+            $newpass = $request->input('newpassword');
+            $oldpass = $request->input('password');
+            $input['role'] = $editUser->role;
+            $input['user_id'] = $editUser->user_id;
+            $input['boost_score'] = $editUser->boost_score;
+            $input['commission_rate'] = $editUser->commission_rate;
+            $userM = new User();
+            if (Hash::check($oldpass, $editUser->password)) {
+                if ($request->input('newpassword') != $request->input('repassword')) {
+                    return redirect()->back()->with('errormk', 'Mật khẩu không trùng khớp');
+                } else {
+                    $userM = new User();
+                    $rs = $userM->changePassword($request, $input);
+                    return redirect()->route('me.dashboard')->with('notify', $rs);
+                }
+            } else {
+                //return redirect()->route('me.resetpassword')->with('notify', 'error');
+                return redirect()->back()->with('error', 'Mật Khẩu không chính xác');
+            }
+        }
+        $this->data['user'] = $editUser;
+        $this->data['navText'] = __('Đổi Mật Khẩu');
+        return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 
     public function memberEdit(Request $request, $userId)
@@ -135,13 +316,13 @@ class UserController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.member')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.members')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
-        $editUser = User::find($userId);
-
         if ($request->input('moneyFix')) {
+            $editUser = User::find($userId);
+
             $result = $userService->createMoneyFix($editUser, $request->all());
             if ($result === true) {
                 return redirect()->back()->with('notify', 'Giao dịch mới đã được cập nhật.');
@@ -157,8 +338,8 @@ class UserController extends Controller
         }
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([ConfigConstants::CONFIG_BONUS_RATE]);
-
-        $this->data['user'] = $editUser;
+        $userI18n = $userService->userInfo($userId);
+        $this->data['user'] = $userI18n;
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
         $this->data['type'] = 'member';
@@ -189,7 +370,7 @@ class UserController extends Controller
         }
         $userService = new UserServices();
         $user = Auth::user();
-        if ($userId == 1 || !$userService->haveAccess($user->role, 'admin')) {
+        if ($userId == 1 || !$userService->haveAccess($user->role, 'user.mods')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         } else {
             $this->data['user'] = User::find($userId);
@@ -215,7 +396,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'user.contract')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $list = DB::table('contracts')
@@ -247,7 +428,7 @@ class UserController extends Controller
     {
         $userService = new UserServices();
         $user = Auth::user();
-        if (!$userService->haveAccess($user->role, 'admin')) {
+        if (!$userService->haveAccess($user->role, 'admin' || $user->role, 'fin')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $contract = DB::table('contracts')
@@ -302,7 +483,7 @@ class UserController extends Controller
                 ->orWhereNull('introduce')
                 ->orWhereNull('full_content');
         })
-            ->select(DB::raw("users.*, (SELECT notifications.created_at 
+            ->select(DB::raw("users.*, (SELECT notifications.created_at
         FROM notifications WHERE notifications.user_id = users.id AND type = '" . NotifConstants::UPDATE_INFO_REMIND . "'  order by notifications.id desc limit 1) AS last_notif"))
             ->orderBy('users.id', 'desc')
             ->paginate(20);
@@ -411,7 +592,7 @@ class UserController extends Controller
     public function pendingOrders(Request $request)
     {
         $user = Auth::user();
-        $this->data['orders'] = DB::table('orders')
+        $data = DB::table('orders')
             ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
             ->where('orders.user_id', $user->id)
             ->select(
@@ -419,6 +600,9 @@ class UserController extends Controller
                 DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
             )
             ->paginate();
+
+        $this->data['orders'] = $data;
+        $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
@@ -426,9 +610,27 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['navText'] = __('Khoá học của tôi');
+
+        $input = $request->input('search');
+        $item = Item::all()->where('title', 'LIKE', '%' . $input . '%');
+        $inputselect = $request->input('myselect');
         $orderDetailM = new OrderDetail();
-        $this->data['orders'] = $orderDetailM->userRegistered($user->id);
-        // dd($this->data['orders']);
+        $id = auth()->user()->id;
+        $childuser = DB::table('users')->where('is_child', $id)->orWhere('id', $id)->get();
+        $this->data['childuser'] = $childuser;
+        $this->data['inputselect'] = $inputselect;
+        $this->data['input'] = $request->input('search');
+
+        if ($inputselect == 'all' || $inputselect == null) {
+            $this->data['orders'] = $orderDetailM->searchall($user->id, $input);
+        } elseif ($inputselect == $user->id) {
+            $this->data['orders'] = $orderDetailM->searchparents($user->id, $input);
+        } else {
+            $this->data['orders'] = $orderDetailM->searchall($inputselect, $input);
+        }
+        if ($request->input('reset')) {
+            return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
+        }
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 

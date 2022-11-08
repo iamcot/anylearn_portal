@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Constants\ConfigConstants;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Configuration extends Model
 {
@@ -52,7 +53,8 @@ class Configuration extends Model
         return $this->get(ConfigConstants::GUIDE_TOC);
     }
 
-    public function getDoc($key) {
+    public function getDoc($key)
+    {
         return $this->where('key', $key)->first();
     }
 
@@ -69,19 +71,27 @@ class Configuration extends Model
         return null;
     }
 
-    public function gets(array $keys) {
+    public function gets(array $keys)
+    {
         $data = [];
         $fileConfig = config('site');
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             $data[$key] = $fileConfig[$key]['value'];
         }
         $dbConfig = $this->whereIn('key', $keys)->get();
         if ($dbConfig) {
-            foreach($dbConfig as $config) {
+            foreach ($dbConfig as $config) {
                 $data[$config->key] = $config->value;
             }
         }
 
         return $data;
+    }
+
+    public function enableIOSTrans(Request $request)
+    {
+        $appVer = $request->get('v');
+        $configVer = env('APP_VERSION_REVIEW', 'NOT_DEFINED');
+        return $appVer != $configVer ? 1 : 0;
     }
 }

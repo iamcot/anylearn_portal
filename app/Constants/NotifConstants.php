@@ -15,6 +15,7 @@ class NotifConstants
     const REGISTER_CLASS_REMIND = 'register_class_remind';
 
     /** Course process */
+    const COURSE_CREATED = 'course_created';
     const COURSE_APPROVED = 'course_approved';
     const COURSE_REJECTED = 'course_rejected';
     const COURSE_REGISTERED = 'course_registered';
@@ -25,6 +26,8 @@ class NotifConstants
     const COURSE_SHARE = 'course_share';
     const COURSE_REGISTER_APPROVE = 'course_register_approve';
     const COURSE_REGISTER_PENDING = 'course_register_pending';
+    const COURSE_REGISTER_REJECT = 'course_register_reject';
+    const COURSE_CERT_SENT = 'course_cert_sent';
 
     /** Transaction */
     const TRANS_DEPOSIT_SENT = 'trans_deposit_sent';

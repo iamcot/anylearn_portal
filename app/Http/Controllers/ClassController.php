@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
+use App\Constants\NotifConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Category;
 use App\Models\Configuration;
@@ -13,13 +15,19 @@ use App\Models\ItemResource;
 use App\Models\ItemUserAction;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\I18nContent;
+use App\Models\Notification;
+use App\Models\SocialPost;
 use App\Models\UserLocation;
+use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use Vanthao03596\HCVN\Models\Province;
 use Illuminate\Support\Str;
@@ -43,12 +51,18 @@ class ClassController extends Controller
         }
         $classService = new ItemServices();
         $userService = new UserServices();
-        $this->data['navText'] = __('Quản lý lớp học');
+        $this->data['navText'] = __('Lớp học của tôi');
         if ($request->input('action') == 'clear') {
             return redirect()->route('class');
         }
-        $this->data['courseList'] = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+        $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+
+        $this->data['courseList'] = $courseList;
         if ($userService->isMod()) {
+            $this->data['isSale'] = false;
+            if ($user->role == UserConstants::ROLE_SALE) {
+                $this->data['isSale'] = true;
+            }
             return view('class.list', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_list', $this->data);
@@ -74,7 +88,8 @@ class ClassController extends Controller
             ConfigConstants::CONFIG_COMMISSION,
             ConfigConstants::CONFIG_COMMISSION_FOUNDATION
         ]);
-        $this->data['categories'] = Category::all();
+        $category = Category::all();
+        $this->data['categories'] = $category;
         $this->data['companyCommission'] = null;
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
@@ -87,9 +102,15 @@ class ClassController extends Controller
         }
     }
 
+    public function del(Request $request, $courseId)
+    {
+        Schedule::where('item_id', $courseId)->delete();
+        Item::find($courseId)->delete();
+        return redirect()->back();
+    }
+
     public function edit(Request $request, $courseId)
     {
-        $user = Auth::user();
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             $input = $request->all();
@@ -149,7 +170,9 @@ class ClassController extends Controller
             $this->data['opening'] = $op ?? null;
             $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
         }
-        $this->data['categories'] = Category::all();
+        $category = Category::all();
+
+        $this->data['categories'] = $category;
         $itemCats = ItemCategory::where('item_id', $courseId)->get();
         $this->data['itemCategories'] = [];
         foreach ($itemCats as $cat) {
@@ -160,6 +183,28 @@ class ClassController extends Controller
             ->join('users', 'users.id', '=', 'item_user_actions.user_id')
             ->where('type', 'rating')->where('item_id', $courseId)
             ->select('users.name', 'item_user_actions.*')
+            ->get();
+
+        $this->data['students'] = DB::table('order_details')
+            // ->leftJoin('participations', 'participations.')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->where('order_details.item_id', $courseId)
+            ->select(
+                'users.name',
+                'users.id',
+                'order_details.created_at',
+                DB::raw('(SELECT count(*) FROM participations 
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
+            GROUP BY participations.item_id
+            ) AS confirm_count'),
+                DB::raw("(SELECT value FROM item_user_actions 
+            WHERE item_user_actions.user_id = users.id AND item_user_actions.item_id = order_details.item_id
+            and item_user_actions.type = 'cert'
+            ORDER BY id DESC
+            LIMIT 1
+            ) AS cert")
+            )
             ->get();
 
         $this->data['course'] = $courseDb;
@@ -196,28 +241,91 @@ class ClassController extends Controller
 
     public function category()
     {
-        $this->data['categories'] = Category::paginate();
+        $data = Category::paginate();
+        $i18nModel = new I18nContent();
+
+        // change vi->en
+        foreach ($data as $row) {
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    foreach (I18nContent::$categoryCols as $col => $type) {
+                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
+                    }
+                } else {
+                    $item18nData = $i18nModel->i18nCategory($row->id, $locale);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $row->$col = $row->$col + [$locale => ""];
+                        } else {
+                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+                }
+            }
+        }
+        $this->data['categories'] = $data;
         return view('category.index', $this->data);
     }
     public function categoryEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            $category = $request->get('title');
-            $url = Str::slug($category);
-            $catId = $request->get('id');
-            $data = [
-                'title' => $category,
-                'url' => $url,
-            ];
-            if ($catId) {
-                Category::find($catId)->update($data);
-            } else {
-                Category::create($data);
+            foreach (I18nContent::$supports as $locale) {
+                $input = $request->all();
+                // dd($input);
+                $category = $input["title"];
+                // dd($category);
+                $url = Str::slug($category[$locale]);
+                $catId = $request->get('id');
+                // dd($category);
+                $data = [
+                    'title' => $category[$locale],
+                    'url' => $url,
+                ];
+                $i18n = new I18nContent();
+                if ($catId) {
+                    if ($locale != I18nContent::DEFAULT) {
+                        $i18n->i18nSave($locale, 'categories', $catId, 'title', $category[$locale]);
+                        $i18n->i18nSave($locale, 'categories', $catId, 'url', $url);
+                    } else {
+                        Category::find($catId)->update($data);
+                    }
+                } else {
+                    if ($locale == I18nContent::DEFAULT) {
+                        $id = Category::create($data)->id;
+                    } else {
+                        $i18n->i18nSave($locale, 'categories', $id, 'title', $category[$locale]);
+                        $i18n->i18nSave($locale, 'categories', $id, 'url', $url);
+                    }
+                }
             }
             return redirect()->route('category')->with('notify', 'Thành công');
         }
         if ($id) {
-            $this->data['category'] = Category::find($id);
+            $data = Category::find($id);
+            $i18nModel = new I18nContent();
+
+            // change vi->en
+
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    foreach (I18nContent::$categoryCols as $col => $type) {
+                        $data->$col = [I18nContent::DEFAULT => $data->$col];
+                    }
+                } else {
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    $item18nData = $i18nModel->i18nCategory($data->id, $locale);
+                    foreach ($supportCols as $col) {
+                        if (empty($item18nData[$col])) {
+                            $data->$col = $data->$col + [$locale => ""];
+                        } else {
+                            $data->$col = $data->$col + [$locale => $item18nData[$col]];
+                        }
+                    }
+                }
+            }
+            $this->data['category'] = $data;
         }
         return view('category.form', $this->data);
     }
@@ -246,5 +354,69 @@ class ClassController extends Controller
     public function specsLink(Request $request, $type, $objId)
     {
         return view('specs.links');
+    }
+
+    public function authorConfirmJoinCourse(Request $request, $itemId)
+    {
+        $joinUserId = $request->get('join_user');
+        $firstSchedule = Schedule::where('item_id', $itemId)->first();
+        $itemServ = new ItemServices();
+        try {
+            $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);
+        } catch (\Exception $ex) {
+            return redirect()->back()->with(['tab' => 'registered', 'notify' => $ex->getMessage()]);
+        }
+
+        return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Thao tác thành công']);
+    }
+
+    public function authorCert(Request $request, $itemId, $userId)
+    {
+        $certTemplate = ItemResource::where('item_id', $itemId)
+            ->where('type', 'cert')
+            ->first();
+        if (!$certTemplate) {
+            return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Chưa có mẫu chứng chỉ']);
+        }
+        $user = User::find($userId);
+        if (!$user) {
+            return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Thành viên không tồn tại']);
+        }
+        $item = Item::find($itemId);
+        $fileServ = new FileServices();
+        try {
+            $certUrl = $fileServ->generateCert($certTemplate, $user, $item);
+            $notifM = new Notification();
+            if ($user->is_child) {
+                $parent = User::find($user->user_id);
+                $receiverId = $parent->id;
+            } else {
+                $receiverId = $user->id;
+            }
+            $notifM->createNotif(NotifConstants::COURSE_CERT_SENT, $receiverId, [
+                'name' => $user->name,
+                'class' => $item->title,
+                'cert' => $certUrl,
+                'content' => ""
+            ]);
+
+            $existsPost = SocialPost::where('type', SocialPost::TYPE_CLASS_CERT)
+                ->where('user_id', $receiverId)
+                ->where('ref_id', $item->id)
+                ->first();
+            if (!$existsPost) {
+                SocialPost::create([
+                    'type' => SocialPost::TYPE_CLASS_CERT,
+                    'user_id' => $user->id,
+                    'ref_id' => $item->id,
+                    'image' => $certUrl,
+                    'day' => date('Y-m-d'),
+                ]);
+            }
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return redirect()->back()->with(['tab' => 'registered', 'notify' => $ex->getMessage()]);
+        }
+        return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Thao tác thành công']);
     }
 }

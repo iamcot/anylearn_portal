@@ -9,18 +9,18 @@
                 <div class="form-group">
                     <label>{{ __('Hoa hồng trực tiếp người mua') }} (Mặc định: {{ $configs[\App\Constants\ConfigConstants::CONFIG_DISCOUNT] }})</label>
                     <input type="text" class="form-control" name="company[{{ \App\Constants\ConfigConstants::CONFIG_DISCOUNT }}]" value="{{ $companyCommission[\App\Constants\ConfigConstants::CONFIG_DISCOUNT] ?? '' }}">
-                    <div class="small">Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.</div>
+                    <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.')</div>
 
                 </div>
                 <div class="form-group">
-                    <label>{{ __('Hoa hồng gián tiếp bạn người mua') }} (Mặc định: {{ $configs[\App\Constants\ConfigConstants::CONFIG_COMMISSION] }})</label>
+                    <label>{{ __('Hoa hồng gián tiếp bạn người mua') }} (@lang('Mặc định:') {{ $configs[\App\Constants\ConfigConstants::CONFIG_COMMISSION] }})</label>
                     <input type="text" class="form-control" name="company[{{ \App\Constants\ConfigConstants::CONFIG_COMMISSION }}]" value="{{ $companyCommission[\App\Constants\ConfigConstants::CONFIG_COMMISSION] ?? '' }}">
-                    <div class="small">Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.</div>
+                    <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.')</div>
                 </div>
                 <div class="form-group">
-                    <label>{{ __('Quỹ foundation') }} (Mặc định: {{ $configs[\App\Constants\ConfigConstants::CONFIG_COMMISSION_FOUNDATION] }})</label>
+                    <label>{{ __('Quỹ foundation') }} (@lang('Mặc định:') {{ $configs[\App\Constants\ConfigConstants::CONFIG_COMMISSION_FOUNDATION] }})</label>
                     <input type="text" class="form-control" name="company[{{ \App\Constants\ConfigConstants::CONFIG_COMMISSION_FOUNDATION }}]" value="{{ $companyCommission[\App\Constants\ConfigConstants::CONFIG_COMMISSION_FOUNDATION] ?? '' }}">
-                    <div class="small">Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.</div>
+                    <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.')</div>
                 </div>
             </div>
             <div class="modal-footer">

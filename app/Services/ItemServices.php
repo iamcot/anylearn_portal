@@ -6,24 +6,30 @@ use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;
 use App\Models\CourseSeries;
+use App\Models\I18nContent;
 use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\OrderDetail;
+use App\Models\Participation;
 use App\Models\Schedule;
+use App\Models\SocialPost;
 use App\Models\Tag;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -36,14 +42,26 @@ class ItemServices
         return Article::where('status', 1)->orderby('id', 'desc')->take(4)->get();
     }
 
-    public function pdpData($itemId, $user)
+    public function pdpData(Request $request, $itemId, $user)
     {
         $item = Item::find($itemId);
         if (!$item) {
             throw new Exception("Trang không tồn tại", 404);
         }
         $item = $item->makeVisible(['content']);
-        // $item->content = "<html><body>" . $item->content . "</body></html>";
+        $locale = App::getLocale();
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            $item18nData = $i18->i18nItem($item->id, $locale);
+            // dd($item18nData);
+            $supportCols = array_keys(I18nContent::$itemCols);
+            foreach ($item18nData as $col => $content) {
+                if (in_array($col, $supportCols) && $content != "") {
+                    $item->$col = $content;
+                }
+            }
+        }
+
         $configM = new Configuration();
         $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION, ConfigConstants::CONFIG_BONUS_RATE, ConfigConstants::CONFIG_DISCOUNT, ConfigConstants::CONFIG_DISABLE_ANYPOINT]);
         $author = User::find($item->user_id);
@@ -65,7 +83,20 @@ class ItemServices
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
-
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            foreach ($hotItems as $row) {
+                // dd($row);
+                $item18nData = $i18->i18nItem($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$itemCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
+                    }
+                }
+            }
+        }
         $numSchedule = Schedule::where('item_id', $itemId)->count();
 
         $itemUserActionM = new ItemUserAction();
@@ -79,6 +110,20 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
+            $locale = App::getLocale();
+            foreach ($categories as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nCategory($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$categoryCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
         $teachers = DB::table('users')
             ->join('class_teachers AS ct', function ($join) use ($item) {
                 $join->on('ct.user_id', '=', 'users.id')
@@ -100,7 +145,7 @@ class ItemServices
             'author' => $author,
             'item' => $item,
             'num_schedule' => $numSchedule,
-            'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
+            'ios_transaction' => $configM->enableIOSTrans($request),
             'is_fav' =>  !($user instanceof User) ? false : $itemUserActionM->isFav($itemId, $user->id),
             'categories' => $categories,
             'teachers' => $teachers,
@@ -161,10 +206,10 @@ class ItemServices
         }
 
         $requester = Auth::user();
-        if ($requester->role == UserConstants::ROLE_SALE) {
-            $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
-                ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
-        }
+        // if ($requester->role == UserConstants::ROLE_SALE) {
+        //     $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
+        //         ->whereRaw('((items.sale_id = ?) OR (items.sale_id is null AND author.sale_id = ?))', [$requester->id, $requester->id]);
+        // }
         $courses = $courses->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->select(
@@ -176,22 +221,39 @@ class ItemServices
             ->paginate(self::PP);
         return $courses;
     }
+    public function statusText($status)
+    {
+        $locale = App::getLocale();
+        if ($locale == "vi") {
+            if ($status == ItemConstants::STATUS_ACTIVE) {
+                return '<span class="text-success">Đã duyệt</span>';
+            } else {
+                return '<span class="text-danger">Chờ duyệt</span>';
+            }
+        } else {
+            if ($status == ItemConstants::STATUS_ACTIVE) {
+                return '<span class="text-success">Approved</span>';
+            } else {
+                return '<span class="text-danger">Pending</span>';
+            }
+        }
+    }
 
     public function statusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
         } else {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         }
     }
 
     public function userStatusOperation($itemId, $status)
     {
-        if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
+        if ($status == ItemConstants::STATUS_INACTIVE) {
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
         } else {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
         }
     }
 
@@ -233,7 +295,25 @@ class ItemServices
         if (!$item) {
             return false;
         }
-        // $item->image = $this->itemImageUrl($item->image);
+        $i18nModel = new I18nContent();
+        foreach (I18nContent::$supports as $locale) {
+            if ($locale == I18nContent::DEFAULT) {
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    $item->$col =  [I18nContent::DEFAULT => $item->$col];
+                }
+            } else {
+                $item18nData = $i18nModel->i18nItem($courseId, $locale);
+                $supportCols = array_keys(I18nContent::$itemCols);
+
+                foreach ($supportCols as $col) {
+                    if (empty($item18nData[$col])) {
+                        $item->$col = $item->$col + [$locale => ""];
+                    } else {
+                        $item->$col = $item->$col + [$locale => $item18nData[$col]];
+                    }
+                }
+            }
+        }
 
         $data['info'] = $item;
         $data['resource'] = $this->itemResources($courseId);
@@ -255,6 +335,13 @@ class ItemServices
     public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
         $user = $userApi ?? Auth::user();
+
+        $orgInputs = $input;
+
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = $input[$col][I18nContent::DEFAULT];
+        }
+
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -282,6 +369,19 @@ class ItemServices
 
         $newCourse = Item::create($input);
         if ($newCourse) {
+            $i18nModel = new I18nContent();
+
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    continue;
+                }
+                $i18nModel->i18nSave($locale, 'items', $newCourse->id, 'title', $newCourse['title']);
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    if (isset($orgInputs[$col][$locale])) {
+                        $i18nModel->i18nSave($locale, 'items', $newCourse->id, $col, $orgInputs[$col][$locale]);
+                    }
+                }
+            }
             if (!empty($input['categories'])) {
                 $this->assignCategoryToItem($newCourse->id, $input['categories']);
             }
@@ -306,6 +406,12 @@ class ItemServices
         if (!in_array($user->role, UserConstants::$modRoles) && $user->id != $itemUpdate->user_id) {
             return false;
         }
+        $orgInputs = $input;
+
+        foreach (I18nContent::$itemCols as $col => $type) {
+            $input[$col] = isset($input[$col][I18nContent::DEFAULT]) ? $input[$col][I18nContent::DEFAULT] : "";
+        }
+
         $validator = $this->validate($input);
         if ($validator->fails()) {
             return $validator;
@@ -343,6 +449,17 @@ class ItemServices
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
+            $i18nModel = new I18nContent();
+            foreach (I18nContent::$supports as $locale) {
+                if ($locale == I18nContent::DEFAULT) {
+                    continue;
+                }
+                foreach (I18nContent::$itemCols as $col => $type) {
+                    if (isset($orgInputs[$col][$locale])) {
+                        $i18nModel->i18nSave($locale, 'items', $itemUpdate->id, $col, $orgInputs[$col][$locale]);
+                    }
+                }
+            }
             if (!empty($input['categories'])) {
                 $this->assignCategoryToItem($itemUpdate->id, $input['categories']);
             }
@@ -434,15 +551,15 @@ class ItemServices
                     commission_rate,
                     got_bonus,
                     date_start,
-                    time_start, 
+                    time_start,
                     nolimit_time,
                     company_commission,
                     `status`,
                     is_test,
                     item_id,
-                    user_location_id 
-                ) 
-                SELECT 
+                    user_location_id
+                )
+                SELECT
                     ?,
                     `type`,
                     subtype,
@@ -451,7 +568,7 @@ class ItemServices
                     commission_rate,
                     got_bonus,
                     ?,
-                    time_start, 
+                    time_start,
                     nolimit_time,
                     company_commission,
                     1,
@@ -541,7 +658,7 @@ class ItemServices
     {
         return Validator::make($data, [
             'title' => ['required', 'string', 'max:250'],
-            'price' => ['required', 'integer'],
+            'price' => ['required', 'numeric', 'min:0'],
             'date_start' => ['required'],
         ]);
     }
@@ -572,7 +689,7 @@ class ItemServices
             $resource = $request->get('resource');
             $db = ItemResource::create([
                 'item_id' => $courseId,
-                'type' => $file['file_ext'],
+                'type' => $resource['type'],
                 'title' => $resource['title'],
                 'desc' => $resource['desc'],
                 'data' => $file['path'],
@@ -606,5 +723,169 @@ class ItemServices
             ->orderby('date_start', 'asc')
             ->take($pageSize)->get();
         return $list;
+    }
+
+    public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
+    {
+        $user = User::find($joinedUserId);
+        
+        $schedule = Schedule::find($scheduleId);
+        if (!$schedule) {
+            throw new Exception("Không có lịch cho buổi học này");
+            // return response("Không có lịch cho buổi học này", 404);
+        }
+
+        $item = Item::find($schedule->item_id);
+        if (!$item) {
+            throw new Exception("Khóa  học không tồn tại");
+            // return response("Khóa  học không tồn tại", 404);
+        }
+        $itemId = $item->id;
+
+        $isConfirmed = Participation::where('item_id', $itemId)
+            ->where('schedule_id',  $schedule->id)
+            ->where('participant_user_id', $joinedUserId)
+            ->count();
+        if ($isConfirmed > 0) {
+            throw new Exception("Bạn đã xác nhận rồi");
+            // return response("Bạn đã xác nhận rồi", 400);
+        }
+
+        $unpaiedOrders = OrderDetail::where('item_id', $itemId)
+            ->where('user_id', $user->id)
+            ->where('status', OrderConstants::STATUS_NEW)
+            ->count();
+        if ($unpaiedOrders > 0) {
+            throw new Exception("Bạn chưa thanh toán cho khoá học này");
+
+            // return response("Bạn chưa thanh toán cho khoá học này", 400);
+        }
+
+        $rs = Participation::create([
+            'item_id' => $itemId,
+            'schedule_id' =>  $scheduleId,
+            'organizer_user_id' => $item->user_id,
+            'participant_user_id' => $joinedUserId,
+            'organizer_confirm' => 1,
+            'participant_confirm' => 1,
+        ]);
+        $author = User::find($item->user_id);
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
+            'username' => $user->name,
+            'course' => $item->title,
+        ]);
+
+        $transService = new TransactionService();
+        // approve direct and indirect commission
+        $directCommission = DB::table('transactions')
+            ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+            ->join('orders', 'orders.id', '=', 'od.order_id')
+            ->where('orders.user_id', $joinedUserId)
+            ->where('od.item_id', $item->id)
+            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+            ->where('transactions.user_id', $user->id)
+            ->select('transactions.*')
+            ->first();
+        if ($directCommission) {
+            $transService->approveWalletcTransaction($directCommission->id);
+        }
+
+        // approve up tree transaction, just 1 level
+        $refUser = User::find($user->user_id);
+        if ($refUser) {
+            $inDirectCommission = DB::table('transactions')
+                ->join('orders', 'orders.id', '=', 'transactions.order_id')
+                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+                ->where('transactions.order_id', $directCommission->order_id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.user_id', $refUser->id)
+                ->select('transactions.*')
+                ->first();
+            if ($inDirectCommission) {
+                $transService->approveWalletcTransaction($inDirectCommission->id);
+            }
+        }
+
+        SocialPost::create([
+            'type' => SocialPost::TYPE_CLASS_COMPLETE,
+            'user_id' => $user->id,
+            'ref_id' => $itemId,
+            'image' => $item->image,
+            'day' => date('Y-m-d'),
+        ]);
+
+        // No limit time class => just touch transaction related to approved user 
+        if ($item->nolimit_time == 1) {
+            //get transaction relate order id & user & item
+            $trans = DB::table('transactions')
+                ->join('order_details AS od', function ($query) use ($user) {
+                    $query->on('od.id', '=', 'transactions.order_id')
+                        ->where('od.user_id', '=', $user->id);
+                })
+                ->join('orders', 'orders.id', '=', 'od.order_id')
+                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+                ->where('orders.user_id', $joinedUserId)
+                ->where('od.item_id', $item->id)
+                ->where('transactions.user_id', $author->id)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->select('transactions.*')
+                ->first();
+            // approve author transaction
+            if ($trans) {
+                $transService->approveWalletcTransaction($trans->id);
+                // approve foundation transaction
+                DB::table('transactions')
+                    ->where('transactions.order_id', $trans->order_id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                    ->update([
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                    ]);
+            }
+        } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
+            $configM = new Configuration();
+            $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
+            $totalReg = OrderDetail::where('item_id', $itemId)->count();
+            $totalConfirm = Participation::where('item_id', $itemId)->count();
+            //update author commssion when reach % of approved users
+            if ($totalConfirm / $totalReg >= $needNumConfirm) {
+                //get ALL transaction relate order id & item
+                $allTrans = DB::table('transactions')
+                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                    ->where('od.item_id', $item->id)
+                    ->where('transactions.user_id', $author->id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                    ->select('transactions.*')
+                    ->get();
+
+                // approve author transaction
+                if ($allTrans) {
+                    foreach ($allTrans as $trans) {
+                        $transService->approveWalletcTransaction($trans->id);
+                    }
+                }
+                // approve foundation transaction
+                DB::table('transactions')
+                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+                    ->where('od.item_id', $item->id)
+                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                    ->where('transactions.user_id', $author->id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                    ->update([
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                    ]);
+
+                Item::find($itemId)->update([
+                    'got_bonus' => 1
+                ]);
+            }
+        }
     }
 }

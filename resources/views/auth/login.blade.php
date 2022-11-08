@@ -5,7 +5,7 @@
         <div class="col-md-8" style="padding-top:100px;">
             <div class="card shadow">
                 <div class="card-header font-weight-bold text-{{ env('MAIN_COLOR', 'primary') }}"><i class="fas fa-shield-alt"></i> {{ __('Đăng nhập vào') }} {{ env('APP_NAME') }}
-                <a class="btn btn-link font-weight-bold text-success float-right" href="/ref/anylearn">ĐĂNG KÝ</a>
+                <a class="btn btn-link font-weight-bold text-success float-right" href="/ref/anylearn">@lang('ĐĂNG KÝ')</a>
             </div>
 
                 <div class="card-body">

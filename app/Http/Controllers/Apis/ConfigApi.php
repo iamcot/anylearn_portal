@@ -46,6 +46,8 @@ class ConfigApi extends Controller
                 $homeConfig['popup'] = $homePopup;
             }
         }
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
         if ($homeClassesDb) {
@@ -54,6 +56,7 @@ class ConfigApi extends Controller
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
@@ -202,18 +205,22 @@ class ConfigApi extends Controller
         return response()->json($config);
     }
 
-    public function foundation()
+    public function foundation(Request $request)
     {
         $configM = new Configuration();
-        $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION]);
+        
+        // $configs = $configM->gets([ConfigConstants::CONFIG_IOS_TRANSACTION]);
 
         $foundation = Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
+            ->where('amount', '>', 0)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
             ->sum('amount');
         $data = [
             'value' => (int) $foundation,
-            'ios_transaction' => (int)$configs[ConfigConstants::CONFIG_IOS_TRANSACTION],
+            'ios_transaction' => $configM->enableIOSTrans($request),
             'history' => Transaction::where('type', ConfigConstants::TRANSACTION_FOUNDATION)
                 ->where('amount', '>', 0)
+                ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
                 ->orderby('id', 'desc')->take(20)->get(),
             'news' => DB::table('tags')->where('tags.type', Tag::TYPE_ARTICLE)
                 ->where('tags.tag', ConfigConstants::FOUNDATION_TAG)
@@ -317,6 +324,8 @@ class ConfigApi extends Controller
         if (empty($query)) {
             return response()->json(null);
         }
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
         $result = null;
         if ($type == 'user') {
             $result = User::where('status', 1);
@@ -324,12 +333,14 @@ class ConfigApi extends Controller
                 $result = $result->where('role', $screen);
             }
             $result = $result->where('name', 'like', "%$query%")
+                ->whereNotIn("id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                 ->orderby('boost_score', 'desc')
                 ->orderby('is_hot', 'desc')
                 ->orderby('first_name')
                 ->get();
         } else {
             $querydb = DB::table('items')
+                ->whereNotIn("items.user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                 ->where('items.status', 1)
                 ->where('items.user_status', '>', 0)
                 ->join('users', 'users.id', '=', 'items.user_id');

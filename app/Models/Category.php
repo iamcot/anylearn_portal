@@ -14,6 +14,9 @@ class Category extends Model
 
     public function buildCatWithItems(Request $request, $catId)
     {
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
+
         $categoriesDB = $this->where('status', 1)->get();
         $categories = [];
         $i = 0;
@@ -23,6 +26,7 @@ class Category extends Model
                 $products = DB::table('items')
                     ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
                     ->where('items_categories.category_id', $cat->id)
+                    ->whereNotIn("items.user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('items.status', 1)
                     ->select('items.id', 'items.image', 'items.title')
                     ->take(2)
@@ -30,6 +34,7 @@ class Category extends Model
             } else if ($catId == 0 && $i++ == 0) {
                 $products = DB::table('items')
                     ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
+                    ->whereNotIn("items.user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('items_categories.category_id', $cat->id)
                     ->where('items.status', 1)
                     ->select('items.id', 'items.image', 'items.title')
@@ -37,6 +42,7 @@ class Category extends Model
             } else if ($catId > 0 && $catId == $cat->id) {
                 $products = DB::table('items')
                     ->join('items_categories', 'items_categories.item_id', '=', 'items.id')
+                    ->whereNotIn("items.user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('items_categories.category_id', $catId)
                     ->where('items.status', 1)
                     ->select('items.id', 'items.image', 'items.title')
