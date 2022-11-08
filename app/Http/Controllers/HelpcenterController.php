@@ -87,6 +87,7 @@ class HelpcenterController extends Controller
         $this->data['topic'] = $topic;
         $catsInTopic = DB::table('knowledge_topic_category_links')
         ->where('knowledge_topic_id', $topic->id)
+        ->where('status',1)
         ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledge_topic_category_links.knowledge_category_id')
         ->select('title', 'knowledge_categories.id')
         ->get();
