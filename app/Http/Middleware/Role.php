@@ -15,13 +15,17 @@ class Role
      */
     public function handle($request, Closure $next)
     {
-        
+
         // if (Auth::check()) {
         //     return redirect('login');
         // }
-        if (auth()->user()->role =="admin" || auth()->user()->role =="mod" || auth()->user()->role =="content" ||auth()->user()->role =="sale" ||auth()->user()->role =="fin") {
+        $role = auth()->user()->role;
+        if(in_array($role,["admin","mod","content","sale","fin"])){
             return $next($request);
         }
+        // if (auth()->user()->role =="admin" || auth()->user()->role =="mod" || auth()->user()->role =="content" ||auth()->user()->role =="sale" ||auth()->user()->role =="fin") {
+        //     return $next($request);
+        // }
         return redirect('me');
     }
 }
