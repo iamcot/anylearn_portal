@@ -21,7 +21,25 @@ class I18nContent extends Model
         'title' =>'input',
         'url' =>'input',
     ];
-
+    static $knowledgetopicCols=[
+        'title' =>'input',
+        'url' =>'input',
+    ];
+    static $knowledge_categoriesCols=[
+        'title' =>'input',
+        'url' =>'input',
+    ];
+    static $knowledgeCols=[
+        'title' =>'input',
+        'url' =>'input',
+        'content' =>'editor',
+        'content_bot' =>'editor_bot',
+    ];
+    static $articleCols = [
+        'title' =>'input',
+        'short_content'=>'textarea',
+        'content' =>'editor',
+    ];
     protected $table = 'i18n_contents';
     protected $fillable = [
         'locale', 'tbl', 'col', 'content_id', 'i18n_content', 'status'
@@ -123,6 +141,58 @@ class I18nContent extends Model
         return $data;
     }
 
+    public function i18nTopic($id,$locale)
+    {
+        $i18n = $this->where('tbl', 'knowledge_topics')
+            ->where('content_id', $id)
+            ->where('locale', $locale)
+            ->get();
+        $data = [];
+
+        foreach ($i18n as $row) {
+            $data[$row->col] = $row->i18n_content;
+        }
+        return $data;
+    }
+    public function i18nknowledgeCategory($id,$locale)
+    {
+        $i18n = $this->where('tbl', 'knowledge_categories')
+            ->where('content_id', $id)
+            ->where('locale', $locale)
+            ->get();
+        $data = [];
+
+        foreach ($i18n as $row) {
+            $data[$row->col] = $row->i18n_content;
+        }
+        return $data;
+    }
+    public function i18nKnowledge($id,$locale)
+    {
+        $i18n = $this->where('tbl', 'knowledges')
+            ->where('content_id', $id)
+            ->where('locale', $locale)
+            ->get();
+        $data = [];
+
+        foreach ($i18n as $row) {
+            $data[$row->col] = $row->i18n_content;
+        }
+        return $data;
+    }
+    public function i18nArticle($id,$locale)
+    {
+        $i18n = $this->where('tbl', 'articles')
+            ->where('content_id', $id)
+            ->where('locale', $locale)
+            ->get();
+        $data = [];
+
+        foreach ($i18n as $row) {
+            $data[$row->col] = $row->i18n_content;
+        }
+        return $data;
+    }
     public function i18nNotif($locale, $notifKey)
     {
     }

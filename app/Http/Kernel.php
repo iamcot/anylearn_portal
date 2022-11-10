@@ -73,6 +73,7 @@ class Kernel extends HttpKernel
         'access.mod' => AccessMod::class,
         'api.user' => ApiUser::class,
         'webappauth' => WebAppAuth::class,
+        'language' => \App\Http\Middleware\LocalizationAPIMiddleware::class,
     ];
 
     /**

@@ -24,7 +24,6 @@ Route::post('/password/reset', 'Apis\UserApi@resetPassOtp');
 Route::post('/otp/check', 'Apis\UserApi@otpCheck');
 
 Route::get('/users/{role}', 'Apis\UserApi@usersList');
-Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
 Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
 
 Route::get('/event/{month}', 'Apis\ConfigApi@event');
@@ -32,8 +31,7 @@ Route::get('/search', 'Apis\ConfigApi@search');
 Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
 Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
 Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
-Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
-Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
+// Route::get('/pdp/{id}', 'Apis\ItemApi@pdp')->middleware('language');
 Route::get('/foundation', 'Apis\ConfigApi@foundation');
 Route::get('/doc/{key}', 'Apis\ConfigApi@getDoc');
 Route::get('/item/{itemId}/reviews', 'Apis\ItemApi@reviews');
@@ -49,8 +47,19 @@ Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
 Route::post('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
 
-Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
-Route::get('/social/post/{postId}', 'Apis\SocialController@post');
+Route::middleware(['language'])->group(function () {
+    Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
+    Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
+    Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
+
+    // Route::get('/article', 'Apis\ArticleApi@index');
+    // Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
+    // Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
+    // Route::get('/quote', 'Apis\ArticleApi@quote');
+// Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
+
+
+});
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/social/profile', 'Apis\SocialController@profile');

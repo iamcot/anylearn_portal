@@ -728,7 +728,7 @@ class ItemServices
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
         $user = User::find($joinedUserId);
-        
+
         $schedule = Schedule::find($scheduleId);
         if (!$schedule) {
             throw new Exception("Không có lịch cho buổi học này");
@@ -809,6 +809,7 @@ class ItemServices
             }
         }
 
+        // No limit time class => just touch transaction related to approved user
         SocialPost::create([
             'type' => SocialPost::TYPE_CLASS_COMPLETE,
             'user_id' => $user->id,
@@ -817,7 +818,7 @@ class ItemServices
             'day' => date('Y-m-d'),
         ]);
 
-        // No limit time class => just touch transaction related to approved user 
+        // No limit time class => just touch transaction related to approved user
         if ($item->nolimit_time == 1) {
             //get transaction relate order id & user & item
             $trans = DB::table('transactions')

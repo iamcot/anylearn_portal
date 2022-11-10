@@ -20,7 +20,9 @@
             <thead>
                 <thead>
                     <th class="text-center">#ID</th>
-                    <th>Tiêu đề</th>
+                    @foreach(App\Models\I18nContent::$supports as $locale)
+                    <th>@lang('Tiêu đề') [{{ $locale }}]</th>
+                    @endforeach
                     <th>Tạo lúc</th>
                     <th>Thao tác</th>
                 </thead>
@@ -28,11 +30,14 @@
                 @foreach($categories as $category)
                 <tr>
                     <th class="text-center">{{ $category->id }}</th>
-                    <td>{{ $category->title }}
-                        <a href="{{ route('knowledge.category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
+                    @foreach(App\Models\I18nContent::$supports as $locale)
+                    <td>{{ $category->title[$locale] }}
+
                     </td>
+                    @endforeach
                     <td>{{ $category->updated_at }}</td>
                     <td>
+                        <a href="{{ route('knowledge.category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
                         <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_categories', 'id' => $category->id]) }}">
                             {{ $category->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>

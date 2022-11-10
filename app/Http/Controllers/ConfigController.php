@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Models\Configuration;
+use App\Models\I18nContent;
 use App\Models\Tag;
 use App\Models\Voucher;
 use App\Models\VoucherEvent;
@@ -13,6 +14,7 @@ use App\Services\FileServices;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
@@ -349,13 +351,15 @@ class ConfigController extends Controller
             $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'popup');
 
             $config = $request->all();
-
             Configuration::create([
                 'key' => $key,
                 'type' => ConfigConstants::TYPE_CONFIG,
                 'value' => json_encode([
                     'image' => empty($file) ? $lastImage : $file['url'],
-                    'title' => $config['title'],
+                    'title' => json_encode([
+                        'vi' =>$config['title']['vi'],
+                        'en' =>$config['title']['en'],
+                    ]),
                     'route' => isset($config['route']) ? $config['route'] : "",
                     'args' => isset($config['args']) ? $config['args'] : "",
                     'version' => (int)$version + 1,
@@ -366,11 +370,15 @@ class ConfigController extends Controller
         }
         $appConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if ($appConfig) {
-            $this->data['config'] = json_decode($appConfig->value, true);
+        $temp = json_decode($appConfig->value, true);
+        $temp['title'] = json_decode($temp['title']);
+            $this->data['config'] = $temp;
         }
         $webConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
         if ($webConfig) {
-            $this->data['webconfig'] = json_decode($webConfig->value, true);
+             $web = json_decode($webConfig->value, true);
+             $web['title'] =json_decode($web['title']);
+             $this->data['webconfig'] =$web;
         }
         $this->data['navText'] = __('Quản lý Popup Trang Chủ APP/WEB');
         return view('config.homepopup', $this->data);
@@ -389,7 +397,7 @@ class ConfigController extends Controller
             }
 
             $configs = $request->all();
-
+            // dd($configs);
             $values = [];
             foreach ($configs['block'] as $index => $config) {
                 if (empty($config['title'])) {

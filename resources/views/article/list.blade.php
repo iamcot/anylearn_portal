@@ -33,9 +33,11 @@
             <thead>
                 <thead>
                     <th class="text-center">#</th>
-                    <th></th>
+
+                    @foreach(App\Models\I18nContent::$supports as $locale)
+                    <th>@lang('Tiêu đề') [{{ $locale }}]</th>
+                    @endforeach
                     <th>@lang('Loại')</th>
-                    <th>@lang('Tiêu đề')</th>
                     <th>@lang('Lần sửa cuối')</th>
                     <th>@lang('Thao tác')</th>
                 </thead>
@@ -43,14 +45,15 @@
                 @foreach($list as $article)
                 <tr>
                     <th class="text-center">{{ $article->id }}</th>
-                    <td>
-                        {!! $itemServ->articleStatusOperation($article->id, $article->status) !!}
-                    </td>
+
+                    @foreach(App\Models\I18nContent::$supports as $locale)
+                    <td>{{ $article->title[$locale]}}</td>
+                    @endforeach
                     <td>{{ $article->type }}</td>
-                    <td>{{ $article->title }}</td>
                     <td>{{ $article->updated_at }}</td>
                     <td>
                         <a href="{{ route('article.edit', ['id' => $article->id  ]) }}"><i class="fa fa-edit"></i></a>
+                        {!! $itemServ->articleStatusOperation($article->id, $article->status) !!}
                     </td>
                 </tr>
                 @endforeach
