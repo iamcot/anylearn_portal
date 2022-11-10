@@ -112,7 +112,7 @@ Route::middleware(['webappauth'])->group(function () {
     Route::get('/remove2cart/{odId}', 'TransactionController@remove2cart')->name('checkout.remove2cart');
 });
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::any('/config/banner', 'ConfigController@banner')->name('config.banner');
     Route::any('/config/site', 'ConfigController@site')->name('config.site');
