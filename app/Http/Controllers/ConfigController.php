@@ -385,6 +385,7 @@ class ConfigController extends Controller
         $webConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
         if ($webConfig) {
              $web = json_decode($webConfig->value, true);
+             dd($temp['title'],$temp);
              if(!is_object((json_decode($temp['title'])))) {
                 $temp['title'] = json_encode([
                     'vi' =>$temp['title'],
