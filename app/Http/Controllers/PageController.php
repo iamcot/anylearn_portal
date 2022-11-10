@@ -63,8 +63,24 @@ class PageController extends Controller
         $this->data['events_title'] = env('EVENTS_TITLE', 'Sự kiện nổi bật');
         $this->data['events'] = Article::where('type', Article::TYPE_EVENT)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
-        $this->data['articles'] = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
+            $temp = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+            $locale = App::getLocale();
+            foreach ($temp as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nArticle($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$articleCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
+            // dd($temp);
+        $this->data['articles'] = $temp;
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
         if ($homeClassesDb) {
@@ -176,12 +192,38 @@ class PageController extends Controller
         if (!$article) {
             return redirect()->to('/');
         }
+        $locale = App::getLocale();
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            $item18nData = $i18->i18nArticle($article->id, $locale);
+            // dd($item18nData);
+            $supportCols = array_keys(I18nContent::$articleCols);
+            foreach ($item18nData as $col => $content) {
+                if (in_array($col, $supportCols) && $content != "") {
+                    $article->$col = $content;
+                }
+            }
+        }
 
         $data['article'] = $article;
-        $data['moreArticles'] = Article::where('status', 1)
+        $morearticle = Article::where('status', 1)
             ->where('id', '!=', $id)
             ->orderby('id', 'desc')
             ->take(10)->get();
+            foreach ($morearticle as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nArticle($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$articleCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
+            $data['moreArticles'] = $morearticle;
         return view(env('TEMPLATE', '') . 'pdp.article', $data);
     }
 
