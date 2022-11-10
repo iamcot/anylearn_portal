@@ -371,13 +371,27 @@ class ConfigController extends Controller
         $appConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if ($appConfig) {
         $temp = json_decode($appConfig->value, true);
+        //  dd(is_object((json_decode($temp['title']))));
+        if(!is_object((json_decode($temp['title'])))) {
+            $temp['title'] = json_encode([
+                'vi' =>$temp['title'],
+                'en' =>$temp['title'],
+            ]);
+        }
+        // dd($temp);
         $temp['title'] = json_decode($temp['title']);
             $this->data['config'] = $temp;
         }
         $webConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
         if ($webConfig) {
              $web = json_decode($webConfig->value, true);
-             $web['title'] =json_decode($web['title']);
+             if(!is_object((json_decode($temp['title'])))) {
+                $temp['title'] = json_encode([
+                    'vi' =>$temp['title'],
+                    'en' =>$temp['title'],
+                ]);
+            }
+             $web['title'] = json_decode($web['title']);
              $this->data['webconfig'] =$web;
         }
         $this->data['navText'] = __('Quản lý Popup Trang Chủ APP/WEB');
