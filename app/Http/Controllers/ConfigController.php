@@ -437,7 +437,7 @@ class ConfigController extends Controller
             $values = json_decode($config->value, true);
             for ($i = 0; $i < count($this->data['configs']); $i++) {
                 if (!empty($values[$i])) {
-                    if (!empty($values[$i]['title'])) {
+                    if (empty($values[$i]['title'])) {
                             $values[$i]['title'] = json_encode([
                                 'vi' => null,
                                 'en' => null,
