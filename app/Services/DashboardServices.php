@@ -286,4 +286,44 @@ class DashboardServices
         }
         return $chartDataset;
     }
+
+    public function saleReport()
+    {
+        $sales = User::whereIn('role', UserConstants::$saleRoles)
+            ->where('status', 1)
+            ->get();
+        $data = [];
+        $report = [];
+        foreach ($sales as $sale) {
+            $reportDB = DB::table('sale_activities AS sa')
+                ->where('sa.sale_id', $sale->id)
+                ->select(DB::raw('DATE(sa.created_at) AS day'), DB::raw('COUNT(sa.id) AS activity'))
+                ->groupBy('day')
+                ->get();
+            $tmp = [];
+            foreach ($reportDB as $row) {
+                $tmp[$row->day] = $row->activity;
+            }
+            $crrDay = $this->dateF;
+            do {
+                $data[$sale->name][$crrDay] = isset($tmp[$crrDay]) ? $tmp[$crrDay] : 0;
+                $date = date_create($crrDay);
+                date_add($date, date_interval_create_from_date_string("1 day"));
+                $crrDay =  date_format($date, "Y-m-d");
+            } while ($crrDay <= $this->dateT);
+        }
+        $hasHeader = false;
+        foreach ($data as $saleName => $days) {
+            if (!$hasHeader) {
+                $daysHeader = [];
+                foreach (array_keys($days) as $d) {
+                    $daysHeader[] = date('d/m', strtotime($d));
+                }
+                $report[] = ['Sales'] + $daysHeader;
+                $hasHeader = true;
+            }
+            $report[] = [$saleName] + array_values($days);
+        }
+        return $report;
+    }
 }
