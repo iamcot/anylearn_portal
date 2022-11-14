@@ -443,14 +443,14 @@ class ConfigController extends Controller
                                 'en' => null,
                             ]);
                     }
-                $values[$i]['title'] = json_decode($values[$i]['title'], true);
+                // $values[$i]['title'] = json_decode($values[$i]['title'], true);
 
                 }
                 $config = empty($values[$i]) ? [] : $values[$i];
                     $this->data['configs'][$i] = $config;
             }
         }
-          dd($this->data['configs']);
+        //   dd($this->data['configs']);
         $this->data['navText'] = __('Quản lý Các Khoá học Đặc biệt trên HOME APP');
         return view('config.homeclasses', $this->data);
     }
