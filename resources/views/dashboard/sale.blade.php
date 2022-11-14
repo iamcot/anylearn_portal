@@ -20,7 +20,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 </form>
 @endsection
 
-@extends('layout')
+{{-- @extends('layout') --}}
 @section('body')
 <div class="row">
     @php

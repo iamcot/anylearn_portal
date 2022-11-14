@@ -1,6 +1,6 @@
 @inject('dashServ','App\Services\DashboardServices')
 @php
-$dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @request('dateT'));
+$dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @request('dateT') ?? date('Y-m-d'));
 @endphp
 
 @extends('layout')
@@ -21,7 +21,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 @endsection
 @section('body')
 <div class="row">
-@include('dashboard.count_box', ['title' => 'Khóa học trong kỳ', 'data' => number_format($dashServ->itemCount(false),0,',','.'),
+    @include('dashboard.count_box', ['title' => 'Khóa học trong kỳ', 'data' => number_format($dashServ->itemCount(false),0,',','.'),
     'icon' => 'fa-fire', 'color' => 'danger'])
     @include('dashboard.count_box', ['title' => 'Thành viên trong kỳ', 'data' => number_format($dashServ->userCount('member', false),0,',','.'),
     'icon' => 'fa-users', 'color' => 'success' ])
@@ -39,6 +39,27 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     @include('dashboard.count_box', ['title' => 'Tổng Trường học', 'data' => number_format($dashServ->userCount('school'),0,',','.'),
     'icon' => 'fa-university', 'color' => 'info'])
 
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-bottom-primary shadow">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">@lang('Sale activities')</h6>
+            </div>
+            <div class="card-body p-0" style="min-height: 300px;">
+
+                <table class="table table-responsive table-striped">
+                    @foreach($dashServ->saleReport() as $row)
+                    <tr>
+                        @foreach($row as $col)
+                        <td>{{ $col }}</td>
+                        @endforeach
+                    </tr>
+                    @endforeach
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
@@ -93,6 +114,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 
 </div>
 @endsection
+@if($dashServ != null)
 @section('jscript')
 <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
 <script>
@@ -186,3 +208,4 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     });
 </script>
 @endsection
+@endif
