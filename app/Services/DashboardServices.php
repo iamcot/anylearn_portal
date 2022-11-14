@@ -124,7 +124,7 @@ class DashboardServices
         return $chartDataset;
     }
 
-    public function topUser($num = 5)
+    public function topUser($num = 10)
     {
         $query = DB::table('users')
             ->join('items', 'items.user_id', '=', 'users.id')
@@ -144,7 +144,7 @@ class DashboardServices
         return $query;
     }
 
-    public function topItem($num = 5)
+    public function topItem($num = 10)
     {
 
         $query = DB::table('items')
@@ -203,7 +203,7 @@ class DashboardServices
         }
         return $query->sum('orders.quantity');
     }
-    public function saleTopBuyer($saleId, $num = 5)
+    public function saleTopBuyer($saleId, $num = 10)
     {
         $query = DB::table('users')
             ->join('orders', 'orders.user_id', 'users.id')
@@ -228,7 +228,7 @@ class DashboardServices
         return $query;
     }
 
-    public function saleTopItems($saleId, $num = 5)
+    public function saleTopItems($saleId, $num = 10)
     {
         $query = DB::table('users')
             ->join('orders', 'orders.user_id', 'users.id')
@@ -285,5 +285,45 @@ class DashboardServices
             $chartDataset['gmv'][] = $row->gmv;
         }
         return $chartDataset;
+    }
+
+    public function saleReport()
+    {
+        $sales = User::whereIn('role', UserConstants::$saleRoles)
+            ->where('status', 1)
+            ->get();
+        $data = [];
+        $report = [];
+        foreach ($sales as $sale) {
+            $reportDB = DB::table('sale_activities AS sa')
+                ->where('sa.sale_id', $sale->id)
+                ->select(DB::raw('DATE(sa.created_at) AS day'), DB::raw('COUNT(sa.id) AS activity'))
+                ->groupBy('day')
+                ->get();
+            $tmp = [];
+            foreach ($reportDB as $row) {
+                $tmp[$row->day] = $row->activity;
+            }
+            $crrDay = $this->dateF;
+            do {
+                $data[$sale->name][$crrDay] = isset($tmp[$crrDay]) ? $tmp[$crrDay] : 0;
+                $date = date_create($crrDay);
+                date_add($date, date_interval_create_from_date_string("1 day"));
+                $crrDay =  date_format($date, "Y-m-d");
+            } while ($crrDay <= $this->dateT);
+        }
+        $hasHeader = false;
+        foreach ($data as $saleName => $days) {
+            if (!$hasHeader) {
+                $daysHeader = [];
+                foreach (array_keys($days) as $d) {
+                    $daysHeader[] = date('d/m', strtotime($d));
+                }
+                $report[] = ['Sales'] + $daysHeader;
+                $hasHeader = true;
+            }
+            $report[] = [$saleName] + array_values($days);
+        }
+        return $report;
     }
 }
