@@ -2,11 +2,7 @@
 <section class="carousel4">
     <div class="mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}">
-            @if (Session::get('locale') == null || Session::get('locale') == 'vi')
-                <h2 class="m-2 fw-bold text-uppercase">{{ __($title['vi']) }}</h2>
-            @else
-                <h2 class="m-2 fw-bold text-uppercase">{{ __($title['en']) }}</h2>
-            @endif
+                <h2 class="m-2 fw-bold text-uppercase">{{ __($title) }}</h2>
             <div class="owl-carousel owl-theme">
                 @foreach ($data as $class)
                     <a class="p-1 classBox" href="{{ $itemServ->classUrl($class->id) }}">

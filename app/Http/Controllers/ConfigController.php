@@ -357,8 +357,8 @@ class ConfigController extends Controller
                 'value' => json_encode([
                     'image' => empty($file) ? $lastImage : $file['url'],
                     'title' => json_encode([
-                        'vi' =>$config['title']['vi'],
-                        'en' =>$config['title']['en'],
+                        'vi' => $config['title']['vi'],
+                        'en' => $config['title']['en'],
                     ]),
                     'route' => isset($config['route']) ? $config['route'] : "",
                     'args' => isset($config['args']) ? $config['args'] : "",
@@ -370,29 +370,29 @@ class ConfigController extends Controller
         }
         $appConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if ($appConfig) {
-        $temp = json_decode($appConfig->value, true);
-        //  dd(is_object((json_decode($temp['title']))));
-        if(!is_object((json_decode($temp['title'])))) {
-            $temp['title'] = json_encode([
-                'vi' =>$temp['title'],
-                'en' =>$temp['title'],
-            ]);
-        }
-        // dd($temp);
-        $temp['title'] = json_decode($temp['title']);
+            $temp = json_decode($appConfig->value, true);
+            //  dd(is_object((json_decode($temp['title']))));
+            if (!is_object((json_decode($temp['title'])))) {
+                $temp['title'] = json_encode([
+                    'vi' => $temp['title'],
+                    'en' => $temp['title'],
+                ]);
+            }
+            // dd($temp);
+            $temp['title'] = json_decode($temp['title']);
             $this->data['config'] = $temp;
         }
         $webConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
         if ($webConfig) {
-             $web = json_decode($webConfig->value, true);
-             if(!is_object((json_decode($web['title'])))) {
+            $web = json_decode($webConfig->value, true);
+            if (!is_object((json_decode($web['title'])))) {
                 $web['title'] = json_encode([
-                    'vi' =>$web['title'],
-                    'en' =>$web['title'],
+                    'vi' => $web['title'],
+                    'en' => $web['title'],
                 ]);
             }
-             $web['title'] = json_decode($web['title']);
-             $this->data['webconfig'] =$web;
+            $web['title'] = json_decode($web['title']);
+            $this->data['webconfig'] = $web;
         }
         $this->data['navText'] = __('Quản lý Popup Trang Chủ APP/WEB');
         return view('config.homepopup', $this->data);
@@ -411,15 +411,17 @@ class ConfigController extends Controller
             }
 
             $configs = $request->all();
-            // dd($configs);
             $values = [];
             foreach ($configs['block'] as $index => $config) {
-                if (empty($config['title'])) {
-                    $values[$index] = [];
-                } else {
-                    $values[$index] = $config;
+                if($config['classes'] != null){
+                    if (empty($config['title'])) {
+                        $values[$index] = [];
+                    } else {
+                        $values[$index] = $config;
+                    }
                 }
             }
+            // dd($values);
             Configuration::create([
                 'key' => $key,
                 'type' => ConfigConstants::TYPE_CONFIG,
@@ -434,15 +436,26 @@ class ConfigController extends Controller
         if ($config) {
             $values = json_decode($config->value, true);
             for ($i = 0; $i < count($this->data['configs']); $i++) {
-                if (is_object($values[$i]['title'])) {
-                    $values[$i]['title'] = json_encode([
-                                    'vi' =>$values[$i]['title'],
-                                    'en' =>$values[$i]['title'],
-                                ]);
+                if (!empty($values[$i])) {
+                    if (is_object($values[$i]['title'])) {
+                        $values[$i]['title'] = json_encode([
+                            'vi' => $values[$i]['title'],
+                            'en' => $values[$i]['title'],
+                        ]);
+                    }
+                    if ($values[$i]['title'] == null) {
+                        $values[$i]['title'] = json_encode([
+                            'vi' => null,
+                            'en' => null,
+                        ]);
+                        $values[$i]['title'] = json_decode($values[$i]['title'], true);
+                    }
+                    // dd($values[$i]['title']);
+                    //   $values[$i] = json_decode($config->value, true);
+                    $config = empty($values[$i]) ? [] : $values[$i];
+                    $this->data['configs'][$i] = $config;
                 }
-                // $values[$i] = json_decode($config->value, true);
-                $config= empty($values[$i]) ? [] : $values[$i];
-                $this->data['configs'][$i] = $config;
+
             }
         }
         // dd($this->data['configs']);
@@ -484,7 +497,8 @@ class ConfigController extends Controller
         return view('config.tags', $this->data);
     }
 
-    public function touchTagStatus($tag) {
+    public function touchTagStatus($tag)
+    {
         $rs = Tag::where('tag', $tag)->update(
             [
                 'status' => DB::raw('1 - status')

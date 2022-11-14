@@ -16,11 +16,14 @@ use App\Services\UserServices;
 use App\Models\I18nContent;
 use App\Services\CategoryServices;
 use Exception;
+use Hamcrest\Core\HasToString;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Exists;
 use Vanthao03596\HCVN\Models\Province;
 
 class PageController extends Controller
@@ -85,18 +88,29 @@ class PageController extends Controller
         $homeClasses = [];
         if ($homeClassesDb) {
             foreach (json_decode($homeClassesDb->value, true) as $block) {
+                // json_decode($block->value, true);
+                // dd($block);
+
                 if (empty($block)) {
                     continue;
                 }
+
                 $items = Item::whereIn('id', explode(",", $block['classes']))
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
-                $homeClasses[] = [
-                    'title' => $block['title'],
-                    'classes' => $items
-                ];
-
+                $locale = App::getLocale();
+                if (!empty($block['title'][$locale])) {
+                    $homeClasses[] = [
+                        'title' => $block['title'][$locale],
+                        'classes' => $items
+                    ];
+                } else {
+                    $homeClasses[] = [
+                        'title' => null,
+                        'classes' => $items
+                    ];
+                }
             }
         }
         $this->data['classes'] = $homeClasses;
