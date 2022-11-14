@@ -48,7 +48,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
 
-                <table class="table table-responsive table-striped">
+                <table class="table table-responsive table-striped table-freeze-col table-bordered">
                     @foreach($dashServ->saleReport() as $row)
                     <tr>
                         @foreach($row as $col)
