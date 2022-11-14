@@ -96,6 +96,7 @@ class PageController extends Controller
                     'title' => $block['title'],
                     'classes' => $items
                 ];
+
             }
         }
         $this->data['classes'] = $homeClasses;
