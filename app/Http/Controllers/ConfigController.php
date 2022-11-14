@@ -443,7 +443,7 @@ class ConfigController extends Controller
                             'en' => $values[$i]['title'],
                         ]);
                     }
-                    if ($values[$i]['title'] == null) {
+                    if (empty($values[$i]['title'])) {
                         $values[$i]['title'] = json_encode([
                             'vi' => null,
                             'en' => null,
