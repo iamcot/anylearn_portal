@@ -458,7 +458,7 @@ class ConfigController extends Controller
 
             }
         }
-        // dd($this->data['configs']);
+         dd($this->data['configs']);
         $this->data['navText'] = __('Quản lý Các Khoá học Đặc biệt trên HOME APP');
         return view('config.homeclasses', $this->data);
     }
