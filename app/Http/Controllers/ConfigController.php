@@ -437,28 +437,26 @@ class ConfigController extends Controller
             $values = json_decode($config->value, true);
             for ($i = 0; $i < count($this->data['configs']); $i++) {
                 if (!empty($values[$i])) {
-                    if (is_object($values[$i]['title'])) {
+                    if (!empty($values[$i]['title'])) {
                         $values[$i]['title'] = json_encode([
                             'vi' => $values[$i]['title'],
                             'en' => $values[$i]['title'],
                         ]);
                     }
-                    if (empty($values[$i]['title'])) {
-                        $values[$i]['title'] = json_encode([
-                            'vi' => null,
-                            'en' => null,
-                        ]);
-                        $values[$i]['title'] = json_decode($values[$i]['title'], true);
+                    else{
+                            $values[$i]['title'] = json_encode([
+                                'vi' => null,
+                                'en' => null,
+                            ]);
                     }
-                    // dd($values[$i]['title']);
-                    //   $values[$i] = json_decode($config->value, true);
-                    $config = empty($values[$i]) ? [] : $values[$i];
-                    $this->data['configs'][$i] = $config;
-                }
+                $values[$i]['title'] = json_decode($values[$i]['title'], true);
 
+                }
+                $config = empty($values[$i]) ? [] : $values[$i];
+                    $this->data['configs'][$i] = $config;
             }
         }
-         dd($this->data['configs']);
+          dd($this->data['configs']);
         $this->data['navText'] = __('Quản lý Các Khoá học Đặc biệt trên HOME APP');
         return view('config.homeclasses', $this->data);
     }
