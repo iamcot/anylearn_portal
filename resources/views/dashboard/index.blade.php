@@ -40,7 +40,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     'icon' => 'fa-university', 'color' => 'info'])
 
 </div>
-<div class="row">
+<div class="row mb-3">
     <div class="col-md-12">
         <div class="card border-bottom-primary shadow">
             <div class="card-header">
