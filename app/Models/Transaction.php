@@ -10,7 +10,7 @@ class Transaction extends Model
 {
     protected $fillable = [
         'user_id', 'type', 'amount', 'pay_method', 'pay_info', 'order_id', 'content', 'status',
-        'ref_user_id', 'ref_amount'
+        'ref_user_id', 'ref_amount','created_at','updated_at'
     ];
 
     public function user()

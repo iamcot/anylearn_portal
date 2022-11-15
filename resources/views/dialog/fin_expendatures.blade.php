@@ -25,8 +25,8 @@
                         <label>{{ __('Loại chi phí') }}</label>
                         <select name="expend[type]" id="form_type" class="form-control" required>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY }}">@lang('Lương/Thưởng')</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_FIXED_FEE }}">@lang('Phí cố định')</option>
-                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE }}">@lang('Phí biến đổi')</option>
+                            {{-- <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_FIXED_FEE }}">@lang('Phí cố định')</option>
+                            <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE }}">@lang('Phí biến đổi')</option> --}}
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_MARKETING }}">Marketing</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_EVENT }}">@lang('Sự kiện')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_ASSETS }}">@lang('Tài sản')</option>
@@ -40,11 +40,11 @@
                     </div>
                     <div class="form-group">
                         <label>{{ __('Ngày chi') }}</label>
-                        <input  id="form_date" type="date" class="form-control" name="expend[date]" value="{{ date('Y-m-d') }}">
+                        <input  id="form_date" type="date" class="form-control" name="expend[date]" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="form-group">
                         <label>{{ __('Số tiền') }}</label>
-                        <input  id="form_amount" type="number" class="form-control" name="expend[amount]" value="" required>
+                        <input  id="form_amount" type="number" min="0" class="form-control" name="expend[amount]" value="" required>
                     </div>
                     <div class="form-group">
                         <label>{{ __('Ghi chú') }}</label>

@@ -124,7 +124,7 @@ class TransactionController extends Controller
             }
             $headers = [
                 // "Content-Encoding" => "UTF-8",
-                "Content-type" => "text/csv", 
+                "Content-type" => "text/csv",
                 "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
@@ -785,9 +785,12 @@ class TransactionController extends Controller
                 'pay_method' => $expend['pay_method'],
                 'pay_info' => $expend['comment'],
                 'created_at' => $expend['date'],
+                'updated_at' => $expend['date'],
                 'status' => 1,
             ];
-            if ($request->get('expendid') == "") {
+            // Transaction::create($obj);
+            // dd($obj);
+            if (empty($request->get('expendid'))) {
                 Transaction::create($obj);
             } else {
                 Transaction::find($request->get('expendid'))->update($obj);
@@ -797,8 +800,8 @@ class TransactionController extends Controller
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)->get();
 
         $this->data['transaction'] = Transaction::whereIn('type', [
-            ConfigConstants::TRANSACTION_FIN_ASSETS,
-            ConfigConstants::TRANSACTION_FIN_FIXED_FEE,
+            // ConfigConstants::TRANSACTION_FIN_ASSETS,
+            // ConfigConstants::TRANSACTION_FIN_FIXED_FEE,
             ConfigConstants::TRANSACTION_FIN_MARKETING,
             ConfigConstants::TRANSACTION_FIN_OTHERS,
             ConfigConstants::TRANSACTION_FIN_SALARY,
@@ -807,6 +810,8 @@ class TransactionController extends Controller
             ->orderby('id', 'desc')
             ->with('refUser')
             ->paginate(20);
+            $tamp = $this->data['transaction'];
+        //  dd($tamp[1]->);
         $this->data['navText'] = __('Quản lý Chi tiền');
         return view('transaction.expenditures', $this->data);
     }
