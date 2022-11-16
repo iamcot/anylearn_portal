@@ -38,6 +38,10 @@ class SocialController extends Controller
             $value->user = $user;
             $value->comments = [];
             $value->like = [];
+            $value->isliked = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)
+                            ->where('user_id', $user->id)
+                            ->where('post_id', $value->id)
+                            ->count();
             return $value;
         });
         return response()->json([
@@ -61,6 +65,10 @@ class SocialController extends Controller
         $data->user = $user;
         $data->comments = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $postId)->get();
         $data->like = [];
+        $data->isliked = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)
+                            ->where('user_id', $user->id)
+                            ->where('post_id', $postId)
+                            ->count();
         return response()->json($data);
     }
 
