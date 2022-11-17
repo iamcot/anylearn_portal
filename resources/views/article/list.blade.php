@@ -8,7 +8,8 @@
             <option {{ app('request')->input('t') == 'title' ? 'selected' : '' }} value="title">@lang('Tiêu đề')</option>
         </select>
     </div>
-    <div class="col-xs-6 mr-1">
+
+    <div class="col-xs-7 mr-1">
         <input value="{{ app('request')->input('s') }}" type="text" class="form-control" name="s" placeholder="{{ __('Tìm kiếm') }}" />
     </div>
     <div class="col-xs-1 mr-1">

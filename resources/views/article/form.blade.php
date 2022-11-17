@@ -70,12 +70,12 @@
                                 @if ($locale != App\Models\I18nContent::DEFAULT)
                                     <div class="form-group row">
                                         <label for="title{{ $locale }}"
-                                            class="col-md-2 col-form-label text-md-right">{{ __('Tiêu đề') }}[{{ $locale }}]</label>
+                                            class="col-md-2 col-form-label text-md-right font-weight-bold @error('title') is-invalid @enderror">{{ __('Tiêu đề') }}[{{ $locale }}]</label>
                                         <div class="col-md-8">
                                             <input id="title{{ $locale }}" type="text"
                                                 class="form-control @error('title') is-invalid @enderror" name="title[{{ $locale }}]"
                                                 value="{{ old('title', !empty($article) ? $article->title[$locale] : '') }}"
-                                                required>
+                                                >
                                         </div>
                                     </div>
                                 @endif
@@ -83,7 +83,7 @@
                                     <label for="short_content{{ $locale }}"
                                         class="col-md-2 col-form-label text-md-right font-weight-bold @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}[{{ $locale }}]</label>
                                     <div class="col-md-8">
-                                        <textarea required class="form-control" id="short_content{{ $locale }}" name="short_content[{{ $locale }}]">{!! old('short_content', !empty($article) ? $article->short_content[$locale] : '') !!}</textarea>
+                                        <textarea class="form-control" id="short_content{{ $locale }}" name="short_content[{{ $locale }}]">{!! old('short_content', !empty($article) ? $article->short_content[$locale] : '') !!}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">

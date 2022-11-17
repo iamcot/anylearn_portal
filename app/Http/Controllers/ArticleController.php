@@ -68,7 +68,7 @@ class ArticleController extends Controller
                     'short_content' => $short_content[$locale],
                     'content' => $content[$locale],
                     'type' => $input['type'],
-                    'image' => $input['image'],
+                    'image' => isset($input['image'])?$input['image']:null,
                     'video' => $input['video'],
                     'tags' => $input['tags']
                 ];
