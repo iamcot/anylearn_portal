@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+
 
 class Transaction extends Model
 {
@@ -24,6 +26,50 @@ class Transaction extends Model
     public function order()
     {
         return $this->belongsTo('App\Models\Order', 'order_id', 'id');
+    }
+    public function search(Request $request, $file = false)
+    {
+        $data = Transaction::whereIn('type', [
+            ConfigConstants::TRANSACTION_FIN_OFFICE,
+            ConfigConstants::TRANSACTION_FIN_SALE,
+            ConfigConstants::TRANSACTION_FIN_MARKETING,
+            ConfigConstants::TRANSACTION_FIN_OTHERS,
+            ConfigConstants::TRANSACTION_FIN_SALARY,
+            ConfigConstants::TRANSACTION_FIN_ASSETS,
+        ])
+            ->orderby('id', 'desc')
+             ->with('refUser');
+            // ->paginate(20);
+            if ($request->input('id_f') > 0) {
+                if ($request->input('id_t') > 0) {
+                    $data = $data->where('transactions.id', '>=', $request->input('id_f'))->where('transactions.id', '<=', $request->input('id_t'));
+                } else {
+                    $data = $data->where('transactions.id', $request->input('id_f'));
+                }
+            }
+            if ($request->input('content')) {
+                $data = $data->where('transactions.content', 'like', '%' . $request->input('content') . '%');
+            }
+            if ($request->input('type')) {
+                $data = $data->where('transactions.type', $request->input('type'));
+            }
+            if ($request->input('date')) {
+                $data = $data->whereDate('transactions.created_at', '>=', $request->input('date'));
+            }
+            if ($request->input('datet')) {
+                $data = $data->whereDate('transactions.created_at', '<=', $request->input('datet'));
+            }
+            if (!$file) {
+                $data = $data->paginate(20);
+            } else {
+                $data = $data->get();
+                if ($data) {
+                    $data = json_decode(json_encode($data->toArray()), true);
+                } else {
+                    $data = [];
+                }
+            }
+            return $data;
     }
     public function pendingWalletM($userId)
     {
