@@ -109,7 +109,7 @@
                 <div class="form-group row">
                     <label for="password" class="col-md-2 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
                     <div class="col-md-8">
-                        <input id="password" type="password" class="form-control" name="password" value="" {{ empty($user) ? 'required' : '' }}>
+                        <input id="password" type="password" class="form-control" name="password" value="" {{ empty($user) ? 'required' : '' }} autocomplete="one-time-code">
                         @if(!empty($user))
                         <span class="small">*Để trống nếu không thay đổi</span>
                         @endif
