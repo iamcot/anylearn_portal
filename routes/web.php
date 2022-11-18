@@ -220,6 +220,8 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/knowledge/topic/{id}/category', 'KnowledgeController@topicCategory')->name('knowledge.topic.category');
 
     Route::middleware('access.mod')->any('/devtools/change-test', 'DevToolsController@changeTestBranch')->name('devtools.change-test');
+
+    Route::get('/spm', 'DashboardController@spm')->name('spm.general');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');
