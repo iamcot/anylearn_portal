@@ -3,8 +3,14 @@
 @section('title')
     {{ $item->title }}
 @endsection
+@section('spmb')
+pdp
+@endsection
+@section('canonical')
+{{ $itemServ->classUrl($item->id) }}
+@endsection
 @section('body')
-    <div class="container mt-5">
+    <section class="container mt-5" id="spmc" data-spm="{{ $item->id }}">
         <div class="card shadow border-0">
             <div class="card-body">
                 <div class="row">
@@ -146,7 +152,7 @@
                 ])
             </div>
         @endif
-    </div>
+    </section>
     @include('dialog.pdpadd2cart', [
         'class' => $item,
         'author' => $author,

@@ -15,8 +15,8 @@ home
         @lang('Nền tảng tìm kiếm Trường học và Chuyên gia hàng đầu, Khóa học Offline và Online')
     </h2>
     <div class="mt-3 text-center" id="search">
-        <form action="/classes" method="get" id="schoolsearch">
-            <button class="border-0 bg-white" name="a" value="search" data-spm="web.home.search.0"><i class="fa fa-search text-success"></i></button>
+        <form action="/classes" method="get" id="schoolsearch" data-spm="search.0">
+            <button class="border-0 bg-white" name="a" value="search"><i class="fa fa-search text-success"></i></button>
             <input type="text" name="s" class="form-control rounded-pill shadow" placeholder="@lang('Tìm khoá học...')">
         </form>
     </div>

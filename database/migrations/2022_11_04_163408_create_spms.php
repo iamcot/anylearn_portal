@@ -28,7 +28,7 @@ class CreateSpms extends Migration
             $table->string('p_url')->nullable();
             $table->string('p_ref')->nullable();
             $table->string('p_title')->nullable();
-            $table->string('p_meta_desc')->nullable();
+            $table->text('p_meta_desc')->nullable();
             $table->string('p_meta_robots')->nullable();
             $table->string('p_canonical')->nullable();
             $table->string('p_lang')->nullable();

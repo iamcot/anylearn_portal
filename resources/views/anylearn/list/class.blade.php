@@ -6,6 +6,9 @@
 @section('description')
     @lang('Tổng hợp các khóa học, chương trình học được kiểm duyệt và đánh giá bởi các chuyên gia tại anyLEARN.')
 @endsection
+@section('spmb')
+classes
+@endsection
 @section('body')
     @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
     @if (!empty($author))

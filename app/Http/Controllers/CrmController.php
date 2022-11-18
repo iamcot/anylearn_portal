@@ -126,6 +126,6 @@ class CrmController extends Controller
 
     public function anylog(Request $request) {
         $spmM = new Spm();
-        $rs = $spmM->addSpm($request);
+        $spmM->addSpm($request);
     }
 }

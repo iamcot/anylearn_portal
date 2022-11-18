@@ -5,7 +5,7 @@
             <h2 class="m-2 fw-bold text-uppercase">{{ __($title) }}</h2>
             <div class="owl-carousel owl-theme" >
                 @foreach($data as $class)
-                <a class="p-1 classBox" href="{{ $itemServ->classUrl($class->id) }}">
+                <a class="p-1 classBox" href="{{ $itemServ->classUrl($class->id) }}" data-spm="topclass.{{ $class->id }}">
                     <div class="card border-0 shadow-sm">
                         <div class="card-img">
                             <div class="imagebox">

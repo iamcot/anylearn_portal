@@ -38,17 +38,19 @@ class Spm extends Model
                 'spmc' => $spms[2],
                 'spmd' => $spms[3],
                 'spm_pre' => $request->get('spm_pre'),
-                'p_url' => URL::full(),
-                'p_ref' => $request->server('HTTP_REFERER'),
+                'p_url' => $request->get('p_url'),
+                'p_ref' => $request->get('p_ref'),
                 'p_title' => $request->get('p_title'),
                 'p_meta_desc' => $request->get('p_meta_desc'),
-                'p_meta_canonical' => URL::current(),
+                'p_meta_canonical' => $request->get('p_meta_canon'),
                 'p_lang' => $request->get('p_lang', App::getLocale()),
                 'os' => $request->get('os'),
                 'country' => $request->get('country'),
                 'screen' => $request->get('screen'),
+                'logfrom' => $request->get('logfrom'),
                 'ip' => $request->ip(),
                 'browser' => $request->header('User-Agent'),
+                'extra' => $request->get('extra'),
             ];
             // get country from IP
             Spm::create($data);

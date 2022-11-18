@@ -64,7 +64,7 @@ Route::any('/password/otp', 'Auth\OTPResetPasswordController@showOtpRequestForm'
 Route::any('/password/otp/reset', 'Auth\OTPResetPasswordController@sendOtp')->name('password.resetotp');
 Route::any('/password/update', 'Auth\OTPResetPasswordController@updatePassword')->name('password.updateotp');
 
-Route::get('/anylog.gif', 'CrmController@anylog');
+Route::get('/anylog.gif', 'CrmController@anylog')->name('anylog');
 
 Auth::routes();
 
