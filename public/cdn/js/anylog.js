@@ -53,8 +53,8 @@
                 method: 'GET',
                 // timeout: 100
             });
-            return true;
         }
+        return true;
     });
 
     function appendSpmToRedirectUrl(url, spm) {
