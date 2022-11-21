@@ -29,6 +29,13 @@
         gtag('js', new Date());
         gtag('config', 'G-NKEYYJ92SP');
     </script>
+     <script>
+        a_config = {
+            "logUrl": "{{ route('anylog') }}",
+            "uid": "{{ Auth::check() ? Auth::user()->id : '' }}",
+            "lang": "{{ App::getLocale() }}",
+        };
+    </script>
 </head>
 <body id="admin-top" data-spm="@yield('spmb')">
     <div id="wrapper">
@@ -68,6 +75,8 @@
     <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     <script src="/cdn/js/sb-admin-2.min.js"></script>
+    <script async src="/cdn/js/anylog.js"></script>
+
     @yield('jscript')
 </body>
 

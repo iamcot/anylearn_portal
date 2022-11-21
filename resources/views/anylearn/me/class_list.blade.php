@@ -1,7 +1,9 @@
 @inject('userServ', 'App\Services\UserServices')
 @inject('itemServ', 'App\Services\ItemServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+class_list
+@endsection
 @section('rightFixedTop')
     <div class="col-xs-2 mr-1">
         <a class="btn btn-success btn-sm border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus">
