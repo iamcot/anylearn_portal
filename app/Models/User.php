@@ -336,6 +336,9 @@ class User extends Authenticatable
         if ($request->input('ref_id')) {
             $members = $members->where('users.user_id', $request->input('ref_id'));
         }
+        if ($request->input('sale_id')) {
+            $members = $members->where('users.sale_id', $request->input('sale_id'));
+        }
         if ($request->input('date')) {
             $members = $members->whereDate('users.created_at', '>=', $request->input('date'));
         }

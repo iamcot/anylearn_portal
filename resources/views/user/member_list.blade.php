@@ -23,7 +23,7 @@
                     <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên thành viên" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-4">
+            <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">Vai trò</label>
                     <select class="form-control" name="role" id="">
@@ -32,6 +32,12 @@
                         <option {{ app('request')->input('role') == 'school' ? 'selected' : '' }} value="school">Trung tâm</option>
                         <option {{ app('request')->input('role') == 'teacher' ? 'selected' : '' }} value="teacher">Chuyên gia</option>
                     </select>
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-2">
+                <div class="form-group">
+                    <label for="">Sale Id</label>
+                    <input value="{{ app('request')->input('sale_id') }}" type="text" class="form-control" name="sale_id" placeholder="Sale Id" />
                 </div>
             </div>
             <div class="col-xs-6 col-lg-4">
