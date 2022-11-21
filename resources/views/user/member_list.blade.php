@@ -134,6 +134,7 @@
                     </td>
                     <td>
                         {{ $user->last_contact ? date('d/m/y', strtotime($user->last_contact)) : "" }}
+                        {!! $user->last_note ? "<br>" . $user->last_note : "" !!}
                     </td>
 
                     @if(!$isSale)

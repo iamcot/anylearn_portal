@@ -381,6 +381,7 @@ class User extends Authenticatable
                 'lastsa.last_contact',
                 'users.is_registered',
                 'users.source',
+                DB::raw("(SELECT content FROM sale_activities WHERE `type` = 'note' AND member_id = users.id ORDER BY sale_activities.id DESC limit 1) AS last_note")
             );
 
         if (!$file) {
