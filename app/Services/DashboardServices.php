@@ -298,8 +298,7 @@ class DashboardServices
             $reportDB = DB::table('sale_activities AS sa')
                 ->where('sa.sale_id', $sale->id)
                 ->select(DB::raw('DATE(sa.created_at) AS day'), DB::raw('COUNT(sa.id) AS activity'))
-                ->groupBy('day')
-                ->groupBy('sa.member_id')
+                ->groupBy('day', 'sa.member_id')
                 ->get();
             $tmp = [];
             foreach ($reportDB as $row) {
