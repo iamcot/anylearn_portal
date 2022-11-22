@@ -35,6 +35,7 @@ class SocialController extends Controller
             $value->description = "";
             $value->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)->where('post_id', $value->id)->count();
             $value->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $value->id)->count();
+            $value->comment_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $value->id)->count();
             $value->user = $user;
             $value->comments = [];
             $value->like = [];

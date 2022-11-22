@@ -1,5 +1,8 @@
 @inject('userServ', 'App\Services\UserServices')
 @extends('anylearn.me.layout')
+@section('spmb')
+child
+@endsection
 @section('rightFixedTop')
     <button class="btn btn-success rounded rounded-pill btn-sm my-2 my-sm-0 ml-2 " data-bs-toggle="modal"
         data-bs-target="#exampleModal">@lang('Tạo Tài khoản')</button>

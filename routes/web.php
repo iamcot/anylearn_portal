@@ -64,6 +64,8 @@ Route::any('/password/otp', 'Auth\OTPResetPasswordController@showOtpRequestForm'
 Route::any('/password/otp/reset', 'Auth\OTPResetPasswordController@sendOtp')->name('password.resetotp');
 Route::any('/password/update', 'Auth\OTPResetPasswordController@updatePassword')->name('password.updateotp');
 
+Route::get('/anylog.gif', 'CrmController@anylog')->name('anylog');
+
 Auth::routes();
 
 Route::middleware(['auth'])->prefix('me')->group(function () { 
@@ -218,6 +220,8 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/knowledge/topic/{id}/category', 'KnowledgeController@topicCategory')->name('knowledge.topic.category');
 
     Route::middleware('access.mod')->any('/devtools/change-test', 'DevToolsController@changeTestBranch')->name('devtools.change-test');
+
+    Route::get('/spm', 'DashboardController@spm')->name('spm.general');
 });
 
 Route::get('/inactive', 'UserController@inactivePage')->name('user.inactive');

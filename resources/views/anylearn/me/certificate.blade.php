@@ -1,6 +1,8 @@
 @inject('userServ','App\Services\UserServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+cert
+@endsection
 @section('body')
 <div class="row">
     <div class="col-12 mb-3">

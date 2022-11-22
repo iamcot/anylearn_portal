@@ -64,7 +64,8 @@ class UserServices
             'user.members',
             'transaction.commission',
             'useractions',
-            'user.mods'
+            'user.mods',
+            'config.guide',
         ],
     ];
 

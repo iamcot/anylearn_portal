@@ -1,6 +1,9 @@
 @inject('itemServ', 'App\Services\ItemServices')
 @inject('transServ', 'App\Services\TransactionService')
 @extends('anylearn.layout')
+@section('spmb')
+cart
+@endsection
 @if (empty($order))
     @section('body')
         <div class="card mb-5 shadow">
@@ -69,10 +72,10 @@
                 </table>
                 @if (empty($voucherUsed))
                     @if ($api_token)
-                        <form method="POST" action="{{ route('exchangePoint', ['api_token' => $api_token]) }}"
+                        <form data-spm="cart.anypoint-change" method="POST" action="{{ route('exchangePoint', ['api_token' => $api_token]) }}"
                             id="exchangePoint">
                         @else
-                            <form method="POST" action="{{ route('exchangePoint') }}" id="exchangePoint">
+                            <form  data-spm="cart.anypoint-change" method="POST" action="{{ route('exchangePoint') }}" id="exchangePoint">
                     @endif
                     @csrf
                     <input type="hidden" name="order_id" value="{{ $order->id }}">
@@ -111,10 +114,10 @@
 
                 @if (empty($pointUsed))
                     @if ($api_token)
-                        <form method="POST" action="{{ route('applyvoucher', ['api_token' => $api_token]) }}"
+                        <form data-spm="cart.voucher-apply"  method="POST" action="{{ route('applyvoucher', ['api_token' => $api_token]) }}"
                             id="cartvoucher">
                         @else
-                            <form method="POST" action="{{ route('applyvoucher') }}" id="cartvoucher">
+                            <form data-spm="cart.voucher-apply" method="POST" action="{{ route('applyvoucher') }}" id="cartvoucher">
                     @endif
                     @csrf
                     <input type="hidden" name="order_id" value="{{ $order->id }}">
@@ -154,9 +157,9 @@
         </div>
 
         @if ($api_token)
-            <form method="POST" action="{{ route('payment', ['api_token' => $api_token]) }}" id="cartsubmit">
+            <form data-spm="cart.purchased" method="POST" action="{{ route('payment', ['api_token' => $api_token]) }}" id="cartsubmit">
             @else
-                <form method="POST" action="{{ route('payment') }}" id="cartsubmit">
+                <form  data-spm="cart.purchased" method="POST" action="{{ route('payment') }}" id="cartsubmit">
         @endif
         @csrf
         @if (!empty($order))

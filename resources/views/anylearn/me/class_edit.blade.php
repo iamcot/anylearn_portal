@@ -1,5 +1,7 @@
 @extends('anylearn.me.layout')
-
+@section('spmb')
+class_edit
+@endsection
 @section('rightFixedTop')
 <a class="btn btn-sm btn-success border-0 rounded-pill" href="{{ route('me.class.create') }}"><i class="fas fa-plus"></i>
     <span class="mobile-no-text">@lang('Thêm mới')</span></a>

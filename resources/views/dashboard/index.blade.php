@@ -52,7 +52,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                     @foreach($dashServ->saleReport() as $row)
                     <tr>
                         @foreach($row as $col)
-                        <td>{{ $col }}</td>
+                        <td>@if($col == 0)  {{ $col }} @else <a href="{{ route('user.members') }}">{{ $col }}</a> @endif</td>
                         @endforeach
                     </tr>
                     @endforeach

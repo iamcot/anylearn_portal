@@ -2,7 +2,9 @@
 @inject('itemServ', 'App\Services\ItemServices')
 
 @extends('anylearn.me.layout')
-
+@section('spmb')
+orders
+@endsection
 @section('body')
     <ul class="nav nav-tabs" id="classtab" role="tablist">
         <li class="nav-item" role="presentation">

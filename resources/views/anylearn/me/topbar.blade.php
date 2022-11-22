@@ -1,6 +1,6 @@
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-print-none">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('me.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('me.dashboard') }}"  data-spm="topnav.dashboard">
                 <img src="/cdn/img/logo.png" alt="" width="30" height="30" class="d-block d-sm-none">
                 <img src="/cdn/img/logo-full.png" alt="" width="120" height="30" class="d-none d-sm-block">
             </a>
@@ -25,12 +25,12 @@
 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/">
+                    <a class="nav-link" href="/"  data-spm="topnav.home">
                         <i class="fas fa-home fa-fw mr-2 text-success"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('me.notification') }}">
+                    <a class="nav-link" href="{{ route('me.notification') }}" data-spm="topnav.notification">
                         <i class="fas fa-bell fa-fw mr-2 text-success"></i>
                     </a>
                 </li>
@@ -43,9 +43,9 @@
                             @endif
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"  data-spm="topnav.lang_vi">
                             <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Tiếng Việt</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"  data-spm="topnav.lang_vi">
                             <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
                     </ul>
                 </li>

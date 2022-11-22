@@ -1,5 +1,8 @@
 @inject('userServ','App\Services\UserServices')
 @extends('anylearn.me.layout')
+@section('spmb')
+child_edit
+@endsection
 @section('body')
 
 <form method="POST">
