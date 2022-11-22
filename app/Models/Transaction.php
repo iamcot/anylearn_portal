@@ -66,7 +66,7 @@ class Transaction extends Model
 
                 if ($data) {
                     $data->transform(function($value) {
-
+                        dd($value->refUser->name);
                         $value->refName = $value->refUser->name;
                         $value->refPhone = $value->refUser->phone;
 
