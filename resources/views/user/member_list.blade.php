@@ -40,7 +40,7 @@
                     <input value="{{ app('request')->input('sale_id') }}" type="text" class="form-control" name="sale_id" placeholder="Sale Id" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-4">
+            <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">SDT</label>
                     <input value="{{ app('request')->input('phone') }}" type="text" class="form-control" name="phone" placeholder="SDT" />
@@ -52,16 +52,22 @@
                     <input value="{{ app('request')->input('ref_id') }}" type="text" class="form-control" name="ref_id" placeholder="ID người giới thiệu" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-3">
+            <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">Thời gian tạo từ</label>
                     <input value="{{ app('request')->input('date') }}" type="date" class="form-control" name="date" placeholder="Thời gian tạo" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-3">
+            <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">Thời gian tạo đến</label>
                     <input value="{{ app('request')->input('datet') }}" type="date" class="form-control" name="datet" placeholder="Thời gian tạo đến" />
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-2">
+                <div class="form-group">
+                    <label for="">Ngày Liên Hệ</label>
+                    <input value="{{ app('request')->input('adate') }}" type="date" class="form-control" name="adate" placeholder="Ngày liên hệ" />
                 </div>
             </div>
         </div>

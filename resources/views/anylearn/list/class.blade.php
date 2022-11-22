@@ -96,7 +96,7 @@ classes
                                     </div>
                                     <div class="p-1">@include('anylearn.widget.rating', ['score' => $class->rating ?? 0])</div>
                                     <div class="text-center mb-2">
-                                        <a data-spm="author_classes.{{ $author->id }}" href="{{ $itemServ->classUrl($class->id) }}"
+                                        <a data-spm="author_classes.{{ !empty($author) ? $author->id  : 0 }}" href="{{ $itemServ->classUrl($class->id) }}"
                                             class="btn btn-success rounded-pill border-0 w-75">@lang('CHI TIẾT')</a>
                                     </div>
                                 </div>
