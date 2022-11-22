@@ -42,7 +42,7 @@
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY }}">
                                 @lang('Lương/Thưởng')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_OFFICE }}">
-                                @lang('Văn Phòng')</option>\
+                                @lang('Văn Phòng')</option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_SALE }}">@lang('Chi Phí Bán Hàng')
                             </option>
                             <option value="{{ \App\Constants\ConfigConstants::TRANSACTION_FIN_MARKETING }}">Marketing

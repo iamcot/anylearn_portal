@@ -60,10 +60,17 @@ class Transaction extends Model
                 $data = $data->whereDate('transactions.created_at', '<=', $request->input('datet'));
             }
             if (!$file) {
-                $data = $data->paginate(20);
+                 $data = $data->paginate(20);
             } else {
-                $data = $data->get();
+               $data = $data->get();
                 if ($data) {
+                    $data->transform(function($value) {
+                        $value->refName = $value->refUser->name;
+                        $value->refPhone = $value->refUser->phone;
+
+                        unset($value->refUser);
+                        return $value;
+                    });
                     $data = json_decode(json_encode($data->toArray()), true);
                 } else {
                     $data = [];

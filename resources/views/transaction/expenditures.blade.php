@@ -107,7 +107,14 @@
                                         {{ $row->refUser->name }} ({{ $row->refUser->phone }})
                                     @endif
                                 </td>
-                                <td class="text-center" scope="row">{{ $row->type }}</td>
+                                <td class="text-center" scope="row">
+                                @if ($row->type == \App\Constants\ConfigConstants::TRANSACTION_FIN_SALARY)@lang('Lương/Thưởng')@endif
+                                @if ($row->type == \App\Constants\ConfigConstants::TRANSACTION_FIN_OFFICE)@lang('Văn Phòng')@endif
+                                @if ($row->type == \App\Constants\ConfigConstants::TRANSACTION_FIN_SALE)@lang('Chi Phí Bán Hàng')@endif
+                                @if ($row->type == \App\Constants\ConfigConstants::TRANSACTION_FIN_MARKETING) Marketing @endif
+                                @if ($row->type == \App\Constants\ConfigConstants::TRANSACTION_FIN_ASSETS)@lang('Tài sản')@endif
+                                @if ($row->type == \App\Constants\ConfigConstants::TRANSACTION_FIN_OTHERS)@lang('Chi khác')@endif</td>
+
                                 <td class="text-center" scope="row"><p class="inline-block">{{ number_format($row->amount) }}</p>
 
                                 </td>

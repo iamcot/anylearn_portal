@@ -818,13 +818,14 @@ class TransactionController extends Controller
         }
         if ($request->input('action') == 'file') {
             $data = $transM->search($request, true);
+
             if (!$data) {
                 return redirect()->route('fin.expenditures');
             }
             $headers = [
                 // "Content-Encoding" => "UTF-8",
                 "Content-type" => "text/csv",
-                "Content-Disposition" => "attachment; filename=anylearn_member_" . now() . ".csv",
+                "Content-Disposition" => "attachment; filename=anylearn_expenditures_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
                 "Expires" => "0"
@@ -834,12 +835,21 @@ class TransactionController extends Controller
                 $file = fopen('php://output', 'w');
                 fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
                 fputcsv($file, array_keys($data[0]));
+
+
                 foreach ($data as $row) {
+
                     mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
+
                     fputcsv($file, $row);
+
                 }
                 fclose($file);
             };
+            $amount = $data->sum('amount');
+            $this->data['amount'] = $amount;
+            $this->data['transaction'] = $data;
+
             return response()->stream($callback, 200, $headers);
         } else{
             $data = $transM->search($request);
