@@ -34,7 +34,7 @@
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
-        
+
     </div>
     <li class="nav-item {{ $route == 'me.dashboard' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.dashboard') }}"  data-spm="nav.edit">
@@ -66,6 +66,13 @@
             <i class="fas fa-fw fa-wallet"></i>
             <span>@lang('Giao dịch của tôi')</span></a>
     </li>
+    @if(Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+    <li class="nav-item {{ in_array($route, ['helpcenter.seller']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('helpcenter.seller') }}" data-spm="nav.class">
+            <i class="fas fa-fw fa-headset"></i>
+            <span>@lang('Trung tâm hỗ trợ')</span></a>
+    </li>
+    @endif
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
