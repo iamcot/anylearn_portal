@@ -1,6 +1,8 @@
 @inject('userServ','App\Services\UserServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+location_form
+@endsection
 @section('body')
 <form method="POST" enctype="multipart/form-data">
     @csrf

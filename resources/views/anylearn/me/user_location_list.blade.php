@@ -1,6 +1,8 @@
 @inject('userServ','App\Services\UserServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+locations
+@endsection
 @section('rightFixedTop')
 <form class="row">
     <div class="col-xs-2 mr-1">

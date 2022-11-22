@@ -1,5 +1,8 @@
 @inject('itemServ', 'App\Services\ItemServices')
 @extends('anylearn.layout')
+@section('spmb')
+checkout-finish
+@endsection
 @section('body')
     <div class="card mb-5 border-left-success shadow">
         <div class="card-header">

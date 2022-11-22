@@ -6,12 +6,15 @@
 @section('description')
     @lang('Hệ Thống Các Trường Học, Các Khóa Đào Tạo tại anyLEARN được đánh giá dựa vào các tiêu chí và quy định về trường học đạt chuẩn.')
 @endsection
+@section('spmb')
+schools
+@endsection
 @section('body')
     @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
     <div class="row">
         <div class="col-md-9">
             @if ($hasSearch && $searchNotFound)
-                <p>@lang('Không tìm thấy trung tâm bạn đang tìm kiếm, hãy tìm thử các trung tâm dưới đây nhé.')</p>
+                <p id="spmc" data-spm="no-data">@lang('Không tìm thấy trung tâm bạn đang tìm kiếm, hãy tìm thử các trung tâm dưới đây nhé.')</p>
                 <hr>
             @endif
             @if (count($list) <= 0)
@@ -42,7 +45,7 @@
 
                                 </div>
                                 <div class="align-self-center m-2">
-                                    <a href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
+                                    <a data-spm="list.{{ $school->id }}" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
                                         class="fw-bold btn border-0 rounded-pill btn-success">@lang('KHOÁ HỌC')</a>
                                 </div>
 
@@ -54,7 +57,7 @@
             @endif
         </div>
         <div class="col-md-3">
-            <form action="" method="get" id="schoolsearch">
+            <form action="" method="get" id="schoolsearch"  data-spm="search.0" >
                 <div class="card shadow">
                     <div class="card-body">
                         <h6>@lang('BỘ LỌC')</h6>

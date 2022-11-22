@@ -1,6 +1,8 @@
 @inject('userServ', 'App\Services\UserServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+contract
+@endsection
 @section('body')
     <div class="col-12 mb-3">
         <form action="" method="POST" role="form" id="formnews">

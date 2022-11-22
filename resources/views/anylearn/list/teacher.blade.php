@@ -6,6 +6,9 @@
 @section('description')
     @lang('Các chuyên gia & giảng viên tại anyLEARN là những cá nhân thành công trong công việc và ngành nghề của họ. Tại anyLEARN, họ mong muốn dùng kinh nghiệm của mình để truyền đạt và tạo ra giá trị cho học viên.')
 @endsection
+@section('spmb')
+teachers
+@endsection
 @section('body')
     <div class="row">
         <div class="col-md-9">
@@ -42,7 +45,7 @@
 
                                 </div>
                                 <div class="align-self-center m-2">
-                                    <a href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
+                                    <a data-spm="list.{{ $school->id }}" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
                                         class="fw-bold btn border-0 rounded-pill btn-success">@lang('KHOÁ HỌC')</a>
                                 </div>
 
@@ -54,7 +57,7 @@
             @endif
         </div>
         <div class="col-md-3">
-            <form action="" method="get" id="schoolsearch">
+            <form action="" method="get" id="schoolsearch" data-spm="search.0">
                 <div class="card shadow">
                     <div class="card-body">
                         <h6>@lang('BỘ LỌC')</h6>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ App::getLocale() }}">
 
 <head>
     <meta charset="utf-8">
+    <meta name="data-spm" content="me">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -28,8 +29,15 @@
         gtag('js', new Date());
         gtag('config', 'G-NKEYYJ92SP');
     </script>
+     <script>
+        a_config = {
+            "logUrl": "{{ route('anylog') }}",
+            "uid": "{{ Auth::check() ? Auth::user()->id : '' }}",
+            "lang": "{{ App::getLocale() }}",
+        };
+    </script>
 </head>
-<body id="admin-top">
+<body id="admin-top" data-spm="@yield('spmb')">
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content" class="mb-4">
@@ -67,6 +75,8 @@
     <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     <script src="/cdn/js/sb-admin-2.min.js"></script>
+    <script async src="/cdn/js/anylog.js"></script>
+
     @yield('jscript')
 </body>
 

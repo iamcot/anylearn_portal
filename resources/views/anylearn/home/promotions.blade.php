@@ -6,7 +6,7 @@
         <div class="owl-carousel owl-theme">
             @foreach($promotions as $promotion)
             <div class="p-1">
-                <a class="card border-0 text-decoration-none text-secondary" href="{{ $itemServ->articleUrl($promotion->id) }}">
+                <a class="card border-0 text-decoration-none text-secondary" href="{{ $itemServ->articleUrl($promotion->id) }}"  data-spm="promotion.{{ $promotion->id }}">
                     <div class="card-img">
                         <img src="{{ $promotion->image }}" class="img-fluid">
                         <div class="promotion-tag">{{ $promotion->video }}</div>
