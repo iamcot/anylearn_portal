@@ -846,9 +846,9 @@ class TransactionController extends Controller
                 }
                 fclose($file);
             };
-            $amount = $data->sum('amount');
-            $this->data['amount'] = $amount;
-            $this->data['transaction'] = $data;
+            // $amount = $data->sum('amount');
+            // $this->data['amount'] = $amount;
+            // $this->data['transaction'] = $data;
 
             return response()->stream($callback, 200, $headers);
         } else{

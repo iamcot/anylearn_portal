@@ -63,8 +63,10 @@ class Transaction extends Model
                  $data = $data->paginate(20);
             } else {
                $data = $data->get();
+               dd($data);
                 if ($data) {
                     $data->transform(function($value) {
+
                         $value->refName = $value->refUser->name;
                         $value->refPhone = $value->refUser->phone;
 
@@ -75,6 +77,7 @@ class Transaction extends Model
                 } else {
                     $data = [];
                 }
+
             }
             return $data;
     }
