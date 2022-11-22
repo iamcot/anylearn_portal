@@ -53,16 +53,16 @@
         </div>
         <div class="row p1">
             <div class="col-3">
-                <img src="/cdn/img/register/step1_en.png" alt="">
+                <img src="/cdn/img/register/teacher_step1_en.png" alt="">
             </div>
             <div class="col-3">
-                <img src="/cdn/img/register/step2_en.png" alt="">
+                <img src="/cdn/img/register/teacher_step2_en.png" alt="">
             </div>
             <div class="col-3">
-                <img src="/cdn/img/register/step3_en.png" alt="">
+                <img src="/cdn/img/register/teacher_step3_en.png" alt="">
             </div>
             <div class="col-3">
-                <img src="/cdn/img/register/step4_en.png" alt="">
+                <img src="/cdn/img/register/teacher_step4_en.png" alt="">
             </div>
         </div>
         <div class="m2">
@@ -70,16 +70,16 @@
         </div>
         <div class="row p1">
             <div class="col-3">
-                <img src="/cdn/img/register/school_r1_en.png" alt="">
+                <img src="/cdn/img/register/teacher_r1_en.png" alt="">
             </div>
             <div class="col-3">
-                <img src="/cdn/img/register/school_r2_en.png" alt="">
+                <img src="/cdn/img/register/teacher_r2_en.png" alt="">
             </div>
             <div class="col-3">
-                <img src="/cdn/img/register/school_r3_en.png" alt="">
+                <img src="/cdn/img/register/teacher_r3_en.png" alt="">
             </div>
             <div class="col-3">
-                <img src="/cdn/img/register/school_r4_en.png" alt="">
+                <img src="/cdn/img/register/teacher_r4_en.png" alt="">
             </div>
         </div>
     @endif
