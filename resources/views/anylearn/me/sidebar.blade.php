@@ -67,8 +67,8 @@
             <span>@lang('Giao dịch của tôi')</span></a>
     </li>
     @if(Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
-    <li class="nav-item {{ in_array($route, ['helpcenter.seller']) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('helpcenter.seller') }}" data-spm="nav.class">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('helpcenter.parnter') }}" data-spm="nav.class">
             <i class="fas fa-fw fa-headset"></i>
             <span>@lang('Trung tâm hỗ trợ')</span></a>
     </li>

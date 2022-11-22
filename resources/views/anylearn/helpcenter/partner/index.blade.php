@@ -3,7 +3,7 @@
 @extends('anylearn.layout')
 
 @section('body')
-    {{-- @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
+    @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
     <div class="mb-5">
         <section class="text-center">
             <h5 class="mt-3 fw-bold text-secondary">
@@ -42,7 +42,7 @@
                 @endforeach
             </div>
         </section>
-    </div> --}}
+    </div>
 @endsection
 @section('jscript')
     @parent
