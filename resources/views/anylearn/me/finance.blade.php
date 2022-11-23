@@ -25,6 +25,108 @@
         data-bs-target="#exampleModal">@lang('Tạo Tài khoản')</button> --}}
 @endsection
 @section('body')
+<div class="card p-3 mb-3">
+    <div class="strong">anyPoint:</div>
+    <div class="row">
+        <div class="col-md-8">
+            <h3 class="text-danger fs-3">{{ auth()->user()->wallet_c }}</h3>
+        </div>
+        <div class="col-md-4 text-end"><a target="_blank" href="https://anylearn.vn/helpcenter/tich-luy-diem">@lang('anyPoint là gì?')</a></div>
+    </div>
+</div>
+<ul class="nav nav-tabs" id="classtab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link text-secondary active" id="done-tab"
+            data-bs-toggle="tab" data-bs-target="#done" type="button" role="tab" aria-controls="done"
+            aria-selected="true">@lang('Lịch sử bán hàng')</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link text-secondary" id="open-tab"
+            data-bs-toggle="tab" data-bs-target="#open" type="button" role="tab" aria-controls="open"
+            aria-selected="true">@lang('Lịch sử anyPoint')</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link text-secondary" id="open-tab"
+            data-bs-toggle="tab" data-bs-target="#withdraw" type="button" role="tab" aria-controls="open"
+            aria-selected="true">@lang('Lịch sử rút tiền')</button>
+    </li>
+</ul>
+<div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
+    <div class="tab-pane fade show active p-2" id="done"
+        role="tabpanel" aria-labelledby="done-tab">
+        <table class="table text-secondary table-hover">
+            <tbody>
+                @foreach ($WALLETM as $row)
+                <tr>
+                    <td class="text-start" scope="col-md-6"><b>Nhận tiền từ bán khóa học</b><br>
+                        {{ $row->created_at }} <br>
+                        @if ($row->status == 0)
+                            <b>@lang('Đang chờ')</b>
+                        @else
+                            <b class="text-danger">@lang('Đã xác nhận')</b>
+                        @endif
+                    </td>
+                    <td class="text-end text-danger" scope="col-md-6"><br>{{ number_format(abs($row->amount*1000)) }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade p-2" id="open"
+        role="tabpanel" aria-labelledby="open-tab">
+        <table class="table  text-secondary table-hover">
+
+            <tbody>
+                @foreach ($WALLETC as $row)
+                <tr>
+                    <td class="text-start" scope="col-md-6"><b>{{ $row->content }}</b><br>
+                        {{ $row->created_at }} <br>
+                        @if ($row->status == 0)
+                            <b>@lang('Đang chờ')</b>
+                        @else
+                            <b class="text-danger">@lang('Đã xác nhận')</b>
+                        @endif
+                    </td>
+                    @if ($row->amount >= 0)
+                        <td class="text-end text-danger" scope="col-md-6"><br>+{{ abs($row->amount) }}
+                        </td>
+                    @else
+                        <td class="text-end text-black" scope="col-md-6"><br>{{ abs($row->amount) }}
+                        </td>
+                    @endif
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade p-2" id="withdraw"
+        role="tabpanel" aria-labelledby="withdraw-tab">
+        <table class="table  text-secondary table-hover">
+
+            <tbody>
+                @foreach ($withdraw as $row)
+                <tr>
+                    <td class="text-start" scope="col-md-6"><b>{{ $row->content }}</b><br>
+                        {{ $row->created_at }} <br>
+                        @if ($row->status == 0)
+                            <b>@lang('Đang chờ')</b>
+                        @else
+                            <b class="text-danger">@lang('Đã xác nhận')</b>
+                        @endif
+                    </td>
+                    @if ($row->amount >= 0)
+                        <td class="text-end text-danger" scope="col-md-6"><br>+{{ abs($row->amount) }}
+                        </td>
+                    @else
+                        <td class="text-end text-black" scope="col-md-6"><br>{{ abs($row->amount) }}
+                        </td>
+                    @endif
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
     @if ($UserServices->bankaccount(auth()->user()->id) != null)
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -192,19 +294,28 @@
             document.getElementById("anypoint").value = 0;
             x = 0;
         }
-        document.getElementById("vnd").innerHTML = (x * 1000)+" VND"
+        document.getElementById("vnd").innerHTML = (x * 1000).toLocaleString('vn-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
     }
     //nút tối da
     function max() {
         document.getElementById("anypoint").value = {{ auth()->user()->wallet_c }};
         x = {{ auth()->user()->wallet_c }};
-        document.getElementById("vnd").innerHTML = (x * 1000)+" VND"
+        document.getElementById("vnd").innerHTML = (x * 1000).toLocaleString('vn-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
     }
 
     function cfwithdraw() {
         document.getElementById("withdraw").style.display = "none";
         document.getElementById("cfwithdraw").style.display = "block";
         var x = document.getElementById("anypoint").value;
-        document.getElementById("money").innerHTML = (x * 1000)+" VND"
+        document.getElementById("money").innerHTML = (x * 1000).toLocaleString('vn-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
     }
 </script>

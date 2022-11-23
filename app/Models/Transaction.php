@@ -45,9 +45,9 @@ class Transaction extends Model
     {
         $query = Transaction::where('user_id', $userId);
         if ($wallet == UserConstants::WALLET_M) {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_DEPOSIT_REFUND]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_DEPOSIT_REFUND]);
         } else {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
         }
         $db = $query->orderby('id', 'desc')
             ->get();

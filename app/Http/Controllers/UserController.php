@@ -211,8 +211,6 @@ class UserController extends Controller
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
-        $sum = Transaction::where('pay_method', '=', 'wallet_c')->where('status', 1)->where('user_id', auth()->user()->id)->sum('amount');
-        $this->data['anyPoint'] = abs($sum);
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
@@ -722,6 +720,16 @@ class UserController extends Controller
             $user->update();
         return Redirect::back()->with('bignotify', 'withdraw');
         }
+        $trans = new Transaction();
+        // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
+        // $b = DB::table('transaction')->where('user_id',auth()->user()->id)->where('type','commission')->belongsTo('App\Models\OrderDetail', 'order_id', 'id');
+        // dd($b);
+        $a = Transaction::where('user_id',auth()->user()->id)->where('type','commission')->with('order')->get();
+        // dd($a);
+        $this->data['WALLETM'] = $a;
+        $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
+        $this->data['withdraw'] = Transaction::where('user_id',auth()->user()->id)->where('type','withdraw')->get();
+        $this->data['navText'] = __('Quản lý tài chính');
         return view(env('TEMPLATE', '') . 'me.finance', $this->data);
     }
     public function removeCert(Request $request, $fileId)
