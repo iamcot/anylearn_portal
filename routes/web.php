@@ -62,9 +62,9 @@ Route::get('/helpcenter', 'HelpcenterController@index')->name('helpcenter');
 Route::get('/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
 Route::get('/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
 
-Route::get('/partner/helpcenter', 'HelpcenterController@index')->name('helpcenter.parnter');
-Route::get('/partner/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
-Route::get('/partner/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
+Route::get('/partner/helpcenter', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
+// Route::get('/partner/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.parnter.topic');
+// Route::get('/partner/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.parnter.knowledge');
 
 Route::any('/password/otp', 'Auth\OTPResetPasswordController@showOtpRequestForm')->name('password.otp');
 Route::any('/password/otp/reset', 'Auth\OTPResetPasswordController@sendOtp')->name('password.resetotp');

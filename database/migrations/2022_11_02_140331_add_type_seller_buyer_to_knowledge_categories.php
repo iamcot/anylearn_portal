@@ -14,8 +14,7 @@ class AddTypeSellerBuyerToKnowledgeCategories extends Migration
     public function up()
     {
         Schema::table('knowledge_categories', function (Blueprint $table) {
-            $table->string('type');
-
+            $table->string('type')->default('buyer');
         });
     }
 

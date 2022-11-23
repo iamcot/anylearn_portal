@@ -22,12 +22,28 @@ class HelpcenterController extends Controller
     {
         $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
         ->where('status', '>', 0)
+        ->where('type','buyer')
         ->orderby('view', 'desc')
         ->take(10)->get();
-        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->get();
+        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type','buyer')->get();
         $this->data['breadcrumb'] = [
             [
                 'text' => 'Trung tâm hỗ trợ',
+            ]
+        ];
+        return view(env('TEMPLATE', '') . 'helpcenter.index', $this->data);
+    }
+    public function indexpartner(Request $request)
+    {
+        $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
+        ->where('status', '>', 0)
+        ->where('type','seller')
+        ->orderby('view', 'desc')
+        ->take(10)->get();
+        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type','seller')->get();
+        $this->data['breadcrumb'] = [
+            [
+                'text' => 'Trung tâm hỗ trợ đối tác',
             ]
         ];
         return view(env('TEMPLATE', '') . 'helpcenter.index', $this->data);
@@ -68,7 +84,6 @@ class HelpcenterController extends Controller
         $this->data['topics'] = KnowledgeTopic::where('id', '!=', $topic->id)->where('status', '>', 0)->get();
         return view(env('TEMPLATE', '') . 'helpcenter.topic', $this->data);
     }
-
     public function knowledge(Request $request, $id, $url)
     {
         $this->data['knowledge'] = Knowledge::find($id);

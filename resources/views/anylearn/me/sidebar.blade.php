@@ -68,7 +68,7 @@
     </li>
     @if(Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('helpcenter.parnter') }}" data-spm="nav.class">
+        <a class="nav-link" href="{{ route('helpcenter.parnter.index') }}" data-spm="nav.class">
             <i class="fas fa-fw fa-headset"></i>
             <span>@lang('Trung tâm hỗ trợ')</span></a>
     </li>
