@@ -118,13 +118,13 @@ class TransactionController extends Controller
         }
         $exOrder = new Order();
         if ($request->input('action') == 'file') {
-            $order = $exOrder -> searchOrders($request, true);
+            $order = $exOrder->searchOrders($request, true);
             if (!$order) {
                 return redirect()->route('transaction.order_all');
             }
             $headers = [
                 // "Content-Encoding" => "UTF-8",
-                "Content-type" => "text/csv", 
+                "Content-type" => "text/csv",
                 "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
@@ -141,7 +141,7 @@ class TransactionController extends Controller
                 fclose($file);
             };
             // dd($callback);
-             return response()->stream($callback, 200, $headers);
+            return response()->stream($callback, 200, $headers);
             // return response()->download($callback, 200, $headers);
         }
         $this->data['orders'] = $orders->leftJoin('vouchers_used', 'vouchers_used.order_id', '=', 'orders.id')
@@ -236,12 +236,12 @@ class TransactionController extends Controller
         $user = Auth::user();
 
         $transaction = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
-        ->orderby('id', 'desc')
-        ->with('user')
-        ->with('order')
-        ->whereHas('order',function($query){
-            $query->where('status','delivered');
-        });
+            ->orderby('id', 'desc')
+            ->with('user')
+            ->with('order')
+            ->whereHas('order', function ($query) {
+                $query->where('status', 'delivered');
+            });
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
         }
@@ -256,24 +256,26 @@ class TransactionController extends Controller
             $transaction = $transaction->where('type', $request->input('type'));
         }
         if ($request->input('name')) {
-            $transaction = $transaction->whereHas('user',function($query) use ($request){
-                $query->where('name','like','%' . $request->input('name') . '%');
-            }
+            $transaction = $transaction->whereHas(
+                'user',
+                function ($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->input('name') . '%');
+                }
             );
         }
         if ($request->input('phone')) {
-            $transaction = $transaction->whereHas('user',function($query) use ($request){
-                $query->where('phone',$request->input('phone'));
-            }
+            $transaction = $transaction->whereHas(
+                'user',
+                function ($query) use ($request) {
+                    $query->where('phone', $request->input('phone'));
+                }
             );
         }
         if ($request->input('date')) {
             $transaction = $transaction->whereDate('created_at', '>=', $request->input('date'));
-
         }
         if ($request->input('datet')) {
             $transaction = $transaction->whereDate('created_at', '<=', $request->input('datet'));
-
         }
         if (!$userService->haveAccess($user->role, 'transaction.commission')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
@@ -368,15 +370,15 @@ class TransactionController extends Controller
         if ($openOrder) {
             $orderDetails = DB::table('order_details AS od')
                 ->join('items', 'items.id', '=', 'od.item_id')
-                ->join('i18n_contents','i18n_contents.content_id','=','od.item_id')
+                ->join('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
                 ->join('users AS u2', 'u2.id', '=', 'od.user_id')
                 ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
-                ->where('i18n_contents.tbl','items')
-                ->where('i18n_contents.col','title')
+                ->where('i18n_contents.tbl', 'items')
+                ->where('i18n_contents.col', 'title')
                 ->where('od.order_id', $openOrder->id)
-                ->select('od.*','i18n_contents.i18n_content' ,'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
+                ->select('od.*', 'i18n_contents.i18n_content', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
                 ->get();
-                // dd($orderDetails);
+            // dd($orderDetails);
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
             $pointUsed = Transaction::where('type', ConfigConstants::TRANSACTION_EXCHANGE)
@@ -774,6 +776,7 @@ class TransactionController extends Controller
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
+        $transM = new Transaction();
         if ($request->get('action') == 'saveFinExpend') {
             $expend = $request->get('expend');
             $obj = [
@@ -785,9 +788,12 @@ class TransactionController extends Controller
                 'pay_method' => $expend['pay_method'],
                 'pay_info' => $expend['comment'],
                 'created_at' => $expend['date'],
+                'updated_at' => $expend['date'],
                 'status' => 1,
             ];
-            if ($request->get('expendid') == "") {
+            // Transaction::create($obj);
+            // dd($obj);
+            if (empty($request->get('expendid'))) {
                 Transaction::create($obj);
             } else {
                 Transaction::find($request->get('expendid'))->update($obj);
@@ -797,16 +803,61 @@ class TransactionController extends Controller
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)->get();
 
         $this->data['transaction'] = Transaction::whereIn('type', [
-            ConfigConstants::TRANSACTION_FIN_ASSETS,
-            ConfigConstants::TRANSACTION_FIN_FIXED_FEE,
+            ConfigConstants::TRANSACTION_FIN_OFFICE,
+            ConfigConstants::TRANSACTION_FIN_SALE,
             ConfigConstants::TRANSACTION_FIN_MARKETING,
             ConfigConstants::TRANSACTION_FIN_OTHERS,
             ConfigConstants::TRANSACTION_FIN_SALARY,
-            ConfigConstants::TRANSACTION_FIN_VARIABLE_FEE,
+            ConfigConstants::TRANSACTION_FIN_ASSETS,
         ])
             ->orderby('id', 'desc')
             ->with('refUser')
             ->paginate(20);
+        if ($request->input('action') == 'clear') {
+            return redirect()->route('fin.expenditures');
+        }
+        if ($request->input('action') == 'file') {
+            $data = $transM->search($request, true);
+
+            if (!$data) {
+                return redirect()->route('fin.expenditures');
+            }
+            $headers = [
+                // "Content-Encoding" => "UTF-8",
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=anylearn_expenditures_" . now() . ".csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+
+            $callback = function () use ($data) {
+                $file = fopen('php://output', 'w');
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                fputcsv($file, array_keys($data[0]));
+
+
+                foreach ($data as $row) {
+
+                    mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
+
+                    fputcsv($file, $row);
+
+                }
+                fclose($file);
+            };
+            // $amount = $data->sum('amount');
+            // $this->data['amount'] = $amount;
+            // $this->data['transaction'] = $data;
+
+            return response()->stream($callback, 200, $headers);
+        } else{
+            $data = $transM->search($request);
+            $amount = $data->sum('amount');
+            $this->data['amount'] = $amount;
+            $this->data['transaction'] = $data;
+        }
+        //  dd($tamp[1]->);
         $this->data['navText'] = __('Quản lý Chi tiền');
         return view('transaction.expenditures', $this->data);
     }
