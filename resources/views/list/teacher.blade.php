@@ -1,5 +1,8 @@
 @inject('itemServ','App\Services\ItemServices')
 @extends('page_layout')
+@section('spmb')
+teachers
+@endsection
 @section('body')
 <div class="row">
     <!-- <div class="col-md-3">

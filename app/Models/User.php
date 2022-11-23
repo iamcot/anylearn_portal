@@ -336,11 +336,20 @@ class User extends Authenticatable
         if ($request->input('ref_id')) {
             $members = $members->where('users.user_id', $request->input('ref_id'));
         }
+        if ($request->input('sale_id')) {
+            $members = $members->where('users.sale_id', $request->input('sale_id'));
+        }
         if ($request->input('date')) {
             $members = $members->whereDate('users.created_at', '>=', $request->input('date'));
         }
         if ($request->input('datet')) {
             $members = $members->whereDate('users.created_at', '<=', $request->input('datet'));
+        }
+        if ($request->input('adate')) {
+            $members = $members->join('sale_activities AS sa2', function($join) use ($request) {
+                $join->on('sa2.member_id', '=', 'users.id')
+                ->whereDate('sa2.created_at', '=', $request->input('adate'));
+            });
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
@@ -359,6 +368,7 @@ class User extends Authenticatable
         $members = $members
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
             ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
+            ->groupBy('users.id')
             ->select(
                 'users.id',
                 'users.phone',
@@ -378,6 +388,7 @@ class User extends Authenticatable
                 'lastsa.last_contact',
                 'users.is_registered',
                 'users.source',
+                DB::raw("(SELECT content FROM sale_activities WHERE `type` = 'note' AND member_id = users.id ORDER BY sale_activities.id DESC limit 1) AS last_note")
             );
 
         if (!$file) {

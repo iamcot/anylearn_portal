@@ -25,6 +25,7 @@ class SocialController extends Controller
         $user = User::select('id', 'name', 'first_name', 'dob', 'image', 'banner', 'role', 'introduce')->find($user->id);
 
         $dbPosts = SocialPost::where('user_id', $user->id)
+            ->whereNotIn('type', [SocialPost::TYPE_ACTION_COMMENT, SocialPost::TYPE_ACTION_LIKE, SocialPost::TYPE_ACTION_DISLIKE, SocialPost::TYPE_ACTION_SHARE])
             ->where('status', 1)
             ->orderby('day', 'desc')
             ->paginate(self::PER_PAGE);
@@ -34,9 +35,14 @@ class SocialController extends Controller
             $value->description = "";
             $value->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)->where('post_id', $value->id)->count();
             $value->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $value->id)->count();
+            $value->comment_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $value->id)->count();
             $value->user = $user;
             $value->comments = [];
             $value->like = [];
+            $value->isliked = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)
+                            ->where('user_id', $user->id)
+                            ->where('post_id', $value->id)
+                            ->count();
             return $value;
         });
         return response()->json([
@@ -60,6 +66,10 @@ class SocialController extends Controller
         $data->user = $user;
         $data->comments = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $postId)->get();
         $data->like = [];
+        $data->isliked = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)
+                            ->where('user_id', $user->id)
+                            ->where('post_id', $postId)
+                            ->count();
         return response()->json($data);
     }
 

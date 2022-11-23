@@ -10,6 +10,8 @@ use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\I18nContent;
+use App\Models\Spm;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -68,5 +70,11 @@ class DashboardController extends Controller
         $this->data['feedbacks'] = Feedback::with('user')->orderby('id', 'desc')->paginate(20);
         // dd($this->data['feedbacks']);
         return view('dashboard.feedback', $this->data);
+    }
+
+    public function spm(Request $request) {
+        $this->data['spms'] = Spm::orderby('id', 'desc')->paginate(20);
+        $this->data['columns'] = Schema::getColumnListing('spms');
+        return view('dashboard.spm', $this->data);
     }
 }

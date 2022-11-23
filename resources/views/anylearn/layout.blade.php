@@ -1,14 +1,16 @@
 @inject('transServ','App\Services\TransactionService')
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ App::getLocale() }}">
 
 <head>
     <meta charset="utf-8">
+    <meta name="data-spm" content="web">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="@yield('description')">
     <meta name="author" content="">
     <title>@yield('title')</title>
+    <link rel="canonical" href="@yield('canonical')" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link href="/cdn/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,9 +31,16 @@
         gtag('js', new Date());
         gtag('config', 'UA-170883972-1');
     </script>
+    <script>
+        a_config = {
+            "logUrl": "{{ route('anylog') }}",
+            "uid": "{{ Auth::check() ? Auth::user()->id : '' }}",
+            "lang": "{{ App::getLocale() }}",
+        };
+    </script>
 </head>
 
-<body>
+<body data-spm="@yield('spmb')">
     <script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
     <section>
         @if(empty($isApp) || !$isApp)
@@ -57,6 +66,7 @@
     <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
+    <script async src="/cdn/js/anylog.js"></script>
     @yield('jscript')
 </body>
 <style>

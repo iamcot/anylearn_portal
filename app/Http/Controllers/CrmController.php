@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\UserConstants;
 use App\Models\SaleActivity;
+use App\Models\Spm;
 use App\Models\User;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
@@ -121,5 +122,10 @@ class CrmController extends Controller
         $activity = SaleActivity::find($id);
         $content = nl2br($activity->content);
         echo $content;
+    }
+
+    public function anylog(Request $request) {
+        $spmM = new Spm();
+        $spmM->addSpm($request);
     }
 }

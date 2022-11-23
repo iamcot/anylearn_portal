@@ -6,7 +6,7 @@
 @endsection
 
 @section('body')
-<form method="POST">
+<form method="POST" autocomplete="one-time-code">
     @csrf
     <input type="hidden" name="id" value="{{ !empty($user) ? $user->id : null }}">
     <div class="card shadow">
@@ -38,13 +38,13 @@
                 <div class="form-group row">
                     <label for="omicall_id" class="col-md-4 col-form-label text-md-right">{{ __('Omical Login Id') }}</label>
                     <div class="col-md-8">
-                        <input id="omicall_id" type="text" class="form-control @error('omicall_id') is-invalid @enderror" name="omicall_id" value="{{ old('omicall_id', !empty($user) ? $user->omicall_id : '') }}">
+                        <input id="omicall_id" type="text" class="form-control @error('omicall_id') is-invalid @enderror" name="omicall_id" value="{{ old('omicall_id', !empty($user) ? $user->omicall_id : '') }}" autocomplete="one-time-code">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="omicall_pwd" class="col-md-4 col-form-label text-md-right">{{ __('Omicall password') }}</label>
                     <div class="col-md-8">
-                        <input id="omicall_pwd" type="text" class="form-control @error('omicall_pwd') is-invalid @enderror" name="omicall_pwd" value="{{ old('omicall_pwd', !empty($user) ? $user->omicall_pwd : '') }}">
+                        <input id="omicall_pwd" type="text" class="form-control @error('omicall_pwd') is-invalid @enderror" name="omicall_pwd" value="{{ old('omicall_pwd', !empty($user) ? $user->omicall_pwd : '') }}" autocomplete="one-time-code">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -55,9 +55,9 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
+                    <label for="passwordmod" class="col-md-4 col-form-label text-md-right">{{ __('Mật khẩu') }}</label>
                     <div class="col-md-8">
-                        <input id="password" type="password" class="form-control" name="password" value="">
+                        <input id="passwordmod" type="password" class="form-control" name="password" value="" autocomplete="one-time-code">
                         @if(!empty($user))
                         <span class="small">*Để trống nếu không thay đổi/không thiết lập</span>
                         @endif

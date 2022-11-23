@@ -1,6 +1,8 @@
 @inject('userServ','App\Services\UserServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+pending_orders
+@endsection
 @section('body')
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">

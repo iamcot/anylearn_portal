@@ -24,7 +24,7 @@
                 <ul class="list-unstyled">
                     @foreach($moreArticles as $item)
                     <li class="mb-2 article-sidebar">
-                        <a class="row text-decoration-none text-secondary" href="{{ $itemServ->articleUrl($item->id) }}">
+                        <a data-spm="relate-item.{{ $item->id }}" class="row text-decoration-none text-secondary" href="{{ $itemServ->articleUrl($item->id) }}">
                             <div class="col-4">
                                 @php
                                 $img = $item->image;

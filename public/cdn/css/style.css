@@ -261,3 +261,10 @@ td:hover .tooltiptext {
     /* Equivalent of the background-size: cover; of a background-image */
     object-position: center;
 }
+
+.table-freeze-col td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 99;
+    background: #fff;
+}

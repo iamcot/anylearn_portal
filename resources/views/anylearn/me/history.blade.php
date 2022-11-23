@@ -1,4 +1,7 @@
 @extends('anylearn.me.layout')
+@section('spmb')
+history
+@endsection
 @section('body')
     <div class="card p-3 mb-3">
         <div class="strong">anyPoint:</div>

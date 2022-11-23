@@ -192,28 +192,19 @@
             document.getElementById("anypoint").value = 0;
             x = 0;
         }
-        document.getElementById("vnd").innerHTML = (x * 1000).toLocaleString('vn-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
+        document.getElementById("vnd").innerHTML = (x * 1000)+" VND"
     }
     //nút tối da
     function max() {
         document.getElementById("anypoint").value = {{ auth()->user()->wallet_c }};
         x = {{ auth()->user()->wallet_c }};
-        document.getElementById("vnd").innerHTML = (x * 1000).toLocaleString('vn-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
+        document.getElementById("vnd").innerHTML = (x * 1000)+" VND"
     }
 
     function cfwithdraw() {
         document.getElementById("withdraw").style.display = "none";
         document.getElementById("cfwithdraw").style.display = "block";
         var x = document.getElementById("anypoint").value;
-        document.getElementById("money").innerHTML = (x * 1000).toLocaleString('vn-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
+        document.getElementById("money").innerHTML = (x * 1000)+" VND"
     }
 </script>

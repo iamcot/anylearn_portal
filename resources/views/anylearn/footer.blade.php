@@ -27,22 +27,22 @@
             <div class="col-md-3">
                 <div class="fw-bold d-md-none d-sm-block head_text">@lang('THÔNG TIN HỖ TRỢ')</div>
                 <ul class="list-unstyled text-secondary">
-                    <li><p><a href="/helpcenter" class="text-secondary text-decoration-none">@lang('Trung tâm hỗ trợ')</a></p></li>
-                    <li><p><a href="/privacy" class="text-secondary text-decoration-none">@lang('Chính sách')</a></p></li>
-                    <li><p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">@lang('Điều khoản')</a></p></li>
-                    <li><p><a href="https://anylearn.vn/info" class="text-secondary text-decoration-none">@lang('Giới thiệu')</a></p></li>
+                    <li><p><a data-spm="footer.helpcenter" href="/helpcenter" class="text-secondary text-decoration-none">@lang('Trung tâm hỗ trợ')</a></p></li>
+                    <li><p><a data-spm="footer.privacy" href="/privacy" class="text-secondary text-decoration-none">@lang('Chính sách')</a></p></li>
+                    <li><p><a data-spm="footer.toc" href="/guide?p=guide_toc" class="text-secondary text-decoration-none">@lang('Điều khoản')</a></p></li>
+                    <li><p><a data-spm="footer.about" href="https://anylearn.vn/info" class="text-secondary text-decoration-none">@lang('Giới thiệu')</a></p></li>
                 </ul>
             </div>
             <div class="col-md-5">
                 <div class="fw-bold d-md-none d-sm-block head_text">@lang('TIN TỨC MỚI NHẤT')</div>
                 <ul class="list-unstyled text-secondary">
                     @foreach($itemServ->footerNews() as $news)
-                    <li><p><a href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p></li>
+                    <li><p><a data-spm="footer-news.{{ $news->id }}" href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p></li>
                     @endforeach
                 </ul>
                 <ul class="list-unstyled list-inline">
-                    <li class="list-inline-item"><a href="https://www.facebook.com/anylearnhockhonggioihan"><i class="fab fa-2x fa-facebook"></i></a></li>
-                    <li class="list-inline-item"><a href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><i class="fab fa-2x fa-youtube text-danger"></i></a></li>
+                    <li class="list-inline-item"><a data-spm="footer.facebook" href="https://www.facebook.com/anylearnhockhonggioihan"><i class="fab fa-2x fa-facebook"></i></a></li>
+                    <li class="list-inline-item"><a data-spm="footer.youtube" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><i class="fab fa-2x fa-youtube text-danger"></i></a></li>
                 </ul>
             </div>
         </div>

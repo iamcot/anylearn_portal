@@ -124,7 +124,7 @@ class DashboardServices
         return $chartDataset;
     }
 
-    public function topUser($num = 5)
+    public function topUser($num = 10)
     {
         $query = DB::table('users')
             ->join('items', 'items.user_id', '=', 'users.id')
@@ -144,7 +144,7 @@ class DashboardServices
         return $query;
     }
 
-    public function topItem($num = 5)
+    public function topItem($num = 10)
     {
 
         $query = DB::table('items')
@@ -203,7 +203,7 @@ class DashboardServices
         }
         return $query->sum('orders.quantity');
     }
-    public function saleTopBuyer($saleId, $num = 5)
+    public function saleTopBuyer($saleId, $num = 10)
     {
         $query = DB::table('users')
             ->join('orders', 'orders.user_id', 'users.id')
@@ -228,7 +228,7 @@ class DashboardServices
         return $query;
     }
 
-    public function saleTopItems($saleId, $num = 5)
+    public function saleTopItems($saleId, $num = 10)
     {
         $query = DB::table('users')
             ->join('orders', 'orders.user_id', 'users.id')
@@ -297,7 +297,7 @@ class DashboardServices
         foreach ($sales as $sale) {
             $reportDB = DB::table('sale_activities AS sa')
                 ->where('sa.sale_id', $sale->id)
-                ->select(DB::raw('DATE(sa.created_at) AS day'), DB::raw('COUNT(sa.id) AS activity'))
+                ->select(DB::raw('DATE(sa.created_at) AS day'), DB::raw('COUNT(DISTINCT member_id) AS activity'))
                 ->groupBy('day')
                 ->get();
             $tmp = [];

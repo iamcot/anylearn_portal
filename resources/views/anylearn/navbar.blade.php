@@ -1,7 +1,7 @@
 @inject('userServ', 'App\Services\UserServices')
 <nav class="navbar navbar-expand-lg navbar-dark bg-topbg">
     <div class="container">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/" data-spm="nav.home">
             <img src="/cdn/anylearn/img/logo-white.svg" alt="" height="59">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar10">
@@ -10,88 +10,81 @@
         <div class="navbar-collapse collapse" id="navbar10">
             <ul class="navbar-nav nav-fill w-100">
                 <li class="nav-item">
-                    <a class="nav-link" href="/schools">anySCHOOL</a>
+                    <a class="nav-link" href="/schools" data-spm="nav.anyschool">anySCHOOL</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/teachers">anyPROFESSOR</a>
+                    <a class="nav-link" href="/teachers" data-spm="nav.anyprofessor">anyPROFESSOR</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/classes">anyCOURSE</a>
+                    <a class="nav-link" href="/classes" data-spm="nav.anycourse">anyCOURSE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ref/anylearn">@lang('TẢI APP')</a>
+                    <a class="nav-link" href="/ref/anylearn" data-spm="nav.download_app">@lang('TẢI APP')</a>
                 </li>
                 @if (@auth()->check())
-                    <li class="nav-item dropdown no-arrow d-flex">
-                        <a class=" nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="me-2 text-white small">{{ Auth::user()->name }}</span>
+                <li class="nav-item dropdown no-arrow d-flex">
+                    <a class=" nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="me-2 text-white small">{{ Auth::user()->name }}</span>
 
+                    </a>
+                    <a class=" nav-link" href="{{ route('cart') }}">
+                        <i class="fa fa-shopping-cart text-white  position-relative"><span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle">{{ $userServ->countItemInCart(Auth::user()->id) }}</span></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/me" data-spm="nav.me">
+                            <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-secondary"></i>
+                            @lang('Trang Quản lý')
                         </a>
-                        <a class=" nav-link" href="{{ route('cart') }}">
-                            <i class="fa fa-shopping-cart text-white  position-relative"><span
-                                    class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle">{{ $userServ->countItemInCart(Auth::user()->id) }}</span></i>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw ms-2 text-secondary"></i>
+                            @lang('Đăng xuất')
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/me">
-                                <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-secondary"></i>
-                                @lang('Trang Quản lý')
-                            </a>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                data-bs-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw ms-2 text-secondary"></i>
-                                @lang('Đăng xuất')
-                            </a>
-                        </div>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" style="margin-top: -5px;"  href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            @if (Session::get('locale') == null || Session::get('locale') == 'vi')
-                            <span class="locale_flag-vi"></span>
-                            @else
-                               <span class="locale_flag-en"></span>
-                            @endif
-                            
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                    </div>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="margin-top: -5px;" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (Session::get('locale') == null || Session::get('locale') == 'vi')
+                        <span class="locale_flag-vi"></span>
+                        @else
+                        <span class="locale_flag-en"></span>
+                        @endif
+
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}" data-spm="nav.lang_vi">
                                 <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Tiếng Việt</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}" data-spm="nav.lang_en">
                                 <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
-                        </ul>
-                    </li>
-                    </li>
+                    </ul>
+                </li>
+                </li>
                 @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">@lang('ĐĂNG NHẬP')</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">@lang('ĐĂNG KÝ')</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" style="margin-top:-2px;" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            @if (Session::get('locale') == null || Session::get('locale') == 'vi')
-                            <span class="locale_flag-vi"></span>
-                            @else
-                               <span class="locale_flag-en"></span>
-                            @endif
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login"  data-spm="nav.login">@lang('ĐĂNG NHẬP')</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn"  data-spm="nav.register">@lang('ĐĂNG KÝ')</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="margin-top:-2px;" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (Session::get('locale') == null || Session::get('locale') == 'vi')
+                        <span class="locale_flag-vi"></span>
+                        @else
+                        <span class="locale_flag-en"></span>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}"  data-spm="nav.lang_vi">
                                 <img src="{{ url("").'/cdn/img/flag/vn.svg' }}" width="30"> Việt Nam</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}">
+                        <li><a class="dropdown-item" href="{{ url('/') . '?language=en' }}"  data-spm="nav.lang_en">
                                 <img src="{{ url("").'/cdn/img/flag/en.svg' }}" width="30"> English</a></li>
-                        </ul>
-                    </li>
+                    </ul>
+                </li>
                 @endif
             </ul>
         </div>
     </div>
 </nav>
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -104,8 +97,7 @@
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">@lang('Bỏ qua')</button>
                 <form action="{{ route('logout') }}" method="POST">
                     {{ csrf_field() }}
-                    <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"
-                        type="submit">@lang('Đăng xuất')</button>
+                    <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit"  data-spm="logout.0">@lang('Đăng xuất')</button>
                 </form>
             </div>
         </div>
