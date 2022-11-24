@@ -235,13 +235,13 @@ class TransactionController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        $transaction = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
-            ->orderby('id', 'desc')
-            ->with('user')
-            ->with('order')
-            ->whereHas('order', function ($query) {
-                $query->where('status', 'delivered');
-            });
+        $transaction = DB::table('transactions')->whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+            ->orderby('transactions.id', 'desc')
+            ->join('users','transactions.user_id','=','users.id')
+            ->join('orders','transactions.order_id','=','orders.id')
+            ->where('orders.status', 'delivered')
+            ->select(['transactions.id','users.name','users.phone','users.email','transactions.amount','transactions.content','transactions.created_at','transactions.type','transactions.updated_at']);
+            // dd($transaction->get());
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
         }
@@ -283,6 +283,7 @@ class TransactionController extends Controller
                 return redirect()->route('transaction.commission');
             }
             $transaction = json_decode(json_encode($transaction->toArray()), true);
+
             $headers = [
                 // "Content-Encoding" => "UTF-8",
                 "Content-type" => "text/csv",

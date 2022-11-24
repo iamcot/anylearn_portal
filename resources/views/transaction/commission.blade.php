@@ -86,7 +86,7 @@
                 @foreach($transaction as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
-                    <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
+                    <td class="text-center" scope="row">@if(!empty($row->name)) {{ $row->name }} ({{ $row->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->content }}</td>
