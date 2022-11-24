@@ -321,6 +321,13 @@ class TransactionController extends Controller
             Transaction::find($id)->update([
                 'status' => $status
             ]);
+            if($status == ConfigConstants::TRANSACTION_STATUS_REJECT){
+                $trans =Transaction::find($id);
+                $userup = User::find($trans->user_id);
+                $userup -> update([
+                    'wallet_c' =>$userup->wallet_c + ($trans->amount*1/1000)
+                ]);
+            }
             $notifServ = new Notification();
             $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
         }
