@@ -277,6 +277,32 @@ class TransactionController extends Controller
         if ($request->input('datet')) {
             $transaction = $transaction->whereDate('created_at', '<=', $request->input('datet'));
         }
+        if ($request->input('action') == 'file') {
+            $transaction = $transaction->get();
+            if ($transaction=="[]") {
+                return redirect()->route('transaction.commission');
+            }
+            $transaction = json_decode(json_encode($transaction->toArray()), true);
+            $headers = [
+                // "Content-Encoding" => "UTF-8",
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+            $callback = function () use ($transaction) {
+                $file = fopen('php://output', 'w');
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                fputcsv($file, array_keys($transaction[0]));
+                foreach ($transaction as $row) {
+                    mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+            };
+            return response()->stream($callback, 200, $headers);
+        }
         if (!$userService->haveAccess($user->role, 'transaction.commission')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
