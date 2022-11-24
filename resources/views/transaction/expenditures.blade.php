@@ -103,8 +103,8 @@
                                         data-comment="{{ $row->pay_info }}"><i class="fa fa-edit"></i></a>
                                 </th>
                                 <td class="text-center" scope="row">
-                                    @if (!empty($row->refUser))
-                                        {{ $row->refUser->name }} ({{ $row->refUser->phone }})
+                                    @if (!empty($row->name))
+                                        {{ $row->name }} ({{ $row->phone }})
                                     @endif
                                 </td>
                                 <td class="text-center" scope="row">
@@ -121,7 +121,6 @@
                                 <td class="text-center" scope="row">{{ $row->content }}</td>
                                 <td class="text-center" scope="row">{{ date('d/m/y', strtotime($row->created_at)) }}
                                 </td>
-                                {{-- {{ date('d/m/y', strtotime($row->created_at)) }} --}}
                                 <td>{{ $row->pay_info }}</td>
                             </tr>
                         @endforeach
@@ -132,10 +131,11 @@
         </div>
         <div class="card-footer">
             <div>
-                Số phiếu chi: <p class="d-inline" id="SPC"></p> | Tổng chi: <p class="d-inline">{{ number_format($amount)}}
+                Số phiếu chi: <p class="d-inline">{{number_format($totalv)}}</p> | Tổng chi: <p class="d-inline">{{ number_format($amount)}}
                 </p> vnđ
             </div>
-            <div>{{ $transaction->links() }}</div>
+        <div>{{ $transaction->appends(request()->query())->links() }}</div>
+
         </div>
     </div>
 
@@ -174,7 +174,5 @@
             }
             $('#finExpendaturesModal').modal('show');
         });
-        var total = 0;
-        $('#SPC').html($('.table >tbody:last >tr').length);
     </script>
 @endsection

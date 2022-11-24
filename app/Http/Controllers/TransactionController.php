@@ -802,17 +802,6 @@ class TransactionController extends Controller
         }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)->get();
 
-        $this->data['transaction'] = Transaction::whereIn('type', [
-            ConfigConstants::TRANSACTION_FIN_OFFICE,
-            ConfigConstants::TRANSACTION_FIN_SALE,
-            ConfigConstants::TRANSACTION_FIN_MARKETING,
-            ConfigConstants::TRANSACTION_FIN_OTHERS,
-            ConfigConstants::TRANSACTION_FIN_SALARY,
-            ConfigConstants::TRANSACTION_FIN_ASSETS,
-        ])
-            ->orderby('id', 'desc')
-            ->with('refUser')
-            ->paginate(20);
         if ($request->input('action') == 'clear') {
             return redirect()->route('fin.expenditures');
         }
@@ -846,17 +835,16 @@ class TransactionController extends Controller
                 }
                 fclose($file);
             };
-            // $amount = $data->sum('amount');
-            // $this->data['amount'] = $amount;
-            // $this->data['transaction'] = $data;
+
 
             return response()->stream($callback, 200, $headers);
         } else{
             $data = $transM->search($request);
-            $amount = $data->sum('amount');
-            $this->data['amount'] = $amount;
-            $this->data['transaction'] = $data;
         }
+            $amount = $data->sum('amount');
+            $this->data['totalv'] = $data->count();
+            $this->data['amount'] = $amount;
+            $this->data['transaction'] = $data->paginate(20);
         //  dd($tamp[1]->);
         $this->data['navText'] = __('Quản lý Chi tiền');
         return view('transaction.expenditures', $this->data);
