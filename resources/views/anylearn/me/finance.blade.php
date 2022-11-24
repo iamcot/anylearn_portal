@@ -47,7 +47,7 @@
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link text-secondary" id="open-tab"
-            data-bs-toggle="tab" data-bs-target="#withdraw" type="button" role="tab" aria-controls="open"
+            data-bs-toggle="tab" data-bs-target="#tabwithdraw" type="button" role="tab" aria-controls="open"
             aria-selected="true">@lang('Lịch sử rút tiền')</button>
     </li>
 </ul>
@@ -99,7 +99,7 @@
             </tbody>
         </table>
     </div>
-    <div class="tab-pane fade p-2" id="withdraw"
+    <div class="tab-pane fade p-2" id="tabwithdraw"
         role="tabpanel" aria-labelledby="withdraw-tab">
         <table class="table  text-secondary table-hover">
 

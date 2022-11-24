@@ -724,11 +724,11 @@ class UserController extends Controller
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         // $b = DB::table('transaction')->where('user_id',auth()->user()->id)->where('type','commission')->belongsTo('App\Models\OrderDetail', 'order_id', 'id');
         // dd($b);
-        $a = Transaction::where('user_id',auth()->user()->id)->where('type','commission')->with('order')->get();
+        $a = Transaction::where('user_id',auth()->user()->id)->where('type','commission')->with('order')->orderBy('id','DESC')->get();
         // dd($a);
         $this->data['WALLETM'] = $a;
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
-        $this->data['withdraw'] = Transaction::where('user_id',auth()->user()->id)->where('type','withdraw')->get();
+        $this->data['withdraw'] = Transaction::where('user_id',auth()->user()->id)->where('type','withdraw')->orderBy('id','DESC')->get();
         $this->data['navText'] = __('Quản lý tài chính');
         return view(env('TEMPLATE', '') . 'me.finance', $this->data);
     }
