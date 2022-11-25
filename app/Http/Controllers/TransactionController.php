@@ -378,7 +378,7 @@ class TransactionController extends Controller
                 ->where('od.order_id', $openOrder->id)
                 ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
                 ->get();
-            dd($orderDetails);
+            // dd($orderDetails);
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
             $pointUsed = Transaction::where('type', ConfigConstants::TRANSACTION_EXCHANGE)
