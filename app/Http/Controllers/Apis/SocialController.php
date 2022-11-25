@@ -69,7 +69,7 @@ class SocialController extends Controller
         ->join('users', 'users.id', '=', 'social_posts.user_id')
         ->where('type', SocialPost::TYPE_ACTION_COMMENT)
         ->where('post_id', $postId)
-        ->select('social_posts.*', 'users.first_name', 'users.name', 'users.image AS user_comment_image', 'users.id AS comment_user_id')
+        ->select('social_posts.*', 'users.first_name AS comment_user_first_name', 'users.name AS comment_user_name', 'users.image AS comment_user_image', 'users.id AS comment_user_id')
         ->get();
         $data->like = [];
         $data->isliked = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)
