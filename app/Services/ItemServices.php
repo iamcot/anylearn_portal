@@ -164,7 +164,8 @@ class ItemServices
         if (!$item) {
             return "";
         }
-        $url = route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
+        
+        $url = route('page.pdp', ['id' => $id, 'url' => $item->seo_url ?? Str::slug($item->title) . '.html']);
         $url = str_replace("https://api.", "https://", $url);
         return $url;
     }
