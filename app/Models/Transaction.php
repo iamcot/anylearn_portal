@@ -38,7 +38,7 @@ class Transaction extends Model
             ConfigConstants::TRANSACTION_FIN_ASSETS,
         ])
 
-            ->join('users','users.id','=','transactions.user_id')
+            ->join('users','users.id','=','transactions.ref_user_id')
             ->orderby('transactions.id', 'desc');
 
 

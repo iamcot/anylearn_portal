@@ -779,6 +779,7 @@ class TransactionController extends Controller
         $transM = new Transaction();
         if ($request->get('action') == 'saveFinExpend') {
             $expend = $request->get('expend');
+
             $obj = [
                 'user_id' => $user->id,
                 'content' => $expend['title'],
