@@ -377,13 +377,13 @@ class TransactionController extends Controller
         if ($openOrder) {
             $orderDetails = DB::table('order_details AS od')
                 ->join('items', 'items.id', '=', 'od.item_id')
-                ->join('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
+                // ->leftjoin('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
                 ->join('users AS u2', 'u2.id', '=', 'od.user_id')
                 ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
-                ->where('i18n_contents.tbl', 'items')
-                ->where('i18n_contents.col', 'title')
+                // ->where('i18n_contents.tbl', 'items')
+                // ->where('i18n_contents.col', 'title')
                 ->where('od.order_id', $openOrder->id)
-                ->select('od.*', 'i18n_contents.i18n_content', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
+                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
                 ->get();
             // dd($orderDetails);
             $this->data['order'] = $openOrder;
