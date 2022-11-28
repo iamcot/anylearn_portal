@@ -80,6 +80,7 @@ class ItemServices
         $hotItems = Item::where('status', ItemConstants::STATUS_ACTIVE)
             ->where('user_status', ItemConstants::STATUS_ACTIVE)
             ->where('id', '!=', $itemId)
+            ->whereNull('item_id')
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc')
             ->take(5)->get();
