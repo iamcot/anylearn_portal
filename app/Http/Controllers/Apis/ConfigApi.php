@@ -14,6 +14,7 @@ use App\Models\Feedback;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Schedule;
+use App\Models\Spm;
 use App\Models\Tag;
 use App\Models\Transaction;
 use App\Models\User;
@@ -392,7 +393,7 @@ class ConfigApi extends Controller
         $report = [];
         $diffinSec = $to->getTimestamp() - $from;
         // print_r($diffinSec);
-        $report['SoLuongTruyCap'] = User::count();
+        $report['SoLuongTruyCap'] = Spm::where('created_at', '>', $fromInText)->count();
         $report['SoNguoiBan'] = User::whereIn('role', ['teacher', 'school'])->count();
         $report['SoNguoiBanMoi'] = User::whereIn('role', ['teacher', 'school'])->where('created_at', '>', $fromInText)->count();
         $report['TongSoSanPham'] = Item::count();
