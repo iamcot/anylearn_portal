@@ -140,13 +140,18 @@
                             <strong> @lang('Số dư anyPoint:') {{ auth()->user()->wallet_c }}</strong><br />
                             <span class="fst-italic">@lang('Mỗi anyPoint tương ứng với 1000 vnđ')</span> <br>
                             <strong>@lang('Số anyPoint rút:')</strong>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-2">
                                 <input type="number" class="form-control" name="anypoint" id="anypoint" oninput="vnd()"
                                     placeholder="{{ __('Nhập số anyPoint bạn muốn rút') }}"
-                                    aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    aria-label="Recipient's username" aria-describedby="button-addon2" required>
                                 <button class="btn btn-outline-secondary" onclick="max()" type="button"
                                     id="button-addon2">@lang('Tối đa')</button>
+
                             </div>
+                            <div class="text-danger d-none" id="val">Vui lòng nhập giá trị thích hợp</div>
+
+
+
                             <span>@lang('Số tiền tương ứng:') </span> <span id="vnd"></span><br>
                             <strong class="pt-2">@lang('Phương thức nhận tiền')</strong> <br><br>
                             <div id="option">
@@ -310,8 +315,13 @@
     }
 
     function cfwithdraw() {
-        document.getElementById("withdraw").style.display = "none";
-        document.getElementById("cfwithdraw").style.display = "block";
+        if(document.getElementById("anypoint").value <=0 || document.getElementById("anypoint").value == null){
+            document.getElementById("val").classList.remove("d-none");
+        } else{
+            document.getElementById("val").classList.add("d-none");
+            document.getElementById("withdraw").style.display = "none";
+            document.getElementById("cfwithdraw").style.display = "block";
+        }
         var x = document.getElementById("anypoint").value;
         document.getElementById("money").innerHTML = (x * 1000).toLocaleString('vn-VN', {
             style: 'currency',
