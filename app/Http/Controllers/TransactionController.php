@@ -23,6 +23,7 @@ use App\PaymentGateway\Processor;
 use App\Services\FileServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use Aws\Api\Parser\Crc32ValidatingParser;
 use Exception;
 use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Facades\Log;
@@ -124,7 +125,7 @@ class TransactionController extends Controller
             }
             $headers = [
                 // "Content-Encoding" => "UTF-8",
-                "Content-type" => "text/csv", 
+                "Content-type" => "text/csv",
                 "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
