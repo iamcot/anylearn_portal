@@ -549,6 +549,19 @@ class PageController extends Controller
 
         return view(env('TEMPLATE', '') . 'helpcenter.index', $data);
     }
+    public function helpcenterseller(Request $request)
+    {
+        $configM = new Configuration();
+        $data['member'] = $configM->getDoc(ConfigConstants::GUIDE_MEMBER);
+        $data['teacher'] = $configM->getDoc(ConfigConstants::GUIDE_TEACHER);
+        $data['school'] = $configM->getDoc(ConfigConstants::GUIDE_SCHOOL);
+        $data['checkout'] = $configM->getDoc(ConfigConstants::GUIDE_CHECKOUT);
+        if (!$request->session()->get('tab') && $request->get('tab')) {
+            $request->session()->flash('tab', $request->get('tab'));
+        }
+
+        return view(env('TEMPLATE', '') . 'helpcenter.parnter.index', $data);
+    }
 
     public function guide(Request $request)
     {

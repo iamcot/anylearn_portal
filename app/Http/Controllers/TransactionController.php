@@ -23,6 +23,7 @@ use App\PaymentGateway\Processor;
 use App\Services\FileServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use Aws\Api\Parser\Crc32ValidatingParser;
 use Exception;
 use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Facades\Log;
