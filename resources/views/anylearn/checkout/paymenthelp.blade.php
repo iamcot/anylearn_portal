@@ -1,4 +1,7 @@
 @extends('anylearn.layout')
+@section('spmb')
+checkout-paymenthelp
+@endsection
 @section('body')
     <h5 class="mb-5 font-weight-bold text-success">@lang('Để hoàn tất thanh toán, quý khách vui lòng chuyển khoản theo thông tin sau.')</h5>
     @foreach ($banks as $bank)

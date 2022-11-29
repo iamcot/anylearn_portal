@@ -7,7 +7,7 @@
             <div class="owl-carousel owl-theme" role="listbox">
                 @foreach($data as $article)
                 <div class="p-1">
-                    <a class="card border-0 text-decoration-none text-secondary" href="{{ $itemServ->articleUrl($article->id) }}">
+                    <a class="card border-0 text-decoration-none text-secondary" href="{{ $itemServ->articleUrl($article->id) }}" data-spm="article.{{ $article->id }}">
                         <div class="card-img">
                             @php
                             $img = $article->image;

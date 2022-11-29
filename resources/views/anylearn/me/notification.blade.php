@@ -1,6 +1,8 @@
 @inject('userServ','App\Services\UserServices')
 @extends('anylearn.me.layout')
-
+@section('spmb')
+notification
+@endsection
 @section('body')
 @if(empty($notifications))
 <p>@lang('Bạn chưa có thông báo nào!')</p>

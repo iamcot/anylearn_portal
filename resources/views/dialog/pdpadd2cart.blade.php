@@ -1,4 +1,4 @@
-<form action="{{ route('add2cart') }}" method="post" id="pdpAdd2Cart">
+<form action="{{ route('add2cart') }}" method="post" id="pdpAdd2Cart" data-spm="add2cart.0">
     @csrf
     <input type="hidden" name="action" value="pdpAdd2Cart">
     <input type="hidden" name="class" value="{{ $class->id }}">

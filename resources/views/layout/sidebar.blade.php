@@ -216,6 +216,23 @@
         </div>
     </li>
     @endif
+    @if($userService->haveAccess($role, 'spm'))
+    <li class="nav-item {{ in_array($route, ['spm.general']) ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSpm" 
+        aria-expanded="{{ in_array($route, ['spm.general']) ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-fire"></i>
+            <span>@lang('anyLogs')</span>
+        </a>
+        <div id="collapseSpm" class="collapse {{ in_array($route, ['spm.general']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ $route == 'spm.general' ? 'active' : '' }}" href="{{ route('spm.general') }}">
+                    <i class="fas fa-fw fa-fire"></i>
+                    <span>Spm all</span>
+                </a>
+            </div>
+        </div>
+    </li>
+    @endif
     @if($userService->haveAccess(Auth::user()->role, 'user.mods'))
     <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.mods') }}">

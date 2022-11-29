@@ -416,7 +416,7 @@ class ConfigApi extends Controller
         $report = [];
         $diffinSec = $to->getTimestamp() - $from;
         // print_r($diffinSec);
-        $report['SoLuongTruyCap'] = \Tracker::sessions($diffinSec)->count();
+        $report['SoLuongTruyCap'] = User::count();
         $report['SoNguoiBan'] = User::whereIn('role', ['teacher', 'school'])->count();
         $report['SoNguoiBanMoi'] = User::whereIn('role', ['teacher', 'school'])->where('created_at', '>', $fromInText)->count();
         $report['TongSoSanPham'] = Item::count();

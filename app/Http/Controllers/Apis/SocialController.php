@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\SocialPost;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class SocialController extends Controller
 {
@@ -35,6 +36,7 @@ class SocialController extends Controller
             $value->description = "";
             $value->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)->where('post_id', $value->id)->count();
             $value->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $value->id)->count();
+            $value->comment_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $value->id)->count();
             $value->user = $user;
             $value->comments = [];
             $value->like = [];
@@ -63,7 +65,12 @@ class SocialController extends Controller
         $data->like_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)->where('post_id', $postId)->count();
         $data->share_counts = SocialPost::where('type', SocialPost::TYPE_ACTION_SHARE)->where('post_id', $postId)->count();
         $data->user = $user;
-        $data->comments = SocialPost::where('type', SocialPost::TYPE_ACTION_COMMENT)->where('post_id', $postId)->get();
+        $data->comments = DB::table('social_posts')
+        ->join('users', 'users.id', '=', 'social_posts.user_id')
+        ->where('type', SocialPost::TYPE_ACTION_COMMENT)
+        ->where('post_id', $postId)
+        ->select('social_posts.*', 'users.first_name AS comment_user_first_name', 'users.name AS comment_user_name', 'users.image AS comment_user_image', 'users.id AS comment_user_id')
+        ->get();
         $data->like = [];
         $data->isliked = SocialPost::where('type', SocialPost::TYPE_ACTION_LIKE)
                             ->where('user_id', $user->id)
