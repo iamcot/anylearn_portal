@@ -5,7 +5,7 @@ namespace App\Constants;
 class ConfigConstants
 {
     const FOUNDATION_TAG = 'foundation';
-    
+
     const GUIDE_TOC = 'guide_toc';
     const GUIDE_PAYMENT_TERM = 'guide_payment_term';
     const GUIDE_MEMBER  = 'guide_member';
@@ -63,10 +63,9 @@ class ConfigConstants
     const TRANSACTION_COMMISSION_ADD = 'commission_add';
 
     const TRANSACTION_FIN_SALARY =  'fin_salary';
-    const TRANSACTION_FIN_FIXED_FEE =  'fin_fixed_fee';
-    const TRANSACTION_FIN_VARIABLE_FEE =  'fin_variable_fee';
+    const TRANSACTION_FIN_OFFICE ='fin_office';
+    const TRANSACTION_FIN_SALE ='fin_sale';
     const TRANSACTION_FIN_MARKETING =  'fin_marketing';
-    const TRANSACTION_FIN_EVENT =  'fin_event';
     const TRANSACTION_FIN_ASSETS =  'fin_assets';
     const TRANSACTION_FIN_OTHERS =  'fin_others';
 

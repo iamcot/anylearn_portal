@@ -110,20 +110,20 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
-            $locale = App::getLocale();
-            foreach ($categories as $row) {
-                if($locale!=I18nContent::DEFAULT){
-                    $i18 = new I18nContent();
-                        $item18nData = $i18->i18nCategory($row->id, $locale);
-                        // dd($item18nData);
-                        $supportCols = array_keys(I18nContent::$categoryCols);
-                        foreach ($item18nData as $col => $content) {
-                            if (in_array($col, $supportCols) && $content != "") {
-                                $row->$col = $content;
-                            }
-                        }
+        $locale = App::getLocale();
+        foreach ($categories as $row) {
+            if ($locale != I18nContent::DEFAULT) {
+                $i18 = new I18nContent();
+                $item18nData = $i18->i18nCategory($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
+                    }
                 }
             }
+        }
         $teachers = DB::table('users')
             ->join('class_teachers AS ct', function ($join) use ($item) {
                 $join->on('ct.user_id', '=', 'users.id')
@@ -164,7 +164,8 @@ class ItemServices
         if (!$item) {
             return "";
         }
-        $url = route('page.pdp', ['id' => $id, 'url' => Str::slug($item->title) . '.html']);
+        
+        $url = route('page.pdp', ['id' => $id, 'url' => $item->seo_url ?? Str::slug($item->title) . '.html']);
         $url = str_replace("https://api.", "https://", $url);
         return $url;
     }
@@ -214,7 +215,7 @@ class ItemServices
             ->orderby('id', 'desc')
             ->select(
                 'items.*',
-                DB::raw('(select count(*) from order_details where order_details.item_id = items.id) AS sum_reg'),
+                DB::raw("(select count(*) from order_details where order_details.item_id = items.id AND order_details.status = '" . OrderConstants::STATUS_DELIVERED . "') AS sum_reg"),
                 DB::raw('(select count(*) from item_user_actions where item_user_actions.item_id = items.id AND item_user_actions.type=\'rating\') AS sum_rating')
             )
             ->with('series', 'user')
@@ -728,7 +729,7 @@ class ItemServices
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
         $user = User::find($joinedUserId);
-        
+
         $schedule = Schedule::find($scheduleId);
         if (!$schedule) {
             throw new Exception("Không có lịch cho buổi học này");
