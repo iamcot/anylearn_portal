@@ -22,9 +22,10 @@ class HelpcenterController extends Controller
     {
         $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
         ->where('status', '>', 0)
+        ->where('type','buyer')
         ->orderby('view', 'desc')
         ->take(10)->get();
-        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->get();
+        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type','buyer')->get();
         $this->data['breadcrumb'] = [
             [
                 'text' => 'Trung tâm hỗ trợ',
@@ -32,7 +33,21 @@ class HelpcenterController extends Controller
         ];
         return view(env('TEMPLATE', '') . 'helpcenter.index', $this->data);
     }
-
+    public function indexpartner(Request $request)
+    {
+        $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
+        ->where('status', '>', 0)
+        ->where('type','seller')
+        ->orderby('view', 'desc')
+        ->take(10)->get();
+        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type','seller')->get();
+        $this->data['breadcrumb'] = [
+            [
+                'text' => 'Trung tâm hỗ trợ đối tác',
+            ]
+        ];
+        return view(env('TEMPLATE', '') . 'helpcenter.index', $this->data);
+    }
     public function topic(Request $request, $topicUrl)
     {
         $topic = KnowledgeTopic::where('url', $topicUrl)->where('status', '>', 0)->first();
@@ -69,7 +84,6 @@ class HelpcenterController extends Controller
         $this->data['topics'] = KnowledgeTopic::where('id', '!=', $topic->id)->where('status', '>', 0)->get();
         return view(env('TEMPLATE', '') . 'helpcenter.topic', $this->data);
     }
-
     public function knowledge(Request $request, $id, $url)
     {
         $this->data['knowledge'] = Knowledge::find($id);
@@ -78,7 +92,7 @@ class HelpcenterController extends Controller
         ->where('knowledge_topic_category_links.knowledge_category_id', $this->data['knowledge']->knowledge_category_id)
         ->select('knowledge_topics.*')
         ->first();
-        
+
         $this->data['others'] = Knowledge::where('id', '!=', $id)
         ->where('status', '>', 0)
         ->where('knowledge_category_id', $this->data['knowledge']->knowledge_category_id)->get();
@@ -98,7 +112,7 @@ class HelpcenterController extends Controller
         return view(env('TEMPLATE', '') . 'helpcenter.knowledge', $this->data);
     }
 
-    public function chatbot() 
+    public function chatbot()
     {
         $this->data['greetingCard'] = view(env('TEMPLATE', '') . 'helpcenter.chatbot.greetingcard')->render();
         return view(env('TEMPLATE', '') . 'helpcenter.chatbot', $this->data);
