@@ -47,7 +47,7 @@ Route::get('/quote', 'Apis\ArticleApi@quote');
 Route::get('/ask/list', 'Apis\AskApi@getList');
 Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
-Route::post('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
+Route::any('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
 
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');

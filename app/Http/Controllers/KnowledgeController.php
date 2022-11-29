@@ -28,11 +28,13 @@ class KnowledgeController extends Controller
     {
         if ($request->get('save')) {
             $category = $request->get('title');
+            $type = $request->get('type');
             $url = Str::slug($category);
             $catId = $request->get('id');
             $data = [
                 'title' => $category,
                 'url' => $url,
+                'type'=> $type,
             ];
             if ($catId) {
                 KnowledgeCategory::find($catId)->update($data);
@@ -62,12 +64,14 @@ class KnowledgeController extends Controller
             $catId = $request->get('knowledge_category_id');
             $content = $request->get('content');
             $contentBot = $request->get('content_bot');
+            $type = $request->get('type');
             $data = [
                 'title' => $title,
                 'url' => $url,
                 'knowledge_category_id' => $catId,
                 'content' => $content,
                 'content_bot' => $contentBot,
+                'type'=> $type,
             ];
             if ($articleId) {
                 Knowledge::find($articleId)->update($data);
@@ -95,9 +99,11 @@ class KnowledgeController extends Controller
             $category = $request->get('title');
             $url = Str::slug($category);
             $catId = $request->get('id');
+            $type = $request->get('type');
             $data = [
                 'title' => $category,
                 'url' => $url,
+                'type'=>$type
             ];
             if ($catId) {
                 KnowledgeTopic::find($catId)->update($data);
@@ -127,8 +133,9 @@ class KnowledgeController extends Controller
             }
             return redirect()->route('knowledge.topic.category', ['id' => $topicId])->with('notify', 'Thành công');
         }
-        $this->data['topic'] = KnowledgeTopic::find($topicId);
-        $this->data['categories'] = KnowledgeCategory::all();
+        $top = KnowledgeTopic::find($topicId);
+        $this->data['topic'] =$top;
+        $this->data['categories'] = KnowledgeCategory::all()->where('type',$top->type);
         $links = KnowledgeTopicCategoryLink::where('knowledge_topic_id', $topicId)->get();
         $this->data['topicCategories'] = [];
         if ($links) {

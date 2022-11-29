@@ -66,6 +66,13 @@
             <i class="fas fa-fw fa-wallet"></i>
             <span>@lang('Giao dịch của tôi')</span></a>
     </li>
+    @if(Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('helpcenter.parnter.index') }}" data-spm="nav.class">
+            <i class="fas fa-fw fa-headset"></i>
+            <span>@lang('Trung tâm hỗ trợ')</span></a>
+    </li>
+    @endif
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

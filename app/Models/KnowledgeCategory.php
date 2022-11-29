@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KnowledgeCategory extends Model
 {
-    protected $fillable = ['title', 'url', 'description', 'status'];
+    protected $fillable = ['title', 'url', 'description', 'status','type'];
 
     protected $table = 'knowledge_categories';
 }
