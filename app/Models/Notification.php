@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Services\ItemServices;
 use App\Services\SmsServices;
@@ -167,6 +168,7 @@ class Notification extends Model
     public function notifRemindConfirms($itemId)
     {
         $registers = DB::table('order_details')->where('order_details.item_id', $itemId)
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->select('users.id', 'users.name', 'items.title')

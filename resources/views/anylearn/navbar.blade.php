@@ -18,9 +18,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/classes" data-spm="nav.anycourse">anyCOURSE</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="/ref/anylearn" data-spm="nav.download_app">@lang('TẢI APP')</a>
-                </li>
+                </li> -->
                 @if (@auth()->check())
                 <li class="nav-item dropdown no-arrow d-flex">
                     <a class=" nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

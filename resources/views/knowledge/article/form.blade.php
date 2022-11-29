@@ -22,6 +22,16 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="type" class="col-md-2 col-form-label text-md-right">{{ __('Đối tượng') }}</label>
+                <div class="col-md-6">
+                    <select name="type" id="type" required class="form-control">
+                        @foreach(["buyer", "seller"] as $type)
+                            <option value="{{ $type }}" {{ !empty($article) && $article->type  == $type ? 'selected' : '' }}>{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
                     <label for="editor" class="col-md-2 col-form-label text-md-right @error('content') is-invalid @enderror">{{ __('Nội dung') }}</label>
                     <div class="col-md-8">
                         <textarea id="editor" name="content">{!! old('content', !empty($article) ? $article->content : '') !!}</textarea>
