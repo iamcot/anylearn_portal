@@ -28,7 +28,7 @@
     </li>
     <li class="nav-item {{ in_array($route, ['me.finance']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.finance') }}">
-            <i class="fas fa-fw fa-scroll"></i>
+            <i class="fas fa-fw fa-money-bill"></i>
             <span>@lang('Quản lý tài chính')</span></a>
     </li>
     <hr class="sidebar-divider d-none d-md-block text-secondary">
