@@ -433,6 +433,12 @@ class ConfigController extends Controller
         $this->data['configs'] = [
             [], [], [], [], [], //5
         ];
+        if ($config) {
+            $values = json_decode($config->value, true);
+            for ($i = 0; $i < count($this->data['configs']); $i++) {
+                $this->data['configs'][$i] = empty($values[$i]) ? [] : $values[$i];
+            }
+        }
         // if ($config) {
         //     $values = json_decode($config->value, true);
         //     for ($i = 0; $i < count($this->data['configs']); $i++) {
