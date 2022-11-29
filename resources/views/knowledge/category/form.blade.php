@@ -5,14 +5,23 @@
     <input type="hidden" name="id" value="{{ !empty($category) ? $category->id : null }}">
     <div class="card shadow">
         <div class="card-body">
-            @foreach(App\Models\I18nContent::$supports as $locale)
             <div class="form-group row">
-                <label for="title{{ $locale }}" class="col-md-2 col-form-label text-md-right">{{ __('Tên thư mục') }} [{{ $locale }}]</label>
+                <label for="title" class="col-md-2 col-form-label text-md-right">{{ __('Tên thư mục') }}</label>
                 <div class="col-md-6">
-                    <input id="title{{ $locale }}" type="text" class="form-control" name="title[{{ $locale }}]" value="{{ old('title', !empty($category) ? $category->title[$locale] : '') }}" required>
+                    <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', !empty($category) ? $category->title : '') }}" required>
                 </div>
             </div>
-            @endforeach
+            <div class="form-group row">
+                <label for="type" class="col-md-2 col-form-label text-md-right">{{ __('Đối tượng') }}</label>
+                <div class="col-md-6">
+                    <select name="type" id="type" required class="form-control">
+                        @foreach(["buyer", "seller"] as $type)
+                            <option value="{{ $type }}" {{ !empty($category) && $category->type  == $type ? 'selected' : '' }}>{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
         </div>
         <div class="card-footer">
             <button name="save" value="save" class="btn btn-primary }}"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>

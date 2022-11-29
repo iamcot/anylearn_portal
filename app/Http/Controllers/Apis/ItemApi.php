@@ -7,7 +7,6 @@ use App\Constants\FileConstants;
 use App\Constants\ItemConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
-use App\Models\I18nContent;
 use App\Models\Item;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
@@ -135,20 +134,18 @@ class ItemApi extends Controller
     public function userItems(Request $request, $userId)
     {
         $user = User::find($userId)->makeVisible(['full_content']);
-        $userService = new UserServices();
-        $user = $userService->userInfo($user->id);
         if (!$user) {
             return response('Trang không tồn tại', 404);
         }
         $pageSize = $request->get('pageSize', 9999);
-        // DB::enableQueryLog();
+        // DB::enableQueryLog(); 
         $configM = new Configuration();
         $isEnableIosTrans = $configM->enableIOSTrans($request);
 
         $items = DB::table('items')
-            ->where(function ($query) use ($userId) {
+            ->where(function($query) use ($userId) {
                 $query->where('user_id', $userId)
-                    ->orWhereRaw('items.id in (SELECT class_id from class_teachers AS ct where ct.user_id = ?)', [$userId]);
+                ->orWhereRaw('items.id in (SELECT class_id from class_teachers AS ct where ct.user_id = ?)', [$userId]);
             })
             // ->where('update_doc', UserConstants::STATUS_ACTIVE)
             ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
@@ -162,31 +159,9 @@ class ItemApi extends Controller
                 DB::raw("(select avg(iua.value) from item_user_actions AS iua WHERE type = 'rating' AND iua.item_id = items.id) AS rating")
             )
             ->paginate($pageSize);
-        $i18nModel = new I18nContent();
-
-        $itemService = new ItemServices();
-        foreach ($items as $row) {
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$itemCols as $col => $type) {
-                        $row->$col = [I18nContent::DEFAULT => $row->$col];
-                    }
-                } else {
-                    $supportCols = array_keys(I18nContent::$itemCols);
-                    $item18nData = $i18nModel->i18nItem($row->id, $locale);
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $row->$col = $row->$col + [$locale => ""];
-                        } else {
-                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-        }
 
 
-        // dd(DB::getQueryLog());
+            // dd(DB::getQueryLog());
         return response()->json([
             'user' => $user,
             'items' => $items,

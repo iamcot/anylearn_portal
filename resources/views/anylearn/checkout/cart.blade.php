@@ -96,14 +96,14 @@ cart
                                     href="javascript:$('#payment_point_input').val({{ $transServ->calRequiredPoint($order->amount, $user->wallet_c, $bonusRate) }})">@lang('Dùng hết')</a>
                             </label>
                             <div class="row">
-                                <div class="form-group col-8 col-lg-4">
+                                <div class="form-group col-xs-12 col-md-4 mt-1">
                                     <input type="number" min=0
                                         max="{{ $transServ->calRequiredPoint($order->amount, $user->wallet_c, $bonusRate) }}"
                                         class=" rounded-pill form-control" id="payment_point_input" name="payment_point"
                                         value="{{ !empty($pointUsed) ? $pointUsed->amount : '' }}">
                                 </div>
-                                <div class="form-group col-4">
-                                    <button class="btn btn-success rounded-pill border-0" name="cart_action"
+                                <div class="form-group col-xs-12 col-md-2 mt-1">
+                                    <button class="btn btn-success form-control rounded-pill border-0" name="cart_action"
                                         value="exchangePoint">@lang('Đổi anyPoint')</button>
                                 </div>
                             </div>
@@ -131,12 +131,12 @@ cart
                         <div class="p-3">
                             <label for="" class="fw-bold text-secondary">@lang('Mã giảm giá')</label>
                             <div class="row">
-                                <div class="form-group col-8 col-lg-4">
+                                <div class="form-group col-xs-12 col-md-4 mt-1">
                                     <input type="text" class=" rounded-pill form-control" name="payment_voucher"
                                         value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
                                 </div>
-                                <div class="form-group col-4">
-                                    <button class="btn btn-success rounded-pill border-0" name="cart_action"
+                                <div class="form-group col-xs-12 col-md-2 mt-1">
+                                    <button class="btn btn-success form-control rounded-pill border-0" name="cart_action"
                                         value="apply_voucher">@lang('Áp dụng')</button>
                                 </div>
                             </div>
@@ -201,10 +201,12 @@ cart
                     <input type="hidden" name="payment" value="free">
                 @endif
                 <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! __($term) !!}</div>
-                <p class="fw-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" checked
-                        required> <label for="accept_term">@lang('Tôi đồng ý với điều khoản thanh toán và') <a target="_BLANK"
+                <p class="fw-bold d-flex"><input class="me-2" type="checkbox" name="accept_term" value="payment" id="accept_term" checked
+                        required> <label class="" for="accept_term">@lang('Tôi đồng ý với điều khoản thanh toán và') <a target="_BLANK"
                             href="/privacy">@lang('chính sách bảo mật')</a> @lang('của Công ty')</label></p>
-                <button class="btn btn-success border-0 rounded-pill mt-2" name="cart_action"
+                <button class="btn btn-success border-0 rounded-pill mt-2 d-none d-sm-block" name="cart_action"
+                    value="pay">@lang('THANH TOÁN')</button>
+                    <button class="btn btn-success border-0 rounded-pill mt-2 d-block d-sm-none form-control" name="cart_action"
                     value="pay">@lang('THANH TOÁN')</button>
 
             </div>

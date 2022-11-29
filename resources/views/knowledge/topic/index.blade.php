@@ -20,35 +20,27 @@
             <thead>
                 <thead>
                     <th class="text-center">#ID</th>
-                    @foreach(App\Models\I18nContent::$supports as $locale)
-                    <th>@lang('Tiêu đề') [{{ $locale }}]</th>
-                    @endforeach
-                    <th>@lang('Tạo lúc')</th>
-                    <th>@lang('Thao tác')</th>
+                    <th>Tiêu đề</th>
+                    <th>Tạo lúc</th>
+                    <th>Đối tượng</th>
+                    <th>Thao tác</th>
                 </thead>
             <tbody>
                 @foreach($categories as $category)
                 <tr>
                     <th class="text-center">{{ $category->id }}</th>
-                    @foreach(App\Models\I18nContent::$supports as $locale)
-                    <td>{{ $category->title[$locale] }}
-
-                        {{-- <a href="{{ route('category.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a> --}}
+                    <td>{{ $category->title }}
+                        <a href="{{ route('knowledge.topic.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
                     </td>
-                    @endforeach
-                    {{-- <td>{{ $category->title }}
-                        <a href="{{ route('knowledge.topic.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
-                    </td> --}}
                     <td>{{ $category->updated_at }}</td>
+                    <td>{{ $category->type }}</td>
                     <td>
-                        <a href="{{ route('knowledge.topic.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
-                        <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_topics', 'id' => $category->id]) }}">
+                        <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_categories', 'id' => $category->id]) }}">
                             {{ $category->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>
                         <a class="btn btn-sm btn-primary" href="{{ route('knowledge.topic.category', ['id' => $category->id]) }}">
                             Các thư mục
                         </a>
-
                     </td>
                 </tr>
                 @endforeach

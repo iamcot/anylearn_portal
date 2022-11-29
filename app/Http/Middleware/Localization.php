@@ -41,7 +41,7 @@ class Localization
                 App::setLocale(Session::get('locale'));
             }
         }
-        // dd(Session::get('locale'));
+        // dd(Session::get('locale'));  
         return $next($request);
     }
 }

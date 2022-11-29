@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Constants\FileConstants;
 use App\Models\Article;
-use App\Models\I18nContent;
 use App\Models\Knowledge;
 use App\Models\KnowledgeCategory;
 use App\Models\KnowledgeTopic;
@@ -21,187 +20,68 @@ class KnowledgeController extends Controller
 {
     public function category(Request $request)
     {
-        $data = KnowledgeCategory::paginate();
-        $i18nModel = new I18nContent();
-
-        // change vi->en
-        foreach ($data as $row) {
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$knowledge_categoriesCols as $col => $type) {
-                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
-                    }
-                } else {
-                    $item18nData = $i18nModel->i18nknowledgeCategory($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$knowledge_categoriesCols);
-
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $row->$col = $row->$col + [$locale => ""];
-                        } else {
-                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-        }
-        $this->data['categories'] = $data;
+        $this->data['categories'] = KnowledgeCategory::paginate();
         return view('knowledge.category.index', $this->data);
     }
 
     public function categoryEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            foreach (I18nContent::$supports as $locale) {
-                $input = $request->all();
-                // dd($input);
-                $category = $input["title"];
-                $url = Str::slug($category[$locale]);
-                $catId = $request->get('id');
-                $data = [
-                    'title' => $category[$locale],
-                    'url' => $url,
-                ];
-                $i18n = new I18nContent();
-                if ($catId) {
-                    if ($locale != I18nContent::DEFAULT) {
-                        $i18n->i18nSave($locale, 'knowledge_categories', $catId, 'title', $category[$locale]);
-                    } else {
-                        KnowledgeCategory::find($catId)->update($data);
-                    }
-                } else {
-                    if ($locale == I18nContent::DEFAULT) {
-                        $id = KnowledgeCategory::create($data)->id;
-                    } else {
-                        $i18n->i18nSave($locale, 'knowledge_categories', $id, 'title', $category[$locale]);
-                    }
-                }
+            $category = $request->get('title');
+            $type = $request->get('type');
+            $url = Str::slug($category);
+            $catId = $request->get('id');
+            $data = [
+                'title' => $category,
+                'url' => $url,
+                'type'=> $type,
+            ];
+            if ($catId) {
+                KnowledgeCategory::find($catId)->update($data);
+            } else {
+                KnowledgeCategory::create($data);
             }
             return redirect()->route('knowledge.category')->with('notify', 'Thành công');
         }
         if ($id) {
-            $data = KnowledgeCategory::find($id);
-            $i18nModel = new I18nContent();
-
-            // change vi->en
-
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$knowledge_categoriesCols as $col => $type) {
-                        $data->$col = [I18nContent::DEFAULT => $data->$col];
-                    }
-                } else {
-                    $supportCols = array_keys(I18nContent::$knowledge_categoriesCols);
-                    $item18nData = $i18nModel->i18nknowledgeCategory($data->id, $locale);
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $data->$col = $data->$col + [$locale => ""];
-                        } else {
-                            $data->$col = $data->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-            $this->data['category'] = $data;
+            $this->data['category'] = KnowledgeCategory::find($id);
         }
         return view('knowledge.category.form', $this->data);
     }
 
     public function knowledge(Request $request)
     {
-        $data = Knowledge::paginate();
-        $i18nModel = new I18nContent();
-
-        // change vi->en
-        foreach ($data as $row) {
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$knowledgeCols as $col => $type) {
-                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
-                    }
-                } else {
-                    $item18nData = $i18nModel->i18nKnowledge($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$knowledgeCols);
-
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $row->$col = $row->$col + [$locale => ""];
-                        } else {
-                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-        }
-        $this->data['articles'] = $data;
+        $this->data['articles'] = Knowledge::paginate();
         return view('knowledge.article.index', $this->data);
     }
 
     public function knowledgeEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            foreach (I18nContent::$supports as $locale) {
-                $input = $request->all();
-                //  dd($input);
-                $title = $input["title"];
-                $url = Str::slug($title[$locale]);
-                $articleId = $request->get('id');
-                $catId = $request->get('knowledge_category_id');
-                $content = $input["content"];
-                $contentBot = $input["content_bot"];
-                $data = [
-                    'title' => $title[$locale],
-                    'url' => $url,
-                    'knowledge_category_id' => $catId,
-                    'content' => $content[$locale],
-                    'content_bot' => $contentBot[$locale],
-                ];
-                $i18n = new I18nContent();
-                if ($articleId) {
-                    if ($locale != I18nContent::DEFAULT) {
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'title', $title[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'content', $content[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $articleId, 'content_bot', $contentBot[$locale]);
-                    } else {
-                        Knowledge::find($articleId)->update($data);
-                    }
-                } else {
-                    if ($locale == I18nContent::DEFAULT) {
-                        $id = Knowledge::create($data)->id;
-                    } else {
-                        $i18n->i18nSave($locale, 'knowledges', $id, 'title', $title[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $id, 'content', $content[$locale]);
-                        $i18n->i18nSave($locale, 'knowledges', $id, 'content_bot', $contentBot[$locale]);
-                    };
-                }
+            $title = $request->get('title');
+            $url = Str::slug($title);
+            $articleId = $request->get('id');
+            $catId = $request->get('knowledge_category_id');
+            $content = $request->get('content');
+            $contentBot = $request->get('content_bot');
+            $type = $request->get('type');
+            $data = [
+                'title' => $title,
+                'url' => $url,
+                'knowledge_category_id' => $catId,
+                'content' => $content,
+                'content_bot' => $contentBot,
+                'type'=> $type,
+            ];
+            if ($articleId) {
+                Knowledge::find($articleId)->update($data);
+            } else {
+                Knowledge::create($data);
             }
-
             return redirect()->route('knowledge')->with('notify', 'Thành công');
         }
         if ($id) {
-            $data= Knowledge::find($id);
-            $i18nModel = new I18nContent();
-
-            // change vi->en
-
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$knowledgeCols as $col => $type) {
-                        $data->$col = [I18nContent::DEFAULT => $data->$col];
-                    }
-                } else {
-                    $supportCols = array_keys(I18nContent::$knowledgeCols);
-                    $item18nData = $i18nModel->i18nKnowledge($data->id, $locale);
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $data->$col = $data->$col + [$locale => ""];
-                        } else {
-                            $data->$col = $data->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-            $this->data['article'] = $data;
+            $this->data['article'] = Knowledge::find($id);
         }
         $this->data['categories'] = KnowledgeCategory::all();
         return view('knowledge.article.form', $this->data);
@@ -209,89 +89,31 @@ class KnowledgeController extends Controller
 
     public function topic(Request $request)
     {
-        $data = KnowledgeTopic::paginate();
-        $i18nModel = new I18nContent();
-
-        // change vi->en
-        foreach ($data as $row) {
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$knowledgetopicCols as $col => $type) {
-                        $row->$col =  [I18nContent::DEFAULT => $row->$col];
-                    }
-                } else {
-                    $item18nData = $i18nModel->i18nTopic($row->id, $locale);
-                    $supportCols = array_keys(I18nContent::$knowledgetopicCols);
-
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $row->$col = $row->$col + [$locale => ""];
-                        } else {
-                            $row->$col = $row->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-        }
-        // dd($data);
-        $this->data['categories'] = $data;
+        $this->data['categories'] = KnowledgeTopic::paginate();
         return view('knowledge.topic.index', $this->data);
     }
 
     public function topicEdit(Request $request, $id = null)
     {
         if ($request->get('save')) {
-            foreach (I18nContent::$supports as $locale) {
-                $input = $request->all();
-                // dd($input);
-                $category = $input["title"];
-                $url = Str::slug($category[$locale]);
-                $catId = $request->get('id');
-                $data = [
-                    'title' => $category[$locale],
-                    'url' => $url,
-                ];
-                $i18n = new I18nContent();
-                if ($catId) {
-                    if ($locale != I18nContent::DEFAULT) {
-                        $i18n->i18nSave($locale, 'knowledge_topics', $catId, 'title', $category[$locale]);
-                    } else {
-                        KnowledgeTopic::find($catId)->update($data);
-                    }
-                } else {
-                    if ($locale == I18nContent::DEFAULT) {
-                        $id = KnowledgeTopic::create($data)->id;
-                    } else {
-                        $i18n->i18nSave($locale, 'knowledge_topics', $id, 'title', $category[$locale]);
-                    }
-                }
+            $category = $request->get('title');
+            $url = Str::slug($category);
+            $catId = $request->get('id');
+            $type = $request->get('type');
+            $data = [
+                'title' => $category,
+                'url' => $url,
+                'type'=>$type
+            ];
+            if ($catId) {
+                KnowledgeTopic::find($catId)->update($data);
+            } else {
+                KnowledgeTopic::create($data);
             }
             return redirect()->route('knowledge.topic')->with('notify', 'Thành công');
         }
         if ($id) {
-            $data = KnowledgeTopic::find($id);
-            $i18nModel = new I18nContent();
-
-            // change vi->en
-
-            foreach (I18nContent::$supports as $locale) {
-                if ($locale == I18nContent::DEFAULT) {
-                    foreach (I18nContent::$knowledgetopicCols as $col => $type) {
-                        $data->$col = [I18nContent::DEFAULT => $data->$col];
-                    }
-                } else {
-                    $supportCols = array_keys(I18nContent::$knowledgetopicCols);
-                    $item18nData = $i18nModel->i18nTopic($data->id, $locale);
-                    foreach ($supportCols as $col) {
-                        if (empty($item18nData[$col])) {
-                            $data->$col = $data->$col + [$locale => ""];
-                        } else {
-                            $data->$col = $data->$col + [$locale => $item18nData[$col]];
-                        }
-                    }
-                }
-            }
-            $this->data['category'] = $data;
+            $this->data['category'] = KnowledgeTopic::find($id);
         }
         return view('knowledge.topic.form', $this->data);
     }
@@ -311,8 +133,9 @@ class KnowledgeController extends Controller
             }
             return redirect()->route('knowledge.topic.category', ['id' => $topicId])->with('notify', 'Thành công');
         }
-        $this->data['topic'] = KnowledgeTopic::find($topicId);
-        $this->data['categories'] = KnowledgeCategory::all();
+        $top = KnowledgeTopic::find($topicId);
+        $this->data['topic'] =$top;
+        $this->data['categories'] = KnowledgeCategory::all()->where('type',$top->type);
         $links = KnowledgeTopicCategoryLink::where('knowledge_topic_id', $topicId)->get();
         $this->data['topicCategories'] = [];
         if ($links) {
