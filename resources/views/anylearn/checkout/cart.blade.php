@@ -36,17 +36,9 @@ cart
                                 <td>
                                     @if ($item->class_name)
                                         {{ $item->class_name }}
-                                        @if(\App::getLocale()=='vi')
                                         <span class="small text-danger">({{ $item->title }} )</span>
-                                        @else
-                                        <span class="small text-danger">({{ $item->i18n_content }} )</span>
-                                        @endif
                                     @else
-                                        @if(\App::getLocale()=='vi')
                                         {{ $item->title }}
-                                        @else
-                                        {{ $item->i18n_content }}
-                                        @endif
                                     @endif
                                     @if ($item->childId != $user->id)
                                         ({{ $item->childName }})
