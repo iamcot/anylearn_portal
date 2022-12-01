@@ -25,6 +25,7 @@
                     <th>Mã/Tiền tố voucher</th>
                     <th>Giá trị</th>
                     <th>Số lượng</th>
+                    <th>Khóa học</th>
                     <th>Tạo lúc</th>
                     <th>Thao tác</th>
                 </thead>
@@ -37,6 +38,7 @@
                     <td>{{ $voucher->prefix }}</td>
                     <td>{{ $voucher->value }}</td>
                     <td>{{ $voucher->qtt }}</td>
+                    <td>{{ $voucher->ext }}</td>
                     <td>{{ $voucher->updated_at }}</td>
                     <td>
                         <a class="btn btn-sm btn-info" href="{{ route('config.voucher.list', ['id' => $voucher->id]) }}">

@@ -98,7 +98,9 @@
                             <div class="row mt-3">
                                 <div class="col-md-8">
                                     <select name="child" class="form-select" id="inputGroupSelect04">
+                                        @if (Auth::check())
                                         <option value="">{{auth()->user()->name}} (@lang("Tôi"))</option>
+                                        @endif
                                         @if (count($children) > 0)
                                             @foreach ($children as $child)
                                                 <option value="{{ $child->id }}">{{ $child->name }}</option>

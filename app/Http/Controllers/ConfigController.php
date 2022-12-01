@@ -285,16 +285,15 @@ class ConfigController extends Controller
                 if ($exists > 0) {
                     return redirect()->back()->with('notify', 'Mã này đã tạo');
                 }
-                if ($data['type'] == VoucherGroup::TYPE_CLASS) {
-                    if (empty(trim($input['ext']))) {
-                        return redirect()->back()->with('notify', 'Voucher lớp học cần nhập IDs các khóa học.');
-                    }
-                    $classIds = explode(',', $input['ext']);
+
+                if (!empty(trim($input['ext']))) {
+                    $classIds = explode(',', trim($input['ext']));
                     for ($i = 0; $i < count($classIds); $i++) {
                         $classIds[$i] = intval($classIds[$i]);
                     }
                     $data['ext'] = implode(",", $classIds);
                 }
+
                 $newGroup = VoucherGroup::create($data);
                 if ($newGroup) {
                     if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
@@ -454,7 +453,8 @@ class ConfigController extends Controller
         return view('config.tags', $this->data);
     }
 
-    public function touchTagStatus($tag) {
+    public function touchTagStatus($tag)
+    {
         $rs = Tag::where('tag', $tag)->update(
             [
                 'status' => DB::raw('1 - status')
