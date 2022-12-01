@@ -30,21 +30,6 @@
                             @endforeach
                         </ul>
                     @endif
-                    <div>
-                        <p id="textvorcher"><a class="text-primary"
-                                href="javascript:onVoucher()"><strong>@lang('TÔI CÓ MÃ QUÀ TẶNG / GIẢM GIÁ')</strong></a></p>
-                        <div id="add2cartvoucher" style="display: none;">
-                            <div class="row mb-2">
-                                <div class="col-9">
-                                    <input type="text" placeholder="{{ __('Mã Khuyến Mãi Khóa Học') }}"
-                                        class="form-control" name="voucher">
-                                </div>
-                                <div class="col-3 mt-1">
-                                    <button onclick="offVoucher()" type="button" class="form-control btn-close"
-                                        aria-label="Close"></button>
-                                </div>
-                            </div>
-                        </div>
                         <div>
                             <p id="textchild"><a class="text-primary"
                                     href="javascript:onChild()"><strong>@lang('TÔI MUỐN ĐĂNG KÝ TÀI KHOẢN CON')</strong></a></p>

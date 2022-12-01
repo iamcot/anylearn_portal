@@ -12,18 +12,11 @@
                 <div class="col-md-6">
                     <select name="voucher_type" id="voucher_type" class="form-control">
                         <option value="{{ App\Models\VoucherGroup::TYPE_PAYMENT }}">Voucher Thanh Toán</option>
-                        <option value="{{ App\Models\VoucherGroup::TYPE_MONEY }}">Tiền mặt</option>
-                        <option value="{{ App\Models\VoucherGroup::TYPE_CLASS }}">Khóa học</option>
                         <option value="{{ App\Models\VoucherGroup::TYPE_PARTNER }}">Voucher Đối tác</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group row" id="extra_box" style="display: none;">
-                <label for="ext" class="col-md-2 col-form-label text-md-right">{{ __('ID Khóa học') }}</label>
-                <div class="col-md-6">
-                    <input id="ext" type="text" class="form-control @error('expired') is-invalid @enderror" name="ext" value="{{ old('ext', !empty($voucher) ? $voucher->ext : '') }}">
-                </div>
-            </div>
+            
             <div class="form-group row normal_voucher">
                 <label for="generate_type" class="col-md-2 col-form-label text-md-right">{{ __('Cách tạo') }}</label>
                 <div class="col-md-6">
@@ -34,22 +27,28 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="prefix" class="col-md-2 col-form-label text-md-right">{{ __('Voucher/Tiền tố') }}</label>
+                <label for="prefix" class="col-md-2 col-form-label text-md-right">{{ __('Voucher/Tiền tố') }}*</label>
                 <div class="col-md-6">
-                    <input id="prefix" type="text" class="form-control @error('voucher') is-invalid @enderror" name="prefix" value="{{ old('prefix', !empty($voucher) ? $voucher->prefix : '') }}" >
+                    <input id="prefix" type="text" class="form-control @error('voucher') is-invalid @enderror" name="prefix" value="{{ old('prefix', !empty($voucher) ? $voucher->prefix : '') }}" required>
                 </div>
             </div>
             <div class="form-group row normal_voucher">
-                <label for="value" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị') }}</label>
+                <label for="value" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị') }}*</label>
                 <div class="col-md-6">
-                    <input id="value" type="text" class="form-control @error('value') is-invalid @enderror" name="value" value="{{ old('value', !empty($voucher) ? $voucher->value : '') }}" >
+                    <input id="value" type="text" class="form-control @error('value') is-invalid @enderror" name="value" value="{{ old('value', !empty($voucher) ? $voucher->value : '') }}" required>
                     <p class="small">Số thập phân (ví dụ 0.2) để giảm phần trăm. Hoặc số > 1000 để giảm số tiền cụ thể.</p>
                 </div>
             </div>
             <div class="form-group row normal_voucher">
-                <label for="qtt" class="col-md-2 col-form-label text-md-right">{{ __('Số lượng') }}</label>
+                <label for="qtt" class="col-md-2 col-form-label text-md-right">{{ __('Số lượng') }}*</label>
                 <div class="col-md-6">
-                    <input id="qtt" type="text" class="form-control @error('amount') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($voucher) ? $voucher->qtt : '') }}">
+                    <input id="qtt" type="text" class="form-control @error('amount') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($voucher) ? $voucher->qtt : '') }}" required>
+                </div>
+            </div>
+            <div class="form-group row" id="extra_box">
+                <label for="ext" class="col-md-2 col-form-label text-md-right">{{ __('ID Khóa học') }}</label>
+                <div class="col-md-6">
+                    <input id="ext" type="text" class="form-control @error('expired') is-invalid @enderror" name="ext" value="{{ old('ext', !empty($voucher) ? $voucher->ext : '') }}">
                 </div>
             </div>
             <div class="form-group row" id="partner_voucher" style="display: none;">
@@ -75,11 +74,7 @@
 @section('jscript')
 <script>
     $("#voucher_type").change(function() {
-        if ($(this).val() == "{{ App\Models\VoucherGroup::TYPE_MONEY }}") {
-            $(".normal_voucher").show();
-            $("#extra_box").hide();
-            $("#partner_voucher").hide();
-        } else if ($(this).val() == "{{ App\Models\VoucherGroup::TYPE_PARTNER }}") {
+        if ($(this).val() == "{{ App\Models\VoucherGroup::TYPE_PARTNER }}") {
             $("#extra_box").hide();
             $(".normal_voucher").hide();
             $("#partner_voucher").show();
