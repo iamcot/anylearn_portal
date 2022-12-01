@@ -3,7 +3,7 @@
     <input type="hidden" name="action" value="pdpAdd2Cart">
     <input type="hidden" name="class" value="{{ $class->id }}">
     <div id="pdpAdd2CartModal" class="modal fade shadow" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog" id="step1">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title m-0 text-primary }}">@lang('Bạn đang đăng ký khoá học')
@@ -30,7 +30,7 @@
                             @endforeach
                         </ul>
                     @endif
-                    <div>
+                    {{-- <div>
                         <p id="textvorcher"><a class="text-primary"
                                 href="javascript:onVoucher()"><strong>@lang('TÔI CÓ MÃ QUÀ TẶNG / GIẢM GIÁ')</strong></a></p>
                         <div id="add2cartvoucher" style="display: none;">
@@ -73,13 +73,57 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> --}}
 
                     <div class="modal-footer">
-                        <button id="add2CartBtn" name="add2cart" value="add2cart"
+                        {{-- <button id="add2CartBtn" name="add2cart" value="add2cart"
+                            class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button> --}}
+                            <button type="button" id="nex_step" onclick="next_step()"
                             class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="modal-dialog d-none" id="step2">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h5 class="modal-title m-0 text-primary }}"><b class="text-dark">@lang("Bạn đang đăng ký khóa học: ")</b> <br>{{ $class->title }}
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <h5 class="fw-bold">@lang('Vui lòng chọn tài khoản học cho khóa học này')</h5>
+                    <div>
+                        <div id="add2cartchild" class="input-group-append mb-2">
+                            <div class="row mt-3">
+                                <div class="col-md-8">
+                                    <select name="child" class="form-select" id="inputGroupSelect04">
+                                        <option value="">{{auth()->user()->name}} (@lang("Tôi"))</option>
+                                        @if (count($children) > 0)
+                                            @foreach ($children as $child)
+                                                <option value="{{ $child->id }}">{{ $child->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mt-2">
+                                    <a class="text-primary fw-bold" href="{{ route('me.child') }}">@lang('+ Thêm tài khoản')</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <button id="add2CartBtn" name="add2cart" value="add2cart"
+                            class="btn btn-success rounded-pill border-0">@lang('XÁC NHẬN')</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+<script>
+    function next_step() {
+        $("#step1").hide();
+        $("#step2").removeClass("d-none");
+    }
+</script>
