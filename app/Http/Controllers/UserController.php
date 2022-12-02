@@ -74,7 +74,7 @@ class UserController extends Controller
         if (!$userService->haveAccess($user->role, 'user.mods')) {
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['mods'] = User::whereIn('role', UserConstants::$pannerRoles)
+        $this->data['mods'] = User::whereIn('role', UserConstants::$parterRoles)
             ->orderby('role')
             ->paginate(UserConstants::PP);
         $this->data['navText'] = __('Quản lý Quản trị viên');
