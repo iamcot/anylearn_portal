@@ -37,9 +37,9 @@
                     <dt class="col-sm-4">{{ number_format($orderStats['gmv'], 0, ',', '.') }}</dt>
                     <dd class="col-sm-8">Khóa học đã đăng kí thành công</dd>
                     <dt class="col-sm-4">{{ number_format($orderStats['registered'], 0, ',', '.') }}</dt>
-                    <dd class="col-sm-8">Khóa học đã đăng hoàn thành</dd>
+                    <dd class="col-sm-8">Khóa học đã hoàn thành</dd>
                     <dt class="col-sm-4">{{ number_format($orderStats['complete'], 0, ',', '.') }}</dt>
-                    <dd class="col-sm-8">Giá trị đơn đang chờ thành toán</dd>
+                    <dd class="col-sm-8">Giá trị đơn đang chờ thanh toán</dd>
                     <dt class="col-sm-4">{{ number_format($orderStats['pending'], 0, ',', '.') }}</dt>
                     <dd class="col-sm-8">Tổng anyPoint đã dùng</dd>
                     <dt class="col-sm-4">{{ number_format($orderStats['anyPoint'], 0, ',', '.') }}</dt>
