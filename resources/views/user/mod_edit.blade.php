@@ -16,7 +16,7 @@
                     <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Vai trò') }}*</label>
                     <div class="col-md-8">
                         <select class="form-control" name="role" id="role">
-                            @foreach($type == 'mod' ? \App\Constants\UserConstants::$modRoles : \App\Constants\UserConstants::$memberRoles as $role)
+                            @foreach($type == 'mod' ? \App\Constants\UserConstants::$modparterRoles : \App\Constants\UserConstants::$memberRoles as $role)
                             <option value="{{ $role }}" {{ !empty($user) && $user->role  == $role ? 'selected' : '' }}>{{ $role }}</option>
                             @endforeach
                         </select>
