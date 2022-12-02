@@ -80,6 +80,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="address" class="col-md-2 col-form-label text-md-right">{{ __('Address') }}</label>
+                    <div class="col-md-8">
+                        <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', !empty($user) ? $user->address : '') }}">
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="commission_rate" class="col-md-2 col-form-label text-md-right">{{ __('Tỉ lệ hoa hồng') }}</label>
                     <div class="col-md-8">
                         <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($user) ? $user->commission_rate : '') }}" required>
