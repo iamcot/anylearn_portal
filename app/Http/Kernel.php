@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'api.user' => ApiUser::class,
         'webappauth' => WebAppAuth::class,
         'role'=> \App\Http\Middleware\Role::class,
+        'language' => \App\Http\Middleware\Localization::class,
     ];
 
     /**

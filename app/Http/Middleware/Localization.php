@@ -24,13 +24,13 @@ class Localization
                 return $next($request);
             }
             if (Auth::check()) {
-                Auth::user()->language = $request->language;
+                Auth::user()->language = $request->get('language');
                 Auth::user()->save();
-                App::setLocale($request->language);
-                Session::put('locale', $request->language);
+                App::setLocale($request->get('language'));
+                Session::put('locale', $request->get('language'));
             } else {
-                Session::put('locale', $request->language);
-                App::setLocale($request->language);
+                Session::put('locale', $request->get('language'));
+                App::setLocale($request->get('language'));
             }
             return redirect()->back();
         } elseif (auth()->user()) {
