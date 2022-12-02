@@ -97,7 +97,11 @@ class TransactionController extends Controller
         if ($request->input('name')) {
             $orders = $orders->where('users.name', 'like', '%' . $request->input('name') . '%');
         }
-
+        if ($request->input('classes')) {
+            $orders = $orders->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where('items.title', 'like', '%' . $request->input('classes') . '%');
+        }
         if ($request->input('phone')) {
             $orders = $orders->where('users.phone', $request->input('phone'));
         }
