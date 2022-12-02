@@ -97,6 +97,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/contract', 'UserController@contract')->name('me.contract');
     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
     Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
+    Route::any('/finance', 'UserController@finance')->name('me.finance');
     Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
 
 });

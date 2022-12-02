@@ -7,7 +7,7 @@ history
         <div class="strong">anyPoint:</div>
         <div class="row">
             <div class="col-md-8">
-                <h3 class="text-danger fs-3">{{ $anyPoint }}</h3>
+                <h3 class="text-danger fs-3">{{ auth()->user()->wallet_c }}</h3>
             </div>
             <div class="col-md-4 text-end"><a target="_blank" href="https://anylearn.vn/helpcenter/tich-luy-diem">@lang('anyPoint là gì?')</a></div>
         </div>
@@ -48,7 +48,7 @@ history
         <div class="tab-pane fade p-2" id="open"
             role="tabpanel" aria-labelledby="open-tab">
             <table class="table  text-secondary table-hover">
-                
+
                 <tbody>
                     @foreach ($WALLETC as $row)
                     <tr>
