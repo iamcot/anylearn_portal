@@ -151,6 +151,8 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/user/mods/create', 'UserController@modCreate')->name('user.mods.create');
     Route::any('/user/mods/{userId}', 'UserController@modEdit')->name('user.mods.edit');
     Route::get('/user/mods', 'UserController@mods')->name('user.mods');
+    Route::get('/user/modspartner', 'UserController@modspartner')->name('user.modspartner');
+
 
     Route::any('/user/members', 'UserController@members')->name('user.members');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');

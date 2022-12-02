@@ -27,7 +27,9 @@ class UserConstants
 
     public static $memberRoles = [self::ROLE_MEMBER, self::ROLE_TEACHER, self::ROLE_SCHOOL];
     public static $saleRoles = [self::ROLE_SALE, self::ROLE_SALE_CONTENT];
-    public static $modRoles = [self::ROLE_FIN_PARTNER, self::ROLE_MOD, self::ROLE_ADMIN, self::ROLE_SALE, self::ROLE_CONTENT, self::ROLE_FIN, self::ROLE_SALE_CONTENT];
+    public static $modRoles = [self::ROLE_MOD, self::ROLE_ADMIN, self::ROLE_SALE, self::ROLE_CONTENT, self::ROLE_FIN, self::ROLE_SALE_CONTENT];
+    public static $pannerRoles = [self::ROLE_FIN_PARTNER];
+
 
     public static $statusText = [
         self::STATUS_ACTIVE => 'Hoạt động',
