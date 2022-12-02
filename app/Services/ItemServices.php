@@ -165,7 +165,7 @@ class ItemServices
         if (!$item) {
             return "";
         }
-        
+
         $url = route('page.pdp', ['id' => $id, 'url' => $item->seo_url ?? Str::slug($item->title) . '.html']);
         $url = str_replace("https://api.", "https://", $url);
         return $url;
@@ -819,7 +819,7 @@ class ItemServices
             'day' => date('Y-m-d'),
         ]);
 
-        // No limit time class => just touch transaction related to approved user 
+        // No limit time class => just touch transaction related to approved user
         if ($item->nolimit_time == 1) {
             //get transaction relate order id & user & item
             $trans = DB::table('transactions')
