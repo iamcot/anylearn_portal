@@ -9,7 +9,7 @@
                     <div class="col-md-6">
                         <input id="voucher{{ $locale }}" type="text" class="form-control"
                             name="block[{{ $index }}][title][{{ $locale }}]"
-                            value="{{ !empty($config) ? $config['title'][$locale] : '' }}">
+                            value="{{ !empty($config['title'][$locale]) ? $config['title'][$locale] : '' }}">
                         <p class="small text-danger">Để trống nếu không muốn block này hiện lên</p>
                     </div>
                 </div>
