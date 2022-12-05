@@ -21,6 +21,7 @@ use App\Models\VoucherUsed;
 use App\PaymentGateway\OnepayLocal;
 use App\PaymentGateway\Processor;
 use App\Services\FileServices;
+use App\Services\QRServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
 use Aws\Api\Parser\Crc32ValidatingParser;
@@ -599,6 +600,7 @@ class TransactionController extends Controller
 
         if ($payment == 'atm') {
             $transService->paymentPending($orderId);
+            $qrservice = new QRServices();
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
         if ($payment != 'onepaylocal') {

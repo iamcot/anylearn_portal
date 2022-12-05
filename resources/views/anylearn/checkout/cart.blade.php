@@ -1,5 +1,6 @@
 @inject('itemServ', 'App\Services\ItemServices')
 @inject('transServ', 'App\Services\TransactionService')
+@inject('qrServ', 'App\Services\QRServices')
 @extends('anylearn.layout')
 @section('spmb')
 cart
@@ -186,12 +187,22 @@ cart
                                     id="radio_onepaylocal"> <label
                                     for="radio_onepaylocal"><strong>@lang('Thanh toán bằng thẻ trực tuyến MỚI')</strong></label></li>
                         @endif
+                        <li class="p-2"><input required type="radio" name="payment" value="QR" id="QR">
+                            <label for="QR"><strong>@lang('Thanh toán nhanh bằng QR')</strong></label></li>
+                            <div class="d-none" id="qrcode">
+                                {!! QrCode::size(300)->generate($qrServ->QR($order->amount,$order->id)); !!}
+                                {!! QrCode::size(300)->generate("00020101021238570010A00000072701270006970403011300110123456780208QRIBFTTA530370454061800005802VN62340107NPS68690819thanh toan don hang63042E2E"); !!}
+                                {!! QrCode::size(300)->generate("00020101021238500010A0000007270120000697041601065454460208QRIBFTTA530370454061800005802VN62340107NPS68690819thanh toan don hang63042E2E"); !!}
+
+                            </div>
+
                     </ul>
                     <p class="fw-bold" style="display: none;" id="save_card_block"><input type="checkbox"
                             name="save_card" id="save_card"> <label for="save_card">@lang('Lưu thông tin thẻ cho lần thanh toán sau.')</label></p>
                 @else
                     <input type="hidden" name="payment" value="free">
                 @endif
+
                 <div class="border p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! __($term) !!}</div>
                 <p class="fw-bold d-flex"><input class="me-2" type="checkbox" name="accept_term" value="payment" id="accept_term" checked
                         required> <label class="" for="accept_term">@lang('Tôi đồng ý với điều khoản thanh toán và') <a target="_BLANK"
@@ -218,6 +229,11 @@ cart
             } else {
                 $("#save_card_block").hide();
                 $("#save_card").prop("checked", false);
+            }
+            if (value =="QR") {
+                $("#qrcode").removeClass("d-none");
+            } else{
+                $("#qrcode").addClass("d-none");
             }
         });
     </script>
