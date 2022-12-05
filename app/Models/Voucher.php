@@ -95,6 +95,19 @@ class Voucher extends Model
         if ($dbVoucher->type != VoucherGroup::TYPE_PAYMENT) {
             throw new \Exception("Loại voucher không hợp lệ.");
         }
+        if (!empty($dbVoucher->ext)) {
+            $classIds = explode(",", $dbVoucher->ext);
+            $orderDetails = OrderDetail::where('order_id', $orderId)->get();
+            $hasClassInVoucher = false;
+            foreach($orderDetails as $detail) {
+                if (in_array($detail->item_id, $classIds)) {
+                    $hasClassInVoucher = true;
+                }
+            }
+            if (!$hasClassInVoucher) {
+                throw new \Exception("Voucher này không hỗ trợ các khóa học trong đơn hàng.");
+            }
+        }
 
         VoucherUsed::create([
             'voucher_id' => $dbVoucher->id,

@@ -6,7 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\DB;
 
 class Transaction extends Model
 {
@@ -29,7 +29,7 @@ class Transaction extends Model
     }
     public function search(Request $request, $file = false)
     {
-        $data = Transaction::whereIn('type', [
+        $data = DB::table('transactions')->whereIn('type', [
             ConfigConstants::TRANSACTION_FIN_OFFICE,
             ConfigConstants::TRANSACTION_FIN_SALE,
             ConfigConstants::TRANSACTION_FIN_MARKETING,
@@ -37,8 +37,12 @@ class Transaction extends Model
             ConfigConstants::TRANSACTION_FIN_SALARY,
             ConfigConstants::TRANSACTION_FIN_ASSETS,
         ])
-            ->orderby('id', 'desc')
-             ->with('refUser');
+
+            ->join('users','users.id','=','transactions.ref_user_id')
+            ->orderby('transactions.id', 'desc');
+
+
+
             // ->paginate(20);
             if ($request->input('id_f') > 0) {
                 if ($request->input('id_t') > 0) {
@@ -60,18 +64,14 @@ class Transaction extends Model
                 $data = $data->whereDate('transactions.created_at', '<=', $request->input('datet'));
             }
             if (!$file) {
-                 $data = $data->paginate(20);
+                 $data = $data->select(['transactions.id','transactions.ref_user_id','transactions.user_id','users.name','users.phone',
+                 'transactions.type','transactions.amount','transactions.pay_method','transactions.pay_info',
+                 'transactions.content','transactions.created_at','transactions.updated_at']);
             } else {
-               $data = $data->get();
-
+               $data = $data->select(['transactions.id','transactions.ref_user_id','transactions.user_id','users.name AS Họ Tên','users.phone AS SĐT',
+               'transactions.type AS Loại','transactions.amount AS Số tiền','transactions.pay_method AS Hình Thức Thanh Toán','transactions.pay_info AS Thông Tin Thanh Toán',
+               'transactions.content AS Nội Dung','transactions.created_at AS Ngày Tạo','transactions.updated_at AS Ngày Cập Nhật'])->get();
                 if ($data) {
-                    $data->transform(function($value) {
-                        $value->refName = $value->refUser->name;
-                        $value->refPhone = $value->refUser->phone;
-
-                        unset($value->refUser);
-                        return $value;
-                    });
                     $data = json_decode(json_encode($data->toArray()), true);
                 } else {
                     $data = [];
@@ -99,9 +99,9 @@ class Transaction extends Model
     {
         $query = Transaction::where('user_id', $userId);
         if ($wallet == UserConstants::WALLET_M) {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_DEPOSIT_REFUND]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_DEPOSIT_REFUND]);
         } else {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_WITHDRAW, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
         }
         $db = $query->orderby('id', 'desc')
             ->get();

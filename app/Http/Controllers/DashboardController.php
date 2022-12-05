@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contract;
 use App\Models\Feedback;
 use App\Models\User;
 use App\Services\DashboardServices;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\I18nContent;
 use App\Models\Spm;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -42,6 +44,8 @@ class DashboardController extends Controller
         $editUser = Auth::user();
         $userService = new UserServices();
 
+            // $input = $request->all();
+            // dd($input);
         if ($request->input('save')) {
             $input = $request->all();
             $input['role'] = $editUser->role;

@@ -25,7 +25,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
+use App\Services\TransactionService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\VarDumper\Cloner\Data;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
@@ -66,6 +69,19 @@ class UserController extends Controller
             ->paginate(UserConstants::PP);
         $this->data['navText'] = __('Quản lý Quản trị viên');
         return view('user.mods', $this->data);
+    }
+    public function modspartner(Request $request)
+    {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->haveAccess($user->role, 'user.mods')) {
+            return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $this->data['mods'] = User::whereIn('role', UserConstants::$parterRoles)
+            ->orderby('role')
+            ->paginate(UserConstants::PP);
+        $this->data['navText'] = __('Quản lý Quản trị viên');
+        return view('user.modspartner', $this->data);
     }
 
     public function members(Request $request)
@@ -177,7 +193,13 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
-
+    // public function WithDraw(Request $request)
+    // {
+    //     if ($request->input('withdraw')) {
+    //         $input = $request->all();
+    //         dd($input);
+    //     }
+    // }
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -202,8 +224,6 @@ class UserController extends Controller
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
-        $sum = Transaction::where('pay_method', '=', 'wallet_c')->where('status', 1)->where('user_id', auth()->user()->id)->sum('amount');
-        $this->data['anyPoint'] = abs($sum);
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
@@ -700,7 +720,31 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Chứng chỉ');
         return view(env('TEMPLATE', '') . 'me.certificate', $this->data);
     }
-
+    public function finance(Request $request)
+    {
+        if($request->input('withdraw')){
+            $user = User::find(auth()->user()->id);
+            $input = $request->all();
+            $transv = new TransactionService();
+            $anypoint = $input['anypoint'];
+            $created = $transv->withdraw($anypoint);
+            $trans = Transaction::find($created);
+            $user->wallet_c -= $anypoint;
+            $user->update();
+        return Redirect::back()->with('bignotify', 'withdraw');
+        }
+        $trans = new Transaction();
+        // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
+        // $b = DB::table('transaction')->where('user_id',auth()->user()->id)->where('type','commission')->belongsTo('App\Models\OrderDetail', 'order_id', 'id');
+        // dd($b);
+        $a = Transaction::where('user_id',auth()->user()->id)->where('type','commission')->with('order')->orderBy('id','DESC')->get();
+        // dd($a);
+        $this->data['WALLETM'] = $a;
+        $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
+        $this->data['withdraw'] = Transaction::where('user_id',auth()->user()->id)->where('type','withdraw')->orderBy('id','DESC')->get();
+        $this->data['navText'] = __('Quản lý tài chính');
+        return view(env('TEMPLATE', '') . 'me.finance', $this->data);
+    }
     public function removeCert(Request $request, $fileId)
     {
         $user = Auth::user();

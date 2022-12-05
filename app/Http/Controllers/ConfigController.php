@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Models\Configuration;
+use App\Models\I18nContent;
 use App\Models\Tag;
 use App\Models\Voucher;
 use App\Models\VoucherEvent;
@@ -13,6 +14,7 @@ use App\Services\FileServices;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
@@ -285,16 +287,15 @@ class ConfigController extends Controller
                 if ($exists > 0) {
                     return redirect()->back()->with('notify', 'Mã này đã tạo');
                 }
-                if ($data['type'] == VoucherGroup::TYPE_CLASS) {
-                    if (empty(trim($input['ext']))) {
-                        return redirect()->back()->with('notify', 'Voucher lớp học cần nhập IDs các khóa học.');
-                    }
-                    $classIds = explode(',', $input['ext']);
+
+                if (!empty(trim($input['ext']))) {
+                    $classIds = explode(',', trim($input['ext']));
                     for ($i = 0; $i < count($classIds); $i++) {
                         $classIds[$i] = intval($classIds[$i]);
                     }
                     $data['ext'] = implode(",", $classIds);
                 }
+
                 $newGroup = VoucherGroup::create($data);
                 if ($newGroup) {
                     if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
@@ -349,13 +350,15 @@ class ConfigController extends Controller
             $file = $fileService->doUploadImage($request, 'image', FileConstants::DISK_S3, true, 'popup');
 
             $config = $request->all();
-
             Configuration::create([
                 'key' => $key,
                 'type' => ConfigConstants::TYPE_CONFIG,
                 'value' => json_encode([
                     'image' => empty($file) ? $lastImage : $file['url'],
-                    'title' => $config['title'],
+                    'title' => json_encode([
+                        'vi' => $config['title']['vi'],
+                        'en' => $config['title']['en'],
+                    ]),
                     'route' => isset($config['route']) ? $config['route'] : "",
                     'args' => isset($config['args']) ? $config['args'] : "",
                     'version' => (int)$version + 1,
@@ -366,11 +369,29 @@ class ConfigController extends Controller
         }
         $appConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if ($appConfig) {
-            $this->data['config'] = json_decode($appConfig->value, true);
+            $temp = json_decode($appConfig->value, true);
+            //  dd(is_object((json_decode($temp['title']))));
+            if (!is_object((json_decode($temp['title'])))) {
+                $temp['title'] = json_encode([
+                    'vi' => $temp['title'],
+                    'en' => $temp['title'],
+                ]);
+            }
+            // dd($temp);
+            $temp['title'] = json_decode($temp['title']);
+            $this->data['config'] = $temp;
         }
         $webConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
         if ($webConfig) {
-            $this->data['webconfig'] = json_decode($webConfig->value, true);
+            $web = json_decode($webConfig->value, true);
+            if (!is_object((json_decode($web['title'])))) {
+                $web['title'] = json_encode([
+                    'vi' => $web['title'],
+                    'en' => $web['title'],
+                ]);
+            }
+            $web['title'] = json_decode($web['title']);
+            $this->data['webconfig'] = $web;
         }
         $this->data['navText'] = __('Quản lý Popup Trang Chủ APP/WEB');
         return view('config.homepopup', $this->data);
@@ -389,15 +410,17 @@ class ConfigController extends Controller
             }
 
             $configs = $request->all();
-
             $values = [];
             foreach ($configs['block'] as $index => $config) {
-                if (empty($config['title'])) {
-                    $values[$index] = [];
-                } else {
-                    $values[$index] = $config;
+                if($config['classes'] != null){
+                    if (empty($config['title'])) {
+                        $values[$index] = [];
+                    } else {
+                        $values[$index] = $config;
+                    }
                 }
             }
+            // dd($values);
             Configuration::create([
                 'key' => $key,
                 'type' => ConfigConstants::TYPE_CONFIG,
@@ -415,7 +438,30 @@ class ConfigController extends Controller
                 $this->data['configs'][$i] = empty($values[$i]) ? [] : $values[$i];
             }
         }
-
+        // if ($config) {
+        //     $values = json_decode($config->value, true);
+        //     for ($i = 0; $i < count($this->data['configs']); $i++) {
+        //         if (!empty($values[$i])) {
+        //             if (empty($values[$i]['title'])) {
+        //                     $values[$i]['title'] = json_encode([
+        //                         'vi' => null,
+        //                         'en' => null,
+        //                     ]);
+        //             }
+        //             if($values[$i]['title']){
+        //                 $values[$i]['title'] = json_encode([
+        //                     'vi' => $values[$i]['title'],
+        //                     'en' => $values[$i]['title'],
+        //                 ]);
+        //             }
+        //          $values[$i]['title'] = json_decode($values[$i]['title'], true);
+        //         }
+        //         // dd($values[$i]['title']);
+        //         $config = empty($values[$i]) ? [] : $values[$i];
+        //             $this->data['configs'][$i] = $config;
+        //     }
+        // }
+        //   dd($this->data['configs']);
         $this->data['navText'] = __('Quản lý Các Khoá học Đặc biệt trên HOME APP');
         return view('config.homeclasses', $this->data);
     }
@@ -454,7 +500,8 @@ class ConfigController extends Controller
         return view('config.tags', $this->data);
     }
 
-    public function touchTagStatus($tag) {
+    public function touchTagStatus($tag)
+    {
         $rs = Tag::where('tag', $tag)->update(
             [
                 'status' => DB::raw('1 - status')

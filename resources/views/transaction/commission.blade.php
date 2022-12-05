@@ -63,7 +63,7 @@
         </div>
         <div class="card-footer">
             <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> @lang('Tìm kiếm')</button>
-            <!-- <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button> -->
+            <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button>
             <button class="btn btn-warning btn-sm" name="action" value="clear"> @lang('Xóa tìm kiếm')</button>
         </div>
     </div>
@@ -86,7 +86,7 @@
                 @foreach($transaction as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
-                    <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
+                    <td class="text-center" scope="row">@if(!empty($row->name)) {{ $row->name }} ({{ $row->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">{{ $row->content }}</td>

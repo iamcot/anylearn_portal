@@ -26,15 +26,15 @@
             <i class="fas fa-fw fa-scroll"></i>
             <span>@lang('Quản lý chứng chỉ')</span></a>
     </li>
-    {{-- <li class="nav-item ">
-        <a class="nav-link" href="">
-            <i class="fas fa-fw fa-scroll"></i>
+    <li class="nav-item {{ in_array($route, ['me.finance']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.finance') }}">
+            <i class="fas fa-fw fa-money-bill"></i>
             <span>@lang('Quản lý tài chính')</span></a>
-    </li> --}}
+    </li>
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
-        
+
     </div>
     <li class="nav-item {{ $route == 'me.dashboard' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.dashboard') }}"  data-spm="nav.edit">
@@ -66,6 +66,13 @@
             <i class="fas fa-fw fa-wallet"></i>
             <span>@lang('Giao dịch của tôi')</span></a>
     </li>
+    @if(Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('helpcenter.parnter.index') }}" data-spm="nav.class">
+            <i class="fas fa-fw fa-headset"></i>
+            <span>@lang('Trung tâm hỗ trợ')</span></a>
+    </li>
+    @endif
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

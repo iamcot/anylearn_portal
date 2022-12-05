@@ -9,7 +9,7 @@ dashboard
         <form method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id" value="{{ !empty($user) ? $user->id : null }}">
-    
+
     <div class="card shadow">
         <div class="card-body">
             <div class="">
@@ -56,7 +56,7 @@ dashboard
                             </div>
                         </div>
                     </div>
-                    
+
                     <p></p>
                     <label for="name" class="col-md-3 col-form-label text-md-right text-start">{{ __('Họ và tên*') }}</label>
                     <div class="col-md-8">
@@ -111,7 +111,7 @@ dashboard
                     <div class="col-md-8">
                         <input id="name" type="text" class="form-control @error('refcode') is-invalid @enderror" name="refcode" value="{{ old('refcode', !empty($user) ? $user->refcode : '') }}" disabled>
                     </div>
-                </div>     
+                </div>
                 <div class="form-group row">
                     <label for="phone" class="col-md-3 col-form-label text-md-right text-start">{{ __('Số điện thoại') }}</label>
                     <div class="col-md-8">
@@ -131,7 +131,7 @@ dashboard
                         <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', !empty($user) ? $user->address : '') }}" disabled>
                     </div>
                 </div>
-            
+
                 <ul class="nav nav-tabs" id="i18ntab" role="tablist">
                     @foreach (App\Models\I18nContent::$supports as $locale)
                         <li class="nav-item" role="presentation">
@@ -169,10 +169,10 @@ dashboard
                         </div>
                     @endforeach
                 </div>
-                
+
             </div>
         </div>
-        
+
     </div>
 </form>
 </div>
@@ -183,6 +183,8 @@ dashboard
 @endsection
 @section('jscript')
 @parent
+<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('editor');

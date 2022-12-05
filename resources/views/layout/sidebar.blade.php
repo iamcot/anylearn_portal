@@ -64,7 +64,7 @@
     @endif
     @if($userService->haveAccess($role, 'useractions'))
     <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'transaction.commission']) ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction"
         aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thao tác người dùng')</span>
@@ -83,7 +83,7 @@
                     <i class="fas fa-fw fa-money-check-alt"></i>
                     <span>@lang('Lịch sử nhận hoa hồng')</span></a>
                 </a>
-              
+
             </div>
         </div>
     </li>
@@ -94,7 +94,7 @@
     </div>
     @if($userService->haveAccess($role, 'fin.expenditures'))
     <li class="nav-item {{ in_array($route, ['fin.expenditures', 'fin.salereport']) ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFin" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFin"
         aria-expanded="{{ in_array($route, ['fin.expenditures', 'fin.salereport']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-coins"></i>
             <span>@lang('Tài chính')</span>
@@ -109,14 +109,14 @@
                     <i class="fas fa-fw fa-chart-line"></i>
                     <span>@lang('Báo cáo kinh doanh')</span></a>
                 </a>
-              
+
             </div>
         </div>
     </li>
     @endif
     @if($userService->haveAccess($role, 'voucher'))
     <li class="nav-item {{ strpos($route, 'voucher') !== false ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVoucher" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVoucher"
         aria-expanded="{{ strpos($route, 'voucher') !== false ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Voucher')</span>
@@ -131,14 +131,14 @@
                     <i class="fas fa-fw fa-gifts"></i>
                     <span>@lang('Sự kiện phát')</span></a>
                 </a>
-              
+
             </div>
         </div>
     </li>
     @endif
     @if($userService->haveAccess($role, 'helpcenter'))
     <li class="nav-item {{ strpos($route, 'knowledge') !== false ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKnowledge" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKnowledge"
         aria-expanded="{{ strpos($route, 'knowledge') !== false ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Trung tâm hỗ trợ')</span>
@@ -163,7 +163,7 @@
     @endif
     @if($userService->haveAccess($role, 'config'))
     <li class="nav-item {{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConfig" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConfig"
         aria-expanded="{{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thông số hệ thống')</span>
@@ -218,7 +218,7 @@
     @endif
     @if($userService->haveAccess($role, 'spm'))
     <li class="nav-item {{ in_array($route, ['spm.general']) ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSpm" 
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSpm"
         aria-expanded="{{ in_array($route, ['spm.general']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-fire"></i>
             <span>@lang('anyLogs')</span>
@@ -234,10 +234,30 @@
     </li>
     @endif
     @if($userService->haveAccess(Auth::user()->role, 'user.mods'))
-    <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
+    {{-- <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.mods') }}">
             <i class="fas fa-fw fa-user-shield"></i>
             <span>@lang('Quản lý Mods')</span></a>
+    </li> --}}
+
+    <li class="nav-item {{ strpos($route, 'user.mods') !== false ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMods"
+        aria-expanded="{{ strpos($route, 'user.mods') !== false ? true : false }}" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-user-shield"></i>
+            <span>@lang('Quản lý Mods')</span>
+        </a>
+        <div id="collapseMods" class="collapse {{ strpos($route, 'mods') !== false ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ $route == 'user.mods' ? 'active' : '' }}" href="{{ route('user.mods') }}">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Quản trị viên</span>
+                </a>
+                <a class="collapse-item {{ $route == 'user.modspartner' ? 'active' : '' }}" href="{{ route('user.modspartner') }}">
+                    <i class="fas fa-user-plus"></i>
+                    <span>@lang('Fin Partner')</span></a>
+                </a>
+            </div>
+        </div>
     </li>
     @endif
     <!-- Sidebar Toggler (Sidebar) -->

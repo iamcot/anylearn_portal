@@ -23,6 +23,7 @@ use App\PaymentGateway\Processor;
 use App\Services\FileServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use Aws\Api\Parser\Crc32ValidatingParser;
 use Exception;
 use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Facades\Log;
@@ -96,7 +97,11 @@ class TransactionController extends Controller
         if ($request->input('name')) {
             $orders = $orders->where('users.name', 'like', '%' . $request->input('name') . '%');
         }
-
+        if ($request->input('classes')) {
+            $orders = $orders->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where('items.title', 'like', '%' . $request->input('classes') . '%');
+        }
         if ($request->input('phone')) {
             $orders = $orders->where('users.phone', $request->input('phone'));
         }
@@ -235,47 +240,64 @@ class TransactionController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        $transaction = Transaction::whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
-            ->orderby('id', 'desc')
-            ->with('user')
-            ->with('order')
-            ->whereHas('order', function ($query) {
-                $query->where('status', 'delivered');
-            });
+        $transaction = DB::table('transactions')->whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+            ->orderby('transactions.id', 'desc')
+            ->join('users','transactions.user_id','=','users.id')
+            ->join('orders','transactions.order_id','=','orders.id')
+            ->where('orders.status', 'delivered')
+            ->select(['transactions.id','users.name','users.phone','users.email','transactions.amount','transactions.content','transactions.created_at','transactions.type','transactions.updated_at']);
+            // dd($transaction->get());
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
         }
         if ($request->input('id_f') > 0) {
             if ($request->input('id_t') > 0) {
-                $transaction = $transaction->where('id', '>=', $request->input('id_f'))->where('id', '<=', $request->input('id_t'));
+                $transaction = $transaction->where('transactions.id', '>=', $request->input('id_f'))->where('transactions.id', '<=', $request->input('id_t'));
             } else {
-                $transaction = $transaction->where('id', $request->input('id_f'));
+                $transaction = $transaction->where('transactions.id', $request->input('id_f'));
             }
         }
         if ($request->input('type')) {
-            $transaction = $transaction->where('type', $request->input('type'));
+            $transaction = $transaction->where('transactions.type', $request->input('type'));
         }
         if ($request->input('name')) {
-            $transaction = $transaction->whereHas(
-                'user',
-                function ($query) use ($request) {
-                    $query->where('name', 'like', '%' . $request->input('name') . '%');
-                }
-            );
+            $transaction->where('users.name','like','%'.$request->input('name') . '%');
         }
         if ($request->input('phone')) {
-            $transaction = $transaction->whereHas(
-                'user',
-                function ($query) use ($request) {
-                    $query->where('phone', $request->input('phone'));
-                }
-            );
+            $transaction->where('users.phone','like','%'.$request->input('phone') . '%');
         }
         if ($request->input('date')) {
-            $transaction = $transaction->whereDate('created_at', '>=', $request->input('date'));
+            $transaction = $transaction->whereDate('transactions.created_at', '>=', $request->input('date'));
         }
         if ($request->input('datet')) {
-            $transaction = $transaction->whereDate('created_at', '<=', $request->input('datet'));
+            $transaction = $transaction->whereDate('transactions.created_at', '<=', $request->input('datet'));
+        }
+        if ($request->input('action') == 'file') {
+            $transaction = $transaction->get();
+            if ($transaction=="[]") {
+                return redirect()->route('transaction.commission');
+            }
+            $transaction = json_decode(json_encode($transaction->toArray()), true);
+
+            $headers = [
+                // "Content-Encoding" => "UTF-8",
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+            $callback = function () use ($transaction) {
+                $file = fopen('php://output', 'w');
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                fputcsv($file, array_keys($transaction[0]));
+                foreach ($transaction as $row) {
+                    mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
+                    fputcsv($file, $row);
+                }
+                fclose($file);
+            };
+            return response()->stream($callback, 200, $headers);
         }
         if (!$userService->haveAccess($user->role, 'transaction.commission')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
@@ -321,6 +343,13 @@ class TransactionController extends Controller
             Transaction::find($id)->update([
                 'status' => $status
             ]);
+            if($status == ConfigConstants::TRANSACTION_STATUS_REJECT){
+                $trans =Transaction::find($id);
+                $userup = User::find($trans->user_id);
+                $userup -> update([
+                    'wallet_c' =>$userup->wallet_c + ($trans->amount*1/1000)
+                ]);
+            }
             $notifServ = new Notification();
             $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
         }
@@ -370,13 +399,13 @@ class TransactionController extends Controller
         if ($openOrder) {
             $orderDetails = DB::table('order_details AS od')
                 ->join('items', 'items.id', '=', 'od.item_id')
-                ->join('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
+                // ->leftjoin('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
                 ->join('users AS u2', 'u2.id', '=', 'od.user_id')
                 ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
-                ->where('i18n_contents.tbl', 'items')
-                ->where('i18n_contents.col', 'title')
+                // ->where('i18n_contents.tbl', 'items')
+                // ->where('i18n_contents.col', 'title')
                 ->where('od.order_id', $openOrder->id)
-                ->select('od.*', 'i18n_contents.i18n_content', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
+                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
                 ->get();
             // dd($orderDetails);
             $this->data['order'] = $openOrder;
@@ -779,6 +808,7 @@ class TransactionController extends Controller
         $transM = new Transaction();
         if ($request->get('action') == 'saveFinExpend') {
             $expend = $request->get('expend');
+
             $obj = [
                 'user_id' => $user->id,
                 'content' => $expend['title'],
@@ -802,17 +832,6 @@ class TransactionController extends Controller
         }
         $this->data['mods'] = User::whereIn('role', UserConstants::$modRoles)->get();
 
-        $this->data['transaction'] = Transaction::whereIn('type', [
-            ConfigConstants::TRANSACTION_FIN_OFFICE,
-            ConfigConstants::TRANSACTION_FIN_SALE,
-            ConfigConstants::TRANSACTION_FIN_MARKETING,
-            ConfigConstants::TRANSACTION_FIN_OTHERS,
-            ConfigConstants::TRANSACTION_FIN_SALARY,
-            ConfigConstants::TRANSACTION_FIN_ASSETS,
-        ])
-            ->orderby('id', 'desc')
-            ->with('refUser')
-            ->paginate(20);
         if ($request->input('action') == 'clear') {
             return redirect()->route('fin.expenditures');
         }
@@ -846,17 +865,16 @@ class TransactionController extends Controller
                 }
                 fclose($file);
             };
-            // $amount = $data->sum('amount');
-            // $this->data['amount'] = $amount;
-            // $this->data['transaction'] = $data;
+
 
             return response()->stream($callback, 200, $headers);
         } else{
             $data = $transM->search($request);
-            $amount = $data->sum('amount');
-            $this->data['amount'] = $amount;
-            $this->data['transaction'] = $data;
         }
+            $amount = $data->sum('amount');
+            $this->data['totalv'] = $data->count();
+            $this->data['amount'] = $amount;
+            $this->data['transaction'] = $data->paginate(20);
         //  dd($tamp[1]->);
         $this->data['navText'] = __('Quản lý Chi tiền');
         return view('transaction.expenditures', $this->data);

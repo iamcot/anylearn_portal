@@ -49,6 +49,20 @@ Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
 Route::post('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
 
+Route::middleware(['language'])->group(function () {
+    Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
+    Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
+    Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
+
+    // Route::get('/article', 'Apis\ArticleApi@index');
+    // Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
+    // Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
+    // Route::get('/quote', 'Apis\ArticleApi@quote');
+// Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
+
+
+});
+
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 

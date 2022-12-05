@@ -46,7 +46,20 @@ class TransactionService
             ->count();
         return $count;
     }
-
+    public function hasPendingWithDraw()
+    {
+        $count = Transaction::where('type', ConfigConstants::TRANSACTION_WITHDRAW)
+            ->where('status',0)
+            ->count();
+        return $count;
+    }
+    public function statusWithDraw($userId)
+    {
+        $count = Transaction::where('type', ConfigConstants::TRANSACTION_WITHDRAW)
+            ->where('user_id',$userId)
+            ->count();
+        return $count;
+    }
     public function approveWalletcTransaction($id)
     {
         // update transaction
@@ -59,7 +72,7 @@ class TransactionService
         User::find($trans->user_id)->update([
             'wallet_c' => DB::raw('wallet_c + ' . $trans->amount),
         ]);
-        // send notif 
+        // send notif
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
             'content' => $trans->content
@@ -254,7 +267,7 @@ class TransactionService
                 'order_id' => $orderDetail->id
             ]);
 
-            //pay author 
+            //pay author
             $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
 
             Transaction::create([
@@ -295,7 +308,7 @@ class TransactionService
                     break;
                 }
             }
-            //foundation 
+            //foundation
             $foundation = 0;
             if (!$item->is_test) {
                 $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
@@ -598,7 +611,7 @@ class TransactionService
             'class' => '',
             'school' => '',
         ]);
-        
+
         return true;
     }
 
@@ -736,5 +749,24 @@ class TransactionService
             return 'success';
         }
         return 'secondary';
+    }
+    public function withdraw($anypoint)
+    {
+        $userServ = new UserServices();
+        $bank = $userServ->bankaccount(auth()->user()->id);
+        $creted = Transaction::create([
+            'user_id' => auth()->user()->id,
+            'type' => ConfigConstants::TRANSACTION_WITHDRAW,
+            'amount' => ($anypoint*1000),
+            'pay_method' => UserConstants::WALLET_M,
+            'pay_info' => '',
+            'content' => 'Rút anyPoint từ tài khoản ' . auth()->user()->id .
+            ' Ngân Hàng: '. $bank->bank_name .
+            ' Số tài khoản: ' . $bank->bank_no .
+            ' Người hưởng thụ: '. $bank->bank_account,
+            'status' => 0,
+            'order_id' => auth()->user()->id
+        ])->id;
+        return $creted;
     }
 }

@@ -23,7 +23,12 @@
                     <input value="{{ app('request')->input('name') }}" type="text" class="form-control" name="name" placeholder="Tên thành viên" />
                 </div>
             </div>
-
+            <div class="col-xs-6 col-lg-4">
+                <div class="form-group">
+                    <label for="">@lang('Tên Khóa Học')</label>
+                    <input value="{{ app('request')->input('classes') }}" type="text" class="form-control" name="classes" placeholder="Tên Khóa Học" />
+                </div>
+            </div>
             <div class="col-xs-6 col-lg-4">
                 <div class="form-group">
                     <label for="">@lang('SDT')</label>
@@ -117,12 +122,12 @@
                     @if($row->payment =='atm')
                     Thanh toán bằng hình thức chuyển khoản
                     @elseif($row->payment =='onepaylocal')
-                    Thanh toán thông qua onepay 
+                    Thanh toán thông qua onepay
                     @elseif($row->payment =='free')
                     Thanh toán sử dụng voucher hoặc đổi điểm anypoint
                     @else
                     Chưa có chú thích cho phần này
-                    @endif   
+                    @endif
                     </span></td>
                     <td class="text-center" scope="row"><span class="badge badge-{{ $transServ->colorStatus($row->status) }}">{{ $row->status }}</span>
                         @if($row->status == App\Constants\OrderConstants::STATUS_PAY_PENDING)

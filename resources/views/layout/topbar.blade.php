@@ -1,3 +1,4 @@
+@inject('transServ','App\Services\TransactionService')
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-print-none">
     <!-- Sidebar Toggle (Topbar) -->
@@ -36,6 +37,7 @@
                 </a>
             </div>
         </li>
+
     </ul>
 </nav>
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -58,3 +60,8 @@
         </div>
     </div>
 </div>
+    @if(auth()->user()->role == 'fin' && $transServ->hasPendingWithDraw())
+    <section>
+            <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Hệ thống vừa nhận được yêu cầu rút tiền mới vui lòng kiểm tra để thanh toán cho đối tác')</p>
+        </section>
+    @endif

@@ -22,6 +22,7 @@
                     <th class="text-center">#ID</th>
                     <th>Tiêu đề</th>
                     <th>Tạo lúc</th>
+                    <th>Đối tượng</th>
                     <th>Thao tác</th>
                 </thead>
             <tbody>
@@ -32,6 +33,7 @@
                         <a href="{{ route('knowledge.edit', ['id' => $article->id]) }}"><i class="fa fa-edit"></i></a>
                     </td>
                     <td>{{ $article->updated_at }}</td>
+                    <td>{{ $article->type }}</td>
                     <td>
                         <a class="btn btn-sm btn-{{ $article->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledges', 'id' => $article->id]) }}">
                             {{ $article->status == 1 ? 'Khóa' : 'Mở' }}

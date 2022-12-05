@@ -22,6 +22,7 @@
                     <th class="text-center">#ID</th>
                     <th>Tiêu đề</th>
                     <th>Tạo lúc</th>
+                    <th>Đối tượng</th>
                     <th>Thao tác</th>
                 </thead>
             <tbody>
@@ -32,6 +33,7 @@
                         <a href="{{ route('knowledge.topic.edit', ['id' => $category->id]) }}"><i class="fa fa-edit"></i></a>
                     </td>
                     <td>{{ $category->updated_at }}</td>
+                    <td>{{ $category->type }}</td>
                     <td>
                         <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_categories', 'id' => $category->id]) }}">
                             {{ $category->status == 1 ? 'Khóa' : 'Mở' }}

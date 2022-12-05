@@ -16,11 +16,14 @@ use App\Services\UserServices;
 use App\Models\I18nContent;
 use App\Services\CategoryServices;
 use Exception;
+use Hamcrest\Core\HasToString;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Exists;
 use Vanthao03596\HCVN\Models\Province;
 
 class PageController extends Controller
@@ -63,23 +66,51 @@ class PageController extends Controller
         $this->data['events_title'] = env('EVENTS_TITLE', 'Sự kiện nổi bật');
         $this->data['events'] = Article::where('type', Article::TYPE_EVENT)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
-        $this->data['articles'] = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
+            $temp = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+            $locale = App::getLocale();
+            foreach ($temp as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nArticle($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$articleCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
+            // dd($temp);
+        $this->data['articles'] = $temp;
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
         if ($homeClassesDb) {
             foreach (json_decode($homeClassesDb->value, true) as $block) {
+                // json_decode($block->value, true);
+                // dd($block);
+
                 if (empty($block)) {
                     continue;
                 }
+
                 $items = Item::whereIn('id', explode(",", $block['classes']))
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
-                $homeClasses[] = [
-                    'title' => $block['title'],
-                    'classes' => $items
-                ];
+                $locale = App::getLocale();
+                if (!empty($block['title'][$locale])) {
+                    $homeClasses[] = [
+                        'title' => $block['title'][$locale],
+                        'classes' => $items
+                    ];
+                } else {
+                    $homeClasses[] = [
+                        'title' => null,
+                        'classes' => $items
+                    ];
+                }
             }
         }
         $this->data['classes'] = $homeClasses;
@@ -176,12 +207,38 @@ class PageController extends Controller
         if (!$article) {
             return redirect()->to('/');
         }
+        $locale = App::getLocale();
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            $item18nData = $i18->i18nArticle($article->id, $locale);
+            // dd($item18nData);
+            $supportCols = array_keys(I18nContent::$articleCols);
+            foreach ($item18nData as $col => $content) {
+                if (in_array($col, $supportCols) && $content != "") {
+                    $article->$col = $content;
+                }
+            }
+        }
 
         $data['article'] = $article;
-        $data['moreArticles'] = Article::where('status', 1)
+        $morearticle = Article::where('status', 1)
             ->where('id', '!=', $id)
             ->orderby('id', 'desc')
             ->take(10)->get();
+            foreach ($morearticle as $row) {
+                if($locale!=I18nContent::DEFAULT){
+                    $i18 = new I18nContent();
+                        $item18nData = $i18->i18nArticle($row->id, $locale);
+                        // dd($item18nData);
+                        $supportCols = array_keys(I18nContent::$articleCols);
+                        foreach ($item18nData as $col => $content) {
+                            if (in_array($col, $supportCols) && $content != "") {
+                                $row->$col = $content;
+                            }
+                        }
+                }
+            }
+            $data['moreArticles'] = $morearticle;
         return view(env('TEMPLATE', '') . 'pdp.article', $data);
     }
 
@@ -548,6 +605,19 @@ class PageController extends Controller
         }
 
         return view(env('TEMPLATE', '') . 'helpcenter.index', $data);
+    }
+    public function helpcenterseller(Request $request)
+    {
+        $configM = new Configuration();
+        $data['member'] = $configM->getDoc(ConfigConstants::GUIDE_MEMBER);
+        $data['teacher'] = $configM->getDoc(ConfigConstants::GUIDE_TEACHER);
+        $data['school'] = $configM->getDoc(ConfigConstants::GUIDE_SCHOOL);
+        $data['checkout'] = $configM->getDoc(ConfigConstants::GUIDE_CHECKOUT);
+        if (!$request->session()->get('tab') && $request->get('tab')) {
+            $request->session()->flash('tab', $request->get('tab'));
+        }
+
+        return view(env('TEMPLATE', '') . 'helpcenter.parnter.index', $data);
     }
 
     public function guide(Request $request)
