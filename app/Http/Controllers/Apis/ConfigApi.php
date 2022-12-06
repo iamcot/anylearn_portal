@@ -24,6 +24,7 @@ use App\Services\TransactionService;
 use App\Services\UserServices;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +53,7 @@ class ConfigApi extends Controller
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
         if ($homeClassesDb) {
+            $appLocale = App::getLocale();
             foreach (json_decode($homeClassesDb->value, true) as $block) {
                 if (empty($block)) {
                     continue;
@@ -62,7 +64,7 @@ class ConfigApi extends Controller
                     ->where('user_status', 1)
                     ->get();
                 $homeClasses[] = [
-                    'title' => $block['title'],
+                    'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
                     'classes' => $items
                 ];
             }
