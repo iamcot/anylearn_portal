@@ -190,10 +190,7 @@ cart
                         <li class="p-2"><input required type="radio" name="payment" value="QR" id="QR">
                             <label for="QR"><strong>@lang('Thanh toán nhanh bằng QR')</strong></label></li>
                             <div class="d-none" id="qrcode">
-                                {!! QrCode::size(300)->generate($qrServ->QR($order->amount,$order->id)); !!}
-                                {!! QrCode::size(300)->generate("00020101021238570010A00000072701270006970403011300110123456780208QRIBFTTA530370454061800005802VN62340107NPS68690819thanh toan don hang63042E2E"); !!}
-                                {!! QrCode::size(300)->generate("00020101021238500010A0000007270120000697041601065454460208QRIBFTTA530370454061800005802VN62340107NPS68690819thanh toan don hang63042E2E"); !!}
-
+                                {!! QrCode::size(300)->generate($qrServ->QR($order->amount, $order->id)) !!}
                             </div>
 
                     </ul>
