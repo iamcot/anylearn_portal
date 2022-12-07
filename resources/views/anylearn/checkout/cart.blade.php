@@ -187,11 +187,11 @@ cart
                                     id="radio_onepaylocal"> <label
                                     for="radio_onepaylocal"><strong>@lang('Thanh toán bằng thẻ trực tuyến MỚI')</strong></label></li>
                         @endif
-                        <li class="p-2"><input required type="radio" name="payment" value="QR" id="QR">
+                        {{-- <li class="p-2"><input required type="radio" name="payment" value="QR" id="QR">
                             <label for="QR"><strong>@lang('Thanh toán nhanh bằng QR')</strong></label></li>
                             <div class="d-none" id="qrcode">
                                 {!! QrCode::size(300)->generate($qrServ->QR($order->amount, $order->id)) !!}
-                            </div>
+                            </div> --}}
 
                     </ul>
                     <p class="fw-bold" style="display: none;" id="save_card_block"><input type="checkbox"

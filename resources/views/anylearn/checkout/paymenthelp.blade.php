@@ -1,4 +1,5 @@
 @extends('anylearn.layout')
+@inject('qrServ', 'App\Services\QRServices')
 @section('spmb')
 checkout-paymenthelp
 @endsection
@@ -27,6 +28,12 @@ checkout-paymenthelp
             </div>
         </div>
     @endforeach
+    <div>
+        <h5>Thanh toán nhanh bằng QR</h5>
+        {{-- {!! QrCode::format('png')->merge('./cdn/img/logo.png', 0.5, true)->size(300)->errorCorrection('H')->generate($qrServ->QR($orderAmount, $orderId)) !!} --}}
+        {!! QrCode::size(300)->generate($qrServ->QR($orderAmount, $orderId)) !!}
 
-    <p class="small">* @lang('Các khoá học của quý khách sẽ tự động xác nhận sau khi Công ty xác nhận chuyển khoản.')</p>
+    </div>
+
+    <p class="small mt-2">* @lang('Các khoá học của quý khách sẽ tự động xác nhận sau khi Công ty xác nhận chuyển khoản.')</p>
 @endsection

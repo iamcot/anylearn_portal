@@ -6,7 +6,7 @@ use Exception;
 
 class QRServices
 {
-    const ACBSTR1 = "00020101021238500010A0000007270120000697041601065454460208QRIBFTTA53037045405";
+    const ACBSTR1 = "00020101021238500010A0000007270120000697041601065454460208QRIBFTTA530370454";
     const ACBSTR2 = "5802VN";
     const ACBCONTENT = "Thanh toan anyLEARN ";
 
@@ -31,8 +31,8 @@ class QRServices
 
         $content = $this->content . $orderId;
         $str08 = "08" . strlen($content) . $content;
-    
-        $contentStr = $this->str1 . $money . $this->str2 . "62" . strlen($str08) . $str08 . "6304";
+        $strmoney = strlen($money) <10 ? "0".strlen($money):strlen($money);
+        $contentStr = $this->str1 . $strmoney . $money . $this->str2 . "62" . strlen($str08) . $str08 . "6304";
         $qrStr = $contentStr . $this->calCRC($contentStr);
         return $qrStr;
     }
