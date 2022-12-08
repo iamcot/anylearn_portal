@@ -309,7 +309,7 @@ class DashboardServices
             }
             $crrDay = $this->dateF;
             do {
-                $data[$sale->name][$crrDay] = isset($tmp[$crrDay]) ? $tmp[$crrDay] : 0;
+                $data[json_encode(['id' => $sale->id, 'name' => $sale->name])][$crrDay] = isset($tmp[$crrDay]) ? $tmp[$crrDay] : 0;
                 $date = date_create($crrDay);
                 date_add($date, date_interval_create_from_date_string("1 day"));
                 $crrDay =  date_format($date, "Y-m-d");
@@ -325,7 +325,7 @@ class DashboardServices
                 $report[] = ['Sales'] + $daysHeader;
                 $hasHeader = true;
             }
-            $report[] = [$saleName] + array_values($days);
+            $report[] = [$saleName] + $days;
         }
         return $report;
     }
