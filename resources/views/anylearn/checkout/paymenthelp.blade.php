@@ -4,10 +4,17 @@
 checkout-paymenthelp
 @endsection
 @section('body')
-    <h5 class="mb-5 font-weight-bold text-success">@lang('Để hoàn tất thanh toán, quý khách vui lòng chuyển khoản theo thông tin sau.')</h5>
-    @foreach ($banks as $bank)
-        <div class="card shadow mb-5 border-left-success">
-            <div class="card-body">
+<h5 class="mb-5 font-weight-bold text-success">@lang('Để hoàn tất thanh toán, quý khách có thể lựa chọn')</h5>
+@foreach ($banks as $bank)
+<div class="card shadow mb-5 border-left-success">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xs-12 col-md-4 mb-3">
+                <h6 class="mb-2 font-weight-bold text-success">@lang('Quét mã QR')</h6>
+                {!! QrCode::size(200)->generate($qrServ->QR($orderAmount, $orderId)) !!}
+            </div>
+            <div class="col-xs-12 col-md-8">
+                <h6 class="mb-2 font-weight-bold text-success">@lang('Hoặc chuyển khoản theo thông tin')</h6>
                 <dl class="row">
                     <dt class="col-sm-3">@lang('Ngân hàng')</dt>
                     <dd class="col-sm-9">{{ $bank['bank_name'] }}</dd>
@@ -20,20 +27,16 @@ checkout-paymenthelp
                     <dd class="col-sm-9">{{ $bank['bank_no'] }}</dd>
                     <dt class="col-sm-3">@lang('Người thụ hưởng')</dt>
                     <dd class="col-sm-9">{{ $bank['account_name'] }}</dd>
-                    <dt class="col-sm-3">@lang('Nội dung tin chuyển tiền')</dt>
+                    <dt class="col-sm-3">@lang('Nội dung chuyển')</dt>
                     <dd class="col-sm-9">{{ $bank['content'] }} #{{ $orderId }}</dd>
                     <dt class="col-sm-3">@lang('Số tiền')</dt>
                     <dd class="col-sm-9">{{ number_format($orderAmount, 0, ',', '.') }}</dd>
                 </dl>
             </div>
         </div>
-    @endforeach
-    <div>
-        <h5>Thanh toán nhanh bằng QR</h5>
-        {{-- {!! QrCode::format('png')->merge('./cdn/img/logo.png', 0.5, true)->size(300)->errorCorrection('H')->generate($qrServ->QR($orderAmount, $orderId)) !!} --}}
-        {!! QrCode::size(300)->generate($qrServ->QR($orderAmount, $orderId)) !!}
-
     </div>
+</div>
+@endforeach
 
-    <p class="small mt-2">* @lang('Các khoá học của quý khách sẽ tự động xác nhận sau khi Công ty xác nhận chuyển khoản.')</p>
+<p class="small mt-2">* @lang('Các khoá học đăng ký của quý khách sẽ được cập nhật sau khi Công ty xác nhận chuyển khoản.')</p>
 @endsection
