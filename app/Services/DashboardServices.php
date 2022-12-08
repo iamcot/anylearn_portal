@@ -289,7 +289,10 @@ class DashboardServices
 
     public function saleReport()
     {
-        $sales = User::whereIn('role', UserConstants::$saleRoles)
+        $sales = User::where(function ($query) {
+            $query->whereIn('role', UserConstants::$saleRoles)
+                ->orwhere('id', 1);
+        })
             ->where('status', 1)
             ->get();
         $data = [];
