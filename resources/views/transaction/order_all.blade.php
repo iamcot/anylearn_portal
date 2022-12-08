@@ -84,6 +84,7 @@
             <thead class="">
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
+                    <th></th>
                     <th class="text-center">User (SDT)</th>
                     <th class="text-center">Địa chỉ</th>
                     <th>Khoá học</th>
@@ -100,9 +101,12 @@
                 @foreach($orders as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
+                    <td><a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $row->user_id]) }}"><i class="fas fa-briefcase"></i></a></td>
                     <td width="15%" class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
                     <td width="15%" class="text-center" scope="row">{{ $row->address }}</td>
-                    <td width="25%">{{ $row->classes }}</td>
+                    <td width="25%">
+                        {{ $row->classes }}
+                    </td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td>
                         @if(!empty($row->voucher))
