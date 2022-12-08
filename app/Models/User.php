@@ -336,7 +336,7 @@ class User extends Authenticatable
         if ($request->input('ref_id')) {
             $members = $members->where('users.user_id', $request->input('ref_id'));
         }
-        if ($request->input('sale_id')) {
+        if ($request->input('sale_id') && $request->input('sale_id') != 1) {
             $members = $members->where('users.sale_id', $request->input('sale_id'));
         }
         if ($request->input('date')) {
@@ -350,6 +350,9 @@ class User extends Authenticatable
                 $join->on('sa2.member_id', '=', 'users.id')
                 ->whereDate('sa2.created_at', '=', $request->input('adate'));
             });
+            if ($request->input('sale_id') == 1) {
+                $members = $members->where('sa2.sale_id', 1);
+            }
         }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
