@@ -49,14 +49,14 @@ class TransactionService
     public function hasPendingWithDraw()
     {
         $count = Transaction::where('type', ConfigConstants::TRANSACTION_WITHDRAW)
-            ->where('status',0)
+            ->where('status', 0)
             ->count();
         return $count;
     }
     public function statusWithDraw($userId)
     {
         $count = Transaction::where('type', ConfigConstants::TRANSACTION_WITHDRAW)
-            ->where('user_id',$userId)
+            ->where('user_id', $userId)
             ->count();
         return $count;
     }
@@ -127,29 +127,29 @@ class TransactionService
             $status = OrderConstants::STATUS_DELIVERED;
             $amount = $item->price;
             $childUserDB = $childUser > 0 ? User::find($childUser) : null;
-            $dbVoucher = null;
-            $voucherM = new Voucher();
+            // $dbVoucher = null;
+            // $voucherM = new Voucher();
             $saleId = $this->findSaleIdFromBuyerOrItem($user->id, $item->id);
-            if (!empty($voucher)) {
-                try {
-                    $dbVoucher = $voucherM->getVoucherData($user->id, $voucher);
-                    if ($dbVoucher->type == VoucherGroup::TYPE_CLASS) {
-                        $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $dbVoucher);
-                        $openOrder = Order::create([
-                            'user_id' => $user->id,
-                            'amount' => $item->price,
-                            'quantity' => 1,
-                            'status' => $status,
-                            'payment' => UserConstants::VOUCHER,
-                            'sale_id' => $saleId,
-                        ]);
-                        $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
-                    }
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    return $e->getMessage();
-                }
-            }
+            // if (!empty($voucher)) {
+            //     try {
+            //         $dbVoucher = $voucherM->getVoucherData($user->id, $voucher);
+            //         if ($dbVoucher->type == VoucherGroup::TYPE_CLASS) {
+            //             $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $dbVoucher);
+            //             $openOrder = Order::create([
+            //                 'user_id' => $user->id,
+            //                 'amount' => $item->price,
+            //                 'quantity' => 1,
+            //                 'status' => $status,
+            //                 'payment' => UserConstants::VOUCHER,
+            //                 'sale_id' => $saleId,
+            //             ]);
+            //             $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
+            //         }
+            //     } catch (\Exception $e) {
+            //         DB::rollback();
+            //         return $e->getMessage();
+            //     }
+            // }
             if (!$openOrder) {
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
@@ -205,9 +205,14 @@ class TransactionService
                 'status' => $status,
             ]);
 
-            if ($dbVoucher && $dbVoucher->type == VoucherGroup::TYPE_PAYMENT) {
-                $voucherM->useVoucherPayment($user->id, $openOrder->id, $dbVoucher);
-            }
+            // if ($dbVoucher && $dbVoucher->type == VoucherGroup::TYPE_PAYMENT) {
+            //     try {
+            //         $voucherM->useVoucherPayment($user->id, $openOrder->id, $dbVoucher);
+            //     } catch (\Exception $e) {
+            //         DB::rollback();
+            //         return $e->getMessage();
+            //     }
+            // }
 
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
@@ -757,13 +762,13 @@ class TransactionService
         $creted = Transaction::create([
             'user_id' => auth()->user()->id,
             'type' => ConfigConstants::TRANSACTION_WITHDRAW,
-            'amount' => ($anypoint*1000),
+            'amount' => ($anypoint * 1000),
             'pay_method' => UserConstants::WALLET_M,
             'pay_info' => '',
             'content' => 'Rút anyPoint từ tài khoản ' . auth()->user()->id .
-            ' Ngân Hàng: '. $bank->bank_name .
-            ' Số tài khoản: ' . $bank->bank_no .
-            ' Người hưởng thụ: '. $bank->bank_account,
+                ' Ngân Hàng: ' . $bank->bank_name .
+                ' Số tài khoản: ' . $bank->bank_no .
+                ' Người hưởng thụ: ' . $bank->bank_account,
             'status' => 0,
             'order_id' => auth()->user()->id
         ])->id;
