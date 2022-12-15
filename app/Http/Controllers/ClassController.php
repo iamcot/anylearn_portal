@@ -194,11 +194,11 @@ class ClassController extends Controller
                 'users.name',
                 'users.id',
                 'order_details.created_at',
-                DB::raw('(SELECT count(*) FROM participations 
+                DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
             GROUP BY participations.item_id
             ) AS confirm_count'),
-                DB::raw("(SELECT value FROM item_user_actions 
+                DB::raw("(SELECT value FROM item_user_actions
             WHERE item_user_actions.user_id = users.id AND item_user_actions.item_id = order_details.item_id
             and item_user_actions.type = 'cert'
             ORDER BY id DESC

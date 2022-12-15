@@ -101,7 +101,7 @@ class ItemUserAction extends Model
             SocialPost::where('type', SocialPost::TYPE_CLASS_RATING)
                 ->where('user_id', $userId)
                 ->where('ref_id', $itemId)
-                ->udpate([
+                ->update([
                     'content' => $rating,
                     'day' => date('Y-m-d'),
                 ]);
