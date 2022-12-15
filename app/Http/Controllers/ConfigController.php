@@ -269,7 +269,7 @@ class ConfigController extends Controller
                             'amount' => 1,
                             'value' => $newGroup->value,
                             'status' => 1,
-                            'expired' => 0
+                            'expired' => 0,
                         ]);
                         $totalSaved++;
                     }
@@ -282,6 +282,7 @@ class ConfigController extends Controller
                     'qtt' => $input['qtt'],
                     'value' => $input['value'],
                     'status' => 1,
+                    'rule_min' => $input['rule_min'],
                 ];
                 $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
                 if ($exists > 0) {
@@ -412,7 +413,7 @@ class ConfigController extends Controller
             $configs = $request->all();
             $values = [];
             foreach ($configs['block'] as $index => $config) {
-                if($config['classes'] != null){
+                if ($config['classes'] != null) {
                     if (empty($config['title'])) {
                         $values[$index] = [];
                     } else {

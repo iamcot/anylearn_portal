@@ -24,6 +24,7 @@
                     <th>Cách tạo</th>
                     <th>Mã/Tiền tố voucher</th>
                     <th>Giá trị</th>
+                    <th>Rule > Đơn tối thiểu</th>
                     <th>Số lượng</th>
                     <th>Khóa học</th>
                     <th>Tạo lúc</th>
@@ -37,6 +38,7 @@
                     <td>{{ $voucher->generate_type }}</td>
                     <td>{{ $voucher->prefix }}</td>
                     <td>{{ $voucher->value }}</td>
+                    <td>{{ $voucher->rule_min }}</td>
                     <td>{{ $voucher->qtt }}</td>
                     <td>{{ $voucher->ext }}</td>
                     <td>{{ $voucher->updated_at }}</td>
