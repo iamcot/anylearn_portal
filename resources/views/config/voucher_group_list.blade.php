@@ -37,8 +37,8 @@
                     <td>{{ $voucher->type }}</td>
                     <td>{{ $voucher->generate_type }}</td>
                     <td>{{ $voucher->prefix }}</td>
-                    <td>{{ $voucher->value }}</td>
-                    <td>{{ $voucher->rule_min }}</td>
+                    <td>{{ number_format($voucher->value, 0, ",", ".") }}</td>
+                    <td>{{ number_format($voucher->rule_min, 0, ",", ".") }}</td>
                     <td>{{ $voucher->qtt }}</td>
                     <td>{{ $voucher->ext }}</td>
                     <td>{{ $voucher->updated_at }}</td>
