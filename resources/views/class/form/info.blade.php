@@ -67,6 +67,12 @@
                 <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
             </div>
         </div>
+        <div class="form-group row">
+            <label for="is_paymentfee" class="col-md-3 col-form-label text-md-right ">{{ __('Thu hộ học phí') }}</label>
+            <div class="col-md-8 form-check form-switch m-2">
+                <input class="form-check-input" type="checkbox" name="is_paymentfee" id="is_paymentfee" {{ !empty($course) && $course['info']->is_paymentfee > 0 ? "checked" : "" }}>
+            </div>
+        </div>
         @if($userServ->haveAccess(Auth::user()->role, 'user.sale'))
         <div class="form-group row">
             <label for="sale_id" class="col-md-3 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
