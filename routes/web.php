@@ -54,7 +54,7 @@ Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree
 
 Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
 Route::get('/payment-return/{payment}', 'TransactionController@return')->name('checkout.return');
-Route::get('/payment-result', 'TransactionController@paymentResult')->name('checkout.result');
+Route::get('/payment-result/{payment}', 'TransactionController@paymentResult')->name('checkout.result');
 
 Route::get('/guide', 'PageController@guide')->name('guide');
 

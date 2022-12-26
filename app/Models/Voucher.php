@@ -18,7 +18,7 @@ class Voucher extends Model
             ->where('vouchers.voucher', $voucher)
             ->where('vouchers.status', 1)
             ->where('vg.status', 1)
-            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vouchers.value')
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vouchers.value', 'vg.rule_min')
             ->first();
         if (!$dbVoucher) {
             throw new \Exception("Voucher không có");
@@ -56,7 +56,7 @@ class Voucher extends Model
             ->where('vouchers.voucher', $voucher)
             ->where('vouchers.status', 1)
             ->where('vg.status', 1)
-            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vg.value')
+            ->select('vg.type', 'vg.ext', 'vouchers.id', 'vouchers.amount', 'vg.value', 'vg.rule_min')
             ->first();
         if (!$dbVoucher) {
             throw new \Exception("Voucher không có");
@@ -106,6 +106,14 @@ class Voucher extends Model
             }
             if (!$hasClassInVoucher) {
                 throw new \Exception("Voucher này không hỗ trợ các khóa học trong đơn hàng.");
+            }
+        }
+
+        if (!empty($dbVoucher->rule_min)) {
+            $order = Order::find($orderId);
+            if ($order->amount < $dbVoucher->rule_min) {
+                throw new \Exception("Tổng giá trị đơn hàng phải trên " . number_format($dbVoucher->rule_min, 0, ',', '.') . " để sử dụng voucher này.");
+
             }
         }
 

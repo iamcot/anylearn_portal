@@ -51,6 +51,12 @@
                     <input id="ext" type="text" class="form-control @error('expired') is-invalid @enderror" name="ext" value="{{ old('ext', !empty($voucher) ? $voucher->ext : '') }}">
                 </div>
             </div>
+            <div class="form-group row" id="rule_min_box">
+                <label for="rule_min" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị đơn tối thiểu') }}</label>
+                <div class="col-md-6">
+                    <input id="rule_min" type="text" class="form-control @error('rule_min') is-invalid @enderror" name="rule_min" value="{{ old('rule_min', !empty($voucher) ? $voucher->rule_min : '') }}">
+                </div>
+            </div>
             <div class="form-group row" id="partner_voucher" style="display: none;">
                 <label for="ext" class="col-md-2 col-form-label text-md-right">{{ __('Danh sách voucher') }}</label>
                 <div class="col-md-6">
@@ -58,6 +64,7 @@
                     <textarea class="form-control" name="partner_vouchers" rows="10"></textarea>
                 </div>
             </div>
+            
             <!-- <div class="form-group row">
                 <label for="expired" class="col-md-2 col-form-label text-md-right">{{ __('Đến ngày') }}</label>
                 <div class="col-md-6">

@@ -14,6 +14,12 @@ class Processor {
             case OnepayLocal::NAME:
                 self::$processor =  new OnepayLocal();
                 break;
+            case OnepayTg::NAME:
+                self::$processor =  new OnepayTg();
+                break;
+            case OnepayFee::NAME:
+                self::$processor =  new OnepayFee();
+                break;
             default:
                 break;
         } 

@@ -10,7 +10,7 @@ class VoucherGroup extends Model
 
     protected $fillable = [
         'type', 'generate_type', 'prefix', 'qtt',
-        'value_type', 'value', 'status', 'ext'
+        'value_type', 'value', 'status', 'ext', 'rule_min'
     ];
 
     const TYPE_MONEY = 'money';

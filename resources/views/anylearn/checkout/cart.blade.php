@@ -30,7 +30,9 @@ cart
                             <th></th>
                         </tr>
                     <tbody>
+                        @php $hasPaymemtFee = false; @endphp
                         @foreach ($detail as $item)
+                            @php if ($item->is_paymentfee) { $hasPaymemtFee = true; } @endphp
                             <tr>
                                 <td class="text-center">{{ $loop->index + 1 }}</td>
                                 <td><img class="img-fluid" style="max-height: 80px" src="{{ $item->image }}"></td>
@@ -96,7 +98,7 @@ cart
                                         value="{{ !empty($pointUsed) ? $pointUsed->amount : '' }}">
                                 </div>
                                 <div class="form-group col-xs-12 col-md-2 mt-1">
-                                    <button class="btn btn-success form-control rounded-pill border-0" name="cart_action"
+                                    <button class="btn btn-warning form-control rounded-pill border-0" name="cart_action"
                                         value="exchangePoint">@lang('Đổi anyPoint')</button>
                                 </div>
                             </div>
@@ -129,7 +131,7 @@ cart
                                         value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
                                 </div>
                                 <div class="form-group col-xs-12 col-md-2 mt-1">
-                                    <button class="btn btn-success form-control rounded-pill border-0" name="cart_action"
+                                    <button class="btn btn-warning form-control rounded-pill border-0" name="cart_action"
                                         value="apply_voucher">@lang('Áp dụng')</button>
                                 </div>
                             </div>
@@ -171,21 +173,33 @@ cart
                     <ul class="list-unstyled">
                         <li class="p-2"><input required type="radio" name="payment" value="atm" id="radio_atm">
                             <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng')</strong></label></li>
-                        @if (empty($saveBanks))
-                            <li class="p-2"><input required type="radio" name="payment" value="onepaylocal"
-                                    id="radio_onepaylocal"> <label
-                                    for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
+                        
+                        @if ($hasPaymemtFee)
+                            <li class="p-2"><input required type="radio" name="payment" value="onepayfee"
+                                    id="radio_onepayfee"> <label
+                                    for="radio_onepayfee"><strong>@lang('Thu hộ học phí trực tuyến bằng thẻ')</strong></label></li>
+                        
                         @else
-                            @foreach ($saveBanks as $bank)
-                                <li class="p-2"><input required type="radio" name="payment"
-                                        value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label
-                                        for="radio_savedBank_{{ $bank['id'] }}"><img src="{{ $bank['logo'] }}"
-                                            style="height: 20px;">
-                                        <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
-                            @endforeach
-                            <li class="p-2"><input required type="radio" name="payment" value="onepaylocal"
-                                    id="radio_onepaylocal"> <label
-                                    for="radio_onepaylocal"><strong>@lang('Thanh toán bằng thẻ trực tuyến MỚI')</strong></label></li>
+                            @if (empty($saveBanks))
+                                <li class="p-2"><input required type="radio" name="payment" value="onepaylocal"
+                                        id="radio_onepaylocal"> <label
+                                        for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
+                            @else
+                                @foreach ($saveBanks as $bank)
+                                    <li class="p-2"><input required type="radio" name="payment"
+                                            value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label
+                                            for="radio_savedBank_{{ $bank['id'] }}"><img src="{{ $bank['logo'] }}"
+                                                style="height: 20px;">
+                                            <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
+                                @endforeach
+                                <li class="p-2"><input required type="radio" name="payment" value="onepaylocal"
+                                        id="radio_onepaylocal"> <label
+                                        for="radio_onepaylocal"><strong>@lang('Thanh toán bằng thẻ trực tuyến MỚI')</strong></label></li>
+                            @endif
+                        @endif
+                        @if ($order->amount >= 3000000)
+                        <li class="p-2"><input required type="radio" name="payment" value="onepaytg" id="radio_onepaytg">
+                            <label for="radio_onepaytg"><strong>@lang('Trả góp hàng tháng')</strong></label></li>
                         @endif
 
                     </ul>

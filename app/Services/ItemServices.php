@@ -369,6 +369,12 @@ class ItemServices
             $input['nolimit_time'] = 0;
         }
 
+        if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
+            $input['is_paymentfee'] = 1;
+        } else {
+            $input['is_paymentfee'] = 0;
+        }
+
         $newCourse = Item::create($input);
         if ($newCourse) {
             $i18nModel = new I18nContent();
@@ -442,6 +448,12 @@ class ItemServices
             $input['nolimit_time'] = 1;
         } else {
             $input['nolimit_time'] = 0;
+        }
+
+        if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
+            $input['is_paymentfee'] = 1;
+        } else {
+            $input['is_paymentfee'] = 0;
         }
 
         // if (!empty($input['subtype'])) {}
