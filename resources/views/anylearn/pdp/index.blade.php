@@ -87,23 +87,21 @@
                         data-bs-target="#content" type="button" role="tab" aria-controls="content"
                         aria-selected="true">@lang('MÔ TẢ')</button>
                 </li>
-                @if ($author->role == 'school')
-                    <!-- <li class="nav-item" role="presentation">
-                        <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
-                    </li> -->
-                @endif
+            
                 @if (count($reviews) > 0)
                     <li class="nav-item" role="presentation">
                         <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab"
                             data-bs-target="#review" type="button" role="tab" aria-controls="review"
                             aria-selected="false">@lang('ĐÁNH GIÁ')</button>
                     </li>
-                @elseif ((auth()->user()->role == 'school') | (auth()->user()->role == 'teacher'))
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab"
-                            data-bs-target="#review" type="button" role="tab" aria-controls="review"
-                            aria-selected="false">@lang('ĐÁNH GIÁ')</button>
-                    </li>
+                @elseif(Auth::check())
+                    @if ((auth()->user()->role == 'school') | (auth()->user()->role == 'teacher'))
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab"
+                                data-bs-target="#review" type="button" role="tab" aria-controls="review"
+                                aria-selected="false">@lang('ĐÁNH GIÁ')</button>
+                        </li>
+                    @endif
                 @endif
             </ul>
             <div class="tab-content border border-top-0 mb-5 shadow" id="myTabContent">
@@ -133,15 +131,13 @@
                     @endif
 
                 </div>
-                @if ($author->role == 'school')
-                    <!-- <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div> -->
-                @endif
+              
                 @if (count($reviews) > 0)
                     <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel" aria-labelledby="review-tab">
                         @include('anylearn.pdp.review')
                     </div>
                 @elseif(Auth::check())
-                    @if ((auth()->user()->role == 'school') | (auth()->user()->role == 'teacher'))
+                    @if ((auth()->user()->role == 'school') || (auth()->user()->role == 'teacher'))
                         <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel"
                             aria-labelledby="review-tab">
                             @include('anylearn.pdp.review')
