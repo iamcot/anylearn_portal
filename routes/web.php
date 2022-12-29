@@ -47,14 +47,14 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
-Route::get('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
 Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
 Route::get('/payment-return/{payment}', 'TransactionController@return')->name('checkout.return');
-Route::get('/payment-result', 'TransactionController@paymentResult')->name('checkout.result');
+Route::get('/payment-result/{payment}', 'TransactionController@paymentResult')->name('checkout.result');
 
 Route::get('/guide', 'PageController@guide')->name('guide');
 
