@@ -38,7 +38,7 @@ class_edit
         </li>
     </ul>
 
-    <div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
+    <div class="tab-content border-top-2 mb-5" id="myTabContent">
         <div class="tab-pane fade {{ session('tab', 'info') == 'info' ? 'show active' : '' }} p-2" id="info" role="tabpanel" aria-labelledby="info-tab">
             @include('class.form.info')
         </div>
