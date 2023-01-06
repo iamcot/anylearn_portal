@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\PaymentGateway\OnepayLocal;
+use App\PaymentGateway\OnepayTg;
 use Tests\TestCase;
 
 class OnepayTest extends TestCase
@@ -45,6 +46,19 @@ class OnepayTest extends TestCase
         }
 
         $res = $onepayServ->checkHash($data);
+        $this->assertTrue($res);
+    }
+
+    public function testHashTG() {
+        $onepaytgServ = new OnepayTg();
+        $str = "vpc_AcqResponseCode=00&vpc_Amount=325813200&vpc_AuthIndicator=831000&vpc_AuthorizeId=831000&vpc_Card=VC&vpc_CardExp=0524&vpc_CardHolderName=NGUYEN%20VAN%20A&vpc_CardNum=400000xxx1091&vpc_CardUid=INS-ooRXZ-0aB-ngUAB_AQASgw&vpc_CavvResponseCode=2&vpc_Command=pay&vpc_CurrencyCode=VND&vpc_Gateway=CYBER&vpc_GatewayBusinessDate=20221222T060000Z&vpc_ItaBank=ASCBVNVX&vpc_ItaFeeAmount=15813200&vpc_ItaTime=3&vpc_Locale=vn&vpc_MerchTxnRef=31671678081&vpc_Merchant=TESTTRAGOP&vpc_MerchantAdviceCode=01&vpc_Message=Approved&vpc_NetworkTransactionID=016153570198200&vpc_OrderAmount=310000000&vpc_OrderInfo=3&vpc_PayChannel=WEB&vpc_PaymentTime=20221222T030855Z&vpc_SecureHash=6B7F83330D666D54FD0775EDCFF0540CAAB3418AB24DA73AA8668B457C399496&vpc_TransactionNo=PAY-w5j38hHeRSKCvwSbLLTn0A&vpc_TxnResponseCode=0&vpc_Version=2";
+        $data = [];
+        foreach (explode('&', $str) as $couple) {
+            list($key, $val) = explode('=', $couple);
+            $data[$key] = $val;
+        }
+
+        $res = $onepaytgServ->checkHash($data);
         $this->assertTrue($res);
     }
 }

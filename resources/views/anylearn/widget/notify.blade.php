@@ -46,7 +46,6 @@
 </div>
 @section('jscript')
 @parent
-<script type="text/javascript">
     <script src="/cdn/vendor/jquery/jquery.min.js"></script>
     <script src="/cdn/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/cdn/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -54,6 +53,5 @@
     $(function() {
             $('#popup').modal('show');
         });
-</script>
 @endsection
 @endif

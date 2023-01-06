@@ -171,6 +171,17 @@ class PageController extends Controller
     {
         $itemService = new ItemServices();
         $user = Auth::user();
+        if ($request->get('action') == 'rating') {
+            $itemId = $request->get('class-id', 0);
+            $rating = $request->get('rating', 5);
+            $comment = $request->get('comment', '');
+            if ($itemId <= 0) {
+                return redirect()->back()->with(['notify' => 'Khóa học không tồn tại.']);
+            }
+            $itemUserActionM = new ItemUserAction();
+            $rs = $itemUserActionM->saveRating($itemId, $user->id, $rating, $comment);
+            return redirect()->back()->with(['notify' => $rs]);
+        }
         try {
             $data = $itemService->pdpData($request, $itemId, $user);
             // dd($data);

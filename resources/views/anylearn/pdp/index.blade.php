@@ -4,10 +4,10 @@
     {{ $item->title }}
 @endsection
 @section('spmb')
-pdp
+    pdp
 @endsection
 @section('canonical')
-{{ $itemServ->classUrl($item->id) }}
+    {{ $itemServ->classUrl($item->id) }}
 @endsection
 @section('body')
     <section class="container mt-5" id="spmc" data-spm="{{ $item->id }}">
@@ -78,6 +78,8 @@ pdp
             </div>
         </div>
 
+
+
         <div class="mt-4">
             <ul class="nav nav-tabs" id="pdptab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -103,32 +105,40 @@ pdp
                             data-bs-target="#review" type="button" role="tab" aria-controls="review"
                             aria-selected="false">@lang('ĐÁNH GIÁ')</button>
                     </li>
+                @elseif(Auth::check())
+                    @if ((auth()->user()->role == 'school') | (auth()->user()->role == 'teacher'))
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab"
+                                data-bs-target="#review" type="button" role="tab" aria-controls="review"
+                                aria-selected="false">@lang('ĐÁNH GIÁ')</button>
+                        </li>
+                    @endif
                 @endif
             </ul>
             <div class="tab-content border border-top-0 mb-5 shadow" id="myTabContent">
                 <div class="tab-pane fade show active p-2" id="content" role="tabpanel" aria-labelledby="content-tab">
-                    @if(\App::getLocale()=='vi')
-                    <div class="collapse-module pb-4">
-                        <div class="collapse" id="contentCollapse">
-                            {!! $item->content !!}
+                    @if (\App::getLocale() == 'vi')
+                        <div class="collapse-module pb-4">
+                            <div class="collapse" id="contentCollapse">
+                                {!! $item->content !!}
+                            </div>
+                            <div class="text-center">
+                                <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#contentCollapse" aria-expanded="false"
+                                    aria-controls="contentCollapse">
+                            </div>
                         </div>
-                        <div class="text-center">
-                            <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#contentCollapse" aria-expanded="false"
-                                aria-controls="contentCollapse">
-                        </div>
-                    </div>
                     @else
-                    <div class="collapse-module-en pb-4">
-                        <div class="collapse" id="contentCollapse">
-                            {!! $item->content !!}
+                        <div class="collapse-module-en pb-4">
+                            <div class="collapse" id="contentCollapse">
+                                {!! $item->content !!}
+                            </div>
+                            <div class="text-center">
+                                <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#contentCollapse"
+                                    aria-expanded="false" aria-controls="contentCollapse">
+                            </div>
                         </div>
-                        <div class="text-center">
-                            <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#contentCollapse" aria-expanded="false"
-                                aria-controls="contentCollapse">
-                        </div>
-                    </div>
                     @endif
 
                 </div>
@@ -144,6 +154,13 @@ pdp
                     <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel" aria-labelledby="review-tab">
                         @include('anylearn.pdp.review')
                     </div>
+                @elseif(Auth::check())
+                    @if ((auth()->user()->role == 'school') || (auth()->user()->role == 'teacher'))
+                        <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel"
+                            aria-labelledby="review-tab">
+                            @include('anylearn.pdp.review')
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>

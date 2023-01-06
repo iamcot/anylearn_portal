@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="col-10 pl-0 mb-3">
-            <div class="tab-content shadow" id="v-pills-tabContent">
+            <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade {{ session('tab', 'info') == 'info' ? 'show active' : '' }}" id="v-pills-info" role="tabpanel" aria-labelledby="v-pills-info-tab">
                     @include('class.form.info')
                 </div>

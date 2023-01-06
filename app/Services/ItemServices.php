@@ -138,6 +138,7 @@ class ItemServices
             ->join('users', 'users.id', '=', 'iua.user_id')
             ->where('iua.item_id', $itemId)
             ->where('iua.type', ItemUserAction::TYPE_RATING)
+            ->orderby('iua.id', 'desc')
             ->select('iua.*', DB::raw('(CASE WHEN users.name = \'Admin\' THEN \'anyLEARN\' ELSE users.name END) AS user_name'), 'users.id AS user_id', 'users.image AS user_image')
             ->get();
         return [
@@ -369,6 +370,12 @@ class ItemServices
             $input['nolimit_time'] = 0;
         }
 
+        if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
+            $input['is_paymentfee'] = 1;
+        } else {
+            $input['is_paymentfee'] = 0;
+        }
+
         $newCourse = Item::create($input);
         if ($newCourse) {
             $i18nModel = new I18nContent();
@@ -442,6 +449,12 @@ class ItemServices
             $input['nolimit_time'] = 1;
         } else {
             $input['nolimit_time'] = 0;
+        }
+
+        if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
+            $input['is_paymentfee'] = 1;
+        } else {
+            $input['is_paymentfee'] = 0;
         }
 
         // if (!empty($input['subtype'])) {}

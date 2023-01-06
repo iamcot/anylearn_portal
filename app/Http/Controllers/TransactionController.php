@@ -221,9 +221,9 @@ class TransactionController extends Controller
         $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
         if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
             if ($this->data['api_token']) {
-                return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
+                return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Thêm vào giỏ hàng thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
             }
-            return redirect()->route('cart')->with('notify', "Đăng ký khoá học thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
+            return redirect()->route('cart')->with('notify', "Thêm vào giỏ hàng thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
         } else if (is_numeric($result)) {
             return redirect()->route('checkout.finish', ['order_id' => $result]);
         } else {
@@ -406,7 +406,7 @@ class TransactionController extends Controller
                 // ->where('i18n_contents.tbl', 'items')
                 // ->where('i18n_contents.col', 'title')
                 ->where('od.order_id', $openOrder->id)
-                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId')
+                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId', 'items.is_paymentfee')
                 ->get();
             // dd($orderDetails);
             $this->data['order'] = $openOrder;
@@ -497,6 +497,7 @@ class TransactionController extends Controller
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'amount' => $point,
+                    'ref_amount' => (-1 * $point),
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
                     'content' => 'Đổi ' . $point . ' cho đơn #' . $order->id,
@@ -603,7 +604,7 @@ class TransactionController extends Controller
             $qrservice = new QRServices();
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
-        if ($payment != 'onepaylocal') {
+        if (!in_array($payment, ['onepaylocal', 'onepaytg', 'onepayfee'])) {
             $existsBank = UserBank::where('id', $payment)->where('user_id', $user->id)->first();
             if (!$existsBank) {
                 return redirect()->back()->with('notify', 'Phương thức thanh toán không tồn tại');
@@ -684,7 +685,7 @@ class TransactionController extends Controller
         return view(env('TEMPLATE', '') . 'checkout.finish', $this->data);
     }
 
-    public function paymentResult(Request $request)
+    public function paymentResult(Request $request, $payment = 'onepaylocal')
     {
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
@@ -699,7 +700,7 @@ class TransactionController extends Controller
         if ($result['status'] == 1) {
             $orderId = $result['orderId'];
             $transService = new TransactionService();
-            $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
+            $transService->approveRegistrationAfterWebPayment($orderId, $payment);
 
             if (!empty($result['newTokenNum'])) {
                 $newToken = $result['newTokenNum'];
