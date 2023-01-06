@@ -497,6 +497,7 @@ class TransactionController extends Controller
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'amount' => $point,
+                    'ref_amount' => (-1 * $point),
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
                     'content' => 'Đổi ' . $point . ' cho đơn #' . $order->id,
