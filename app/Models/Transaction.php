@@ -104,7 +104,7 @@ class Transaction extends Model
             $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
         }
         $db = $query->orderby('id', 'desc')
-            ->get();
+            ->take(20)->get();
         $data = [];
         foreach($db as $k => $v) {
             $data[$k] = $v;
