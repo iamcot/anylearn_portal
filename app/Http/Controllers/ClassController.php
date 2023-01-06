@@ -16,12 +16,14 @@ use App\Models\ItemUserAction;
 use App\Models\Schedule;
 use App\Models\User;
 use App\Models\I18nContent;
+use App\Models\ItemVideoChapter;
 use App\Models\Notification;
 use App\Models\SocialPost;
 use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
+use App\Services\VideoServices;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -112,8 +114,19 @@ class ClassController extends Controller
     public function edit(Request $request, $courseId)
     {
         $courseService = new ItemServices();
+        $videoServices = new VideoServices();
+        if ($request ->input('action')=='createChapter') {
+            $input = $request->all();
+            $videoServices->createChapter($request,$input);
+        }
+
+        if ($request->input('action')=='createLesson'){
+            $input = $request->all();
+            $videoServices->createLesson($request,$input);
+        }
         if ($request->input('action') == 'update') {
             $input = $request->all();
+            // dd($input);
             try {
                 $rs = $courseService->updateItem($request, $input);
             } catch (Exception $e) {
@@ -194,11 +207,11 @@ class ClassController extends Controller
                 'users.name',
                 'users.id',
                 'order_details.created_at',
-                DB::raw('(SELECT count(*) FROM participations 
+                DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
             GROUP BY participations.item_id
             ) AS confirm_count'),
-                DB::raw("(SELECT value FROM item_user_actions 
+                DB::raw("(SELECT value FROM item_user_actions
             WHERE item_user_actions.user_id = users.id AND item_user_actions.item_id = order_details.item_id
             and item_user_actions.type = 'cert'
             ORDER BY id DESC

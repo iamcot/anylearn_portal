@@ -22,6 +22,9 @@ class_edit
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule" aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
         </li>
+        <li class="nav-item d-none" role="presentation" id="vdo">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'video' ? 'active' : '' }}" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="true"><i class="fas fa-play"></i> <span class="d-none d-sm-block">@lang('VIDEO')</span></button>
+        </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Hình ảnh')</span></button>
         </li>
@@ -44,6 +47,9 @@ class_edit
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'schedule' ? 'show active' : '' }} p-2" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
             @include('class.form.schedule')
+        </div>
+        <div class="tab-pane fade {{ session('tab', 'info') == 'video' ? 'show active' : '' }} p-2" id="video" role="tabpanel" aria-labelledby="video-tab">
+            @include('class.form.video')
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'resource' ? 'show active' : '' }} p-2" id="resource" role="tabpanel" aria-labelledby="resource-tab">
             @include('class.form.resource')
@@ -93,7 +99,20 @@ class_edit
             $("#locationbox").hide();
         }
     });
-
+    // $("select[name=subtype]").on("change", function(e) {
+    //     var select = $(this).val();
+    //     if (select == "video") {
+    //         $("#vdo").removeClass("d-none");
+    //     } else {
+    //         $("#vdo").addClass("d-none");
+    //     }
+    // });
+    $(document).ready(function () {
+        var select = $("select[name=subtype]").val();
+        if (select == "video") {
+            $("#vdo").removeClass("d-none");
+        }
+    })
     $("#schedule_generate").click(function() {
         var type = $(this).data("type");
         var num = $("#schedule_auto").find('#num').val();
