@@ -402,7 +402,7 @@ class ConfigApi extends Controller
         $report['soSanPhamMoi'] = Item::where('created_at', '>', $fromInText)->count();
         $report['soLuongGiaoDich'] = Order::where('created_at', '>', $fromInText)->count();
         $report['tongSoDonHangThanhCong'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->count();
-        $report['tongSoDongHangKhongThanhCong'] = $report['SoLuongGiaoDich'] - $report['TongSoDonHangThanhCong'];
+        $report['tongSoDongHangKhongThanhCong'] = $report['soLuongGiaoDich'] - $report['tongSoDonHangThanhCong'];
         $report['tongGiaTriGiaoDich'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->sum('amount');
         return response()->json($report);
     }
