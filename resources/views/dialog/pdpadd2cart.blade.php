@@ -30,56 +30,13 @@
                             @endforeach
                         </ul>
                     @endif
-                    {{-- <div>
-                        <p id="textvorcher"><a class="text-primary"
-                                href="javascript:onVoucher()"><strong>@lang('TÔI CÓ MÃ QUÀ TẶNG / GIẢM GIÁ')</strong></a></p>
-                        <div id="add2cartvoucher" style="display: none;">
-                            <div class="row mb-2">
-                                <div class="col-9">
-                                    <input type="text" placeholder="{{ __('Mã Khuyến Mãi Khóa Học') }}"
-                                        class="form-control" name="voucher">
-                                </div>
-                                <div class="col-3 mt-1">
-                                    <button onclick="offVoucher()" type="button" class="form-control btn-close"
-                                        aria-label="Close"></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <p id="textchild"><a class="text-primary"
-                                    href="javascript:onChild()"><strong>@lang('TÔI MUỐN ĐĂNG KÝ TÀI KHOẢN CON')</strong></a></p>
-                            <div id="add2cartchild" class="input-group-append mb-2" style="display: none;">
-                                <div class="row mt-1">
-                                    <div class="col-md-8">
-                                        <select name="child" class="form-select" id="inputGroupSelect04">
-                                            <option value="">@lang('Chọn thành viên')<nav></nav>
-                                            </option>
-                                            @if (count($children) > 0)
-                                                @foreach ($children as $child)
-                                                    <option value="{{ $child->id }}"> {{ $child->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                    <div class="col-md-1 mt-1">
-                                        <a class="text-black" href="{{ route('me.child') }}"><i
-                                                class="fas fa-user-plus"></i></a>
-                                    </div>
-                                    <div class="col-md-1 mt-1">
-                                        <button onclick="offChild()" type="button" class="form-control btn-close"
-                                            aria-label="Close"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div> --}}
 
                     <div class="modal-footer">
                         {{-- <button id="add2CartBtn" name="add2cart" value="add2cart"
                             class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button> --}}
                             <button type="button" id="nex_step" onclick="next_step()"
                             class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button>
+
                     </div>
                 </div>
             </div>

@@ -87,7 +87,18 @@
                         data-bs-target="#content" type="button" role="tab" aria-controls="content"
                         aria-selected="true">@lang('MÔ TẢ')</button>
                 </li>
-            
+                @if ($author->role == 'school')
+                    <!-- <li class="nav-item" role="presentation">
+                    <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
+                </li> -->
+                @endif
+                @if (1==1)
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-secondary fw-bold" id="video-tab" data-bs-toggle="tab"
+                        data-bs-target="#video" type="button" role="tab" aria-controls="video"
+                        aria-selected="false">@lang('VIDEO')</button>
+                </li>
+                @endif
                 @if (count($reviews) > 0)
                     <li class="nav-item" role="presentation">
                         <button class="nav-link text-secondary fw-bold" id="review-tab" data-bs-toggle="tab"
@@ -131,7 +142,14 @@
                     @endif
 
                 </div>
-              
+                @if ($author->role == 'school')
+                    <!-- <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div> -->
+                @endif
+                @if (1==1)
+                    <div class="tab-pane fade ps-4 pe-4" id="video" role="tabpanel" aria-labelledby="video-tab">
+                        @include('anylearn.pdp.video')
+                    </div>
+                @endif
                 @if (count($reviews) > 0)
                     <div class="tab-pane fade ps-4 pe-4" id="review" role="tabpanel" aria-labelledby="review-tab">
                         @include('anylearn.pdp.review')

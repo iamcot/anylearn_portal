@@ -211,7 +211,6 @@ class PageController extends Controller
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
         }
     }
-
     public function article(Request $request, $id)
     {
         $article = Article::find($id);

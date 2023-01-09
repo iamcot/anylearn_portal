@@ -1,8 +1,9 @@
-@inject('userServ','App\Services\UserServices')
+@inject('userServ', 'App\Services\UserServices')
 <div class="row">
     <div class="col-12 p-4">
-        <h5 class="mb-3 text-right">
-            <button class="btn btn-sm btn-success border-0 rounded" name="tab" value="info"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+        <h5>@lang('Thông tin chính')
+            <button class="btn btn-sm btn-success border-0 rounded float-right" name="tab" value="info"><i
+                    class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </h5>
 
         <div class="card p-3 mb-3 shadow">
@@ -30,17 +31,19 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="categories" class="col-md-3 col-form-label text-md-right ">{{ __('Chuyên mục') }}</label>
-                    <div class="col-md-8">
-                        <select class="form-control" name="categories[]" multiple>
-                            @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ !empty($itemCategories) && in_array($category->id, $itemCategories) ? 'selected' : '' }}>{{ $category->title }}</option>
-                            @endforeach
-                        </select>
-                        <p class="small">@lang('Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)')</p>
-                    </div>
-                </div>
+        <div class="form-group row">
+            <label for="categories" class="col-md-3 col-form-label text-md-right ">{{ __('Chuyên mục') }}</label>
+            <div class="col-md-8">
+                <select class="form-control" name="categories[]" multiple>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ !empty($itemCategories) && in_array($category->id, $itemCategories) ? 'selected' : '' }}>
+                            {{ $category->title }}</option>
+                    @endforeach
+                </select>
+                <p class="small">@lang('Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)')</p>
+            </div>
+        </div>
 
                 <div class="form-group row">
                     <label for="date_start" class="col-md-3 col-form-label text-md-right ">{{ __('Ngày bắt đầu') }}</label>
@@ -130,62 +133,93 @@
                 </div>
             </div>
         </div>
-
-
-        @if($userServ->haveAccess(Auth::user()->role, 'user.sale'))
         <div class="form-group row">
-            <label for="sale_id" class="col-md-3 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
+            <label for="time_start"
+                class="col-md-3 col-form-label text-md-right ">{{ __('Thời gian bắt đầu') }}</label>
             <div class="col-md-8">
-                <input id="sale_id" type="text" class="form-control @error('sale_id') is-invalid @enderror" name="sale_id" value="{{ old('sale_id', !empty($course) ? $course['info']->sale_id : '') }}">
-                <small>@lang('Có thể tham khảo ID ngoài danh sách nhân viên.')</small>
+                <input id="time_start" type="text"
+                    class="time form-control @error('time_start') is-invalid @enderror" name="time_start"
+                    value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}"
+                    placeholder="hh:mm" required>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label for="nolimit_time" class="col-md-3 col-form-label text-md-right ">{{ __('Không giới hạn') }}</label>
+            <div class="col-md-8 form-check form-switch m-2">
+                <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time"
+                    {{ !empty($course) && $course['info']->nolimit_time > 0 ? 'checked' : '' }}>
+            </div>
+        </div>
+        @if ($userServ->haveAccess(Auth::user()->role, 'user.sale'))
+            <div class="form-group row">
+                <label for="sale_id"
+                    class="col-md-3 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
+                <div class="col-md-8">
+                    <input id="sale_id" type="text" class="form-control @error('sale_id') is-invalid @enderror"
+                        name="sale_id" value="{{ old('sale_id', !empty($course) ? $course['info']->sale_id : '') }}">
+                    <small>@lang('Có thể tham khảo ID ngoài danh sách nhân viên.')</small>
+                </div>
+            </div>
         @endif
-        @if($userServ->isMod())
-        <div class="form-group row">
-            <label for="company_rate" class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng công ty') }}</label>
-            <div class="col-md-8">
-                @if($companyCommission != null)
-                @foreach($companyCommission as $key => $config)
-                @if ($config != null)
-                {{ $key }}= {{ $config }};
-                @endif
-                @endforeach
-                @endif
-                <a class="btn btn-sm btn-danger" id="companyCommission-action" href="#"><i class="fa fa-edit"></i></a>
+        @if ($userServ->isMod())
+            <div class="form-group row">
+                <label for="company_rate"
+                    class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng công ty') }}</label>
+                <div class="col-md-8">
+                    @if ($companyCommission != null)
+                        @foreach ($companyCommission as $key => $config)
+                            @if ($config != null)
+                                {{ $key }}= {{ $config }};
+                            @endif
+                        @endforeach
+                    @endif
+                    <a class="btn btn-sm btn-danger" id="companyCommission-action" href="#"><i
+                            class="fa fa-edit"></i></a>
+                </div>
             </div>
-        </div>
         @endif
 
         <div class="card mb-3 shadow">
             <div class="card-header  font-weight-bold">Thông tin giới thiệu</div>
             <div class="card-body">
 
-                <ul class="nav nav-tabs" id="i18ntab" role="tablist">
-                    @foreach(App\Models\I18nContent::$supports as $locale)
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link text-secondary {{ $locale == App\Models\I18nContent::DEFAULT ? 'active':'' }}" id="{{ $locale }}-tab" data-toggle="tab" data-bs-toggle="tab" data-target="#{{ $locale }}box" data-bs-target="#{{ $locale }}box" type="button" role="tab" aria-controls="{{ $locale }}" aria-selected="{{ $locale == App\Models\I18nContent::DEFAULT ? 'true': 'false' }}">{{ $locale }}</button>
-                    </li>
-                    @endforeach
-                </ul>
-                <div class="tab-content" id="i18ntabContent">
-                    @foreach(App\Models\I18nContent::$supports as $locale)
-                    <div class="p-3 tab-pane fade {{ $locale == App\Models\I18nContent::DEFAULT ? 'show active':'' }}" id="{{ $locale }}box" role="tabpanel" aria-labelledby="{{ $locale }}-tab">
-                        @if($locale != App\Models\I18nContent::DEFAULT)
+        <ul class="nav nav-tabs" id="i18ntab" role="tablist">
+            @foreach (App\Models\I18nContent::$supports as $locale)
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {{ $locale == App\Models\I18nContent::DEFAULT ? 'active' : '' }}"
+                        id="{{ $locale }}-tab" data-toggle="tab" data-bs-toggle="tab"
+                        data-target="#{{ $locale }}box" data-bs-target="#{{ $locale }}box"
+                        type="button" role="tab" aria-controls="{{ $locale }}"
+                        aria-selected="{{ $locale == App\Models\I18nContent::DEFAULT ? 'true' : 'false' }}">{{ $locale }}</button>
+                </li>
+            @endforeach
+        </ul>
+        <div class="tab-content" id="i18ntabContent">
+            @foreach (App\Models\I18nContent::$supports as $locale)
+                <div class="p-3 tab-pane fade {{ $locale == App\Models\I18nContent::DEFAULT ? 'show active' : '' }}"
+                    id="{{ $locale }}box" role="tabpanel" aria-labelledby="{{ $locale }}-tab">
+                    @if ($locale != App\Models\I18nContent::DEFAULT)
                         <div class="form-group row">
-                            <label for="title{{ $locale }}" class="col-md-3 col-form-label text-md-right ">{{ __('Tiêu đề') }} [{{ $locale }}]</label>
+                            <label for="title{{ $locale }}"
+                                class="col-md-3 col-form-label text-md-right ">{{ __('Tiêu đề') }}
+                                [{{ $locale }}]</label>
                             <div class="col-md-8">
-                                <input id="title{{ $locale }}" type="text" class="form-control" name="title[{{ $locale }}]" value="{{ old('title', !empty($course) ? $course['info']->title[$locale] : '') }}">
+                                <input id="title{{ $locale }}" type="text" class="form-control"
+                                    name="title[{{ $locale }}]"
+                                    value="{{ old('title', !empty($course) ? $course['info']->title[$locale] : '') }}">
                             </div>
                         </div>
-                        @endif
+                    @endif
 
-                        <div class="form-group row">
-                            <label for="short_content" class="col-md-3 col-form-label text-md-right ">{{ __('Điểm độc đáo của khóa học (USP)') }} [{{ $locale }}]</label>
-                            <div class="col-md-8">
-                                <textarea name="short_content[{{ $locale }}]" class="form-control">{{ old('short_content', !empty($course) ? $course['info']->short_content[$locale] : '') }}</textarea>
-                            </div>
+                    <div class="form-group row">
+                        <label for="short_content"
+                            class="col-md-3 col-form-label text-md-right ">{{ __('Thông tin tóm tắt') }}
+                            [{{ $locale }}]</label>
+                        <div class="col-md-8">
+                            <textarea name="short_content[{{ $locale }}]" class="form-control">{{ old('short_content', !empty($course) ? $course['info']->short_content[$locale] : '') }}</textarea>
                         </div>
+                    </div>
 
                         <div class="form"></div>
 
@@ -198,11 +232,40 @@
                     </div>
                     @endforeach
                 </div>
+            @endforeach
+        </div>
+
+        <hr>
+        <div class="form-group row">
+            <label for="org_price" class="col-md-3 col-form-label text-md-right ">{{ __('Học phí gốc') }}</label>
+            <div class="col-md-8">
+                <input id="org_price" type="number" class="form-control @error('org_price') is-invalid @enderror"
+                    name="org_price"
+                    value="{{ old('org_price', !empty($course) ? $course['info']->org_price : '') }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="commission_rate"
+                class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng người bán') }}</label>
+            <div class="col-md-8">
+                <input id="commission_rate" type="text"
+                    class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate"
+                    value="{{ old('commission_rate', !empty($course) ? $course['info']->commission_rate : '') }}">
+                <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong hợp đồng.')</div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="tags" class="col-md-3 col-form-label text-md-right ">{{ __('Tags') }}</label>
+            <div class="col-md-8">
+                <input id="tags" type="text" class="form-control @error('tags') is-invalid @enderror"
+                    name="tags" value="{{ old('tags', !empty($course) ? $course['info']->tags : '') }}">
             </div>
         </div>
 
         <div class="text-center">
-            <button class="btn btn-success border-0 rounded" name="tab" value="info"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+            <button class="btn btn-success border-0 rounded" name="tab" value="info"><i
+                    class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
         </div>
     </div>
 </div>
