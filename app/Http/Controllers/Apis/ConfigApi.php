@@ -382,7 +382,7 @@ class ConfigApi extends Controller
         $credential = $request->json()->all();
         $username = isset($credential['UserName']) ? $credential['UserName'] : '';
         $password = isset($credential['PassWord']) ? $credential['PassWord'] : '';
-        if ($username != 'bct' || $password != '@nyLEARN!@#') {
+        if ($username != 'BaocaoTMDT' || $password != '@nyLEARN!@#') {
             return response()->json([
                 'result' => false,
                 'msg' => 'Thông tin đăng nhập không đúng.'
@@ -395,15 +395,15 @@ class ConfigApi extends Controller
         $report = [];
         $diffinSec = $to->getTimestamp() - $from;
         // print_r($diffinSec);
-        $report['SoLuongTruyCap'] = Spm::where('created_at', '>', $fromInText)->count();
-        $report['SoNguoiBan'] = User::whereIn('role', ['teacher', 'school'])->count();
-        $report['SoNguoiBanMoi'] = User::whereIn('role', ['teacher', 'school'])->where('created_at', '>', $fromInText)->count();
-        $report['TongSoSanPham'] = Item::count();
-        $report['SoSanPhamMoi'] = Item::where('created_at', '>', $fromInText)->count();
-        $report['SoLuongGiaoDich'] = Order::count();
-        $report['TongSoDonHangThanhCong'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->count();
-        $report['TongSoDongHangKhongThanhCong'] = $report['SoLuongGiaoDich'] - $report['TongSoDonHangThanhCong'];
-        $report['TongGiaTriGiaoDich'] = Order::sum('amount');
+        $report['soLuongTruyCap'] = Spm::count();//Spm::where('created_at', '>', $fromInText)->count();
+        $report['soNguoiBan'] = User::whereIn('role', ['teacher', 'school'])->count();
+        $report['soNguoiBanMoi'] = User::whereIn('role', ['teacher', 'school'])->where('created_at', '>', $fromInText)->count();
+        $report['tongSoSanPham'] = Item::count();
+        $report['soSanPhamMoi'] = Item::where('created_at', '>', $fromInText)->count();
+        $report['soLuongGiaoDich'] = Order::where('created_at', '>', $fromInText)->count();
+        $report['tongSoDonHangThanhCong'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->count();
+        $report['tongSoDongHangKhongThanhCong'] = $report['SoLuongGiaoDich'] - $report['TongSoDonHangThanhCong'];
+        $report['tongGiaTriGiaoDich'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->sum('amount');
         return response()->json($report);
     }
 }
