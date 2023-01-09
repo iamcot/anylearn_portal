@@ -396,7 +396,7 @@ class ConfigApi extends Controller
         $report = [];
         $diffinSec = $to->getTimestamp() - $from;
         // print_r($diffinSec);
-        $report['soLuongTruyCap'] = Spm::count();//Spm::where('created_at', '>', $fromInText)->count();
+        $report['soLuongTruyCap'] = Spm::where('created_at', '>', $fromInText)->count();
         $report['soNguoiBan'] = User::whereIn('role', ['teacher', 'school'])->count();
         $report['soNguoiBanMoi'] = User::whereIn('role', ['teacher', 'school'])->where('created_at', '>', $fromInText)->count();
         $report['tongSoSanPham'] = Item::count();
