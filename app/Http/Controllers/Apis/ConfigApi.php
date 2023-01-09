@@ -13,6 +13,7 @@ use App\Models\Configuration;
 use App\Models\Feedback;
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Schedule;
 use App\Models\Spm;
 use App\Models\Tag;
@@ -403,7 +404,7 @@ class ConfigApi extends Controller
         $report['soLuongGiaoDich'] = Order::where('created_at', '>', $fromInText)->count();
         $report['tongSoDonHangThanhCong'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->count();
         $report['tongSoDongHangKhongThanhCong'] = $report['soLuongGiaoDich'] - $report['tongSoDonHangThanhCong'];
-        $report['tongGiaTriGiaoDich'] = Order::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->sum('amount');
+        $report['tongGiaTriGiaoDich'] = OrderDetail::where('status', OrderConstants::STATUS_DELIVERED)->where('created_at', '>', $fromInText)->sum('unit_price');
         return response()->json($report);
     }
 }
