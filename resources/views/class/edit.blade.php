@@ -20,7 +20,7 @@
                 @endif
                 <a class="shadow nav-link {{ session('tab') == 'seo' ? 'active' : '' }}" id="v-pills-seo-tab" data-toggle="pill" href="#v-pills-seo" role="tab" aria-controls="v-pills-seo" aria-selected="false"><i class="fa fa-link"></i> <span class="mobile-no-text">@lang('SEO')</span></a>
                 <a class="shadow nav-link {{ session('tab') == 'rating' ? 'active' : '' }}" id="v-pills-rating-tab" data-toggle="pill" href="#v-pills-rating" role="tab" aria-controls="v-pills-rating" aria-selected="false"><i class="fa fa-star"></i> <span class="mobile-no-text">@lang('Đánh giá')</span></a>
-                <a class="shadow nav-link {{ session('tab') == 'registered' ? 'active' : '' }}" id="v-pills-registered-tab" data-toggle="pill" href="#v-pills-registered" role="tab" aria-controls="v-pills-registered" aria-selected="false"><i class="fa fa-star"></i> <span class="mobile-no-text">@lang('Học viên')</span></a>
+                <a class="shadow nav-link {{ session('tab') == 'registered' ? 'active' : '' }}" id="v-pills-registered-tab" data-toggle="pill" href="#v-pills-registered" role="tab" aria-controls="v-pills-registered" aria-selected="false"><i class="fa fa-users"></i> <span class="mobile-no-text">@lang('Học viên')</span></a>
             </div>
         </div>
         <div class="col-10 pl-0 mb-3">
@@ -56,17 +56,44 @@
 @endif
 @endsection
 @section('jscript')
-<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+<script src="/cdn/vendor/ckeditor5/ckeditor.js"></script>
 <script src="/cdn/vendor/jquery/jquery.mask.js"></script>
 <script src="/cdn/vendor/jquery/speakingurl.min.js"></script>
 <script>
-    CKEDITOR.replace('editorvi');
-    CKEDITOR.replace('editoren');
-    $('.time').mask('00:00');
+    ClassicEditor
+    .create( document.querySelector( '.editor' ), {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+            ]
+        }
+    } )
+    .catch( error => {
+        console.log( error );
+    } );    
 
     function formatSlug(field, id) {
         $("#" + id).val(getSlug(field.value));
     }
+
+    $( function() {
+        $('.time').mask('00:00');
+
+        $( "#age-range" ).slider({
+        range: true,
+        min: 0,
+        max: 60,
+        values: [ $("#age-amount").data('ages_min'), $("#age-amount").data('ages_max') ],
+        slide: function( event, ui ) {
+            $( "#age-amount" ).val( ui.values[ 0 ] + "-" + ui.values[ 1 ] );
+        }
+        });
+        $( "#age-amount" ).val( $( "#age-range" ).slider( "values", 0 ) +
+        "-" + $( "#age-range" ).slider( "values", 1 ) );
+  } );
 
     $('#courseSubmit').click(function() {
         $("#courseEditForm").submit();

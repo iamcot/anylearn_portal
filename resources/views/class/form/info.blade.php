@@ -7,7 +7,7 @@
 
         <div class="card p-3 mb-3 shadow">
             <div class="form-group row">
-                <label for="subtype" class="col-md-3 col-form-label text-md-right ">{{ __('Loại khoá học') }}</label>
+                <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại khoá học') }}</label>
                 <div class="col-md-8">
                     <select class="form-control" name="subtype" required @if(!empty($course) && count($course['schedule'])> 0) disabled @endif>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Khoá học Chính khóa Tại trung tâm')</option>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="card mb-3 shadow">
-            <div class="card-header">Thông tin chính</div>
+            <div class="card-header font-weight-bold">Thông tin chính</div>
             <div class="card-body">
                 <div class="form-group row">
                     <label for="title" class="col-md-3 col-form-label text-md-right ">{{ __('Tiêu đề') }}</label>
@@ -51,7 +51,7 @@
                 <div class="form-group row">
                     <label for="time_start" class="col-md-3 col-form-label text-md-right ">{{ __('Thời gian bắt đầu') }}</label>
                     <div class="col-md-8">
-                        <input id="time_start" type="text" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm" required>
+                        <input id="time_start" type="time" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm" required>
                     </div>
                 </div>
 
@@ -62,8 +62,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="agerange" class="col-md-3 col-form-label text-md-right ">{{ __('Độ tuổi') }}</label>
+                    <label for="age-range" class="col-md-3 col-form-label text-md-right ">{{ __('Độ tuổi') }}</label>
                     <div class="col-md-8">
+                        <input type="text" id="age-amount" readonly style="border:0;"
+                        data-ages_min="{{ !empty($course['info']->ages_min) ? $course['info']->ages_min : 0 }}"
+                        data-ages_max="{{ !empty($course['info']->max) ? $course['info']->ages_max : 30 }}"
+                        >
+                        <div id="age-range" class="mt-2"></div>
                     </div>
                 </div>
 
@@ -85,7 +90,7 @@
         </div>
 
         <div class="card mb-3 shadow">
-            <div class="card-header">Chính sách phí và ưu đãi</div>
+            <div class="card-header  font-weight-bold">Chính sách phí và ưu đãi</div>
             <div class="card-body">
 
                 <div class="form-group row">
@@ -153,7 +158,7 @@
         @endif
 
         <div class="card mb-3 shadow">
-            <div class="card-header">Thông tin giới thiệu</div>
+            <div class="card-header  font-weight-bold">Thông tin giới thiệu</div>
             <div class="card-body">
 
                 <ul class="nav nav-tabs" id="i18ntab" role="tablist">
@@ -182,12 +187,14 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form"></div>
+
+                        <!-- <div class="form-group">
                             <label for="editor{{ $locale }}" class="col-12 col-form-label @error('content') is-invalid @enderror">{{ __('Thông tin chi tiết') }} [{{ $locale }}]</label>
                             <div class="col-md-12">
                                 <textarea class="editor" id="editor{{ $locale }}" name="content[{{ $locale }}]">{!! old('content', !empty($course) ? $course['info']->content[$locale] : '') !!}</textarea>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     @endforeach
                 </div>

@@ -36,6 +36,23 @@ use Illuminate\Support\Str;
 class ItemServices
 {
     const PP = 20;
+    const CONTENT_ADVANTAGE = 'content_advantage';
+    const CONTENT_STANDARD = 'content_standard';
+    const CONTENT_EFFICIENCY = 'content_efficiency';
+    const CONTENT_ACHIVEMENT = 'content_achivement';
+    const CONTENT_RESULT = 'content_result';
+    const CONTENT_PARENTS = 'content_parents';
+    const CONTENT_FEEDBACK = 'content_feedback';
+
+    public static $CONTENT_FIELDS = [
+        self::CONTENT_ADVANTAGE => 'Ưu điểm nổi bật',
+        self::CONTENT_STANDARD => 'Tiêu chuẩn chất lượng',
+        self::CONTENT_EFFICIENCY => 'Hiệu quả đào tạo',
+        self::CONTENT_ACHIVEMENT => 'Thành tựu của nhà trường',
+        self::CONTENT_RESULT => 'Kết quả học sinh',
+        self::CONTENT_PARENTS => 'Phản hồi của PHHS',
+        self::CONTENT_FEEDBACK => 'Chia sẻ của cựu học sinh',
+    ];
 
     public function footerNews()
     {
