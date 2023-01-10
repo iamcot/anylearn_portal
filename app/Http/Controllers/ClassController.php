@@ -126,7 +126,7 @@ class ClassController extends Controller
         }
         if ($request->input('action') == 'update') {
             $input = $request->all();
-            // dd($input);
+             dd($input);
             try {
                 $rs = $courseService->updateItem($request, $input);
             } catch (Exception $e) {
@@ -219,12 +219,12 @@ class ClassController extends Controller
             ) AS cert")
             )
             ->get();
-
+        $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$courseId)->get();
+        // $this->data['lesson'] = DB::table('item_video_lessons')->get();
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
-
         $userService = new UserServices();
         if ($userService->isMod()) {
             return view('class.edit', $this->data);
