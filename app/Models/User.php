@@ -186,7 +186,7 @@ class User extends Authenticatable
             'name' => $input['name'],
             'email' => $input['email'],
             'phone' => $input['phone'],
-            'contact_phone' => $input['contact_phone'],
+            'contact_phone' => isset($input['contact_phone'])?$input['contact_phone']:null,
             'omicall_id' => $input['omicall_id'],
             'omicall_pwd' => $input['omicall_pwd'],
             'refcode' => $input['phone'],
