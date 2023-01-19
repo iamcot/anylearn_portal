@@ -103,6 +103,8 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('/upload/ckimage', 'FileController@ckEditorImage')->name('upload.ckimage');
+    
     Route::get('/location-geo/{address}', 'ConfigController@locationGeo')->name('location-geo');
     Route::get('/location', 'UserController@locationList')->name('location');
     Route::any('/location/create', 'UserController@locationCreate')->name('location.create');
@@ -131,7 +133,6 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/config/homepopup', 'ConfigController@homePopup')->name('config.homepopup');
     Route::any('/config/homeclasses', 'ConfigController@homeClasses')->name('config.homeclasses');
     Route::post('/config/guide/{type}', 'ConfigController@guideUpdate');
-    Route::post('/upload/ckimage', 'FileController@ckEditorImage')->name('upload.ckimage');
 
     Route::any('/config/voucher', 'ConfigController@voucher')->name('config.voucher');
     Route::any('/config/voucher/create', 'ConfigController@voucherEdit')->name('config.voucher.create');

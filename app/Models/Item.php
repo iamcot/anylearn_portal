@@ -11,7 +11,7 @@ class Item extends Model
         'date_start', 'time_start', 'date_end', 'time_end', 'is_hot', 'status', 'seo_title', 'seo_url',
         'seo_desc', 'image', 'location_type', 'location', 'series_id', 'user_status', 'boost_score', 'item_category_id',
         'is_test', 'tags', 'nolimit_time', 'company_commission', 'item_id', 'user_location_id',
-        'sale_id', 'is_paymentfee',
+        'sale_id', 'is_paymentfee', 'ages_min', 'ages_max', 'seats',
     ];
 
     protected $hidden = [
