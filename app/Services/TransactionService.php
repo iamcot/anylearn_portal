@@ -389,8 +389,11 @@ class TransactionService
                 Order::find($order->id)->delete();
             } else {
                 $usingVoucher = VoucherUsed::where('order_id', $order->id)->first();
-                VoucherUsed::find($usingVoucher->id)->delete();
+                if ($usingVoucher) {
+                    VoucherUsed::find($usingVoucher->id)->delete();
+                }
                 $this->recalculateOrderAmount($order->id);
+
                 // if ($usingVoucher) {
                 //     $this->recalculateOrderAmount($order->id);
                 //     $voucher = Voucher::find($usingVoucher->voucher_id);
