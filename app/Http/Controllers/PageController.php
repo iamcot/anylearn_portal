@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use App\Models\I18nContent;
+use App\Models\ItemVideoLesson;
 use App\Services\CategoryServices;
 use App\Services\VideoServices;
 use Exception;
@@ -188,9 +189,10 @@ class PageController extends Controller
         $videoServ = new VideoServices();
 
         if ($request->get('action') == 'learnfree') {
-            $link ="https://www.youtube.com/watch?v=h3f60sK6Agc";
-            $links=$videoServ->getlinkYT($link);
             // dd($request->all());
+            $link = ItemVideoLesson::find($request->idvideo);
+            $links=$videoServ->getlinkYT($link->type_value);
+
             $this->data['link']= $links;
             $this->data['itemId']= $itemId;
             $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$itemId)->get();

@@ -37,9 +37,8 @@
                                     <div class="tab-content">
                                         <table class="fs--1 text-end mb-0 table table-borderless">
                                             <tbody>
-
                                                     @foreach ($videoServ->LessoninChapter($chap->chapter_no) as $les)
-                                                    <form action="" method="get">
+                                                    <form action="" method="post">
                                                         <tr class="btn-reveal-trigger bg-light">
                                                             <td class="align-middle white-space-nowrap text-start">
                                                                 <div
@@ -55,19 +54,15 @@
                                                                             {{ $les->title }}</h6>
                                                                     </div>
                                                                 </div>
+                                                                <input type="hidden" name="id" value="{{ $les->id}}">
                                                                 <button type="submit" name="action" value="learn"
                                                                     class="float-end btn btn-outline-primary btn-sm">Học</button>
-
-                                                                {{-- <button type="button"
-                                                                class="float-end btn btn-outline-primary btn-sm">Học</button> --}}
                                                                 <hr
                                                                     style="height:1px;border:none;color:#333;background-color:#333;">
                                                             </td>
                                                         </tr>
                                                     </form>
                                                     @endforeach
-
-
                                             </tbody>
                                         </table>
                                     </div>
