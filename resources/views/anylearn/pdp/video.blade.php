@@ -13,7 +13,7 @@
             <table class="fs--1 text-end mb-0 table table-borderless">
                 <tbody>
                     @foreach ($videoServ->lessonItem($item->id) as $les)
-                        @if ($chap->id == $les->item_video_chapter_id)
+                        @if ($chap->item_id == $les->item_id)
                             <tr class="btn-reveal-trigger bg-light">
                                 <td class="align-middle white-space-nowrap text-start">
                                     <div class="d-flex align-items-center gap-3">
