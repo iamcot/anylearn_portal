@@ -13,7 +13,7 @@
                 <h6 class="fw-semi-bold text-400">Một khóa học đến từ <a class="link-info"
                         href="/school/{{ $videoServ->getTeacher($itemId)->id }}">{{ $videoServ->getTeacher($itemId)->name }}</a>
                 </h6>
-                <h2 class="fw-bold text-black">{{ $videoServ->getOneLessonItem(11)->title }}</h2>
+                <h2 class="fw-bold text-black">{{ $videoServ->getOneLessonItem($idvideo)->title }}</h2>
                 <p class="text-black fw-semi-bold fs--1">
                     @include('pdp.rat', ['score' => 5])
                 </p>

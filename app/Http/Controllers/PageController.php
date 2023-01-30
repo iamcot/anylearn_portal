@@ -177,7 +177,7 @@ class PageController extends Controller
             // dd($request->all());
             $link = ItemVideoLesson::find($request->idvideo);
             $links=$videoServ->getlinkYT($link->type_value);
-
+            $this->data['idvideo'] = $request->idvideo;
             $this->data['link']= $links;
             $this->data['itemId']= $itemId;
             $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$itemId)->get();
