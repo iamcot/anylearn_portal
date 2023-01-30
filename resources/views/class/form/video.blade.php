@@ -1,87 +1,129 @@
 @inject('lesson', 'App\Services\VideoServices')
 @if (isset($chapter))
-@foreach ($chapter as $chap)
-    <div class="mb-3 card">
-        <h5 class="card-header">
-            <div class="g-0 justify-content-between row">
-                <div class="col-sm-auto">
-                    <h6 class="text-primary fs--1 mb-0">Chương {{ $chap->chapter_no }}</h6>
-                    <h4 class="text-primary fw-bold mb-0">{{ $chap->title }}</h4>
-                </div>
-                <div class="mb-3 mb-md-0 col-md-auto">
-                    <div class="g-3 gy-md-0 h-100 align-items-center row">
-                        <button type="button" onclick="addid({{ $chap->chapter_no }})" class="btn btn-outline-primary"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal2">Thêm
-                            bài mới</button>
+    @foreach ($chapter as $chap)
+        <div class="mb-3 card">
+            <h5 class="card-header">
+                <div class="g-0 justify-content-between row">
+                    <div class="col-sm-auto">
+                        <h6 class="text-black fs--1 mb-0">Chương {{ $chap->chapter_no }}</h6>
+                        <h4 class="text-black fw-bold mb-0">{{ $chap->title }}</h4>
+                    </div>
+                    <div class="mb-3 mb-md-0 col-md-auto">
+                        <div class="g-3 gy-md-0 h-100 align-items-center row">
+                            <button type="button" onclick="addid({{ $chap->chapter_no }})" class="btn btn-success"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal2">Thêm
+                                bài mới</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </h5>
-        <div class="p-0 card-body">
-            <div class="table-responsive scrollbar">
-                <table class="fs--1 text-end mb-0 table table-borderless">
-                    <tbody>
-                        <tr class="btn-reveal-trigger bg-light">
-                            <td class="align-middle white-space-nowrap text-start">
-                                @foreach ($lesson->LessoninChapter($chap->chapter_no) as $les)
-                                    <div class="d-flex align-items-center position-relative gap-3">
-                                        <div>
-                                            <h6 class="text-primary fs--1 mb-0">Bài</h6>
-                                            <h3 class="text-primary fw-bold ml-1 mb-0">{{ $les->lesson_no }}</h3>
-                                        </div>
-                                        <div>
-                                            <h6 class="fs--2 text-primary" style="vertical-align: inherit;">
-                                                {{ $les->title }}</h6>
-                                            <p class="fs--1 text-900 mb-0" style="vertical-align: inherit;">
-                                                {{ $les->description }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr  style="height:1px;border:none;color:#333;background-color:#333;">
-                                @endforeach
-                                @if ($lesson->LessoninChapter($chap->chapter_no) == "[]")
-                                <div class="d-flex align-items-center position-relative gap-3">
-                                    <div>
-                                        <h6 class="fs--2 text-primary" style="vertical-align: inherit;">
-                                            Bạn chưa có bài nào cho chương này</h6>
-                                        <p class="fs--1 text-900 mb-0" style="vertical-align: inherit;">
-                                        </p>
-                                    </div>
-                                </div>
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-@endforeach
+            </h5>
+            <div class="p-0 card-body">
+                <div class="table-responsive scrollbar">
+                    <table class="fs--1 text-end mb-0 table table-borderless">
+                        <tbody>
+                            <tr class="btn-reveal-trigger bg-light">
+                                <td class="align-middle white-space-nowrap text-start">
 
-@if ($chapter == '[]')
-    <div class="mb-3 card">
-        <h5 class="card-header">
-            <div class="g-0 justify-content-between row">
-                <div class="col-sm-auto">
-                    <h4 class="text-primary fw-bold mb-0"> Bạn chưa có bất kì chương học video nào</h4>
+                                    {{-- <div class="d-flex align-items-center position-relative gap-3">
+                                            <div>
+                                                <h6 class="text-black fs--1 mb-0">Bài</h6>
+                                                <h3 class="text-black fw-bold ml-1 mb-0">{{ $les->lesson_no }}</h3>
+                                            </div>
+                                            <div>
+                                                <h6 class="fs--2 text-black" style="vertical-align: inherit;">
+                                                    {{ $les->title }}</h6>
+                                                <p class="fs--1 text-900 mb-0" style="vertical-align: inherit;">
+                                                    {{ $les->description }}
+                                                </p>
+                                            </div>
+                                        </div> --}}
+                                    <div class="mb-3 card">
+                                        <div class="p-0 card-body">
+                                            <div data-simplebar="init">
+                                                <div class="simplebar-wrapper" style="margin: 0px;">
+                                                    <div class="simplebar-height-auto-observer-wrapper">
+                                                        <div class="simplebar-height-auto-observer"></div>
+                                                    </div>
+                                                    <div class="simplebar-mask">
+                                                        <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                                            <div class="simplebar-content-wrapper" tabindex="0"
+                                                                role="region" aria-label="scrollable content"
+                                                                style="height: auto; overflow: scroll hidden;">
+                                                                <div class="simplebar-content" style="padding: 0px;">
+                                                                    <table role="table"
+                                                                        class="fs--1 mb-0 overflow-hidden table table-sm table-striped">
+                                                                        <tbody>
+                                                                            @foreach ($lesson->LessoninChapter($chap->chapter_no) as $les)
+                                                                                <tr class="align-middle white-space-nowrap"
+                                                                                    role="row">
+                                                                                    <td role="cell"><a
+                                                                                            href="#"><strong>Bài
+                                                                                                {{ $les->lesson_no }}</strong></a>
+                                                                                        <strong></strong>
+                                                                                        <p>{{ $les->title }}</p>
+                                                                                        <p class="fs--1 text-900 mb-0"
+                                                                                            style="vertical-align: inherit;">
+                                                                                            {{ $les->description }}
+                                                                                        </p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    @if ($lesson->LessoninChapter($chap->chapter_no) == '[]')
+                                        <div class="d-flex align-items-center position-relative gap-3">
+                                            <div>
+                                                <h6 class="fs--2 text-black" style="vertical-align: inherit;">
+                                                    Bạn chưa có bài nào cho chương này</h6>
+                                                <p class="fs--1 text-900 mb-0" style="vertical-align: inherit;">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </h5>
+        </div>
+    @endforeach
+
+    @if ($chapter == '[]')
+        <div class="mb-3 card">
+            <h5 class="card-header">
+                <div class="g-0 justify-content-between row">
+                    <div class="col-sm-auto">
+                        <h4 class="text-primary fw-bold mb-0"> Bạn chưa có bất kì chương học video nào</h4>
+                    </div>
+                </div>
+            </h5>
+            <div class="text-center py-2 card-footer">
+                <a class="btn btn-link btn-sm" style="vertical-align: inherit; text-decoration:none">
+                    <h6 class="fs-0 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">+Thêm Chương
+                        Mới
+                    </h6>
+                </a>
+            </div>
+        </div>
+    @else
         <div class="text-center py-2 card-footer">
             <a class="btn btn-link btn-sm" style="vertical-align: inherit; text-decoration:none">
                 <h6 class="fs-0 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">+Thêm Chương Mới
                 </h6>
             </a>
         </div>
-    </div>
-@else
-<div class="text-center py-2 card-footer">
-    <a class="btn btn-link btn-sm" style="vertical-align: inherit; text-decoration:none">
-        <h6 class="fs-0 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">+Thêm Chương Mới
-        </h6>
-    </a>
-</div>
-@endif
+    @endif
 @endif
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -111,8 +153,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="mb-1 btn btn-outline-success" name="action"
-                        value="createChapter">Thêm mới</button>
+                    <button type="submit" class="mb-1 btn btn-success" name="action" value="createChapter">Thêm
+                        mới</button>
                 </div>
             </div>
         </form>
@@ -180,7 +222,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" name="action" value="createLesson" class="mb-1 btn btn-outline-success">Thêm
+                <button type="submit" name="action" value="createLesson" class="mb-1 btn btn-success">Thêm
                     mới</button>
             </div>
         </div>

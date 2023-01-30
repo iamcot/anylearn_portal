@@ -96,7 +96,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link text-secondary fw-bold" id="video-tab" data-bs-toggle="tab"
                         data-bs-target="#video" type="button" role="tab" aria-controls="video"
-                        aria-selected="false">@lang('VIDEO')</button>
+                        aria-selected="false">@lang('BÀI HỌC')</button>
                 </li>
                 @endif
                 @if (count($reviews) > 0)

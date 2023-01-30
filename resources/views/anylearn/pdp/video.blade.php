@@ -1,30 +1,38 @@
+@inject('videoServ', 'App\Services\VideoServices')
 <div class="d-flex align-items-center px-card py-2 border-bottom border-200">
-    <div class="hoverbox text-center me-3 my-1">
-        <button type="button" class="bg-attachment btn btn-link">
-            <img src="https://frlive.prium.me/static/media/intro.4ee98cd3.png" alt="" width="60">
-        </button>
+    <table class="fs--1 text-end mb-0 table table-borderless">
+        <tbody>
+            <form action="" method="POST">
+            @foreach ($videoServ->lessonItem($item->id) as $les)
+            {{ csrf_field() }}
+                <tr class="btn-reveal-trigger bg-light">
+                    <td class="align-middle white-space-nowrap text-start">
+                        <div class="d-flex align-items-center position-relative gap-3">
+                            <div>
+                                <h6 class="text-success fs--1 mb-0">Bài</h6>
+                                <h3 class="text-success fw-bold ml-1 mb-0">{{ $les->lesson_no }}</h3>
+                            </div>
+                            <div>
+                                <h6 class="fs--2 text-black" style="vertical-align: inherit;">
+                                    {{ $les->title }}</h6>
+                                <p class="fs--1 text-900 mb-0" style="vertical-align: inherit;">
+                                    {{ $les->description }}
+                                </p>
+                            </div>
+                        </div>
+                        @if ($les->is_free ==1)
+                            <input type="hidden" name="id" value="{{ $les->id}}">
+                            <button type="submit" name="action" value="learnfree" class="float-end btn btn-outline-primary btn-sm">Học miễn phí</button>
+                        @else
+                        <a href="/learn"><button type="button" name="action" value="learnfree" class="float-end btn btn-outline-primary btn-sm">Đăng kí để học</button></a>
+                        {{-- <button type="button" class="float-end btn btn-outline-primary btn-sm"><i class="fas fa-fw fa-lock"></i></button> --}}
+                        @endif
+                        <hr style="height:1px;border:none;color:#333;background-color:#333;">
+                    </td>
+                </tr>
+            @endforeach
+        </form>
 
-    </div>
-    <div class="flex-1">
-        <button type="button" class="fs-0 p-0 fw-medium btn btn-link">Intro</button>
-        <p class="fs--1 mb-0"> Introduction and Course Objectives Introduction and Course ObjectivesIntroduction and
-            Course ObjectivesIntroduction and Course ObjectivesIntroduction and Course ObjectivesIntroduction and Course
-            Objectives</p>
-    </div>
-
-        <a href="" class="btn btn-link btn-sm text-end float-right" style="vertical-align: inherit; text-decoration:none">
-            <h6 class="fs-0 text-primary">Học</h6>
-        </a>
-    {{-- <button type="button" class="btn btn-sm text-end float-right"><i class="fas fa-lock"></i></button> --}}
+        </tbody>
+    </table>
 </div>
-{{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg ">
-        <div class="modal-content">
-
-            <iframe width="100%" height="500" src="https://www.youtube.com/embed/tgbNymZ7vqY" frameborder="0"
-                allow="autoplay; encrypted-media" allowfullscreen>
-            </iframe>
-
-        </div>
-    </div>
-</div> --}}

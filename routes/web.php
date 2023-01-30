@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -48,8 +49,9 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+// Route::post('/learn','PageController@learn')->name('learn');
 Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
-
+Route::any('/learn','PageController@learn')->name('page.learn');
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
