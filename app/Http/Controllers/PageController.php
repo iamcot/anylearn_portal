@@ -219,6 +219,7 @@ class PageController extends Controller
             if ($user) {
                 $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
+            $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$itemId)->get();
             $this->data['children'] = $children;
             return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
         } catch (Exception $e) {

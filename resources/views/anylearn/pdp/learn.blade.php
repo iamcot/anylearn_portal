@@ -1,4 +1,5 @@
 @inject('videoServ', 'App\Services\VideoServices')
+@inject('itemServ', 'App\Services\ItemServices')
 @extends('anylearn.layout')
 
 @section('body')
@@ -18,7 +19,59 @@
                 </p>
             </div>
         </div>
-        {{-- Đã mua hiển thị --}}
+        @if ($videoServ->checkOrder($itemId) == 0)
+        <div class="col-lg-5">
+            <div class="mb-3 card">
+                <div class="bg-light d-none d-lg-block mb-0 card-header">
+                    <h5 class="mb-0">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Đăng kí khóa học ngay</font>
+                        </font>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="order-md-1 order-lg-0 col-lg-12 col-md-7">
+                            <h2 class="fw-medium d-flex align-items-center">
+                                <font style="vertical-align: inherit;"></font>
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">{{ $videoServ->getOneItem($itemId)->price}}</font>
+                                    <font style="vertical-align: inherit;">VND</font>
+                                </font> <del class="ms-2 fs--1 text-500">
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;">VND </font>
+                                    </font>
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;">{{ $videoServ->getOneItem($itemId)->org_price}}</font>
+                                    </font>
+                                </del>
+                            </h2>
+                            <div class="flex-fill pt-2"><a @if (auth()->check()) id="add2cart-action" @endif
+                                class="border-0 btn btn-success form-control rounded-pill"
+                                href="{{ $itemServ->classUrl($itemId) }}">@lang('Đăng ký học')</a>
+                        </div>
+
+                        </div>
+                        <div class="col-lg-12 col-md-5">
+                            <hr class="border-top border-dashed d-md-none d-lg-block">
+                            <h6 class="fw-bold">
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">Nội dung khóa học</font>
+                                </font>
+                            </h6>
+                            <p>{{ $videoServ->getOneItem($itemId)->short_content}}</p>
+                        </div>
+                    </div>
+                    <hr class="border-top border-dashed">
+                    {{-- <h6 class="fw-bold text-end">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;"><a href="#"> Chia sẻ với bạn bè <i class="fas fa-share"></i></a></font>
+                        </font>
+                    </h6> --}}
+                </div>
+            </div>
+        </div>
+        @else
         <div class="mb-lg-4 col-lg-5">
             <div class="accordion" id="accordionExample">
                 @foreach ($chapter as $chap)
@@ -74,91 +127,7 @@
                 @endforeach
             </div>
         </div>
-        {{-- Chưa mua hiển thị --}}
-        {{-- <div class="col-lg-5">
-            <div class="mb-3 card">
-                <div class="bg-light d-none d-lg-block mb-0 card-header">
-                    <h5 class="mb-0">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">Đăng kí khóa học ngay</font>
-                        </font>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="order-md-1 order-lg-0 col-lg-12 col-md-7">
-                            <h2 class="fw-medium d-flex align-items-center">
-                                <font style="vertical-align: inherit;"></font>
-                                <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">69,99 </font>
-                                    <font style="vertical-align: inherit;">VND</font>
-                                </font> <del class="ms-2 fs--1 text-500">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">$ </font>
-                                    </font>
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">139,99</font>
-                                    </font>
-                                </del>
-                            </h2>
-                            <button type="button" class="w-100 fs-0 mt-1 btn btn-primary btn-lg">
-                                <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">Mua khóa học này</font>
-                                </font>
-                            </button>
-
-                        </div>
-                        <div class="col-lg-12 col-md-5">
-                            <hr class="border-top border-dashed d-md-none d-lg-block">
-                            <h6 class="fw-bold">
-                                <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">Những nội dung khóa học</font>
-                                </font>
-                            </h6>
-                            <ul class="list-unstyled fs--1 mb-0">
-                                <li class="mb-1">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">Tổng cộng 13 giờ video bài giảng</font>
-                                    </font>
-                                </li>
-                                <li class="mb-1">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">12 quyền truy cập bài viết cao cấp</font>
-                                    </font>
-                                </li>
-                                <li class="mb-1">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">11 tài nguyên có thể tải xuống</font>
-                                    </font>
-                                </li>
-                                <li class="mb-1">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">Nội dung thân thiện với thiết bị di động,
-                                            tab hoặc TV</font>
-                                    </font>
-                                </li>
-                                <li class="mb-1">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">Giấy chứng nhận sau khi hoàn thành</font>
-                                    </font>
-                                </li>
-                                <li class="mb-1">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">Quyền truy cập trọn đời</font>
-                                    </font>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <hr class="border-top border-dashed">
-                    <h6 class="fw-bold text-end">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;"><a href="#"> Chia sẻ với bạn bè <i class="fas fa-share"></i></a></font>
-                        </font>
-                    </h6>
-                </div>
-            </div>
-        </div> --}}
+        @endif
     </div>
     <div class="mb-3 card">
         <div class="card-header">
@@ -175,10 +144,10 @@
         </div>
         <div class="bg-light card-body">
             <div class="g-4 text-center text-md-start row">
-                <div class="col-md-auto">
+                {{-- <div class="col-md-auto">
                     <div class="avatar avatar-4xl "><img class="rounded-circle "
                             src="{{ $videoServ->getTeacher($itemId)->image }}" alt=""></div>
-                </div>
+                </div> --}}
                 <div class="col">
                     <h5 class="mb-2"><a href="/school/{{ $videoServ->getTeacher($itemId)->id }}">
                             <font style="vertical-align: inherit;">
@@ -206,21 +175,4 @@
                 </font>
             </a></div>
     </div>
-    {{-- <div class="mb-3 card">
-        <div class="card-header">
-            <h6 class="mb-0">
-                <font style="vertical-align: inherit;">
-                    <font style="vertical-align: inherit;">Các khóa học tương tự</font>
-                </font>
-            </h6>
-        </div>
-        <div class="bg-light py-0 card-body">
-            <div class="slick-slider full-height-slider slick-slider-arrow-inner slick-initialized" dir="ltr">
-
-            </div>
-        </div>
-        <div class="text-end py-2 card-footer"><a role="button" tabindex="0" href="/e-learning/course/course-grid"
-                class="fw-medium btn btn-link btn-sm">
-            </a></div>
-    </div> --}}
 @endsection

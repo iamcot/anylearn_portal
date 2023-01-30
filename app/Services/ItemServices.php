@@ -410,6 +410,7 @@ class ItemServices
         $data['info'] = $item;
         $data['resource'] = $this->itemResources($courseId);
         $data['schedule'] = Schedule::where('item_id', $courseId)->get();
+        // dd($data);
         return $data;
     }
 

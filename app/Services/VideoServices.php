@@ -6,6 +6,7 @@ use App\Constants\UserConstants;
 use App\Models\Item;
 use App\Models\ItemVideoChapter;
 use App\Models\ItemVideoLesson;
+use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,6 @@ class VideoServices{
     public function LessoninChapter($id)
     {
         $les = DB::table('item_video_lessons')->where('item_video_chapter_id',$id)->get();
-        // dd($les);
         return $les;
     }
     public function lessonItem($id)
@@ -61,5 +61,18 @@ class VideoServices{
         $item = Item::Where('id',$itemid)->first();
         $teacher = User::find($item->user_id);
         return $teacher;
+    }
+    public function checkOrder($itemid)
+    {
+        # code...
+        $check = DB::table('order_details')->where('item_id',$itemid)->where('user_id',auth()->user()->id)->count();
+        return $check;
+    }
+
+    public function getOneItem($itemid)
+    {
+        $item = Item::find($itemid);
+        // dd($item);
+        return $item;
     }
 }
