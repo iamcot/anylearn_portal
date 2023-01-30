@@ -40,6 +40,7 @@
                                                                         class="fs--1 mb-0 overflow-hidden table table-sm table-striped">
                                                                         <tbody>
                                                                             @foreach ($lesson->LessoninChapter($chap->chapter_no) as $les)
+                                                                            @if ($chap->id == $les->item_video_chapter_id)
                                                                                 <tr class="align-middle white-space-nowrap"
                                                                                     role="row">
                                                                                     <td role="cell"><a><strong>Bài
@@ -52,6 +53,7 @@
                                                                                         </p>
                                                                                     </td>
                                                                                 </tr>
+                                                                                @endif
                                                                             @endforeach
                                                                         </tbody>
                                                                     </table>
