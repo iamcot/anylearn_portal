@@ -5,12 +5,12 @@
             <h5 class="card-header">
                 <div class="g-0 justify-content-between row">
                     <div class="col-sm-auto">
-                        <h6 class="text-black fs--1 mb-0">Chương {{ $chap->chapter_no }}</h6>
-                        <h4 class="text-black fw-bold mb-0">{{ $chap->title }}</h4>
+                        <h6 class="text-success fs--1 mb-0">Chương {{ $chap->chapter_no }}</h6>
+                        <h5 class="text-success fw-bold mb-0">{{ $chap->title }}</h5>
                     </div>
                     <div class="mb-3 mb-md-0 col-md-auto">
                         <div class="g-3 gy-md-0 h-100 align-items-center row">
-                            <button type="button" onclick="addid({{ $chap->chapter_no }})" class="btn btn-success"
+                            <button type="button" onclick="addid({{ $chap->chapter_no }})" class="btn btn-success btn-sm"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal2">Thêm
                                 bài mới</button>
                         </div>
@@ -23,20 +23,6 @@
                         <tbody>
                             <tr class="btn-reveal-trigger bg-light">
                                 <td class="align-middle white-space-nowrap text-start">
-
-                                    {{-- <div class="d-flex align-items-center position-relative gap-3">
-                                            <div>
-                                                <h6 class="text-black fs--1 mb-0">Bài</h6>
-                                                <h3 class="text-black fw-bold ml-1 mb-0">{{ $les->lesson_no }}</h3>
-                                            </div>
-                                            <div>
-                                                <h6 class="fs--2 text-black" style="vertical-align: inherit;">
-                                                    {{ $les->title }}</h6>
-                                                <p class="fs--1 text-900 mb-0" style="vertical-align: inherit;">
-                                                    {{ $les->description }}
-                                                </p>
-                                            </div>
-                                        </div> --}}
                                     <div class="mb-3 card">
                                         <div class="p-0 card-body">
                                             <div data-simplebar="init">
@@ -48,7 +34,7 @@
                                                         <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
                                                             <div class="simplebar-content-wrapper" tabindex="0"
                                                                 role="region" aria-label="scrollable content"
-                                                                style="height: auto; overflow: scroll hidden;">
+                                                                style="height: auto;">
                                                                 <div class="simplebar-content" style="padding: 0px;">
                                                                     <table role="table"
                                                                         class="fs--1 mb-0 overflow-hidden table table-sm table-striped">
@@ -56,11 +42,10 @@
                                                                             @foreach ($lesson->LessoninChapter($chap->chapter_no) as $les)
                                                                                 <tr class="align-middle white-space-nowrap"
                                                                                     role="row">
-                                                                                    <td role="cell"><a
-                                                                                            href="#"><strong>Bài
-                                                                                                {{ $les->lesson_no }}</strong></a>
-                                                                                        <strong></strong>
-                                                                                        <p>{{ $les->title }}</p>
+                                                                                    <td role="cell"><a><strong>Bài
+                                                                                                {{ $les->lesson_no }}:</strong></a>
+                                                                                        <strong>{{ $les->title }}</strong>
+
                                                                                         <p class="fs--1 text-900 mb-0"
                                                                                             style="vertical-align: inherit;">
                                                                                             {{ $les->description }}
@@ -100,7 +85,7 @@
     @endforeach
 
     @if ($chapter == '[]')
-        <div class="mb-3 card">
+        <div class="mb-1 card">
             <h5 class="card-header">
                 <div class="g-0 justify-content-between row">
                     <div class="col-sm-auto">
@@ -179,9 +164,9 @@
                             <select aria-label="Default select example" class="form-select" name="typelesson"
                                 id="select" onchange="getval(this)">
                                 <option><label for="floatingInput">Loại bài học</label></option>
-                                <option value="file">File</option>
+                                {{-- <option value="file">File</option> --}}
                                 <option value="youtube">Youtube</option>
-                                <option value="stream">Stream Video</option>
+                                {{-- <option value="stream">Stream Video</option> --}}
                             </select>
                         </div>
                     </div>

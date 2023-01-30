@@ -125,21 +125,6 @@ class PageController extends Controller
         // dd($this->data['banners']);
         return view(env('TEMPLATE', '') . 'home', $this->data);
     }
-    public function learn(Request $request,$itemId)
-    {
-        $itemService = new ItemServices();
-        $videoServ = new VideoServices();
-
-        if ($request->get('action') == 'learn') {
-            $link ="https://www.youtube.com/watch?v=h3f60sK6Agc";
-            $links=$videoServ->getlinkYT($link);
-            $this->data['link']= $links;
-            $this->data['itemId']= $itemId;
-            $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$itemId)->get();
-            return view(env('TEMPLATE', '') . 'pdp.learn',$this->data);
-            // dd($links);
-        }
-    }
     public function ref(Request $request, $code = "")
     {
         if (empty($code)) {

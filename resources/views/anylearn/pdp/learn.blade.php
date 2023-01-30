@@ -33,32 +33,33 @@
                         <div id="collapse{{ $chap->chapter_no }}" class="accordion-collapse collapse "
                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <div class="card-body">
+
                                     <div class="tab-content">
-                                        <table class="fs--1 text-end mb-0 table table-borderless">
+                                        <table class="fs--1 text-end table table-borderless">
                                             <tbody>
                                                     @foreach ($videoServ->LessoninChapter($chap->chapter_no) as $les)
-                                                    <form action="" method="post">
+                                                    <form action="" method="get">
                                                         <tr class="btn-reveal-trigger bg-light">
                                                             <td class="align-middle white-space-nowrap text-start">
                                                                 <div
-                                                                    class="d-flex align-items-center position-relative gap-3">
+                                                                    class="d-flex">
                                                                     <div>
                                                                         <h6 class="text-success fs--1">Bài
-                                                                            {{ $les->lesson_no }}
+                                                                            {{ $les->lesson_no }} &nbsp;
                                                                         </h6>
                                                                     </div>
                                                                     <div>
-                                                                        <h6 class="fs--2 text-black"
+                                                                       <h6 class="fs--2 text-black"
                                                                             style="vertical-align: inherit;">
                                                                             {{ $les->title }}</h6>
                                                                     </div>
                                                                 </div>
-                                                                <input type="hidden" name="id" value="{{ $les->id}}">
-                                                                <button type="submit" name="action" value="learn"
+                                                                <input type="hidden" name="idvideo" value="{{ $les->id }}">
+                                                                <button type="submit" name="action" value="learnfree"
                                                                     class="float-end btn btn-outline-primary btn-sm">Học</button>
                                                                 <hr
                                                                     style="height:1px;border:none;color:#333;background-color:#333;">
+
                                                             </td>
                                                         </tr>
                                                     </form>
@@ -66,7 +67,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
