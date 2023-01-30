@@ -40,18 +40,35 @@ class ItemServices
     const CONTENT_STANDARD = 'content_standard';
     const CONTENT_EFFICIENCY = 'content_efficiency';
     const CONTENT_ACHIVEMENT = 'content_achivement';
+    const CONTENT_CSVC = 'content_csvc';
     const CONTENT_RESULT = 'content_result';
     const CONTENT_PARENTS = 'content_parents';
     const CONTENT_FEEDBACK = 'content_feedback';
+    const CONTENT_OLD = 'content_old';
 
     public static $CONTENT_FIELDS = [
         self::CONTENT_ADVANTAGE => 'Ưu điểm nổi bật',
         self::CONTENT_STANDARD => 'Tiêu chuẩn chất lượng',
         self::CONTENT_EFFICIENCY => 'Hiệu quả đào tạo',
         self::CONTENT_ACHIVEMENT => 'Thành tựu của nhà trường',
+        self::CONTENT_CSVC => 'Cơ sở vật chất',
         self::CONTENT_RESULT => 'Kết quả học sinh',
         self::CONTENT_PARENTS => 'Phản hồi của PHHS',
         self::CONTENT_FEEDBACK => 'Chia sẻ của cựu học sinh',
+        self::CONTENT_OLD => 'Nội dung của định dạng cũ',
+    ];
+    public static $CONTENT_FIELDS_I18N = [
+        'en' => [
+            self::CONTENT_ADVANTAGE => 'Advantages',
+            self::CONTENT_STANDARD => 'Standards',
+            self::CONTENT_EFFICIENCY => 'Efficency',
+            self::CONTENT_ACHIVEMENT => 'Achivements',
+            self::CONTENT_CSVC => 'School Pictures',
+            self::CONTENT_RESULT => 'Results',
+            self::CONTENT_PARENTS => 'Parents comments',
+            self::CONTENT_FEEDBACK => 'Feedbacks',
+            self::CONTENT_OLD => 'Nội dung của định dạng cũ',
+        ]
     ];
 
     public function footerNews()
@@ -74,9 +91,15 @@ class ItemServices
             $supportCols = array_keys(I18nContent::$itemCols);
             foreach ($item18nData as $col => $content) {
                 if (in_array($col, $supportCols) && $content != "") {
-                    $item->$col = $content;
+                    if ($col == 'content') {
+                        $item->$col = $this->buildContentToPDP($content, $locale);
+                    } else {
+                        $item->$col = $content;
+                    }
                 }
             }
+        } else {
+            $item->content = $this->buildContentToPDP($item->content);
         }
 
         $configM = new Configuration();
@@ -309,6 +332,49 @@ class ItemServices
         return $files;
     }
 
+    public function buildContentToSave($content)
+    {
+        if (is_array($content)) {
+            return json_encode($content);
+        }
+        return $content;
+    }
+
+    public function buildContentToEdit($content)
+    {
+        try {
+            $contentObj = json_decode($content, true);
+            if (is_array($contentObj)) {
+                return $contentObj;
+            }
+        } catch (\Exception $ex) {
+        }
+        $data = self::$CONTENT_FIELDS;
+        $data = array_map(function () {
+        }, $data);
+        $data[self::CONTENT_OLD] = $content;
+
+        return $data;
+    }
+
+    public function buildContentToPDP($content, $locale = I18nContent::DEFAULT)
+    {
+        try {
+            $contentObj = json_decode($content, true);
+            if (is_array($contentObj)) {
+                $buildContent = "";
+                foreach (self::$CONTENT_FIELDS as $type => $name) {
+                    if (!empty($contentObj[$type])) {
+                        $buildContent .= "<h4 class=\"pdp-content-header\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" . $contentObj[$type];
+                    }
+                }
+                return $buildContent;
+            }
+        } catch (\Exception $ex) {
+        }
+        return $content;
+    }
+
     public function itemInfo($courseId)
     {
         $item = Item::find($courseId)->makeVisible(['content']);
@@ -319,6 +385,9 @@ class ItemServices
         foreach (I18nContent::$supports as $locale) {
             if ($locale == I18nContent::DEFAULT) {
                 foreach (I18nContent::$itemCols as $col => $type) {
+                    if ($col == 'content') {
+                        $item->$col = $this->buildContentToEdit($item->$col);
+                    }
                     $item->$col =  [I18nContent::DEFAULT => $item->$col];
                 }
             } else {
@@ -329,6 +398,9 @@ class ItemServices
                     if (empty($item18nData[$col])) {
                         $item->$col = $item->$col + [$locale => ""];
                     } else {
+                        if ($col == 'content') {
+                            $item18nData[$col] = $this->buildContentToEdit($item18nData[$col]);
+                        }
                         $item->$col = $item->$col + [$locale => $item18nData[$col]];
                     }
                 }
@@ -367,14 +439,14 @@ class ItemServices
             return $validator;
         }
 
-        if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
-            $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
-            if ($newSeriesId === false) {
-                $validator->errors()->add('series', __('Tạo chuỗi khóa học mới không thành công'));
-                return $validator;
-            }
-            $input['series_id'] = $newSeriesId;
-        }
+        // if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
+        //     $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
+        //     if ($newSeriesId === false) {
+        //         $validator->errors()->add('series', __('Tạo chuỗi khóa học mới không thành công'));
+        //         return $validator;
+        //     }
+        //     $input['series_id'] = $newSeriesId;
+        // }
 
         $input['type'] = $itemType;
         $input['user_id'] = in_array($user->role, UserConstants::$modRoles) ? ItemConstants::COURSE_SYSTEM_USERID : $user->id;
@@ -393,6 +465,15 @@ class ItemServices
             $input['is_paymentfee'] = 0;
         }
 
+        if (!empty($input['ages_range'])) {
+            $agesRange = explode("-", $input['ages_range']);
+            if (count($agesRange) == 2) {
+                $input['ages_min'] = $agesRange[0];
+                $input['ages_max'] = $agesRange[1];
+            }
+        }
+
+        $input['content'] = $this->buildContentToSave($input['content']);
         $newCourse = Item::create($input);
         if ($newCourse) {
             $i18nModel = new I18nContent();
@@ -404,6 +485,9 @@ class ItemServices
                 $i18nModel->i18nSave($locale, 'items', $newCourse->id, 'title', $newCourse['title']);
                 foreach (I18nContent::$itemCols as $col => $type) {
                     if (isset($orgInputs[$col][$locale])) {
+                        if ($col == 'content') {
+                            $orgInputs[$col][$locale] = $this->buildContentToSave($orgInputs[$col][$locale]);
+                        }
                         $i18nModel->i18nSave($locale, 'items', $newCourse->id, $col, $orgInputs[$col][$locale]);
                     }
                 }
@@ -433,15 +517,14 @@ class ItemServices
             return false;
         }
         $orgInputs = $input;
-
         foreach (I18nContent::$itemCols as $col => $type) {
             $input[$col] = isset($input[$col][I18nContent::DEFAULT]) ? $input[$col][I18nContent::DEFAULT] : "";
         }
 
-        $validator = $this->validate($input);
-        if ($validator->fails()) {
-            return $validator;
-        }
+        // $validator = $this->validate($input);
+        // if ($validator->fails()) {
+        //     return $validator;
+        // }
         if (!empty($input['company'])) {
             $companyCommission = $input['company'];
             $input['company_commission'] = json_encode($companyCommission);
@@ -449,14 +532,14 @@ class ItemServices
 
         $canAddResource = $this->addItemResource($request, $input['id']);
 
-        if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
-            $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
-            if ($newSeriesId === false) {
-                $validator->errors()->add('series', __('Tạo chuỗi khóa học mới không thành công'));
-                return $validator;
-            }
-            $input['series_id'] = $newSeriesId;
-        }
+        // if (isset($input['series_id']) && $input['series_id'] == ItemConstants::NEW_COURSE_SERIES && !empty($input['series'])) {
+        //     $newSeriesId = $this->createCourseSeries($user->id, $input['series']);
+        //     if ($newSeriesId === false) {
+        //         $validator->errors()->add('series', __('Tạo chuỗi khóa học mới không thành công'));
+        //         return $validator;
+        //     }
+        //     $input['series_id'] = $newSeriesId;
+        // }
         $courseImage = $this->changeItemImage($request, $input['id']);
         if ($courseImage) {
             $input['image'] = $courseImage;
@@ -474,10 +557,19 @@ class ItemServices
             $input['is_paymentfee'] = 0;
         }
 
+        if (!empty($input['ages_range'])) {
+            $agesRange = explode("-", $input['ages_range']);
+            if (count($agesRange) == 2) {
+                $input['ages_min'] = $agesRange[0];
+                $input['ages_max'] = $agesRange[1];
+            }
+        }
+
         // if (!empty($input['subtype'])) {}
 
         $this->updateClassTeachers($request, $input['id']);
 
+        $input['content'] = $this->buildContentToSave($input['content']);
         $canUpdate = $itemUpdate->update($input);
 
         if ($canUpdate) {
@@ -488,6 +580,9 @@ class ItemServices
                 }
                 foreach (I18nContent::$itemCols as $col => $type) {
                     if (isset($orgInputs[$col][$locale])) {
+                        if ($col == 'content') {
+                            $orgInputs[$col][$locale] = $this->buildContentToSave($orgInputs[$col][$locale]);
+                        }
                         $i18nModel->i18nSave($locale, 'items', $itemUpdate->id, $col, $orgInputs[$col][$locale]);
                     }
                 }

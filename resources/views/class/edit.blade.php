@@ -6,7 +6,7 @@
 @if(!$userServ->isSale() || @auth()->user()->role == App\Constants\UserConstants::ROLE_SALE_CONTENT)
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
     @csrf
-@endif
+    @endif
     <input type="hidden" name="id" value="{{ !empty($courseId) ? $courseId : 0 }}">
     <input type="hidden" name="action" value="{{ empty($courseId) ? 'create' : 'update' }}">
     <div class="row nav-pills-custom">
@@ -51,7 +51,7 @@
             </div>
         </div>
     </div>
-@if(!$userServ->isSale())
+    @if(!$userServ->isSale())
 </form>
 @endif
 @endsection
@@ -60,40 +60,42 @@
 <script src="/cdn/vendor/jquery/jquery.mask.js"></script>
 <script src="/cdn/vendor/jquery/speakingurl.min.js"></script>
 <script>
-    ClassicEditor
-    .create( document.querySelector( '.editor' ), {
-        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-            ]
+    var allEditors = document.querySelectorAll('.editor');
+    var editorConfig = {
+        simpleUpload: {
+            uploadUrl: '/upload/ckimage',
+            withCredentials: true,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            }
         }
-    } )
-    .catch( error => {
-        console.log( error );
-    } );    
+    };
+    for (var i = 0; i < allEditors.length; ++i) {
+        ClassicEditor.create(allEditors[i], editorConfig)
+        .catch(error => {
+            console.log(error);
+        });
+    }
 
     function formatSlug(field, id) {
         $("#" + id).val(getSlug(field.value));
     }
 
-    $( function() {
+    $(function() {
         $('.time').mask('00:00');
 
-        $( "#age-range" ).slider({
-        range: true,
-        min: 0,
-        max: 60,
-        values: [ $("#age-amount").data('ages_min'), $("#age-amount").data('ages_max') ],
-        slide: function( event, ui ) {
-            $( "#age-amount" ).val( ui.values[ 0 ] + "-" + ui.values[ 1 ] );
-        }
+        $("#age-range").slider({
+            range: true,
+            min: 0,
+            max: 60,
+            values: [$("#age-amount").data('ages_min'), $("#age-amount").data('ages_max')],
+            slide: function(event, ui) {
+                $("#age-amount").val(ui.values[0] + "-" + ui.values[1]);
+            }
         });
-        $( "#age-amount" ).val( $( "#age-range" ).slider( "values", 0 ) +
-        "-" + $( "#age-range" ).slider( "values", 1 ) );
-  } );
+        $("#age-amount").val($("#age-range").slider("values", 0) +
+            "-" + $("#age-range").slider("values", 1));
+    });
 
     $('#courseSubmit').click(function() {
         $("#courseEditForm").submit();

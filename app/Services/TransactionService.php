@@ -67,6 +67,7 @@ class TransactionService
 
         $trans->update([
             'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
         // update c wallet
         User::find($trans->user_id)->update([
@@ -389,10 +390,15 @@ class TransactionService
             } else {
                 $usingVoucher = VoucherUsed::where('order_id', $order->id)->first();
                 if ($usingVoucher) {
-                    $this->recalculateOrderAmount($order->id);
-                    $voucher = Voucher::find($usingVoucher->voucher_id);
-                    $this->recalculateOrderAmountWithVoucher($order->id, $voucher->value);
+                    VoucherUsed::find($usingVoucher->id)->delete();
                 }
+                $this->recalculateOrderAmount($order->id);
+
+                // if ($usingVoucher) {
+                //     $this->recalculateOrderAmount($order->id);
+                //     $voucher = Voucher::find($usingVoucher->voucher_id);
+                //     $this->recalculateOrderAmountWithVoucher($order->id, $voucher->value);
+                // }
             }
         });
         return true;
@@ -577,17 +583,20 @@ class TransactionService
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
-            'status' => OrderConstants::STATUS_DELIVERED
+            'status' => OrderConstants::STATUS_DELIVERED,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
         Order::find($openOrder->id)->update([
             'status' => OrderConstants::STATUS_DELIVERED,
-            'payment' => $payment
+            'payment' => $payment,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
 
         Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
             ->where('order_id', $openOrder->id)
             ->update([
                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
         $voucherEvent = new VoucherEventLog();
@@ -627,11 +636,13 @@ class TransactionService
             return false;
         }
         OrderDetail::where('order_id', $openOrder->id)->update([
-            'status' => OrderConstants::STATUS_PAY_PENDING
+            'status' => OrderConstants::STATUS_PAY_PENDING,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
         Order::find($openOrder->id)->update([
             'status' => OrderConstants::STATUS_PAY_PENDING,
             'payment' => OrderConstants::PAYMENT_ATM,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
         Log::debug("Update order to pending", ["orderId" => $openOrder->id]);
         $notifServ = new Notification();

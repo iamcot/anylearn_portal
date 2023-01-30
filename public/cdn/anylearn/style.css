@@ -1111,6 +1111,11 @@ footer .head_text {
     display: none !important;
 }
 
+.pdp-content-header {
+    /* text-decoration: underline; */
+    color: #0092ee !important;
+}
+
 
 /* #landing-number div {
     opacity: 1;

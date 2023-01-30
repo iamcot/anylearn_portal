@@ -126,7 +126,7 @@ class ClassController extends Controller
         }
         if ($request->input('action') == 'update') {
             $input = $request->all();
-             dd($input);
+            // dd($input);
             try {
                 $rs = $courseService->updateItem($request, $input);
             } catch (Exception $e) {

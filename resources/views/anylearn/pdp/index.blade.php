@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-lg-8 col-md-6 text-secondary">
                         @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
-                        <h2 class="text-dark fw-bold">{{ $item->title }}</h2>
+                        <h2 class="text-dark fw-bold">[{{ $item->subtype }}] {{ $item->title }}</h2>
                         <p class=""><i
                                 class=" text-success fa fa-{{ $author->role == 'teacher' ? 'user' : 'university' }}"></i> <a
                                 href="{{ route('classes', [
@@ -38,10 +38,12 @@
                         <div>
                             @include('anylearn.widget.rating', ['score' => $item->rating ?? 0])
                         </div>
+                        @if($item->ages_min > 0 && $item->ages_max > 0) <p>@lang('Độ tuổi'): {{ $item->ages_min . '-' . $item->ages_max }}</p>@endif
+                        @if($item->seats > 0) <p>@lang('Số lượng'): {{ $item->seats }}</p> @endif
                         <p><i class="text-success fa fa-calendar"></i> @lang('Khai giảng:')
                             {{ date('d/m/Y', strtotime($item->date_start)) }}
                             {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}</p>
-                        <p>{{ $item->short_content }}</p>
+                        <p>{!! $item->short_content !!}</p>
                     </div>
                     <div class="row mt-3">
                         <div class="col-lg-6 col-md-6">

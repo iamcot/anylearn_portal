@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class OrderDetail extends Model
 {
     protected $fillable = [
-        'user_id', 'item_id', 'unit_price', 'paid_price', 'quanity', 'status', 'order_id'
+        'user_id', 'item_id', 'unit_price', 'paid_price', 'quanity', 'status', 'order_id', 'created_at'
     ];
 
     public function item()
