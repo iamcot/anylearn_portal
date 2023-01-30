@@ -11,7 +11,7 @@
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen></iframe>
                 <h6 class="fw-semi-bold text-400">Một khóa học đến từ <a class="link-info"
-                        href="/school/{{ $videoServ->getTeacher($itemId)->id }}">{{ $videoServ->getTeacher($itemId)->name }}</a>
+                        href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}">{{ $videoServ->getTeacher($itemId)->name }}</a>
                 </h6>
                 <h2 class="fw-bold text-black">{{ $videoServ->getOneLessonItem($idvideo)->title }}</h2>
                 <p class="text-black fw-semi-bold fs--1">
@@ -149,7 +149,7 @@
                             src="{{ $videoServ->getTeacher($itemId)->image }}" alt=""></div>
                 </div> --}}
                 <div class="col">
-                    <h5 class="mb-2"><a href="/school/{{ $videoServ->getTeacher($itemId)->id }}">
+                    <h5 class="mb-2"><a href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}">
                             <font style="vertical-align: inherit;">
                                 <font style="vertical-align: inherit;">{{ $videoServ->getTeacher($itemId)->name }}</font>
                             </font>
@@ -167,10 +167,10 @@
                 </div>
             </div>
         </div>
-        <div class="text-end py-2 card-footer"><a role="button" tabindex="0" href="/school/{{ $videoServ->getTeacher($itemId)->id }}"
+        <div class="text-end py-2 card-footer"><a role="button" tabindex="0" href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}"
                 class="fw-medium btn btn-link btn-sm">
                 <font style="vertical-align: inherit;">
-                    <a href="/school/{{ $videoServ->getTeacher($itemId)->id }}" class="link-info">Xem tất cả các khóa
+                    <a href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}" class="link-info">Xem tất cả các khóa
                         học</a>
                 </font>
             </a></div>
