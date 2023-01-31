@@ -148,7 +148,7 @@
                     <!-- <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div> -->
                 @endif
                 @if (1==1)
-                    <div class="tab-pane fade ps-4 pe-4" id="video" role="tabpanel" aria-labelledby="video-tab">
+                    <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
                         @include('anylearn.pdp.video')
                     </div>
                 @endif
