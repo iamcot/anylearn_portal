@@ -7,7 +7,7 @@
     @lang('Hệ Thống Các Trường Học, Các Khóa Đào Tạo tại anyLEARN được đánh giá dựa vào các tiêu chí và quy định về trường học đạt chuẩn.')
 @endsection
 @section('spmb')
-schools
+    schools
 @endsection
 @section('body')
     @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
@@ -27,7 +27,9 @@ schools
                             <div class="card shadow align-self-stretch vw-100">
                                 <div class="card-body p-2">
                                     <div class="imagebox">
-                                        <img class="img-fluid" src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}">
+                                        <a href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"><img
+                                                class="img-fluid"
+                                                src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}"></a>
                                     </div>
                                     <div class="description">
                                         <h3 class="fw-bold">{{ $school->name }}</h3>
@@ -36,7 +38,9 @@ schools
                                                 @foreach ($school->categories as $category)
                                                     <li
                                                         class="list-inline-item border border-success rounded text-success p-1 small mt-1">
-                                                        {{ $category->title }}</li>
+                                                        <a
+                                                            href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $category->title }}</a>
+                                                    </li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -45,7 +49,8 @@ schools
 
                                 </div>
                                 <div class="align-self-center m-2">
-                                    <a data-spm="list.{{ $school->id }}" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
+                                    <a data-spm="list.{{ $school->id }}"
+                                        href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
                                         class="fw-bold btn border-0 rounded-pill btn-success">@lang('KHOÁ HỌC')</a>
                                 </div>
 
@@ -57,7 +62,7 @@ schools
             @endif
         </div>
         <div class="col-md-3">
-            <form action="" method="get" id="schoolsearch"  data-spm="search.0" >
+            <form action="" method="get" id="schoolsearch" data-spm="search.0">
                 <div class="card shadow">
                     <div class="card-body">
                         <h6>@lang('BỘ LỌC')</h6>
@@ -80,7 +85,8 @@ schools
                                 @else
                                     @foreach ($wards as $ward)
                                         <option value="{{ $ward->code }}"
-                                            {{ $ward->code == $location->ward_code ? 'selected' : '' }}>{{ $ward->name }}
+                                            {{ $ward->code == $location->ward_code ? 'selected' : '' }}>
+                                            {{ $ward->name }}
                                         </option>
                                     @endforeach
                                 @endif
