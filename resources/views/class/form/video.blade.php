@@ -6,9 +6,9 @@
                 <div class="g-0 justify-content-between row">
                     <div class="col-sm-auto">
                         <h6 class="text-success fs--1 mb-0">Chương {{ $chap->chapter_no }}</h6>
-                        <h5 class="text-success fw-bold mb-0">{{ $chap->title }}</h5>
+                        <h6 class="text-success fw-bold mb-0">{{ $chap->title }}</h6>
                     </div>
-                    <div class="mb-3 mb-md-0 col-md-auto">
+                    <div class=" mb-md-0 col-md-auto">
                         <div class="g-3 gy-md-0 h-100 align-items-center row">
                             <button type="button" onclick="addid({{ $chap->chapter_no }})" class="btn btn-success btn-sm"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal2">Thêm
@@ -23,7 +23,7 @@
                         <tbody>
                             <tr class="btn-reveal-trigger bg-light">
                                 <td class="align-middle white-space-nowrap text-start">
-                                    <div class="mb-3 card">
+                                    <div class="">
                                         <div class="p-0 card-body">
                                             <div data-simplebar="init">
                                                 <div class="simplebar-wrapper" style="margin: 0px;">
@@ -128,14 +128,14 @@
                     <div>
                         <div class="mb-3 form-floating">
                             <input type="number" id="floatingInput" name="chapterno" class="form-control" min=0>
-                            <label for="floatingInput">Chương số</label>
+                            <label style="opacity:.9;" for="floatingInput">Chương số</label>
                         </div>
                         <div class="mb-3 form-floating">
                             <input type="text" id="floatingInput2" name="chaptitle" class="form-control">
-                            <label for="floatingInput2">Tiêu đề</label>
+                            <label style="opacity:.9;" for="floatingInput2">Tiêu đề</label>
                         </div>
                         <div class="form-floating">
-                            <textarea id="floatingTextarea2" name="chapdes" class="form-control" style="height: 100px;"></textarea><label for="floatingTextarea2">Giới Thiệu ngắn</label>
+                            <textarea id="floatingTextarea2" name="chapdes" class="form-control" style="height: 100px;"></textarea><label style="opacity:.9;" for="floatingTextarea2">Giới Thiệu ngắn</label>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                         <div>
                             <select aria-label="Default select example" class="form-select" name="typelesson"
                                 id="select" onchange="getval(this)">
-                                <option><label for="floatingInput">Loại bài học</label></option>
+                                <option><label  for="floatingInput">Loại bài học</label></option>
                                 {{-- <option value="file">File</option> --}}
                                 <option value="youtube">Youtube</option>
                                 {{-- <option value="stream">Stream Video</option> --}}
@@ -174,15 +174,15 @@
                     </div>
                     <div class="mb-3 form-floating d-none" id="ytb">
                         <input type="text" class="form-control" min=0 name="youtube">
-                        <label for="floatingInput">Youtube link</label>
+                        <label style="opacity:.9;" for="floatingInput">Youtube link</label>
                     </div>
                     <div class="mb-3 form-floating d-none" id="file">
                         <input type="file" class="form-control" name="file" min=0>
-                        <label for="floatingInput">File</label>
+                        <label style="opacity:.9;" for="floatingInput">File</label>
                     </div>
                     <div class="mb-3 form-floating d-none" id="stream">
                         <input type="text" class="form-control" min=0 name="stream">
-                        <label for="floatingInput">Stream Link</label>
+                        <label style="opacity:.9;" for="floatingInput">Stream Link</label>
                     </div>
                     {{-- <div class="mb-3 form-floating">
                         <input type="text" class="form-control">
@@ -190,14 +190,14 @@
                     </div> --}}
                     <div class="mb-3 form-floating">
                         <input type="number" class="form-control" name="lessonno">
-                        <label for="floatingInput2">Bài học số</label>
+                        <label style="opacity:.9;" for="floatingInput2">Bài học số</label>
                     </div>
                     <div class="mb-3 form-floating">
                         <input type="text" class="form-control" name="lessonname">
-                        <label for="floatingInput2">Tên bài</label>
+                        <label style="opacity:.9;" for="floatingInput2">Tên bài</label>
                     </div>
                     <div class="mb-3 form-floating">
-                        <textarea name="lessondes" class="form-control" style="height: 100px;"></textarea><label for="floatingTextarea2">Giới Thiệu</label>
+                        <textarea name="lessondes" class="form-control" style="height: 100px;"></textarea><label style="opacity:.9;" for="floatingTextarea2">Giới Thiệu</label>
                     </div>
                     <div>
                         <select aria-label="Default select example" class="form-select" name="is_free">

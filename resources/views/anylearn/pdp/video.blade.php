@@ -18,7 +18,7 @@
                                 <td class="align-middle white-space-nowrap text-start">
                                     <div class="d-flex align-items-center row">
                                         <div class="col-md-1">
-                                            <h6 class="text-black fs--1 mb-0">Bài {{ $les->lesson_no }}</h6>
+                                            <h6 class="text-black text-center fs--1 mb-0">Bài {{ $les->lesson_no }}</h6>
                                         </div>
                                         <div class="col-md-9">
                                             <strong>{{ $les->title }}</strong>
