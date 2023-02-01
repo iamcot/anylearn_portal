@@ -125,20 +125,12 @@
             gtag("event", "purchase", {
                 "transaction_id": "{{ $order->id }}",
                 "currency": "VND",
-                "value": {
-                    {
-                        $order - > amount
-                    }
-                },
+                "value": {{ $order -> amount }},
                 "items": [
                     @foreach($detail as $item) {
                         "id": "{{ $item->item_id }}",
                         "name": "{{ $item->class_name ?? $item->title }}",
-                        "price": {
-                            {
-                                $item - > paid_price
-                            }
-                        },
+                        "price": {{ $item -> paid_price }},
                         "quantity": 1,
                         "currency": "VND"
                     }

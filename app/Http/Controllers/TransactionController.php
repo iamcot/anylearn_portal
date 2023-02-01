@@ -21,6 +21,7 @@ use App\Models\VoucherUsed;
 use App\PaymentGateway\OnepayLocal;
 use App\PaymentGateway\Processor;
 use App\Services\FileServices;
+use App\Services\ItemServices;
 use App\Services\QRServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
@@ -100,8 +101,8 @@ class TransactionController extends Controller
         }
         if ($request->input('classes')) {
             $orders = $orders->join('order_details', 'order_details.order_id', '=', 'orders.id')
-            ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->where('items.title', 'like', '%' . $request->input('classes') . '%');
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('items.title', 'like', '%' . $request->input('classes') . '%');
         }
         if ($request->input('phone')) {
             $orders = $orders->where('users.phone', $request->input('phone'));
@@ -217,23 +218,34 @@ class TransactionController extends Controller
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
-        $transService = new TransactionService();
-        $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
-        if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
-            if ($this->data['api_token']) {
-                return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Thêm vào giỏ hàng thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
-            }
-            return redirect()->route('cart')->with('notify', "Thêm vào giỏ hàng thành công. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
-        } else if (is_numeric($result)) {
-            return redirect()->route('checkout.finish', ['order_id' => $result]);
-        } else {
-            if ($this->data['api_token']) {
-                return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', $result);
+        if ($request->get('action') == 'saveCart') {
+            $transService = new TransactionService();
+            $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
+            
+            if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
+                if ($this->data['api_token']) {
+                    return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đã thêm khóa học vào giỏ hàng. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
+                }
+                return redirect()->route('cart')->with('notify', "Đã thêm khóa học vào giỏ hàng. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
+            } else if (is_numeric($result)) {
+                return redirect()->route('checkout.finish', ['order_id' => $result]);
             } else {
-                // dd($result);
-                return redirect()->back()->with('notify', $result);
+                if ($this->data['api_token']) {
+                    return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', $result);
+                } else {
+                    return redirect()->back()->with('notify', $result);
+                }
             }
         }
+        $itemService = new ItemServices();
+        $class = $itemService->pdpData($request, $request->get('class'), $user);
+        if (!$class) {
+            return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
+        }
+
+        $this->data['user'] = $user;
+        $this->data['classId'] = $request->get('class');
+        return view(env('TEMPLATE', '') . 'checkout.add2cart', $class, $this->data);
     }
 
     public function commission(Request $request)
@@ -243,11 +255,11 @@ class TransactionController extends Controller
 
         $transaction = DB::table('transactions')->whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
             ->orderby('transactions.id', 'desc')
-            ->join('users','transactions.user_id','=','users.id')
-            ->join('orders','transactions.order_id','=','orders.id')
+            ->join('users', 'transactions.user_id', '=', 'users.id')
+            ->join('orders', 'transactions.order_id', '=', 'orders.id')
             ->where('orders.status', 'delivered')
-            ->select(['transactions.id','users.name','users.phone','users.email','transactions.amount','transactions.content','transactions.created_at','transactions.type','transactions.updated_at']);
-            // dd($transaction->get());
+            ->select(['transactions.id', 'users.name', 'users.phone', 'users.email', 'transactions.amount', 'transactions.content', 'transactions.created_at', 'transactions.type', 'transactions.updated_at']);
+        // dd($transaction->get());
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
         }
@@ -262,10 +274,10 @@ class TransactionController extends Controller
             $transaction = $transaction->where('transactions.type', $request->input('type'));
         }
         if ($request->input('name')) {
-            $transaction->where('users.name','like','%'.$request->input('name') . '%');
+            $transaction->where('users.name', 'like', '%' . $request->input('name') . '%');
         }
         if ($request->input('phone')) {
-            $transaction->where('users.phone','like','%'.$request->input('phone') . '%');
+            $transaction->where('users.phone', 'like', '%' . $request->input('phone') . '%');
         }
         if ($request->input('date')) {
             $transaction = $transaction->whereDate('transactions.created_at', '>=', $request->input('date'));
@@ -275,7 +287,7 @@ class TransactionController extends Controller
         }
         if ($request->input('action') == 'file') {
             $transaction = $transaction->get();
-            if ($transaction=="[]") {
+            if ($transaction == "[]") {
                 return redirect()->route('transaction.commission');
             }
             $transaction = json_decode(json_encode($transaction->toArray()), true);
@@ -344,11 +356,11 @@ class TransactionController extends Controller
             Transaction::find($id)->update([
                 'status' => $status
             ]);
-            if($status == ConfigConstants::TRANSACTION_STATUS_REJECT){
-                $trans =Transaction::find($id);
+            if ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
+                $trans = Transaction::find($id);
                 $userup = User::find($trans->user_id);
-                $userup -> update([
-                    'wallet_c' =>$userup->wallet_c + ($trans->amount*1/1000)
+                $userup->update([
+                    'wallet_c' => $userup->wallet_c + ($trans->amount * 1 / 1000)
                 ]);
             }
             $notifServ = new Notification();
@@ -864,20 +876,19 @@ class TransactionController extends Controller
                     mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
 
                     fputcsv($file, $row);
-
                 }
                 fclose($file);
             };
 
 
             return response()->stream($callback, 200, $headers);
-        } else{
+        } else {
             $data = $transM->search($request);
         }
-            $amount = $data->sum('amount');
-            $this->data['totalv'] = $data->count();
-            $this->data['amount'] = $amount;
-            $this->data['transaction'] = $data->paginate(20);
+        $amount = $data->sum('amount');
+        $this->data['totalv'] = $data->count();
+        $this->data['amount'] = $amount;
+        $this->data['transaction'] = $data->paginate(20);
         //  dd($tamp[1]->);
         $this->data['navText'] = __('Quản lý Chi tiền');
         return view('transaction.expenditures', $this->data);
