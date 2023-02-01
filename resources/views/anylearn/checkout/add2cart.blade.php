@@ -29,30 +29,43 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        @if (Auth::check())
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" id="radio1" name="optradio"
-                                    value="{{ auth()->user()->id }}" checked>{{ auth()->user()->name }} (@lang('Tôi'))
-                            </div>
-                        @endif
-                        @if (count($children) > 0)
-                            @foreach ($children as $child)
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="radio1" name="optradio"
-                                        value="{{ $child->id }}">{{ $child->name }}
-                                </div>
-                            @endforeach
-                        @endif
+
+                @if (Auth::check())
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="radio1" name="optradio"
+                            value="{{ auth()->user()->id }}" checked>{{ auth()->user()->name }} (@lang('Tôi'))
                     </div>
-
-                </div>
-
+                @endif
+                @if (count($children) > 0)
+                    @foreach ($children as $child)
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="radio1" name="optradio"
+                                value="{{ $child->id }}">{{ $child->name }}
+                        </div>
+                    @endforeach
+                @endif
                 {{-- <div class="float-right nav-link">
                     <button type="button" class="btn btn-success rounded rounded-pill btn-sm my-2 my-sm-0 ml-2" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">Thêm Một Tài khoản</button>
                 </div> --}}
+            </div>
+        </div>
+        <div class="card mb-3 border-left-primary shadow">
+            <div class="card-header">
+                <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i> @lang('Chọn lịch học')
+                </h5>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+        <div class="card mb-3 border-left-primary shadow">
+            <div class="card-header">
+                <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i> @lang('Chọn phụ phí')
+                </h5>
+            </div>
+            <div class="card-body">
+
             </div>
         </div>
         <div class="text-center mb-5 mt-5">
