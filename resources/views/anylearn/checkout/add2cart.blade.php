@@ -30,6 +30,22 @@ add2cart
 
         </div>
     </div>
+    <div class="card mb-3 border-left-primary shadow">
+        <div class="card-header">
+            <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i> @lang('Chọn lịch học')</h5>
+        </div>
+        <div class="card-body">
+
+        </div>
+    </div>
+    <div class="card mb-3 border-left-primary shadow">
+        <div class="card-header">
+            <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i> @lang('Chọn phụ phí')</h5>
+        </div>
+        <div class="card-body">
+
+        </div>
+    </div>
     <div class="text-center mb-5 mt-5">
         <button name="action" value="saveCart" class="btn btn-success w-50 border-0 font-weight-bold">@lang("ĐĂNG KÝ")</button>
     </div>
