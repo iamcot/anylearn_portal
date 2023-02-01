@@ -25,6 +25,11 @@ class_edit
         <li class="nav-item d-none" role="presentation" id="vdo">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'video' ? 'active' : '' }}" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="true"><i class="fas fa-play"></i> <span class="d-none d-sm-block">@lang('VIDEO')</span></button>
         </li>
+        @if (!empty($courseId))
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'extrafee' ? 'active' : '' }}" id="extrafee-tab" data-bs-toggle="tab" data-bs-target="#extrafee" type="button" role="tab" aria-controls="extrafee" aria-selected="true"><i class="fas fa-file-invoice-dollar"></i> <span class="d-none d-sm-block">@lang('Phụ phí')</span></button>
+        </li>
+        @endif
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Hình ảnh')</span></button>
         </li>
@@ -51,6 +56,9 @@ class_edit
         <div class="tab-pane fade {{ session('tab', 'info') == 'video' ? 'show active' : '' }} p-2" id="video" role="tabpanel" aria-labelledby="video-tab">
             @include('class.form.video')
         </div>
+        <div class="tab-pane fade {{ session('tab', 'info') == 'extrafee' ? 'show active' : '' }} p-2" id="extrafee" role="tabpanel" aria-labelledby="extrafee-tab">
+            @include('class.form.extrafee')
+        </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'resource' ? 'show active' : '' }} p-2" id="resource" role="tabpanel" aria-labelledby="resource-tab">
             @include('class.form.resource')
         </div>
@@ -65,8 +73,6 @@ class_edit
         <div class="tab-pane fade {{ session('tab', 'info') == 'registers' ? 'show active' : '' }} p-2" id="registers" role="tabpanel" aria-labelledby="registers-tab">
         </div>
     </div>
-
-
 </form>
 @endsection
 @section('jscript')
@@ -99,20 +105,14 @@ class_edit
             $("#locationbox").hide();
         }
     });
-    // $("select[name=subtype]").on("change", function(e) {
-    //     var select = $(this).val();
-    //     if (select == "video") {
-    //         $("#vdo").removeClass("d-none");
-    //     } else {
-    //         $("#vdo").addClass("d-none");
-    //     }
-    // });
+
     $(document).ready(function () {
         var select = $("select[name=subtype]").val();
         if (select == "video") {
             $("#vdo").removeClass("d-none");
         }
     })
+
     $("#schedule_generate").click(function() {
         var type = $(this).data("type");
         var num = $("#schedule_auto").find('#num').val();

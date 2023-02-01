@@ -7,6 +7,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemExtra;
 use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Item;
@@ -16,6 +17,7 @@ use App\Models\ItemUserAction;
 use App\Models\Schedule;
 use App\Models\User;
 use App\Models\I18nContent;
+use App\Models\ItemExtra as ModelsItemExtra;
 use App\Models\ItemVideoChapter;
 use App\Models\Notification;
 use App\Models\SocialPost;
@@ -115,11 +117,38 @@ class ClassController extends Controller
     {
         $courseService = new ItemServices();
         $videoServices = new VideoServices();
+        $tab = null;
+        if($request->input('action')=='deleteextrafee')
+        {
+            $input = $request->all();
+            ModelsItemExtra::find($input['iddelete'])->delete();
+            return redirect()->back()->with(['notify' => "Xóa thành công",'tab'=> $input['tab']]);
+
+        }
+        if($request->input('action')=='addextrafee')
+        {
+            $input = $request->all();
+            if ($input['idextrafee'] ==null) {
+                ModelsItemExtra::create([
+                    'title'=>$input['titleextrafee'],
+                    'price'=>$input['priceextrafee'],
+                    'item_id'=>$courseId
+                ]);
+                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công",'tab'=> $input['tab']]);
+            }
+            else{
+                $rs = ModelsItemExtra::find($input['idextrafee'])->update([
+                    'title'=>$input['titleextrafee'],
+                    'price'=>$input['priceextrafee']
+                ]);
+                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công",'tab'=> $input['tab']]);
+            }
+
+        }
         if ($request ->input('action')=='createChapter') {
             $input = $request->all();
             $videoServices->createChapter($request,$input);
         }
-
         if ($request->input('action')=='createLesson'){
             $input = $request->all();
             $videoServices->createLesson($request,$input);
@@ -225,6 +254,7 @@ class ClassController extends Controller
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
+        $this->data['extra'] = DB::table('item_extras')->get();
         $userService = new UserServices();
         if ($userService->isMod()) {
             return view('class.edit', $this->data);

@@ -221,7 +221,7 @@ class TransactionController extends Controller
         if ($request->get('action') == 'saveCart') {
             $transService = new TransactionService();
             $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
-            
+
             if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
                 if ($this->data['api_token']) {
                     return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đã thêm khóa học vào giỏ hàng. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
@@ -242,8 +242,12 @@ class TransactionController extends Controller
         if (!$class) {
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
         }
-
+        $children = [];
+            if ($user) {
+                $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
+            }
         $this->data['user'] = $user;
+        $this->data['children'] = $children;
         $this->data['classId'] = $request->get('class');
         return view(env('TEMPLATE', '') . 'checkout.add2cart', $class, $this->data);
     }
