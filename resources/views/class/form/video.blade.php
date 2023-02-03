@@ -189,11 +189,11 @@
                         <label for="floatingInput2">Đường dẫn bài học</label>
                     </div> --}}
                     <div class="mb-3 form-floating">
-                        <input type="number" class="form-control" name="lessonno" required>
+                        <input type="number" class="form-control" name="lessonno" >
                         <label style="opacity:.9;" for="floatingInput2">Bài học số</label>
                     </div>
                     <div class="mb-3 form-floating">
-                        <input type="text" class="form-control" name="lessonname" required>
+                        <input type="text" class="form-control" name="lessonname" >
                         <label style="opacity:.9;" for="floatingInput2">Tên bài</label>
                     </div>
                     <div class="mb-3 form-floating">

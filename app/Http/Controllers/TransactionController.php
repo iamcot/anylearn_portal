@@ -12,6 +12,8 @@ use App\Models\Configuration;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\OrderItemExtra;
+use App\Models\Schedule;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserBank;
@@ -213,6 +215,13 @@ class TransactionController extends Controller
             $user = Auth::user();
             $this->data['api_token'] = null;
         }
+        $parent = Auth::user();
+        if ($request->input('action') == "create") {
+            $input = $request->all();
+            $userChild = new User();
+            $userChild->createChild($parent, $input);
+            return redirect()->back()->with('notify', 'Tạo tài khoản mới thành công');
+        }
         $this->detectUserAgent($request);
 
         if (!$user) {
@@ -221,7 +230,6 @@ class TransactionController extends Controller
         if ($request->get('action') == 'saveCart') {
             $transService = new TransactionService();
             $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
-
             if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
                 if ($this->data['api_token']) {
                     return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đã thêm khóa học vào giỏ hàng. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
@@ -246,6 +254,10 @@ class TransactionController extends Controller
             if ($user) {
                 $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
+        $schedule = DB::table('schedules')->where('item_id',$request->get('class'))->get();
+        $extra = DB::table('item_extras')->where('item_id',$request->get('class'))->get();
+        $this->data['extra']= $extra;
+        $this->data['schedule']=$schedule;
         $this->data['user'] = $user;
         $this->data['children'] = $children;
         $this->data['classId'] = $request->get('class');
@@ -418,13 +430,14 @@ class TransactionController extends Controller
                 ->join('items', 'items.id', '=', 'od.item_id')
                 // ->leftjoin('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
                 ->join('users AS u2', 'u2.id', '=', 'od.user_id')
+                // ->join('order_item_extras AS extra','extra.order_detail_id','=','od.id')
                 ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
                 // ->where('i18n_contents.tbl', 'items')
                 // ->where('i18n_contents.col', 'title')
                 ->where('od.order_id', $openOrder->id)
                 ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId', 'items.is_paymentfee')
                 ->get();
-            // dd($orderDetails);
+            // dd($openOrder);
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
             $pointUsed = Transaction::where('type', ConfigConstants::TRANSACTION_EXCHANGE)
