@@ -16,7 +16,7 @@ class AddAgesToItems extends Migration
         Schema::table('items', function (Blueprint $table) {
             $table->tinyInteger('ages_min')->nullable();
             $table->tinyInteger('ages_max')->nullable();
-            $table->tinyInteger('seats')->nullable();
+            $table->integer('seats')->nullable();
         });
 
         Schema::create('item_extras', function (Blueprint $table) {

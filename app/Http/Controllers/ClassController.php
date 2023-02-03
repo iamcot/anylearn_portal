@@ -100,7 +100,11 @@ class ClassController extends Controller
         $this->data['hasBack'] = route('class');
         $userService = new UserServices();
         if ($userService->isMod()) {
-            return view('class.list', $this->data);
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+            return view('class.edit', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }
@@ -118,40 +122,37 @@ class ClassController extends Controller
         $courseService = new ItemServices();
         $videoServices = new VideoServices();
         $tab = null;
-        if($request->input('action')=='deleteextrafee')
-        {
+        if ($request->input('action') == 'deleteextrafee') {
             $input = $request->all();
             ModelsItemExtra::find($input['iddelete'])->delete();
-            return redirect()->back()->with(['notify' => "Xóa thành công",'tab'=> $input['tab']]);
-
+            return redirect()->back()->with(['notify' => "Xóa thành công", 'tab' => $input['tab']]);
         }
-        if($request->input('action')=='addextrafee')
-        {
+        if ($request->input('action') == 'addextrafee') {
             $input = $request->all();
-            if ($input['idextrafee'] ==null) {
+            if ($input['idextrafee'] == null) {
                 ModelsItemExtra::create([
-                    'title'=>$input['titleextrafee'],
-                    'price'=>$input['priceextrafee'],
-                    'item_id'=>$courseId
+                    'title' => $input['titleextrafee'],
+                    'price' => $input['priceextrafee'],
+                    'item_id' => $courseId
                 ]);
-                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công",'tab'=> $input['tab']]);
-            }
-            else{
+                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => $input['tab']]);
+            } else {
                 $rs = ModelsItemExtra::find($input['idextrafee'])->update([
-                    'title'=>$input['titleextrafee'],
-                    'price'=>$input['priceextrafee']
+                    'title' => $input['titleextrafee'],
+                    'price' => $input['priceextrafee']
                 ]);
-                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công",'tab'=> $input['tab']]);
+                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' => $input['tab']]);
             }
-
         }
-        if ($request ->input('action')=='createChapter') {
+        if ($request->input('action') == 'createChapter') {
             $input = $request->all();
-            $videoServices->createChapter($request,$input);
+            $videoServices->createChapter($request, $input);
+            $input['tab'] = 'video';
         }
-        if ($request->input('action')=='createLesson'){
+        if ($request->input('action') == 'createLesson') {
             $input = $request->all();
-            $videoServices->createLesson($request,$input);
+            $videoServices->createLesson($request, $input);
+            $input['tab'] = 'video';
         }
         if ($request->input('action') == 'update') {
             $input = $request->all();
@@ -248,7 +249,7 @@ class ClassController extends Controller
             ) AS cert")
             )
             ->get();
-        $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$courseId)->get();
+        $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id', '=', $courseId)->get();
         // $this->data['lesson'] = DB::table('item_video_lessons')->get();
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');
@@ -257,6 +258,11 @@ class ClassController extends Controller
         $this->data['extra'] = DB::table('item_extras')->get();
         $userService = new UserServices();
         if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+
             return view('class.edit', $this->data);
         } else {
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);

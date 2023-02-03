@@ -7,6 +7,19 @@
         </h5>
 
         <div class="card p-3 mb-3 shadow">
+            @if($userServ->isMod())
+            <div class="form-group row">
+                <label for="user_id" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Đối tác') }}</label>
+                <div class="col-md-8">
+                    <select class="form-control" name="user_id" id="user_id" required @if(!empty($course)) disabled @endif>
+                        <option value="">@lang('Chọn một đối tác')</option>
+                        @foreach($partners as $partner)
+                            <option value="{{ $partner->id }}" {{ !empty($course) && $course['info']->user_id == $partner->id ? 'selected' : '' }}>{{ $partner->name }}</option>
+                        @endforeach
+                       </select>
+                </div>
+            </div>
+            @endif
             <div class="form-group row">
                 <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại khoá học') }}</label>
                 <div class="col-md-8">
@@ -173,7 +186,7 @@
                     @endforeach
                 </ul>
                 <div class="tab-content border-0" id="i18ntabContent">
-                <p class="text-warning">! Hiện tại chức năng tải ảnh lên vẫn đang hoàn hiện, vui lòng nhấn nút mũi tên bên cạnh icon để chèn link ảnh hoặc dán trực tiếp link ảnh vào form nhập liệu.</p>
+                    <p class="text-warning">! Hiện tại chức năng tải ảnh lên vẫn đang hoàn hiện, vui lòng nhấn nút mũi tên bên cạnh icon để chèn link ảnh hoặc dán trực tiếp link ảnh vào form nhập liệu.</p>
                     @foreach (App\Models\I18nContent::$supports as $locale)
                     <div class="p-3 tab-pane fade {{ $locale == App\Models\I18nContent::DEFAULT ? 'show active' : '' }}" id="{{ $locale }}box" role="tabpanel" aria-labelledby="{{ $locale }}-tab">
                         @if ($locale != App\Models\I18nContent::DEFAULT)

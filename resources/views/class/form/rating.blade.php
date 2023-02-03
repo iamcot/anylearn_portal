@@ -3,7 +3,7 @@
         <h4>@lang('Cách đánh giá của khóa học')
         </h4>
         <hr />
-        @if(count($ratings) > 0)
+        @if(!empty($ratings) && count($ratings) > 0)
         <ul class="list-unstyled">
             @foreach($ratings as $rating)
             <li class="row @if($loop->index < count($ratings) - 1)  border-bottom @endif mb-3">

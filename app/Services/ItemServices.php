@@ -450,7 +450,7 @@ class ItemServices
         // }
 
         $input['type'] = $itemType;
-        $input['user_id'] = in_array($user->role, UserConstants::$modRoles) ? ItemConstants::COURSE_SYSTEM_USERID : $user->id;
+        $input['user_id'] = !empty($input['user_id']) ? $input['user_id'] : $user->id;
 
         $input['is_test'] = $user->is_test;
 

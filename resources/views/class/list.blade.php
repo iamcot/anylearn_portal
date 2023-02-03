@@ -1,6 +1,12 @@
 @inject('userServ','App\Services\UserServices')
 @inject('itemServ','App\Services\ItemServices')
 @extends('layout')
+@section('rightFixedTop')
+<div class="col-xs-2 mr-1">
+    <a class="btn btn-success btn-sm border-0 rounded-pill" href="{{ route('class.create') }}"><i class="fas fa-plus">
+        </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
+</div>
+@endsection
 
 @section('body')
 <form>
@@ -97,6 +103,9 @@
                     <td width="15%">{{ $course->updated_at }}</td>
                     <td class="text-center ">
                         {!! $itemServ->statusText($course->user_status) !!}
+                        @if($userServ->isMod(\Auth::user()->role) && !$isSale)
+                        {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
+                        @endif
                     </td>
                     <td>
                         <a href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i class="fa fa-link"></i></a>

@@ -2,6 +2,12 @@
 
 @extends('layout')
 
+@section('morestyle')
+@parent
+<link href="/cdn/vendor/select2/select2.min.css" rel="stylesheet">
+@endsection
+
+
 @section('body')
 @if(!$userServ->isSale() || @auth()->user()->role == App\Constants\UserConstants::ROLE_SALE_CONTENT)
 <form action="" method="post" id="courseEditForm" enctype="multipart/form-data">
@@ -14,6 +20,7 @@
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="shadow nav-link {{ session('tab', 'info') == 'info' ? 'active' : '' }}" id="v-pills-info-tab" data-toggle="pill" href="#v-pills-info" role="tab" aria-controls="v-pills-info" aria-selected="true"><i class="fa fa-info-circle"></i> <span class="mobile-no-text">@lang('Thông tin')</span></a>
                 <a class="shadow nav-link {{ session('tab') == 'schedule' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-schedule-tab" data-toggle="pill" href="#v-pills-schedule" role="tab" aria-controls="v-pills-schedule" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-calendar-alt"></i> <span class="mobile-no-text">@lang('Lịch học')</span></a>
+                <a class="shadow nav-link {{ session('tab') == 'video' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-video-tab" data-toggle="pill" href="#v-pills-video" role="tab" aria-controls="v-pills-video" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-play"></i> <span class="mobile-no-text">@lang('Videos')</span></a>
                 <a class="shadow nav-link {{ session('tab') == 'resource' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-resource-tab" data-toggle="pill" href="#v-pills-resource" role="tab" aria-controls="v-pills-resource" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-image"></i> <span class="mobile-no-text">@lang('Hình ảnh')</span></a>
                 @if($isSchool)
                 <a class="shadow nav-link {{ session('tab') == 'teachers' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-teachers-tab" data-toggle="pill" href="#v-pills-teachers" role="tab" aria-controls="v-pills-teachers" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-chalkboard-teacher"></i> <span class="mobile-no-text">@lang('Giảng viên')</span></a>
@@ -33,6 +40,9 @@
                 </div>
                 <div class="tab-pane fade {{ session('tab') == 'schedule' ? 'show active' : '' }}" id="v-pills-schedule" role="tabpanel" aria-labelledby="v-pills-schedule-tab">
                     @include('class.form.schedule')
+                </div>
+                <div class="tab-pane fade {{ session('tab') == 'video' ? 'show active' : '' }}" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
+                    @include('class.form.video')
                 </div>
                 <div class="tab-pane fade {{ session('tab') == 'resource' ? 'show active' : '' }}" id="v-pills-resource" role="tabpanel" aria-labelledby="v-pills-resource-tab">
                     @include('class.form.resource')
@@ -59,6 +69,7 @@
 <script src="/cdn/vendor/ckeditor5/ckeditor.js"></script>
 <script src="/cdn/vendor/jquery/jquery.mask.js"></script>
 <script src="/cdn/vendor/jquery/speakingurl.min.js"></script>
+<script src="/cdn/vendor/select2/select2.min.js"></script>
 <script>
     var allEditors = document.querySelectorAll('.editor');
     var editorConfig = {
@@ -82,6 +93,8 @@
     }
 
     $(function() {
+        $("#user_id").select2();
+
         $('.time').mask('00:00');
 
         $("#age-range").slider({

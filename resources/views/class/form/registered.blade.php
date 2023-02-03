@@ -3,7 +3,7 @@
         <h4>@lang('Học viên đã đăng ký')
             <!-- <button class="btn btn-sm btn-primary float-right" name="tab" value="teachers"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button> -->
         </h4>
-        @if(count($students) > 0)
+        @if(!empty($students) &&  count($students) > 0)
         <table class="table">
             <thead>
                 <tr>
