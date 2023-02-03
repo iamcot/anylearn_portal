@@ -10,9 +10,11 @@ use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemExtra;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\OrderItemExtra;
 use App\Models\SocialPost;
 use App\Models\Transaction;
 use App\Models\User;
@@ -38,7 +40,16 @@ class TransactionService
             return $this->statusText($oldStatus);
         }
     }
-
+    public function extraFee($orderdetailid)
+    {
+        $rs = DB::table('order_item_extras')->where('order_detail_id',$orderdetailid)->get();
+        return $rs;
+    }
+    public function sumextraFee($orderdetailid)
+    {
+        $rs = DB::table('order_item_extras')->where('order_detail_id',$orderdetailid)->sum('price');
+        return $rs;
+    }
     public function hasPendingOrders($userId)
     {
         $count = Order::where('user_id', $userId)
@@ -100,8 +111,9 @@ class TransactionService
      */
     public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
     {
-        $childUser = $request->get('child', '');
 
+        $childUser = $request->get('child', '');
+        $input = $request->all();
         $item = Item::find($itemId);
         if (!$item) {
             return 'Trang không tồn tại';
@@ -122,7 +134,7 @@ class TransactionService
         }
         $voucher = $request->get('voucher', '');
 
-        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $allowNoMoney) {
+        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser,$input, $allowNoMoney) {
             $notifServ = new Notification();
             $openOrder = null;
             $status = OrderConstants::STATUS_DELIVERED;
@@ -195,7 +207,6 @@ class TransactionService
             if ($openOrder == null) {
                 return "Không tạo được đơn hàng.";
             }
-
             //save order details
             $orderDetail = OrderDetail::create([
                 'order_id' => $openOrder->id,
@@ -205,6 +216,22 @@ class TransactionService
                 'paid_price' => $item->price,
                 'status' => $status,
             ]);
+            if (isset($input['extrafee'])) {
+                foreach ($input['extrafee'] as $key) {
+                    $extrafee = ItemExtra::find($key);
+                    // dd($extrafee->title);
+                    $orderextra = OrderItemExtra::create([
+                        'order_detail_id' =>$orderDetail->id,
+                        'item_id'=>$item->id,
+                        'title'=>$extrafee->title,
+                        'price'=>$extrafee->price,
+                    ]);
+                    Order::find($openOrder->id)->update([
+                        'amount' => DB::raw('amount + ' . $orderextra->price),
+                    ]);
+                }
+                // dd($input['extrafee'],$orderDetail->id);
+            }
 
             // if ($dbVoucher && $dbVoucher->type == VoucherGroup::TYPE_PAYMENT) {
             //     try {
@@ -346,6 +373,7 @@ class TransactionService
 
             return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? $openOrder->id : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
+
         return $result;
     }
 
@@ -372,8 +400,12 @@ class TransactionService
             return false;
         }
         DB::transaction(function () use ($od, $order, $user) {
+
             Transaction::where('order_id', $od->id)->delete();
             OrderDetail::find($od->id)->delete();
+            // dd($od->paid_price);
+            // $orderextra = OrderItemExtra::Where('order_detail_id',$od->id)->where('item_id',$od->item_id)->get();
+            OrderItemExtra::Where('order_detail_id',$od->id)->where('item_id',$od->item_id)->delete();
             User::find($user->id)->update(
                 ['wallet_m' => DB::raw('wallet_m + ' . $od->paid_price),]
             );

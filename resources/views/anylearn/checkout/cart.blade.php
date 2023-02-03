@@ -1,6 +1,7 @@
 @inject('itemServ', 'App\Services\ItemServices')
 @inject('transServ', 'App\Services\TransactionService')
 @inject('qrServ', 'App\Services\QRServices')
+
 @extends('anylearn.layout')
 @section('spmb')
 cart
@@ -26,7 +27,7 @@ cart
                             <th class="text-center">#</th>
                             <th></th>
                             <th width="55%">@lang('Khoá học')</th>
-                            <th class="text-right">@lang('Học phí')</th>
+                            <th class="text-right">@lang('Tổng')</th>
                             <th></th>
                         </tr>
                     <tbody>
@@ -42,12 +43,23 @@ cart
                                         <span class="small text-danger">({{ $item->title }} )</span>
                                     @else
                                         {{ $item->title }}
+
                                     @endif
                                     @if ($item->childId != $user->id)
                                         ({{ $item->childName }})
                                     @endif
+                                    @foreach ($transServ->extraFee($item->id) as $extra)
+                                    <br>
+                                    <span>{{ $extra->title}} : {{ number_format($extra->price)}}₫ </span>
+
+                                    @endforeach
+
                                 </td>
-                                <td class="text-right">{{ number_format($item->paid_price, 0, ',', '.') }}</td>
+
+                                <td class="text-right">
+                                    {{ number_format($item->paid_price+$transServ->sumextraFee($item->id), 0, ',', '.') }}₫
+                                    <br>
+                                </td>
                                 <td>
                                     @if ($api_token)
                                         <a href="{{ route('checkout.remove2cart', ['odId' => $item->id, 'api_token' => $api_token]) }}"
@@ -173,12 +185,12 @@ cart
                     <ul class="list-unstyled">
                         <li class="p-2"><input required type="radio" name="payment" value="atm" id="radio_atm">
                             <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng')</strong></label></li>
-                        
+
                         @if ($hasPaymemtFee)
                             <li class="p-2"><input required type="radio" name="payment" value="onepayfee"
                                     id="radio_onepayfee"> <label
                                     for="radio_onepayfee"><strong>@lang('Thu hộ học phí trực tuyến bằng thẻ')</strong></label></li>
-                        
+
                         @else
                             @if (empty($saveBanks))
                                 <li class="p-2"><input required type="radio" name="payment" value="onepaylocal"

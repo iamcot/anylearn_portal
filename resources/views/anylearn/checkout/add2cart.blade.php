@@ -32,14 +32,14 @@
 
                 @if (Auth::check())
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio"
+                        <input type="radio" class="form-check-input" id="radio1" name="child"
                             value="{{ auth()->user()->id }}" checked>{{ auth()->user()->name }} (@lang('Tôi'))
                     </div>
                 @endif
                 @if (count($children) > 0)
                     @foreach ($children as $child)
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" id="radio1" name="optradio"
+                            <input type="radio" class="form-check-input" id="radio1" name="child"
                                 value="{{ $child->id }}">{{ $child->name }}
                         </div>
                     @endforeach
@@ -56,7 +56,18 @@
                 </h5>
             </div>
             <div class="card-body">
-
+                @if (count($item->openings) > 0)
+                <p class="text-danger">@lang('Chọn lịch khai giảng')</p>
+                <ul class="list-unstyled">
+                    @foreach ($item->openings as $opening)
+                        <li>
+                            <label for="class_{{ $opening->id }}"> <input required
+                                    id="class_{{ $opening->id }}" type="radio" name="class"
+                                    value="{{ $opening->id }}"> {{ $opening->title }}</label>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
             </div>
         </div>
         <div class="card mb-3 border-left-primary shadow">
@@ -66,6 +77,12 @@
             </div>
             <div class="card-body">
 
+                @foreach ($extra as $extra)
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="{{ $extra->id }}" name="extrafee[]" value="{{ $extra->id }}">
+                    <label class="form-check-label">{{ $extra->title }} - {{ number_format($extra->price)}}₫ </label>
+                  </div>
+        @endforeach
             </div>
         </div>
         <div class="text-center mb-5 mt-5">
@@ -73,7 +90,78 @@
                 class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ')</button>
         </div>
     </form>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title center" id="exampleModalLabel">@lang('Tạo tài khoản con')</h5>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body">
+                <!-- Form  -->
+                <form method="POST">
+                    @csrf
 
+                    <div class="">
+                        <div class="form-group row">
+                            <h6><b>@lang('Thông tin cá nhân')</b></h6>
+                            <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Họ và tên*') }}</label>
+                            <div class="col-md-8">
+                                <input id="name" value="{{ !empty($userC) ? $userC->name : null }}" name="username" type="text" class="form-control @error('name') is-invalid @enderror" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="title" class="col-md-3 col-form-label text-md-right">{{ __('Ngày sinh*') }}</label>
+                            <div class="col-md-8">
+                                <input id="title" value="{{ !empty($userC) ? $userC->dob : null }}" type="date" class="form-control @error('dob') is-invalid @enderror" name="dob">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-md-3 col-form-label text-md-right">{{ __('Giới tính') }}</label>
+                            <div class="col-md-8 mt-2">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" value="male" name="sex" id="sex" <?php if (empty($userC->sex) || $userC->sex == "male") echo "checked='checked'" ?>>
+                                            <label class="form-check-label" for="male">
+                                                @lang('Nam')
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" value="female" name="sex" id="sex" <?php if (!empty($userC->sex) && $userC->sex == "female") echo "checked='checked'"; ?>>
+                                            <label class="form-check-label" for="female">
+                                                @lang('Nữ')
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <h6><b>@lang('Thông tin khác')</b></h6>
+                                <label for="introduce" class="col-md-4 col-form-label text-md-right @error('content') is-invalid @enderror">{{ __('Giới thiệu ngắn') }}</label>
+                                <br>
+                                <div class="col-md-12">
+                                    <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($userC) ? $userC->introduce : '') !!}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('Hủy')</button>
+                            <button type="Submit" class="btn btn-success" name="action" value="create">@lang('Lưu')</button>
+                        </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 @endsection
 @section('jscript')
     @parent

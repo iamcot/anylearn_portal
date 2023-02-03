@@ -185,33 +185,31 @@
                             <label for="floatingInput2">Đường dẫn bài học</label>
                             <input type="text" class="form-control">
                     </div> --}}
-                        <div class="mb-3 form-floating">
-                            <label style="opacity:.9;" for="floatingInput2">Bài học số</label>
-                            <input type="number" class="form-control" name="lessonno" required>
-                        </div>
-                        <div class="mb-3 form-floating">
-                            <label style="opacity:.9;" for="floatingInput2">Tên bài</label>
-                            <input type="text" class="form-control" name="lessonname" required>
-                        </div>
-                        <div class="mb-3 form-floating">
-                            <label style="opacity:.9;" for="floatingTextarea2">Giới Thiệu</label>
-                            <textarea name="lessondes" class="form-control" style="height: 100px;"></textarea>
-                        </div>
-                        <div>
-                            <select aria-label="Default select example" class="form-select form-control" name="is_free">
-                                {{-- <option><label for="floatingInput">Miễn Phí/Thu Phí</label></option> --}}
-                                <option value="1">Miễn Phí</option>
-                                <option value="2">Thu Phí</option>
-                            </select>
-                        </div>
+                    <div class="mb-3 form-floating">
+                        <input type="number" class="form-control" name="lessonno" required>
+                        <label style="opacity:.9;" for="floatingInput2">Bài học số</label>
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <input type="text" class="form-control" name="lessonname" required>
+                        <label style="opacity:.9;" for="floatingInput2">Tên bài</label>
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <textarea name="lessondes" class="form-control" style="height: 100px;"></textarea><label style="opacity:.9;" for="floatingTextarea2">Giới Thiệu</label>
+                    </div>
+                    <div>
+                        <select aria-label="Default select example" class="form-select" name="is_free">
+                            {{-- <option><label for="floatingInput">Miễn Phí/Thu Phí</label></option> --}}
+                            <option value="1">Miễn Phí</option>
+                            <option value="2">Thu Phí</option>
+                        </select>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" name="action" value="createLesson" class="mb-1 btn btn-success">Thêm
-                        mới</button>
-                </div>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="submit" name="action" value="createLesson" class="mb-1 btn btn-success">Thêm
+                    mới</button>
+            </div>
+        </div>
     </div>
 </div>
 <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
