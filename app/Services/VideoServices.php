@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\ItemConstants;
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Item;
 use App\Models\ItemUserAction;
@@ -65,7 +66,10 @@ class VideoServices
         if ($item && $item->user_id == $userId) {
             return true;
         }
-        $check = OrderDetail::where('item_id', $itemid)->where('user_id', $userId)->count();
+        $check = OrderDetail::where('item_id', $itemid)
+        ->where('user_id', $userId)
+        ->where('status', OrderConstants::STATUS_DELIVERED)
+        ->count();
         return $check > 0;
     }
 
