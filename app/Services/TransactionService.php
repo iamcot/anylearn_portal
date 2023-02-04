@@ -216,10 +216,9 @@ class TransactionService
                 'paid_price' => $item->price,
                 'status' => $status,
             ]);
-            if (isset($input['extrafee'])) {
+            if (!empty($input['extrafee'])) {
                 foreach ($input['extrafee'] as $key) {
                     $extrafee = ItemExtra::find($key);
-                    // dd($extrafee->title);
                     $orderextra = OrderItemExtra::create([
                         'order_detail_id' =>$orderDetail->id,
                         'item_id'=>$item->id,
@@ -241,10 +240,9 @@ class TransactionService
             //         return $e->getMessage();
             //     }
             // }
-
+            $this->recalculateOrderAmount($openOrder->id);
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
-                $this->recalculateOrderAmount($openOrder->id);
                 $voucher = Voucher::find($usingVoucher->voucher_id);
                 $this->recalculateOrderAmountWithVoucher($openOrder->id, $voucher->value);
             }
@@ -403,8 +401,6 @@ class TransactionService
 
             Transaction::where('order_id', $od->id)->delete();
             OrderDetail::find($od->id)->delete();
-            // dd($od->paid_price);
-            // $orderextra = OrderItemExtra::Where('order_detail_id',$od->id)->where('item_id',$od->item_id)->get();
             OrderItemExtra::Where('order_detail_id',$od->id)->where('item_id',$od->item_id)->delete();
             User::find($user->id)->update(
                 ['wallet_m' => DB::raw('wallet_m + ' . $od->paid_price),]
@@ -464,6 +460,7 @@ class TransactionService
         $amount = 0;
         foreach ($orderDetails as $item) {
             $amount += $item->paid_price;
+            $amount += $this->sumextraFee($item->id);
         }
         Order::find($orderId)->update(
             ['amount' => $amount],

@@ -1,4 +1,5 @@
 @inject('itemServ', 'App\Services\ItemServices')
+@inject('videoServ', 'App\Services\VideoServices')
 @extends('anylearn.layout')
 @section('title')
 {{ $item->title }}
@@ -84,16 +85,16 @@ pdp
     <div class="mt-4">
         <ul class="nav nav-tabs" id="pdptab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link text-secondary fw-bold active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">@lang('MÔ TẢ')</button>
+                <button class="nav-link text-secondary fw-bold @if(!$videoServ->checkOrder($item->id)) active @endif" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">@lang('MÔ TẢ')</button>
             </li>
             @if ($author->role == 'school')
             <!-- <li class="nav-item" role="presentation">
                     <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
                 </li> -->
             @endif
-            @if (1==1)
+            @if ($item->subtype == 'video')
             <li class="nav-item" role="presentation">
-                <button class="nav-link text-secondary fw-bold" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">@lang('BÀI HỌC')</button>
+                <button class="nav-link text-secondary fw-bold @if($videoServ->checkOrder($item->id)) active @endif" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">@lang('BÀI HỌC')</button>
             </li>
             @endif
             @if (count($reviews) > 0)
@@ -109,7 +110,7 @@ pdp
             @endif
         </ul>
         <div class="tab-content border border-top-0 mb-5 shadow" id="myTabContent">
-            <div class="tab-pane fade show active p-2" id="content" role="tabpanel" aria-labelledby="content-tab">
+            <div class="tab-pane fade show @if(!$videoServ->checkOrder($item->id)) active @endif p-2" id="content" role="tabpanel" aria-labelledby="content-tab">
                 @if (\App::getLocale() == 'vi')
                 <div class="collapse-module pb-4">
                     <div class="collapse" id="contentCollapse">
@@ -135,7 +136,7 @@ pdp
             <!-- <div class="tab-pane fade p-2" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">...</div> -->
             @endif
             @if (1==1)
-            <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
+            <div class="tab-pane fade @if($videoServ->checkOrder($item->id)) show active @endif" id="video" role="tabpanel" aria-labelledby="video-tab">
                 @include('anylearn.pdp.video')
             </div>
             @endif

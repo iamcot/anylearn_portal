@@ -23,7 +23,7 @@
             <div class="form-group row">
                 <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại khoá học') }}</label>
                 <div class="col-md-8">
-                    <select class="form-control" name="subtype" required @if(!empty($course) && count($course['schedule'])> 0) disabled @endif>
+                    <select class="form-control" name="subtype" required @if(!empty($course)) disabled @endif>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Khoá học Chính khóa Tại trung tâm')</option>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_EXTRA }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_EXTRA ? 'selected' : '' }}>@lang('Khoá học Ngoại khóa')</option>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Khoá học Online')</option>
@@ -116,7 +116,7 @@
                 <div class="form-group row">
                     <label for="price" class="col-md-3 col-form-label text-md-right ">{{ __('Học phí') }}</label>
                     <div class="col-md-8">
-                        <input id="price" type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price', !empty($course) ? $course['info']->price : '') }}">
+                        <input id="price" type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price', !empty($course) ? $course['info']->price : '') }}" required>
                     </div>
                 </div>
 

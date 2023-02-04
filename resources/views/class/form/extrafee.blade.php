@@ -1,14 +1,14 @@
 <div class="mb-3 mb-lg-0 card">
-    <h5 class="bg-light card-header">Thêm Phụ Phí</h5>
+    <h5 class="bg-light card-header">Quản lý Phụ Phí</h5>
     <form action="" method="get">
         <input type="hidden" name="tab" value="extrafee">
-        <div class="card-body"><label class="form-label">Các Phụ Phí<span class="text-danger">*</span></label>
+        <div class="card-body">
             <ul class="list-unstyled mb-0">
                 @foreach ($extra as $item)
                     <li>
-                        <div class="d-flex align-items-center py-3 border-top border-300 row">
+                        <div class="d-flex align-items-center py-3 border-bottom border-300 row">
                             <p class="fs--1 mb-0 me-6 col-md-7">{{ $item->title }}</p>
-                            <strong class="col-md-3">Số tiền: {{ number_format($item->price) }}₫</strong>
+                            <strong class="col-md-3">{{ number_format($item->price) }}₫</strong>
                             <div class="col-md-2">
                                 <button
                                     type="button"class="icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm"
@@ -53,7 +53,7 @@
                 @endforeach
             </ul>
     </form>
-    <form action="" method="get">
+    <form action="" method="get" class="mt-3">
         <div class="position-relative mb-4">
             <div class="input-group">
                 <input type="hidden" name="tab" value="extrafee">

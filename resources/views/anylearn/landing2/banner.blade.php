@@ -9,7 +9,7 @@
             <div>{{ __($quote['quoteText']) }}</div>
             <p class="text-end">- {{ __($quote['quoteAuthor']) }}</p>
         </div>
-        <div class="mt-3" id="search">
+        <div class="mt-3" id="search2">
             <form action="/classes" method="get" id="schoolsearch">
                 <button class="border-0" name="a" value="search"><i class="fa fa-search text-white"></i></button>
                 <input type="text" name="s" class="form-control rounded-pill border-0 " placeholder="{{ __('Tìm khoá học...') }}">

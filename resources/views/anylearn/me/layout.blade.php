@@ -17,6 +17,7 @@
     <link href="/cdn/anylearn/bootstrap-5.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="/cdn/anylearn/fontawesome/css/all.css" rel="stylesheet">
     <link href="/cdn/anylearn/owl.carousel.min.css" rel="stylesheet">
+    <link href="/cdn/vendor/jquery/jquery-ui-1.13.2/jquery-ui.min.css" rel="stylesheet">
     <link href="/cdn/anylearn/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     @yield('morestyle')
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
@@ -72,6 +73,7 @@
     </a>
     <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
+    <script src="/cdn/vendor/jquery/jquery-ui-1.13.2/jquery-ui.min.js"></script>
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     <script src="/cdn/js/sb-admin-2.min.js"></script>
     <script async src="/cdn/js/anylog.js"></script>

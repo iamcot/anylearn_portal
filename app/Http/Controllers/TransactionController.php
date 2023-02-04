@@ -9,6 +9,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\DataObjects\ServiceResponse;
 use App\Models\Configuration;
+use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -227,6 +228,7 @@ class TransactionController extends Controller
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
+
         if ($request->get('action') == 'saveCart') {
             $transService = new TransactionService();
             $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
@@ -255,8 +257,8 @@ class TransactionController extends Controller
                 $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
             }
         $schedule = DB::table('schedules')->where('item_id',$request->get('class'))->get();
-        $extra = DB::table('item_extras')->where('item_id',$request->get('class'))->get();
-        $this->data['extra']= $extra;
+        $extras = DB::table('item_extras')->where('item_id',$request->get('class'))->get();
+        $this->data['extras']= $extras;
         $this->data['schedule']=$schedule;
         $this->data['user'] = $user;
         $this->data['children'] = $children;

@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\I18nContent;
 use App\Models\ItemExtra as ModelsItemExtra;
 use App\Models\ItemVideoChapter;
+use App\Models\ItemVideoLesson;
 use App\Models\Notification;
 use App\Models\SocialPost;
 use App\Models\UserLocation;
@@ -26,6 +27,7 @@ use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use App\Services\VideoServices;
+use BotMan\BotMan\Messages\Attachments\Video;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -83,7 +85,11 @@ class ClassController extends Controller
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo lớp học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {
-                return redirect()->route('class.edit', ['id' => $rs])->with(['tab' => 'schedule', 'notify' => __('Tạo lớp học thành công, vui lòng cập nhật lịch học.')]);
+                $tab = 'schedule';
+                if ($input['subtype'] == 'video') {
+                    $tab = 'video';
+                }
+                return redirect()->route('class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
             }
         }
         $configM = new Configuration();
@@ -119,16 +125,36 @@ class ClassController extends Controller
 
     public function edit(Request $request, $courseId)
     {
-        $courseService = new ItemServices();
-        $videoServices = new VideoServices();
-        $tab = null;
+        $input = $request->all();
+
+        if ($request->get('action') == 'dlesson') {
+            $lid = $request->get('lid');
+            $lesson = ItemVideoLesson::find($lid);
+            if ($lesson && $lesson->item_id == $courseId) {
+                $lesson->delete();
+                return redirect()->back()->with(['notify' => 1, 'tab' => 'video']);
+            } else {
+                return redirect()->back()->with(['notify' => 'Không thể xóa bài học này.', 'tab' => 'video']);
+            }
+        }
+
+        if ($request->get('action') == 'dchap') {
+            $cid = $request->get('cid');
+            $chapter = ItemVideoChapter::find($cid);
+            $lessonCount = ItemVideoLesson::where('item_video_chapter_id', $cid)->count();
+            if ($chapter && $chapter->item_id == $courseId && $lessonCount == 0) {
+                $chapter->delete();
+                return redirect()->back()->with(['notify' => 1, 'tab' => 'video']);
+            } else {
+                return redirect()->back()->with(['notify' => 'Không thể xóa chương này', 'tab' => 'video']);
+            }
+        }
+
         if ($request->input('action') == 'deleteextrafee') {
-            $input = $request->all();
             ModelsItemExtra::find($input['iddelete'])->delete();
             return redirect()->back()->with(['notify' => "Xóa thành công", 'tab' => $input['tab']]);
         }
         if ($request->input('action') == 'addextrafee') {
-            $input = $request->all();
             if ($input['idextrafee'] == null) {
                 ModelsItemExtra::create([
                     'title' => $input['titleextrafee'],
@@ -145,18 +171,17 @@ class ClassController extends Controller
             }
         }
         if ($request->input('action') == 'createChapter') {
-            $input = $request->all();
+            $videoServices = new VideoServices();
             $videoServices->createChapter($request, $input);
-            $input['tab'] = 'video';
+            return redirect()->back()->with(['notify' => 1, 'tab' => 'video']);
         }
         if ($request->input('action') == 'createLesson') {
-            $input = $request->all();
+            $videoServices = new VideoServices();
             $videoServices->createLesson($request, $input);
-            $input['tab'] = 'video';
+            return redirect()->back()->with(['notify' => 1, 'tab' => 'video']);
         }
+        $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
-            $input = $request->all();
-            // dd($input);
             try {
                 $rs = $courseService->updateItem($request, $input);
             } catch (Exception $e) {
@@ -249,7 +274,8 @@ class ClassController extends Controller
             ) AS cert")
             )
             ->get();
-        $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id', '=', $courseId)->get();
+        $videoServices = new VideoServices();
+        $this->data['videos'] = $videoServices->getAllChapterAndLessons($courseId);
         // $this->data['lesson'] = DB::table('item_video_lessons')->get();
         $this->data['course'] = $courseDb;
         $this->data['navText'] = __('Chỉnh sửa lớp học');

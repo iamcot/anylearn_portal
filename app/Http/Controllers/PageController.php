@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use App\Models\I18nContent;
+use App\Models\ItemVideoChapter;
 use App\Models\ItemVideoLesson;
 use App\Services\CategoryServices;
 use App\Services\VideoServices;
@@ -68,23 +69,23 @@ class PageController extends Controller
         $this->data['events_title'] = env('EVENTS_TITLE', 'Sự kiện nổi bật');
         $this->data['events'] = Article::where('type', Article::TYPE_EVENT)
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
-            $temp = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
+        $temp = Article::whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
             ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
-            $locale = App::getLocale();
-            foreach ($temp as $row) {
-                if($locale!=I18nContent::DEFAULT){
-                    $i18 = new I18nContent();
-                        $item18nData = $i18->i18nArticle($row->id, $locale);
-                        // dd($item18nData);
-                        $supportCols = array_keys(I18nContent::$articleCols);
-                        foreach ($item18nData as $col => $content) {
-                            if (in_array($col, $supportCols) && $content != "") {
-                                $row->$col = $content;
-                            }
-                        }
+        $locale = App::getLocale();
+        foreach ($temp as $row) {
+            if ($locale != I18nContent::DEFAULT) {
+                $i18 = new I18nContent();
+                $item18nData = $i18->i18nArticle($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$articleCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
+                    }
                 }
             }
-            // dd($temp);
+        }
+        // dd($temp);
         $this->data['articles'] = $temp;
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         $homeClasses = [];
@@ -168,23 +169,30 @@ class PageController extends Controller
         return view('ref', $data);
     }
 
+    public function videoPage(Request $request, $itemId, $url, $lessonId = null)
+    {
+        $videoServ = new VideoServices();
+        $itemServ = new ItemServices();
+        if ($lessonId) {
+            $lesson = ItemVideoLesson::where('id', $lessonId)->where('item_id', $itemId)->first();
+            if (!$lesson) {
+                return redirect()->to('/')->with('notify', 'Bài học không tồn tại');
+            }
+            if (!$videoServ->checkOrder($itemId) && $lesson->is_free == 2) {
+                return redirect()->to($itemServ->classUrl($itemId))
+                ->with(['notify' => 'Vui lòng đăng ký để xem bài học này']);
+            }
+        }
+        $pageData = $videoServ->learnPageData($itemId, $lessonId);
+        
+        $this->data['itemId'] = $itemId;
+        return view(env('TEMPLATE', '') . 'pdp.learn', $this->data, $pageData);
+    }
+
     public function pdp(Request $request, $itemId)
     {
         $itemService = new ItemServices();
-        $videoServ = new VideoServices();
-        if ($request->get('action') == 'learnfree') {
-            // dd($request->all());
-            $link = ItemVideoLesson::find($request->idvideo);
-            $links=$videoServ->getlinkYT($link->type_value);
-            $this->data['idvideo'] = $request->idvideo;
-            // dd($data);
 
-            $this->data['link']= $links;
-            $this->data['itemId']= $itemId;
-            $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$itemId)->get();
-            return view(env('TEMPLATE', '') . 'pdp.learn',$this->data);
-            // dd($links);
-        }
         $user = Auth::user();
         if ($request->get('action') == 'rating') {
             $itemId = $request->get('class-id', 0);
@@ -199,7 +207,6 @@ class PageController extends Controller
         }
         try {
             $data = $itemService->pdpData($request, $itemId, $user);
-            // dd($data);
             $data['breadcrumb'] = [
                 [
                     'url' => $data['author']->role == 'school' ? '/schools' : '/teachers',
@@ -216,13 +223,7 @@ class PageController extends Controller
                     'text' => 'Khoá học',
                 ]
             ];
-            $children = [];
-            if ($user) {
-                $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
-            }
-            $this->data['chapter'] = DB::table('item_video_chapters')->where('item_video_chapters.item_id','=',$itemId)->get();
-            $this->data['children'] = $children;
-            return view(env('TEMPLATE', '') . 'pdp.index', $data,$this->data);
+            return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
         }
@@ -251,20 +252,20 @@ class PageController extends Controller
             ->where('id', '!=', $id)
             ->orderby('id', 'desc')
             ->take(10)->get();
-            foreach ($morearticle as $row) {
-                if($locale!=I18nContent::DEFAULT){
-                    $i18 = new I18nContent();
-                        $item18nData = $i18->i18nArticle($row->id, $locale);
-                        // dd($item18nData);
-                        $supportCols = array_keys(I18nContent::$articleCols);
-                        foreach ($item18nData as $col => $content) {
-                            if (in_array($col, $supportCols) && $content != "") {
-                                $row->$col = $content;
-                            }
-                        }
+        foreach ($morearticle as $row) {
+            if ($locale != I18nContent::DEFAULT) {
+                $i18 = new I18nContent();
+                $item18nData = $i18->i18nArticle($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$articleCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
+                    }
                 }
             }
-            $data['moreArticles'] = $morearticle;
+        }
+        $data['moreArticles'] = $morearticle;
         return view(env('TEMPLATE', '') . 'pdp.article', $data);
     }
 
@@ -345,10 +346,10 @@ class PageController extends Controller
                 ->select('categories.id', 'categories.url', 'categories.title')
                 ->take(4)
                 ->get();
-                $locale = App::getLocale();
-        foreach ($userCategories as $row) {
-            if($locale!=I18nContent::DEFAULT){
-                $i18 = new I18nContent();
+            $locale = App::getLocale();
+            foreach ($userCategories as $row) {
+                if ($locale != I18nContent::DEFAULT) {
+                    $i18 = new I18nContent();
                     $item18nData = $i18->i18nCategory($row->id, $locale);
                     // dd($item18nData);
                     $supportCols = array_keys(I18nContent::$categoryCols);
@@ -357,8 +358,8 @@ class PageController extends Controller
                             $row->$col = $content;
                         }
                     }
+                }
             }
-        }
             $user->categories = $userCategories;
             $data['list'][] = $user;
         }
@@ -371,16 +372,16 @@ class PageController extends Controller
         $category = Category::all();
         $locale = App::getLocale();
         foreach ($category as $row) {
-            if($locale!=I18nContent::DEFAULT){
+            if ($locale != I18nContent::DEFAULT) {
                 $i18 = new I18nContent();
-                    $item18nData = $i18->i18nCategory($row->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols) && $content != "") {
-                            $row->$col = $content;
-                        }
+                $item18nData = $i18->i18nCategory($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
                     }
+                }
             }
         }
         $data['categories'] = $category;
@@ -449,20 +450,20 @@ class PageController extends Controller
                 ->select('categories.id', 'categories.url', 'categories.title')
                 ->take(4)
                 ->get();
-                $locale = App::getLocale();
-                foreach ($userCategories as $row) {
-                    if($locale!=I18nContent::DEFAULT){
-                        $i18 = new I18nContent();
-                            $item18nData = $i18->i18nCategory($row->id, $locale);
-                            // dd($item18nData);
-                            $supportCols = array_keys(I18nContent::$categoryCols);
-                            foreach ($item18nData as $col => $content) {
-                                if (in_array($col, $supportCols) && $content != "") {
-                                    $row->$col = $content;
-                                }
-                            }
+            $locale = App::getLocale();
+            foreach ($userCategories as $row) {
+                if ($locale != I18nContent::DEFAULT) {
+                    $i18 = new I18nContent();
+                    $item18nData = $i18->i18nCategory($row->id, $locale);
+                    // dd($item18nData);
+                    $supportCols = array_keys(I18nContent::$categoryCols);
+                    foreach ($item18nData as $col => $content) {
+                        if (in_array($col, $supportCols) && $content != "") {
+                            $row->$col = $content;
+                        }
                     }
                 }
+            }
             $user->categories = $userCategories;
             $data['list'][] = $user;
         }
@@ -476,16 +477,16 @@ class PageController extends Controller
         $category = Category::all();
         $locale = App::getLocale();
         foreach ($category as $row) {
-            if($locale!=I18nContent::DEFAULT){
+            if ($locale != I18nContent::DEFAULT) {
                 $i18 = new I18nContent();
-                    $item18nData = $i18->i18nCategory($row->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols) && $content != "") {
-                            $row->$col = $content;
-                        }
+                $item18nData = $i18->i18nCategory($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
                     }
+                }
             }
         }
         $data['categories'] = $category;
@@ -513,16 +514,16 @@ class PageController extends Controller
                 return redirect()->back()->with('notify', 'Yêu cầu không hợp lệ');
             }
             $locale = App::getLocale();
-            if($locale!=I18nContent::DEFAULT){
+            if ($locale != I18nContent::DEFAULT) {
                 $i18 = new I18nContent();
-                    $item18nData = $i18->i18nUser($author->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$userCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols) && $content != "") {
-                            $author->$col = $content;
-                        }
+                $item18nData = $i18->i18nUser($author->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$userCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $author->$col = $content;
                     }
+                }
             }
             $data['author'] = $author;
             $classes = $classes->where('user_id', $id);
@@ -576,20 +577,20 @@ class PageController extends Controller
             $data['searchNotFound'] = false;
         }
         $locale = App::getLocale();
-            if($locale!=I18nContent::DEFAULT){
-                $i18 = new I18nContent();
-                foreach ($classes as $row) {
-                    // dd($row);
-                    $item18nData = $i18->i18nItem($row->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$itemCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols) && $content != "") {
-                            $row->$col = $content;
-                        }
+        if ($locale != I18nContent::DEFAULT) {
+            $i18 = new I18nContent();
+            foreach ($classes as $row) {
+                // dd($row);
+                $item18nData = $i18->i18nItem($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$itemCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
                     }
                 }
             }
+        }
         // $data['classes'] = $classes;
         $data['classesPaginate'] = $classes->appends($request->query())->links();
         $data['classes'] = [];
@@ -601,16 +602,16 @@ class PageController extends Controller
         $category = Category::all();
         $locale = App::getLocale();
         foreach ($category as $row) {
-            if($locale!=I18nContent::DEFAULT){
+            if ($locale != I18nContent::DEFAULT) {
                 $i18 = new I18nContent();
-                    $item18nData = $i18->i18nCategory($row->id, $locale);
-                    // dd($item18nData);
-                    $supportCols = array_keys(I18nContent::$categoryCols);
-                    foreach ($item18nData as $col => $content) {
-                        if (in_array($col, $supportCols) && $content != "") {
-                            $row->$col = $content;
-                        }
+                $item18nData = $i18->i18nCategory($row->id, $locale);
+                // dd($item18nData);
+                $supportCols = array_keys(I18nContent::$categoryCols);
+                foreach ($item18nData as $col => $content) {
+                    if (in_array($col, $supportCols) && $content != "") {
+                        $row->$col = $content;
                     }
+                }
             }
         }
         // dd($category);

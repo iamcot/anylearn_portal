@@ -92,7 +92,7 @@
                         {{ $course->user->name }}
                     </td>@endif
                     <td width="20%">
-                        <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a>
+                        <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i>[{{ $course->subtype }}] {{ $course->title }}</a>
                     </td>
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
                         <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>

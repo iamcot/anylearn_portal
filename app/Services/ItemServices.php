@@ -17,6 +17,8 @@ use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
 use App\Models\ItemUserAction;
+use App\Models\ItemVideoChapter;
+use App\Models\ItemVideoLesson;
 use App\Models\Notification;
 use App\Models\OrderDetail;
 use App\Models\Participation;
@@ -74,6 +76,22 @@ class ItemServices
     public function footerNews()
     {
         return Article::where('status', 1)->orderby('id', 'desc')->take(4)->get();
+    }
+
+    public function checkoutHasScheduleBox($item)
+    {
+        if ($item->subtype == 'video' || $item->subtype == 'digital') {
+            return false;
+        }
+        return true;
+    }
+
+    public function checkoutHasExtrafeeBox($item)
+    {
+        if ($item->subtype == 'offline') {
+            return true;
+        }
+        return false;
     }
 
     public function pdpData(Request $request, $itemId, $user)
@@ -181,6 +199,13 @@ class ItemServices
             ->orderby('iua.id', 'desc')
             ->select('iua.*', DB::raw('(CASE WHEN users.name = \'Admin\' THEN \'anyLEARN\' ELSE users.name END) AS user_name'), 'users.id AS user_id', 'users.image AS user_image')
             ->get();
+
+        $videos = [];
+        if ($item->subtype == 'video') {
+            $videoServ = new VideoServices();
+            $videos = $videoServ->getAllChapterAndLessons($itemId);
+        }
+
         return [
             'commission' => $commission,
             'disable_anypoint' => (int)$configs[ConfigConstants::CONFIG_DISABLE_ANYPOINT],
@@ -192,6 +217,7 @@ class ItemServices
             'categories' => $categories,
             'teachers' => $teachers,
             'reviews' => $reviews,
+            'videos' => $videos,
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
@@ -208,6 +234,22 @@ class ItemServices
         }
 
         $url = route('page.pdp', ['id' => $id, 'url' => $item->seo_url ?? Str::slug($item->title) . '.html']);
+        $url = str_replace("https://api.", "https://", $url);
+        return $url;
+    }
+
+    public function classVideoUrl($id, $lessonId = null)
+    {
+        $item = Item::find($id);
+        if (!$item) {
+            return "";
+        }
+
+        $url = route('page.video', [
+            'id' => $id,
+            'url' => $item->seo_url ?? Str::slug($item->title) . '.html',
+            'lessonId' => $lessonId
+        ]);
         $url = str_replace("https://api.", "https://", $url);
         return $url;
     }
@@ -365,7 +407,7 @@ class ItemServices
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
                     if (!empty($contentObj[$type])) {
-                        $buildContent .= "<h4 class=\"pdp-content-header\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" . $contentObj[$type];
+                        $buildContent .= "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" . $contentObj[$type];
                     }
                 }
                 return $buildContent;

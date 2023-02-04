@@ -5,7 +5,7 @@ user_edit
 @endsection
 @section('body')
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <form method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="id" value="{{ !empty($user) ? $user->id : null }}">
@@ -175,7 +175,7 @@ user_edit
                                     <label for="introduce" class="col-md-3 col-form-label text-md-right ">{{ __('Giới Thiệu Ngắn (Bio)') }}
                                         [{{ $locale }}]</label>
                                     <div class="col-md-8">
-                                        <textarea name="introduce[{{ $locale }}]" class="form-control">{{ old('introduce', !empty($userDT) ? $userDT['info']->introduce[$locale] : '') }}</textarea>
+                                        <textarea name="introduce[{{ $locale }}]" class="editor form-control">{{ old('introduce', !empty($userDT) ? $userDT['info']->introduce[$locale] : '') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -196,17 +196,27 @@ user_edit
             </div>
         </form>
     </div>
-    <div class="col-md-4">
-        @include('anylearn.me.friend_list')
-    </div>
 </div>
 @endsection
 @section('jscript')
 @parent
-<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+<script src="/cdn/vendor/ckeditor5/ckeditor.js"></script>
 <script>
-    @foreach(App\ Models\ I18nContent::$supports as $locale)
-    CKEDITOR.replace('editor{{ $locale }}');
-    @endforeach
+    var allEditors = document.querySelectorAll('.editor');
+    var editorConfig = {
+        simpleUpload: {
+            uploadUrl: '/upload/ckimage',
+            withCredentials: true,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            }
+        }
+    };
+    for (var i = 0; i < allEditors.length; ++i) {
+        ClassicEditor.create(allEditors[i], editorConfig)
+            .catch(error => {
+                console.log(error);
+            });
+    }
 </script>
 @endsection

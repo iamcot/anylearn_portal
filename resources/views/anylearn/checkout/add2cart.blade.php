@@ -1,95 +1,91 @@
 @inject('itemServ', 'App\Services\ItemServices')
 @extends('anylearn.layout')
 @section('spmb')
-    add2cart
+add2cart
 @endsection
 @section('body')
-    <!-- <h5 class="text-success mb-5">@lang('Vui lòng hoàn tất các bước sau để đăng ký khóa học')</h5> -->
-    <form class="" method="get">
-        <input type="hidden" name="class" value="{{ $item->id }}">
+<!-- <h5 class="text-success mb-5">@lang('Vui lòng hoàn tất các bước sau để đăng ký khóa học')</h5> -->
+<form class="" method="get">
+    <input type="hidden" name="class" value="{{ $item->id }}">
 
-        <div class="card mb-3 border-left-primary shadow">
-            <div class="card-header">
-                <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-shopping-cart"></i>
-                    @lang('Khóa học bạn đang đăng ký')</h5>
-            </div>
-            <div class="card-body">
-                <h3 class="fw-bold text-success">{{ $item->title }}</h3>
-                <p>{{ $author->role == 'teacher' ? __('Giảng viên') : __('Trung tâm') }}: {{ $author->name }}</p>
-                <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($item->date_start)) }}
-                    {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
-                </p>
-                <p>@lang('Học phí:') <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
-                <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong>
-            </div>
+    <div class="card mb-3 border-left-primary shadow">
+        <div class="card-header">
+            <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-shopping-cart"></i>
+                @lang('Khóa học bạn đang đăng ký')</h5>
         </div>
-        <div class="card mb-3 border-left-primary shadow">
-            <div class="card-header">
-                <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i> @lang('Bạn đang đăng ký cho')
-                </h5>
-            </div>
-            <div class="card-body">
-
-                @if (Auth::check())
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="child"
-                            value="{{ auth()->user()->id }}" checked>{{ auth()->user()->name }} (@lang('Tôi'))
-                    </div>
-                @endif
-                @if (count($children) > 0)
-                    @foreach ($children as $child)
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="radio1" name="child"
-                                value="{{ $child->id }}">{{ $child->name }}
-                        </div>
-                    @endforeach
-                @endif
-                <div class="float-right nav-link">
-                    <button type="button" class="btn btn-success rounded rounded-pill btn-sm my-2 my-sm-0 ml-2" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">Thêm Một Tài khoản</button>
-                </div>
-            </div>
+        <div class="card-body">
+            <h3 class="fw-bold text-success">{{ $item->title }}</h3>
+            <p>Đối tác:  {{ $author->name }}</p>
+            <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($item->date_start)) }}
+                {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
+            </p>
+            <p>@lang('Học phí:') <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
+            <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong> @lang('anyPoint cho giao dịch này')</p>
         </div>
-        <div class="card mb-3 border-left-primary shadow">
-            <div class="card-header">
-                <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i> @lang('Chọn lịch học')
-                </h5>
+    </div>
+    <div class="card mb-3 border-left-primary shadow">
+        <div class="card-header">
+            <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i> @lang('Bạn đang đăng ký cho')
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (Auth::check())
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="child0" name="child" value="{{ auth()->user()->id }}" checked><label for="child0">{{ auth()->user()->name }} (@lang('Tôi'))</label>
             </div>
-            <div class="card-body">
-                @if (count($item->openings) > 0)
-                <p class="text-danger">@lang('Chọn lịch khai giảng')</p>
-                <ul class="list-unstyled">
-                    @foreach ($item->openings as $opening)
-                        <li>
-                            <label for="class_{{ $opening->id }}"> <input required
-                                    id="class_{{ $opening->id }}" type="radio" name="class"
-                                    value="{{ $opening->id }}"> {{ $opening->title }}</label>
-                        </li>
-                    @endforeach
-                </ul>
             @endif
+            @if (count($children) > 0)
+            @foreach ($children as $child)
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="child{{ $child->id }}" name="child" value="{{ $child->id }}"> <label for="child{{ $child->id }}">{{ $child->name }}</label>
+            </div>
+            @endforeach
+            @endif
+            <div class="float-right nav-link">
+                <button type="button" class="btn btn-success border-0 rounded rounded-pill btn-sm my-2 my-sm-0 ml-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm người học mới</button>
             </div>
         </div>
-        <div class="card mb-3 border-left-primary shadow">
-            <div class="card-header">
-                <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i> @lang('Chọn phụ phí')
-                </h5>
-            </div>
-            <div class="card-body">
-
-                @foreach ($extra as $extra)
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="{{ $extra->id }}" name="extrafee[]" value="{{ $extra->id }}">
-                    <label class="form-check-label">{{ $extra->title }} - {{ number_format($extra->price)}}₫ </label>
-                  </div>
-        @endforeach
-            </div>
+    </div>
+    <div class="card mb-3 border-left-primary shadow">
+        <div class="card-header">
+            <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i> @lang('Lịch học')
+            </h5>
         </div>
-        <div class="text-center mb-5 mt-5">
-            <button name="action" value="saveCart"
-                class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ')</button>
+        <div class="card-body">
+            @if (count($item->openings) > 0)
+            <p class="text-danger">@lang('Chọn lịch khai giảng')</p>
+            <ul class="list-unstyled">
+                @foreach ($item->openings as $opening)
+                <li>
+                    <label for="class_{{ $opening->id }}"> <input required id="class_{{ $opening->id }}" type="radio" name="class" value="{{ $opening->id }}"> {{ $opening->title }}</label>
+                </li>
+                @endforeach
+            </ul>
+            @else 
+                <p>Lịch học bắt đầu từ {{ $item->time_start}}, ngày {{ date('d/m/Y', strtotime($item->date_start)) }}</p>
+            @endif
         </div>
-    </form>
+    </div>
+    @if (!empty($extras) && count($extras) > 0)
+    <div class="card mb-3 border-left-primary shadow">
+        <div class="card-header">
+            <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i> @lang('Chọn phụ phí')
+            </h5>
+        </div>
+        <div class="card-body">
+            @foreach ($extras as $extra)
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="extra{{ $extra->id }}" name="extrafee[]" value="{{ $extra->id }}">
+                <label for="extra{{ $extra->id }}" class="form-check-label">{{ $extra->title }} - {{ number_format($extra->price)}}₫ </label>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+    <div class="text-center mb-5 mt-5">
+        <button name="action" value="saveCart" class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ')</button>
+    </div>
+</form>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -164,5 +160,5 @@
 </div>
 @endsection
 @section('jscript')
-    @parent
+@parent
 @endsection

@@ -2,7 +2,7 @@
 <section class="carousel4">
     <div class="mx-auto my-auto justify-content-center">
         <div id="{{ $carouselId }}">
-            <h2 class="m-2 fw-bold text-uppercase">{{ $title }}</h2>
+            <h2 class="m-2 fw-bold text-uppercase">{{ $title }} @if(!empty($linkAll)) <a class="small" href="{{ $linkAll }}">XEM TOÀN BỘ ></a> @endif</h2>
             <div class="owl-carousel owl-theme" >
                 @foreach($data as $class)
                 <a class="p-1 classBox" href="{{ $itemServ->classUrl($class->id) }}" data-spm="topclass.{{ $class->id }}">

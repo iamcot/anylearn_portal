@@ -7,6 +7,7 @@ body {
 .container-fluid {
     padding-left: 0px;
 }
+
 .locale_flag-vi {
     height: 25px;
     width: 25px;
@@ -35,6 +36,7 @@ body {
     background: url("../img/flag/en.svg");
     background-position: center;
 }
+
 h2 {
     font-size: 1.25rem;
 }
@@ -134,19 +136,19 @@ nav a {
     color: #fff !important;
 }
 
-#search {
+#search2 {
     max-width: 50%;
     position: relative;
 }
 
-#search input {
+#search2 input {
     display: inline-block;
     text-indent: 20px;
     padding: 20px;
     max-height: 64px !important;
 }
 
-#search button {
+#search2 button {
     position: absolute;
     top: 0;
     right: 0;
@@ -654,7 +656,7 @@ footer .head_text {
     #banners img {
         max-height: 200px;
     }
-    #search {
+    #search2 {
         max-width: 93%;
     }
     .quote-text {

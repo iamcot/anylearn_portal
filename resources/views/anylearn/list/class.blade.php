@@ -28,7 +28,7 @@ classes
                     <div class="col-md-9 text-secondary">
                         <div class="collapse-module">
                             <div class="collapse" id="introduceCollapse">
-                                <p>{{ $author->introduce }}</p>
+                                <p>{!! $author->introduce !!}</p>
                                 @if ($author->role == 'school')
                                     <p>@lang('Người đại diện:') {{ $author->title }}</p>
                                 @endif

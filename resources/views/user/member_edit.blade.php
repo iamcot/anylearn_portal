@@ -166,7 +166,7 @@
                                     class="col-md-3 col-form-label text-md-right ">{{ __('Giới Thiệu Ngắn (Bio)') }}
                                     [{{ $locale }}]</label>
                                 <div class="col-md-8">
-                                    <textarea name="introduce[{{ $locale }}]" class="form-control">{{ old('introduce', !empty($user) ? $user->introduce[$locale] : '') }}</textarea>
+                                    <textarea name="introduce[{{ $locale }}]" class="editor form-control">{{ old('introduce', !empty($user) ? $user->introduce[$locale] : '') }}</textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -192,14 +192,28 @@
 @endsection
 @include('dialog.money_fix')
 @section('jscript')
-<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+@parent
+<script src="/cdn/vendor/ckeditor5/ckeditor.js"></script>
 <script>
-    @foreach(App\Models\I18nContent::$supports as $locale)
-    CKEDITOR.replace('editor{{ $locale }}');
-    @endforeach
+    var allEditors = document.querySelectorAll('.editor');
+    var editorConfig = {
+        simpleUpload: {
+            uploadUrl: '/upload/ckimage',
+            withCredentials: true,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            }
+        }
+    };
+    for (var i = 0; i < allEditors.length; ++i) {
+        ClassicEditor.create(allEditors[i], editorConfig)
+        .catch(error => {
+            console.log(error);
+        });
+    }
+    
     $('#moneyfix-action').click(function() {
         $('#moneyFixModal').modal('show');
     });
 </script>
-@parent
 @endsection

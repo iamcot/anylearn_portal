@@ -1,68 +1,55 @@
 @inject('videoServ', 'App\Services\VideoServices')
-@foreach ($chapter as $chap)
+<div class="">
+    @foreach ($videos as $chapter)
+    @if (count($chapter['lessons']) > 0)
     <div class="">
         <h5 class="card-header">
             <div class="g-0 justify-content-between">
                 <div class="col-sm-auto">
-                    <h6 class="text-success fs--1 mb-0">Chương {{ $chap->chapter_no }}</h6>
-                    <h6 class="text-success fw-bold mb-0">{{ $chap->title }}</h6>
+                    <h6 class="text-success fs--1 mb-0 fw-bold p-2">Chương {{ $chapter['chapter']->chapter_no }}: {{ $chapter['chapter']->title }}</h6>
                 </div>
             </div>
         </h5>
         <div class="d-flex align-items-center px-card border-200">
             <table class="fs--1 text-end mb-0 table">
                 <tbody>
-                    @foreach ($videoServ->LessoninChapter($chap->chapter_no) as $les)
-                        @if ($chap->item_id == $les->item_id)
-                            <tr class="btn-reveal-trigger bg-light">
-                                <td class="align-middle white-space-nowrap text-start">
-                                    <div class="d-flex align-items-center row">
-                                        <div class="col-md-1">
-                                            <h6 class="text-black text-center fs--1 mb-0">Bài {{ $les->lesson_no }}</h6>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <strong>{{ $les->title }}</strong>
-                                            <p class="fs--1 mb-0" style="vertical-align: inherit;">
-                                                {{ $les->description }}
-                                            </p>
-                                        </div>
-                                        <div class="col-md-2">
-                                            @if ($videoServ->checkOrder($item->id) == 0)
-                                                <form action="" method="get">
-                                                    {{ csrf_field() }}
-                                                    @if ($les->is_free == 1)
-                                                        <input type="hidden" name="idvideo"
-                                                            value="{{ $les->id }}">
-                                                        <button type="submit" name="action" value="learnfree"
-                                                            class="float-end btn btn-outline-primary btn-sm">Học miễn
-                                                            phí</button>
-                                                    @else
-                                                        <a href="#"><button type="button" name="action"
-                                                                value="learnfree"
-                                                                class="float-end btn btn-outline-primary btn-sm">Đăng kí
-                                                                để
-                                                                học</button></a>
-                                                        {{-- <button type="button" class="float-end btn btn-outline-primary btn-sm"><i class="fas fa-fw fa-lock"></i></button> --}}
-                                                    @endif
-                                                </form>
-                                            @else
-                                                <form action="" method="get">
-                                                    <input type="hidden" name="idvideo" value="{{ $les->id }}">
-                                                    <button type="submit" name="action" value="learnfree"
-                                                        class="float-end btn btn-outline-primary btn-sm">Học</button>
-                                                </form>
-                                            @endif
+                    @foreach ($chapter['lessons'] as $les)
+                    <tr class="btn-reveal-trigger bg-light">
+                        <td class="align-middle white-space-nowrap text-start p-2">
+                            <div class="d-flex align-items-center row">
+                                <div class="col-md-1">
+                                    <h6 class="text-black text-center fs--1 mb-0">Bài {{ $les->lesson_no }}</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <strong>{{ $les->title }}</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    @if (auth()->check())
+                                    @if (!$videoServ->checkOrder($item->id))
+                                    @if ($les->is_free == 1)
+                                    <a href="{{ $itemServ->classVideoUrl($les->item_id, $les->id) }}" class="float-end btn btn-outline-danger btn-sm">FREE</a>
+                                    @else
+                                    <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
+                                        <input type="hidden" name="class" value="{{ $item->id }}">
+                                        <button name="action" value="add2cart" class="float-end btn btn-outline-success btn-sm"><i class="fa fa-cart-plus"></i></button>
+                                    </form>
+                                    @endif
+                                    @else
+                                    <a href="{{ $itemServ->classVideoUrl($les->item_id, $les->id) }}" class="float-end btn btn-outline-success btn-sm"><i class="fa fa-play"></i></a>
+                                    @endif
+                                    @elseif($les->is_free == 1)
+                                    <a href="{{ $itemServ->classVideoUrl($les->item_id, $les->id) }}" class="float-end btn btn-outline-danger btn-sm">FREE</a>
+                                    @endif
+                                </div>
+                            </div>
 
-                                        </div>
-
-                                    </div>
-
-                                </td>
-                            </tr>
-                        @endif
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-@endforeach
+    @endif
+    @endforeach
+</div>

@@ -1,6 +1,6 @@
 @inject('itemServ', 'App\Services\ItemServices')
 <footer>
-    <div class="row h-100">
+    <div class="row">
         <div class="col-sm-6 bg-primary pb-5">
             <div class="row mt-5 mb-3">
                 <div class="col-sm-5 ps-5 text-center d-none d-lg-block">

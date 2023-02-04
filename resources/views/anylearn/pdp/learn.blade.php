@@ -3,181 +3,192 @@
 @extends('anylearn.layout')
 
 @section('body')
-    <div class="row">
-        <div class="mb-4 mb-lg-4 col-lg-7">
-            <div class="position-relative h-sm-100 overflow-hidden">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $link }}"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen></iframe>
-                <h6 class="fw-semi-bold text-400">Một khóa học đến từ <a class="link-info"
-                        href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}">{{ $videoServ->getTeacher($itemId)->name }}</a>
-                </h6>
-                <h2 class="fw-bold text-black">{{ $videoServ->getOneLessonItem($idvideo)->title }}</h2>
-                <p class="text-black fw-semi-bold fs--1">
-                    @include('pdp.rat', ['score' => 5])
-                </p>
+<h1 class="text-success">{{ $itemData->title }} </h1>
+<hr>
+<div class="row mb-3">
+    <div class="mb-3 col-lg-8">
+        <div class="position-relative">
+            <div class="shadow">
+                @if ($lessonData->type == 'youtube' && $videoServ->getlinkYT($lessonData->type_value) != "")
+                @include('anylearn.pdp.video_youtube', ['youtubeId' => $videoServ->getlinkYT($lessonData->type_value) ])
+                @else
+                <p class="p-3">Tạm thời chưa có video</p>
+                @endif
             </div>
-        </div>
-        @if ($videoServ->checkOrder($itemId) == 0)
-            <div class="col-lg-5">
-                <div class="mb-3 card">
-                    <div class="bg-light d-none d-lg-block mb-0 card-header">
-                        <h5 class="mb-0">
-                            <font style="vertical-align: inherit;">
-                                <font class="fw-bold" style="vertical-align: inherit;">Đăng kí khóa học ngay</font>
-                            </font>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="order-md-1 order-lg-0 col-lg-12 col-md-7">
-                                <h2 class="fw-medium d-flex align-items-center">
-                                    <font style="vertical-align: inherit;"></font>
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">{{ $videoServ->getOneItem($itemId)->price }}
-                                        </font>
-                                        <font style="vertical-align: inherit;">VND</font>
-                                    </font> <del class="ms-2 fs--1 text-500">
-                                        <font style="vertical-align: inherit;">
-                                            <font style="vertical-align: inherit;">VND </font>
-                                        </font>
-                                        <font style="vertical-align: inherit;">
-                                            <font style="vertical-align: inherit;">
-                                                {{ $videoServ->getOneItem($itemId)->org_price }}</font>
-                                        </font>
-                                    </del>
-                                </h2>
-                                <div class="flex-fill pt-2"><a @if (auth()->check()) id="add2cart-action" @endif
-                                        class="border-0 btn btn-success form-control rounded-pill"
-                                        href="{{ $itemServ->classUrl($itemId) }}">@lang('Đăng ký học')</a>
-                                </div>
-
-                            </div>
-                            <div class="col-lg-12 col-md-5">
-                                <hr class="border-top border-dashed d-md-none d-lg-block">
-                                <h6 class="fw-bold">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">Nội dung khóa học</font>
-                                    </font>
-                                </h6>
-                                <p>{{ substr($videoServ->getOneItem($itemId)->short_content, 0, 265) }}...</p>
-                            </div>
-                        </div>
-
-                        {{-- <h6 class="fw-bold text-end">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;"><a href="#"> Chia sẻ với bạn bè <i class="fas fa-share"></i></a></font>
-                        </font>
-                    </h6> --}}
-                    </div>
+            <h3 class="fw-bold text-success mt-3">@lang('Bài') {{ $lessonData->lesson_no }}: {{ $lessonData->title }}</h3>
+            @if($lessonData->length)<div>@lang('Thời lượng'): {{ $lessonData->length }} @lang('phút')</div>@endif
+            <div>{!! $lessonData->description !!}</div>
+            <div class="card mt-3">
+                <div class="card-header fw-bold text-secondary">Về khóa học {{ $itemData->title }}
+                    <a class="float-end small" href="{{ $itemServ->classUrl($itemData->id) }}">Xem thông tin ></a>
+                </div>
+                <div class="card-body">{!! $itemData->short_content !!}</div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header fw-bold text-secondary">Về đối tác {{ $author->name }}
+                    <a class="small float-end" href="{{ route('classes', ['role' => $author->role, 'id' => $author->id]) }}">Xem khóa học khác ></a>
+                </div>
+                <div class="card-body">
+                    <p class="text-success">Tham gia từ: tháng {{ date("m", strtotime($author->created_at)) }} năm {{ date("Y", strtotime($author->created_at)) }}</p>
+                    {!! $author->introduce !!}
                 </div>
             </div>
-        @else
-            <div class="mb-lg-4 col-lg-5">
-                <div class="accordion" id="accordionExample">
-                    @foreach ($chapter as $chap)
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse{{ $chap->chapter_no }}" aria-expanded="true"
-                                    aria-controls="collapse{{ $chap->chapter_no }}">
-                                    Chương {{ $chap->chapter_no }}
-                                </button>
-                            </h2>
-                            <div id="collapse{{ $chap->chapter_no }}" class="accordion-collapse collapse "
-                                aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="">
-                                    <div class="tab-content">
-                                        <table class="fs--1 text-end table" style="margin-bottom: 0em;">
-                                            <tbody>
-                                                @foreach ($videoServ->LessoninChapter($chap->chapter_no) as $les)
-                                                @if ($chap->item_id == $les->item_id)
-                                                    <form action="" method="get">
-                                                        <tr class="btn-reveal-trigger bg-light">
-                                                            <td class="align-middle white-space-nowrap text-start">
-                                                                <div class="d-flex row">
-                                                                    <div class="col-md-2">
-                                                                        <h6 class="text-success fs--1 mt-1">Bài
-                                                                            {{ $les->lesson_no }} &nbsp;
-                                                                        </h6>
-                                                                    </div>
-                                                                    <div class="col-md-8">
-                                                                        <h6 class="fs--2 text-black mt-1"
-                                                                            style="vertical-align: inherit;">
-                                                                            {{ $les->title }}</h6>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <input type="hidden" name="idvideo"
-                                                                            value="{{ $les->id }}">
-                                                                        <button type="submit" name="action"
-                                                                            value="learnfree"
-                                                                            class="float-end btn btn-outline-primary btn-sm">Học</button>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </form>
-                                                    @endif
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+            @if(count($ratings) > 0)
+            <div class="card mt-3">
+                <div class="card-header fw-bold text-secondary">Học viên đánh giá</div>
+                <div class="card-body">
+                    @foreach($ratings as $review)
+                    <li class="row @if ($loop->index < count($ratings) - 1) border-bottom @endif mb-3">
+                        <div class="col-sm-1 col-3 m-2">
+                            @if ($review->user_image)
+                            <img class="avatar avatar-img border rounded-circle" src="{{ $review->user_image }}" alt="">
+                            @endif
                         </div>
+                        <div class="col-9">
+                            <p>{{ $review->user_name }}</p>
+                            @include('anylearn.widget.rating', ['score' => $review->value ?? 0])
+                            <p>{{ $review->extra_value }}</p>
+                        </div>
+                    </li>
                     @endforeach
                 </div>
             </div>
+            @endif
+        </div>
+    </div>
+    <div class="col-lg-4">
+        @if (!$videoServ->checkOrder($itemId))
+        <div class="mb-3 card shadow">
+            <div class="card-body">
+                <h3>
+                    <i class="fa fa-dollar-sign"></i>
+                    @if ($itemData->org_price > 0)
+                    <span class="bg-success badge mr-1">-{{ number_format((($itemData->org_price - $itemData->price) / $itemData->org_price) * 100, 0, '.', ',') }}%</span>
+                    <span class="text-secondary text-decoration-line-through mr-1">{{ number_format($itemData->org_price, 0, ',', '.') }}đ</span>
+                    @endif
+                    <span class="text-success fw-bold">{{ number_format($itemData->price, 0, ',', '.') }}đ</span>
+
+                </h3>
+                <p class="">
+                    <i class=" text-success fa fa-{{ $author->role == 'teacher' ? 'user' : 'university' }}"></i> <a href="{{ route('classes', [
+                        'role' => $author->role,
+                        'id' => $author->id,
+                    ]) }}" class="text-decoration-none text-success">{{ $author->name }}</a>
+                </p>
+                <div>
+                    <ul class="list-unstyled list-inline">
+                        @foreach ($categories as $category)
+                        <li class="list-inline-item border border-success rounded text-success p-1 fw-light">
+                            {{ $category->title }}
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @if ($itemData->rating)
+                <div>
+                    @include('anylearn.widget.rating', ['score' => $itemData->rating ?? 0])
+                </div>
+                @endif
+                @if($itemData->ages_min > 0 && $itemData->ages_max > 0) <p>@lang('Độ tuổi'): {{ $itemData->ages_min . '-' . $itemData->ages_max }}</p>@endif
+                @if (!auth()->check())
+                <a class="border-0 btn btn-success form-control rounded" href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($itemData->id)) }}">@lang('Đăng ký học')</a>
+                @else
+                <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
+                    <input type="hidden" name="class" value="{{ $itemData->id }}">
+                    <button name="action" value="add2cart" class="border-0 btn btn-success form-control rounded">@lang('Đăng ký học')</button>
+                </form>
+                @endif
+            </div>
+        </div>
         @endif
-    </div>
-    <div class="mb-3 card">
-        <div class="card-header">
-            <div class="align-items-center row">
-                <div class="col">
-                    <h5 class="mb-0">
-                        <font style="vertical-align: inherit;">
-                            <font class="fw-bold" style="vertical-align: inherit;">Được cung cấp bởi</font>
-                        </font>
-                    </h5>
-                </div>
+        <div class="accordion shadow" id="accordionVideos">
+            @foreach ($videos as $chapter)
+            @if (count($chapter['lessons']) > 0)
+            <div class="accordion-item ">
+                <h2 class="accordion-header" id="heading{{ $chapter['chapter']->chapter_no }}">
+                    <button class="accordion-button @if($lessonData->item_video_chapter_id != $chapter['chapter']->id) collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $chapter['chapter']->chapter_no }}" aria-expanded="true" aria-controls="collapse{{ $chapter['chapter']->chapter_no }}">
+                        <strong>@lang('Chương') {{ $chapter['chapter']->chapter_no }}: {{ $chapter['chapter']->title }}</strong>
+                    </button>
+                </h2>
+                <div id="collapse{{ $chapter['chapter']->chapter_no }}" class="accordion-collapse collapse @if($lessonData->item_video_chapter_id == $chapter['chapter']->id) show @endif" aria-labelledby="heading{{ $chapter['chapter']->chapter_no }}" data-bs-parent="#accordionVideos">
+                    <div class="tab-content">
+                        <table class="fs--1 text-end table table-striped mb-0">
+                            <tbody>
+                                @foreach ($chapter['lessons'] as $les)
+                                <tr class="btn-reveal-trigger bg-light">
+                                    <td class="align-middle white-space-nowrap text-start">
+                                        <div class="d-flex row">
+                                            <div class="col-md-3">
+                                                <h6 class="text-success fs--1">Bài {{ $les->lesson_no }}
+                                                </h6>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <h6 class="fs--2 text-black">
+                                                    {{ $les->title }}
+                                                </h6>
+                                            </div>
+                                            <div class="col-md-2">
+                                                @if (auth()->check())
+                                                @if (!$videoServ->checkOrder($itemData->id))
+                                                @if ($les->is_free == 1)
+                                                <a href="{{ $itemServ->classVideoUrl($les->item_id, $les->id) }}" class="float-end btn btn-outline-danger btn-sm">FREE</a>
+                                                @else
+                                                <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
+                                                    <input type="hidden" name="class" value="{{ $itemData->id }}">
+                                                    <button name="action" value="add2cart" class="float-end btn btn-outline-success btn-sm"><i class="fa fa-cart-plus"></i></button>
+                                                </form>
+                                                @endif
+                                                @else
+                                                <a href="{{ $itemServ->classVideoUrl($les->item_id, $les->id) }}" class="float-end btn btn-outline-success btn-sm"><i class="fa fa-play"></i></a>
+                                                @endif
+                                                @elseif($les->is_free == 1)
+                                                <a href="{{ $itemServ->classVideoUrl($les->item_id, $les->id) }}" class="float-end btn btn-outline-danger btn-sm">FREE</a>
+                                                @endif
 
-            </div>
-        </div>
-        <div class="bg-light card-body">
-            <div class="g-4 text-center text-md-start row">
-                {{-- <div class="col-md-auto">
-                    <div class="avatar avatar-4xl "><img class="rounded-circle "
-                            src="{{ $videoServ->getTeacher($itemId)->image }}" alt=""></div>
-                </div> --}}
-                <div class="col">
-                    <h5 class="mb-2"><a
-                            href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">{{ $videoServ->getTeacher($itemId)->name }}</font>
-                            </font>
-                        </a></h5>
-                    <h6 class="fs--1 text-800 fw-normal mb-3">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">{{ $videoServ->getTeacher($itemId)->introduce }}</font>
-                            {{-- <font style="vertical-align: inherit;">Nhà văn truyện tranh chuyên nghiệp</font> --}}
-                        </font>
-                    </h6>
-                    <p class="fs--1 text-700">
-                        {{ $videoServ->getTeacher($itemId)->full_content }}
-                    </p>
-
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+            @endif
+            @endforeach
         </div>
-        <div class="text-end py-2 card-footer"><a role="button" tabindex="0"
-                href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}"
-                class="fw-medium btn btn-link btn-sm">
-                <font style="vertical-align: inherit;">
-                    <a href="{{ route('classes', ['role' => 'school', 'id' => $videoServ->getTeacher($itemId)->id]) }}"
-                        class="link-info">Xem tất cả các khóa
-                        học</a>
-                </font>
-            </a></div>
     </div>
+</div>
+@if(count($authorClasses) > 0)
+<div class="mb-5">
+    @include('anylearn.home.classes', [
+    'title' => 'KHÓA HỌC CÙNG ĐỐI TÁC',
+    'carouselId' => 'learn-classes',
+    'data' => $authorClasses,
+    'linkAll' => route('classes', ['role' => $author->role, 'id' => $author->id]),
+    ])
+</div>
+@endif
+@endsection
+@section('jscript')
+@parent
+<script>
+    $('.carousel4 .owl-carousel').owlCarousel({
+        margin: 10,
+        nav: true,
+        navText: [
+            '<span class="owl-carousel-control-icon rounded-circle border p-2 bg-white shadow"><i class="fas fa-2x fa-angle-left text-secondary"></i></span>',
+            '<span class="owl-carousel-control-icon-right rounded-circle border  p-2 bg-white shadow"><i class="fas fa-2x fa-angle-right text-secondary"></i></span>'
+        ],
+        responsive: {
+            0: {
+                items: 2
+            },
+            600: {
+                items: 5
+            }
+        }
+    });
+</script>
 @endsection
