@@ -281,7 +281,7 @@ class ClassController extends Controller
         $this->data['navText'] = __('Chỉnh sửa lớp học');
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
-        $this->data['extra'] = DB::table('item_extras')->get();
+        $this->data['extra'] = ModelsItemExtra::where('item_id', $courseId)->get();
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])

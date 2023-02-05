@@ -23,6 +23,9 @@
                 @if(!empty($course['info']) && $course['info']->subtype == 'video')
                 <a class="shadow nav-link {{ session('tab') == 'video' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-video-tab" data-toggle="pill" href="#v-pills-video" role="tab" aria-controls="v-pills-video" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-play"></i> <span class="mobile-no-text">@lang('Videos')</span></a>
                 @endif
+                @if(!empty($course['info']) && $course['info']->subtype == 'offline')
+                <a class="shadow nav-link {{ session('tab') == 'extrafee' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-extrafee-tab" data-toggle="pill" href="#v-pills-extrafee" role="tab" aria-controls="v-pills-extrafee" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-dollar-sign"></i> <span class="mobile-no-text">@lang('Phụ phí')</span></a>
+                @endif
                 <a class="shadow nav-link {{ session('tab') == 'resource' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-resource-tab" data-toggle="pill" href="#v-pills-resource" role="tab" aria-controls="v-pills-resource" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-image"></i> <span class="mobile-no-text">@lang('Hình ảnh')</span></a>
                 @if($isSchool)
                 <a class="shadow nav-link {{ session('tab') == 'teachers' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="v-pills-teachers-tab" data-toggle="pill" href="#v-pills-teachers" role="tab" aria-controls="v-pills-teachers" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-chalkboard-teacher"></i> <span class="mobile-no-text">@lang('Giảng viên')</span></a>
@@ -45,6 +48,9 @@
                 </div>
                 <div class="tab-pane fade {{ session('tab') == 'video' ? 'show active' : '' }}" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
                     @include('class.form.video')
+                </div>
+                <div class="tab-pane fade {{ session('tab') == 'extrafee' ? 'show active' : '' }}" id="v-pills-extrafee" role="tabpanel" aria-labelledby="v-pills-extrafee-tab">
+                    @include('class.form.extrafee')
                 </div>
                 <div class="tab-pane fade {{ session('tab') == 'resource' ? 'show active' : '' }}" id="v-pills-resource" role="tabpanel" aria-labelledby="v-pills-resource-tab">
                     @include('class.form.resource')
