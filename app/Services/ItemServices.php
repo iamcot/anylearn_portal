@@ -946,16 +946,21 @@ class ItemServices
             'course' => $item->title,
         ]);
 
+        if ($user->is_child) {
+            $orderUser = User::find($user->user_id);
+        } else {
+            $orderUser = $user;
+        }
         $transService = new TransactionService();
         // approve direct and indirect commission
         $directCommission = DB::table('transactions')
             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
             ->join('orders', 'orders.id', '=', 'od.order_id')
-            ->where('orders.user_id', $joinedUserId)
+            ->where('orders.user_id', $orderUser->id)
             ->where('od.item_id', $item->id)
             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-            ->where('transactions.user_id', $user->id)
+            ->where('transactions.user_id', $orderUser->id)
             ->select('transactions.*')
             ->first();
         if ($directCommission) {
@@ -963,7 +968,7 @@ class ItemServices
         }
 
         // approve up tree transaction, just 1 level
-        $refUser = User::find($user->user_id);
+        $refUser = User::find($orderUser->user_id);
         if ($refUser) {
             $inDirectCommission = DB::table('transactions')
                 ->join('orders', 'orders.id', '=', 'transactions.order_id')
@@ -979,6 +984,7 @@ class ItemServices
             }
         }
 
+        //TODO: khi get user social post can lay them record cua child id
         SocialPost::create([
             'type' => SocialPost::TYPE_CLASS_COMPLETE,
             'user_id' => $user->id,
@@ -988,74 +994,74 @@ class ItemServices
         ]);
 
         // No limit time class => just touch transaction related to approved user
-        if ($item->nolimit_time == 1) {
-            //get transaction relate order id & user & item
-            $trans = DB::table('transactions')
-                ->join('order_details AS od', function ($query) use ($user) {
-                    $query->on('od.id', '=', 'transactions.order_id')
-                        ->where('od.user_id', '=', $user->id);
-                })
-                ->join('orders', 'orders.id', '=', 'od.order_id')
-                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
-                ->where('orders.user_id', $joinedUserId)
-                ->where('od.item_id', $item->id)
-                ->where('transactions.user_id', $author->id)
+        // if ($item->nolimit_time == 1) {
+        //get transaction relate order id & user & item
+        $trans = DB::table('transactions')
+            ->join('order_details AS od', function ($query) use ($user) {
+                $query->on('od.id', '=', 'transactions.order_id')
+                    ->where('od.user_id', '=', $user->id);
+            })
+            ->join('orders', 'orders.id', '=', 'od.order_id')
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->where('orders.user_id', $orderUser->id)
+            ->where('od.item_id', $item->id)
+            ->where('transactions.user_id', $author->id)
+            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+            ->select('transactions.*')
+            ->first();
+        // approve author transaction
+        if ($trans) {
+            $transService->approveWalletcTransaction($trans->id);
+            // approve foundation transaction
+            DB::table('transactions')
+                ->where('transactions.order_id', $trans->order_id)
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->select('transactions.*')
-                ->first();
-            // approve author transaction
-            if ($trans) {
-                $transService->approveWalletcTransaction($trans->id);
-                // approve foundation transaction
-                DB::table('transactions')
-                    ->where('transactions.order_id', $trans->order_id)
-                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
-                    ->update([
-                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
-                    ]);
-            }
-        } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
-            $configM = new Configuration();
-            $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
-            $totalReg = OrderDetail::where('item_id', $itemId)->count();
-            $totalConfirm = Participation::where('item_id', $itemId)->count();
-            //update author commssion when reach % of approved users
-            if ($totalConfirm / $totalReg >= $needNumConfirm) {
-                //get ALL transaction relate order id & item
-                $allTrans = DB::table('transactions')
-                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-                    ->where('od.item_id', $item->id)
-                    ->where('transactions.user_id', $author->id)
-                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                    ->select('transactions.*')
-                    ->get();
-
-                // approve author transaction
-                if ($allTrans) {
-                    foreach ($allTrans as $trans) {
-                        $transService->approveWalletcTransaction($trans->id);
-                    }
-                }
-                // approve foundation transaction
-                DB::table('transactions')
-                    ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-                    ->where('od.item_id', $item->id)
-                    ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-                    ->where('transactions.user_id', $author->id)
-                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                    ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
-                    ->update([
-                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE
-                    ]);
-
-                Item::find($itemId)->update([
-                    'got_bonus' => 1
+                ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+                ->update([
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE
                 ]);
-            }
         }
+        // } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
+        //     $configM = new Configuration();
+        //     $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
+        //     $totalReg = OrderDetail::where('item_id', $itemId)->count();
+        //     $totalConfirm = Participation::where('item_id', $itemId)->count();
+        //     //update author commssion when reach % of approved users
+        //     if ($totalConfirm / $totalReg >= $needNumConfirm) {
+        //         //get ALL transaction relate order id & item
+        //         $allTrans = DB::table('transactions')
+        //             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+        //             ->where('od.status', OrderConstants::STATUS_DELIVERED)
+        //             ->where('od.item_id', $item->id)
+        //             ->where('transactions.user_id', $author->id)
+        //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+        //             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+        //             ->select('transactions.*')
+        //             ->get();
+
+        //         // approve author transaction
+        //         if ($allTrans) {
+        //             foreach ($allTrans as $trans) {
+        //                 $transService->approveWalletcTransaction($trans->id);
+        //             }
+        //         }
+        //         // approve foundation transaction
+        //         DB::table('transactions')
+        //             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+        //             ->where('od.item_id', $item->id)
+        //             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+        //             ->where('transactions.user_id', $author->id)
+        //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+        //             ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+        //             ->update([
+        //                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+        //             ]);
+
+        //         Item::find($itemId)->update([
+        //             'got_bonus' => 1
+        //         ]);
+        //     }
+        // }
     }
 }

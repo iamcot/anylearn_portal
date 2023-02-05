@@ -216,18 +216,23 @@ class TransactionController extends Controller
             $user = Auth::user();
             $this->data['api_token'] = null;
         }
-        $parent = Auth::user();
-        if ($request->input('action') == "create") {
-            $input = $request->all();
-            $userChild = new User();
-            $userChild->createChild($parent, $input);
-            return redirect()->back()->with('notify', 'Tạo tài khoản mới thành công');
-        }
-        $this->detectUserAgent($request);
 
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
+        $this->data['user'] = $user;
+
+        if ($request->input('action') == "createChild") {
+            $input = $request->all();
+            $userChild = new User();
+            $userChild->createChild($user, $input);
+            $returnObj = ['class' => $request->get('class')];
+            if ($this->data['api_token']) {
+                $returnObj['api_token'] = $this->data['api_token'];
+            }
+            return redirect()->route('add2cart', $returnObj)->with('notify', 'Tạo người học mới thành công');
+        }
+        $this->detectUserAgent($request);
 
         if ($request->get('action') == 'saveCart') {
             $transService = new TransactionService();
@@ -253,13 +258,13 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
         }
         $children = [];
-            if ($user) {
-                $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
-            }
-        $schedule = DB::table('schedules')->where('item_id',$request->get('class'))->get();
-        $extras = DB::table('item_extras')->where('item_id',$request->get('class'))->get();
-        $this->data['extras']= $extras;
-        $this->data['schedule']=$schedule;
+        if ($user) {
+            $children = User::where('user_id', $user->id)->where('is_child', 1)->get();
+        }
+        $schedule = DB::table('schedules')->where('item_id', $request->get('class'))->get();
+        $extras = DB::table('item_extras')->where('item_id', $request->get('class'))->get();
+        $this->data['extras'] = $extras;
+        $this->data['schedule'] = $schedule;
         $this->data['user'] = $user;
         $this->data['children'] = $children;
         $this->data['classId'] = $request->get('class');

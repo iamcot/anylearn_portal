@@ -5,8 +5,9 @@ add2cart
 @endsection
 @section('body')
 <!-- <h5 class="text-success mb-5">@lang('Vui lòng hoàn tất các bước sau để đăng ký khóa học')</h5> -->
-<form class="" method="get">
+<form class="" method="get" id="spmc" data-spm="{{ $item->id }}">
     <input type="hidden" name="class" value="{{ $item->id }}">
+    <input type="hidden" name="api_token" value="{{ $api_token }}">
 
     <div class="card mb-3 border-left-primary shadow">
         <div class="card-header">
@@ -29,11 +30,11 @@ add2cart
             </h5>
         </div>
         <div class="card-body">
-            @if (Auth::check())
+           
             <div class="form-check">
-                <input type="radio" class="form-check-input" id="child0" name="child" value="{{ auth()->user()->id }}" checked><label for="child0">{{ auth()->user()->name }} (@lang('Tôi'))</label>
+                <input type="radio" class="form-check-input" id="child0" name="child" value="{{ $user->id }}" checked><label for="child0">{{ $user->name }} (@lang('Tôi'))</label>
             </div>
-            @endif
+           
             @if (count($children) > 0)
             @foreach ($children as $child)
             <div class="form-check">
@@ -98,7 +99,7 @@ add2cart
                 <!-- Form  -->
                 <form method="POST">
                     @csrf
-
+                    <input type="hidden" name="api_token" value="{{ $api_token }}">
                     <div class="">
                         <div class="form-group row">
                             <h6><b>@lang('Thông tin cá nhân')</b></h6>
@@ -150,7 +151,7 @@ add2cart
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('Hủy')</button>
-                            <button type="Submit" class="btn btn-success" name="action" value="create">@lang('Lưu')</button>
+                            <button type="Submit" class="btn btn-success" name="action" value="createChild">@lang('Lưu')</button>
                         </div>
                 </form>
             </div>

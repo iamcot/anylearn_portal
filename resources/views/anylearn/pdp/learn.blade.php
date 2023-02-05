@@ -2,10 +2,14 @@
 @inject('itemServ', 'App\Services\ItemServices')
 @extends('anylearn.layout')
 
+@section('spmb')
+learn_video
+@endsection
+
 @section('body')
 <h1 class="text-success">{{ $itemData->title }} </h1>
 <hr>
-<div class="row mb-3">
+<div class="row mb-3"  id="spmc" data-spm="{{ $lessonData->id }}">
     <div class="mb-3 col-lg-8">
         <div class="position-relative">
             <div class="shadow">
