@@ -175,7 +175,7 @@ user_edit
                                     <label for="introduce" class="col-md-3 col-form-label text-md-right ">{{ __('Giới Thiệu Ngắn (Bio)') }}
                                         [{{ $locale }}]</label>
                                     <div class="col-md-8">
-                                        <textarea name="introduce[{{ $locale }}]" class="editor form-control">{{ old('introduce', !empty($userDT) ? $userDT['info']->introduce[$locale] : '') }}</textarea>
+                                        <textarea name="introduce[{{ $locale }}]" class="_editor form-control">{{ old('introduce', !empty($userDT) ? $userDT['info']->introduce[$locale] : '') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
