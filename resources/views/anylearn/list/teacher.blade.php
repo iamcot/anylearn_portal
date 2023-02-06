@@ -32,14 +32,13 @@
                                                 src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}"></a>
                                     </div>
                                     <div class="description">
-                                        <h3 class="fw-bold">{{ $school->name }}</h3>
+                                        <h3 class="fw-bold"><a class="text-black" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $school->name }}</a></h3>
                                         <div>
                                             <ul class="list-unstyled list-inline">
                                                 @foreach ($school->categories as $category)
                                                     <li
                                                         class="list-inline-item border border-success rounded text-success p-1 small mt-1">
-                                                        <a
-                                                            href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $category->title }}</a>
+                                                        <a>{{ $category->title }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>
