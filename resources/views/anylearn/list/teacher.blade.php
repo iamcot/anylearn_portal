@@ -7,7 +7,7 @@
     @lang('Các chuyên gia & giảng viên tại anyLEARN là những cá nhân thành công trong công việc và ngành nghề của họ. Tại anyLEARN, họ mong muốn dùng kinh nghiệm của mình để truyền đạt và tạo ra giá trị cho học viên.')
 @endsection
 @section('spmb')
-teachers
+    teachers
 @endsection
 @section('body')
     <div class="row">
@@ -27,16 +27,19 @@ teachers
                             <div class="card shadow align-self-stretch vw-100">
                                 <div class="card-body p-2">
                                     <div class="imagebox">
-                                        <img class="img-fluid" src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}">
+                                        <a href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"><img
+                                                class="img-fluid"
+                                                src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}"></a>
                                     </div>
                                     <div class="description">
-                                        <h3 class="fw-bold">{{ $school->name }}</h3>
+                                        <h3 class="fw-bold"><a class="text-black" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $school->name }}</a></h3>
                                         <div>
                                             <ul class="list-unstyled list-inline">
                                                 @foreach ($school->categories as $category)
                                                     <li
                                                         class="list-inline-item border border-success rounded text-success p-1 small mt-1">
-                                                        {{ $category->title }}</li>
+                                                        <a>{{ $category->title }}</a>
+                                                    </li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -45,7 +48,8 @@ teachers
 
                                 </div>
                                 <div class="align-self-center m-2">
-                                    <a data-spm="list.{{ $school->id }}" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
+                                    <a data-spm="list.{{ $school->id }}"
+                                        href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}"
                                         class="fw-bold btn border-0 rounded-pill btn-success">@lang('KHOÁ HỌC')</a>
                                 </div>
 
@@ -80,7 +84,8 @@ teachers
                                 @else
                                     @foreach ($wards as $ward)
                                         <option value="{{ $ward->code }}"
-                                            {{ $ward->code == $location->ward_code ? 'selected' : '' }}>{{ $ward->name }}
+                                            {{ $ward->code == $location->ward_code ? 'selected' : '' }}>
+                                            {{ $ward->name }}
                                         </option>
                                     @endforeach
                                 @endif

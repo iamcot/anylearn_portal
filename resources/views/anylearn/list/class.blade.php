@@ -7,7 +7,7 @@
     @lang('Tổng hợp các khóa học, chương trình học được kiểm duyệt và đánh giá bởi các chuyên gia tại anyLEARN.')
 @endsection
 @section('spmb')
-classes
+    classes
 @endsection
 @section('body')
     @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
@@ -35,23 +35,23 @@ classes
                                 <div>{!! $author->full_content !!}</div>
                             </div>
                             @if ($author->full_content && strlen($author->full_content) > 200)
-                            @if(\App::getLocale()=='vi')
-                            <div class="collapse-module pb-4">
-                                <div class="text-center">
-                                    <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold"
--                                        type="button" data-bs-toggle="collapse" data-bs-target="#introduceCollapse"
--                                        aria-expanded="false" aria-controls="introduceCollapse"></button>
-                                </div>
-                            </div>
-                            @else
-                            <div class="collapse-module-en pb-4">
-                                <div class="text-center">
-                                    <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold"
--                                        type="button" data-bs-toggle="collapse" data-bs-target="#introduceCollapse"
--                                        aria-expanded="false" aria-controls="introduceCollapse"></button>
-                                </div>
-                            </div>
-                            @endif
+                                @if (\App::getLocale() == 'vi')
+                                    <div class="collapse-module pb-4">
+                                        <div class="text-center">
+                                            <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" -
+                                                type="button" data-bs-toggle="collapse" data-bs-target="#introduceCollapse"
+                                                - aria-expanded="false" aria-controls="introduceCollapse"></button>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="collapse-module-en pb-4">
+                                        <div class="text-center">
+                                            <button class="ps-4 pe-4 border-0 btn btn-white rounded-pill shadow fw-bold" -
+                                                type="button" data-bs-toggle="collapse" data-bs-target="#introduceCollapse"
+                                                - aria-expanded="false" aria-controls="introduceCollapse"></button>
+                                        </div>
+                                    </div>
+                                @endif
                             @endif
                         </div>
 
@@ -77,12 +77,14 @@ classes
                             <div class="card border-0 shadow-sm">
                                 <div class="card-img">
                                     <div class="imagebox">
-                                        <img src="{{ $class->image }}" class="img-fluid">
+                                        <a href="{{ $itemServ->classUrl($class->id) }}"><img src="{{ $class->image }}"
+                                                class="img-fluid"></a>
                                     </div>
                                     <div class="class-title mt-1 fw-bold p-1">
                                         @if ($class->is_hot)
                                             <span class="badge bg-danger "><i class="fas fa-fire"></i> HOT</span>
-                                        @endif {{ $class->title }}
+                                        @endif <a class="class-title mt-1 fw-bold p-1 text-success"
+                                            href="{{ $itemServ->classUrl($class->id) }}">{{ $class->title }}</a>
                                     </div>
                                     <div class="p-1">
                                         @if ($class->org_price > 0)
@@ -96,7 +98,8 @@ classes
                                     </div>
                                     <div class="p-1">@include('anylearn.widget.rating', ['score' => $class->rating ?? 0])</div>
                                     <div class="text-center mb-2">
-                                        <a data-spm="author_classes.{{ !empty($author) ? $author->id  : 0 }}" href="{{ $itemServ->classUrl($class->id) }}"
+                                        <a data-spm="author_classes.{{ !empty($author) ? $author->id : 0 }}"
+                                            href="{{ $itemServ->classUrl($class->id) }}"
                                             class="btn btn-success rounded-pill border-0 w-75">@lang('CHI TIẾT')</a>
                                     </div>
                                 </div>
