@@ -1,6 +1,7 @@
 @inject('videoServ', 'App\Services\VideoServices')
 @inject('itemServ', 'App\Services\ItemServices')
 <div class="p-3">
+    @if (!empty($videos) && count($videos) > 0)
     @foreach ($videos as $chapter)
     <div class="mb-3 card">
         <h5 class="card-header">
@@ -177,6 +178,7 @@
             </div>
         </form>
     </div>
+    @endif
 </div>
 <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
 <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>
