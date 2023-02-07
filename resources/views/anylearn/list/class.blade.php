@@ -94,7 +94,7 @@
                                                 class="text-secondary text-decoration-line-through mr-1">{{ number_format($class->org_price, 0, ',', '.') }}</span>
                                         @endif
                                         <span
-                                            class="text-success fw-bold">{{ number_format($class->price, 0, ',', '.') }}</span>
+                                            class="text-success fw-bold">{{ number_format($class->price, 0, ',', '.') }}đ</span>
                                     </div>
                                     <div class="p-1">@include('anylearn.widget.rating', ['score' => $class->rating ?? 0])</div>
                                     <div class="text-center mb-2">

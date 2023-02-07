@@ -126,7 +126,6 @@ class ClassController extends Controller
     public function edit(Request $request, $courseId)
     {
         $input = $request->all();
-
         if ($request->get('action') == 'dlesson') {
             $lid = $request->get('lid');
             $lesson = ItemVideoLesson::find($lid);
