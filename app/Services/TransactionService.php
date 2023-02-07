@@ -578,10 +578,16 @@ class TransactionService
 
     public function rejectRegistration($orderId)
     {
+
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
             return false;
         }
+        $anypoint= Transaction::where('order_id', $openOrder->id)->where('type','exchange')->first();
+        $user = User::where('id',$anypoint->user_id)->first();
+        $user->update([
+            'wallet_c' => $user->wallet_c + $anypoint->amount,
+        ]);
         // $user = User::find($openOrder->user_id);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -594,6 +600,7 @@ class TransactionService
             ->update([
                 'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
             ]);
+
         Log::debug("Seller cancel transaction & orders", ["orderId" => $openOrder->id]);
         $notifServ->createNotif(NotifConstants::COURSE_REGISTER_REJECT, $openOrder->user_id, []);
         return true;
