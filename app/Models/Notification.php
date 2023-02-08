@@ -31,6 +31,7 @@ class Notification extends Model
     public function createNotif($type, $userId, $data, $copy = "", $route = "", $template = "")
     {
         $config = config('notification.' . $type);
+
         $obj = [
             'type' => $type,
             'user_id' => $userId,
@@ -45,18 +46,22 @@ class Notification extends Model
             $obj['extra_content'] = 'copy';
             $obj['route'] = $copy;
         }
+        // dd($obj,$userId);
         $newNotif = $this->create($obj);
         if (!$newNotif) {
             return;
         }
         $user = User::find($userId);
         //email
+        // dd($config);
+
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
                     Mail::to($user->email)->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
+                    dd($ex);
                 }
             }
         }

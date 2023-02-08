@@ -127,6 +127,13 @@ class ClassController extends Controller
     {
         $input = $request->all();
 
+        if ($request->get('action') == 'mailsave') {
+            Item::find($courseId)->update([
+                'mailcontent' => isset($input['mailcontent']) ? $input['mailcontent'] : null
+            ]);
+            return redirect()->back()->with(['notify' => "Cập nhật thành công", 'tab' => $input['tab']]);
+        }
+
         if ($request->get('action') == 'dlesson') {
             $lid = $request->get('lid');
             $lesson = ItemVideoLesson::find($lid);

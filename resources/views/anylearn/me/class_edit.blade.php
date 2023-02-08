@@ -32,6 +32,11 @@ class_edit
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'extrafee' ? 'active' : '' }}" id="extrafee-tab" data-bs-toggle="tab" data-bs-target="#extrafee" type="button" role="tab" aria-controls="extrafee" aria-selected="true"><i class="fas fa-file-invoice-dollar"></i> <span class="d-none d-sm-block">@lang('Phụ phí')</span></button>
         </li>
         @endif
+        @if (!empty($courseId))
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'templatemail' ? 'active' : '' }}" id="templatemail-tab" data-bs-toggle="tab" data-bs-target="#templatemail" type="button" role="tab" aria-controls="templatemail" aria-selected="true"><i class="fas fa-envelope"></i> <span class="d-none d-sm-block">@lang('Send Mail')</span></button>
+        </li>
+        @endif
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Hình ảnh')</span></button>
         </li>
@@ -61,6 +66,9 @@ class_edit
         @if (!empty($courseId))
         <div class="tab-pane fade {{ session('tab', 'info') == 'extrafee' ? 'show active' : '' }} p-2" id="extrafee" role="tabpanel" aria-labelledby="extrafee-tab">
             @include('class.form.extrafee')
+        </div>
+        <div class="tab-pane fade {{ session('tab', 'info') == 'templatemail' ? 'show active' : '' }} p-2" id="templatemail" role="tabpanel" aria-labelledby="templatemail-tab">
+            @include('class.form.templatemail')
         </div>
         @endif
         <div class="tab-pane fade {{ session('tab', 'info') == 'resource' ? 'show active' : '' }} p-2" id="resource" role="tabpanel" aria-labelledby="resource-tab">
