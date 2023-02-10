@@ -88,6 +88,9 @@ class_edit
 <script>
     var allEditors = document.querySelectorAll('.editor');
     var editorConfig = {
+        mediaEmbed: {
+                previewsInData: true
+            },
         simpleUpload: {
             uploadUrl: '/upload/ckimage',
             withCredentials: true,
