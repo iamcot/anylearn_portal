@@ -81,6 +81,9 @@
 <script>
     var allEditors = document.querySelectorAll('.editor');
     var editorConfig = {
+        mediaEmbed: {
+                previewsInData: true
+            },
         simpleUpload: {
             uploadUrl: '/upload/ckimage',
             withCredentials: true,
@@ -91,9 +94,9 @@
     };
     for (var i = 0; i < allEditors.length; ++i) {
         ClassicEditor.create(allEditors[i], editorConfig)
-        .catch(error => {
-            console.log(error);
-        });
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     function formatSlug(field, id) {
