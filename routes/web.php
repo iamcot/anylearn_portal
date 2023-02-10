@@ -74,7 +74,6 @@ Route::any('/password/update', 'Auth\OTPResetPasswordController@updatePassword')
 Route::get('/anylog.gif', 'CrmController@anylog')->name('anylog');
 
 Auth::routes();
-
 Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
     Route::get('/class', 'ClassController@list')->name('me.class');
