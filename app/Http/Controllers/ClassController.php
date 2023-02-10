@@ -168,13 +168,13 @@ class ClassController extends Controller
                     'price' => $input['priceextrafee'],
                     'item_id' => $courseId
                 ]);
-                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => $input['tab']]);
+                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => 'extrafee']);
             } else {
                 $rs = ModelsItemExtra::find($input['idextrafee'])->update([
                     'title' => $input['titleextrafee'],
                     'price' => $input['priceextrafee']
                 ]);
-                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' => $input['tab']]);
+                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' =>  'extrafee']);
             }
         }
         if ($request->input('action') == 'createChapter') {

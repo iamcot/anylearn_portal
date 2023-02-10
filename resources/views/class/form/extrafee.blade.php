@@ -1,7 +1,6 @@
 <div class="mb-3 mb-lg-0 card">
     <h5 class="bg-light card-header">Quản lý Phụ Phí</h5>
     <form action="" method="get">
-        <input type="hidden" name="tab" value="extrafee">
         <div class="card-body">
             <ul class="list-unstyled mb-0">
                 @foreach ($extra as $item)
@@ -56,7 +55,6 @@
     <form action="" method="get" class="mt-3">
         <div class="position-relative mb-4">
             <div class="input-group">
-                <input type="hidden" name="tab" value="extrafee">
                 <input type="hidden" name="idextrafee" value="" id="idextrafee">
                 <input name="titleextrafee" id="titleextrafee" required="" placeholder="Thêm phụ phí" type="text"
                     class="pe-4 form-control" value="">
