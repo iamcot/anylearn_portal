@@ -588,6 +588,17 @@ class TransactionService
         $user->update([
             'wallet_c' => $user->wallet_c + $anypoint->amount,
         ]);
+        Transaction::create([
+            'user_id' => $user->id,
+            'type' => ConfigConstants::TRANSACTION_COMMISSION,
+            'amount' => $anypoint->amount,
+            'pay_method' => UserConstants::WALLET_C,
+            'pay_info' => '',
+            'content' => 'Hoàn điểm vì đơn hàng bị hủy',
+            'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+            'order_id' => $anypoint->order_id
+        ]);
+        
         // $user = User::find($openOrder->user_id);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
