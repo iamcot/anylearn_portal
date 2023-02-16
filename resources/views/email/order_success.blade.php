@@ -55,7 +55,7 @@
                                             <h2 class="v1size-20"
                                                 style="margin-top: 0; margin-bottom: 16px; font-style: normal; font-weight: normal; color: #fff; font-size: 17px; line-height: 26px; text-align: center"
                                                 lang="x-size-20"><span style="color: #ffffff">anyLEARN - Ứng dụng kết
-                                                    nối giáo dục hàng đầu Viêt Nam.</span></h2>
+                                                    nối giáo dục hàng đầu.</span></h2>
                                         </div>
                                     </div>
                                     <div style="margin-left: 20px; margin-right: 20px">
