@@ -9,7 +9,7 @@
                 <br>
             <p>Học Phí: {{number_format($row->item_price)}}đ</p>
             <p>Học Viên: {{$row->username}}</p>
-            <p>Phụ Phí: {{$row->item_extra_title }} - {{number_format($row->item_extra_price) or 0}}đ</p>
+            <p>Phụ Phí: {{$row->item_extra_title }} - {{number_format($row->item_extra_price)}}đ</p>
             <p>Ngày Khai Giảng: {{$row->schedule_date}} - {{ $row->schedule_time }} - {{ $row->schedule_content}}</p>
             <p>{{$row->mailcontent}}</p>
         </div>

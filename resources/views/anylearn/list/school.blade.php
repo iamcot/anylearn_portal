@@ -32,7 +32,9 @@
                                                 src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}"></a>
                                     </div>
                                     <div class="description">
-                                        <h3 class="fw-bold"><a class="text-black" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $school->name }}</a></h3>
+                                        <h3 class="fw-bold"><a class="text-black"
+                                                href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $school->name }}</a>
+                                        </h3>
                                         <div>
                                             <ul class="list-unstyled list-inline">
                                                 @foreach ($school->categories as $category)
@@ -64,7 +66,24 @@
             <form action="" method="get" id="schoolsearch" data-spm="search.0">
                 <div class="card shadow">
                     <div class="card-body">
-                        <h6>@lang('BỘ LỌC')</h6>
+                        <div class="d-flex flex-between-center pt-card card-header pb-2">
+                            <div class="d-flex gap-2 flex-xl-grow-1 align-items-center justify-content-xl-between">
+                                <h5 class="mb-0 text-700 fs-0 d-flex align-items-center">
+                                    <i class="fas fa-filter fa-w-16 fs--1 me-1"></i>
+                                    <span style="font-size: 16px;">@lang('BỘ LỌC')</span>
+                                </h5>
+                                <button class="ms-2 mt-0 mb-0 btn btn-outline-secondary btn-sm text-end"
+                                    style="font-size: 12px;">
+                                    <i class="fas fa-redo">@lang(' Xóa bộ lọc')</i>
+                                </button>
+                            </div>
+                        </div>
+                        <label for="customRange1" class="form-label">@lang('Giá')</label>
+                        <input name="price" type="range" class="form-range" min="0" max="20000000" step="10000"
+                            id="priceRange" value="{{ request()->get('price') ?? 1000000 }}" oninput="onPriceChange(this)">
+                        <div>
+                            0 - <span id="priceRangeShow">{{ number_format(request()->get('price') ?? 1000000) }}</span>
+                        </div>
                         <div class="form-group mb-2">
                             <select class="form-control location-tree rounded-pill text-secondary"
                                 data-next-level="district" name="p">
@@ -120,6 +139,7 @@
                             class="btn border-0 rounded-pill btn-success ">@lang('TÌM KIẾM')</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 
@@ -127,4 +147,13 @@
 @section('jscript')
     @parent
     <script src="/cdn/js/location-tree.js"></script>
+    <script>
+        function onPriceChange(input) {
+            console.log(input.value);
+            $('#priceRangeShow').text(new Intl.NumberFormat('vn-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(input.value));
+        }
+    </script>
 @endsection
