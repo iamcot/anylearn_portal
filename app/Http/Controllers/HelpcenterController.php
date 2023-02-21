@@ -30,6 +30,7 @@ class HelpcenterController extends Controller
             ->where('knowledges.type', 'buyer')
             ->orderBy('knowledges.is_top_question', 'desc')
             ->orderby('knowledges.view', 'desc')
+            ->select('knowledges.*')
             ->take(8)->get();
         $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'buyer')->get();
         $this->data['breadcrumb'] = [
@@ -51,6 +52,7 @@ class HelpcenterController extends Controller
             ->where('knowledges.type', 'seller')
             ->orderBy('knowledges.is_top_question', 'desc')
             ->orderby('knowledges.view', 'desc')
+            ->select('knowledges.*')
             ->take(10)->get();
         $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'seller')->get();
         $this->data['breadcrumb'] = [
