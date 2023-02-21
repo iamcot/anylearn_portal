@@ -21,11 +21,11 @@ class HelpcenterController extends Controller
     public function index(Request $request)
     {
         $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
-        ->where('status', '>', 0)
-        ->where('type','buyer')
-        ->orderby('view', 'desc')
-        ->take(10)->get();
-        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type','buyer')->get();
+            ->where('status', '>', 0)
+            ->where('type', 'buyer')
+            ->orderby('view', 'desc')
+            ->take(10)->get();
+        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'buyer')->get();
         $this->data['breadcrumb'] = [
             [
                 'text' => 'Trung tâm hỗ trợ',
@@ -36,11 +36,11 @@ class HelpcenterController extends Controller
     public function indexpartner(Request $request)
     {
         $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
-        ->where('status', '>', 0)
-        ->where('type','seller')
-        ->orderby('view', 'desc')
-        ->take(10)->get();
-        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type','seller')->get();
+            ->where('status', '>', 0)
+            ->where('type', 'seller')
+            ->orderby('view', 'desc')
+            ->take(10)->get();
+        $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'seller')->get();
         $this->data['breadcrumb'] = [
             [
                 'text' => 'Trung tâm hỗ trợ đối tác',
@@ -56,14 +56,15 @@ class HelpcenterController extends Controller
         }
         $this->data['topic'] = $topic;
         $catsInTopic = DB::table('knowledge_topic_category_links')
-        ->where('knowledge_topic_id', $topic->id)
-        ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledge_topic_category_links.knowledge_category_id')
-        ->select('title', 'knowledge_categories.id')
-        ->get();
-        $catwithKnowledge = [];
-        foreach($catsInTopic as $cat) {
-            $knowledges = Knowledge::where('knowledge_category_id', $cat->id)->where('status', '>', 0)
+            ->where('knowledge_topic_id', $topic->id)
+            ->where('knowledge_categories.status', '>', 0)
+            ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledge_topic_category_links.knowledge_category_id')
+            ->select('title', 'knowledge_categories.id')
             ->get();
+        $catwithKnowledge = [];
+        foreach ($catsInTopic as $cat) {
+            $knowledges = Knowledge::where('knowledge_category_id', $cat->id)->where('status', '>', 0)
+                ->get();
             if ($knowledges) {
                 $catwithKnowledge[$cat->id] = [
                     'cat' => $cat->title,
@@ -88,14 +89,15 @@ class HelpcenterController extends Controller
     {
         $this->data['knowledge'] = Knowledge::find($id);
         $topic = DB::table('knowledge_topics')
-        ->join('knowledge_topic_category_links', 'knowledge_topic_category_links.knowledge_topic_id', '=', 'knowledge_topics.id')
-        ->where('knowledge_topic_category_links.knowledge_category_id', $this->data['knowledge']->knowledge_category_id)
-        ->select('knowledge_topics.*')
-        ->first();
+            ->join('knowledge_topic_category_links', 'knowledge_topic_category_links.knowledge_topic_id', '=', 'knowledge_topics.id')
+            ->where('knowledge_topic_category_links.knowledge_category_id', $this->data['knowledge']->knowledge_category_id)
+            ->where('knowledge_topics.status', '>', 0)
+            ->select('knowledge_topics.*')
+            ->first();
 
         $this->data['others'] = Knowledge::where('id', '!=', $id)
-        ->where('status', '>', 0)
-        ->where('knowledge_category_id', $this->data['knowledge']->knowledge_category_id)->get();
+            ->where('status', '>', 0)
+            ->where('knowledge_category_id', $this->data['knowledge']->knowledge_category_id)->get();
         $this->data['breadcrumb'] = [
             [
                 'url' => '/helpcenter',
