@@ -34,7 +34,7 @@
             <div class="form-group row">
                     <label for="editor" class="col-md-2 col-form-label text-md-right @error('content') is-invalid @enderror">{{ __('Nội dung') }}</label>
                     <div class="col-md-8">
-                        <textarea id="editor" name="content">{!! old('content', !empty($article) ? $article->content : '') !!}</textarea>
+                        <textarea class="editor" id="editor" name="content">{!! old('content', !empty($article) ? $article->content : '') !!}</textarea>
                     </div>
             </div>
             <div class="form-group row">
