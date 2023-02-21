@@ -41,7 +41,7 @@
                     <label for="editor_bot" class="col-md-2 col-form-label text-md-right @error('content_bot') is-invalid @enderror">{{ __('Nội dung riêng cho bot') }}
                         <p class="small">Bỏ trống nếu giống nội dung chính</p></label>
                     <div class="col-md-8">
-                        <textarea id="editor_bot" name="content_bot">{!! old('content_bot', !empty($article) ? $article->content_bot : '') !!}</textarea>
+                        <textarea class="editor" id="editor_bot" name="content_bot">{!! old('content_bot', !empty($article) ? $article->content_bot : '') !!}</textarea>
                     </div>
             </div>
         </div>
@@ -52,10 +52,26 @@
 </form>
 @endsection
 @section('jscript')
-@parent
-<script src="/cdn/vendor/ckeditor/ckeditor.js"></script>
+<script src="/cdn/vendor/ckeditor5/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace('editor');
-    CKEDITOR.replace('editor_bot');
+    var allEditors = document.querySelectorAll('.editor');
+    var editorConfig = {
+        mediaEmbed: {
+                previewsInData: true
+            },
+        simpleUpload: {
+            uploadUrl: "{{ @route('upload.ckimage5') }}",
+            withCredentials: true,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            }
+        }
+    };
+    for (var i = 0; i < allEditors.length; ++i) {
+        ClassicEditor.create(allEditors[i], editorConfig)
+            .catch(error => {
+                console.log(error);
+            });
+    }
 </script>
 @endsection
