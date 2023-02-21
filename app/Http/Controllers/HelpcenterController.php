@@ -20,11 +20,17 @@ class HelpcenterController extends Controller
 {
     public function index(Request $request)
     {
-        $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
-            ->where('status', '>', 0)
-            ->where('type', 'buyer')
-            ->orderby('view', 'desc')
-            ->take(10)->get();
+        $this->data['topKnowledge'] = DB::table('knowledges')
+            ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledges.knowledge_category_id')
+            ->join('knowledge_topic_category_links', 'knowledge_topic_category_links.knowledge_category_id', '=', 'knowledge_categories.id')
+            ->join('knowledge_topics', 'knowledge_topics.id', '=', 'knowledge_topic_category_links.knowledge_category_id')
+            ->where('knowledges.status', '>', 0)
+            ->where('knowledge_categories.status', '>', 0)
+            ->where('knowledge_topics.status', '>', 0)
+            ->where('knowledges.type', 'buyer')
+            ->orderBy('knowledges.is_top_question', 'desc')
+            ->orderby('knowledges.view', 'desc')
+            ->take(8)->get();
         $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'buyer')->get();
         $this->data['breadcrumb'] = [
             [
@@ -35,10 +41,16 @@ class HelpcenterController extends Controller
     }
     public function indexpartner(Request $request)
     {
-        $this->data['topKnowledge'] = Knowledge::orderBy('is_top_question', 'desc')
-            ->where('status', '>', 0)
-            ->where('type', 'seller')
-            ->orderby('view', 'desc')
+        $this->data['topKnowledge'] = DB::table('knowledges')
+            ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledges.knowledge_category_id')
+            ->join('knowledge_topic_category_links', 'knowledge_topic_category_links.knowledge_category_id', '=', 'knowledge_categories.id')
+            ->join('knowledge_topics', 'knowledge_topics.id', '=', 'knowledge_topic_category_links.knowledge_category_id')
+            ->where('knowledges.status', '>', 0)
+            ->where('knowledge_categories.status', '>', 0)
+            ->where('knowledge_topics.status', '>', 0)
+            ->where('knowledges.type', 'seller')
+            ->orderBy('knowledges.is_top_question', 'desc')
+            ->orderby('knowledges.view', 'desc')
             ->take(10)->get();
         $this->data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'seller')->get();
         $this->data['breadcrumb'] = [
@@ -94,6 +106,9 @@ class HelpcenterController extends Controller
             ->where('knowledge_topics.status', '>', 0)
             ->select('knowledge_topics.*')
             ->first();
+        if (empty($topic)) {
+            return redirect()->back();
+        }
 
         $this->data['others'] = Knowledge::where('id', '!=', $id)
             ->where('status', '>', 0)
