@@ -224,6 +224,7 @@
     </div>
 
 @section('jscript')
+@parent
 <script>
     function hp() {
         var hp = document.getElementById("price").value;
