@@ -470,7 +470,7 @@ class PageController extends Controller
 
         $data['breadcrumb'] = [
             [
-                'text' => 'Chuyên viên & Giảng Viên'
+                'text' => 'Chuyên gia & Giảng Viên'
             ]
         ];
         $data['provinces'] = Province::orderby('name')->get();
