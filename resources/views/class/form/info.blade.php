@@ -122,7 +122,7 @@
                     <div class="form-group row">
                         <label for="org_price" class="col-md-3 col-form-label text-md-right ">{{ __('Học phí gốc') }}</label>
                         <div class="col-md-8">
-                            <input id="org_price" onchange="hp();" min="0" type="number" class="form-control @error('org_price') is-invalid @enderror" name="org_price" value="{{ old('org_price', !empty($course) ? $course['info']->org_price : '') }}" required>
+                            <input id="org_price" onchange="hp();" min="0" type="number" class="form-control @error('org_price') is-invalid @enderror" name="org_price" value="{{ old('org_price', !empty($course) ? $course['info']->org_price : '') }}">
                         </div>
 
                     </div>
@@ -186,7 +186,6 @@
                         @endforeach
                     </ul>
                     <div class="tab-content border-0" id="i18ntabContent">
-                        <p class="text-warning">! Hiện tại chức năng tải ảnh lên vẫn đang hoàn hiện, vui lòng nhấn nút mũi tên bên cạnh icon để chèn link ảnh hoặc dán trực tiếp link ảnh vào form nhập liệu.</p>
                         @foreach (App\Models\I18nContent::$supports as $locale)
                         <div class="p-3 tab-pane fade {{ $locale == App\Models\I18nContent::DEFAULT ? 'show active' : '' }}" id="{{ $locale }}box" role="tabpanel" aria-labelledby="{{ $locale }}-tab">
                             @if ($locale != App\Models\I18nContent::DEFAULT)
@@ -224,11 +223,12 @@
     </div>
 
 @section('jscript')
+@parent
 <script>
     function hp() {
         var hp = document.getElementById("price").value;
         var hpg = document.getElementById("org_price").value;
-        if (hpg < hp) {
+        if ((hpg != "" || hpg > 0 ) && hpg < hp) {
             document.getElementById("org_price").value = hp;
         }
     }

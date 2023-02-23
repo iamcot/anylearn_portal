@@ -105,6 +105,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/upload/ckimage', 'FileController@ckEditorImage')->name('upload.ckimage');
+    Route::post('/upload/ckimage5', 'FileController@ckEditorImage5')->name('upload.ckimage5');
 
     Route::get('/location-geo/{address}', 'ConfigController@locationGeo')->name('location-geo');
     Route::get('/location', 'UserController@locationList')->name('location');

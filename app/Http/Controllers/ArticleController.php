@@ -17,7 +17,7 @@ class ArticleController extends Controller
 {
     public function list(Request $request)
     {
-        $data = Article::paginate(20);
+        $data = Article::orderby('id', 'desc')->paginate(20);
         $locale = App::getLocale();
         $i18nModel = new I18nContent();
         // change vi->en

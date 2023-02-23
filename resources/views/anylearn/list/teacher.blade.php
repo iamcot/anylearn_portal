@@ -14,7 +14,7 @@
         <div class="col-md-9">
             @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
             @if ($hasSearch && $searchNotFound)
-                <p>@lang('Không tìm thấy chuyên viên bạn đang tìm kiếm, hãy tìm thử các chuyên viên dưới đây nhé.')</p>
+                <p>@lang('Không tìm thấy chuyên gia bạn đang tìm kiếm, hãy tìm thử các chuyên gia dưới đây nhé.')</p>
                 <hr>
             @endif
             @if (count($list) <= 0)

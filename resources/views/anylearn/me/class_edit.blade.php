@@ -92,7 +92,7 @@ class_edit
                 previewsInData: true
             },
         simpleUpload: {
-            uploadUrl: '/upload/ckimage',
+            uploadUrl: "{{ @route('upload.ckimage5') }}",
             withCredentials: true,
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
