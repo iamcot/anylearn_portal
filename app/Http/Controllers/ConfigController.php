@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
+use App\Constants\InteractConstants;
+use App\Models\Activitybonus;
 use App\Models\Configuration;
 use App\Models\I18nContent;
+use App\Models\Interaction;
 use App\Models\Tag;
 use App\Models\Voucher;
 use App\Models\VoucherEvent;
@@ -36,7 +40,20 @@ class ConfigController extends Controller
         $this->data['navText'] = __('Cài đặt thông số hệ thống');
         return view('config.site', $this->data);
     }
-
+    public function activitybonus(Request $request)
+    {
+        $activitybonusM = new Activitybonus();
+        if ($request->input('save')) {
+            $configs = $request->input('config');
+            foreach ($configs as $key => $config) {
+                $activitybonusM->createOrUpdate($key, $config, ActivitybonusConstants::TYPE_CONFIG);
+            }
+            return redirect()->back()->with('notify',  true);
+        }
+        $this->data['configs'] = $activitybonusM->getConfigs();
+        $this->data['navText'] = __('Cài đặt điểm thưởng tương tác');
+        return view('config.activitybonus', $this->data);
+    }
     public function guide($type)
     {
         if (!isset(ConfigConstants::$guideTitle[$type])) {

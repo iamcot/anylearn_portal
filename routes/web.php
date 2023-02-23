@@ -127,6 +127,7 @@ Route::middleware(['webappauth'])->group(function () {
 
 Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
+    Route::any('/config/activitybonus','ConfigController@activitybonus')->name('config.activitybonus');
     Route::any('/config/banner', 'ConfigController@banner')->name('config.banner');
     Route::any('/config/site', 'ConfigController@site')->name('config.site');
     Route::get('/config/banner/del/{index}', 'ConfigController@delBanner')->name('config.banner.del');
