@@ -24,7 +24,7 @@ class ActivitybonusServices
                 ]);
                 $result = Transaction::create([
                     'user_id' => $user->id,
-                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'type' => ActivitybonusConstants::Activitybonus_Bonus,
                     'amount' => $activitybonus->get($key) ? $activitybonus->get($key) : 0,
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => $key,

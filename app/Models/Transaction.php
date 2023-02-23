@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
 use Illuminate\Http\Request;
@@ -101,7 +102,7 @@ class Transaction extends Model
         if ($wallet == UserConstants::WALLET_M) {
             $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_DEPOSIT_REFUND]);
         } else {
-            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD]);
+            $query = $query->whereIn('type', [ConfigConstants::TRANSACTION_EXCHANGE, ConfigConstants::TRANSACTION_COMMISSION, ConfigConstants::TRANSACTION_COMMISSION_ADD, ActivitybonusConstants::Activitybonus_Bonus]);
         }
         $db = $query->orderby('id', 'desc')
             ->take(40)->get();

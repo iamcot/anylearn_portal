@@ -14,6 +14,8 @@ class ActivitybonusConstants
     const Activitybonus_Course_Feedback ='Activitybonus_Course_Feedback';
     const Activitybonus_Referral ='Activitybonus_Referral';
     const TYPE_CONFIG = 'config';
+    const Activitybonus_Bonus = 'bonus';
+
 
     public static $activitybonuses = [
         self::Activitybonus_Update_Avatar => 5,
