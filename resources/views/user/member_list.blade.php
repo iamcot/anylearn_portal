@@ -73,7 +73,9 @@
         </div>
         <div class="card-footer">
             <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
+            @if (auth()->role != 'sale')
             <button class="btn btn-success btn-sm" name="action" value="file"><i class="fas fa-file"></i> Xuất file</button>
+            @endif
             <button class="btn btn-warning btn-sm" name="action" value="clear"> Xóa tìm kiếm</button>
         </div>
     </div>

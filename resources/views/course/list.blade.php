@@ -54,12 +54,18 @@
                     @if($userServ->isMod()) <td class="text-center">
                         {{ $course->user->name }}
                     </td>@endif
-                    
+                    @if (auth()->role != 'sale')
                     <td><a href="{{ route('course.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
+                    @else
+                    <td><a href="{{ $itemServ->classUrl($class->id) }}"> {{ $course->title }}</a></td>
+                    @endif
+
+
+
                     <td>@if($course->series)
                         <a href="?t=series&s={{ $course->series->id }}">{{ $course->series->title }}</a>
                         @endif</td>
-                    <td>{{ $course->time_start }}-{{ $course->time_end }} {{ date('d/m/y', strtotime($course->date_start))}} 
+                    <td>{{ $course->time_start }}-{{ $course->time_end }} {{ date('d/m/y', strtotime($course->date_start))}}
                      <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
 
                     </td>
