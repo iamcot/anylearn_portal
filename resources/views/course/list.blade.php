@@ -54,14 +54,12 @@
                     @if($userServ->isMod()) <td class="text-center">
                         {{ $course->user->name }}
                     </td>@endif
-                    @if (auth()->user()->role != 'sale')
+                    {{-- @if (auth()->user()->role != 'sale')
                     <td><a href="{{ route('course.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
                     @else
                     <td><a href="{{ $itemServ->classUrl($class->id) }}"> {{ $course->title }}</a></td>
-                    @endif
-
-
-
+                    @endif --}}
+                    <td><a href="{{ route('course.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i> {{ $course->title }}</a></td>
                     <td>@if($course->series)
                         <a href="?t=series&s={{ $course->series->id }}">{{ $course->series->title }}</a>
                         @endif</td>

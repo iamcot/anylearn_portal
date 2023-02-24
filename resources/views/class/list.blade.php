@@ -91,9 +91,16 @@
                     @if($userServ->isMod()) <td class="text-center" width="15%">
                         {{ $course->user->name }}
                     </td>@endif
+                    @if (!$isSale)
                     <td width="20%">
                         <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i class="fas fa-edit"></i>[{{ $course->subtype }}] {{ $course->title }}</a>
                     </td>
+                    @else
+                    <td width="20%">
+                        <a href="{{ $itemServ->classUrl($class->id) }}">[{{ $course->subtype }}] {{ $course->title }}</a>
+                    </td>
+                    @endif
+
                     <td>{{ date('d/m/y', strtotime($course->date_start))}} @if($course->date_end) - {{ date('d/m/y', strtotime($course->date_end))}} @endif
                         <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i class="fas fa-bell"></i></a>
                     </td>
