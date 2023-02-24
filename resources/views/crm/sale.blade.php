@@ -176,10 +176,12 @@
                             (Đang lọc theo tài khoản con có mã: {{$idC}})
                         @endif
                     </strong>
+                    @if ($idC !=null)
                     <a href="{{ route('crm.sale', ['userId' => $memberProfile->id]) }}"
                         class="btn btn-sm btn-secondary mt-1 float-right">
-                        <i class="fas fa-history"></i>
+                        <i class="fas fa-trash"></i>
                     </a>
+                    @endif
                 </div>
                 <div class="card-body p-0">
                     <table class="table">
