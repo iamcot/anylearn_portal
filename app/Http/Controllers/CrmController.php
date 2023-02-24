@@ -25,13 +25,27 @@ class CrmController extends Controller
         if ($user->role == UserConstants::ROLE_SALE && $saleUser->user_id != $user->id && $saleUser->sale_id != $user->id) {
             return redirect()->route('user.members')->with('notify', __('Bạn không có quyền với user này'));
         }
-        $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
+        if ($request->get('action')=='history') {
+            $input=$request->all();
+            // dd($request->id);
+            $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where('order_details.user_id',$request->id)
+            ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
+            ->orderBy('orders.id', 'desc')
+            ->paginate(5);
+        } else{
+            $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
             ->join('order_details', 'order_details.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
             ->orderBy('orders.id', 'desc')
             ->paginate(5);
-
+        }
+        $accountC = DB::table('users')->where('user_id',$userId)->get();
+        // dd($memberOrders);
+        $this->data['accountC'] = $accountC;
         $this->data['user'] = $user;
         $this->data['memberOrders'] = $memberOrders;
         $this->data['orderStats'] = $userService->orderStats($saleUser->id);
