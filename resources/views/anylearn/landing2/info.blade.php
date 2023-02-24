@@ -62,7 +62,7 @@
                     <div>@lang('Ứng dụng học tập')</div>
                 </div>
                 <div class="info-have rounded" id="info-have-4">
-                    <div>@lang('Chuyên gia & Giảng viên')/div>
+                    <div>@lang('Chuyên gia & Giảng viên')</div>
                 </div>
                 <div class="info-have rounded" id="info-have-5">
                     <div>@lang('Lớp học trực tuyến')</div>
