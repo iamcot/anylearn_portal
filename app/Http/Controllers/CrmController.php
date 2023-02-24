@@ -35,6 +35,7 @@ class CrmController extends Controller
             ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
             ->orderBy('orders.id', 'desc')
             ->paginate(5);
+            $this->data['idC'] = $request->id;
         } else{
             $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
             ->join('order_details', 'order_details.order_id', '=', 'orders.id')
@@ -42,6 +43,7 @@ class CrmController extends Controller
             ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
             ->orderBy('orders.id', 'desc')
             ->paginate(5);
+            $this->data['idC'] = null;
         }
         $accountC = DB::table('users')->where('user_id',$userId)->get();
         // dd($memberOrders);

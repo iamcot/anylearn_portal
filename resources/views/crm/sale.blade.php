@@ -171,7 +171,11 @@
 
             <div class="card shadow mt-3">
                 <div class="card-header">
-                    <strong>Lịch sử đặt hàng</strong>
+                    <strong>Lịch sử đặt hàng
+                        @if ($idC !=null)
+                            (Đang lọc theo tài khoản con có mã: {{$idC}})
+                        @endif
+                    </strong>
                     <a href="{{ route('crm.sale', ['userId' => $memberProfile->id]) }}"
                         class="btn btn-sm btn-secondary mt-1 float-right">
                         <i class="fas fa-history"></i>
