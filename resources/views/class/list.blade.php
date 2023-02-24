@@ -97,7 +97,7 @@
                     </td>
                     @else
                     <td width="20%">
-                        <a href="{{ $itemServ->classUrl($class->id) }}">[{{ $course->subtype }}] {{ $course->title }}</a>
+                        <a href="{{ $itemServ->classUrl($course->id) }}">[{{ $course->subtype }}] {{ $course->title }}</a>
                     </td>
                     @endif
 
