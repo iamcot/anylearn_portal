@@ -202,7 +202,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer">{{ $memberOrders->links() }}</div>
+                <div class="card-footer">{{ $memberOrders->appends(request()->query())->links() }}</div>
             </div>
         </div>
     </div>
