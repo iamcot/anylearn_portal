@@ -172,8 +172,8 @@
             <div class="card shadow mt-3">
                 <div class="card-header">
                     <strong>Lịch sử đặt hàng</strong>
-                    <a href="{{ route('crm.sale', ['userId' => $user->id]) }}"
-                        class="btn btn-sm btn-secondary mt-1 float-right" name="action" value="reset">
+                    <a href="{{ route('crm.sale', ['userId' => $memberProfile->id]) }}"
+                        class="btn btn-sm btn-secondary mt-1 float-right">
                         <i class="fas fa-history"></i>
                     </a>
                 </div>
