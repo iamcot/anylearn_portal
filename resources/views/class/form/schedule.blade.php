@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-12 p-4">
 
-        <h4>@lang('Lịch khai giảng')</h4>
+        <h4>@lang('Kế hoạch học')</h4>
         <hr />
         <div class="row">
             <div class="col-md-8 ">

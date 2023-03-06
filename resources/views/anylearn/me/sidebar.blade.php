@@ -3,8 +3,13 @@
 @php ( $route = app('router')->getRoutes()->match(app('request'))->getName() )
 <ul class="navbar-nav sidebar sidebar-dark accordion d-print-none shadow rounded bg-success me-4 pt-4" id="accordionSidebar">
     @if(Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+    <li class="nav-item {{ in_array($route, ['me.dashboard']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.dashboard') }}" data-spm="nav.dashboard">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>@lang('Tổng quan')</span></a>
+    </li>
     <div class="sidebar-heading">
-        @lang('Lớp học của tôi')
+        @lang('Chức năng đối tác')
     </div>
     <li class="nav-item {{ in_array($route, ['me.class', 'me.class.create', 'me.class.edit']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.class') }}" data-spm="nav.class">
@@ -12,16 +17,16 @@
             <span>@lang('Lớp học của tôi')</span></a>
     </li>
     <li class="nav-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('location') }}"  data-spm="nav.locations">
+        <a class="nav-link" href="{{ route('location') }}" data-spm="nav.locations">
             <i class="fas fa-fw fa-map-marker"></i>
             <span>@lang('Quản lý chi nhánh')</span></a>
     </li>
-    <li class="nav-item {{ in_array($route, ['me.contract']) ? 'active' : '' }}"  data-spm="nav.contract">
+    <li class="nav-item {{ in_array($route, ['me.contract']) ? 'active' : '' }}" data-spm="nav.contract">
         <a class="nav-link" href="{{ route('me.contract') }}">
             <i class="far fa-fw fa-sun"></i>
             <span>@lang('Quản lý hợp đồng')</span></a>
     </li>
-    <li class="nav-item {{ in_array($route, ['me.certificate']) ? 'active' : '' }}"  data-spm="nav.cert">
+    <li class="nav-item {{ in_array($route, ['me.certificate']) ? 'active' : '' }}" data-spm="nav.cert">
         <a class="nav-link" href="{{ route('me.certificate') }}">
             <i class="fas fa-fw fa-scroll"></i>
             <span>@lang('Quản lý chứng chỉ')</span></a>
@@ -34,15 +39,15 @@
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
-
+        @lang('Thông tin cơ bản')
     </div>
     <li class="nav-item {{ $route == 'me.dashboard' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('me.dashboard') }}"  data-spm="nav.edit">
+        <a class="nav-link" href="{{ route('me.dashboard') }}" data-spm="nav.edit">
             <i class="fas fa-fw fa-user-edit"></i>
             <span>@lang('Thông tin chung')</span></a>
     </li>
     <li class="nav-item {{ $route == 'me.orders' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('me.orders') }}"  data-spm="nav.orders">
+        <a class="nav-link" href="{{ route('me.orders') }}" data-spm="nav.orders">
             <i class="fas fa-fw fa-calendar"></i>
             <span>@lang('Khoá học tôi tham gia')</span></a>
     </li>
@@ -52,11 +57,11 @@
             <span>@lang('Chờ thanh toán')</span></a>
     </li>
     <li class="nav-item {{ $route == 'me.resetpassword' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('me.resetpassword') }}"  data-spm="nav.resetpass">
+        <a class="nav-link" href="{{ route('me.resetpassword') }}" data-spm="nav.resetpass">
             <i class="fas fa-fw fa-lock"></i>
             <span>@lang('Đổi mật khẩu')</span></a>
     </li>
-    <li class="nav-item {{ $route == 'me.child' ? 'active' : '' }}" >
+    <li class="nav-item {{ $route == 'me.child' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.child') }}" data-spm="nav.child">
             <i class="fas fa-fw fa-child"></i>
             <span>@lang('Quản lý tài khoản con')</span></a>

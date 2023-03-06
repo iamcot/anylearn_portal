@@ -12,6 +12,11 @@ img {
     background: #fff;
 }
 
+#article_content img {
+    text-align: center;
+    max-height: 100% !important;
+}
+
 .avatar {
     font-size: 1rem;
     position: relative;

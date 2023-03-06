@@ -407,12 +407,14 @@ class ItemServices
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
                     if (!empty($contentObj[$type])) {
-                        $buildContent .= "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" . $contentObj[$type];
+                        $buildContent .= (($type == self::CONTENT_OLD) ? "" : "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" ) 
+                        . $contentObj[$type];
                     }
                 }
                 return $buildContent;
             }
         } catch (\Exception $ex) {
+            Log::error($ex);
         }
         return $content;
     }

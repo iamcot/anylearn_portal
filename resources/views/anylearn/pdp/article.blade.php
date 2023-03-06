@@ -13,7 +13,7 @@
             <img src="{{ $article->image }}" class="img-fluid">
             @endif
         </div>
-        <div>
+        <div id="article_content">
             <h4 class="text-success text-center mt-2">{{ $article->title }}</h4>
             {!! $article->content !!}
         </div>

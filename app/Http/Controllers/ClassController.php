@@ -151,7 +151,7 @@ class ClassController extends Controller
 
         if ($request->input('action') == 'deleteextrafee') {
             ModelsItemExtra::find($input['iddelete'])->delete();
-            return redirect()->back()->with(['notify' => "Xóa thành công", 'tab' => $input['tab']]);
+            return redirect()->back()->with(['notify' => "Xóa thành công", 'tab' => 'price']);
         }
         if ($request->input('action') == 'addextrafee') {
             if ($input['idextrafee'] == null) {
@@ -160,13 +160,13 @@ class ClassController extends Controller
                     'price' => $input['priceextrafee'],
                     'item_id' => $courseId
                 ]);
-                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => 'extrafee']);
+                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => 'price']);
             } else {
                 $rs = ModelsItemExtra::find($input['idextrafee'])->update([
                     'title' => $input['titleextrafee'],
                     'price' => $input['priceextrafee']
                 ]);
-                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' =>  'extrafee']);
+                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' =>  'price']);
             }
         }
         if ($request->input('action') == 'createChapter') {
