@@ -34,15 +34,18 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="quantity" class="col-md-3 col-form-label text-md-right ">{{ __('Chu kỳ học (ngày)') }}</label>
-            <div class="col-md-8">
-                <input id="quantity" type="number" class="form-control @error('quantity') is-invalid @enderror" name="seats" value="{{ old('quantity', !empty($course) ? $course['info']->seats : '') }}">
+            <label for="cycle_amount" class="col-md-3 col-form-label text-md-right ">{{ __('Chu kỳ học') }}</label>
+            <div class="col-sm-4">
+                <input id="cycle_amount" type="number" class="form-control @error('quantity') is-invalid @enderror" name="cycle_amount" value="{{ old('cycle_amount', !empty($course) ? $course['info']->cycle_amount : '') }}">
             </div>
-        </div>
-        <div class="form-group row">
-            <label for="quantity" class="col-md-3 col-form-label text-md-right ">{{ __('Chu kỳ học (buổi)') }}</label>
-            <div class="col-md-8">
-                <input id="quantity" type="number" class="form-control @error('quantity') is-invalid @enderror" name="seats" value="{{ old('quantity', !empty($course) ? $course['info']->seats : '') }}">
+            <div class="col-md-4">
+                <select name="cycle_type" id="" class="form-control">
+                    <option value="{{ \App\Models\Item::CYCLE_SESSION }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_SESSION ? 'selected' : '' }}>@lang('Buổi')</option>
+                    <option value="{{ \App\Models\Item::CYCLE_DAY }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_DAY ? 'selected' : '' }}>@lang('Ngày')</option>
+                    <option value="{{ \App\Models\Item::CYCLE_WEEK }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_WEEK ? 'selected' : '' }}>@lang('Tuần')</option>
+                    <option value="{{ \App\Models\Item::CYCLE_MONTH }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_MONTH ? 'selected' : '' }}>@lang('Tháng')</option>
+                    <option value="{{ \App\Models\Item::CYCLE_YEAR }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_YEAR ? 'selected' : '' }}>@lang('Năm')</option>
+                </select>
             </div>
         </div>
     </div>
@@ -52,65 +55,59 @@
 @if(!empty($course['info']) && $course['info']->subtype == 'offline')
 <div class="card mb-3 shadow">
     <div class="card-header"><strong>Quản lý phụ phí</strong></div>
-    <div class="card-body">
+    <div class="card-body p-0">
         <form action="" method="get">
-            <ul class="list-unstyled mb-0">
-                @foreach ($extra as $item)
-                <li>
-                    <div class="d-flex align-items-center py-3 border-bottom border-300 row">
-                        <p class="fs--1 mb-0 me-6 col-md-7">{{ $item->title }}</p>
-                        <strong class="col-md-3">{{ number_format($item->price) }}₫</strong>
-                        <div class="col-md-2">
-                            <button type="button" class="icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" onclick="update({{ $item->id }},'{{ $item->title }}',{{ $item->price }})"><i class="fas fa-pen"></i></button>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-md-3 text-right">Tên phụ phí</th>
+                        <th>Đơn giá</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($extra as $item)
+                    <tr>
+                        <td class="text-right">{{ $item->title }}</td>
+                        <td>{{ number_format($item->price) }}₫
+
+                        </td>
+                        <td>
+                            <button type="button" class="icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" onclick="update({{ $item->id }},'{{ $item->title }}',{{ $item->price }})"><i class="fas fa-pen-square"></i></button>
                             <input type="hidden" name="iddelete" value="{{ $item->id }}">
-                            <button type="button" class="icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#delete">
+                            <button type="button" class="text-danger icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#delete">
                                 <i class="fas fa-trash"></i>
                             </button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title text-danger" id="exampleModalLabel">Bạn đang yêu
-                                                cầu xóa!!!</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Bạn có chắc muốn xóa khoản phụ phí này?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                            <button type="submit" name="action" value="deleteextrafee" class="btn btn-primary">Xóa</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- <button type="submit" name="action" value="deleteextrafee"
-                                    class="icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm"><i
-                                        class="fas fa-trash"></i></button> --}}
-                        </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td>
+                            <input type="hidden" name="idextrafee" value="" id="idextrafee">
+                            <input name="titleextrafee" id="titleextrafee" required="" placeholder="Thêm phụ phí" type="text" class="pe-4 form-control" value="">
 
-                    </div>
-                </li>
-                @endforeach
-            </ul>
-        </form>
-        <form action="" method="get" class="mt-3">
-            <div class="position-relative mb-4">
-                <div class="input-group">
-                    <input type="hidden" name="idextrafee" value="" id="idextrafee">
-                    <input name="titleextrafee" id="titleextrafee" required="" placeholder="Thêm phụ phí" type="text" class="pe-4 form-control" value="">
-                    <input name="priceextrafee" id="priceextrafee" required="" placeholder="Số tiền phụ phí" type="number" class="pe-4 form-control" min="0" value="">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" name="action" value="addextrafee" type="submit">Lưu</button>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                        <td>
+                            <input name="priceextrafee" id="priceextrafee" required="" placeholder="Số tiền phụ phí" type="number" class="pe-4 form-control" min="0" value="">
+
+                        </td>
+                        <td>
+                            <button class="btn btn-success" name="action" value="addextrafee" type="submit">Lưu</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </form>
     </div>
 </div>
+@else
+<div class="card">
+    <div class="card-body">
+        <p>Phụ phí chỉ hỗ trợ sau khi tạo khoá học. Và chỉ hỗ trợ Lớp học chính khoá</p>
+    </div>
+</div>
 @endif
-<div class="text-center mb-3">
+<div class="text-center mb-3 mt-3">
     <a href="javascript:changeTab('info-tab')" class="btn btn-primary border-0 rounded">
         << Sửa thông tin chính</a>
             <button class="btn btn-success border-0 rounded" name="tab" value="price"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>

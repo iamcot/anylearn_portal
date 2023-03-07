@@ -36,7 +36,6 @@
             <i class="fas fa-fw fa-money-bill"></i>
             <span>@lang('Quản lý tài chính')</span></a>
     </li>
-    <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
         @lang('Thông tin cơ bản')

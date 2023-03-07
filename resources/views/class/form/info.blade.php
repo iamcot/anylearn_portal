@@ -27,13 +27,13 @@
         <div class="form-group row">
             <label for="date_start" class="col-md-3 col-form-label text-md-right ">{{ __('Ngày bắt đầu') }}</label>
             <div class="col-md-8">
-                <input id="date_start" type="date" class="form-control @error('date_start') is-invalid @enderror" name="date_start" value="{{ old('date_start', !empty($course) ? $course['info']->date_start : '') }}">
+                <input id="date_start" type="date" class="form-control @error('date_start') is-invalid @enderror" name="date_start" value="{{ old('date_start', !empty($course) ? $course['info']->date_start : '') }}" required>
             </div>
         </div>
         <div class="form-group row">
             <label for="time_start" class="col-md-3 col-form-label text-md-right ">{{ __('Thời gian bắt đầu') }}</label>
             <div class="col-md-8">
-                <input id="time_start" type="time" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm" required>
+                <input id="time_start" type="time" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm">
             </div>
         </div>
 
@@ -44,21 +44,27 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="nolimit_time" class="col-md-3 col-form-label text-md-right ">{{ __('Có học thử') }}</label>
+            <label for="allow_re_register" class="col-md-3 col-form-label text-md-right ">{{ __('Cho phép đăng ký nhiều lần') }}</label>
             <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
+                <input class="form-check-input" type="checkbox" name="allow_re_register" id="allow_re_register" {{ !empty($course) && $course['info']->allow_re_register > 0 ? "checked" : "" }}>
             </div>
         </div>
         <div class="form-group row">
-            <label for="nolimit_time" class="col-md-3 col-form-label text-md-right ">{{ __('Có Tham quan trường') }}</label>
+            <label for="activiy_trial" class="col-md-3 col-form-label text-md-right ">{{ __('Có học thử') }}</label>
             <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
+                <input class="form-check-input" type="checkbox" name="activiy_trial" id="activiy_trial" {{ !empty($course) && $course['info']->activiy_trial > 0 ? "checked" : "" }}>
             </div>
         </div>
         <div class="form-group row">
-            <label for="nolimit_time" class="col-md-3 col-form-label text-md-right ">{{ __('Có test đầu vào') }}</label>
+            <label for="activiy_visit" class="col-md-3 col-form-label text-md-right ">{{ __('Có Tham quan trường') }}</label>
             <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
+                <input class="form-check-input" type="checkbox" name="activiy_visit" id="activiy_visit" {{ !empty($course) && $course['info']->activiy_visit > 0 ? "checked" : "" }}>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="activiy_test" class="col-md-3 col-form-label text-md-right ">{{ __('Có test đầu vào') }}</label>
+            <div class="col-md-8 form-check form-switch m-2">
+                <input class="form-check-input" type="checkbox" name="activiy_test" id="activiy_test" {{ !empty($course) && $course['info']->activiy_test > 0 ? "checked" : "" }}>
             </div>
         </div>
 
@@ -74,14 +80,6 @@
             <label for="tags" class="col-md-3 col-form-label text-md-right ">{{ __('Tags') }}</label>
             <div class="col-md-8">
                 <input id="tags" type="text" class="form-control @error('tags') is-invalid @enderror" name="tags" value="{{ old('tags', !empty($course) ? $course['info']->tags : '') }}">
-            </div>
-        </div>
-
-        <div class="form-group row" id="locationbox" {{ !empty($course) && !empty($course['info']->subtype) && $course['info']->subtype != \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'style=display:none' : '' }}>
-            <label for="location" class="col-md-3 col-form-label text-md-right ">{{ __('URL Room học') }}</label>
-            <div class="col-md-8">
-                <input id="location_type" type="hidden" name="location_type" value="offline">
-                <input id="location" type="text" class="form-control @error('location') is-invalid @enderror" name="location" value="{{ old('location', !empty($course) ? $course['info']->location : '') }}">
             </div>
         </div>
     </div>

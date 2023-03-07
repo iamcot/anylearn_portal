@@ -15,8 +15,8 @@ class ItemAllowRegisterAndNoEndtime extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             $table->tinyInteger('allow_re_register')->default(0);
-            $table->integer('day_cycles')->nullable();
-            $table->integer('schedule_cycles')->nullable();
+            $table->integer('cycle_type')->nullable();
+            $table->integer('cycle_amount')->nullable();
             $table->tinyInteger('activiy_trial')->nullable();
             $table->tinyInteger('activiy_test')->nullable();
             $table->tinyInteger('activiy_visit')->nullable();
@@ -32,6 +32,24 @@ class ItemAllowRegisterAndNoEndtime extends Migration
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
+
+        Schema::create('item_schedule_plans', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('item_id')->index();
+            $table->bigInteger('user_location_id')->nullable()->index();
+            $table->string('title');
+            $table->string('weekdays');
+            $table->string('date_start');
+            $table->string('date_end')->nullable();
+            $table->string('time_start');
+            $table->string('time_end')->nullable();
+            $table->text('info')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->timestamps();
+        });
+        Schema::table('schedules', function (Blueprint $table) {
+            $table->bigInteger('user_id')->nullable();
+        });
     }
 
     /**
@@ -43,13 +61,17 @@ class ItemAllowRegisterAndNoEndtime extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             $table->dropColumn('allow_re_register');
-            $table->dropColumn('day_cycles');
-            $table->dropColumn('schedule_cycles');
+            $table->dropColumn('cycle_type');
+            $table->dropColumn('cycle_value');
             $table->dropColumn('activiy_trial');
             $table->dropColumn('activiy_test');
             $table->dropColumn('activiy_visit');
         });
 
         Schema::dropIfExists('item_activities');
+        Schema::dropIfExists('item_schedule_plans');
+        Schema::table('schedules', function (Blueprint $table) {
+            $table->dropColumn('user_id');
+        });
     }
 }
