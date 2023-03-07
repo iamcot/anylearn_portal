@@ -41,27 +41,28 @@ class DashboardController extends Controller
 
     public function meDashboard(Request $request)
     {
-        $editUser = Auth::user();
-        $userService = new UserServices();
+        // $editUser = Auth::user();
+        // $userService = new UserServices();
 
-            // $input = $request->all();
-            // dd($input);
-        if ($request->input('save')) {
-            $input = $request->all();
-            $input['role'] = $editUser->role;
-            $input['user_id'] = $editUser->user_id;
-            $input['boost_score'] = $editUser->boost_score;
-            $input['commission_rate'] = $editUser->commission_rate;
-            $userM = new User();
-            $rs = $userM->saveMember($request, $input);
-            return redirect()->route('me.edit')->with('notify', $rs);
-        }
+        //     // $input = $request->all();
+        //     // dd($input);
+        // if ($request->input('save')) {
+        //     $input = $request->all();
+        //     $input['role'] = $editUser->role;
+        //     $input['user_id'] = $editUser->user_id;
+        //     $input['boost_score'] = $editUser->boost_score;
+        //     $input['commission_rate'] = $editUser->commission_rate;
+        //     $userM = new User();
+        //     $rs = $userM->saveMember($request, $input);
+        //     return redirect()->route('me.edit')->with('notify', $rs);
+        // }
 
-        $friends = User::where('user_id', $editUser->id)->paginate(20);
-        $userI18n = $userService->userInfo($editUser->id);
-        $this->data['friends'] = $friends;
-        $this->data['user'] = $userI18n;
-        $this->data['type'] = 'member';
+        // $friends = User::where('user_id', $editUser->id)->paginate(20);
+        // $userI18n = $userService->userInfo($editUser->id);
+        // $this->data['friends'] = $friends;
+        // $this->data['user'] = $userI18n;
+        // $this->data['type'] = 'member';
+        // $this->data['navText'] = 'Trang tổng quan';
         return view(env('TEMPLATE', '') . 'me.dashboard', $this->data);
     }
 

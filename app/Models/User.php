@@ -240,6 +240,7 @@ class User extends Authenticatable
             'name' => $input['name'],
             'refcode' => $input['refcode'],
             'sex' => isset($input['sex']) ? $input['sex'] : null,
+            'title' => isset($input['title']) ? $input['title'] : null,
             'introduce' => $input['introduce'][I18nContent::DEFAULT],
             'full_content' => $input['full_content'][I18nContent::DEFAULT],
             'dob' => isset($input['dob']) ? $input['dob'] : null,

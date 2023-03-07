@@ -193,13 +193,12 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
-    // public function WithDraw(Request $request)
-    // {
-    //     if ($request->input('withdraw')) {
-    //         $input = $request->all();
-    //         dd($input);
-    //     }
-    // }
+    public function meProfile()
+    {
+        $user = Auth::user();
+        $this->data['user'] = $user;
+        return view(env('TEMPLATE', '') . 'me.profile',$this->data);
+    }
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -212,7 +211,7 @@ class UserController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            return redirect()->route('me.dashboard')->with('notify', $rs);
+            return redirect()->route('me.profile')->with('notify', $rs);
         }
         $friends = User::where('user_id', $editUser->id)->paginate();
         $editUser = $userService->userInfo($editUser->id);
@@ -279,25 +278,6 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý tài khoản con');
         return view(env('TEMPLATE', '') . 'me.child', $this->data);
     }
-    // public function meChildEdit(Request $request)
-    // {
-    //     $id = session()->get('id');
-    //     $userC = User::find($id);
-    //     $this->data['userC'] = $userC;
-    //     $this->data['navText'] = __('Quản lý tài khoản con');
-    //     if($request->input('save')){
-    //         $input=$request->all();
-    //         $this->data['navText'] = __('Quản lý tài khoản con');
-    //         $userC->name = $input['username'];
-    //         $userC->dob = $input['dob'];
-    //         $userC->sex = $input['sex'];
-    //         $userC->introduce = $input['introduce'];
-    //         $userC -> save($input);
-    //         $this->data['userC'] = $userC;
-    //         return redirect()->route('me.editchild')->with([ 'id' => $id ]);
-    //     }
-    //     return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-    // }
     public function mePassword(Request $request)
     {
         $editUser = Auth::user();

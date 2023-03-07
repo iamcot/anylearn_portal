@@ -42,7 +42,7 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content" class="mb-4">
                 @include('anylearn.me.topbar')
-                @include('anylearn.me.avatar')
+                {{-- @include('anylearn.me.avatar') --}}
                 <div class="container-fluid">
                 @include('anylearn.widget.notify', ['notify' => session('notify', '')])
                     <div class="d-flex">
@@ -50,16 +50,18 @@
                         @include('anylearn.me.sidebar')
                         </div>
                         <div class="text-secondary is-content">
+                            @if($navText ?? '')
                             <h1 class="h5 text-gray-800 mb-3">
                             @if($hasBack ?? false)
                                 @if ($hasBack === true)
                                 <a href="javascript:window.history.back()"><i class="fas  fa-arrow-left"></i></a>
-                                @else 
+                                @else
                                 <a href="{{ $hasBack }}"><i class="fas  fa-arrow-left"></i></a>
                                 @endif
                             @endif
                                 {{ $navText ?? '' }}
                             </h1>
+                            @endif
                             @yield('body')
                         </div>
                     </div>

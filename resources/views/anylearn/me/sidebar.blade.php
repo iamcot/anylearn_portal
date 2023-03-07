@@ -41,8 +41,8 @@
     <div class="sidebar-heading">
         @lang('Thông tin cơ bản')
     </div>
-    <li class="nav-item {{ $route == 'me.dashboard' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('me.dashboard') }}" data-spm="nav.edit">
+    <li class="nav-item {{ $route == 'me.profile' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.profile') }}" data-spm="nav.edit">
             <i class="fas fa-fw fa-user-edit"></i>
             <span>@lang('Thông tin chung')</span></a>
     </li>
