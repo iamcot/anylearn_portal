@@ -551,7 +551,7 @@ class UserController extends Controller
                 return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
             }
 
-            return redirect()->route('me.introduces')->with('notify', "Cập nhật địa chỉ thành công");
+            return redirect()->route('me.introduce')->with('notify', "Cập nhật địa chỉ thành công");
         }
         $this->data['location'] = $location;
         $this->data['provinces'] = Province::orderby('name')->get();

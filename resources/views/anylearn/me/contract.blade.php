@@ -162,7 +162,7 @@ contract
                         <!-- <div class="modal-header">
                         <button type="button" class="btn btn-secondary  rounded-pill border-0" data-bs-dismiss="modal">Đóng</button>
                     </div> -->
-                        <div class="modal-body">
+                        <div class="modal-body p-5">
                             {!! $contract->template !!}
                         </div>
                         <div class="modal-footer text-center p-5">
