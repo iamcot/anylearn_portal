@@ -55,29 +55,34 @@ class_edit
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'contenttab' ? 'active' : '' }}" id="content-tab" data-bs-toggle="tab" data-bs-target="#contenttab" type="button" role="tab" aria-controls="contenttab" aria-selected="true"><i class="fa fa-font"></i> <span class="d-none d-sm-block">@lang('Giới thiệu')</span></button>
         </li>
+        @if(!empty($course))
         <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule" aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule"  aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
         </li>
+        @endif
         @if(!empty($course) && $course['info']->subtype == 'video')
         <li class="nav-item d-none" role="presentation" id="vdo">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'video' ? 'active' : '' }}" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="true"><i class="fas fa-play"></i> <span class="d-none d-sm-block">@lang('VIDEO')</span></button>
         </li>
         @endif
+        @if(!empty($course))
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Tài liệu')</span></button>
         </li>
-        @if ($isSchool)
+        @endif
+        @if (!empty($course) && $isSchool)
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'teachers' ? 'active' : '' }}" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="true"><i class="fa fa-chalkboard-teacher"></i> <span class="d-none d-sm-block">@lang('Giảng viên')</span></button>
         </li>
         @endif
-
+        @if(!empty($course))
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'rating' ? 'active' : '' }}" id="rating-tab" data-bs-toggle="tab" data-bs-target="#rating" type="button" role="tab" aria-controls="rating" aria-selected="true"><i class="fa fa-star"></i> <span class="d-none d-sm-block">@lang('Đánh giá')</span></button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'registers' ? 'active' : '' }}" id="registers-tab" data-bs-toggle="tab" data-bs-target="#registers" type="button" role="tab" aria-controls="registers" aria-selected="true"><i class="fa fa-users-cog"></i> <span class="d-none d-sm-block">@lang('Học viên')</span></button>
         </li>
+        @endif
     </ul>
 
     <div class="tab-content border-top-2 mb-5 bg-white" id="myTabContent">
