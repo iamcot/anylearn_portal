@@ -220,6 +220,23 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
+    public function meTransHistory()
+    {
+        return view(env('TEMPLATE', '') . 'me.transactionhistory', $this->data);
+    }
+    public function meFriend()
+    {
+        $friends = DB::table('users')->where('user_id','=',Auth::user()->id)->where('is_child','=',0)->get();
+        $this->data['friends'] = $friends;
+        return view(env('TEMPLATE', '') . 'me.friend', $this->data);
+    }
+    public function meIntroduce()
+    {
+        $user = Auth::user();
+        $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
+        $this->data['user'] = $user;
+        return view(env('TEMPLATE', '') . 'me.introduce', $this->data);
+    }
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
@@ -534,7 +551,7 @@ class UserController extends Controller
                 return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
             }
 
-            return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
+            return redirect()->route('me.introduces')->with('notify', "Cập nhật địa chỉ thành công");
         }
         $this->data['location'] = $location;
         $this->data['provinces'] = Province::orderby('name')->get();
@@ -572,7 +589,7 @@ class UserController extends Controller
                 return redirect()->back()->with('notify',  "Tạo địa chỉ thất bại");
             }
 
-            return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
+            return redirect()->route('me.introduce')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
@@ -675,10 +692,21 @@ class UserController extends Controller
                 $contract->template = Contract::makeContent($template, $user, $contract);
             }
         }
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $fileService = new FileServices();
+            $fileuploaded = $fileService->doUploadImage($request, 'file');
+            if ($fileuploaded === false) {
+                return redirect()->back()->with('notify', 'Tải lên chứng chỉ không thành công.');
+            }
+            $userDocM = new UserDocument();
+            $userDocM->addDocWeb($fileuploaded, $user);
+            return redirect()->back()->with('notify', 'Tải lên chứng chỉ thành công.');
+        }
 
+        $this->data['files'] = UserDocument::where('user_id', $user->id)->get();
         // dd($contract);
         $this->data['contract'] = $contract;
-        $this->data['navText'] = __('Quản lý Hợp đồng');
+        // $this->data['navText'] = __('Quản lý Hợp Đồng/Chứng Chỉ');
         return view(env('TEMPLATE', '') . 'me.contract', $this->data);
     }
 

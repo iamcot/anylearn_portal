@@ -44,7 +44,7 @@
                     <h4 class="mb-1">{{ $user->name }}<span></span></h4>
                     <h5 class="fs-0 fw-normal">{{ $user->title }}</h5>
                     <a href="/me/edit" type="button" class="px-3 btn btn-primary btn-sm">Sửa thông tin</a>
-                    <button type="button" class="px-3 ms-2 btn btn-secondary btn-sm">Bạn bè</button>
+                    <a href="{{ route('me.friend') }}" type="button" class="px-3 ms-2 btn btn-secondary btn-sm">Bạn bè</a>
                     <div class="border-dashed border-bottom my-4 d-lg-none"></div>
                 </div>
             </div>

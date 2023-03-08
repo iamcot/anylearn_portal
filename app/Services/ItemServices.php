@@ -336,9 +336,9 @@ class ItemServices
     public function userStatusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_INACTIVE) {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
         } else {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
         }
     }
 
@@ -407,7 +407,7 @@ class ItemServices
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
                     if (!empty($contentObj[$type])) {
-                        $buildContent .= (($type == self::CONTENT_OLD) ? "" : "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" ) 
+                        $buildContent .= (($type == self::CONTENT_OLD) ? "" : "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" )
                         . $contentObj[$type];
                     }
                 }
