@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
+use App\Services\ActivitybonusServices;
+use App\Services\InteractServices;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -203,8 +206,22 @@ class UserController extends Controller
     {
         $editUser = Auth::user();
         $userService = new UserServices();
+        $activityService = new ActivitybonusServices();
         if ($request->input('save')) {
+
             $input = $request->all();
+            if ($editUser->image == null && isset($input['image']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Avatar,'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện',null);
+            }
+            if ($editUser->banner == null && isset($input['banner']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Banner,'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa',null);
+            }
+            if ($editUser->email == null && isset($input['email']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Email,'Bạn được cộng điểm vì lần đầu cập nhật email',null);
+            }
+            if ($editUser->address == null && isset($input['address']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Address,'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ',null);
+            }
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
@@ -23,6 +24,7 @@ use App\Models\ItemVideoLesson;
 use App\Models\Notification;
 use App\Models\SocialPost;
 use App\Models\UserLocation;
+use App\Services\ActivitybonusServices;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -410,6 +412,8 @@ class ClassController extends Controller
         if (!$item) {
             return redirect()->back()->with('notif', 'Trang không tồn tại');
         }
+        $activityServ = new ActivitybonusServices();
+        $activityServ->updateWalletC($user->id,ActivitybonusConstants::Activitybonus_Course_Favourite,'Bạn được cộng điểm vì yêu thích khóa học',$itemId);
         $itemUserActionM = new ItemUserAction();
         $rs = $itemUserActionM->touchFav($itemId, $user->id);
         return redirect()->back();
