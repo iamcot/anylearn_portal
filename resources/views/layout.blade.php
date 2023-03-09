@@ -18,6 +18,7 @@
     <link href="/cdn/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/cdn/vendor/jquery/jquery-ui-1.13.2/jquery-ui.min.css" rel="stylesheet">
     <link href="/cdn/css/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
+
     @yield('morestyle')
 </head>
 

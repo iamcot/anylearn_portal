@@ -10,6 +10,7 @@ use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class CrmController extends Controller
 {
@@ -51,7 +52,23 @@ class CrmController extends Controller
 
         return view('crm.sale', $this->data);
     }
-
+    public function requestSale(Request $request)
+    {
+        $data = DB::table('items')
+        ->join('users', 'items.user_id', '=', 'users.id')
+        ->leftJoin('items_categories', 'items.id', '=', 'items_categories.item_id')
+        ->leftJoin('categories', 'items_categories.category_id', '=', 'categories.id')
+        ->leftJoin('order_details', 'items.id', '=', 'order_details.item_id')
+        ->select('items.id','items.title', 'items.subtype', 'items.price', 'items.seats',
+                 'users.name', 'users.email', 'users.image',
+                 DB::raw('GROUP_CONCAT(categories.title SEPARATOR ", ") as category_names'),
+                 DB::raw('COALESCE(SUM(order_details.quanity), 0) as quanity_purchased'))
+        ->groupBy('items.id','items.title', 'items.subtype', 'items.price', 'items.seats',
+                  'users.name', 'users.email', 'users.image')
+        ->get();
+        $this->data['data'] = $data;
+        return view('crm.requestsale', $this->data);
+    }
     public function saveNote(Request $request)
     {
         if ($request->get('action') == 'save-note') {
@@ -124,7 +141,8 @@ class CrmController extends Controller
         echo $content;
     }
 
-    public function anylog(Request $request) {
+    public function anylog(Request $request)
+    {
         $spmM = new Spm();
         $spmM->addSpm($request);
     }

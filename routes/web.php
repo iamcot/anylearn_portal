@@ -172,6 +172,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
 
     Route::any('/crm/sale/{userId}', 'CrmController@memberSale')->name('crm.sale');
+    Route::any('/sale/request', 'CrmController@requestSale')->name('crm.requestsale');
     Route::any('/crm/save-note', 'CrmController@saveNote')->name('crm.save-note');
     Route::any('/crm/save-call', 'CrmController@saveCall')->name('crm.save-call');
     Route::any('/crm/save-chat', 'CrmController@saveChat')->name('crm.save-chat');

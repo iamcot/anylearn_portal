@@ -341,7 +341,6 @@ class UserController extends Controller
             }
         }
         $this->data['user'] = $editUser;
-        $this->data['navText'] = __('Đổi Mật Khẩu');
         return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 

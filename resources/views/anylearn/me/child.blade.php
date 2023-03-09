@@ -8,38 +8,35 @@ child
         data-bs-target="#exampleModal">@lang('Tạo Tài khoản')</button>
 @endsection
 @section('body')
-    <!-- <div class="row mb-2 text-end">
-        <form>
-            <button class="btn btn-secondary my-2 my-sm-0 ml-2 " type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Tạo Tài khoản</button>
-        </form>
-    </div> -->
-
     <div class="card shadow">
         <div class="card-body p-0 table-responsive">
             <table class="table table-hover">
                 <thead class="table-secondary text-secondary">
                     <tr>
-                        <th class="text-center border-0" width="25%" scope="col">@lang('Họ Tên')</th>
-                        <th class="border-0">@lang('Giới Tính')</th>
-                        <th class="text-center border-0">@lang('Ngày Sinh')</th>
-                        <th width="15%" class="text-right border-0" scope="col">@lang('Thao tác')</th>
+                        <th>#ID</th>
+                        <th> @lang('Họ Tên')</th>
+                        <th>@lang('Giới Tính')</th>
+                        <th>@lang('Ngày Sinh')</th>
+                        <th>@lang('Địa Chỉ')</th>
+                        <th>@lang('Thao tác')</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     @foreach ($childuser as $row)
                         <tr>
                             <form action="" method="get">
-                                <input class="form-control mr-sm-2" type="hidden" name="childid"
+                                <input type="hidden" name="childid"
                                     value="{{ $row->id }}" readonly>
+                                <td>{{ $row->id }}</td>
                                 <td>{{ $row->name }}</td>
                                 @if ($row->sex == 'female')
-                                    <td class="">@lang('Nữ')</td>
+                                    <td >@lang('Nữ')</td>
                                 @else
-                                    <td class="">@lang('Nam')</td>
+                                    <td >@lang('Nam')</td>
                                 @endif
-                                <td class="text-center">{{ $row->dob }}</td>
-                                <td class="text-right"> <button class="btn btn-primary btn-sm" id="{{ $row->id }}"
+                                <td>{{ $row->dob }}</td>
+                                <td>{{ $row->address }}</td>
+                                <td> <button class="btn btn-primary btn-sm" id="{{ $row->id }}"
                                         name="childedit" value="{{ $row->id }}">@lang('Chi tiết')</button></td>
                             </form>
                         </tr>
@@ -65,7 +62,7 @@ child
                     <form method="POST">
                         @csrf
 
-                        <div class="">
+                        <div >
                             <div class="form-group row">
                                 <h6><b>@lang('Thông tin cá nhân')</b></h6>
                                 <label for="name"

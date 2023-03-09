@@ -3,7 +3,7 @@
     history
 @endsection
 @section('body')
-    <table class="table table-bordered">
+    {{-- <table class="table table-bordered">
         <thead class="text-center">
             <tr>
                 <th scope="col">#</th>
@@ -126,7 +126,6 @@
                 </td>
                 <td class="small small fw-bold text-success">Đã thanh toán</td>
                 <td>
-                    {{-- <button type="button" class="btn btn-sm btn-warning fw-bold" data-mdb-ripple-color="dark">Đánh Giá</button> --}}
                 </td>
             </tr>
             <tr>
@@ -145,5 +144,5 @@
                 </td>
             </tr>
         </tbody>
-    </table>
+    </table> --}}
 @endsection
