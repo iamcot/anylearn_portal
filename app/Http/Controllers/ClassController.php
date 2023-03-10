@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
@@ -18,11 +19,13 @@ use App\Models\Schedule;
 use App\Models\User;
 use App\Models\I18nContent;
 use App\Models\ItemExtra as ModelsItemExtra;
+use App\Models\ItemSchedulePlan;
 use App\Models\ItemVideoChapter;
 use App\Models\ItemVideoLesson;
 use App\Models\Notification;
 use App\Models\SocialPost;
 use App\Models\UserLocation;
+use App\Services\ActivitybonusServices;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -104,6 +107,7 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
+        
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
@@ -112,6 +116,7 @@ class ClassController extends Controller
                 ->get();
             return view('class.edit', $this->data);
         } else {
+            $this->data['hasBack'] = route('me.class');
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }
     }
@@ -133,6 +138,7 @@ class ClassController extends Controller
             ]);
             return redirect()->back()->with(['notify' => "Cập nhật thành công", 'tab' => $input['tab']]);
         }
+
 
         if ($request->get('action') == 'dlesson') {
             $lid = $request->get('lid');
@@ -159,7 +165,7 @@ class ClassController extends Controller
 
         if ($request->input('action') == 'deleteextrafee') {
             ModelsItemExtra::find($input['iddelete'])->delete();
-            return redirect()->back()->with(['notify' => "Xóa thành công", 'tab' => $input['tab']]);
+            return redirect()->back()->with(['notify' => "Xóa thành công", 'tab' => 'price']);
         }
         if ($request->input('action') == 'addextrafee') {
             if ($input['idextrafee'] == null) {
@@ -168,13 +174,13 @@ class ClassController extends Controller
                     'price' => $input['priceextrafee'],
                     'item_id' => $courseId
                 ]);
-                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => 'extrafee']);
+                return redirect()->back()->with(['notify' => "Thêm phụ phí thành công", 'tab' => 'price']);
             } else {
                 $rs = ModelsItemExtra::find($input['idextrafee'])->update([
                     'title' => $input['titleextrafee'],
                     'price' => $input['priceextrafee']
                 ]);
-                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' =>  'extrafee']);
+                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' =>  'price']);
             }
         }
         if ($request->input('action') == 'createChapter') {
@@ -187,12 +193,34 @@ class ClassController extends Controller
             $videoServices->createLesson($request, $input);
             return redirect()->back()->with(['notify' => 1, 'tab' => 'video']);
         }
+        if ($request->get('action') == 'schedule') {
+            $schedulePlan = $request->get('opening');
+            if (empty($schedulePlan['title']) || empty($schedulePlan['date_start']) || empty($schedulePlan['time_start'])) {
+                return redirect()->back()->with(['notify' => 'Vui lòng nhập các trường có dấu *', 'tab' => 'schedule']);
+            }
+            if (empty($schedulePlan['d'])) {
+                return redirect()->back()->with(['notify' => 'Vui lòng chọn ít nhất một ngày trong tuần', 'tab' => 'schedule']);
+            }
+            $ds = [];
+            foreach($schedulePlan['d'] as $day => $v) {
+                $ds[] = $day;
+            }
+            $schedulePlan['weekdays'] = implode(",", $ds);
+            $schedulePlan['item_id'] = $courseId;
+            if (empty($schedulePlan['plan'])) {
+                ItemSchedulePlan::create($schedulePlan);
+            } else {
+                ItemSchedulePlan::find($schedulePlan['plan'])->update($schedulePlan);
+            }
+            return redirect()->back()->with(['notify' => 1, 'tab' => 'schedule']);
+        }
         $courseService = new ItemServices();
         if ($request->input('action') == 'update') {
             try {
                 $rs = $courseService->updateItem($request, $input);
             } catch (Exception $e) {
-                return redirect()->back()->with(['tab' => $input['tab'], 'notify' => $e->getMessage()]);
+                Log::error($e);
+                return redirect()->back()->with(['tab' => $input['tab'], 'notify' => 'Có lỗi xảy ra khi cập nhật, vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.']);
             }
 
             if ($rs === false || $rs instanceof Validator) {
@@ -231,20 +259,26 @@ class ClassController extends Controller
         $this->data['companyCommission'] = json_decode($courseDb['info']->company_commission, true);
         $userLocations = UserLocation::where('user_id', $author->id)->orderby('is_head', 'desc')->get();
         $this->data['userLocations'] = $userLocations;
-        $this->data['openings'] = DB::table('items')
+        $this->data['openings'] = DB::table('item_schedule_plans')
             ->join('user_locations', 'user_locations.id', '=', 'user_location_id')
             ->where('item_id', $courseId)
-            ->select('items.title', 'items.id', 'user_locations.title AS location', 'items.user_status', 'items.date_start')
+            ->select('item_schedule_plans.title', 'item_schedule_plans.id', 'user_locations.title AS location', 
+            'item_schedule_plans.date_start', 'item_schedule_plans.time_start'
+            , 'item_schedule_plans.weekdays', 'item_schedule_plans.info')
             ->get();
+        if ($request->get('plan')) {
+            $this->data['opening'] = ItemSchedulePlan::find($request->get('plan'));
+            $this->data['opening']->weekdays = explode(",", $this->data['opening']->weekdays);
+        }
 
         if (!$request->session()->get('tab') && $request->get('tab')) {
             $request->session()->flash('tab', $request->get('tab'));
         }
-        if ($request->get('op')) {
-            $op = Item::find($request->get('op'));
-            $this->data['opening'] = $op ?? null;
-            $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
-        }
+        // if ($request->get('op')) {
+        //     $op = Item::find($request->get('op'));
+        //     $this->data['opening'] = $op ?? null;
+        //     $courseDb['schedule'] = Schedule::where('item_id', $op->id)->get();
+        // }
         $category = Category::all();
 
         $this->data['categories'] = $category;
@@ -298,6 +332,7 @@ class ClassController extends Controller
 
             return view('class.edit', $this->data);
         } else {
+            $this->data['hasBack'] = route('me.class');
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }
     }
@@ -418,6 +453,8 @@ class ClassController extends Controller
         if (!$item) {
             return redirect()->back()->with('notif', 'Trang không tồn tại');
         }
+        $activityServ = new ActivitybonusServices();
+        $activityServ->updateWalletC($user->id,ActivitybonusConstants::Activitybonus_Course_Favourite,'Bạn được cộng điểm vì yêu thích khóa học',$itemId);
         $itemUserActionM = new ItemUserAction();
         $rs = $itemUserActionM->touchFav($itemId, $user->id);
         return redirect()->back();

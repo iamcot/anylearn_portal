@@ -336,9 +336,9 @@ class ItemServices
     public function userStatusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_INACTIVE) {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
         } else {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
         }
     }
 
@@ -407,12 +407,14 @@ class ItemServices
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
                     if (!empty($contentObj[$type])) {
-                        $buildContent .= "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" . $contentObj[$type];
+                        $buildContent .= (($type == self::CONTENT_OLD) ? "" : "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>")
+                            . $contentObj[$type];
                     }
                 }
                 return $buildContent;
             }
         } catch (\Exception $ex) {
+            Log::error($ex);
         }
         return $content;
     }
@@ -508,6 +510,27 @@ class ItemServices
             $input['is_paymentfee'] = 0;
         }
 
+        if (!empty($input['allow_re_register']) && $input['allow_re_register'] == 'on') {
+            $input['allow_re_register'] = 1;
+        } else {
+            $input['allow_re_register'] = 0;
+        }
+        if (!empty($input['activiy_trial']) && $input['activiy_trial'] == 'on') {
+            $input['activiy_trial'] = 1;
+        } else {
+            $input['activiy_trial'] = 0;
+        }
+        if (!empty($input['activiy_test']) && $input['activiy_test'] == 'on') {
+            $input['activiy_test'] = 1;
+        } else {
+            $input['activiy_test'] = 0;
+        }
+        if (!empty($input['activiy_visit']) && $input['activiy_visit'] == 'on') {
+            $input['activiy_visit'] = 1;
+        } else {
+            $input['activiy_visit'] = 0;
+        }
+
         if (!empty($input['ages_range'])) {
             $agesRange = explode("-", $input['ages_range']);
             if (count($agesRange) == 2) {
@@ -593,6 +616,26 @@ class ItemServices
         } else {
             $input['nolimit_time'] = 0;
         }
+        if (!empty($input['allow_re_register']) && $input['allow_re_register'] == 'on') {
+            $input['allow_re_register'] = 1;
+        } else {
+            $input['allow_re_register'] = 0;
+        }
+        if (!empty($input['activiy_trial']) && $input['activiy_trial'] == 'on') {
+            $input['activiy_trial'] = 1;
+        } else {
+            $input['activiy_trial'] = 0;
+        }
+        if (!empty($input['activiy_test']) && $input['activiy_test'] == 'on') {
+            $input['activiy_test'] = 1;
+        } else {
+            $input['activiy_test'] = 0;
+        }
+        if (!empty($input['activiy_visit']) && $input['activiy_visit'] == 'on') {
+            $input['activiy_visit'] = 1;
+        } else {
+            $input['activiy_visit'] = 0;
+        }
 
         if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
             $input['is_paymentfee'] = 1;
@@ -637,25 +680,25 @@ class ItemServices
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($itemUpdate, Tag::TYPE_CLASS);
 
-            $canUpdateSchedule = $this->updateClassSchedule($request, $input);
+            // $canUpdateSchedule = $this->updateClassSchedule($request, $input);
 
-            if (
-                $itemUpdate->date_start != $input['date_start']
-                || $itemUpdate->time_start != $input['time_start']
-                || $itemUpdate->location != $input['location']
-            ) {
-                $registerUsers = OrderDetail::where('item_id', $itemUpdate->id)->get();
-                $notifServ = new Notification();
-                foreach ($registerUsers as $user) {
-                    $notifServ->createNotif(
-                        NotifConstants::COURSE_HAS_CHANGED,
-                        $user->user_id,
-                        [
-                            'course' => $itemUpdate->title
-                        ]
-                    );
-                }
-            }
+            // if (
+            //     $itemUpdate->date_start != $input['date_start']
+            //     || $itemUpdate->time_start != $input['time_start']
+            //     || $itemUpdate->location != $input['location']
+            // ) {
+            //     $registerUsers = OrderDetail::where('item_id', $itemUpdate->id)->get();
+            //     $notifServ = new Notification();
+            //     foreach ($registerUsers as $user) {
+            //         $notifServ->createNotif(
+            //             NotifConstants::COURSE_HAS_CHANGED,
+            //             $user->user_id,
+            //             [
+            //                 'course' => $itemUpdate->title
+            //             ]
+            //         );
+            //     }
+            // }
         }
         return $canUpdate;
     }

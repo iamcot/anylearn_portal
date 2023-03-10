@@ -41,6 +41,20 @@ class DashboardServices
         }
         return $users->where('role', $role)->count();
     }
+    public function userCountpanert($getAll = true)
+    {
+        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('items.user_id', auth()->user()->id);
+        if ($this->dateF && !$getAll) {
+            $query = $query->where('orders.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT && !$getAll) {
+            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        return $query->count('orders.id');
+    }
     public function itemCount($getAll = true)
     {
         $items = DB::table('items');
@@ -64,6 +78,20 @@ class DashboardServices
                         ->orWhere('users.sale_id', $saleId);
                 });
         }
+        if ($this->dateF && !$getAll) {
+            $query = $query->where('orders.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT && !$getAll) {
+            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        return $query->sum('order_details.unit_price');
+    }
+    public function gmvpartner($getAll = true)
+    {
+        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('items.user_id', auth()->user()->id);
         if ($this->dateF && !$getAll) {
             $query = $query->where('orders.created_at', '>=', $this->dateF);
         }
@@ -123,7 +151,32 @@ class DashboardServices
         }
         return $chartDataset;
     }
+    public function revenuechartDataset()
+    {
+        $query = DB::table('order_details')
+            ->whereNotNull('created_at');
+        if ($this->dateF) {
+            $query = $query->where('created_at', '>=', $this->dateF);
+        } else {
+            $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
+        }
+        if ($this->dateT) {
+            $query = $query->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        $results = $query->selectRaw('DATE(created_at) AS day, sum(order_details.unit_price) AS num')
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get();
 
+        $chartDataset = [
+            'labels' => [],
+            'data' => []
+        ];
+        foreach ($results as $row) {
+            $chartDataset['labels'][] = date('d/m', strtotime($row->day));
+            $chartDataset['data'][] = $row->num;
+        }
+        return $chartDataset;
+    }
     public function topUser($num = 10)
     {
         $query = DB::table('users')
@@ -161,7 +214,22 @@ class DashboardServices
             ->take($num)->get();
         return $query;
     }
-
+    public function topItempartner($num = 10)
+    {
+        $query = DB::table('items')->where('items.user_id',auth()->user()->id)
+            ->leftJoin('order_details AS od', 'od.item_id', '=', 'items.id');
+        if ($this->dateF) {
+            $query = $query->where('od.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT) {
+            $query = $query->where('od.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        $query = $query->groupBy('items.title')
+            ->orderBy('reg_num', 'DESC')
+            ->select('items.title', DB::raw('count(od.id) AS reg_num'))
+            ->take($num)->get();
+        return $query;
+    }
     public function saleActivities($saleId, $getAll = true)
     {
         $query = DB::table('users')

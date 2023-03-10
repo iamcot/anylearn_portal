@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
+use App\Services\ActivitybonusServices;
+use App\Services\InteractServices;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -193,26 +196,39 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
-    // public function WithDraw(Request $request)
-    // {
-    //     if ($request->input('withdraw')) {
-    //         $input = $request->all();
-    //         dd($input);
-    //     }
-    // }
+    public function meProfile()
+    {
+        $user = Auth::user();
+        $this->data['user'] = $user;
+        return view(env('TEMPLATE', '') . 'me.profile',$this->data);
+    }
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
         $userService = new UserServices();
+        $activityService = new ActivitybonusServices();
         if ($request->input('save')) {
+
             $input = $request->all();
+            if ($editUser->image == null && isset($input['image']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Avatar,'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện',null);
+            }
+            if ($editUser->banner == null && isset($input['banner']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Banner,'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa',null);
+            }
+            if ($editUser->email == null && isset($input['email']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Email,'Bạn được cộng điểm vì lần đầu cập nhật email',null);
+            }
+            if ($editUser->address == null && isset($input['address']) != null) {
+                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Address,'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ',null);
+            }
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            return redirect()->route('me.dashboard')->with('notify', $rs);
+            return redirect()->route('me.profile')->with('notify', $rs);
         }
         $friends = User::where('user_id', $editUser->id)->paginate();
         $editUser = $userService->userInfo($editUser->id);
@@ -220,6 +236,23 @@ class UserController extends Controller
         $this->data['user'] = $editUser;
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
+    }
+    public function meTransHistory()
+    {
+        return view(env('TEMPLATE', '') . 'me.transactionhistory', $this->data);
+    }
+    public function meFriend()
+    {
+        $friends = DB::table('users')->where('user_id','=',Auth::user()->id)->where('is_child','=',0)->get();
+        $this->data['friends'] = $friends;
+        return view(env('TEMPLATE', '') . 'me.friend', $this->data);
+    }
+    public function meIntroduce()
+    {
+        $user = Auth::user();
+        $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
+        $this->data['user'] = $user;
+        return view(env('TEMPLATE', '') . 'me.introduce', $this->data);
     }
     public function meHistory(Request $request)
     {
@@ -279,25 +312,6 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý tài khoản con');
         return view(env('TEMPLATE', '') . 'me.child', $this->data);
     }
-    // public function meChildEdit(Request $request)
-    // {
-    //     $id = session()->get('id');
-    //     $userC = User::find($id);
-    //     $this->data['userC'] = $userC;
-    //     $this->data['navText'] = __('Quản lý tài khoản con');
-    //     if($request->input('save')){
-    //         $input=$request->all();
-    //         $this->data['navText'] = __('Quản lý tài khoản con');
-    //         $userC->name = $input['username'];
-    //         $userC->dob = $input['dob'];
-    //         $userC->sex = $input['sex'];
-    //         $userC->introduce = $input['introduce'];
-    //         $userC -> save($input);
-    //         $this->data['userC'] = $userC;
-    //         return redirect()->route('me.editchild')->with([ 'id' => $id ]);
-    //     }
-    //     return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-    // }
     public function mePassword(Request $request)
     {
         $editUser = Auth::user();
@@ -327,7 +341,6 @@ class UserController extends Controller
             }
         }
         $this->data['user'] = $editUser;
-        $this->data['navText'] = __('Đổi Mật Khẩu');
         return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 
@@ -554,7 +567,7 @@ class UserController extends Controller
                 return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
             }
 
-            return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
+            return redirect()->route('me.introduce')->with('notify', "Cập nhật địa chỉ thành công");
         }
         $this->data['location'] = $location;
         $this->data['provinces'] = Province::orderby('name')->get();
@@ -592,7 +605,7 @@ class UserController extends Controller
                 return redirect()->back()->with('notify',  "Tạo địa chỉ thất bại");
             }
 
-            return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
+            return redirect()->route('me.introduce')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
@@ -695,10 +708,21 @@ class UserController extends Controller
                 $contract->template = Contract::makeContent($template, $user, $contract);
             }
         }
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $fileService = new FileServices();
+            $fileuploaded = $fileService->doUploadImage($request, 'file');
+            if ($fileuploaded === false) {
+                return redirect()->back()->with('notify', 'Tải lên chứng chỉ không thành công.');
+            }
+            $userDocM = new UserDocument();
+            $userDocM->addDocWeb($fileuploaded, $user);
+            return redirect()->back()->with('notify', 'Tải lên chứng chỉ thành công.');
+        }
 
+        $this->data['files'] = UserDocument::where('user_id', $user->id)->get();
         // dd($contract);
         $this->data['contract'] = $contract;
-        $this->data['navText'] = __('Quản lý Hợp đồng');
+        // $this->data['navText'] = __('Quản lý Hợp Đồng/Chứng Chỉ');
         return view(env('TEMPLATE', '') . 'me.contract', $this->data);
     }
 

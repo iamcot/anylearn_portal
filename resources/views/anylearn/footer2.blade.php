@@ -51,7 +51,7 @@
                 <div class="col-sm-7 ps-5">
                     <div class="fw-bold head_text fs-5">@lang('TIN TỨC')</div>
                     <ul class="list-unstyled text-white">
-                        @foreach($itemServ->footerNews() as $news)
+                        @foreach ($itemServ->footerNews() as $news)
                         <li>
                             <p><a href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p>
                         </li>
@@ -104,7 +104,7 @@
         <div class="col-md-5">
             <div class="fw-bold d-md-none d-sm-block head_text">TIN TỨC MỚI NHẤT</div>
             <ul class="list-unstyled text-secondary">
-                @foreach($itemServ->footerNews() as $news)
+                @foreach ($itemServ->footerNews() as $news)
                 <li>
                     <p><a href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p>
                 </li>
@@ -117,4 +117,67 @@
         </div>
     </div> -->
 </footer>
-<div id="footer_call"><i class="fas fa-phone text-success m-2 blink_me"></i><a href="tel:0374900344">+84 37 490 0344</a></div>
+{{-- <div id="footer_call"><i class="fas fa-phone text-success m-2 blink_me"></i><a href="tel:0374900344">+84 37 490 0344</a></div> --}}
+{{-- <footer class="footer bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 pt-5">
+                <h5><img src="/cdn/anylearn/img/logo-color.svg" class="img-fluid" alt=""></h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold">LIÊN HỆ</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-briefcase text-success m-2"></i>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC ANYLEARN
+                    </li>
+                    <li><i class="fas fa-briefcase text-success m-2"></i>MSKD: 0316363793</li>
+                    <li><i class="fas fa-envelope text-success m-2"></i>info@anylearn.vn</li>
+                    <li><i class="fas fa-phone text-success m-2"></i><a href="tel:0374900344">+84 37 490 0344</a></li>
+                    <li><i class="fas fa-map-marker-alt text-success m-2"></i>352/28A Nguyễn Tất Thành, P.13, Q.4,<br>
+                        TP Hồ Chí Minh, Việt Nam
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold">KẾT NỐI VỚI CHÚNG TÔI</h5>
+                <ul class="list-unstyled">
+                    <li><a href="https://www.facebook.com/anylearnhockhonggioihan"><i class="fab fa-facebook-f"></i>
+                            Facebook</a></li>
+                    <li><a href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><i
+                                class="fab fa-youtube"></i> Youtube</a></li>
+                </ul>
+                <h5 class="fw-bold">TIN TỨC</h5>
+                <ul class="list-unstyled text-secondary">
+                    @foreach ($itemServ->footerNews() as $news)
+                        <li>
+                            <p><a href="{{ $itemServ->articleUrl($news->id) }}"
+                                    class="text-secondary text-decoration-none">{{ $news->title }}</a></p>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <p>&copy; 2023 AnyLearn. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <p><a href="/helpcenter" class="text-secondary text-decoration-none">Trung tâm hỗ trợ</a></p>
+                    </li>
+                    <li class="list-inline-item">
+                        <p><a href="/privacy" class="text-secondary text-decoration-none">Chính sách</a></p>
+                    </li>
+                    <li class="list-inline-item">
+                        <p><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều khoản</a></p>
+                    </li>
+                    <li class="list-inline-item">
+                        <p><a href="https://anylearn.vn/info" class="text-secondary text-decoration-none">Giới thiệu</a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer> --}}

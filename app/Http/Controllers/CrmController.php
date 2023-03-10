@@ -10,6 +10,7 @@ use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class CrmController extends Controller
 {
@@ -25,13 +26,29 @@ class CrmController extends Controller
         if ($user->role == UserConstants::ROLE_SALE && $saleUser->user_id != $user->id && $saleUser->sale_id != $user->id) {
             return redirect()->route('user.members')->with('notify', __('Bạn không có quyền với user này'));
         }
-        $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
+        if ($request->get('action')=='history') {
+            $input=$request->all();
+            // dd($request->id);
+            $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where('order_details.user_id',$request->id)
+            ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
+            ->orderBy('orders.id', 'desc')
+            ->paginate(5);
+            $this->data['idC'] = $request->id;
+        } else{
+            $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
             ->join('order_details', 'order_details.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
             ->orderBy('orders.id', 'desc')
             ->paginate(5);
-
+            $this->data['idC'] = null;
+        }
+        $accountC = DB::table('users')->where('user_id',$userId)->get();
+        // dd($memberOrders);
+        $this->data['accountC'] = $accountC;
         $this->data['user'] = $user;
         $this->data['memberOrders'] = $memberOrders;
         $this->data['orderStats'] = $userService->orderStats($saleUser->id);
@@ -51,7 +68,23 @@ class CrmController extends Controller
 
         return view('crm.sale', $this->data);
     }
-
+    public function requestSale(Request $request)
+    {
+        $data = DB::table('items')
+        ->join('users', 'items.user_id', '=', 'users.id')
+        ->leftJoin('items_categories', 'items.id', '=', 'items_categories.item_id')
+        ->leftJoin('categories', 'items_categories.category_id', '=', 'categories.id')
+        ->leftJoin('order_details', 'items.id', '=', 'order_details.item_id')
+        ->select('items.id','items.title', 'items.subtype', 'items.price', 'items.seats',
+                 'users.name', 'users.email', 'users.image',
+                 DB::raw('GROUP_CONCAT(categories.title SEPARATOR ", ") as category_names'),
+                 DB::raw('COALESCE(SUM(order_details.quanity), 0) as quanity_purchased'))
+        ->groupBy('items.id','items.title', 'items.subtype', 'items.price', 'items.seats',
+                  'users.name', 'users.email', 'users.image')
+        ->get();
+        $this->data['data'] = $data;
+        return view('crm.requestsale', $this->data);
+    }
     public function saveNote(Request $request)
     {
         if ($request->get('action') == 'save-note') {
@@ -124,7 +157,8 @@ class CrmController extends Controller
         echo $content;
     }
 
-    public function anylog(Request $request) {
+    public function anylog(Request $request)
+    {
         $spmM = new Spm();
         $spmM->addSpm($request);
     }
