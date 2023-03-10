@@ -15,7 +15,7 @@ class ItemAllowRegisterAndNoEndtime extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             $table->tinyInteger('allow_re_register')->default(0);
-            $table->integer('cycle_type')->nullable();
+            $table->string('cycle_type')->nullable();
             $table->integer('cycle_amount')->nullable();
             $table->tinyInteger('activiy_trial')->nullable();
             $table->tinyInteger('activiy_test')->nullable();
@@ -62,7 +62,7 @@ class ItemAllowRegisterAndNoEndtime extends Migration
         Schema::table('items', function (Blueprint $table) {
             $table->dropColumn('allow_re_register');
             $table->dropColumn('cycle_type');
-            $table->dropColumn('cycle_value');
+            $table->dropColumn('cycle_amount');
             $table->dropColumn('activiy_trial');
             $table->dropColumn('activiy_test');
             $table->dropColumn('activiy_visit');

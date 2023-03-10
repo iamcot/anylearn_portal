@@ -75,7 +75,7 @@
                         <td>
                             <button type="button" class="icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" onclick="update({{ $item->id }},'{{ $item->title }}',{{ $item->price }})"><i class="fas fa-pen-square"></i></button>
                             <input type="hidden" name="iddelete" value="{{ $item->id }}">
-                            <button type="button" class="text-danger icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#delete">
+                            <button class="text-danger icon-item icon-item-sm rounded-3 fs--2 btn btn-default btn-sm" name="action" value="deleteextrafee">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -84,11 +84,11 @@
                     <tr>
                         <td>
                             <input type="hidden" name="idextrafee" value="" id="idextrafee">
-                            <input name="titleextrafee" id="titleextrafee" required="" placeholder="Thêm phụ phí" type="text" class="pe-4 form-control" value="">
+                            <input name="titleextrafee" id="titleextrafee" placeholder="Thêm phụ phí" type="text" class="pe-4 form-control" value="">
 
                         </td>
                         <td>
-                            <input name="priceextrafee" id="priceextrafee" required="" placeholder="Số tiền phụ phí" type="number" class="pe-4 form-control" min="0" value="">
+                            <input name="priceextrafee" id="priceextrafee" placeholder="Số tiền phụ phí" type="number" class="pe-4 form-control" min="0" value="">
 
                         </td>
                         <td>

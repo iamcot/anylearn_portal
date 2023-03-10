@@ -86,11 +86,13 @@
 </div>
 <div class="card mb-3 shadow">
     <div class="card-header font-weight-bold">Ảnh đại diện</div>
-    <div class="card-body">
-        <input name="image" type="file" id="mainImageInp" />
-        <div id="mainImage" class="mt-2">
+    <div class="card-body row">
+        <div class="col-sm-6">
+            <input name="image" type="file" id="mainImageInp" />
+        </div>
+        <div id="mainImage" class="mt-2 col-sm-6">
             @if(!empty($course) && $course['info']->image)
-            <img src="{{ $course['info']->image }}" alt="$course['info']->title" class="img-fluid">
+            <img style="max-height:50px;" src="{{ $course['info']->image }}" alt="$course['info']->title" class="img-fluid">
             @endif
         </div>
     </div>

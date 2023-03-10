@@ -3,6 +3,10 @@
 @section('spmb')
 location_form
 @endsection
+@section('morestyle')
+@parent
+<link href="/cdn/vendor/select2/select2.min.css" rel="stylesheet">
+@endsection
 @section('body')
 <form method="POST" enctype="multipart/form-data">
     @csrf
@@ -19,10 +23,10 @@ location_form
                 <div class="form-group row">
                     <label for="province" class="col-md-3 col-form-label text-md-right">{{ __('Tỉnh/Thành Phố') }}</label>
                     <div class="col-md-8">
-                        <select class="form-control location-tree" data-next-level="district" name="province_code" required>
+                        <select class="form-control location-tree" data-next-level="district" name="province_code" id="province" required>
                             <option value="">@lang('--Chọn Tỉnh/Thành Phố--')</option>
                             @foreach($provinces as $province)
-                                <option value="{{ $province->code }}" {{ !empty($location) && $province->code == $location->province_code ? "selected" : ""}}>{{ $province->name }}</option>
+                            <option value="{{ $province->code }}" {{ !empty($location) && $province->code == $location->province_code ? "selected" : ""}}>{{ $province->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -34,9 +38,9 @@ location_form
                             @if(empty($districts))
                             <option>@lang('--Vui lòng chọn Tỉnh/Thành Phố--')</option>
                             @else
-                                @foreach($districts as $district)
-                                <option value="{{ $district->code }}" {{ $district->code == $location->district_code ? "selected" : ""}}>{{ $district->name }}</option>
-                                @endforeach
+                            @foreach($districts as $district)
+                            <option value="{{ $district->code }}" {{ $district->code == $location->district_code ? "selected" : ""}}>{{ $district->name }}</option>
+                            @endforeach
                             @endif
                         </select>
                     </div>
@@ -44,13 +48,13 @@ location_form
                 <div class="form-group row">
                     <label for="select-ward" class="col-md-3 col-form-label text-md-right">{{ __('Phường/Xã') }}</label>
                     <div class="col-md-8">
-                        <select class="form-control location-tree"  data-next-level="ward_path" id="select-ward" name="ward_code" required>
+                        <select class="form-control location-tree" data-next-level="ward_path" id="select-ward" name="ward_code" required>
                             @if(empty($wards))
                             <option>@lang('--Vui lòng chọn Quận/Huyện--')</option>
                             @else
-                                @foreach($wards as $ward)
-                                <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>
-                                @endforeach
+                            @foreach($wards as $ward)
+                            <option value="{{ $ward->code }}" {{ $ward->code == $location->ward_code ? "selected" : ""}}>{{ $ward->name }}</option>
+                            @endforeach
                             @endif
                         </select>
                     </div>
@@ -72,14 +76,21 @@ location_form
                 </div>
             </div>
             <div class="text-center">
-             <button name="save" value="save" class="btn btn-success border-0"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
+                <button name="save" value="save" class="btn btn-success border-0"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
             </div>
         </div>
-      
+
     </div>
 </form>
 @endsection
 @section('jscript')
 @parent
 <script src="/cdn/js/location-tree.js"></script>
+<script src="/cdn/vendor/select2/select2.min.js"></script>
+
+<script>
+    $(function() {
+        $(".location-tree").select2();
+    });
+</script>
 @endsection

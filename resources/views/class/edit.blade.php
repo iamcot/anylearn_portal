@@ -166,49 +166,6 @@
         }
     });
 
-    $("#schedule_generate").click(function() {
-        var type = $(this).data("type");
-        var num = $("#schedule_auto").find('#num').val();
-        var configDays = $("#schedule_auto input:checkbox:checked").map(function() {
-            return $(this).attr('name');
-        }).get();
-        var startDate = $("#opening_date").val() ?? $("#date_start").val();
-        var configStartTime = $("#time_start").val();
-        var configEndTime = $("#time_end").val();
-        var dt = new Date(startDate);
-
-        var html = "";
-        if (configDays.length > 0) {
-            for (i = 0; i < num;) {
-                var weekdayStr = "d" + dt.getDay();
-                if (configDays.includes(weekdayStr)) {
-                    var month = dt.getMonth() + 1;
-                    if (type == "create") {
-                        html += "<tr>" +
-                            "<td><input type=\"date\" name=\"schedule[" + i + "][date]\" class=\"form-control\" value=\"" + dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate() + "\"/></td>" +
-                            "<td><input name=\"schedule[" + i + "][time_start]\" class=\"time form-control\" value=\"" + configStartTime + "\"/></td>" +
-                            "<td></td></tr>";
-                    } else {
-                        $("#schedule_" + i + "_date").val(dt.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (dt.getDate() < 10 ? "0" : "") + dt.getDate());
-                        if (configStartTime) {
-                            $("#schedule_" + i + "_time_start").val(configStartTime);
-                        }
-                    }
-
-                    i++;
-                }
-                dt.setDate(dt.getDate() + 1);
-            }
-        } else {
-            alert("Vui lòng nhập số buổi và chọn ít nhất 1 ngày trong tuần.");
-        }
-
-        if (html.length > 0) {
-            $("#schedule_result").html(html);
-            $('.time').mask('00:00');
-        }
-
-    });
     function changeTab(tabName) {
         $("#" + tabName).tab('show');
         window.scrollTo(0, 0);
