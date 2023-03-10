@@ -91,6 +91,12 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/ischild', 'UserController@meChild')->name('me.child');
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
     Route::any('/history', 'UserController@meHistory')->name('me.history');
+    Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
+    Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
+    Route::any('/friend', 'UserController@meFriend')->name('me.friend');
+
+
+
 
 
 
@@ -129,6 +135,7 @@ Route::middleware(['webappauth'])->group(function () {
 
 Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
+    Route::any('/config/activitybonus','ConfigController@activitybonus')->name('config.activitybonus');
     Route::any('/config/banner', 'ConfigController@banner')->name('config.banner');
     Route::any('/config/site', 'ConfigController@site')->name('config.site');
     Route::get('/config/banner/del/{index}', 'ConfigController@delBanner')->name('config.banner.del');
@@ -165,6 +172,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
 
     Route::any('/crm/sale/{userId}', 'CrmController@memberSale')->name('crm.sale');
+    Route::any('/sale/request', 'CrmController@requestSale')->name('crm.requestsale');
     Route::any('/crm/save-note', 'CrmController@saveNote')->name('crm.save-note');
     Route::any('/crm/save-call', 'CrmController@saveCall')->name('crm.save-call');
     Route::any('/crm/save-chat', 'CrmController@saveChat')->name('crm.save-chat');
