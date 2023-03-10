@@ -862,6 +862,7 @@ nav a {
 footer {
     background-color: #F7F7F7;
     min-height: 300px;
+    overflow: hidden;
 }
 
 .topic_box {
@@ -986,6 +987,7 @@ footer .head_text {
 .avatar img {
     display: block;
 }
+
 
 /* collapse-module-en */
 

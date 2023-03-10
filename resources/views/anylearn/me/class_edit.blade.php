@@ -18,34 +18,22 @@ class_edit
     <input type="hidden" name="id" value="{{ !empty($courseId) ? $courseId : 0 }}">
     <input type="hidden" name="action" value="{{ empty($courseId) ? 'create' : 'update' }}">
     <div class="card p-3 mb-3 shadow">
-        @if($userServ->isMod())
         <div class="form-group row">
-            <label for="user_id" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Đối tác') }}</label>
-            <div class="col-md-8">
-                <select class="form-control" name="user_id" id="user_id" required @if(!empty($course)) disabled @endif>
-                    <option value="">@lang('Chọn một đối tác')</option>
-                    @foreach($partners as $partner)
-                    <option value="{{ $partner->id }}" {{ !empty($course) && $course['info']->user_id == $partner->id ? 'selected' : '' }}>{{ $partner->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        @endif
-        <div class="form-group row">
-            <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại khoá học') }}</label>
+            <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại Lớp học') }}</label>
             <div class="col-md-8">
                 <select class="form-control" name="subtype" required @if(!empty($course) && $course['info']->subtype != "") disabled @endif>
-                <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Chính khóa (Mầm non, K12, Đại học)')</option>
-                        <option value="{{ \App\Constants\ItemConstants::SUBTYPE_EXTRA }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_EXTRA ? 'selected' : '' }}>@lang('Lớp học Ngoại khóa (các môn kỹ năng tại trường/ trung tâm)')</option>
-                        <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Lớp học trực tuyến')</option>
-                        <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>@lang('Học trên Ứng dụng')</option>
-                        <option value="{{ \App\Constants\ItemConstants::SUBTYPE_VIDEO }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_VIDEO ? 'selected' : '' }}>@lang('Học qua video')</option>
+                    <option value="">@lang('Vui lòng chọn Loại Lớp Học để khởi tạo')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Chính khóa (Mầm non, K12, Đại học)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_EXTRA }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_EXTRA ? 'selected' : '' }}>@lang('Lớp học Ngoại khóa (các môn kỹ năng tại trường/ trung tâm)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Lớp học trực tuyến')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>@lang('Học trên Ứng dụng')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_VIDEO }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_VIDEO ? 'selected' : '' }}>@lang('Học qua video')</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <ul class="nav nav-tabs" id="classtab" role="tablist">
+    <ul class="nav nav-tabs " style="@if(empty($course)) display:none; @endif" id="classtab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'info' ? 'active' : '' }}" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true"><i class="fa fa-info-circle"></i> <span class="d-none d-sm-block">@lang('Thông tin')</span></button>
         </li>
@@ -55,9 +43,9 @@ class_edit
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'contenttab' ? 'active' : '' }}" id="content-tab" data-bs-toggle="tab" data-bs-target="#contenttab" type="button" role="tab" aria-controls="contenttab" aria-selected="true"><i class="fa fa-font"></i> <span class="d-none d-sm-block">@lang('Giới thiệu')</span></button>
         </li>
-        @if(!empty($course))
+        @if(!empty($course) && !in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_DIGITAL, \App\Constants\ItemConstants::SUBTYPE_VIDEO]))
         <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule"  aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule" aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
         </li>
         @endif
         @if(!empty($course) && $course['info']->subtype == 'video')
@@ -71,14 +59,9 @@ class_edit
         </li>
         @endif
         @if (!empty($courseId))
-        <li class="nav-item" role="presentation">
+        <!-- <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'templatemail' ? 'active' : '' }}" id="templatemail-tab" data-bs-toggle="tab" data-bs-target="#templatemail" type="button" role="tab" aria-controls="templatemail" aria-selected="true"><i class="fas fa-envelope"></i> <span class="d-none d-sm-block">@lang('Send Mail')</span></button>
-        </li>
-        @endif
-        @if (!empty($courseId))
-        <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'templatemail' ? 'active' : '' }}" id="templatemail-tab" data-bs-toggle="tab" data-bs-target="#templatemail" type="button" role="tab" aria-controls="templatemail" aria-selected="true"><i class="fas fa-envelope"></i> <span class="d-none d-sm-block">@lang('Send Mail')</span></button>
-        </li>
+        </li> -->
         @endif
         @if (!empty($course) && $isSchool)
         <li class="nav-item" role="presentation">
@@ -95,7 +78,7 @@ class_edit
         @endif
     </ul>
 
-    <div class="tab-content border-top-2 mb-5 bg-white" id="myTabContent">
+    <div class="tab-content border-top-2 mb-5 bg-white" style="@if(empty($course)) display:none; @endif" id="myTabContent">
         <div class="tab-pane fade {{ session('tab', 'info') == 'info' ? 'show active' : '' }} p-2" id="info" role="tabpanel" aria-labelledby="info-tab">
             @include('class.form.info')
         </div>
@@ -112,12 +95,9 @@ class_edit
             @include('class.form.video')
         </div>
         @if (!empty($courseId))
-        <div class="tab-pane fade {{ session('tab', 'info') == 'extrafee' ? 'show active' : '' }} p-2" id="extrafee" role="tabpanel" aria-labelledby="extrafee-tab">
-            @include('class.form.extrafee')
-        </div>
-        <div class="tab-pane fade {{ session('tab', 'info') == 'templatemail' ? 'show active' : '' }} p-2" id="templatemail" role="tabpanel" aria-labelledby="templatemail-tab">
-            @include('class.form.templatemail')
-        </div>
+        <!-- <div class="tab-pane fade {{ session('tab', 'info') == 'templatemail' ? 'show active' : '' }} p-2" id="templatemail" role="tabpanel" aria-labelledby="templatemail-tab"> -->
+            <!-- @include('class.form.templatemail') -->
+        <!-- </div> -->
         @endif
         <div class="tab-pane fade {{ session('tab', 'info') == 'resource' ? 'show active' : '' }} p-2" id="resource" role="tabpanel" aria-labelledby="resource-tab">
             @include('class.form.resource')
@@ -256,5 +236,25 @@ class_edit
         $("#" + tabName).tab('show');
         window.scrollTo(0, 0);
     }
+
+    $("select[name=subtype]").on("change", function(e) {
+        if ($(this).val() != "") {
+            $("#classtab").show();
+            $("#myTabContent").show();
+        }
+
+        if ($(this).val() == "video" || $(this).val() == "digital") {
+            $("#box_time").hide();
+            $("#box_price").hide();
+        } else {
+            $("#box_time").show();
+            $("#box_price").show();
+        }
+        if ($(this).val() == "offline" || $(this).val() == "extra") {
+            $("#box_activities").show();
+        } else {
+            $("#box_activities").hide();
+        }
+    });
 </script>
 @endsection

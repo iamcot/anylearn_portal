@@ -26,31 +26,32 @@
             </div>
 
         </div>
-
-        <div class="form-group row">
-            <label for="quantity" class="col-md-3 col-form-label text-md-right ">{{ __('Số lượng tuyển sinh') }}</label>
-            <div class="col-md-8">
-                <input id="quantity" type="number" class="form-control @error('quantity') is-invalid @enderror" name="seats" value="{{ old('quantity', !empty($course) ? $course['info']->seats : '') }}">
+        <div id="box_price" style="@if(empty($course)
+        || (!empty($course) && !in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_OFFLINE, \App\Constants\ItemConstants::SUBTYPE_EXTRA]))
+        ) display:none; @endif">
+            <div class="form-group row">
+                <label for="quantity" class="col-md-3 col-form-label text-md-right ">{{ __('Số lượng tuyển sinh') }}</label>
+                <div class="col-md-8">
+                    <input id="quantity" type="number" class="form-control @error('quantity') is-invalid @enderror" name="seats" value="{{ old('quantity', !empty($course) ? $course['info']->seats : '') }}">
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label for="cycle_amount" class="col-md-3 col-form-label text-md-right ">{{ __('Chu kỳ học') }}</label>
-            <div class="col-sm-4">
-                <input id="cycle_amount" type="number" class="form-control @error('quantity') is-invalid @enderror" name="cycle_amount" value="{{ old('cycle_amount', !empty($course) ? $course['info']->cycle_amount : '') }}">
-            </div>
-            <div class="col-md-4">
-                <select name="cycle_type" id="" class="form-control">
-                    <option value="{{ \App\Models\Item::CYCLE_SESSION }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_SESSION ? 'selected' : '' }}>@lang('Buổi')</option>
-                    <option value="{{ \App\Models\Item::CYCLE_DAY }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_DAY ? 'selected' : '' }}>@lang('Ngày')</option>
-                    <option value="{{ \App\Models\Item::CYCLE_WEEK }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_WEEK ? 'selected' : '' }}>@lang('Tuần')</option>
-                    <option value="{{ \App\Models\Item::CYCLE_MONTH }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_MONTH ? 'selected' : '' }}>@lang('Tháng')</option>
-                    <option value="{{ \App\Models\Item::CYCLE_YEAR }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_YEAR ? 'selected' : '' }}>@lang('Năm')</option>
-                </select>
+            <div class="form-group row">
+                <label for="cycle_amount" class="col-md-3 col-form-label text-md-right ">{{ __('Chu kỳ học') }}</label>
+                <div class="col-sm-4">
+                    <input id="cycle_amount" type="number" class="form-control @error('quantity') is-invalid @enderror" name="cycle_amount" value="{{ old('cycle_amount', !empty($course) ? $course['info']->cycle_amount : '') }}">
+                </div>
+                <div class="col-md-4">
+                    <select name="cycle_type" id="" class="form-control">
+                        <option value="{{ \App\Models\Item::CYCLE_SESSION }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_SESSION ? 'selected' : '' }}>@lang('Buổi')</option>
+                        <option value="{{ \App\Models\Item::CYCLE_DAY }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_DAY ? 'selected' : '' }}>@lang('Ngày')</option>
+                        <option value="{{ \App\Models\Item::CYCLE_WEEK }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_WEEK ? 'selected' : '' }}>@lang('Tuần')</option>
+                        <option value="{{ \App\Models\Item::CYCLE_MONTH }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_MONTH ? 'selected' : '' }}>@lang('Tháng')</option>
+                        <option value="{{ \App\Models\Item::CYCLE_YEAR }}" {{ !empty($course) && $course['info']->cycle_type == \App\Models\Item::CYCLE_YEAR ? 'selected' : '' }}>@lang('Năm')</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
-
-
 </div>
 @if(!empty($course['info']) && $course['info']->subtype == 'offline')
 <div class="card mb-3 shadow">

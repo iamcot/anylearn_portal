@@ -2,54 +2,54 @@
 @inject('itemServ', 'App\Services\ItemServices')
 <div class="p-3">
     @if (!empty($videos) && count($videos) > 0)
-    @foreach ($videos as $chapter)
-    <div class="mb-3 card">
-        <h5 class="card-header">
-            <div class="g-0 justify-content-between row">
-                <div class="col-sm-auto">
-                    <h5 class="text-success mb-0 font-weight-bold">Chương {{ $chapter['chapter']->chapter_no }}: {{ $chapter['chapter']->title }}
+        @foreach ($videos as $chapter)
+        <div class="mb-3 card">
+            <h5 class="card-header">
+                <div class="g-0 justify-content-between row">
+                    <div class="col-sm-auto">
+                        <h5 class="text-success mb-0 font-weight-bold">Chương {{ $chapter['chapter']->chapter_no }}: {{ $chapter['chapter']->title }}
 
-                    </h5>
-                </div>
-                <div class=" mb-md-0 col-md-auto">
-                    <div class="g-3 gy-md-0 h-100 align-items-center row">
-                        @if(count($chapter['lessons']) == 0)
-                        <a class="text-danger" href="?action=dchap&cid={{ $chapter['chapter']->id }}"><i class="fa fa-trash"></i></a>
-                        @else
-                        <small class="text-xs">Chương không có bài học mới có thể xóa</small>
-                        @endif
+                        </h5>
+                    </div>
+                    <div class=" mb-md-0 col-md-auto">
+                        <div class="g-3 gy-md-0 h-100 align-items-center row">
+                            @if(count($chapter['lessons']) == 0)
+                            <a class="text-danger" href="?action=dchap&cid={{ $chapter['chapter']->id }}"><i class="fa fa-trash"></i></a>
+                            @else
+                            <small class="text-xs">Chương không có bài học mới có thể xóa</small>
+                            @endif
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        </h5>
-        <div class="p-0 card-body">
-            <div class="table-responsive scrollbar">
-                <table role="table" class="fs--1 mb-0 overflow-hidden table table-sm table-striped">
-                    <tbody>
-                        @foreach ($chapter['lessons'] as $les)
-                        <tr class="align-middle white-space-nowrap" role="row">
-                            <td role="cell" class="p-2">
-                                <div><strong>Bài {{ $les->lesson_no }}: {{ $les->title }}</strong></div>
-                                <div class="fs-11">Loại bài học: <strong>{{ $les->type }}</strong> ({{ $les->type_value }}). <a target="_blank" href="{{ $itemServ->classVideoUrl($courseId, $les->id) }}"><i class="fa fa-play"></i> Xem</a></div>
-                                <p class="fs--1 text-900 mb-0">
-                                    {!! $les->description !!}
-                                </p>
-                            </td>
-                            <td class="text-right">
-                                <a class="text-danger" href="?action=dlesson&lid={{ $les->id }}"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <p class="p-2 border-top"><a href="#" onclick="addid({{ $chapter['chapter']->id }})" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-                        <i class="fa fa-plus"></i> Thêm bài mới</a></p>
+            </h5>
+            <div class="p-0 card-body">
+                <div class="table-responsive scrollbar">
+                    <table role="table" class="fs--1 mb-0 overflow-hidden table table-sm table-striped">
+                        <tbody>
+                            @foreach ($chapter['lessons'] as $les)
+                            <tr class="align-middle white-space-nowrap" role="row">
+                                <td role="cell" class="p-2">
+                                    <div><strong>Bài {{ $les->lesson_no }}: {{ $les->title }}</strong></div>
+                                    <div class="fs-11">Loại bài học: <strong>{{ $les->type }}</strong> ({{ $les->type_value }}). <a target="_blank" href="{{ $itemServ->classVideoUrl($courseId, $les->id) }}"><i class="fa fa-play"></i> Xem</a></div>
+                                    <p class="fs--1 text-900 mb-0">
+                                        {!! $les->description !!}
+                                    </p>
+                                </td>
+                                <td class="text-right">
+                                    <a class="text-danger" href="?action=dlesson&lid={{ $les->id }}"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <p class="p-2 border-top"><a href="#" onclick="addid({{ $chapter['chapter']->id }})" class="" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                            <i class="fa fa-plus"></i> Thêm bài mới</a></p>
+                </div>
             </div>
         </div>
-    </div>
-    @endforeach
-
+        @endforeach
+    @endif
     @if (count($videos) == 0)
     <div class="mb-1 card">
         <div class="text-center py-2 card-footer">
@@ -178,7 +178,6 @@
             </div>
         </form>
     </div>
-    @endif
 </div>
 <script src="/cdn/anylearn/bootstrap-5.1.1/js/bootstrap.bundle.min.js"></script>
 <script src="/cdn/anylearn/jquery-3.6.0.min.js"></script>

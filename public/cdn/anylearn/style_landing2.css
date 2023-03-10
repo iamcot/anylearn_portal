@@ -126,13 +126,13 @@ nav a {
     width: 100%;
 }
 
-.nav-item.active {
+.navbar2>.nav-item.active {
     background-color: #00458B;
     color: #fff !important;
     border-radius: 50px;
 }
 
-.nav-item.active>.nav-link {
+.navbar2>.nav-item.active>.nav-link {
     color: #fff !important;
 }
 

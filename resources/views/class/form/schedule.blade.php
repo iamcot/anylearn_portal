@@ -41,17 +41,19 @@
                     <div class="form-group ">
                         <label for="opening_title" class="form-label text-md-right">{{ __('Tiêu đề') }}*</label>
                         <div class="">
-                            <input id="opening_title" type="text" class="form-control @error('opening_title') is-invalid @enderror" name="opening[title]" value="{{ old('opening_title', !empty($opening) ? $opening->title : '') }}" required>
+                            <input id="opening_title" type="text" class="form-control @error('opening_title') is-invalid @enderror" name="opening[title]" value="{{ old('opening_title', !empty($opening) ? $opening->title : '') }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="province" class=" form-label text-md-right">{{ __('Địa chỉ / Chi nhánh') }} <a href="{{ route('location.create') }}">@lang('Tạo địa chỉ')</a></label>
                         <div class="">
+                            @if (!empty($userLocations))
                             <select class="form-control" name="opening[user_location_id]">
                                 @foreach($userLocations as $location)
                                 <option value="{{ $location->id }}" @if(!empty($opening) &&  $location->id == $opening->user_location_id ) selected @endif>{{ $location->title }}</option>
                                 @endforeach
                             </select>
+                            @endif
                         </div>
                     </div>
                     <div class="form-group ">
@@ -72,13 +74,13 @@
                         <div class="form-group  col-sm-6">
                             <label for="opening_date_start" class="form-label text-md-right">{{ __('Ngày bắt đầu') }}*</label>
                             <div class="">
-                                <input id="opening_date_start" type="date" class="form-control" name="opening[date_start]" value="{{ old('opening_date_start', !empty($opening) ? $opening->date_start : '') }}" required>
+                                <input id="opening_date_start" type="date" class="form-control" name="opening[date_start]" value="{{ old('opening_date_start', !empty($opening) ? $opening->date_start : '') }}">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="opening_time_start" class="form-label text-md-right">{{ __('Giờ bắt đầu') }}*</label>
                             <div class="">
-                                <input id="opening_time_start" type="time" class="form-control" name="opening[time_start]" value="{{ old('opening_time_start', !empty($opening) ? $opening->time_start : '') }}" required>
+                                <input id="opening_time_start" type="time" class="form-control" name="opening[time_start]" value="{{ old('opening_time_start', !empty($opening) ? $opening->time_start : '') }}">
                             </div>
                         </div>
                     </div>
