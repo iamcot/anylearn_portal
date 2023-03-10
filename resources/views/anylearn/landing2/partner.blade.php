@@ -2,7 +2,7 @@
     <div class="container">
         <h1 class="text-black">
             @lang('Đối tác của anyLEARN')
-            <a href="/ref/anylearn?r=school" class="btn border rounded rounded-pill border-primary text-primary fs-6 fw-bold ps-4 pe-4 float-end">@lang('ĐĂNG KÝ ĐỐI TÁC')</a>
+            <a href="/ref/anylearn?r=school" id="partner" class="btn border rounded rounded-pill border-primary text-primary fs-6 fw-bold ps-4 pe-4 float-end">@lang('ĐĂNG KÝ ĐỐI TÁC')</a>
         </h1>
         <div class="text-center">
             <ul class="school-logo">
@@ -14,5 +14,13 @@
             </ul>
         </div>
     </div>
-
+</section>
+<section>
+    <script>
+        if (screen.width < 900) {
+            document.getElementById("partner").classList.remove("float-end");
+        } else{
+            document.getElementById("partner").classList.add("float-end");
+        }
+    </script>
 </section>

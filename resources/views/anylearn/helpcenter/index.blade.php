@@ -14,7 +14,7 @@
                     <button class="border-0 bg-white" name="a" value="search"><i
                             class="fa fa-search text-success"></i></button>
                     <input type="text" name="s" class="form-control rounded-pill shadow"
-                        placeholder="@lang('Làm sao để mua hàng, Làm sao để thanh toán...')">
+                        placeholder="@lang('Bạn muốn hỏi gì...')">
                 </form>
             </div>
         </section>

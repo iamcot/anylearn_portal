@@ -141,10 +141,16 @@ class ConfigController extends Controller
     {
         $configM = new Configuration();
         $data = $configM->getDoc(ConfigConstants::GUIDE_PRIVACY);
+        // if ($data) {
+        //     return $data->value;
+        // }
         if ($data) {
-            return $data->value;
+            $data['guide'] = $data['value'];
+        } else {
+            $data['guide'] = "";
         }
-        echo "";
+        return view(env('TEMPLATE', '') . 'helpcenter.guide', $data);
+        // echo "";
     }
 
     public function voucher(Request $request)

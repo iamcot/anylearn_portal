@@ -149,18 +149,7 @@ user_edit
     @endif -->
                             </div>
                         </div>
-                        {{-- <div class="form-group row">
-                                <h6><b>@lang('Giới Thiệu Ngắn (Bio)')</b></h6>
-                                <div class="col-md-11">
-                                    <textarea class="form-control" id="introduce" name="introduce">{!! old('introduce', !empty($user) ? $user->introduce : '') !!}</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <h6><b>@lang('Thông tin giới thiệu')</b></h6>
-                                <div class="col-md-11">
-                                    <textarea class="form-control" id="full_content" name="full_content">{!! old('full_content', !empty($user) ? $user->full_content : '') !!}</textarea>
-                                </div>
-                            </div> --}}
+                       
                         <ul class="nav nav-tabs" id="i18ntab" role="tablist">
                             @foreach (App\Models\I18nContent::$supports as $locale)
                             <li class="nav-item" role="presentation">
@@ -205,10 +194,10 @@ user_edit
     var allEditors = document.querySelectorAll('.editor');
     var editorConfig = {
         mediaEmbed: {
-                previewsInData: true
-            },
+            previewsInData: true
+        },
         simpleUpload: {
-            uploadUrl: '/upload/ckimage',
+            uploadUrl: "{{ @route('upload.ckimage5') }}",
             withCredentials: true,
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",

@@ -42,12 +42,12 @@ class TransactionService
     }
     public function extraFee($orderdetailid)
     {
-        $rs = DB::table('order_item_extras')->where('order_detail_id',$orderdetailid)->get();
+        $rs = DB::table('order_item_extras')->where('order_detail_id', $orderdetailid)->get();
         return $rs;
     }
     public function sumextraFee($orderdetailid)
     {
-        $rs = DB::table('order_item_extras')->where('order_detail_id',$orderdetailid)->sum('price');
+        $rs = DB::table('order_item_extras')->where('order_detail_id', $orderdetailid)->sum('price');
         return $rs;
     }
     public function hasPendingOrders($userId)
@@ -134,7 +134,7 @@ class TransactionService
         }
         $voucher = $request->get('voucher', '');
 
-        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser,$input, $allowNoMoney) {
+        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $input, $allowNoMoney) {
             $notifServ = new Notification();
             $openOrder = null;
             $status = OrderConstants::STATUS_DELIVERED;
@@ -220,10 +220,10 @@ class TransactionService
                 foreach ($input['extrafee'] as $key) {
                     $extrafee = ItemExtra::find($key);
                     $orderextra = OrderItemExtra::create([
-                        'order_detail_id' =>$orderDetail->id,
-                        'item_id'=>$item->id,
-                        'title'=>$extrafee->title,
-                        'price'=>$extrafee->price,
+                        'order_detail_id' => $orderDetail->id,
+                        'item_id' => $item->id,
+                        'title' => $extrafee->title,
+                        'price' => $extrafee->price,
                     ]);
                     Order::find($openOrder->id)->update([
                         'amount' => DB::raw('amount + ' . $orderextra->price),
@@ -401,7 +401,7 @@ class TransactionService
 
             Transaction::where('order_id', $od->id)->delete();
             OrderDetail::find($od->id)->delete();
-            OrderItemExtra::Where('order_detail_id',$od->id)->where('item_id',$od->item_id)->delete();
+            OrderItemExtra::Where('order_detail_id', $od->id)->where('item_id', $od->item_id)->delete();
             User::find($user->id)->update(
                 ['wallet_m' => DB::raw('wallet_m + ' . $od->paid_price),]
             );
@@ -578,10 +578,34 @@ class TransactionService
 
     public function rejectRegistration($orderId)
     {
+
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
             return false;
         }
+        $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
+        foreach ($orderDetails as $od) {
+            $anypoint = Transaction::where('order_id', $od->id)->where('type', 'exchange')->first();
+            if ($anypoint) {
+                $user = User::where('id', $anypoint->user_id)->first();
+                if ($user) {
+                    $user->update([
+                        'wallet_c' => $user->wallet_c + $anypoint->amount,
+                    ]);
+                    Transaction::create([
+                        'user_id' => $user->id,
+                        'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                        'amount' => $anypoint->amount,
+                        'pay_method' => UserConstants::WALLET_C,
+                        'pay_info' => '',
+                        'content' => 'Hoàn điểm vì đơn hàng bị hủy',
+                        'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                        'order_id' => $anypoint->order_id
+                    ]);
+                }
+            }
+        }
+
         // $user = User::find($openOrder->user_id);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -594,6 +618,7 @@ class TransactionService
             ->update([
                 'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
             ]);
+
         Log::debug("Seller cancel transaction & orders", ["orderId" => $openOrder->id]);
         $notifServ->createNotif(NotifConstants::COURSE_REGISTER_REJECT, $openOrder->user_id, []);
         return true;

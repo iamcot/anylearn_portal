@@ -77,12 +77,14 @@ class FileServices
         try {
             if ($request->hasFile($field) && $request->file($field)->isValid()) {
                 $extension = $request->file($field)->extension();
+                
                 if ($changeName) {
                     $file =  $this->randomFileName() . '.jpg';
                 } else {
                     $file = $request->file($field)->getClientOriginalName();
                 }
                 $photo = Image::make($request->file($field));
+
                 $width = $photo->width();
                 if ($width > self::MAX_IMAGE_W) {
                     $photo->resize(self::MAX_IMAGE_W, null, function ($constraint) {

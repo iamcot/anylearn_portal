@@ -43,7 +43,7 @@
             <div id="content" class="mb-4">
                 @include('anylearn.me.topbar')
                 @include('anylearn.me.avatar')
-                <div class="container">
+                <div class="container-fluid">
                 @include('anylearn.widget.notify', ['notify' => session('notify', '')])
                     <div class="d-flex">
                         <div class="">

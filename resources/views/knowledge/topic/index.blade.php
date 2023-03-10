@@ -35,7 +35,7 @@
                     <td>{{ $category->updated_at }}</td>
                     <td>{{ $category->type }}</td>
                     <td>
-                        <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_categories', 'id' => $category->id]) }}">
+                        <a class="btn btn-sm btn-{{ $category->status == 1 ? 'danger' : 'success' }}" href="{{ route('service.touch.status', ['table' => 'knowledge_topics', 'id' => $category->id]) }}">
                             {{ $category->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>
                         <a class="btn btn-sm btn-primary" href="{{ route('knowledge.topic.category', ['id' => $category->id]) }}">
