@@ -90,6 +90,8 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
     Route::any('/ischild', 'UserController@meChild')->name('me.child');
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
+
     Route::any('/history', 'UserController@meHistory')->name('me.history');
     Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
     Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');

@@ -200,7 +200,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['user'] = $user;
-        return view(env('TEMPLATE', '') . 'me.profile',$this->data);
+        return view(env('TEMPLATE', '') . 'me.profile', $this->data);
     }
     public function meEdit(Request $request)
     {
@@ -211,16 +211,16 @@ class UserController extends Controller
 
             $input = $request->all();
             if ($editUser->image == null && isset($input['image']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Avatar,'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
             }
             if ($editUser->banner == null && isset($input['banner']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Banner,'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
             }
             if ($editUser->email == null && isset($input['email']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Email,'Bạn được cộng điểm vì lần đầu cập nhật email',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
             }
             if ($editUser->address == null && isset($input['address']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Address,'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
             }
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
@@ -243,7 +243,7 @@ class UserController extends Controller
     }
     public function meFriend()
     {
-        $friends = DB::table('users')->where('user_id','=',Auth::user()->id)->where('is_child','=',0)->get();
+        $friends = DB::table('users')->where('user_id', '=', Auth::user()->id)->where('is_child', '=', 0)->get();
         $this->data['friends'] = $friends;
         return view(env('TEMPLATE', '') . 'me.friend', $this->data);
     }
@@ -260,57 +260,54 @@ class UserController extends Controller
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
-        $this->data['navText'] = __('Giao dịch của tôi');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
     }
     public function meChild(Request $request)
     {
+        $userService = new UserServices();
+        $user = Auth::user();
         $id = Auth::user()->id;
-        $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
-        $this->data['childuser'] = $childuser;
+
         $parent = Auth::user();
         if ($request->input('childedit')) {
+            $input = $request->all();
+            $id = $input['id'];
+            $userC = User::find($id);
 
             $input = $request->all();
-            $id = $input['childid'];
-            $userC = User::find($id);
-            $courses = DB::table('order_details')
-                ->join('items', 'order_details.item_id', '=', 'items.id')
-                ->where('order_details.user_id', $id)
-                ->orderBy('order_details.created_at', 'desc')->take(4)
-                ->get();
-            $this->data['courses'] = $courses;
-            $this->data['hasBack'] = route('me.child');
-            $this->data['userC'] = $userC;
+            $userC->name = $input['username'];
+            $userC->dob = $input['dob'];
+            $userC->sex = $input['sex'];
+            $userC->introduce = $input['introduce'];
+            $userC->save($input);
+            return redirect()->route('me.child')->with('notify', 'Cập nhật tài khoản con thành công');
             $this->data['navText'] = __('Quản lý tài khoản con');
-            if ($request->input('save')) {
-                $input = $request->all();
-                $this->data['navText'] = __('Quản lý tài khoản con');
-                $userC->name = $input['username'];
-                $userC->dob = $input['dob'];
-                $userC->sex = $input['sex'];
-                $userC->introduce = $input['introduce'];
-                $userC->save($input);
-                $this->data['userC'] = $userC;
-                return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-            }
-            if ($request->input('more')) {
-                return redirect()->route('me.orders');
-            }
-            $this->data['navText'] = __('Quản lý tài khoản con');
-            return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-
-            // return redirect()->route('me.editchild')->with([ 'id' => $id ]);
         }
-
         if ($request->input('create')) {
             $input = $request->all();
             $userChild = new User();
             $userChild->createChild($parent, $input);
             return redirect()->route('me.child')->with('notify', 'Tạo tài khoản mới thành công');
         }
+        $this->data['orderStats'] = $userService->orderStats($user->id);
+        $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
+        $this->data['childuser'] = $childuser;
+        $this->data['user'] = $user;
         $this->data['navText'] = __('Quản lý tài khoản con');
         return view(env('TEMPLATE', '') . 'me.child', $this->data);
+    }
+    public function meChildHistory($id)
+    {
+        $userC = User::find($id);
+        $courses = DB::table('order_details')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('order_details.user_id', $id)
+            ->orderBy('order_details.created_at', 'desc')
+            ->get();
+        $this->data['courses'] = $courses;
+        $this->data['userC'] = $userC;
+        return view(env('TEMPLATE', '') . 'me.childhistory', $this->data);
+
     }
     public function mePassword(Request $request)
     {
@@ -403,7 +400,7 @@ class UserController extends Controller
         }
         $userService = new UserServices();
         $user = Auth::user();
-        if (($userId == 1 && !$request->has('super') ) || !$userService->haveAccess($user->role, 'user.mods')) {
+        if (($userId == 1 && !$request->has('super')) || !$userService->haveAccess($user->role, 'user.mods')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         } else {
             $this->data['user'] = User::find($userId);
@@ -635,35 +632,16 @@ class UserController extends Controller
             ->paginate();
 
         $this->data['orders'] = $data;
-        $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
+        // $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
     public function orders(Request $request)
     {
         $user = Auth::user();
-        $this->data['navText'] = __('Khoá học của tôi');
-
-        $input = $request->input('search');
-        $item = Item::all()->where('title', 'LIKE', '%' . $input . '%');
-        $inputselect = $request->input('myselect');
         $orderDetailM = new OrderDetail();
-        $id = auth()->user()->id;
-        $childuser = DB::table('users')->where('is_child', $id)->orWhere('id', $id)->get();
-        $this->data['childuser'] = $childuser;
-        $this->data['inputselect'] = $inputselect;
-        $this->data['input'] = $request->input('search');
-
-        if ($inputselect == 'all' || $inputselect == null) {
-            $this->data['orders'] = $orderDetailM->searchall($user->id, $input);
-        } elseif ($inputselect == $user->id) {
-            $this->data['orders'] = $orderDetailM->searchparents($user->id, $input);
-        } else {
-            $this->data['orders'] = $orderDetailM->searchall($inputselect, $input);
-        }
-        if ($request->input('reset')) {
-            return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
-        }
+        $data = $orderDetailM->usersOrders($user->id);
+        $this -> data['data'] = $data;
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
@@ -746,7 +724,7 @@ class UserController extends Controller
     }
     public function finance(Request $request)
     {
-        if($request->input('withdraw')){
+        if ($request->input('withdraw')) {
             $user = User::find(auth()->user()->id);
             $input = $request->all();
             $transv = new TransactionService();
@@ -755,17 +733,17 @@ class UserController extends Controller
             $trans = Transaction::find($created);
             $user->wallet_c -= $anypoint;
             $user->update();
-        return Redirect::back()->with('bignotify', 'withdraw');
+            return Redirect::back()->with('bignotify', 'withdraw');
         }
         $trans = new Transaction();
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         // $b = DB::table('transaction')->where('user_id',auth()->user()->id)->where('type','commission')->belongsTo('App\Models\OrderDetail', 'order_id', 'id');
         // dd($b);
-        $a = Transaction::where('user_id',auth()->user()->id)->where('type','commission')->with('order')->orderBy('id','DESC')->get();
+        $a = Transaction::where('user_id', auth()->user()->id)->where('type', 'commission')->with('order')->orderBy('id', 'DESC')->get();
         // dd($a);
         $this->data['WALLETM'] = $a;
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
-        $this->data['withdraw'] = Transaction::where('user_id',auth()->user()->id)->where('type','withdraw')->orderBy('id','DESC')->get();
+        $this->data['withdraw'] = Transaction::where('user_id', auth()->user()->id)->where('type', 'withdraw')->orderBy('id', 'DESC')->get();
         $this->data['navText'] = __('Quản lý tài chính');
         return view(env('TEMPLATE', '') . 'me.finance', $this->data);
     }
