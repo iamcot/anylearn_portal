@@ -23,24 +23,27 @@
                 <p class="small">@lang('Có thể chọn nhiều chuyên mục bằng giữ phím Ctrl (hoặc Cmd)')</p>
             </div>
         </div>
-
         <div class="form-group row">
             <label for="date_start" class="col-md-3 col-form-label text-md-right ">{{ __('Ngày bắt đầu') }}</label>
             <div class="col-md-8">
                 <input id="date_start" type="date" class="form-control @error('date_start') is-invalid @enderror" name="date_start" value="{{ old('date_start', !empty($course) ? $course['info']->date_start : '') }}" required>
             </div>
         </div>
-        <div class="form-group row">
-            <label for="time_start" class="col-md-3 col-form-label text-md-right ">{{ __('Thời gian bắt đầu') }}</label>
-            <div class="col-md-8">
-                <input id="time_start" type="time" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm">
-            </div>
-        </div>
+        <div id="box_time" style="@if(empty($course)
+        || ( !empty($course) && in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_DIGITAL, \App\Constants\ItemConstants::SUBTYPE_VIDEO]))
+        ) display:none; @endif">
 
-        <div class="form-group row">
-            <label for="nolimit_time" class="col-md-3 col-form-label text-md-right ">{{ __('Không giới hạn thời gian đăng ký') }}</label>
-            <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
+            <div class="form-group row">
+                <label for="time_start" class="col-md-3 col-form-label text-md-right ">{{ __('Thời gian bắt đầu') }}</label>
+                <div class="col-md-8">
+                    <input id="time_start" type="time" class="time form-control @error('time_start') is-invalid @enderror" name="time_start" value="{{ old('time_start', !empty($course) ? $course['info']->time_start : '') }}" placeholder="hh:mm">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nolimit_time" class="col-md-3 col-form-label text-md-right ">{{ __('Không giới hạn thời gian đăng ký') }}</label>
+                <div class="col-md-8 form-check form-switch m-2">
+                    <input class="form-check-input" type="checkbox" name="nolimit_time" id="nolimit_time" {{ !empty($course) && $course['info']->nolimit_time > 0 ? "checked" : "" }}>
+                </div>
             </div>
         </div>
         <div class="form-group row">
@@ -49,25 +52,28 @@
                 <input class="form-check-input" type="checkbox" name="allow_re_register" id="allow_re_register" {{ !empty($course) && $course['info']->allow_re_register > 0 ? "checked" : "" }}>
             </div>
         </div>
-        <div class="form-group row">
-            <label for="activiy_trial" class="col-md-3 col-form-label text-md-right ">{{ __('Có học thử') }}</label>
-            <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="activiy_trial" id="activiy_trial" {{ !empty($course) && $course['info']->activiy_trial > 0 ? "checked" : "" }}>
+        <div id="box_activities" style="@if(empty($course)
+        || (!empty($course) && !in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_OFFLINE, \App\Constants\ItemConstants::SUBTYPE_EXTRA]))
+        ) display:none; @endif">
+            <div class="form-group row">
+                <label for="activiy_trial" class="col-md-3 col-form-label text-md-right ">{{ __('Có học thử') }}</label>
+                <div class="col-md-8 form-check form-switch m-2">
+                    <input class="form-check-input" type="checkbox" name="activiy_trial" id="activiy_trial" {{ !empty($course) && $course['info']->activiy_trial > 0 ? "checked" : "" }}>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="activiy_visit" class="col-md-3 col-form-label text-md-right ">{{ __('Có Tham quan trường') }}</label>
+                <div class="col-md-8 form-check form-switch m-2">
+                    <input class="form-check-input" type="checkbox" name="activiy_visit" id="activiy_visit" {{ !empty($course) && $course['info']->activiy_visit > 0 ? "checked" : "" }}>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="activiy_test" class="col-md-3 col-form-label text-md-right ">{{ __('Có test đầu vào') }}</label>
+                <div class="col-md-8 form-check form-switch m-2">
+                    <input class="form-check-input" type="checkbox" name="activiy_test" id="activiy_test" {{ !empty($course) && $course['info']->activiy_test > 0 ? "checked" : "" }}>
+                </div>
             </div>
         </div>
-        <div class="form-group row">
-            <label for="activiy_visit" class="col-md-3 col-form-label text-md-right ">{{ __('Có Tham quan trường') }}</label>
-            <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="activiy_visit" id="activiy_visit" {{ !empty($course) && $course['info']->activiy_visit > 0 ? "checked" : "" }}>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="activiy_test" class="col-md-3 col-form-label text-md-right ">{{ __('Có test đầu vào') }}</label>
-            <div class="col-md-8 form-check form-switch m-2">
-                <input class="form-check-input" type="checkbox" name="activiy_test" id="activiy_test" {{ !empty($course) && $course['info']->activiy_test > 0 ? "checked" : "" }}>
-            </div>
-        </div>
-
         <div class="form-group row">
             <label for="age-range" class="col-md-3 col-form-label text-md-right ">{{ __('Độ tuổi') }}</label>
             <div class="col-md-8">
@@ -92,7 +98,7 @@
         </div>
         <div id="mainImage" class="mt-2 col-sm-6">
             @if(!empty($course) && $course['info']->image)
-            <img style="max-height:50px;" src="{{ $course['info']->image }}" alt="$course['info']->title" class="img-fluid">
+            <img style="max-height:50px;" src="{{ $course['info']->image }}" class="img-fluid">
             @endif
         </div>
     </div>

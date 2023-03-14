@@ -84,7 +84,7 @@ class ClassController extends Controller
         $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
-            $rs = $courseService->createItem($input, ItemConstants::TYPE_CLASS);
+            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS);
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo lớp học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {
@@ -92,7 +92,15 @@ class ClassController extends Controller
                 if ($input['subtype'] == 'video') {
                     $tab = 'video';
                 }
-                return redirect()->route('class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
+                if ($input['subtype'] == 'digital') {
+                    $tab = 'info';
+                }
+                $userService = new UserServices();
+                if ($userService->isMod()) {
+                    return redirect()->route('class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
+                } else {
+                    return redirect()->route('me.class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
+                }
             }
         }
         $configM = new Configuration();
@@ -107,7 +115,7 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
-        
+
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
@@ -131,6 +139,14 @@ class ClassController extends Controller
     public function edit(Request $request, $courseId)
     {
         $input = $request->all();
+
+        if ($request->get('action') == 'mailsave') {
+            Item::find($courseId)->update([
+                'mailcontent' => isset($input['mailcontent']) ? $input['mailcontent'] : null
+            ]);
+            return redirect()->back()->with(['notify' => "Cập nhật thành công", 'tab' => $input['tab']]);
+        }
+
 
         if ($request->get('action') == 'dlesson') {
             $lid = $request->get('lid');
@@ -194,7 +210,7 @@ class ClassController extends Controller
                 return redirect()->back()->with(['notify' => 'Vui lòng chọn ít nhất một ngày trong tuần', 'tab' => 'schedule']);
             }
             $ds = [];
-            foreach($schedulePlan['d'] as $day => $v) {
+            foreach ($schedulePlan['d'] as $day => $v) {
                 $ds[] = $day;
             }
             $schedulePlan['weekdays'] = implode(",", $ds);
@@ -254,9 +270,15 @@ class ClassController extends Controller
         $this->data['openings'] = DB::table('item_schedule_plans')
             ->join('user_locations', 'user_locations.id', '=', 'user_location_id')
             ->where('item_id', $courseId)
-            ->select('item_schedule_plans.title', 'item_schedule_plans.id', 'user_locations.title AS location', 
-            'item_schedule_plans.date_start', 'item_schedule_plans.time_start'
-            , 'item_schedule_plans.weekdays', 'item_schedule_plans.info')
+            ->select(
+                'item_schedule_plans.title',
+                'item_schedule_plans.id',
+                'user_locations.title AS location',
+                'item_schedule_plans.date_start',
+                'item_schedule_plans.time_start',
+                'item_schedule_plans.weekdays',
+                'item_schedule_plans.info'
+            )
             ->get();
         if ($request->get('plan')) {
             $this->data['opening'] = ItemSchedulePlan::find($request->get('plan'));
@@ -446,7 +468,7 @@ class ClassController extends Controller
             return redirect()->back()->with('notif', 'Trang không tồn tại');
         }
         $activityServ = new ActivitybonusServices();
-        $activityServ->updateWalletC($user->id,ActivitybonusConstants::Activitybonus_Course_Favourite,'Bạn được cộng điểm vì yêu thích khóa học',$itemId);
+        $activityServ->updateWalletC($user->id, ActivitybonusConstants::Activitybonus_Course_Favourite, 'Bạn được cộng điểm vì yêu thích khóa học', $itemId);
         $itemUserActionM = new ItemUserAction();
         $rs = $itemUserActionM->touchFav($itemId, $user->id);
         return redirect()->back();

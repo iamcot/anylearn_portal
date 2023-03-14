@@ -660,10 +660,12 @@ class TransactionService
             $author = User::find($item->user_id);
             $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
                 'course' => $item->title,
+                'orderid' => $openOrder->id,
             ]);
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
                 'username' => $author->name,
                 'course' => $item->title,
+                'orderid' => $openOrder->id,
             ]);
             SocialPost::create([
                 'type' => SocialPost::TYPE_CLASS_REGISTER,
@@ -682,7 +684,6 @@ class TransactionService
 
         return true;
     }
-
     public function paymentPending($orderId)
     {
         $openOrder = Order::find($orderId);

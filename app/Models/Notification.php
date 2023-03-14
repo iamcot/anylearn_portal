@@ -6,6 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\Mail\OrderSuccess;
 use App\Services\ItemServices;
 use App\Services\SmsServices;
 use DateTime;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use FCM;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Mail;
 use LaravelFCM\Facades\FCM as FacadesFCM;
 use LaravelFCM\Message\OptionsBuilder;
@@ -45,12 +47,14 @@ class Notification extends Model
             $obj['extra_content'] = 'copy';
             $obj['route'] = $copy;
         }
+        // dd($obj,$userId);
         $newNotif = $this->create($obj);
         if (!$newNotif) {
             return;
         }
         $user = User::find($userId);
         //email
+
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
@@ -60,6 +64,28 @@ class Notification extends Model
                 }
             }
         }
+
+        if (isset($data['orderid'])) {
+            if (!empty($user->email)) {
+                $dataOrder = DB::table('order_details as od')
+                ->leftJoin('items as it','it.id','=','od.item_id')
+                ->leftJoin('users as us','us.id','=','od.user_id')
+                ->leftJoin('item_extras as is','is.item_id','=','od.item_id')
+                ->leftJoin('schedules as sc','sc.item_id','=','od.item_id')
+                ->where('order_id',$data['orderid'])
+                ->select('it.title as item_title','it.price as item_price','us.name as username','is.title as item_extra_title','is.price as item_extra_price','sc.date as schedule_date','sc.time_start as schedule_time','sc.content as schedule_content','it.mailcontent')->get();
+                $status = Transaction::where('order_id', $data['orderid'])->where('type', 'order')->first();
+                if ($status->status == 1) {
+                    Mail::send( "email.order_success",
+                        array('name' => $user->name,'data'=>$dataOrder),
+                        function ($message) use ($user) {
+                            $message->to($user->email, $user->name)->subject('Đăng ký khóa học thành công!');
+                        }
+                    );
+                }
+            }
+        }
+
         if (!$user->notif_token) {
             return;
         }

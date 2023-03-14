@@ -1,5 +1,5 @@
 @inject('userServ','App\Services\UserServices')
-<nav class="navbar navbar-expand-lg navbar-light bg-topbg">
+<nav class="navbar navbar-expand-lg navbar-light bg-topbg navbar2">
     <div class="container">
         <a class="d-lg-none navbar-brand ">
             <img src="/cdn/anylearn/img/logo-color.svg" alt="" height="59">

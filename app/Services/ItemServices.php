@@ -469,8 +469,9 @@ class ItemServices
         }
     }
 
-    public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
+    public function createItem($request, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
+        $input = $request->all();
         $user = $userApi ?? Auth::user();
 
         $orgInputs = $input;
@@ -564,11 +565,16 @@ class ItemServices
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($newCourse, Tag::TYPE_CLASS);
             // if ($newCourse->type == ItemConstants::TYPE_COURSE) {
-            Schedule::create([
-                'item_id' => $newCourse->id,
-                'date' => $newCourse->date_start,
-                'time_start' => $newCourse->time_start,
-            ]);
+            // Schedule::create([
+            //     'item_id' => $newCourse->id,
+            //     'date' => $newCourse->date_start,
+            //     'time_start' => $newCourse->time_start,
+            // ]);
+            $courseImage = $this->changeItemImage($request, $input['id']);
+            if ($courseImage) {
+                $input['image'] = $courseImage;
+                Item::find($newCourse->id)->update(['image' => $courseImage]);
+            }
             // }
             return $newCourse->id;
         }
