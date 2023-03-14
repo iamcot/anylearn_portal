@@ -354,6 +354,18 @@ class User extends Authenticatable
                 $members = $members->where('sa2.sale_id', 1);
             }
         }
+        if ($request->input('dateo')) {
+            $members = $members->join('orders AS o', function($join) use ($request) {
+                $join->on('o.user_id', '=', 'users.id')
+                ->whereDate('o.created_at', '>=', $request->input('dateo'));
+            });
+        }
+        if ($request->input('datelo')) {
+            $members = $members->join('orders AS lo', function($join) use ($request) {
+                $join->on('lo.user_id', '=', 'users.id')
+                ->whereDate('lo.created_at', '<=', $request->input('datelo'));
+            });
+        }
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
             $members = $members->where(function ($query) use ($requester) {

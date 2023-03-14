@@ -70,6 +70,18 @@
                     <input value="{{ app('request')->input('adate') }}" type="date" class="form-control" name="adate" placeholder="Ngày liên hệ" />
                 </div>
             </div>
+            <div class="col-xs-6 col-lg-2">
+                <div class="form-group">
+                    <label for="">Đơn hàng cuối từ</label>
+                    <input value="{{ app('request')->input('dateo') }}" type="date" class="form-control" name="dateo" placeholder="Đơn hàng cuối từ" />
+                </div>
+            </div>
+            <div class="col-xs-6 col-lg-2">
+                <div class="form-group">
+                    <label for="">Đơn hàng cuối đến</label>
+                    <input value="{{ app('request')->input('datelo') }}" type="date" class="form-control" name="datelo" placeholder="Đơn hàng cuối đến" />
+                </div>
+            </div>
         </div>
         <div class="card-footer">
             <button class="btn btn-primary btn-sm" name="action" value="search"><i class="fas fa-search"></i> Tìm kiếm</button>
