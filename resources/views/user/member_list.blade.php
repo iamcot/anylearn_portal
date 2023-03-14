@@ -70,6 +70,7 @@
                     <input value="{{ app('request')->input('adate') }}" type="date" class="form-control" name="adate" placeholder="Ngày liên hệ" />
                 </div>
             </div>
+            <div class="col-xs-6 col-lg-2"></div>
             <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">Đơn hàng cuối từ</label>
