@@ -722,6 +722,16 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Chứng chỉ');
         return view(env('TEMPLATE', '') . 'me.certificate', $this->data);
     }
+    public function withdraw(Request $request)
+    {
+
+        $user = Auth::user();
+        $contract = Contract::where('user_id',$user->id)->where('status',99)->first();
+        // dd($contract->bank_name);
+        $this->data['user'] = $user;
+        $this->data['contract'] = $contract;
+        return view(env('TEMPLATE', '') . 'me.withdraw', $this->data);
+    }
     public function finance(Request $request)
     {
         if ($request->input('withdraw')) {

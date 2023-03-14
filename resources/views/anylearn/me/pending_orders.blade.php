@@ -63,32 +63,4 @@ pending_orders
     </table>
     <div>{{ $orders->links() }}</div>
   </div>
-  {{-- <div class="container">
-    <h1 class="text-center mb-4">Rút tiền</h1>
-    <form>
-      <div class="form-group">
-        <label for="inputContractNo">Số hợp đồng:</label>
-        <input type="text" class="form-control" id="inputContractNo" placeholder="Nhập số hợp đồng">
-      </div>
-      <div class="form-group">
-        <label for="inputCurrentBalance">Số tiền hiện có:</label>
-        <input type="text" class="form-control" id="inputCurrentBalance" placeholder="Nhập số tiền hiện có" readonly>
-      </div>
-      <div class="form-group">
-        <label for="inputReceiverAccount">Tài khoản nhận tiền:</label>
-        <input type="text" class="form-control" id="inputReceiverAccount" placeholder="Nhập tài khoản nhận tiền">
-      </div>
-      <div class="form-group">
-        <label for="inputAmount">Số tiền muốn rút:</label>
-        <input type="number" class="form-control" id="inputAmount" placeholder="Nhập số tiền muốn rút">
-      </div>
-      <div class="form-group">
-        <label for="inputPassword">Mật khẩu:</label>
-        <input type="password" class="form-control" id="inputPassword" placeholder="Nhập mật khẩu">
-      </div>
-      <button type="submit" class="btn btn-primary">Xác nhận rút tiền</button>
-    </form>
-  </div> --}}
-
-
 @endsection

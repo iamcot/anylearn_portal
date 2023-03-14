@@ -79,6 +79,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::get('/profile', 'UserController@meProfile')->name('me.profile');
     Route::get('/class', 'ClassController@list')->name('me.class');
     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
+    Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
 
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');

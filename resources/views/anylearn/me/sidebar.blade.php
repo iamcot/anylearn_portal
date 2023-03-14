@@ -82,6 +82,31 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             </div>
         </div>
     </li>
+    <li class="nav-item {{ in_array($route, ['me.orders','me.pendingorders','me.history']) ? 'active' : '' }}">
+        <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#couser-collapse" aria-expanded="false">
+            <i class="fas fa-fw fa-book"></i>
+            <span>@lang('QUẢN LÝ KHÓA HỌC')</span>
+        </a>
+        <div class="collapse {{ in_array($route, ['me.orders','me.pendingorders','me.history']) ? 'show' : '' }}" id="couser-collapse" style="">
+            <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ in_array($route, ['me.orders']) ? 'active' : '' }}"
+                    href="{{ route('me.orders') }}">
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>@lang('Khoá học tôi tham gia')</span></a>
+                </a>
+                <a class="collapse-item {{ in_array($route, ['me.pendingorders']) ? 'active' : '' }}"
+                    href="{{ route('me.pendingorders') }}">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span>@lang('Chờ thanh toán')</span></a>
+                </a>
+                <a class="collapse-item {{ in_array($route, ['me.history']) ? 'active' : '' }}"
+                    href="{{ route('me.history') }}">
+                    <i class="fas fa-fw fa-wallet"></i>
+                    <span>@lang('Giao dịch của tôi')</span></a>
+                </a>
+            </div>
+        </div>
+    </li>
     <li class="nav-item {{ in_array($route, ['me.resetpassword']) ? 'active' : '' }}">
         <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#order-collapse" aria-expanded="false">
             <i class="fas fa-fw fa-book"></i>
@@ -110,31 +135,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             </div>
         </div>
     </li>
-    <li class="nav-item {{ in_array($route, ['me.resetpassword','me.pendingorders','me.history']) ? 'active' : '' }}">
-        <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#couser-collapse" aria-expanded="false">
-            <i class="fas fa-fw fa-book"></i>
-            <span>@lang('QUẢN LÝ KHÓA HỌC')</span>
-        </a>
-        <div class="collapse {{ in_array($route, ['me.orders','me.pendingorders','me.history']) ? 'show' : '' }}" id="couser-collapse" style="">
-            <div class="bg-gray-300 py-2 collapse-inner rounded">
-                <a class="collapse-item {{ in_array($route, ['me.orders']) ? 'active' : '' }}"
-                    href="{{ route('me.orders') }}">
-                    <i class="fas fa-fw fa-calendar"></i>
-                    <span>@lang('Khoá học tôi tham gia')</span></a>
-                </a>
-                <a class="collapse-item {{ in_array($route, ['me.pendingorders']) ? 'active' : '' }}"
-                    href="{{ route('me.pendingorders') }}">
-                    <i class="fas fa-fw fa-shopping-cart"></i>
-                    <span>@lang('Chờ thanh toán')</span></a>
-                </a>
-                <a class="collapse-item {{ in_array($route, ['me.history']) ? 'active' : '' }}"
-                    href="{{ route('me.history') }}">
-                    <i class="fas fa-fw fa-wallet"></i>
-                    <span>@lang('Giao dịch của tôi')</span></a>
-                </a>
-            </div>
-        </div>
-    </li>
+
     @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('helpcenter.parnter.index') }}" data-spm="nav.class">
