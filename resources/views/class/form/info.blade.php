@@ -26,7 +26,7 @@
         <div class="form-group row">
             <label for="date_start" class="col-md-3 col-form-label text-md-right ">{{ __('Ngày bắt đầu') }}</label>
             <div class="col-md-8">
-                <input id="date_start" type="date" class="form-control @error('date_start') is-invalid @enderror" name="date_start" value="{{ old('date_start', !empty($course) ? $course['info']->date_start : '') }}" required>
+                <input id="date_start" type="date" class="form-control @error('date_start') is-invalid @enderror" name="date_start" value="{{ old('date_start', !empty($course) ? $course['info']->date_start : date('Y-m-d') ) }}" required>
             </div>
         </div>
         <div id="box_time" style="@if(empty($course)

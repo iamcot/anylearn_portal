@@ -50,7 +50,7 @@
         </div>
         @endforeach
     @endif
-    @if (count($videos) == 0)
+    @if (empty($videos) || count($videos) == 0)
     <div class="mb-1 card">
         <div class="text-center py-2 card-footer">
             <a href="#" class="btn btn-link btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">

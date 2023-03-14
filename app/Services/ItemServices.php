@@ -162,7 +162,7 @@ class ItemServices
         $item->num_favorite = $itemUserActionM->numFav($itemId);
         $item->num_cart = $itemUserActionM->numReg($itemId);
         $item->rating = $itemUserActionM->rating($itemId);
-        $item->openings = Item::where('item_id', $item->id)->select('id', 'title')->get();
+        $item->openings = [];
         $item->url = "Khoá học " . $item->title . " cực hay trên anyLEARN bạn có biết chưa " . $this->classUrl($itemId);
         $categories = DB::table('items_categories')
             ->join('categories', 'categories.id', '=', 'items_categories.category_id')
@@ -218,12 +218,38 @@ class ItemServices
             'teachers' => $teachers,
             'reviews' => $reviews,
             'videos' => $videos,
+            'plans' => $this->getClassSchedulePlan($itemId),
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
                 'list' => $hotItems
             ],
         ];
+    }
+
+    public function getClassSchedulePlan($itemId)
+    {
+        $planWithLocation = DB::table('item_schedule_plans')
+            ->join('user_locations', 'user_locations.id', '=', 'item_schedule_plans.user_location_id')
+            ->where('item_schedule_plans.item_id', $itemId)
+            ->orderby('item_schedule_plans.date_start')
+            ->select('user_locations.id AS location_id', 'user_locations.title AS location_title', 'user_locations.address', 'item_schedule_plans.*')
+            ->get();
+        if (empty($planWithLocation)) {
+            return [];
+        }
+        $data = [];
+        foreach ($planWithLocation as $plan) {
+            if (!isset($data[$plan->location_id])) {
+                $data[$plan->location_id]['location'] = [
+                    'location_id' => $plan->location_id,
+                    'location_title' => $plan->location_title,
+                    'address' => $plan->address,
+                ];
+            }
+            $data[$plan->location_id]['plans'][] = $plan;
+        }
+        return $data;
     }
 
     public function classUrl($id)

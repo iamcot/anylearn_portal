@@ -29,7 +29,7 @@
                     <label for="short_content" class="col-form-label font-weight-bold">{{ __('Thông tin tóm tắt') }}
                         [{{ $locale }}]</label>
                     <div class="">
-                        <textarea name="short_content[{{ $locale }}]" class="editor">{{ old('short_content', !empty($course) ? $course['info']->short_content[$locale] : '') }}</textarea>
+                        <textarea name="short_content[{{ $locale }}]" class="form-control">{{ old('short_content', !empty($course) ? $course['info']->short_content[$locale] : '') }}</textarea>
                     </div>
                 </div>
                 @foreach(App\Services\ItemServices::$CONTENT_FIELDS as $type => $name)
