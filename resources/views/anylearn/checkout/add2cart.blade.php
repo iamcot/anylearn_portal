@@ -17,9 +17,6 @@ add2cart
         <div class="card-body">
             <h3 class="fw-bold text-success">{{ $item->title }}</h3>
             <p>Đối tác:  {{ $author->name }}</p>
-            <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($item->date_start)) }}
-                {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
-            </p>
             <p>@lang('Học phí:') <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
             <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong> @lang('anyPoint cho giao dịch này')</p>
         </div>
@@ -47,26 +44,28 @@ add2cart
             </div>
         </div>
     </div>
+    @if (!in_array($item->subtype, ['digital', 'video']))
     <div class="card mb-3 border-left-primary shadow">
         <div class="card-header">
             <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i> @lang('Lịch học')
             </h5>
         </div>
         <div class="card-body">
-            @if (count($item->openings) > 0)
+            @if (count($plans) > 0)
             <p class="text-danger">@lang('Chọn lịch khai giảng')</p>
             <ul class="list-unstyled">
-                @foreach ($item->openings as $opening)
+                @foreach ($plans as $opening)
                 <li>
                     <label for="class_{{ $opening->id }}"> <input required id="class_{{ $opening->id }}" type="radio" name="class" value="{{ $opening->id }}"> {{ $opening->title }}</label>
                 </li>
                 @endforeach
             </ul>
             @else 
-                <p>Lịch học bắt đầu từ {{ $item->time_start}}, ngày {{ date('d/m/Y', strtotime($item->date_start)) }}</p>
+                <p>Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }}</p>
             @endif
         </div>
     </div>
+    @endif
     @if (!empty($extras) && count($extras) > 0)
     <div class="card mb-3 border-left-primary shadow">
         <div class="card-header">

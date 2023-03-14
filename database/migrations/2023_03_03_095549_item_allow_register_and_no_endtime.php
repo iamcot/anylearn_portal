@@ -50,6 +50,10 @@ class ItemAllowRegisterAndNoEndtime extends Migration
         Schema::table('schedules', function (Blueprint $table) {
             $table->bigInteger('user_id')->nullable();
         });
+
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->bigInteger('item_schedule_plan_id')->nullable();
+        });
     }
 
     /**
@@ -72,6 +76,9 @@ class ItemAllowRegisterAndNoEndtime extends Migration
         Schema::dropIfExists('item_schedule_plans');
         Schema::table('schedules', function (Blueprint $table) {
             $table->dropColumn('user_id');
+        });
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->dropColumn('item_schedule_plan_id');
         });
     }
 }

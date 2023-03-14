@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserLocation extends Model
 {
+    protected $table = 'user_locations';
     protected $fillable = [
         'user_id', 'title', 'ward_code',
         'district_code', 'province_code', 'ward_path', 'longitude', 'latitude',
