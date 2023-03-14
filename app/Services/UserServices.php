@@ -535,4 +535,9 @@ class UserServices
         $bank = DB::table('contracts')->where('user_id',$id)->where('status',99)->first();
         return $bank;
     }
+    public function accountC($userId)
+    {
+        $c = User::where('id',$userId)->orWhere('is_child',1)->where('user_id',$userId)->get();
+        return $c;
+    }
 }

@@ -4,6 +4,13 @@
 @section('spmb')
     dashboard
 @endsection
+@section('rightFixedTop')
+<form class="row">
+    <div class="col-xs-2 mr-1 mt-4">
+        <a href="{{ route('me.withdraw') }}" type="button" class="btn btn-outline-success" data-mdb-ripple-color="dark">@lang('Rút Tiền')</a>
+    </div>
+</form>
+@endsection
 @section('body')
     <div class="row">
         @include('dashboard.count_box_partner', [
