@@ -354,13 +354,18 @@ class User extends Authenticatable
                 $members = $members->where('sa2.sale_id', 1);
             }
         }
-        if ($request->input('dateo')) {
+        if ($request->input('dateo') && $request->input('datelo')) {
+            $members = $members->join('orders AS o', function($join) use ($request) {
+                $join->on('o.user_id', '=', 'users.id')
+                ->whereDate('o.created_at', '>=', $request->input('dateo'))
+                ->whereDate('o.created_at', '<=', $request->input('datelo'));
+            });
+        } elseif ($request->input('dateo')) {
             $members = $members->join('orders AS o', function($join) use ($request) {
                 $join->on('o.user_id', '=', 'users.id')
                 ->whereDate('o.created_at', '>=', $request->input('dateo'));
             });
-        }
-        if ($request->input('datelo')) {
+        } elseif($request->input('datelo')){
             $members = $members->join('orders AS lo', function($join) use ($request) {
                 $join->on('lo.user_id', '=', 'users.id')
                 ->whereDate('lo.created_at', '<=', $request->input('datelo'));
