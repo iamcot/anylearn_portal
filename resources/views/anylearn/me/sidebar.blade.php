@@ -33,11 +33,11 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                 </a> --}}
                 <a class="collapse-item {{ in_array($route, ['me.introduce', 'location.create', 'location.edit']) ? 'active' : '' }}" href="{{ route('me.introduce') }}">
                     <i class="fas fa-fw fa-info-circle"></i>
-                    <span>Giới thiệu</span>
+                    <span>Giới thiệu/Chi Nhánh</span>
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.contract']) ? 'active' : '' }}" href="{{ route('me.contract') }}">
                     <i class="far fa-fw fa-sun"></i>
-                    <span>Hợp Đồng</span>
+                    <span>Hợp Đồng/Chứng Chỉ</span>
                 </a>
                 <!-- <a class="collapse-item {{ in_array($route, ['helpcenter.parnter.index']) ? 'active' : '' }}" href="{{ route('helpcenter.parnter.index') }}" target="_blank">
                     <i class="fas fa-fw fa-headset"></i>
