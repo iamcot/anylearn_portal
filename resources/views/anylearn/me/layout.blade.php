@@ -77,7 +77,6 @@
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     <script src="/cdn/js/sb-admin-2.min.js"></script>
     <script async src="/cdn/js/anylog.js"></script>
-
     @yield('jscript')
 </body>
 
