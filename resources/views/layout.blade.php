@@ -67,7 +67,11 @@
     <!-- Custom scripts for all pages-->
     <script src="/cdn/js/sb-admin-2.min.js"></script>
     <script>
-        $('.toast').toast('show')
+        $('.toast').toast({
+            "autohide": false,
+        });
+
+        $('.toast').toast('show');
     </script>
     @yield('jscript')
     <!-- <script type="text/javascript" src="https://anylearn.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/azc3hx/b/8/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=7444ee51"></script> -->

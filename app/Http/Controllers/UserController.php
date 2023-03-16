@@ -88,6 +88,20 @@ class UserController extends Controller
         return view('user.modspartner', $this->data);
     }
 
+    private function detectDelimiter($csvFile)
+    {
+        $delimiters = [";" => 0, "," => 0, "\t" => 0, "|" => 0];
+
+        $handle = fopen($csvFile, "r");
+        $firstLine = fgets($handle);
+        fclose($handle);
+        foreach ($delimiters as $delimiter => &$count) {
+            $count = count(str_getcsv($firstLine, $delimiter));
+        }
+
+        return array_search(max($delimiters), $delimiters);
+    }
+
     public function members(Request $request)
     {
         $userService = new UserServices();
@@ -105,14 +119,16 @@ class UserController extends Controller
             if ($request->hasFile('saleassign') && $request->file('saleassign')->isValid()) {
                 $csvFile = $request->file('saleassign');
 
+                $delimiter = $this->detectDelimiter($csvFile);
+
                 $fileHandle = fopen($csvFile, 'r');
                 $rows = [];
                 $header = [];
                 while (!feof($fileHandle)) {
                     if (empty($header)) {
-                        $header = fgetcsv($fileHandle, 0, ';');
+                        $header = fgetcsv($fileHandle, 0, $delimiter);
                     } else {
-                        $csvRaw = fgetcsv($fileHandle, 0, ';');
+                        $csvRaw = fgetcsv($fileHandle, 0, $delimiter);
                         $rowcsv = [];
                         foreach ($header as $k => $col) {
                             $rowcsv[] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";

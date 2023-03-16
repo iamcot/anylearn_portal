@@ -1,5 +1,5 @@
 @if(!empty($notify))
-<div class="toast show position-absolute end-0 bg-{{ $notify == "0" ? "danger" : "primary" }} text-white" role="alert" aria-live="assertive" aria-atomic="true">
+<div class="toast show position-absolute end-0 bg-{{ $notify == "0" ? "danger" : "primary" }} text-white" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
   <!-- <div class="toast-header">
     <span class="rounded me-2"><i class="fa fa-info-circle"></i></span>
     <strong class="me-auto">@lang('Thông báo')</strong>
