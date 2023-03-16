@@ -1,5 +1,9 @@
 @inject('userServ','App\Services\UserServices')
-@extends('anylearn.me.layout')
+@if($userServ->isMod())
+    @extends('layout')
+@else
+    @extends('anylearn.me.layout')
+@endif
 @section('spmb')
 location_form
 @endsection
@@ -14,6 +18,19 @@ location_form
     <div class="card shadow">
         <div class="card-body">
             <div class="">
+                @if($userServ->isMod())
+                <div class="form-group row">
+                    <label for="user_id" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Đối tác') }}</label>
+                    <div class="col-md-8">
+                        <select class="form-control location-tree" name="user_id" id="user_id" required @if(!empty($location)) disabled @endif>
+                            <option value="">@lang('Chọn một đối tác')</option>
+                            @foreach($partners as $partner)
+                            <option value="{{ $partner->id }}" {{ !empty($location) && $location->user_id == $partner->id ? 'selected' : '' }}>{{ $partner->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @endif
                 <div class="form-group row">
                     <label for="title" class="col-md-3 col-form-label text-md-right">{{ __('Tên địa điểm') }}</label>
                     <div class="col-md-8">

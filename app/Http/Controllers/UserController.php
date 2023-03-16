@@ -307,7 +307,6 @@ class UserController extends Controller
         $this->data['courses'] = $courses;
         $this->data['userC'] = $userC;
         return view(env('TEMPLATE', '') . 'me.childhistory', $this->data);
-
     }
     public function mePassword(Request $request)
     {
@@ -566,6 +565,10 @@ class UserController extends Controller
 
             return redirect()->route('me.introduce')->with('notify', "Cập nhật địa chỉ thành công");
         }
+        $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+            ->where('status', 1)
+            ->select('id', 'name')
+            ->get();
         $this->data['location'] = $location;
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['districts'] = District::where('parent_code', $location->province_code)->orderBy('name')->get();
@@ -605,6 +608,10 @@ class UserController extends Controller
             return redirect()->route('me.introduce')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();
+        $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+            ->where('status', 1)
+            ->select('id', 'name')
+            ->get();
         $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
 
         $this->data['hasBack'] = true;
@@ -641,7 +648,7 @@ class UserController extends Controller
         $user = Auth::user();
         $orderDetailM = new OrderDetail();
         $data = $orderDetailM->usersOrders($user->id);
-        $this -> data['data'] = $data;
+        $this->data['data'] = $data;
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
@@ -726,7 +733,7 @@ class UserController extends Controller
     {
 
         $user = Auth::user();
-        $contract = Contract::where('user_id',$user->id)->where('status',99)->first();
+        $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
         // dd($contract->bank_name);
         $this->data['user'] = $user;
         $this->data['contract'] = $contract;

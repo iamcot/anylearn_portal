@@ -25,11 +25,7 @@
 <body id="page-top" data-spm="@yield('spmb')">
     <!-- Page Wrapper -->
     <div id="wrapper">
-        @if ($userServ->isMod())
-            @include('layout.sidebar')
-        @else
-         @include('layout.me_sidebar')
-        @endif
+        @include('layout.sidebar')
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column @yield('main-bg')">
             <!-- Main Content -->
