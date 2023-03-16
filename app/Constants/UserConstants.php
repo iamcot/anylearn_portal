@@ -30,7 +30,7 @@ class UserConstants
     public static $saleRoles = [self::ROLE_SALE, self::ROLE_SALE_CONTENT,self::ROLE_SALE_MANAGER];
     public static $modRoles = [self::ROLE_MOD, self::ROLE_ADMIN, self::ROLE_SALE, self::ROLE_CONTENT, self::ROLE_FIN, self::ROLE_SALE_CONTENT ,self::ROLE_SALE_MANAGER];
     public static $parterRoles = [self::ROLE_FIN_PARTNER];
-    public static $modparterRoles = [self::ROLE_FIN_PARTNER, self::ROLE_MOD, self::ROLE_ADMIN, self::ROLE_SALE, self::ROLE_CONTENT, self::ROLE_FIN, self::ROLE_SALE_CONTENT];
+    public static $modparterRoles = [self::ROLE_FIN_PARTNER, self::ROLE_MOD, self::ROLE_ADMIN, self::ROLE_SALE, self::ROLE_CONTENT, self::ROLE_FIN, self::ROLE_SALE_CONTENT,self::ROLE_SALE_MANAGER];
 
 
 
