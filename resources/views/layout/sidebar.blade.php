@@ -21,12 +21,12 @@
     </li>
     @endif
 
-    <hr class="sidebar-divider d-none d-md-block">
+    {{-- <hr class="sidebar-divider d-none d-md-block">
     <li class="nav-item {{ in_array($route, ['crm.requestsale']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('crm.requestsale') }}">
             <i class="fas fa-fw fa-university"></i>
             <span>@lang('Sale')</span></a>
-    </li>
+    </li> --}}
 
     @if($userService->haveAccess($role, 'user.members'))
     <li class="nav-item {{ strpos($route, 'user.members') !== false ? 'active' : '' }}">

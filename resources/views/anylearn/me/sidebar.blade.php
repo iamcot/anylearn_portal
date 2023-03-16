@@ -27,17 +27,17 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                     <i class="fas fa-fw fa-university"></i>
                     <span>Lớp Học Của Tôi</span>
                 </a>
-                <a class="collapse-item {{ in_array($route, ['me.transactionhistory']) ? 'active' : '' }}" href="{{ route('me.transactionhistory') }}">
+                {{-- <a class="collapse-item {{ in_array($route, ['me.transactionhistory']) ? 'active' : '' }}" href="{{ route('me.transactionhistory') }}">
                     <i class="far fa-fw fa-sun"></i>
                     <span>Lịch Sử Giao Dịch</span>
-                </a>
+                </a> --}}
                 <a class="collapse-item {{ in_array($route, ['me.introduce', 'location.create', 'location.edit']) ? 'active' : '' }}" href="{{ route('me.introduce') }}">
                     <i class="fas fa-fw fa-info-circle"></i>
-                    <span>Giới thiệu</span>
+                    <span>Giới thiệu/Chi Nhánh</span>
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.contract']) ? 'active' : '' }}" href="{{ route('me.contract') }}">
                     <i class="far fa-fw fa-sun"></i>
-                    <span>Hợp Đồng</span>
+                    <span>Hợp Đồng/Chứng Chỉ</span>
                 </a>
                 <!-- <a class="collapse-item {{ in_array($route, ['helpcenter.parnter.index']) ? 'active' : '' }}" href="{{ route('helpcenter.parnter.index') }}" target="_blank">
                     <i class="fas fa-fw fa-headset"></i>
@@ -118,10 +118,10 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                     <i class="fas fa-fw fa-lock"></i>
                     <span>@lang('Đổi mật khẩu')</span></a>
                 </a>
-                <a class="collapse-item " href="">
+                {{-- <a class="collapse-item " href="">
                     <i class="fas fa-fw fa-gift"></i>
                     <span>@lang('Mã giới thiệu')</span></a>
-                </a>
+                </a> --}}
                 @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
                 <a class="collapse-item " href="">
                     <i class="fas fa-fw fa-star"></i>
@@ -136,13 +136,13 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
         </div>
     </li>
 
-    @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+    {{-- @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('helpcenter.parnter.index') }}" data-spm="nav.class">
                 <i class="fas fa-fw fa-headset"></i>
                 <span>@lang('Trung tâm hỗ trợ')</span></a>
         </li>
-    @endif
+    @endif --}}
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

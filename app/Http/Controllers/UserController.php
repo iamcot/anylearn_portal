@@ -31,6 +31,7 @@ use App\Services\InteractServices;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use PSpell\Config;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
@@ -731,10 +732,34 @@ class UserController extends Controller
     }
     public function withdraw(Request $request)
     {
-
         $user = Auth::user();
+        if ($request->input('withdraw')) {
+            $input = $request->all();
+            if (Hash::check($input['password'], $user->password)) {
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'type' => ConfigConstants::TRANSACTION_WITHDRAW,
+                    'amount' => $input['withdraw'],
+                    'ref_amount' => $input['withdraw'],
+                    'pay_method' => UserConstants::WALLET_M,
+                    'pay_info' => '',
+                    'content' => 'Rút ' . $input['withdraw'] . ' cho đơn đối tác #' . ($user->id) . ' ' . $user->name,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'order_id' => null
+                ]);
+                return redirect()->back()->with('notify', 'Lệnh rút Tiền đã được gởi đi');
+            } else {
+                return redirect()->back()->with('notify', 'Mật khẩu không chính xác');
+            }
+        }
+        $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method','wallet_m')->where('type','!=',ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
+        $totalAmount = DB::table('transactions')
+            ->where('type', 'withdraw')
+            ->where('status', 0)
+            ->sum('amount');
         $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
-        // dd($contract->bank_name);
+        $this->data['history'] = $history;
+        $this->data['totalAmount'] = $totalAmount;
         $this->data['user'] = $user;
         $this->data['contract'] = $contract;
         return view(env('TEMPLATE', '') . 'me.withdraw', $this->data);
