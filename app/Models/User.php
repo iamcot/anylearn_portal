@@ -382,8 +382,16 @@ class User extends Authenticatable
                 ->orderBy('id');
         } elseif ($requester->role == UserConstants::ROLE_SALE_MANAGER) {
             $members = $members->where(function ($query) use ($requester) {
-                return $query->whereIn('users.sale_id', env('SALE_MANAGER'))
-                    ->orWhereIn('users.user_id',env('SALE_MANAGER'));
+                $saleManager = explode(',', env('SALE_MANAGER'));
+                // $d = env('SALE_MANAGER');
+                // dd($d,$saleManager);
+                if (is_array($saleManager)) {
+                    return $query->whereIn('users.sale_id', $saleManager)
+                        ->orWhereIn('users.user_id', $saleManager);
+                } else {
+                    dd("no array");
+                    return $query;
+                }
             });
             $members = $members
                 ->orderBy('lastsa.last_contact')
