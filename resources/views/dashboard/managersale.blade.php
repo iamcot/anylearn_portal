@@ -150,8 +150,6 @@
             </div>
             {{-- </div> --}}
         </div>
-
-
     </div>
 @endsection
 @section('jscript')
@@ -216,40 +214,6 @@
                 filterAndApplyFilters(null, null);
             });
 
-            // function filterData(timeRange) {
-            //     var startDate, endDate;
-
-            //     // Tính toán startDate và endDate dựa trên timeRange
-            //     if (timeRange === "week") {
-            //         startDate = new Date();
-            //         startDate.setHours(0, 0, 0, 0);
-            //         startDate.setDate(startDate.getDate() - startDate.getDay());
-            //         endDate = new Date();
-            //         endDate.setHours(23, 59, 59, 999);
-            //         endDate.setDate(startDate.getDate() + 6);
-            //     } else if (timeRange === "month") {
-            //         startDate = new Date();
-            //         startDate.setDate(1);
-            //         startDate.setHours(0, 0, 0, 0);
-            //         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-            //         endDate.setHours(23, 59, 59, 999);
-            //     } else if (timeRange === "quarter") {
-            //         var currentDate = new Date();
-            //         var currentQuarter = Math.floor((currentDate.getMonth() / 3));
-            //         startDate = new Date(currentDate.getFullYear(), currentQuarter * 3, 1);
-            //         startDate.setHours(0, 0, 0, 0);
-            //         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 3, 0);
-            //         endDate.setHours(23, 59, 59, 999);
-            //     }
-
-            //     // Lọc dữ liệu theo khoảng thời gian này
-            //     var filteredData = data.filter(function(row) {
-            //         var rowDate = new Date(row.created_at);
-            //         return rowDate >= startDate && rowDate <= endDate;
-            //     });
-
-            //     renderTable(filteredData);
-            // }
 
             $(document).on("click", "button[name=week]", function() {
                 filterAndApplyFilters("week", null);
