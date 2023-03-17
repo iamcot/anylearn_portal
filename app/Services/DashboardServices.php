@@ -303,6 +303,7 @@ class DashboardServices
                 ->select(DB::raw('DATE(sa.created_at) AS day'), DB::raw('COUNT(DISTINCT member_id) AS activity'))
                 ->groupBy('day')
                 ->get();
+            // dd($reportDB);
             $tmp = [];
             foreach ($reportDB as $row) {
                 $tmp[$row->day] = $row->activity;
@@ -327,6 +328,20 @@ class DashboardServices
             }
             $report[] = [$saleName] + $days;
         }
+        // dd($report);
         return $report;
+    }
+    public function saleManager()
+    {
+        $saleManager = explode(',', env('SALE_MANAGER'));
+        $results = DB::table('order_details as od')
+            ->select('od.unit_price','od.created_at', 'i.title', 'u1.name as buyer_name', 'u2.name as seller_name')
+            ->join('items as i', 'od.item_id', '=', 'i.id')
+            ->join('users as u1', 'od.user_id', '=', 'u1.id')
+            ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
+            ->whereIn('u1.sale_id',$saleManager)
+            ->get();
+        // dd($results);
+        return $results;
     }
 }
