@@ -33,10 +33,12 @@
             <i class="fas fa-fw fa-users-cog"></i>
             <span>@lang('Quản lý thành viên')</span></a>
     </li>
-    <a class="nav-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}" href="{{ route('location') }}">
-        <i class="fas fa-fw fa-info-circle"></i>
-        <span>Quản lý địa chỉ</span>
-    </a>
+    <li class="nav-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}">
+        <a href="{{ route('location') }}" class="nav-link">
+            <i class="fas fa-fw fa-info-circle"></i>
+            <span>Quản lý địa chỉ</span>
+        </a>
+    </li>
     @endif
 
     @if($userService->haveAccess($role, 'article'))

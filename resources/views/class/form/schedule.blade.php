@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="province" class=" form-label text-md-right">{{ __('Địa chỉ / Chi nhánh') }} <a href="{{ route('location.create') }}">@lang('Tạo địa chỉ')</a></label>
+                        <label for="province" class=" form-label text-md-right">{{ __('Địa chỉ / Chi nhánh') }} <a href="{{ route('location.create') }}?user_id={{ $course['info']->user_id }}">@lang('Tạo địa chỉ')</a></label>
                         <div class="">
                             @if (!empty($userLocations))
                             <select class="form-control" name="opening[user_location_id]">
