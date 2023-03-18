@@ -1,4 +1,5 @@
 @inject('itemServ','App\Services\ItemServices')
+@if(!empty($course['info']))
 <div class="row">
     <div class="col-12">
         <div class="card shadow">
@@ -105,3 +106,4 @@
         </div>
     </div>
 </div>
+@endif
