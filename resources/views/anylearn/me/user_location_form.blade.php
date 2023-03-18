@@ -1,9 +1,5 @@
 @inject('userServ','App\Services\UserServices')
-@if($userServ->isMod())
-    @extends('layout')
-@else
-    @extends('anylearn.me.layout')
-@endif
+@extends($layout)
 @section('spmb')
 location_form
 @endsection
@@ -22,10 +18,10 @@ location_form
                 <div class="form-group row">
                     <label for="user_id" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Đối tác') }}</label>
                     <div class="col-md-8">
-                        <select class="form-control location-tree" name="user_id" id="user_id" required @if(!empty($location)) disabled @endif>
+                        <select class="form-control location-tree" name="user_id" id="user_id" required>
                             <option value="">@lang('Chọn một đối tác')</option>
                             @foreach($partners as $partner)
-                            <option value="{{ $partner->id }}" {{ !empty($location) && $location->user_id == $partner->id ? 'selected' : '' }}>{{ $partner->name }}</option>
+                            <option value="{{ $partner->id }}" {{ (!empty($location) && $location->user_id == $partner->id) || (Request::get('user_id') == $partner->id) ? 'selected' : '' }}>{{ $partner->name }}</option>
                             @endforeach
                         </select>
                     </div>

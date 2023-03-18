@@ -548,18 +548,35 @@ class UserController extends Controller
     public function locationList(Request $request)
     {
         $user = Auth::user();
-        $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
+        $userLocationId = $user->id;
+        $userService = new UserServices();
+        if ($request->get('user_id')) {
+            $userLocationId = $request->get('user_id');
+        }
+        $this->data['locations'] = UserLocation::where('user_id', $userLocationId)->paginate();
         $this->data['navText'] = __('Quản lý địa điểm/chi nhánh');
+        $this->data['layout'] = $userService->isMod() ? 'layout' : 'anylearn.me.layout';
+        if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
         return view(env('TEMPLATE', '') . 'me.user_location_list', $this->data);
     }
 
     public function locationEdit(Request $request, $id)
     {
         $location = UserLocation::find($id);
+        $userService = new UserServices();
         if ($request->get('save') == "save") {
             $input = $request->input();
-            $input['user_id'] = Auth::user()->id;
-            $userService = new UserServices();
+            if ($request->get('user_id')) {
+                $input['user_id'] = $request->get('user_id');
+            } else {
+                $input['user_id'] = Auth::user()->id;
+            }
+
             $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
             if ($geoCode !== false) {
                 $input['longitude'] = $geoCode['longitude'];
@@ -579,8 +596,10 @@ class UserController extends Controller
                 Log::error($e);
                 return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
             }
-
-            return redirect()->route('me.introduce')->with('notify', "Cập nhật địa chỉ thành công");
+            if ($request->get('user_id')) {
+                return redirect()->route('location', ['user_id' => $request->get('user_id')])->with('notify', "Cập nhật địa chỉ thành công");
+            } 
+            return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
         }
         $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
             ->where('status', 1)
@@ -592,16 +611,27 @@ class UserController extends Controller
         $this->data['wards'] = Ward::where('parent_code', $location->district_code)->orderBy('name')->get();
         $this->data['navText'] = __('Chỉnh sửa địa điểm/chi nhánh');
         $this->data['hasBack'] = true;
+        $this->data['layout'] = $userService->isMod() ? 'layout' : 'anylearn.me.layout';
+        if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
         return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
     }
 
     public function locationCreate(Request $request)
     {
+        $userService = new UserServices();
         if ($request->get('save') == "save") {
             $input = $request->input();
-            $input['user_id'] = Auth::user()->id;
+            if ($request->get('user_id')) {
+                $input['user_id'] = $request->get('user_id');
+            } else {
+                $input['user_id'] = Auth::user()->id;
+            }
 
-            $userService = new UserServices();
             $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
             if ($geoCode !== false) {
                 $input['longitude'] = $geoCode['longitude'];
@@ -621,17 +651,22 @@ class UserController extends Controller
                 Log::error($e);
                 return redirect()->back()->with('notify',  "Tạo địa chỉ thất bại");
             }
-
-            return redirect()->route('me.introduce')->with('notify', "Tạo địa chỉ thành công");
+            if ($request->get('user_id')) {
+                return redirect()->route('location', ['user_id' => $request->get('user_id')])->with('notify', "Cập nhật địa chỉ thành công");
+            } 
+            return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();
-        $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
-            ->where('status', 1)
-            ->select('id', 'name')
-            ->get();
+        if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
         $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
 
         $this->data['hasBack'] = true;
+        $this->data['layout'] = $userService->isMod() ? 'layout' : 'anylearn.me.layout';
         return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
     }
 
@@ -768,7 +803,7 @@ class UserController extends Controller
                 return redirect()->back()->with('notify', 'Mật khẩu không chính xác');
             }
         }
-        $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method','wallet_m')->where('type','!=',ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
+        $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method', 'wallet_m')->where('type', '!=', ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
         $totalAmount = DB::table('transactions')
             ->where('type', 'withdraw')
             ->where('status', 0)

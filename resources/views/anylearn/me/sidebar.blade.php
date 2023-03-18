@@ -31,9 +31,9 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                     <i class="far fa-fw fa-sun"></i>
                     <span>Lịch Sử Giao Dịch</span>
                 </a> --}}
-                <a class="collapse-item {{ in_array($route, ['me.introduce', 'location.create', 'location.edit']) ? 'active' : '' }}" href="{{ route('me.introduce') }}">
+                <a class="collapse-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}" href="{{ route('location') }}">
                     <i class="fas fa-fw fa-info-circle"></i>
-                    <span>Giới thiệu/Chi Nhánh</span>
+                    <span>Quản lý Chi Nhánh</span>
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.contract']) ? 'active' : '' }}" href="{{ route('me.contract') }}">
                     <i class="far fa-fw fa-sun"></i>
