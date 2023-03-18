@@ -23,6 +23,7 @@ use App\Models\ItemSchedulePlan;
 use App\Models\ItemVideoChapter;
 use App\Models\ItemVideoLesson;
 use App\Models\Notification;
+use App\Models\OrderDetail;
 use App\Models\SocialPost;
 use App\Models\UserLocation;
 use App\Services\ActivitybonusServices;
@@ -492,7 +493,14 @@ class ClassController extends Controller
     public function authorConfirmJoinCourse(Request $request, $itemId)
     {
         $joinUserId = $request->get('join_user');
-        $firstSchedule = Schedule::where('item_id', $itemId)->first();
+        $firstSchedule = DB::table('order_details')
+        ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
+        ->where('item_id', $itemId)
+        ->where('user_id', $joinUserId)
+        ->where('status', OrderConstants::STATUS_DELIVERED)
+        ->whereNull('participations.id')
+        ->select('order_details.id')
+        ->first();
         $itemServ = new ItemServices();
         try {
             $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);

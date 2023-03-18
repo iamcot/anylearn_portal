@@ -972,17 +972,20 @@ class ItemServices
         return $list;
     }
 
+    /**
+     * NOTE use order detail ID to replace scheduleId
+     */
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
         $user = User::find($joinedUserId);
 
-        $schedule = Schedule::find($scheduleId);
-        if (!$schedule) {
+        $orderDetail = OrderDetail::find($scheduleId);
+        if (!$orderDetail) {
             throw new Exception("Không có lịch cho buổi học này");
             // return response("Không có lịch cho buổi học này", 404);
         }
 
-        $item = Item::find($schedule->item_id);
+        $item = Item::find($orderDetail->item_id);
         if (!$item) {
             throw new Exception("Khóa  học không tồn tại");
             // return response("Khóa  học không tồn tại", 404);
@@ -990,7 +993,7 @@ class ItemServices
         $itemId = $item->id;
 
         $isConfirmed = Participation::where('item_id', $itemId)
-            ->where('schedule_id',  $schedule->id)
+            ->where('schedule_id',  $orderDetail->id)
             ->where('participant_user_id', $joinedUserId)
             ->count();
         if ($isConfirmed > 0) {

@@ -37,9 +37,8 @@ class OrderDetail extends Model
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('users', 'users.id', '=', 'orders.user_id') //this join is for main user
             ->join('users AS u2', 'u2.id', '=', 'od.user_id') //this join is for child user
-            ->join('schedules', 'schedules.item_id', '=', 'od.item_id')
             ->leftJoin('participations AS pa', function ($join) {
-                $join->on('pa.schedule_id', '=', 'schedules.id')
+                $join->on('pa.schedule_id', '=', 'od.id')
                     ->on('pa.participant_user_id', '=', 'u2.id');
             })
             ->leftJoin('item_user_actions AS iua', function ($query) {
@@ -54,10 +53,10 @@ class OrderDetail extends Model
                 'items.title',
                 'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
-                'schedules.date as date',
-                'schedules.time_start as time',
-                'schedules.time_end',
-                'schedules.content as schedule_content',
+                'items.date_start as date',
+                'items.time_start as time',
+                'items.time_end',
+                "'' as schedule_content",
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
