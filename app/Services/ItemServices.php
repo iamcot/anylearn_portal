@@ -156,7 +156,8 @@ class ItemServices
                 }
             }
         }
-        $numSchedule = Schedule::where('item_id', $itemId)->count();
+        $plans = $this->getClassSchedulePlan($itemId);
+        $numSchedule = array_sum(array_map("count", $plans));
 
         $itemUserActionM = new ItemUserAction();
         $item->num_favorite = $itemUserActionM->numFav($itemId);
@@ -218,7 +219,7 @@ class ItemServices
             'teachers' => $teachers,
             'reviews' => $reviews,
             'videos' => $videos,
-            'plans' => $this->getClassSchedulePlan($itemId),
+            'plans' => $plans,
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
@@ -242,12 +243,13 @@ class ItemServices
         foreach ($planWithLocation as $plan) {
             if (!isset($data[$plan->location_id])) {
                 $data[$plan->location_id]['location'] = [
+                    'id' => $plan->id,
                     'location_id' => $plan->location_id,
                     'location_title' => $plan->location_title,
                     'address' => $plan->address,
                 ];
             }
-            $data[$plan->location_id]['plans'][] = $plan;
+            $data[$plan->location_id]['plans'][] = json_decode(json_encode($plan), true);
         }
         return $data;
     }
@@ -1068,9 +1070,6 @@ class ItemServices
             'day' => date('Y-m-d'),
         ]);
 
-        // No limit time class => just touch transaction related to approved user
-        // if ($item->nolimit_time == 1) {
-        //get transaction relate order id & user & item
         $trans = DB::table('transactions')
             ->join('order_details AS od', function ($query) use ($user) {
                 $query->on('od.id', '=', 'transactions.order_id')
@@ -1082,12 +1081,12 @@ class ItemServices
             ->where('od.item_id', $item->id)
             ->where('transactions.user_id', $author->id)
             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+            ->where('transactions.type', ConfigConstants::TRANSACTION_PARTNER)
             ->select('transactions.*')
             ->first();
         // approve author transaction
         if ($trans) {
-            $transService->approveWalletcTransaction($trans->id);
+            $transService->approveWalletmTransaction($trans->id);
             // approve foundation transaction
             DB::table('transactions')
                 ->where('transactions.order_id', $trans->order_id)
@@ -1097,46 +1096,5 @@ class ItemServices
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE
                 ]);
         }
-        // } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
-        //     $configM = new Configuration();
-        //     $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
-        //     $totalReg = OrderDetail::where('item_id', $itemId)->count();
-        //     $totalConfirm = Participation::where('item_id', $itemId)->count();
-        //     //update author commssion when reach % of approved users
-        //     if ($totalConfirm / $totalReg >= $needNumConfirm) {
-        //         //get ALL transaction relate order id & item
-        //         $allTrans = DB::table('transactions')
-        //             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-        //             ->where('od.status', OrderConstants::STATUS_DELIVERED)
-        //             ->where('od.item_id', $item->id)
-        //             ->where('transactions.user_id', $author->id)
-        //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-        //             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-        //             ->select('transactions.*')
-        //             ->get();
-
-        //         // approve author transaction
-        //         if ($allTrans) {
-        //             foreach ($allTrans as $trans) {
-        //                 $transService->approveWalletcTransaction($trans->id);
-        //             }
-        //         }
-        //         // approve foundation transaction
-        //         DB::table('transactions')
-        //             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-        //             ->where('od.item_id', $item->id)
-        //             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-        //             ->where('transactions.user_id', $author->id)
-        //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-        //             ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
-        //             ->update([
-        //                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE
-        //             ]);
-
-        //         Item::find($itemId)->update([
-        //             'got_bonus' => 1
-        //         ]);
-        //     }
-        // }
     }
 }

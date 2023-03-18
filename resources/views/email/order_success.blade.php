@@ -46,16 +46,11 @@
                                     </div>
 
                                     <div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">
-                                            &nbsp;</div>
-                                    </div>
-                                    <div style="margin-left: 20px; margin-right: 20px">
                                         <div
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <h2 class="v1size-20"
                                                 style="margin-top: 0; margin-bottom: 16px; font-style: normal; font-weight: normal; color: #fff; font-size: 17px; line-height: 26px; text-align: center"
-                                                lang="x-size-20"><span style="color: #ffffff">anyLEARN - Ứng dụng kết
-                                                    nối giáo dục hàng đầu.</span></h2>
+                                                lang="x-size-20"><span style="color: #ffffff">anyLEARN - Ứng dụng kết nối giáo dục hàng đầu.</span></h2>
                                         </div>
                                     </div>
                                     <div style="margin-left: 20px; margin-right: 20px">
@@ -106,16 +101,14 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <h1
                                                 style="margin-top: 0; margin-bottom: 20px; font-style: normal; font-weight: normal; color: #fff; font-size: 18px; line-height: 26px; text-align: center">
-                                                <span style="color: #0d0d0d"><strong>Chúc mừng&nbsp; {{ $name }}
-                                                        - Đăng ký khóa học thành công trên anyLEARN!</strong></span>
+                                                <span style="color: #0d0d0d"><strong>Chúc mừng&nbsp; {{ $username }} Đăng ký khóa học thành công trên anyLEARN!</strong></span>
                                             </h1>
                                         </div>
                                     </div>
-                                    @include('email.data_order')
-                                    <div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">
-                                            &nbsp;</div>
-                                    </div>
+                                    @include('email.data_order', [
+                                        'orderData' => $orderData,
+                                        'extraFee' => $extraFee
+                                        ])
                                     <div style="margin-left: 20px; margin-right: 20px">
                                         <div
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
@@ -136,28 +129,17 @@
                             </div>
                         </div>
                     </div>
+                    <div style="margin-left: 20px; margin-right: 20px">
+                                        <div style="mso-line-height-rule: exactly; line-height: 2px; font-size: 1px">
+                                            &nbsp;</div>
+                                    </div>
                     <div style="background-color: #ffffff">
                         <div class="v1layout v1one-col v1stack"
                             style="margin: 0 auto; max-width: 600px; min-width: 320px; width: 320px; width: calc(28000% - 167400px); overflow-wrap: break-word; word-wrap: break-word; word-break: break-word">
                             <div class="v1layout__inner" style="border-collapse: collapse; display: table; width: 100%">
 
                                 <div class="v1column"
-                                    style="text-align: left; color: #94a4b0; font-size: 14px; line-height: 21px; font-family: sans-serif">
-
-                                    <div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">
-                                            &nbsp;</div>
-                                    </div>
-
-                                    <div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 35px; font-size: 1px">
-                                            &nbsp;</div>
-                                    </div>
-
-                                    <div style="margin-left: 20px; margin-right: 20px">
-                                        <div class="v1divider"
-                                            style="display: block; font-size: 2px; line-height: 2px; margin-left: auto; margin-right: auto; width: 40px; background-color: #ccc; margin-bottom: 20px">
-                                            &nbsp;</div>
+                                    style="text-align: left; color: #94a4b0; font-size: 14px; line-height: 21px; font-family: sans-serif"></div>
                                     </div>
 
                                     <div style="margin-left: 20px; margin-right: 20px">
@@ -165,9 +147,8 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-12"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 12px; line-height: 19px; text-align: center"
-                                                lang="x-size-12"><em>Trong trường hợp bạn&nbsp;cần hỗ trợ, vui lòng
-                                                    liên hệ 0374900344 hoặc<br>
-                                                    email: info@anylearn.vn</em></p>
+                                                lang="x-size-12">Trong trường hợp bạn cần hỗ trợ, vui lòng liên hệ 0374900344 <br>hoặc
+                                                    email: info@anylearn.vn</p>
                                         </div>
                                     </div>
 
@@ -175,8 +156,7 @@
                                         <div class="v1btn v1btn--flat v1btn--small"
                                             style="margin-bottom: 20px; text-align: center">
                                             <a style="border-radius: 4px; display: inline-block; font-size: 11px; font-weight: bold; line-height: 19px; padding: 6px 12px; text-align: center; text-decoration: none !important; transition: opacity 0.1s ease-in; color: #ffffff !important; background-color: #1a7aba; font-family: sans-serif"
-                                                href="tel:0374900344" target="_blank" rel="noreferrer">Liên hệ hỗ
-                                                trợ</a>
+                                                href="tel:0374900344" target="_blank" rel="noreferrer">Liên hệ hỗ trợ</a>
                                         </div>
                                     </div>
 
@@ -184,9 +164,7 @@
                                         <div style="mso-line-height-rule: exactly; line-height: 2px; font-size: 1px">
                                             &nbsp;</div>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -196,17 +174,13 @@
                             style="margin: 0 auto; max-width: 600px; min-width: 320px; width: 320px; width: calc(28000% - 167400px); overflow-wrap: break-word; word-wrap: break-word; word-break: break-word">
                             <div class="v1layout__inner"
                                 style="border-collapse: collapse; display: table; width: 100%">
-
                                 <div class="v1column"
                                     style="text-align: left; color: #94a4b0; font-size: 14px; line-height: 21px; font-family: sans-serif">
-
                                     <div style="margin-left: 20px; margin-right: 20px">
                                         <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">
                                             &nbsp;</div>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -233,9 +207,7 @@
                                                     các khóa học hay và bổ ích nhé!</em></span></p>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                     <div style="background-color:#ffffff">
@@ -257,9 +229,7 @@
                                                 src="https://ci3.googleusercontent.com/proxy/XzqRCBRI9k7t76PxXxvV4zGDvR37lnDLvTKMzkI9lzQR6uxJLrZXlxG9br_lJdYIw8vxD6gj1jqUoqyEFsN8KgFLZAOvFlj4L0tR79RxNf8seC_Cj1HEAV1GOpy9OSZLmIZKdY0=s0-d-e1-ft#https://i5.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/ios-9906db045101453c.png"
                                                 class="CToWUd" data-bit="iit"></a>
                                     </div>
-
                                 </div>
-
                                 <div class="column"
                                     style="text-align:left;color:#94a4b0;font-size:14px;line-height:21px;font-family:sans-serif;max-width:320px;min-width:300px;width:320px;width:calc(12300px - 2000%);Float:left">
 
@@ -274,9 +244,7 @@
                                                 src="https://ci6.googleusercontent.com/proxy/X1OwWHaYlfGFX5HotHOs1XkL4eulaadUoBmUrywPErb3-0QN7_LYgdBQsUCUceB8Ikn2MvoZCgJypTK3A9whOJ9GjFk00m0VwapPEgxC_J4MZfEiWavSRXSlLlhwwRgRmYTfhTG9eDT3=s0-d-e1-ft#https://i6.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/android-9906db045101453c.png"
                                                 class="CToWUd" data-bit="iit"></a>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -293,9 +261,7 @@
                                         <div style="mso-line-height-rule: exactly; line-height: 15px; font-size: 1px">
                                             &nbsp;</div>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -304,23 +270,18 @@
                         <div class="layout one-col stack"
                             style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word">
                             <div class="layout__inner" style="border-collapse:collapse;display:table;width:100%">
-
                                 <div class="column"
                                     style="text-align:left;color:#94a4b0;font-size:14px;line-height:21px;font-family:sans-serif">
-
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="line-height:15px;font-size:1px">&nbsp;</div>
                                     </div>
-
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="vertical-align:middle">
                                             <p class="size-11"
                                                 style="Margin-top:0;Margin-bottom:20px;font-size:11px;line-height:19px;text-align:center"
-                                                lang="x-size-11"><span style="color:#ffffff">Xem thêm
-                                                    về&nbsp;anyLEARN</span></p>
+                                                lang="x-size-11"><span style="color:#ffffff">Xem thêm về anyLEARN</span></p>
                                         </div>
                                     </div>
-
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div>
                                             <div style="padding-top:8px;text-align:center"><span
@@ -353,7 +314,6 @@
                                                             class="CToWUd" data-bit="iit"></a></span></div>
                                         </div>
                                     </div>
-
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="line-height:20px;font-size:1px">&nbsp;</div>
                                     </div>
@@ -361,14 +321,11 @@
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="line-height:1px;font-size:1px">&nbsp;</div>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
-
             </td>
         </tr>
     </tbody>

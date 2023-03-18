@@ -433,18 +433,9 @@ class TransactionController extends Controller
             ->orderBy('id', 'desc')
             ->first();
         if ($openOrder) {
-            $orderDetails = DB::table('order_details AS od')
-                ->join('items', 'items.id', '=', 'od.item_id')
-                // ->leftjoin('i18n_contents', 'i18n_contents.content_id', '=', 'od.item_id')
-                ->join('users AS u2', 'u2.id', '=', 'od.user_id')
-                // ->join('order_item_extras AS extra','extra.order_detail_id','=','od.id')
-                ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
-                // ->where('i18n_contents.tbl', 'items')
-                // ->where('i18n_contents.col', 'title')
-                ->where('od.order_id', $openOrder->id)
-                ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name', 'u2.name as childName', 'u2.id as childId', 'items.is_paymentfee')
-                ->get();
-            // dd($openOrder);
+            $transService = new TransactionService();
+            $orderDetails = $transService->orderDetailsToDisplay($openOrder->id);
+
             $this->data['order'] = $openOrder;
             $this->data['detail'] = $orderDetails;
             $pointUsed = Transaction::where('type', ConfigConstants::TRANSACTION_EXCHANGE)
@@ -703,18 +694,16 @@ class TransactionController extends Controller
             return redirect('/')->with('notify', __('Bạn không có đơn hàng nào, hãy thử tìm một khoá học và đăng ký trước nhé.'));
         }
 
-        if (!$this->data['isApp']) {
+        if ($request->get('_user')) {
+            $user = $request->get('_user');
+            $this->data['api_token'] = $user->api_token;
+        } else {
             $user = Auth::user();
-            if ($order->user_id != $user->id) {
-                return redirect("/");
-            }
+            $this->data['api_token'] = null;
         }
-        $orderDetails = DB::table('order_details AS od')
-            ->join('items', 'items.id', '=', 'od.item_id')
-            ->leftJoin('items as i2', 'i2.id', '=', 'items.item_id')
-            ->where('od.order_id', $order->id)
-            ->select('od.*', 'items.title', 'items.image', 'i2.title AS class_name')
-            ->get();
+        $this->data['user'] = $user;
+        $transService = new TransactionService();
+        $orderDetails = $transService->orderDetailsToDisplay($orderId);
 
         $this->data['order'] = $order;
         $this->data['detail'] = $orderDetails;
