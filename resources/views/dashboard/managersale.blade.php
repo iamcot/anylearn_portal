@@ -53,7 +53,7 @@
                         <button type="button" name="quarter" id="quarter"
                             class="btn btn-outline-primary mx-1">Quý</button>
                         <a href="{{ route('dashboard') }}" class="btn btn-warning mx-1">Xóa Bộ Lọc</a>
-                        <button type="button" class="btn btn-primary mx-1">Xem biểu đồ</button>
+                        {{-- <button type="button" class="btn btn-primary mx-1">Xem biểu đồ</button> --}}
                     </div>
 
                 </div>
