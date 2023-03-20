@@ -5,7 +5,7 @@
 @php ( $role = Auth::user()->role )
 <ul class="navbar-nav bg-gradient-{{ env('MAIN_COLOR', 'primary') }} sidebar sidebar-dark accordion d-print-none" id="accordionSidebar">
     <!-- Sidebar - Brand -->
-    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'mod' || auth()->user()-> =='sale_manager')
+    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'mod' || auth()->user()->role =='sale_manager')
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-book-open"></i>
