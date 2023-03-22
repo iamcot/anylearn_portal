@@ -72,7 +72,11 @@
                                     <p class="card-text">
                                         {{ $data->short_content}}
                                     </p>
-                                    <a href="#" class="btn btn-outline-success position-absolute bottom-0 end-0">Tiếp nhận học viên</a>
+                                    @if ($data->confirm_count == 0)
+                                    <a href="{{ route('class.author.confirmjoin' , ['itemId' =>  $data->itemId ]) }}?join_user={{ $data->userId }}" class="btn btn-success btn-sm button-0 end-0 float-right">Xác nhận tham gia</a>
+                                    @else
+                                    <a class="btn btn-outline-success position-absolute bottom-0 end-0" disabled>Đã tiếp nhận</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>

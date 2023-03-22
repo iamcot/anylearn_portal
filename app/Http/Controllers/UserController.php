@@ -402,19 +402,25 @@ class UserController extends Controller
                 ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
                 ->where('order_details.id', $id)
                 ->select(
+                    'items.id as itemId',
                     'items.title',
                     'items.short_content',
                     'items.image as iimage',
                     'users.image as uimage',
                     'users.introduce',
                     'users.name',
-                    'users.id',
+                    'users.id as userId',
                     'users.phone',
                     'users.email',
                     'users.address',
-                    'order_details.created_at'
+                    'order_details.created_at',
+                    DB::raw('(SELECT count(*) FROM participations
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
+            GROUP BY participations.item_id
+            ) AS confirm_count'),
                 )
                 ->first();
+                // dd($data);
             $this->data['data'] = $data;
 
             return view(env('TEMPLATE', '') . 'me.admitstudent', $this->data);

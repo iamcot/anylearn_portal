@@ -502,6 +502,7 @@ class ClassController extends Controller
         ->select('order_details.id')
         ->first();
         $itemServ = new ItemServices();
+
         try {
             $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);
         } catch (\Exception $ex) {
