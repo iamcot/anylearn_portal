@@ -1,5 +1,7 @@
 body {
-    font-family: 'Quicksand', sans-serif;
+    /* font-family: 'Quicksand', sans-serif; */
+    font-family: 'Sarabun';
+
     /* background-color: #F1F1F1; */
 }
 
@@ -1143,4 +1145,73 @@ footer .head_text {
     #landing-banner>div {
         padding-top: 100px;
     }
+}
+footer {
+    background-color: #F8F8F8;
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+footer h4 {
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+footer ul li {
+    margin-bottom: 10px;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer ul li {
+    margin-bottom: 10px;
+}
+
+footer ul li a {
+    color: #888;
+    text-decoration: none;
+}
+
+footer ul li a:hover {
+    color: #555;
+}
+
+footer .social-links a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: #ccc;
+    color: #fff;
+    font-size: 20px;
+    line-height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+footer .social-links a:hover {
+    background: #555;
+}
+
+footer .app-links {
+    margin-top: 20px;
+}
+
+footer .app-links p {
+    color: #555;
+}
+footer a {
+    color: #555;
 }
