@@ -401,6 +401,7 @@ class UserController extends Controller
                 ->join('items', 'items.id', '=', 'order_details.item_id')
                 ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
                 ->where('order_details.id', $id)
+                ->where('items.user_id',auth()->user()->id)
                 ->select(
                     'items.id as itemId',
                     'items.title',
