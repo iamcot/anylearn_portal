@@ -76,6 +76,7 @@ Route::get('/anylog.gif', 'CrmController@anylog')->name('anylog');
 Auth::routes();
 Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
+    Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
     Route::get('/profile', 'UserController@meProfile')->name('me.profile');
     Route::get('/class', 'ClassController@list')->name('me.class');
     Route::any('/class/create', 'ClassController@create')->name('me.class.create');

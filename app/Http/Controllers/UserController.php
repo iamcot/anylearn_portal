@@ -391,7 +391,38 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view('user.member_edit', $this->data);
     }
+    public function admitstudent(Request $request)
+    {
+        if ($request->input('check')) {
+            $input = $request->all();
+            $id = $input['id'];
+            $data = DB::table('order_details')
+                ->join('users', 'users.id', '=', 'order_details.user_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                ->where('order_details.id', $id)
+                ->select(
+                    'items.title',
+                    'items.short_content',
+                    'items.image as iimage',
+                    'users.image as uimage',
+                    'users.introduce',
+                    'users.name',
+                    'users.id',
+                    'users.phone',
+                    'users.email',
+                    'users.address',
+                    'order_details.created_at'
+                )
+                ->first();
+            $this->data['data'] = $data;
 
+            return view(env('TEMPLATE', '') . 'me.admitstudent', $this->data);
+        }
+        $this->data['data'] = null;
+
+        return view(env('TEMPLATE', '') . 'me.admitstudent', $this->data);
+    }
     public function modCreate(Request $request)
     {
         if ($request->input('save')) {
@@ -598,7 +629,7 @@ class UserController extends Controller
             }
             if ($request->get('user_id')) {
                 return redirect()->route('location', ['user_id' => $request->get('user_id')])->with('notify', "Cập nhật địa chỉ thành công");
-            } 
+            }
             return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
         }
         $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
@@ -653,7 +684,7 @@ class UserController extends Controller
             }
             if ($request->get('user_id')) {
                 return redirect()->route('location', ['user_id' => $request->get('user_id')])->with('notify', "Cập nhật địa chỉ thành công");
-            } 
+            }
             return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();

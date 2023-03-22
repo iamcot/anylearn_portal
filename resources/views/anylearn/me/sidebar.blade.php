@@ -14,6 +14,11 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
     <div class="sidebar-heading">
         @lang('Chức năng đối tác')
     </div>
+    <li class="nav-item {{ in_array($route,['me.admitstudent']) ? 'active' : ''}}">
+        <a class="nav-link" href="{{ route('me.admitstudent') }}" data-spm="nav.class">
+            <i class="fas fa-user-shield"></i>
+            <span>@lang('TIẾP NHẬN HỌC VIÊN')</span></a>
+    </li>
     <li class="nav-item {{ in_array($route,
         ['location', 'location.create', 'location.edit', 'me.contract', 'helpcenter.parnter.index'
         , 'me.transactionhistory', 'me.class', 'me.class.create', 'me.class.edit', 'me.introduce']) ? 'active' : '' }}">
