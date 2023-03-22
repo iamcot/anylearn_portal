@@ -110,9 +110,9 @@
         <a class="d-lg-none navbar-brand ">
             <img src="/cdn/anylearn/img/logo-color.svg" alt="" height="59">
         </a>
-        <a class="d-none d-lg-block navbar-brand background-over" href="/">
+        <a class="d-none d-lg-block navbar-brand" href="/">
             <div>
-                <img src="/cdn/anylearn/img/logo-white.svg" alt="" height="59">
+                <img src="/cdn/anylearn/img/logo-color.svg" alt="" height="59">
             </div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar10">
