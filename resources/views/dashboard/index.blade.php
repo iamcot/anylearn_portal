@@ -53,8 +53,8 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                     <tr>
                         @if($loop->index == 0)
                         <td>Sale\Day</td>
-                        @foreach($row as $day => $col)
                         @endif
+                        @foreach($row as $day => $col)
                         <td>@if($day == 0) @php $saleName = json_decode($col, true)['name']; $saleId = json_decode($col, true)['id']; @endphp {{ $saleName }}
                             @else
                             <a href="{{ route('user.members') . '?sale_id=' . $saleId . '&adate=' . $day }}">{{ $col }}</a>
