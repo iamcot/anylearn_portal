@@ -85,7 +85,7 @@ class ItemServices
             ->orderBy('knowledges.is_top_question', 'desc')
             ->orderby('knowledges.view', 'desc')
             ->select('knowledges.*')
-            ->take(8)->get();
+            ->take(5)->get();
             return $topKnowledge;
     }
     public function footerNews()
