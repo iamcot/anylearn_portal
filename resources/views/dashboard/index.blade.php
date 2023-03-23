@@ -49,10 +49,19 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
             <div class="card-body p-0" style="min-height: 300px;">
 
                 <table class="table table-responsive table-striped table-freeze-col table-bordered">
-                    @foreach($dashServ->saleReport() as $row)
+                    @foreach($dashServ->saleReport() as $index => $row)
                     <tr>
                         @foreach($row as $day => $col)
-                        <td>@if($day == 0)  @php $saleName = json_decode($col, true)['name']; $saleId = json_decode($col, true)['id']; @endphp {{ $saleName }} @else <a href="{{ route('user.members') . '?sale_id=' . $saleId . '&adate=' . $day }}">{{ $col }}</a> @endif</td>
+                        <td>@if ($index == 0)
+                            {{ $col }}
+                            @else 
+                                @if($day == 0)
+                                @php $saleName = json_decode($col, true)['name']; $saleId = json_decode($col, true)['id']; @endphp {{ $saleName }}
+                                @else
+                                <a href="{{ route('user.members') . '?sale_id=' . $saleId . '&adate=' . $day }}">{{ $col }}</a>
+                                @endif
+                            @endif
+                        </td>
                         @endforeach
                     </tr>
                     @endforeach

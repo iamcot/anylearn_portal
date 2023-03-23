@@ -323,7 +323,7 @@ class DashboardServices
                 foreach (array_keys($days) as $d) {
                     $daysHeader[] = date('d/m', strtotime($d));
                 }
-                $report[] = ['Sales'] + $daysHeader;
+                $report[] = array_merge(['Sales'], $daysHeader);
                 $hasHeader = true;
             }
             $report[] = [$saleName] + $days;
