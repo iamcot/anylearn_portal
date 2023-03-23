@@ -30,7 +30,7 @@
             </div>
             <div class="col-sm-3">
                 <h4>THANH TOÁN</h4>
-                <img src="/cdn/img/visa.png" width="20%" class="img-fluid">
+                <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/onepay.png" width="20%" class="img-fluid">
                 {{-- <img src="/cdn/img/thong-bao-website-voi-bo-cong-thuong_grande.png" width="60%" class="img-fluid"> --}}
