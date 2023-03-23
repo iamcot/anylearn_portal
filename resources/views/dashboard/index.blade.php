@@ -52,7 +52,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                     @foreach($dashServ->saleReport() as $row)
                     <tr>
                         @foreach($row as $day => $col)
-                        @if($loop->first()) 
+                        @if($loop->index == 0) 
                         <td>Sale\Day</td>
                         @endif
                         <td>@if($day == 0)  @php $saleName = json_decode($col, true)['name']; $saleId = json_decode($col, true)['id']; @endphp {{ $saleName }} 
