@@ -7,7 +7,7 @@
                 <ul>
                     <ul class="row">
                         @foreach ($itemServ->footertopKnowledge() as $knowledge)
-                            <li class="col-xs-12 col-md-6"><a class=" text-black"
+                            <li class="col-xs-12 col-md-12"><a class=" text-black"
                                     href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url]) }}">{{ $knowledge->title }}</a>
                             </li>
                         @endforeach
