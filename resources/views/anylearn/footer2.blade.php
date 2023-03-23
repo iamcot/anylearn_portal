@@ -28,7 +28,7 @@
                 <h4>TIN TỨC</h4>
                 <ul class="list-unstyled text-secondary">
                     @foreach($itemServ->footerNews() as $news)
-                    <li><p><a data-spm="footer-news.{{ $news->id }}" href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></p></li>
+                    <p><a data-spm="footer-news.{{ $news->id }}" href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none"><li>{{ $news->title }}</li></a></p>
                     @endforeach
                 </ul>
             </div>
