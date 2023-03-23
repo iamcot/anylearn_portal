@@ -75,7 +75,7 @@ class ItemServices
 
     public function footerNews()
     {
-        return Article::where('status', 1)->orderby('id', 'desc')->take(2)->get();
+        return Article::where('status', 1)->orderby('id', 'desc')->take(5)->get();
     }
 
     public function checkoutHasScheduleBox($item)
