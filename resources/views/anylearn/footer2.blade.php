@@ -12,22 +12,8 @@
                             </li>
                         @endforeach
                     </ul>
-                    {{-- <a href="/helpcenter">
-                        <li>Trung Tâm Trợ Giúp </li>
-                    </a>
-                    <a href="/helpcenter/5/anypoint-la-gi.html">
-                        <li>anyPOINT là gì?</li>
-                    </a> --}}
                 </ul>
-                <h4>THEO DÕI CHÚNG TÔI</h4>
-                <div class="social-links">
-                    <a target="_blank" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><img
-                            src="/cdn/img/youtube.png" alt=""></a>
-                    <a target="_blank" href="https://www.facebook.com/anylearnhockhonggioihan"><img
-                            src="/cdn/img/facebook.png" alt=""></a>
-                    <a target="_blank" href="https://zalo.me/0374900344"><img src="/cdn/img/zalo.png"
-                            alt=""></a>
-                </div>
+
             </div>
             <div class="col-sm-3">
                 <h4>ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
@@ -39,7 +25,7 @@
                         <li>Chính Sách Bảo Mật</li>
                     </a>
                 </ul>
-                <h4>
+                <h4 class="mt-2">
                     <p>TẢI ỨNG DỤNG anyLEARN</p>
                 </h4>
                 <div class="app-links">
@@ -62,6 +48,15 @@
                 <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/onepay.png" width="20%" class="img-fluid">
+                <h4 class="mt-2">THEO DÕI CHÚNG TÔI</h4>
+                <div class="social-links">
+                    <a target="_blank" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><img
+                            src="/cdn/img/youtube.png" alt=""></a>
+                    <a target="_blank" href="https://www.facebook.com/anylearnhockhonggioihan"><img
+                            src="/cdn/img/facebook.png" alt=""></a>
+                    <a target="_blank" href="https://zalo.me/0374900344"><img src="/cdn/img/zalo.png"
+                            alt=""></a>
+                </div>
             </div>
             {{-- <div class="col-sm-3 mt-2">
 
