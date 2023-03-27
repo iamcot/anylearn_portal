@@ -44,13 +44,13 @@ class DashboardController extends Controller
                         $data->orderByDesc('od.created_at');
                         break;
                     case 'seller':
-                        $data->orderBy('u2.seller_name');
+                        $data->orderBy('u2.name');
                         break;
                     case 'product':
                         $data->orderByDesc('i.title');
                         break;
                     case 'buyer':
-                        $data->orderBy('u1.buyer_name');
+                        $data->orderBy('u1.name');
                         break;
                     case 'price':
                         $data->orderBy('od.unit_price');
