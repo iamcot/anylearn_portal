@@ -22,7 +22,7 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $userM = new User();
         $this->data['navText'] = __('Bảng thông tin');
@@ -30,11 +30,37 @@ class DashboardController extends Controller
         $userServ = new UserServices();
         $dashServ = new DashboardServices();
         if (auth()->user()->role == UserConstants::ROLE_SALE_MANAGER) {
-            $data =$dashServ->saleManager();
-            // dd($data);
-            $this->data['data'] = $data;
+            $input = $request->all();
+            $saleManager = explode(',', env('SALE_MANAGER'));
+            $data = DB::table('order_details as od')
+                ->select('od.unit_price', 'od.created_at', 'i.title', 'u1.name as buyer_name', 'u2.name as seller_name')
+                ->join('items as i', 'od.item_id', '=', 'i.id')
+                ->join('users as u1', 'od.user_id', '=', 'u1.id')
+                ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
+                ->whereIn('u1.sale_id', $saleManager);
+
+            if ($input != null) {
+                switch ($input['filter']) {
+                    case 'time':
+                        $data->orderBy('od.created_at');
+                        break;
+                    case 'seller':
+                        $data->orderBy('u2.sale_id');
+                        break;
+                    case 'product':
+                        $data->orderBy('i.created_at');
+                        break;
+                    case 'buyer':
+                        $data->orderBy('u1.created_at');
+                        break;
+                    case 'price':
+                        $data->orderBy('od.unit_price');
+                        break;
+                }
+            }
+            $this->data['data'] = $data->paginate(20);
             return view('dashboard.managersale', $this->data);
-        } else if($userServ->isSale()){
+        } else if ($userServ->isSale()) {
             return view('dashboard.sale', $this->data);
         } else if ($userServ->isMod()) {
             return view('dashboard.index', $this->data);
@@ -48,8 +74,8 @@ class DashboardController extends Controller
         $editUser = Auth::user();
         $userService = new UserServices();
 
-            // $input = $request->all();
-            // dd($input);
+        // $input = $request->all();
+        // dd($input);
         if ($request->input('save')) {
             $input = $request->all();
             $input['role'] = $editUser->role;
@@ -76,7 +102,8 @@ class DashboardController extends Controller
         return view('dashboard.feedback', $this->data);
     }
 
-    public function spm(Request $request) {
+    public function spm(Request $request)
+    {
         $this->data['spms'] = Spm::orderby('id', 'desc')->paginate(20);
         $this->data['columns'] = Schema::getColumnListing('spms');
         return view('dashboard.spm', $this->data);

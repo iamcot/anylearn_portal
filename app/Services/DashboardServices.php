@@ -340,7 +340,7 @@ class DashboardServices
             ->join('users as u1', 'od.user_id', '=', 'u1.id')
             ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
             ->whereIn('u1.sale_id',$saleManager)
-            ->get();
+            ->paginate(20);
         // dd($results);
         return $results;
     }

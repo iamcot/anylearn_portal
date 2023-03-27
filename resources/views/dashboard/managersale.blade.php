@@ -10,17 +10,17 @@
                     </div>
                     <div class="col-md-8">
                         <form class="form-check-inline mt-3">
-                            <input type="radio" class="form-check-input mx-2" name="filter" id="radio1" value="time">
+                            <button  class="btn btn-sm btn-outline-secondary mr-2" name="filter"  value="time">
                             Theo
                             thời gian
-                            <input type="radio" class="form-check-input mx-2" name="filter" id="radio2"
+                            <button class="btn btn-sm btn-outline-secondary mr-2" name="filter"
                                 value="seller"> Theo người
                             bán
-                            <input type="radio" class="form-check-input mx-2" name="filter" id="radio3"
+                            <button  class="btn btn-sm btn-outline-secondary mr-2" name="filter"
                                 value="product"> Theo khóa học
-                            <input type="radio" class="form-check-input mx-2" name="filter" id="radio4"
+                            <button  class="btn btn-sm btn-outline-secondary mr-2" name="filter"
                                 value="buyer"> Theo khách hàng
-                            <input type="radio" class="form-check-input mx-2" name="filter" id="radio5"
+                            <button class="btn btn-sm btn-outline-secondary mr-2" name="filter"
                                 value="price"> Theo giá tiền
                         </form>
 
@@ -145,6 +145,9 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="card-footer">
+                {{ $data->links() }}
             </div>
             {{-- </div> --}}
         </div>
