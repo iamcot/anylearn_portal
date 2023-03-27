@@ -10,41 +10,38 @@
                     </div>
                     <div class="col-md-8">
                         <form class="form-check-inline mt-3">
-                            <button  class="btn btn-sm btn-outline-secondary mr-2" name="filter"  value="time">
-                            Theo
-                            thời gian
-                            <button class="btn btn-sm btn-outline-secondary mr-2" name="filter"
-                                value="seller"> Theo người
-                            bán
-                            <button  class="btn btn-sm btn-outline-secondary mr-2" name="filter"
-                                value="product"> Theo khóa học
-                            <button  class="btn btn-sm btn-outline-secondary mr-2" name="filter"
-                                value="buyer"> Theo khách hàng
-                            <button class="btn btn-sm btn-outline-secondary mr-2" name="filter"
-                                value="price"> Theo giá tiền
+                            <button class="btn btn-sm btn-outline-secondary mr-2" name="filter" value="time">
+                                Theo
+                                thời gian
+                                <button class="btn btn-sm btn-outline-secondary mr-2" name="filter" value="seller"> Theo
+                                    người
+                                    bán
+                                    <button class="btn btn-sm btn-outline-secondary mr-2" name="filter" value="product">
+                                        Theo khóa học
+                                        <button class="btn btn-sm btn-outline-secondary mr-2" name="filter" value="buyer">
+                                            Theo khách hàng
+                                            <button class="btn btn-sm btn-outline-secondary mr-2" name="filter"
+                                                value="price"> Theo giá tiền
                         </form>
 
                     </div>
                 </div>
                 <!-- Filter -->
                 <div class="my-3">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <input type="date" class="form-control mx-1" name="start_date" id="start_date">
+                    <form action="">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="date" class="form-control mx-1" name="start_date" id="start_date">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" class="form-control mx-1" name="end_date" id="end_date">
+                            </div>
+                            <button name="time" value="week" class="btn btn-outline-primary mx-1">Tuần</button>
+                            <button name="time" value="month" class="btn btn-outline-primary mx-1">Tháng</button>
+                            <button name="time" value="quarter" class="btn btn-outline-primary mx-1">Quý</button>
+                            <a href="{{ route('dashboard') }}" class="btn btn-warning mx-1">Xóa Bộ Lọc</a>
                         </div>
-                        <div class="col-md-2">
-                            <input type="date" class="form-control mx-1" name="end_date" id="end_date">
-                        </div>
-                        <button type="button" name="week" id="week"
-                            class="btn btn-outline-primary mx-1">Tuần</button>
-                        <button type="button" name="month" id="month"
-                            class="btn btn-outline-primary mx-1">Tháng</button>
-                        <button type="button" name="quarter" id="quarter"
-                            class="btn btn-outline-primary mx-1">Quý</button>
-                        <a href="{{ route('dashboard') }}" class="btn btn-warning mx-1">Xóa Bộ Lọc</a>
-                        {{-- <button type="button" class="btn btn-primary mx-1">Xem biểu đồ</button> --}}
-                    </div>
-
+                    </form>
                 </div>
                 <!-- Nội dung -->
                 <div class="row">
@@ -136,11 +133,11 @@
                     <tbody>
                         @foreach ($data as $row)
                             <tr>
-                                <td>{{ $row->seller_name}}</td>
+                                <td>{{ $row->seller_name }}</td>
                                 <td>{{ $row->title }}</td>
-                                <td>{{ $row->unit_price}}</td>
-                                <td>{{ $row->buyer_name}}</td>
-                                <td>{{ $row->created_at}}</td>
+                                <td>{{ $row->unit_price }}</td>
+                                <td>{{ $row->buyer_name }}</td>
+                                <td>{{ $row->created_at }}</td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -38,23 +38,46 @@ class DashboardController extends Controller
                 ->join('users as u1', 'od.user_id', '=', 'u1.id')
                 ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
                 ->whereIn('u1.sale_id', $saleManager);
-
-            if ($input != null) {
+            if ($request->input('filter')) {
                 switch ($input['filter']) {
                     case 'time':
-                        $data->orderBy('od.created_at');
+                        $data->orderByDesc('od.created_at');
                         break;
                     case 'seller':
-                        $data->orderBy('u2.sale_id');
+                        $data->orderBy('u2.seller_name');
                         break;
                     case 'product':
-                        $data->orderBy('i.created_at');
+                        $data->orderByDesc('i.title');
                         break;
                     case 'buyer':
-                        $data->orderBy('u1.created_at');
+                        $data->orderBy('u1.buyer_name');
                         break;
                     case 'price':
                         $data->orderBy('od.unit_price');
+                        break;
+                }
+            }
+            if ($request->input('time')) {
+                switch ($input['time']) {
+                    case 'week':
+                        $data->whereBetween('od.created_at', [
+                            \Carbon\Carbon::now()->startOfWeek(),
+                            \Carbon\Carbon::now()->endOfWeek()
+                        ]);
+
+                        break;
+                    case 'month':
+                        $data->whereBetween('od.created_at', [
+                            \Carbon\Carbon::now()->startOfMonth(),
+                            \Carbon\Carbon::now()->endOfMonth()
+                        ]);
+
+                        break;
+                    case 'quarter':
+                        $quarter = ceil(\Carbon\Carbon::now()->month / 3);
+                        $start = \Carbon\Carbon::createFromDate(\Carbon\Carbon::now()->year, ($quarter - 1) * 3 + 1, 1)->startOfDay();
+                        $end = $start->copy()->addMonths(3)->subSeconds(1)->endOfDay();
+                        $data->whereBetween('od.created_at', [$start, $end]);
                         break;
                 }
             }
