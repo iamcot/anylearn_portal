@@ -1,16 +1,5 @@
 @inject('dashServ', 'App\Services\DashboardServices')
 @extends('layout')
-<style>
-    .my-custom-scrollbar {
-        position: relative;
-        height: 300px;
-        overflow: auto;
-    }
-
-    .table-wrapper-scroll-y {
-        display: block;
-    }
-</style>
 @section('body')
     <div class="container-fluid">
         <div class="card">
@@ -145,162 +134,19 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($data as $row)
+                            <tr>
+                                <td>{{ $row->seller_name}}</td>
+                                <td>{{ $row->title }}</td>
+                                <td>{{ $row->unit_price}}</td>
+                                <td>{{ $row->buyer_name}}</td>
+                                <td>{{ $row->created_at}}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
             {{-- </div> --}}
         </div>
     </div>
-@endsection
-@section('jscript')
-    @parent
-    <script>
-        $(function() {
-            var originalData = <?php echo json_encode($data); ?>;
-            var data = <?php echo json_encode($data); ?>;
-            var tbody = $("#my-table tbody");
-
-            function renderTable(data) {
-                // Xóa hết các phần tử trong tbody
-                tbody.empty();
-                const buyerCount = new Map();
-                // Tạo lại nội dung bảng HTML từ dữ liệu đã được sắp xếp
-                var total_sales = 0;
-                var order = 0;
-
-                $.each(data, function(index, row) {
-                    var tr = $("<tr>");
-                    tr.append($("<td>").text(row.seller_name));
-                    tr.append($("<td width='40%'>").text(row.title));
-                    var unit_price = parseFloat(row.unit_price);
-                    tr.append($("<td>").text(unit_price.toLocaleString('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    })));
-                    tr.append($("<td>").text(row.buyer_name));
-                    tr.append($("<td>").text(row.created_at));
-                    tbody.append(tr);
-
-                    if (buyerCount.has(row.buyer_name)) {
-                        buyerCount.set(row.buyer_name, buyerCount.get(row.buyer_name) + 1);
-                    } else {
-                        buyerCount.set(row.buyer_name, 1);
-                    }
-                    // Cập nhật tổng tiền bán hàng
-                    order++;
-                    total_sales += unit_price;
-                });
-                document.getElementById('total_sales').innerHTML = total_sales.toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                });
-                var total_customer = 0;
-                // Hiển thị số lần xuất hiện của mỗi buyer_name
-                buyerCount.forEach((count, buyerName) => {
-                    total_customer++;
-                });
-                document.getElementById('total_customer').innerHTML = total_customer;
-                document.getElementById('total_order').innerHTML = order;
-                document.getElementById('total').innerHTML = order;
-            }
-            // Xử lý sự kiện khi checkbox được click
-            $(document).on("click", "input[name='filter']", function() {
-                var filterValue = $(this).val();
-                filterAndApplyFilters(null, filterValue);
-            });
-
-            // Lọc dữ liệu theo khoảng thời gian và sử dụng bộ lọc khác
-            $(document).on('change', "input[name='start_date'],input[name='end_date']", function() {
-                filterAndApplyFilters(null, null);
-            });
-
-
-            $(document).on("click", "button[name=week]", function() {
-                filterAndApplyFilters("week", null);
-            });
-
-            $(document).on("click", "button[name=month]", function() {
-                filterAndApplyFilters("month", null);
-            });
-
-            $(document).on("click", "button[name=quarter]", function() {
-                filterAndApplyFilters("quarter", null);
-            });
-
-            function filterAndApplyFilters(timeRange, filterValue) {
-                var startDate, endDate;
-                if (timeRange !== null) {
-                    // Tính toán startDate và endDate dựa trên timeRange
-                    if (timeRange === "week") {
-                        startDate = new Date();
-                        startDate.setHours(0, 0, 0, 0);
-                        startDate.setDate(startDate.getDate() - startDate.getDay());
-                        endDate = new Date();
-                        endDate.setHours(23, 59, 59, 999);
-                        endDate.setDate(startDate.getDate() + 6);
-                        const startDateStr = startDate.toISOString().split('T')[0];
-                        const endDateStr = endDate.toISOString().split('T')[0];
-                        document.querySelector("input[name='start_date']").setAttribute("value", startDateStr);
-                        document.querySelector("input[name='end_date']").setAttribute("value", endDateStr);
-
-                    } else if (timeRange === "month") {
-                        startDate = new Date();
-                        startDate.setDate(1);
-                        startDate.setHours(0, 0, 0, 0);
-                        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-                        endDate.setHours(23, 59, 59, 999);
-                        const startDateStr = startDate.toISOString().split('T')[0];
-                        const endDateStr = endDate.toISOString().split('T')[0];
-                        document.querySelector("input[name='start_date']").setAttribute("value", startDateStr);
-                        document.querySelector("input[name='end_date']").setAttribute("value", endDateStr);
-                    } else if (timeRange === "quarter") {
-                        var currentDate = new Date();
-                        var currentQuarter = Math.floor((currentDate.getMonth() / 3));
-                        startDate = new Date(currentDate.getFullYear(), currentQuarter * 3, 1);
-                        startDate.setHours(0, 0, 0, 0);
-                        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 3, 0);
-                        endDate.setHours(23, 59, 59, 999);
-                        const startDateStr = startDate.toISOString().split('T')[0];
-                        const endDateStr = endDate.toISOString().split('T')[0];
-                        document.querySelector("input[name='start_date']").setAttribute("value", startDateStr);
-                        document.querySelector("input[name='end_date']").setAttribute("value", endDateStr);
-                    }
-
-                } else {
-                    startDate = new Date(document.getElementById('start_date').value).getTime();
-                    endDate = new Date(document.getElementById('end_date').value).getTime();
-                }
-                // Lọc dữ liệu theo khoảng thời gian này
-                var filteredData = data.filter(function(row) {
-                    var rowDate = new Date(row.created_at);
-                    return rowDate >= startDate && rowDate <= endDate;
-                });
-                // Áp dụng bộ lọc khác nếu có
-                if (filterValue === "time") {
-                    filteredData.sort(function(a, b) {
-                        return new Date(b.created_at) - new Date(a.created_at);
-                    });
-                } else if (filterValue === "seller") {
-                    filteredData.sort(function(a, b) {
-                        return a.seller_name.localeCompare(b.seller_name);
-                    });
-                } else if (filterValue === "product") {
-                    filteredData.sort(function(a, b) {
-                        return a.title.localeCompare(b.title);
-                    });
-                } else if (filterValue === "buyer") {
-                    filteredData.sort(function(a, b) {
-                        return a.buyer_name.localeCompare(b.buyer_name);
-                    });
-                } else if (filterValue === "price") {
-                    filteredData.sort(function(a, b) {
-                        return a.unit_price - b.unit_price;
-                    });
-                }
-
-                renderTable(filteredData);
-            }
-            renderTable(data);
-        });
-    </script>
 @endsection

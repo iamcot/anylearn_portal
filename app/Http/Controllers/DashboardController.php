@@ -31,6 +31,7 @@ class DashboardController extends Controller
         $dashServ = new DashboardServices();
         if (auth()->user()->role == UserConstants::ROLE_SALE_MANAGER) {
             $data =$dashServ->saleManager();
+            // dd($data);
             $this->data['data'] = $data;
             return view('dashboard.managersale', $this->data);
         } else if($userServ->isSale()){
