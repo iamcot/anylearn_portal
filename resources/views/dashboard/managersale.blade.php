@@ -65,7 +65,7 @@
                                                 <strong id="total_sales">
                                                     @if ($data2 != null)
                                                     @foreach ($data2 as $row)
-                                                    {{ $data2->row }}
+                                                    {{ $row->total_unit_price }}
                                                     @endforeach
                                                     @endif
                                                 </strong>
