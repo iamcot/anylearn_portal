@@ -84,6 +84,7 @@ class CrmController extends Controller
                 SaleActivity::create([
                     'type' => SaleActivity::TYPE_CALL,
                     'sale_id' => Auth::user()->id,
+                    'content' => $data['content'],
                     'member_id' => $data['memberId'],
                     'logwork' => $data['logwork'],
                     'created_at' => $data['date'] . ' ' . $data['time'] . ":00"

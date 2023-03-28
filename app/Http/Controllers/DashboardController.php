@@ -38,6 +38,19 @@ class DashboardController extends Controller
                 ->join('users as u1', 'od.user_id', '=', 'u1.id')
                 ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
                 ->whereIn('u1.sale_id', $saleManager);
+            $data2 = DB::table('order_details as od')
+            ->selectRaw('SUM(od.unit_price) as total_unit_price, GROUP_CONCAT(DISTINCT u1.name) as buyer_names')
+            ->join('items as i', 'od.item_id', '=', 'i.id')
+            ->join('users as u1', 'od.user_id', '=', 'u1.id')
+            ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
+            ->whereIn('u1.sale_id', $saleManager)
+            ->groupBy('od.unit_price');
+            $data3 = DB::table('order_details as od')
+            ->join('items as i', 'od.item_id', '=', 'i.id')
+            ->join('users as u1', 'od.user_id', '=', 'u1.id')
+            ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
+            ->whereIn('u1.sale_id', $saleManager);
+            $data4 = $data3->count();
             if ($request->input('filter')) {
                 switch ($input['filter']) {
                     case 'time':
@@ -64,24 +77,48 @@ class DashboardController extends Controller
                             \Carbon\Carbon::now()->startOfWeek(),
                             \Carbon\Carbon::now()->endOfWeek()
                         ]);
-
+                        $data2->whereBetween('od.created_at', [
+                            \Carbon\Carbon::now()->startOfWeek(),
+                            \Carbon\Carbon::now()->endOfWeek()
+                        ]);
+                        $data3->whereBetween('od.created_at', [
+                            \Carbon\Carbon::now()->startOfWeek(),
+                            \Carbon\Carbon::now()->endOfWeek()
+                        ]);
                         break;
                     case 'month':
                         $data->whereBetween('od.created_at', [
                             \Carbon\Carbon::now()->startOfMonth(),
                             \Carbon\Carbon::now()->endOfMonth()
                         ]);
-
+                        $data2->whereBetween('od.created_at', [
+                            \Carbon\Carbon::now()->startOfMonth(),
+                            \Carbon\Carbon::now()->endOfMonth()
+                        ]);
+                        $data3->whereBetween('od.created_at', [
+                            \Carbon\Carbon::now()->startOfMonth(),
+                            \Carbon\Carbon::now()->endOfMonth()
+                        ]);
                         break;
                     case 'quarter':
                         $quarter = ceil(\Carbon\Carbon::now()->month / 3);
                         $start = \Carbon\Carbon::createFromDate(\Carbon\Carbon::now()->year, ($quarter - 1) * 3 + 1, 1)->startOfDay();
                         $end = $start->copy()->addMonths(3)->subSeconds(1)->endOfDay();
                         $data->whereBetween('od.created_at', [$start, $end]);
+                        $data2->whereBetween('od.created_at', [$start, $end]);
+                        $data3->whereBetween('od.created_at', [$start, $end]);
+                        break;
+                    case 'ip':
+                        $data->whereBetween('od.created_at', [$input['start_date'], $input['end_date']]);
+                        $data2->whereBetween('od.created_at', [$input['start_date'], $input['end_date']]);
+                        $data3->whereBetween('od.created_at', [$input['start_date'], $input['end_date']]);
                         break;
                 }
             }
             $this->data['data'] = $data->paginate(20);
+            $this->data['data2'] = $data2->first();
+            $this->data['data3'] = $data3->count();
+            $this->data['data4'] = $data4;
             return view('dashboard.managersale', $this->data);
         } else if ($userServ->isSale()) {
             return view('dashboard.sale', $this->data);
