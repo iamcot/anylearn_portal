@@ -63,7 +63,9 @@
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total_sales">
+                                                    @if (isset($totalUnitPrice))
                                                     {{ number_format($totalUnitPrice)}}
+                                                    @endif
                                                 </strong>
                                             </div>
                                         </div>

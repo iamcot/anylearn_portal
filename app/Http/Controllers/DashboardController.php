@@ -39,15 +39,15 @@ class DashboardController extends Controller
                 ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
                 ->whereIn('u1.sale_id', $saleManager);
             $data2 = DB::table('order_details as od')
-            ->join('items as i', 'od.item_id', '=', 'i.id')
-            ->join('users as u1', 'od.user_id', '=', 'u1.id')
-            ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
-            ->whereIn('u1.sale_id', $saleManager);
+                ->join('items as i', 'od.item_id', '=', 'i.id')
+                ->join('users as u1', 'od.user_id', '=', 'u1.id')
+                ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
+                ->whereIn('u1.sale_id', $saleManager);
             $data3 = DB::table('order_details as od')
-            ->join('items as i', 'od.item_id', '=', 'i.id')
-            ->join('users as u1', 'od.user_id', '=', 'u1.id')
-            ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
-            ->whereIn('u1.sale_id', $saleManager);
+                ->join('items as i', 'od.item_id', '=', 'i.id')
+                ->join('users as u1', 'od.user_id', '=', 'u1.id')
+                ->join('users as u2', 'u1.sale_id', '=', 'u2.id')
+                ->whereIn('u1.sale_id', $saleManager);
             $data4 = $data3->count();
             if ($request->input('filter')) {
                 switch ($input['filter']) {
@@ -113,13 +113,13 @@ class DashboardController extends Controller
                         break;
                 }
             }
-            $dt = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, COUNT(DISTINCT u1.name) as buyer_names')->groupBy('od.unit_price')->first();
+            $dt = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, COUNT(DISTINCT u1.name) as buyer_names')->groupBy('od.unit_price')->get();
             foreach ($dt as $key) {
                 $totalUnitPrice = $key->total_unit_price;
+                $this->data['totalUnitPrice'] = $totalUnitPrice;
             }
             $this->data['data'] = $data->paginate(20);
-            $this->data['totalUnitPrice'] = $totalUnitPrice;
-            $this->data['data2'] = $dt;
+            $this->data['data2'] = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, COUNT(DISTINCT u1.name) as buyer_names')->groupBy('od.unit_price')->first();
             $this->data['data3'] = $data3->count();
             $this->data['data4'] = $data4;
             return view('dashboard.managersale', $this->data);
