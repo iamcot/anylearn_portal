@@ -64,7 +64,9 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total_sales">
                                                     @if ($data2 != null)
-                                                        {{ $data2->total_unit_price }}
+                                                    @foreach ($data2 as $row)
+                                                    {{ $data2->row }}
+                                                    @endforeach
                                                     @endif
                                                 </strong>
                                             </div>
@@ -86,9 +88,9 @@
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total_customer">
-                                                    @if ($data2 != null)
+                                                    {{-- @if ($data2 != null)
                                                         {{ $data2->buyer_names }}
-                                                    @endif
+                                                    @endif --}}
                                                 </strong>
                                             </div>
                                         </div>
