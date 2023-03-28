@@ -149,7 +149,8 @@ class UserController extends Controller
                         if ($exists) {
                             if (!empty($row[2])) {
                                 $data['user_id'] = $row[2];
-                            } else if (!empty($row[3])) {
+                            }  
+                            if (!empty($row[3])) {
                                 $data['sale_id'] = $row[3];
                             }
                             $countUpdate += User::where('phone', $row[1])->update($data);

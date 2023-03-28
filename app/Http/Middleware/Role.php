@@ -20,7 +20,7 @@ class Role
         //     return redirect('login');
         // }
         $role = auth()->user()->role;
-        if(in_array($role,["admin","mod","content","sale","fin","fin_partner","sale_content"])){
+        if(in_array($role,["admin","mod","content","sale","fin","fin_partner","sale_content","sale_manager"])){
             return $next($request);
         }
         // if (auth()->user()->role =="admin" || auth()->user()->role =="mod" || auth()->user()->role =="content" ||auth()->user()->role =="sale" ||auth()->user()->role =="fin") {

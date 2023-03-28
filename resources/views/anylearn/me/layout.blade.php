@@ -18,8 +18,10 @@
     <link href="/cdn/anylearn/fontawesome/css/all.css" rel="stylesheet">
     <link href="/cdn/anylearn/owl.carousel.min.css" rel="stylesheet">
     <link href="/cdn/vendor/jquery/jquery-ui-1.13.2/jquery-ui.min.css" rel="stylesheet">
-    <link href="/cdn/anylearn/style_landing2.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
+    {{-- <link href="/cdn/anylearn/style_landing2.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet"> --}}
     <link href="/cdn/anylearn/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
+    {{-- <link href="/cdn/anylearn/style_landing2.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet"> --}}
+
     @yield('morestyle')
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKEYYJ92SP"></script>
     <script>
