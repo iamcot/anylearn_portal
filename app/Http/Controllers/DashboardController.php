@@ -114,7 +114,7 @@ class DashboardController extends Controller
                 }
             }
             $this->data['data'] = $data->paginate(20);
-            $this->data['data2'] = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, GROUP_CONCAT(DISTINCT u1.name) as buyer_names')->groupBy('od.unit_price')->first();
+            $this->data['data2'] = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, COUNT(u1.name) as buyer_names')->groupBy('od.unit_price')->first();
             $this->data['data3'] = $data3->count();
             $this->data['data4'] = $data4;
             return view('dashboard.managersale', $this->data);
