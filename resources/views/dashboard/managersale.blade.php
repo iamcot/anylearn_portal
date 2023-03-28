@@ -63,11 +63,7 @@
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total_sales">
-                                                    @if ($data2 != null)
-                                                    @foreach ($data2 as $row)
-                                                    {{ $row->total_unit_price }}
-                                                    @endforeach
-                                                    @endif
+                                                    {{ number_format($totalUnitPrice)}}
                                                 </strong>
                                             </div>
                                         </div>
@@ -88,9 +84,9 @@
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total_customer">
-                                                    {{-- @if ($data2 != null)
-                                                        {{ $data2->buyer_names }}
-                                                    @endif --}}
+                                                    @if ($data2 != null)
+                                                        {{ number_format($data2->buyer_names) }}
+                                                    @endif
                                                 </strong>
                                             </div>
                                         </div>
@@ -112,7 +108,7 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total_order">
                                                     @if ($data3 != null)
-                                                        {{ $data3 }}
+                                                        {{ number_format($data3) }}
                                                     @endif
                                                 </strong>
                                             </div>
@@ -135,7 +131,7 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <strong id="total">
                                                     @if ($data4 != null)
-                                                        {{ $data4 }}
+                                                        {{ number_format($data4) }}
                                                     @endif
                                                 </strong>
                                             </div>

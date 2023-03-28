@@ -113,8 +113,10 @@ class DashboardController extends Controller
                         break;
                 }
             }
-            $dt = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, COUNT(DISTINCT u1.name) as buyer_names')->groupBy('od.unit_price')->get();
+            $dt = $data2->selectRaw('SUM(od.unit_price) as total_unit_price, COUNT(DISTINCT u1.name) as buyer_names')->groupBy('od.unit_price')->first();
+            $totalUnitPrice = $dt->total_unit_price;
             $this->data['data'] = $data->paginate(20);
+            $this->data['totalUnitPrice'] = $totalUnitPrice;
             $this->data['data2'] = $dt;
             $this->data['data3'] = $data3->count();
             $this->data['data4'] = $data4;
