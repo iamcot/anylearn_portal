@@ -85,6 +85,9 @@
                             0 - <span id="priceRangeShow">{{ number_format(request()->get('price') ?? 1000000) }}</span>
                         </div>
                         <div class="form-group mb-2">
+                            <input type="text" class="form-control rounded-pill text-secondary" name="s" placeholder="Nhập nội dung tìm kiếm">
+                        </div>
+                        <div class="form-group mb-2">
                             <select class="form-control location-tree rounded-pill text-secondary"
                                 data-next-level="district" name="p">
                                 <option value="">@lang('Tỉnh/Thành Phố')</option>

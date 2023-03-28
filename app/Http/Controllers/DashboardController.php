@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\UserConstants;
 use App\Models\Contract;
 use App\Models\Feedback;
 use App\Models\User;
@@ -24,13 +25,15 @@ class DashboardController extends Controller
     public function index()
     {
         $userM = new User();
-        // if ($userM->needUpdateDocs()) {
-        //     $this->data['warning'] = __('Vui lòng <a href=":url">nhấn vào đây</a> để cập nhật giấy tờ của bạn', ['url' => route('user.update_doc')]);
-        // }
         $this->data['navText'] = __('Bảng thông tin');
         $this->data['user'] = Auth::user();
         $userServ = new UserServices();
-        if ($userServ->isSale()) {
+        $dashServ = new DashboardServices();
+        if (auth()->user()->role == UserConstants::ROLE_SALE_MANAGER) {
+            $data =$dashServ->saleManager();
+            $this->data['data'] = $data;
+            return view('dashboard.managersale', $this->data);
+        } else if($userServ->isSale()){
             return view('dashboard.sale', $this->data);
         } else if ($userServ->isMod()) {
             return view('dashboard.index', $this->data);

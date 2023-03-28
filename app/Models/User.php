@@ -381,7 +381,23 @@ class User extends Authenticatable
             $members = $members
                 ->orderBy('lastsa.last_contact')
                 ->orderBy('id');
-        } else {
+        } elseif ($requester->role == UserConstants::ROLE_SALE_MANAGER) {
+            $members = $members->where(function ($query) use ($requester) {
+                $saleManager = explode(',', env('SALE_MANAGER'));
+                // $d = env('SALE_MANAGER');
+                // dd($d,$saleManager);
+                if (is_array($saleManager)) {
+                    return $query->whereIn('users.sale_id', $saleManager)
+                        ->orWhereIn('users.user_id', $saleManager);
+                } else {
+                    dd("no array");
+                    return $query;
+                }
+            });
+            $members = $members
+                ->orderBy('lastsa.last_contact')
+                ->orderBy('id');
+        } {
             $members = $members->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
                 ->orderby('users.id', 'desc');
@@ -411,7 +427,6 @@ class User extends Authenticatable
                 'users.source',
                 DB::raw("(SELECT content FROM sale_activities WHERE `type` = 'note' AND member_id = users.id ORDER BY sale_activities.id DESC limit 1) AS last_note")
             );
-
         if (!$file) {
             $members = $members->paginate(UserConstants::PP);
         } else {

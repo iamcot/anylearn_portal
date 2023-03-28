@@ -180,11 +180,11 @@ class PageController extends Controller
             }
             if (!$videoServ->checkOrder($itemId) && $lesson->is_free == 2) {
                 return redirect()->to($itemServ->classUrl($itemId))
-                ->with(['notify' => 'Vui lòng đăng ký để xem bài học này']);
+                    ->with(['notify' => 'Vui lòng đăng ký để xem bài học này']);
             }
         }
         $pageData = $videoServ->learnPageData($itemId, $lessonId);
-        
+
         $this->data['itemId'] = $itemId;
         return view(env('TEMPLATE', '') . 'pdp.learn', $this->data, $pageData);
     }
@@ -299,10 +299,14 @@ class PageController extends Controller
         $data['hasSearch'] = false;
         if ($request->get('a') == 'search') {
             $data['hasSearch'] = true;
+            $search = $request->get('s');
             $province = $request->get('p');
             $district = $request->get('d');
             $searchType = $request->get('t');
             $searchCategory = $request->get('c');
+            if ($search) {
+                $listSearch = $listSearch->where('users.name', 'LIKE', "%$search%");
+            }
             if ($province) {
                 $listSearch = $listSearch->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
                     ->where('ul.province_code', $province);
@@ -405,10 +409,14 @@ class PageController extends Controller
         $listSearch = clone ($list);
         if ($request->get('a') == 'search') {
             $data['hasSearch'] = true;
+            $search = $request->get('s');
             $searchType = $request->get('t');
             $searchCategory = $request->get('c');
             $province = $request->get('p');
             $district = $request->get('d');
+            if ($search) {
+                $listSearch = $listSearch->where('users.name', 'LIKE', "%$search%");
+            }
             if ($province) {
                 $listSearch = $listSearch->leftJoin('user_locations AS ul', 'ul.user_id', '=', 'users.id')
                     ->where('ul.province_code', $province);
@@ -551,6 +559,7 @@ class PageController extends Controller
             $searchType = $request->get('t');
             $searchCategory = $request->get('c');
             $searchPrice = $request->get('price');
+
             if ($searchTitle) {
                 $listSearch  = $listSearch->where('title', 'LIKE', "%$searchTitle%");
             }
