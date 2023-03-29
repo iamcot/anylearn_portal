@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\DB;
 
 class Spm extends Model
 {
@@ -61,4 +62,28 @@ class Spm extends Model
 
         return true;
     }
+
+    public function filterSpm(Request $request) {
+
+        $spms = DB::table('spms');
+        
+        if ($request->input('user_id')) {
+            $spms = $spms->where('id', $request->input('user_id'));   
+        }
+
+        if ($request->input('event')) {
+            $spms = $spms->where('event', $request->input('event'));   
+        }
+        
+        if ($request->input('date_from')) {
+            $spms = $spms->whereDate('created_at', '>=', $request->input('date_from'));   
+        }
+
+        if ($request->input('date_to')) {
+            $spms = $spms->where('created_at', '<=', $request->input('date_to'));   
+        }
+
+        return $spms;
+    }
+
 }

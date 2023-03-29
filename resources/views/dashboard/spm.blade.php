@@ -1,7 +1,7 @@
 @extends('layout')
 @section('body')
 <div class="card shadow mb-3">
-    <div class="card-body row">
+    <form class="card-body row">
         <div class="col-xs-6 col-lg-2">
             <div class="form-group">
                 <label for="">ID</label>
@@ -10,8 +10,13 @@
         </div>
         <div class="col-xs-6 col-lg-2">
             <div class="form-group">
-                <label for="">Loại</label>
-                <input value="" type="text" class="form-control" name="user_type" placeholder="Loại người dùng">
+                <label for="">Event</label>
+                <select class=" form-control form-select" name="event">
+                   <option value=""> Danh sách sự kiện</option>
+                   @foreach($events as $eve)
+                   <option value="{{ $eve }}">{{ $eve }}</option>
+                   @endforeach
+                </select>
             </div>
         </div>
         <div class="col-xs-6 col-lg-2">
@@ -27,11 +32,10 @@
             </div>
         </div>
         <div class="col-xs-6 col-lg-2 d-flex flex-column justify-content-end mb-3">   
-            <button class="btn btn-primary align-items-center" name="action" value="search">Filter</button>
+            <button class="btn btn-primary align-items-center" name="action" value="filter">Filter</button>
         </div>
-    </div>
+    </form>
 </div>
-
 <div class="card shadow">
     <div class="card-body p-0">
         <table class="table table-bordered table-responsive table-striped">

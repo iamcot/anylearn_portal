@@ -78,6 +78,13 @@ class DashboardController extends Controller
     public function spm(Request $request) {
         $this->data['spms'] = Spm::orderby('id', 'desc')->paginate(20);
         $this->data['columns'] = Schema::getColumnListing('spms');
+        $this->data['events'] = Spm::select('event')->distinct()->pluck('event');
+        
+        if ($request->input('action') == 'filter') {
+            $spmM = new Spm();
+            $this->data['spms'] = $spmM->filterSpm($request)->paginate(20);        
+        }
+        
         return view('dashboard.spm', $this->data);
     }
 }
