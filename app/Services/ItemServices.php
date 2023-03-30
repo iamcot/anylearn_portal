@@ -72,10 +72,25 @@ class ItemServices
             self::CONTENT_OLD => 'Nội dung của định dạng cũ',
         ]
     ];
-
+    public function footertopKnowledge()
+    {
+        $topKnowledge = DB::table('knowledges')
+            ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledges.knowledge_category_id')
+            ->join('knowledge_topic_category_links', 'knowledge_topic_category_links.knowledge_category_id', '=', 'knowledge_categories.id')
+            ->join('knowledge_topics', 'knowledge_topics.id', '=', 'knowledge_topic_category_links.knowledge_topic_id')
+            ->where('knowledges.status', '>', 0)
+            ->where('knowledge_categories.status', '>', 0)
+            ->where('knowledge_topics.status', '>', 0)
+            ->where('knowledges.type', 'buyer')
+            ->orderBy('knowledges.is_top_question', 'desc')
+            ->orderby('knowledges.view', 'desc')
+            ->select('knowledges.*')
+            ->take(5)->get();
+            return $topKnowledge;
+    }
     public function footerNews()
     {
-        return Article::where('status', 1)->orderby('id', 'desc')->take(4)->get();
+        return Article::where('status', 1)->orderby('id', 'desc')->take(5)->get();
     }
 
     public function checkoutHasScheduleBox($item)

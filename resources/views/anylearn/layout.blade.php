@@ -57,7 +57,7 @@
         @endif
         <section>
             @include('anylearn.widget.notify', ['notify' => session('notify', '')])
-            <div class="container mt-5">
+            <div class="container">
                 @yield('body')
             </div>
         </section>
