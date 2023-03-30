@@ -139,6 +139,32 @@
             </div>
             <div class="card-footer">{{ $memberOrders->links() }}</div>
         </div>
+
+        <div class="card shadow mt-3">
+            <div class="card-header"><strong>Lịch sử nhận điểm thưởng</strong></div>
+            <div class="card-body p-0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Thông tin</th>
+                            <th>Điểm</th>
+                            <th>Ngày nhận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($points as $key => $value)
+                        <tr>
+                            <td class="text-center">{{ $key + 1 }}</td>
+                            <td>{{ $value->content }}</td>
+                            <td>{{ $value->amount / 1000 }}</td>
+                            <td>{{ date('H:i d/m/Y', strtotime($item->created_at)) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
