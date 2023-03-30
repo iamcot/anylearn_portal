@@ -7,6 +7,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\Mail\ActivityMail;
 use App\Models\Ask;
 use App\Models\Configuration;
 use App\Models\Contract;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UserServices
 {
@@ -95,7 +97,16 @@ class UserServices
         $user = Auth::user();
         return in_array($user->role, UserConstants::$saleRoles);
     }
-
+    public function isActivity()
+    {
+        $user = Auth::user();
+        if (in_array($user->id, explode(',', env('ID_ACTIVITY')))) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     public function haveAccess($role, $routeName)
     {
         if (!isset($this->roles[$role])) {
@@ -544,4 +555,14 @@ class UserServices
         $c = User::where('id',$userId)->orWhere('is_child',1)->where('user_id',$userId)->get();
         return $c;
     }
+    public function mailActivity($user)
+    {
+        $data = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone
+        ];
+        Mail::to($user->email)->send(new ActivityMail($data));
+    }
+
 }

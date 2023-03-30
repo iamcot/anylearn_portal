@@ -14,6 +14,7 @@ use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\I18nContent;
 use App\Models\Item;
+use App\Models\ItemActivity;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
 use App\Models\ItemUserAction;
@@ -366,7 +367,18 @@ class ItemServices
             }
         }
     }
-
+    public function activity($type,$input,$itemId)
+    {
+        $user = Auth::user();
+        ItemActivity::create([
+            "item_id" =>$itemId,
+            "type" => $type,
+            "user_id" => $user->id,
+            "date"=>$input["date"],
+            "note"=>$input["note"],
+            "status"=>ItemConstants::STATUS_INACTIVE,
+        ]);
+    }
     public function statusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {

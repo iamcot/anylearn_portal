@@ -87,6 +87,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
 
     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
+
     Route::any('/orders', 'UserController@orders')->name('me.orders');
     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
     Route::any('/ischild', 'UserController@meChild')->name('me.child');
@@ -97,6 +98,8 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
     Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
     Route::any('/friend', 'UserController@meFriend')->name('me.friend');
+    Route::any('/work', 'UserController@meWork')->name('me.work');
+
 
 
 
@@ -170,6 +173,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
 
 
     Route::any('/user/members', 'UserController@members')->name('user.members');
+    Route::any('/user/activity', 'UserController@activity')->name('user.activity');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
     Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');

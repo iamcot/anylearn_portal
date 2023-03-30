@@ -26,16 +26,16 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('QUẢN LÝ TUYỂN SINH')</span>
         </a>
-        <div class="collapse {{ in_array($route, ['location', 'location.create', 'location.edit', 'me.contract', 'helpcenter.parnter.index', 'me.transactionhistory', 'me.class', 'me.class.create', 'me.class.edit', 'me.introduce']) ? 'show' : '' }}" id="home-collapse" style="">
+        <div class="collapse {{ in_array($route, ['location', 'location.create', 'location.edit', 'me.contract', 'helpcenter.parnter.index', 'me.transactionhistory', 'me.class', 'me.class.create', 'me.class.edit', 'me.introduce','me.work']) ? 'show' : '' }}" id="home-collapse" style="">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ in_array($route, ['me.class', 'me.class.create', 'me.class.edit']) ? 'active' : '' }}" href="{{ route('me.class') }}">
                     <i class="fas fa-fw fa-university"></i>
                     <span>Lớp Học Của Tôi</span>
                 </a>
-                {{-- <a class="collapse-item {{ in_array($route, ['me.transactionhistory']) ? 'active' : '' }}" href="{{ route('me.transactionhistory') }}">
+                <a class="collapse-item {{ in_array($route, ['me.work']) ? 'active' : ''}}" href="{{ route('me.work')}}">
                     <i class="far fa-fw fa-sun"></i>
-                    <span>Lịch Sử Giao Dịch</span>
-                </a> --}}
+                    <span>Hoạt động</span>
+                </a>
                 <a class="collapse-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}" href="{{ route('location') }}">
                     <i class="fas fa-fw fa-info-circle"></i>
                     <span>Quản lý Chi Nhánh</span>

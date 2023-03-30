@@ -131,6 +131,9 @@ nav a {
     color: #fff !important;
     border-radius: 50px;
 }
+.nav-item.active>.nav-link{
+    color: #fff !important;
+}
 
 .navbar2>.nav-item.active>.nav-link {
     color: #fff !important;

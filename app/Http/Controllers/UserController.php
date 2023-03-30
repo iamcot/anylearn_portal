@@ -149,7 +149,7 @@ class UserController extends Controller
                         if ($exists) {
                             if (!empty($row[2])) {
                                 $data['user_id'] = $row[2];
-                            }  
+                            }
                             if (!empty($row[3])) {
                                 $data['sale_id'] = $row[3];
                             }
@@ -213,6 +213,29 @@ class UserController extends Controller
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
+    }
+    public function meWork(Request $request)
+    {
+        $data = DB::table('item_activities as ia')
+        ->join('items as i','i.id','=','ia.item_id')
+        ->join('users as u','u.id','=','ia.user_id')
+        ->where('ia.user_id',auth()->user()->id)
+        ->select('ia.*','i.title','u.name')
+        ->get();
+
+        $this->data['data'] = $data;
+        return view(env('TEMPLATE', '') . 'me.work', $this->data);
+    }
+    public function activity(Request $request)
+    {
+        $data = DB::table('item_activities as ia')
+        ->join('items as i','i.id','=','ia.item_id')
+        ->join('users as u','u.id','=','ia.user_id')
+        ->select('ia.*','i.title','u.name')
+        ->get();
+
+        $this->data['data'] = $data;
+        return view('user.activity', $this->data);
     }
     public function meProfile()
     {

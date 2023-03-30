@@ -30,7 +30,13 @@
             <span>@lang('Quản lý Lớp học')</span></a>
     </li>
     @endif
-
+    @if ($userService->isActivity())
+    <li class="nav-item {{ in_array($route, ['user.activity']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.activity') }}">
+            <i class="fas fa-snowboarding"></i>
+            <span>@lang('Hoạt động')</span></a>
+    </li>
+    @endif
     {{-- <hr class="sidebar-divider d-none d-md-block">
     <li class="nav-item {{ in_array($route, ['crm.requestsale']) ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('crm.requestsale') }}">

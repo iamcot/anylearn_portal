@@ -191,6 +191,9 @@ class PageController extends Controller
 
     public function pdp(Request $request, $itemId)
     {
+        if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test' ) {
+            return redirect()->route('add2cart', ['class' => $itemId,'action'=> $request->get('action')]);
+        }
         $itemService = new ItemServices();
 
         $user = Auth::user();

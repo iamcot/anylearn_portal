@@ -216,10 +216,11 @@ class TransactionController extends Controller
             $user = Auth::user();
             $this->data['api_token'] = null;
         }
-
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
         }
+        $userService = new UserServices();
+        $itemService = new ItemServices();
         $this->data['user'] = $user;
 
         if ($request->input('action') == "createChild") {
@@ -237,6 +238,25 @@ class TransactionController extends Controller
         if ($request->get('action') == 'saveCart') {
             $transService = new TransactionService();
             $result = $transService->placeOrderOneItem($request, $user, $request->get('class'), true);
+            $input = $request->all();
+            if ($request->get("activiy_trial") == "on") {
+                $input['date'] = $input['trial_date'];
+                $input['note'] = $input['trial_note'];
+                $itemService->activity("trial",$input,$input['class']);
+            }
+            if ($request->get("activiy_visit") == "on") {
+
+                $input['date'] = $input['visit_date'];
+                $input['note'] = $input['visit_note'];
+                $itemService->activity("visit",$input,$input['class']);
+            }
+            if ($request->get("activiy_test") == "on") {
+
+                $input['date'] = $input['test_date'];
+                $input['note'] = $input['test_note'];
+                $itemService->activity("test",$input,$input['class']);
+                $userService->mailActivity($user);
+            }
             if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
                 if ($this->data['api_token']) {
                     return redirect()->route('cart', ['api_token' => $this->data['api_token']])->with('notify', "Đã thêm khóa học vào giỏ hàng. Vui lòng tiếp tục để hoàn thành bước thanh toán.");
@@ -252,7 +272,36 @@ class TransactionController extends Controller
                 }
             }
         }
-        $itemService = new ItemServices();
+        if ($request->get('action') == 'saveActivity') {
+            $input = $request->all();
+            if ($request->get("activiy_trial") == "on") {
+                $input['date'] = $input['trial_date'];
+                $input['note'] = $input['trial_note'];
+                $itemService->activity("trial",$input,$input['class']);
+            }
+            if ($request->get("activiy_visit") == "on") {
+
+                $input['date'] = $input['visit_date'];
+                $input['note'] = $input['visit_note'];
+                $itemService->activity("visit",$input,$input['class']);
+            }
+            if ($request->get("activiy_test") == "on") {
+
+                $input['date'] = $input['test_date'];
+                $input['note'] = $input['test_note'];
+                $itemService->activity("test",$input,$input['class']);
+            }
+            $userService->mailActivity($user);
+            $returnObj = ['class' => $request->get('class')];
+            if ($this->data['api_token']) {
+                $returnObj['api_token'] = $this->data['api_token'];
+            }
+            return redirect()->route('add2cart',$returnObj)->with('notify', 'Các Hoạt Động Học Thử/Thăm Quan/Thi Đầu Vào Đã đăng ký thành công!');
+        }
+        if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test' ){
+            $this->data['activity'] = $request->get('action');
+        }
+
         $class = $itemService->pdpData($request, $request->get('class'), $user);
         if (!$class) {
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
