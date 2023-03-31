@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Constants\ActivitybonusConstants;
 use App\Models\SocialPost;
+use App\Services\ActivitybonusServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -42,6 +44,7 @@ class ItemUserAction extends Model
                 'type' => self::TYPE_FAV,
                 'value' => self::FAV_ADDED,
             ]);
+
             $item = Item::find($itemId);
             SocialPost::create([
                 'type' => SocialPost::TYPE_CLASS_FAV,
@@ -121,7 +124,14 @@ class ItemUserAction extends Model
                 'day' => date('Y-m-d'),
             ]);
         }
-
+        if ($comment != null) {
+            $activityServ = new ActivitybonusServices();
+            $activityServ->updateWalletC($userId,ActivitybonusConstants::Activitybonus_Course_Feedback,'Bạn được cộng điểm vì bình luận khóa học',$itemId);
+        }
+        if ($rating !=null) {
+            $activityServ = new ActivitybonusServices();
+            $activityServ->updateWalletC($userId,ActivitybonusConstants::Activitybonus_Course_Evaluate,'Bạn được cộng điểm vì đánh giá khóa học',$itemId);
+        }
         return true;
     }
 }

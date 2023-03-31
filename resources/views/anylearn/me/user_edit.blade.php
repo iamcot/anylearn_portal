@@ -116,13 +116,13 @@ user_edit
                             <h6><b>{{__('Thông tin liên hệ')}}</b></h6>
                             <label for="email" class="col-md-3 col-form-label text-md-right text-start">{{ __('Email') }}</label>
                             <div class="col-md-8">
-                                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}">
+                                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', !empty($user) ? $user->email : '') }}" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="address" class="col-md-3 col-form-label text-md-right text-start">{{ __('Address') }}</label>
                             <div class="col-md-8">
-                                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', !empty($user) ? $user->address : '') }}">
+                                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address', !empty($user) ? $user->address : '') }}" required>
                             </div>
                         </div>
                         <div class="form-group row">

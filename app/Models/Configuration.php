@@ -36,6 +36,7 @@ class Configuration extends Model
     {
         $data = config('site');
         $dbConfig = $this->where('type', ConfigConstants::TYPE_CONFIG)->get();
+
         if (empty($dbConfig)) {
             return $data;
         }
