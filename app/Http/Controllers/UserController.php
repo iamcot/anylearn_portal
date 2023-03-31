@@ -84,6 +84,20 @@ class UserController extends Controller
         return view('user.modspartner', $this->data);
     }
 
+    private function detectDelimiter($csvFile)
+    {
+        $delimiters = [";" => 0, "," => 0, "\t" => 0, "|" => 0];
+
+        $handle = fopen($csvFile, "r");
+        $firstLine = fgets($handle);
+        fclose($handle);
+        foreach ($delimiters as $delimiter => &$count) {
+            $count = count(str_getcsv($firstLine, $delimiter));
+        }
+
+        return array_search(max($delimiters), $delimiters);
+    }
+
     public function members(Request $request)
     {
         $userService = new UserServices();
@@ -101,14 +115,16 @@ class UserController extends Controller
             if ($request->hasFile('saleassign') && $request->file('saleassign')->isValid()) {
                 $csvFile = $request->file('saleassign');
 
+                $delimiter = $this->detectDelimiter($csvFile);
+
                 $fileHandle = fopen($csvFile, 'r');
                 $rows = [];
                 $header = [];
                 while (!feof($fileHandle)) {
                     if (empty($header)) {
-                        $header = fgetcsv($fileHandle, 0, ';');
+                        $header = fgetcsv($fileHandle, 0, $delimiter);
                     } else {
-                        $csvRaw = fgetcsv($fileHandle, 0, ';');
+                        $csvRaw = fgetcsv($fileHandle, 0, $delimiter);
                         $rowcsv = [];
                         foreach ($header as $k => $col) {
                             $rowcsv[] = isset($csvRaw[$k]) ? $csvRaw[$k] : "";
@@ -129,7 +145,8 @@ class UserController extends Controller
                         if ($exists) {
                             if (!empty($row[2])) {
                                 $data['user_id'] = $row[2];
-                            } else if (!empty($row[3])) {
+                            }  
+                            if (!empty($row[3])) {
                                 $data['sale_id'] = $row[3];
                             }
                             $countUpdate += User::where('phone', $row[1])->update($data);
@@ -390,7 +407,7 @@ class UserController extends Controller
         }
         $userService = new UserServices();
         $user = Auth::user();
-        if (($userId == 1 && !$request->has('super') ) || !$userService->haveAccess($user->role, 'user.mods')) {
+        if (($userId == 1 && !$request->has('super')) || !$userService->haveAccess($user->role, 'user.mods')) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         } else {
             $this->data['user'] = User::find($userId);
@@ -722,7 +739,7 @@ class UserController extends Controller
     }
     public function finance(Request $request)
     {
-        if($request->input('withdraw')){
+        if ($request->input('withdraw')) {
             $user = User::find(auth()->user()->id);
             $input = $request->all();
             $transv = new TransactionService();
@@ -731,17 +748,17 @@ class UserController extends Controller
             $trans = Transaction::find($created);
             $user->wallet_c -= $anypoint;
             $user->update();
-        return Redirect::back()->with('bignotify', 'withdraw');
+            return Redirect::back()->with('bignotify', 'withdraw');
         }
         $trans = new Transaction();
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         // $b = DB::table('transaction')->where('user_id',auth()->user()->id)->where('type','commission')->belongsTo('App\Models\OrderDetail', 'order_id', 'id');
         // dd($b);
-        $a = Transaction::where('user_id',auth()->user()->id)->where('type','commission')->with('order')->orderBy('id','DESC')->get();
+        $a = Transaction::where('user_id', auth()->user()->id)->where('type', 'commission')->with('order')->orderBy('id', 'DESC')->get();
         // dd($a);
         $this->data['WALLETM'] = $a;
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
-        $this->data['withdraw'] = Transaction::where('user_id',auth()->user()->id)->where('type','withdraw')->orderBy('id','DESC')->get();
+        $this->data['withdraw'] = Transaction::where('user_id', auth()->user()->id)->where('type', 'withdraw')->orderBy('id', 'DESC')->get();
         $this->data['navText'] = __('Quản lý tài chính');
         return view(env('TEMPLATE', '') . 'me.finance', $this->data);
     }
