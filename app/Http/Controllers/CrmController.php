@@ -6,6 +6,7 @@ use App\Constants\UserConstants;
 use App\Models\SaleActivity;
 use App\Models\Spm;
 use App\Models\User;
+use App\Models\Transaction;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,11 @@ class CrmController extends Controller
             ->where('status', 1)
             ->orderby('id', 'desc')
             ->paginate(5);
+            
+        $this->data['points'] = Transaction::where('user_id', $userId)
+            ->where('pay_method', 'wallet_c')
+            ->select('content', 'created_at', 'amount')
+            ->get();
 
         return view('crm.sale', $this->data);
     }
@@ -119,7 +125,6 @@ class CrmController extends Controller
                 'sale_id' => Auth::user()->id,
                 'member_id' => $data['memberId'],
                 'content' => $data['content'],
-                'logwork' => $data['logwork'],
                 'created_at' => $data['date'] . ' ' . $data['time'] . ":00"
             ]);
             return redirect()->back()->with('notify', 'Lưu log chat thành công.');
