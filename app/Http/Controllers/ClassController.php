@@ -501,15 +501,6 @@ class ClassController extends Controller
         ->whereNull('participations.id')
         ->select('order_details.id')
         ->first();
-        if (Auth::check()) {
-            $user = User::find(auth()->user()->id);
-            $item = Item::find($itemId);
-            if ($item->subtype == "extra" || $item->subtype == "offline") {
-                $user->update([
-                    'wallet_m' => DB::raw('wallet_m + ' . $item->price)
-                ]);
-            }
-        }
         $itemServ = new ItemServices();
 
         try {

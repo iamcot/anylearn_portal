@@ -87,7 +87,7 @@ class ItemServices
             ->orderby('knowledges.view', 'desc')
             ->select('knowledges.*')
             ->take(5)->get();
-            return $topKnowledge;
+        return $topKnowledge;
     }
     public function footerNews()
     {
@@ -367,16 +367,16 @@ class ItemServices
             }
         }
     }
-    public function activity($type,$input,$itemId)
+    public function activity($type, $input, $itemId)
     {
         $user = Auth::user();
         ItemActivity::create([
-            "item_id" =>$itemId,
+            "item_id" => $itemId,
             "type" => $type,
             "user_id" => $user->id,
-            "date"=>$input["date"],
-            "note"=>$input["note"],
-            "status"=>ItemConstants::STATUS_INACTIVE,
+            "date" => $input["date"],
+            "note" => $input["note"],
+            "status" => ItemConstants::STATUS_INACTIVE,
         ]);
     }
     public function statusOperation($itemId, $status)
@@ -1116,7 +1116,10 @@ class ItemServices
             ->first();
         // approve author transaction
         if ($trans) {
-            $transService->approveWalletmTransaction($trans->id);
+
+            if ($item->subtype == "extra" || $item->subtype == "offline") {
+                $transService->approveWalletmTransaction($trans->id);
+            }
             // approve foundation transaction
             DB::table('transactions')
                 ->where('transactions.order_id', $trans->order_id)
