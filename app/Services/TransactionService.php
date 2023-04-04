@@ -149,7 +149,7 @@ class TransactionService
             ->where('od.item_id', $itemId)
             ->count();
 
-        if ($alreadyRegister > 0) {
+        if ($alreadyRegister > 0 && $item->allow_re_register == 0) {
             return 'Bạn đã đăng ký khóa học này hoặc khóa học đang chờ thanh toán.';
         }
         $voucher = $request->get('voucher', '');
