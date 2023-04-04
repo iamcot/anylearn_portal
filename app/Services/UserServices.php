@@ -546,7 +546,6 @@ class UserServices
     }
     public function bankaccount($id)
     {
-        # code...
         $bank = DB::table('contracts')->where('user_id',$id)->where('status',99)->first();
         return $bank;
     }
@@ -555,14 +554,25 @@ class UserServices
         $c = User::where('id',$userId)->orWhere('is_child',1)->where('user_id',$userId)->get();
         return $c;
     }
-    public function mailActivity($user)
+    public function mailActivity($user,$type,$itemId,$time)
     {
+        if ($type == "activiy_trial") {
+            $typecontent = "học thử";
+        } elseif ($type == "activiy_visit"){
+            $typecontent = "thăm quan";
+        } else{
+            $typecontent = "kiểm tranh đánh giá năng lực đầu vào";
+        }
+        $item = Item::find($itemId);
+        $partner = User::find($item->user_id);
         $data = [
             'name' => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone
+            'title' => $item->title,
+            'type' => $typecontent,
+            'time' =>$time,
+            'partner'=> $partner->name
         ];
         Mail::to($user->email)->send(new ActivityMail($data));
+        return;
     }
-
 }

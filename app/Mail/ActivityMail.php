@@ -11,6 +11,7 @@ class ActivityMail extends Mailable
 
     public $data;
 
+
     public function __construct($data)
     {
         $this->data = $data;

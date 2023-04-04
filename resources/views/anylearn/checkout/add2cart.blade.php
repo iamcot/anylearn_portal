@@ -191,7 +191,7 @@
             </div>
         </div>
         <div class="text-center mb-5 mt-5">
-            @if (!isset($activity))
+            @if (!isset($activiy))
             <button name="action" value="saveCart"
             class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ')</button>
             @else
