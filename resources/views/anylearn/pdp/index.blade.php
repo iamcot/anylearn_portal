@@ -145,7 +145,13 @@
                             <p><strong>@lang('Độ tuổi:')</strong> {{ $item->ages_min . '-' . $item->ages_max }}</p>
                         @endif
                         @if ($item->seats > 0)
-                            <p><strong>@lang('Số lượng'): </strong>{{ $item->seats }}</p>
+                            <p><strong>@lang('Số lượng'): </strong>
+                            @if ($registered > 0) 
+                                {{ $item->seats - $registered }}
+                            @else 
+                                {{ $item->seats }}
+                            @endif
+                            </p>
                         @endif
                         <p><strong> @lang('Khai giảng:')</strong>
                             {{ date('d/m/Y', strtotime($item->date_start)) }}

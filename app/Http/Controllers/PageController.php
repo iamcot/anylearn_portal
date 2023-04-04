@@ -11,6 +11,7 @@ use App\Models\Configuration;
 use App\Models\Item;
 use App\Models\ItemUserAction;
 use App\Models\User;
+use App\Models\OrderDetail;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use App\Models\I18nContent;
@@ -208,6 +209,7 @@ class PageController extends Controller
             $rs = $itemUserActionM->saveRating($itemId, $user->id, $rating, $comment);
             return redirect()->back()->with(['notify' => $rs]);
         }
+
         try {
             $data = $itemService->pdpData($request, $itemId, $user);
             $data['breadcrumb'] = [
@@ -226,6 +228,11 @@ class PageController extends Controller
                     'text' => 'Khoá học',
                 ]
             ];
+
+            $data['registered'] = OrderDetail::where('item_id', $itemId)
+            ->where('status', 'delivered')
+            ->count();
+            
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
