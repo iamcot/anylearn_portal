@@ -8,6 +8,7 @@ use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Mail\ActivityMail;
+use App\Mail\MailToPartnerRegisterNew;
 use App\Models\Ask;
 use App\Models\Configuration;
 use App\Models\Contract;
@@ -20,6 +21,7 @@ use App\Models\Participation;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\I18nContent;
+use Carbon\Carbon;
 use Exception;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\App;
@@ -102,8 +104,7 @@ class UserServices
         $user = Auth::user();
         if (in_array($user->id, explode(',', env('ID_ACTIVITY')))) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
@@ -546,21 +547,21 @@ class UserServices
     }
     public function bankaccount($id)
     {
-        $bank = DB::table('contracts')->where('user_id',$id)->where('status',99)->first();
+        $bank = DB::table('contracts')->where('user_id', $id)->where('status', 99)->first();
         return $bank;
     }
     public function accountC($userId)
     {
-        $c = User::where('id',$userId)->orWhere('is_child',1)->where('user_id',$userId)->get();
+        $c = User::where('id', $userId)->orWhere('is_child', 1)->where('user_id', $userId)->get();
         return $c;
     }
-    public function mailActivity($user,$type,$itemId,$time)
+    public function mailActivity($user, $type, $itemId, $time)
     {
         if ($type == "activiy_trial") {
             $typecontent = "học thử";
-        } elseif ($type == "activiy_visit"){
+        } elseif ($type == "activiy_visit") {
             $typecontent = "thăm quan";
-        } else{
+        } else {
             $typecontent = "kiểm tranh đánh giá năng lực đầu vào";
         }
         $item = Item::find($itemId);
@@ -569,10 +570,33 @@ class UserServices
             'name' => $user->name,
             'title' => $item->title,
             'type' => $typecontent,
-            'time' =>$time,
-            'partner'=> $partner->name
+            'time' => $time,
+            'partner' => $partner->name
         ];
         Mail::to($user->email)->send(new ActivityMail($data));
         return;
+    }
+    public function MailToPartnerRegisterNew($item, $userId, $author)
+    {
+        $user = User::find($userId);
+        $now = Carbon::now();
+        $commission = DB::table('contracts as c')
+            ->where('c.user_id', '=', $author->id)
+            ->where('c.status', '=', 99)
+            ->select('c.commission')
+            ->first();
+        $concession = $item->price*$commission->commission;
+        $orgprice = $item->price - $concession;
+        $data = [
+            'name' => $user->name,
+            'title' => $item->title,
+            'time' => $now,
+            'partner' => $author->name,
+            'commision' => $commission->commission,
+            'price' => $item->price,
+            'concession' => $concession,
+            'orgprice' => $orgprice
+        ];
+        Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
     }
 }

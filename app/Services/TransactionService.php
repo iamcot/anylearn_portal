@@ -9,6 +9,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
+use App\Models\Contract;
 use App\Models\Item;
 use App\Models\ItemExtra;
 use App\Models\Notification;
@@ -27,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionService
 {
@@ -160,9 +162,9 @@ class TransactionService
             $status = OrderConstants::STATUS_DELIVERED;
             $amount = $item->price;
             $childUserDB = $childUser > 0 ? User::find($childUser) : null;
-         
+
             $saleId = $this->findSaleIdFromBuyerOrItem($user->id, $item->id);
-           
+
             if (!$openOrder) {
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
@@ -629,14 +631,14 @@ class TransactionService
 
     public function approveRegistrationAfterWebPayment($orderId, $payment = OrderConstants::PAYMENT_ONEPAY)
     {
+        $userService = new UserServices();
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
             return false;
         }
         $user = User::find($openOrder->user_id);
-        $user->update([
-            'wallet_m' => DB::raw('wallet_m + ' . $openOrder->amount)
-        ]);
+
+
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -661,7 +663,12 @@ class TransactionService
             $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
             $item = Item::find($orderItem->item_id);
             $author = User::find($item->user_id);
-
+            if ($item->subtype == "online" || $item->subtype == "video") {
+                $user->update([
+                    'wallet_m' => DB::raw('wallet_m + ' . $item->price)
+                ]);
+            }
+            $userService->MailToPartnerRegisterNew($item, $user->id, $author);
             $dataOrder = $this->orderDetailToDisplay($orderItem->id);
 
             $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
