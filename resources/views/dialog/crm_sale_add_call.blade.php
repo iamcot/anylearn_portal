@@ -14,6 +14,10 @@
                         <input id="call_logwork" type="number" class="form-control" name="salecall[logwork]" min=1 required>
                     </div>
                     <div class="form-group">
+                        <label for="call_contennt" class="">{{ __('Nội dung') }}</label>
+                        <textarea id="call_contennt" class="form-control" name="salecall[content]" rows="10" required></textarea>
+                    </div>
+                    <div class="form-group">
                         <label for="call_date" class="">{{ __('Ngày') }}</label>
                         <input id="call_date" type="date" class="form-control" name="salecall[date]" value="{{ date('Y-m-d') }}" required>
                     </div>

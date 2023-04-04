@@ -148,8 +148,8 @@
                         @if($user->id != 1)
                         @if(!$userServ->isSale())
                         {!! $userServ->statusOperation($user->id, $user->status) !!}
-                        @endif
                         <a class="btn btn-sm btn-info mt-1" href="{{ route('user.members.edit', ['userId' => $user->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
+                        @endif
                         @endif
                         <a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $user->id]) }}"><i class="fas fa-briefcase"></i> Sale</a>
                     </td>
