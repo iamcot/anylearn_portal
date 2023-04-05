@@ -17,14 +17,14 @@
             @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('me.class.create')])
         </div>
     @else
-        <form class="pb-3">
-            <div class="d-flex ">
+        <form class="pb-3 d-flex">
+            <div class="position-relative">
                 <div>
                     <input value="{{ app('request')->input('s') }}" type="text" class="rounded-pill form-control"
                         name="s" placeholder="{{ __('Tìm kiếm lớp học') }}" />
                 </div>
-                <div class="ms-1">
-                    <button class="btn btn-success btn border-0 rounded-circle"><i class="fas fa-search"></i></button>
+                <div class="ms-1 position-absolute top-0 end-0">
+                    <button class="btn btn-success btn border-0 rounded-pill form-controlg"><i class="fas fa-search"></i></button>
                 </div>
             </div>
 
