@@ -64,7 +64,7 @@
                                             class="fas fa-bell text-success" title="Nhắc lịch học"></i></a>
                                             <a
                                         href="{{ route('me.class.edit', ['id' => $course->id]) }}?tab=registers"><i
-                                            class="fas fa-users text-danger" title="Xem học viên"></i></a>
+                                            class="fas fa-users text-primary" title="Xem học viên"></i></a>
                                         </td>
                                 <td >{{ date('H:i d/m/y', strtotime($course->updated_at)) }}</td>
                                 <td >

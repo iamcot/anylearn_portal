@@ -4,12 +4,12 @@
 $route = app('router')->getRoutes()->match(app('request'))->getName()
 )
 @php($role = Auth::user()->role)
-<ul class="navbar-nav sidebar sidebar-dark accordion d-print-none shadow rounded bg-success me-4 pt-4" id="accordionSidebar">
+<ul class="navbar-nav sidebar sidebar-dark accordion d-print-none shadow rounded me-4 pt-4" style="background-color: #00a551" id="accordionSidebar">
     @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
     <li class="nav-item {{ in_array($route, ['me.dashboard']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.dashboard') }}" data-spm="nav.dashboard">
             <i class="fas fa-fw fa-chart-area"></i>
-            <span>@lang('Tổng quan')</span></a>
+            <span>@lang('TỔNG QUAN')</span></a>
     </li>
     <div class="sidebar-heading">
         @lang('Chức năng đối tác')
@@ -54,7 +54,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
     <li class="nav-item">
         <a class="nav-link" href="{{ route('helpcenter.parnter.index') }}" data-spm="nav.class">
             <i class="fas fa-fw fa-headset"></i>
-            <span>@lang('Trung tâm hỗ trợ')</span></a>
+            <span>@lang('TRUNG TÂM HỖ TRỢ')</span></a>
     </li>
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif

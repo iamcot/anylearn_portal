@@ -7,7 +7,7 @@
                 <ul>
                     <ul class="row">
                         @foreach ($itemServ->footertopKnowledge() as $knowledge)
-                            <li class="col-xs-12 col-md-12"><a class=" text-black"
+                            <li class="col-xs-12 col-md-12"><a class="text-secondary text-decoration-none"
                                     href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url]) }}">{{ $knowledge->title }}</a>
                             </li>
                         @endforeach
@@ -18,10 +18,10 @@
             <div class="col-sm-3">
                 <h4>ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
                 <ul>
-                    <a href="/guide?p=guide_toc">
+                    <a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">
                         <li>Điều Khoản Sử Dụng</li>
                     </a>
-                    <a href="/privacy">
+                    <a href="/privacy" class="text-secondary text-decoration-none">
                         <li>Chính Sách Bảo Mật</li>
                     </a>
                 </ul>
