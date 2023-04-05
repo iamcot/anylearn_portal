@@ -135,6 +135,16 @@
                 userColumn.textContent = course.name;
                 tableRow.appendChild(userColumn);
 
+                // tạo ra tag a
+                const scheduleLink = document.createElement('a');
+                // thêm href // course.item_id = row->item_id
+                scheduleLink.href = "/me/orders/schedule?id=" + course.item_id;
+                scheduleLink.textContent = "Xem";
+                // tạo td và add tag a
+                const scheduleColumn = document.createElement('td');
+                scheduleColumn.appendChild(scheduleLink);
+                tableRow.appendChild(scheduleColumn);
+
                 tableBody.appendChild(tableRow);
             }
         }
