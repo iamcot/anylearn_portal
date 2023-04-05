@@ -784,6 +784,7 @@ class UserController extends Controller
 
         $this->data['schedule'] = $schedule;
         $this->data['daylist'] = $daylist;
+        $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first(); 
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
 
         return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);
