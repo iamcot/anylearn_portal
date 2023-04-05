@@ -27,8 +27,13 @@
                         <td class="text-center">{{ $key + 1 }}</td>                    
                         <td>{{ $date }}</td>
                         <td>{{ $schedule->time_start }} - {{ $schedule->time_end }}</td>
-                        <td>{{ $location->address }}, {{ $location->ward_path }}</td>
+                        @if (!empty($location))
+                        <td>{{ $location->address }} - {{ $location->ward_path }}</td>
                         <td class="text-center"><a href="https://www.google.com/maps/search/?api=1&query={{ $location->latitude }},{{ $location->longitude }}" target="_blank" rel="noopener noreferrer">@lang('Xem')</a> </td>
+                        @else 
+                        <td>Chưa cập nhật</td>
+                        <td></td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>
