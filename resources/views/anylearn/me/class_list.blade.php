@@ -24,7 +24,7 @@
                         name="s" placeholder="{{ __('Tìm kiếm lớp học') }}" />
                 </div>
                 <div class="ms-1 position-absolute top-0 end-0">
-                    <button class="btn btn-success btn border-0 rounded-pill form-controlg"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-success btn border-0 rounded-pill form-control"><i class="fas fa-search"></i></button>
                 </div>
             </div>
 
