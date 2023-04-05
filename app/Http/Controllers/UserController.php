@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
+use App\Models\ItemSchedulePlan;
 use App\Services\ActivitybonusServices;
 use App\Services\InteractServices;
 use App\Services\TransactionService;
@@ -36,6 +37,8 @@ use Symfony\Component\VarDumper\Cloner\Data;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class UserController extends Controller
 {
@@ -758,12 +761,33 @@ class UserController extends Controller
     }
 
     public function orders(Request $request)
-    {
+    { 
         $user = Auth::user();
         $orderDetailM = new OrderDetail();
         $data = $orderDetailM->usersOrders($user->id);
         $this->data['data'] = $data;
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
+    }
+
+    public function schedule(Request $request, $itemId)
+    { 
+        $schedule = ItemSchedulePlan::where('item_id', $itemId)->first();       
+        $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
+        
+        $daylist = [];
+        $weekdays = explode(',', $schedule->weekdays);
+        foreach ($period as $date) {
+            if (in_array($date->format('w') + 1, $weekdays)) {
+                $daylist[] = $date->format('Y-m-d'); 
+            }
+        }
+
+        $this->data['schedule'] = $schedule;
+        $this->data['daylist'] = $daylist;
+        $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first(); 
+        $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
+
+        return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);
     }
 
     public function contractSign($id)

@@ -89,6 +89,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
 
     Route::any('/orders', 'UserController@orders')->name('me.orders');
+    Route::any('/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
     Route::any('/ischild', 'UserController@meChild')->name('me.child');
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');

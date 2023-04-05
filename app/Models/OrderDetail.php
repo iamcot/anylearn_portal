@@ -130,7 +130,7 @@ class OrderDetail extends Model
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->join('users AS u2', 'u2.id', '=', 'order_details.user_id') //this join is for child user
-            ->join('schedules', 'schedules.item_id', '=', 'order_details.item_id')
+            ->join('item_schedule_plans as schedules', 'schedules.item_id', '=', 'order_details.item_id')
             ->leftJoin('participations AS pa', function ($join) {
                 $join->on('pa.schedule_id', '=', 'schedules.id')
                     ->on('pa.participant_user_id', '=', 'u2.id');
@@ -138,21 +138,23 @@ class OrderDetail extends Model
             ->leftJoin('item_user_actions AS iua', function ($query) {
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
+            ->where('order_details.status', 'delivered')
             ->where('order_details.user_id', $userId)
             ->orWhere('users.user_id', $userId)
             ->where('users.is_child',1)
             ->select(
                 'schedules.id',
+                'schedules.item_id as item_id',
                 'items.title',
                 'items.user_status',
                 'items.status',
                 'items.date_end',
                 'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
-                'schedules.date as date',
+                'schedules.date_start as date',
                 'schedules.time_start as time',
                 'schedules.time_end',
-                'schedules.content as schedule_content',
+                'schedules.title as schedule_content',
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
@@ -165,7 +167,7 @@ class OrderDetail extends Model
                 DB::raw('"" AS image'),
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
-            ->orderBy('schedules.date')
+            ->orderBy('schedules.date_start')
             ->orderBy('schedules.time_start');
             // dd($query->get());
         $result = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();

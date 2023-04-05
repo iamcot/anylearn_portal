@@ -38,6 +38,7 @@
                     <th>Ngày đăng kí</th>
                     <th>Trạng thái</th>
                     <th>Tài khoản học</th>
+                    <th>Lịch học</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,6 +52,7 @@
                             <td>Đã xong</td>
                         @endif
                         <td>{{ $row->child_name }}</td>
+                        <td><a href="{{ route('me.orders.schedule', ['id' => $row->item_id]) }}">Xem</a></td>
                     </tr>
                 @endforeach
             </tbody>
