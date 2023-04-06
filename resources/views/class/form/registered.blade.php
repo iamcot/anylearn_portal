@@ -28,7 +28,7 @@
                 </td>
                 <td>
                     @if($student->confirm_count == 0)
-                    <a href="{{ route('class.author.confirmjoin' , ['itemId' =>  $course['info']->id ]) }}?join_user={{ $student->id }}" class="btn btn-success btn-sm">Xác nhận tham gia</a>
+                    <a href="{{ route('class.author.confirmjoin' , ['itemId' =>  $course['info']->id ]) }}?join_user={{ $student->id }}" class="btn btn-success btn-sm">Tiếp nhận học viên</a>
                     @endif
                     <a href="{{ route('class.author.cert' , ['itemId' =>  $course['info']->id, 'userId' => $student->id]) }}" class="btn btn-warning btn-sm mt-1">Cấp chứng chỉ</a>
                 </td>
