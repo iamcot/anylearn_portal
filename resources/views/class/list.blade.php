@@ -87,83 +87,79 @@
                     </thead>
                 <tbody>
                     @foreach ($courseList as $course)
-                        @if ($course->status == 1)
-                            <tr>
-                                <th class="text-center">{{ $course->id }}
-                                    @if ($userServ->isMod() && $course->sum_reg == 0 && !$isSale)
-                                        <a href="{{ route('class.del', ['id' => $course->id]) }}"><i
-                                                class="fa fa-trash text-danger"></i></a>
-                                    @endif
-                                </th>
-                                @if ($userServ->isMod())
-                                    <td class="text-center">
-                                        @if (!$isSale)
-                                            <a
-                                                href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' => $course->id]) }}">
-                                                {!! $userServ->hotIcon($course->is_hot) !!}</a>
-                                        @else
-                                            {!! $userServ->hotIcon($course->is_hot) !!}
-                                        @endif
-                                    </td>
+                        <tr>
+                            <th class="text-center">{{ $course->id }}
+                                @if ($userServ->isMod() && $course->sum_reg == 0 && !$isSale)
+                                    <a href="{{ route('class.del', ['id' => $course->id]) }}"><i
+                                            class="fa fa-trash text-danger"></i></a>
                                 @endif
-                                @if ($userServ->isMod())
-                                    <td class="text-center" width="15%">
-                                        {{ $course->user->name }}
-                                    </td>
-                                @endif
-                                @if (!$isSale)
-                                    <td width="20%">
-                                        <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i
-                                                class="fas fa-edit"></i>[{{ $course->subtype }}] {{ $course->title }}</a>
-                                    </td>
-                                @else
-                                    <td width="20%">
-                                        <a href="{{ $itemServ->classUrl($course->id) }}">[{{ $course->subtype }}]
-                                            {{ $course->title }}</a>
-                                    </td>
-                                @endif
-
-                                <td>{{ date('d/m/y', strtotime($course->date_start)) }} @if ($course->date_end)
-                                        - {{ date('d/m/y', strtotime($course->date_end)) }}
-                                    @endif
-                                    <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i
-                                            class="fas fa-bell"></i></a>
-                                </td>
-                                <td>{{ number_format($course->price) }}</td>
-                                <!-- <td></td> -->
-                                <td>{{ $course->sum_reg }} <a
-                                        href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i
-                                            class="fas fa-bell"></i></a></td>
-                                @if (!$isSale)
-                                    <td width="15%">{{ $course->updated_at }}</td>
-                                    <td class="text-center ">
-                                        {!! $itemServ->statusText($course->user_status) !!}
-                                        @if ($userServ->isMod(\Auth::user()->role) && !$isSale)
-                                            {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
-                                        @endif
-                                    </td>
-                                    <td>
+                            </th>
+                            @if ($userServ->isMod())
+                                <td class="text-center">
+                                    @if (!$isSale)
                                         <a
-                                            href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i
-                                                class="fa fa-link"></i></a>
-                                        @if ($userServ->isMod(\Auth::user()->role) && !$isSale)
-                                            {!! $itemServ->statusOperation($course->id, $course->status) !!}
-                                            <!-- {!! $itemServ->typeOperation($course) !!} -->
-                                        @endif
-                                        <a class="ratingFormClick" href="#" data-class-id="{{ $course->id }}"><i
-                                                class="fa fa-star"></i>({{ $course->sum_rating }})</a>
-                                    </td>
+                                            href="{{ route('ajax.touch.ishot', ['table' => 'items', 'id' => $course->id]) }}">
+                                            {!! $userServ->hotIcon($course->is_hot) !!}</a>
+                                    @else
+                                        {!! $userServ->hotIcon($course->is_hot) !!}
+                                    @endif
+                                </td>
+                            @endif
+                            @if ($userServ->isMod())
+                                <td class="text-center" width="15%">
+                                    {{ $course->user->name }}
+                                </td>
+                            @endif
+                            @if (!$isSale)
+                                <td width="20%">
+                                    <a href="{{ route('class.edit', ['id' => $course->id]) }}"><i
+                                            class="fas fa-edit"></i>[{{ $course->subtype }}] {{ $course->title }}</a>
+                                </td>
+                            @else
+                                <td width="20%">
+                                    <a href="{{ $itemServ->classUrl($course->id) }}">[{{ $course->subtype }}]
+                                        {{ $course->title }}</a>
+                                </td>
+                            @endif
+
+                            <td>{{ date('d/m/y', strtotime($course->date_start)) }} @if ($course->date_end)
+                                    - {{ date('d/m/y', strtotime($course->date_end)) }}
                                 @endif
-                                <td>{{ $course->seats }}</td>
-                                @if ($course->nolimit_time == 1)
+                                <a href="{{ route('notif.remind_join', ['id' => $course->id]) }}"><i
+                                        class="fas fa-bell"></i></a>
+                            </td>
+                            <td>{{ number_format($course->price) }}</td>
+                            <!-- <td></td> -->
+                            <td>{{ $course->sum_reg }} <a
+                                    href="{{ route('notif.remind_confirm', ['id' => $course->id]) }}"><i
+                                        class="fas fa-bell"></i></a></td>
+                            @if (!$isSale)
+                                <td width="15%">{{ $course->updated_at }}</td>
+                                <td class="text-center ">
+                                    {!! $itemServ->statusText($course->user_status) !!}
+                                    @if ($userServ->isMod(\Auth::user()->role) && !$isSale)
+                                        {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
+                                    @endif
+                                </td>
+                                <td>
+                                    <a
+                                        href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i
+                                            class="fa fa-link"></i></a>
+                                    @if ($userServ->isMod(\Auth::user()->role) && !$isSale)
+                                        {!! $itemServ->statusOperation($course->id, $course->status) !!}
+                                        <!-- {!! $itemServ->typeOperation($course) !!} -->
+                                    @endif
+                                    <a class="ratingFormClick" href="#" data-class-id="{{ $course->id }}"><i
+                                            class="fa fa-star"></i>({{ $course->sum_rating }})</a>
+                                </td>
+                            @endif
+                            <td>{{ $course->seats }}</td>
+                            @if ($course->nolimit_time == 1)
                                 <td>@lang('Không giới hạn')</td>
-                                @else
+                            @else
                                 <td>{{ $course->date_start }}</td>
-                                @endif
-
-
-                            </tr>
-                        @endif
+                            @endif
+                        </tr>
                     @endforeach
                 </tbody>
                 </thead>
