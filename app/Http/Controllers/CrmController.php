@@ -47,10 +47,11 @@ class CrmController extends Controller
             ->paginate(5);
             $this->data['idC'] = null;
         }
-        $accountC = DB::table('users')->where('user_id',$userId)->get();
+        $accountC = User::where('id', $userId)->orWhere('is_child', 1)->where('user_id', $userId)->get();
         // dd($memberOrders);
         $this->data['accountC'] = $accountC;
         $this->data['user'] = $user;
+        // $currentPageItems = $memberOrders->slice(($memberOrders->currentPage() - 1) * 5, 5);
         $this->data['memberOrders'] = $memberOrders;
         $this->data['orderStats'] = $userService->orderStats($saleUser->id);
 
@@ -66,7 +67,7 @@ class CrmController extends Controller
             ->where('status', 1)
             ->orderby('id', 'desc')
             ->paginate(5);
-            
+
         $this->data['points'] = Transaction::where('user_id', $userId)
             ->where('pay_method', 'wallet_c')
             ->select('content', 'created_at', 'amount')
