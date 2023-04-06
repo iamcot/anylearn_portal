@@ -1,11 +1,19 @@
 @inject('UserServices', 'App\Services\UserServices')
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-print-none">
-    <div class="container">
-        <a class="navbar-brand" href="{{ route('me.dashboard') }}">
+    <div class="container-fluid">
+        @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+        <a class="navbar-brand ml-5" href="{{ route('me.dashboard') }}">
             <img src="/cdn/img/logo.png" alt="" width="30" height="30" class="d-block d-sm-none">
             <img src="/cdn/img/logo-full.png" alt="" width="120" height="30" class="d-none d-sm-block">
         </a>
+        @else
+        <a class="navbar-brand ml-5" href="{{ route('me.profile') }}">
+            <img src="/cdn/img/logo.png" alt="" width="30" height="30" class="d-block d-sm-none">
+            <img src="/cdn/img/logo-full.png" alt="" width="120" height="30" class="d-none d-sm-block">
+        </a>
+        @endif
+
         <!-- Sidebar Toggle (Topbar) -->
         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>

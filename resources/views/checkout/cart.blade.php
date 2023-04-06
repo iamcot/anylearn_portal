@@ -25,12 +25,9 @@
                     <td>{{ $loop->index + 1 }}</td>
                     <td><img class="img-fluid" style="max-height: 80px" src="{{ $item->image }}"></td>
                     <td>
-                        @if($item->class_name)
-                        {{ $item->class_name }}
-                        <span class="small text-danger">({{ $item->title }} )</span>
-                        @else
                         {{ $item->title }}
-                        @endif
+                        <br>Học tại {{ $item->plan_location_name }}; @foreach(explode(",", $item->plan_weekdays) as $day ) {{ $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }} {{ !$loop->last ? ", " : ". " }} @endforeach
+                        Bắt đầu từ {{ date("d/m/Y", strtotime($item->plan_date_start)) }}
                     </td>
                     <td class="text-right">{{ number_format($item->paid_price, 0, ",", ".") }}</td>
                     <td>
@@ -52,7 +49,7 @@
         @if(!empty($order))
         <div class="font-weight-bold float-right">
             @if(!empty($voucherUsed))
-                <span class="text-success">( Áp dụng Mã giảm giá: {{ $voucherUsed->voucher }} )</span>
+            <span class="text-success">( Áp dụng Mã giảm giá: {{ $voucherUsed->voucher }} )</span>
             @endif
             @lang('TỔNG TIỀN:')
             <span class="text-danger">{{ number_format($order->amount, 0, ",", ".") }}</span>
@@ -61,84 +58,58 @@
     </div>
 </div>
 @if($api_token)
-    <form method="POST" action="{{ route('applyvoucher', ['api_token' => $api_token]) }}" id="cartvoucher">
-@else
+<form method="POST" action="{{ route('applyvoucher', ['api_token' => $api_token]) }}" id="cartvoucher">
+    @else
     <form method="POST" action="{{ route('applyvoucher') }}" id="cartvoucher">
-@endif
-    @csrf
-@if(!empty($order))
-    <input type="hidden" name="order_id" value="{{ $order->id }}">
-@endif
-<div class="card mb-2 border-left-success shadow">
-    <div class="card-body">
-        <label for="" class="font-weight-bold text-success">Mã giảm giá</label>
-        <div class="row">
-            <div class="form-group col-6">
-                <input type="text" class="form-control" name="payment_voucher" value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
-            </div>
-            <div class="form-group col-4">
-                @if (empty($voucherUsed))
-                <button class="btn btn-success" name="cart_action" value="apply_voucher">Áp dụng</button>
-                @else
-                <input type="hidden" name="voucher_userd_id" value="{{ $voucherUsed->id }}">
-                <button class="btn btn-danger" name="cart_action" value="remove_voucher">Huỷ</button>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-</form>
-@if($api_token)
-    <form method="POST" action="{{ route('payment', ['api_token' => $api_token]) }}" id="cartsubmit">
-@else
-    <form method="POST" action="{{ route('payment') }}" id="cartsubmit">
-@endif
-    @csrf
-@if(!empty($order))
-    <input type="hidden" name="order_id" value="{{ $order->id }}">
-@endif
+        @endif
+        @csrf
+        @if(!empty($order))
+        <input type="hidden" name="order_id" value="{{ $order->id }}">
+        @endif
         <div class="card mb-2 border-left-success shadow">
-            <div class="card-header">
-                <h5 class="modal-title m-0 font-weight-bold text-success"><i class="fa fa-wallet"></i> Phương thức Thanh toán</h5>
-            </div>
             <div class="card-body">
-                <ul class="list-unstyled">
-                    @foreach($payments as $key => $payment)
-                    <li><input required type="radio" name="payment" value="{{ $key }}" id="radio_{{ $key }}"> <label for="radio_{{ $key }}"><strong>{{ $payment['title'] }}</strong></label></li>
-                    @endforeach
-                </ul>
-                <div class="border shadow p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
-                <p class="font-weight-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán</label></p>
-            </div>
-            <div class="card-footer">
-                <button class="btn btn-success" name="cart_action" value="pay">THANH TOÁN</button>
+                <label for="" class="font-weight-bold text-success">Mã giảm giá</label>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <input type="text" class="form-control" name="payment_voucher" value="{{ !empty($voucherUsed) ? $voucherUsed->voucher : '' }}">
+                    </div>
+                    <div class="form-group col-4">
+                        @if (empty($voucherUsed))
+                        <button class="btn btn-success" name="cart_action" value="apply_voucher">Áp dụng</button>
+                        @else
+                        <input type="hidden" name="voucher_userd_id" value="{{ $voucherUsed->id }}">
+                        <button class="btn btn-danger" name="cart_action" value="remove_voucher">Huỷ</button>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </form>
-    @endsection
-    @section('jscript')
-    @parent
-    <script>
-        $("#cartsubmit").on("submit", function(event) {
-            event.preventDefault();
-            @if(!empty($order))
-            gtag("event", "purchase", {
-                "transaction_id": "{{ $order->id }}",
-                "currency": "VND",
-                "value": {{ $order -> amount }},
-                "items": [
-                    @foreach($detail as $item) {
-                        "id": "{{ $item->item_id }}",
-                        "name": "{{ $item->class_name ?? $item->title }}",
-                        "price": {{ $item -> paid_price }},
-                        "quantity": 1,
-                        "currency": "VND"
-                    }
-                    @endforeach
-                ]
-            });
-            $(this).unbind('submit').submit();
+    @if($api_token)
+    <form method="POST" action="{{ route('payment', ['api_token' => $api_token]) }}" id="cartsubmit">
+        @else
+        <form method="POST" action="{{ route('payment') }}" id="cartsubmit">
             @endif
-        });
-    </script>
-    @endsection
+            @csrf
+            @if(!empty($order))
+            <input type="hidden" name="order_id" value="{{ $order->id }}">
+            @endif
+            <div class="card mb-2 border-left-success shadow">
+                <div class="card-header">
+                    <h5 class="modal-title m-0 font-weight-bold text-success"><i class="fa fa-wallet"></i> Phương thức Thanh toán</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        @foreach($payments as $key => $payment)
+                        <li><input required type="radio" name="payment" value="{{ $key }}" id="radio_{{ $key }}"> <label for="radio_{{ $key }}"><strong>{{ $payment['title'] }}</strong></label></li>
+                        @endforeach
+                    </ul>
+                    <div class="border shadow p-2 mb-2" style="max-height:150px; overflow-y: scroll;">{!! $term !!}</div>
+                    <p class="font-weight-bold"><input type="checkbox" name="accept_term" value="payment" id="accept_term" required> <label for="accept_term">Tôi đồng ý với điều khoản thanh toán</label></p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success" name="cart_action" value="pay">THANH TOÁN</button>
+                </div>
+            </div>
+        </form>
+        @endsection

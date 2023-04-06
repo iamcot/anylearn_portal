@@ -62,10 +62,7 @@
                                         <td>
                                             <input type="hidden" name='id' value="{{ $row->id }}">
                                             <button class="btn btn-sm btn-secondary mt-1" name="action" value="history">
-                                                <i class="fas fa-filter"></i>
-                                            </button>
-                                            <button type="submit" class="btn btn-sm btn-primary mt-1">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-filter"></i> Bộ Lọc
                                             </button>
                                         </td>
                                     </form>
@@ -172,15 +169,15 @@
             <div class="card shadow mt-3">
                 <div class="card-header">
                     <strong>Lịch sử đặt hàng
-                        @if ($idC !=null)
-                            (Đang lọc theo tài khoản con có mã: {{$idC}})
+                        @if ($idC != null)
+                            (Đang lọc theo tài khoản con có mã: {{ $idC }})
                         @endif
                     </strong>
-                    @if ($idC !=null)
-                    <a href="{{ route('crm.sale', ['userId' => $memberProfile->id]) }}"
-                        class="btn btn-sm btn-secondary mt-1 float-right">
-                        <i class="fas fa-trash"></i>
-                    </a>
+                    @if ($idC != null)
+                        <a href="{{ route('crm.sale', ['userId' => $memberProfile->id]) }}"
+                            class="btn btn-sm btn-secondary mt-1 float-right">
+                            <i class="fas fa-trash"></i>
+                        </a>
                     @endif
                 </div>
                 <div class="card-body p-0">
@@ -195,16 +192,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($memberOrders as $item)
-                                <tr>
-                                    <td>{{ $item->order_id }}</td>
-                                    <td><a target="_blank"
-                                            href="{{ $itemServ->classUrl($item->itemId) }}">{{ $item->title }}</a></td>
-                                    <td>{{ number_format($item->unit_price, 0, ',', '.') }}</td>
-                                    <td>{{ date('H:i d/m/Y', strtotime($item->created_at)) }}</td>
-                                    <td>{{ $item->status }}</td>
-                                </tr>
-                            @endforeach
+                                @foreach ($memberOrders as $item)
+                                    <tr>
+                                        <td>{{ $item->order_id }}</td>
+                                        <td><a target="_blank"
+                                                href="{{ $itemServ->classUrl($item->itemId) }}">{{ $item->title }}</a>
+                                        </td>
+                                        <td>{{ number_format($item->unit_price, 0, ',', '.') }}</td>
+                                        <td>{{ date('H:i d/m/Y', strtotime($item->created_at)) }}</td>
+                                        <td>{{ $item->status }}</td>
+                                    </tr>
+                                @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -225,13 +223,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($points as $key => $value)
-                        <tr>
-                            <td class="text-center">{{ $key + 1 }}</td>
-                            <td>{{ $value->content }}</td>
-                            <td>{{ $value->amount / 1000 }}</td>
-                            <td>{{ date('H:i d/m/Y', strtotime($item->created_at)) }}</td>
-                        </tr>
+                        @foreach ($points as $key => $value)
+                            <tr>
+                                <td class="text-center">{{ $key + 1 }}</td>
+                                <td>{{ $value->content }}</td>
+                                <td>{{ $value->amount }}</td>
+                                <td>{{ date('H:i d/m/Y', strtotime($item->created_at)) }}</td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>

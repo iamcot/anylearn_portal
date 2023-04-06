@@ -14,6 +14,7 @@ use App\Models\Configuration;
 use App\Models\CourseSeries;
 use App\Models\I18nContent;
 use App\Models\Item;
+use App\Models\ItemActivity;
 use App\Models\ItemCategory;
 use App\Models\ItemResource;
 use App\Models\ItemUserAction;
@@ -86,7 +87,7 @@ class ItemServices
             ->orderby('knowledges.view', 'desc')
             ->select('knowledges.*')
             ->take(5)->get();
-            return $topKnowledge;
+        return $topKnowledge;
     }
     public function footerNews()
     {
@@ -171,13 +172,14 @@ class ItemServices
                 }
             }
         }
-        $numSchedule = Schedule::where('item_id', $itemId)->count();
+        $plans = $this->getClassSchedulePlan($itemId);
+        $numSchedule = array_sum(array_map("count", $plans));
 
         $itemUserActionM = new ItemUserAction();
         $item->num_favorite = $itemUserActionM->numFav($itemId);
         $item->num_cart = $itemUserActionM->numReg($itemId);
         $item->rating = $itemUserActionM->rating($itemId);
-        $item->openings = Item::where('item_id', $item->id)->select('id', 'title')->get();
+        $item->openings = [];
         $item->url = "Khoá học " . $item->title . " cực hay trên anyLEARN bạn có biết chưa " . $this->classUrl($itemId);
         $categories = DB::table('items_categories')
             ->join('categories', 'categories.id', '=', 'items_categories.category_id')
@@ -233,12 +235,39 @@ class ItemServices
             'teachers' => $teachers,
             'reviews' => $reviews,
             'videos' => $videos,
+            'plans' => $plans,
             'hotItems' =>  [
                 'route' => '/event',
                 'title' => 'Sản phẩm liên quan',
                 'list' => $hotItems
             ],
         ];
+    }
+
+    public function getClassSchedulePlan($itemId)
+    {
+        $planWithLocation = DB::table('item_schedule_plans')
+            ->join('user_locations', 'user_locations.id', '=', 'item_schedule_plans.user_location_id')
+            ->where('item_schedule_plans.item_id', $itemId)
+            ->orderby('item_schedule_plans.date_start')
+            ->select('user_locations.id AS location_id', 'user_locations.title AS location_title', 'user_locations.address', 'item_schedule_plans.*')
+            ->get();
+        if (empty($planWithLocation)) {
+            return [];
+        }
+        $data = [];
+        foreach ($planWithLocation as $plan) {
+            if (!isset($data[$plan->location_id])) {
+                $data[$plan->location_id]['location'] = [
+                    'id' => $plan->id,
+                    'location_id' => $plan->location_id,
+                    'location_title' => $plan->location_title,
+                    'address' => $plan->address,
+                ];
+            }
+            $data[$plan->location_id]['plans'][] = json_decode(json_encode($plan), true);
+        }
+        return $data;
     }
 
     public function classUrl($id)
@@ -338,7 +367,18 @@ class ItemServices
             }
         }
     }
-
+    public function activity($type, $input, $itemId)
+    {
+        $user = Auth::user();
+        ItemActivity::create([
+            "item_id" => $itemId,
+            "type" => $type,
+            "user_id" => $user->id,
+            "date" => $input["date"],
+            "note" => $input["note"],
+            "status" => ItemConstants::STATUS_INACTIVE,
+        ]);
+    }
     public function statusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {
@@ -351,9 +391,9 @@ class ItemServices
     public function userStatusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_INACTIVE) {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
         } else {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.userstatus.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
         }
     }
 
@@ -422,12 +462,14 @@ class ItemServices
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
                     if (!empty($contentObj[$type])) {
-                        $buildContent .= "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>" . $contentObj[$type];
+                        $buildContent .= (($type == self::CONTENT_OLD) ? "" : "<h4 style=\"color: #01A652 !important;\">" . ($locale != I18nContent::DEFAULT && isset(self::$CONTENT_FIELDS_I18N[$locale][$type])  ? self::$CONTENT_FIELDS_I18N[$locale][$type] : $name) . "</h4>")
+                            . $contentObj[$type];
                     }
                 }
                 return $buildContent;
             }
         } catch (\Exception $ex) {
+            Log::error($ex);
         }
         return $content;
     }
@@ -482,8 +524,9 @@ class ItemServices
         }
     }
 
-    public function createItem($input, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
+    public function createItem($request, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
+        $input = $request->all();
         $user = $userApi ?? Auth::user();
 
         $orgInputs = $input;
@@ -523,6 +566,27 @@ class ItemServices
             $input['is_paymentfee'] = 0;
         }
 
+        if (!empty($input['allow_re_register']) && $input['allow_re_register'] == 'on') {
+            $input['allow_re_register'] = 1;
+        } else {
+            $input['allow_re_register'] = 0;
+        }
+        if (!empty($input['activiy_trial']) && $input['activiy_trial'] == 'on') {
+            $input['activiy_trial'] = 1;
+        } else {
+            $input['activiy_trial'] = 0;
+        }
+        if (!empty($input['activiy_test']) && $input['activiy_test'] == 'on') {
+            $input['activiy_test'] = 1;
+        } else {
+            $input['activiy_test'] = 0;
+        }
+        if (!empty($input['activiy_visit']) && $input['activiy_visit'] == 'on') {
+            $input['activiy_visit'] = 1;
+        } else {
+            $input['activiy_visit'] = 0;
+        }
+
         if (!empty($input['ages_range'])) {
             $agesRange = explode("-", $input['ages_range']);
             if (count($agesRange) == 2) {
@@ -556,11 +620,16 @@ class ItemServices
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($newCourse, Tag::TYPE_CLASS);
             // if ($newCourse->type == ItemConstants::TYPE_COURSE) {
-            Schedule::create([
-                'item_id' => $newCourse->id,
-                'date' => $newCourse->date_start,
-                'time_start' => $newCourse->time_start,
-            ]);
+            // Schedule::create([
+            //     'item_id' => $newCourse->id,
+            //     'date' => $newCourse->date_start,
+            //     'time_start' => $newCourse->time_start,
+            // ]);
+            $courseImage = $this->changeItemImage($request, $input['id']);
+            if ($courseImage) {
+                $input['image'] = $courseImage;
+                Item::find($newCourse->id)->update(['image' => $courseImage]);
+            }
             // }
             return $newCourse->id;
         }
@@ -608,6 +677,26 @@ class ItemServices
         } else {
             $input['nolimit_time'] = 0;
         }
+        if (!empty($input['allow_re_register']) && $input['allow_re_register'] == 'on') {
+            $input['allow_re_register'] = 1;
+        } else {
+            $input['allow_re_register'] = 0;
+        }
+        if (!empty($input['activiy_trial']) && $input['activiy_trial'] == 'on') {
+            $input['activiy_trial'] = 1;
+        } else {
+            $input['activiy_trial'] = 0;
+        }
+        if (!empty($input['activiy_test']) && $input['activiy_test'] == 'on') {
+            $input['activiy_test'] = 1;
+        } else {
+            $input['activiy_test'] = 0;
+        }
+        if (!empty($input['activiy_visit']) && $input['activiy_visit'] == 'on') {
+            $input['activiy_visit'] = 1;
+        } else {
+            $input['activiy_visit'] = 0;
+        }
 
         if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
             $input['is_paymentfee'] = 1;
@@ -652,25 +741,25 @@ class ItemServices
             $tagsModel = new Tag();
             $tagsModel->createTagFromItem($itemUpdate, Tag::TYPE_CLASS);
 
-            $canUpdateSchedule = $this->updateClassSchedule($request, $input);
+            // $canUpdateSchedule = $this->updateClassSchedule($request, $input);
 
-            if (
-                $itemUpdate->date_start != $input['date_start']
-                || $itemUpdate->time_start != $input['time_start']
-                || $itemUpdate->location != $input['location']
-            ) {
-                $registerUsers = OrderDetail::where('item_id', $itemUpdate->id)->get();
-                $notifServ = new Notification();
-                foreach ($registerUsers as $user) {
-                    $notifServ->createNotif(
-                        NotifConstants::COURSE_HAS_CHANGED,
-                        $user->user_id,
-                        [
-                            'course' => $itemUpdate->title
-                        ]
-                    );
-                }
-            }
+            // if (
+            //     $itemUpdate->date_start != $input['date_start']
+            //     || $itemUpdate->time_start != $input['time_start']
+            //     || $itemUpdate->location != $input['location']
+            // ) {
+            //     $registerUsers = OrderDetail::where('item_id', $itemUpdate->id)->get();
+            //     $notifServ = new Notification();
+            //     foreach ($registerUsers as $user) {
+            //         $notifServ->createNotif(
+            //             NotifConstants::COURSE_HAS_CHANGED,
+            //             $user->user_id,
+            //             [
+            //                 'course' => $itemUpdate->title
+            //             ]
+            //         );
+            //     }
+            // }
         }
         return $canUpdate;
     }
@@ -910,17 +999,20 @@ class ItemServices
         return $list;
     }
 
+    /**
+     * NOTE use order detail ID to replace scheduleId
+     */
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
         $user = User::find($joinedUserId);
 
-        $schedule = Schedule::find($scheduleId);
-        if (!$schedule) {
+        $orderDetail = OrderDetail::find($scheduleId);
+        if (!$orderDetail) {
             throw new Exception("Không có lịch cho buổi học này");
             // return response("Không có lịch cho buổi học này", 404);
         }
 
-        $item = Item::find($schedule->item_id);
+        $item = Item::find($orderDetail->item_id);
         if (!$item) {
             throw new Exception("Khóa  học không tồn tại");
             // return response("Khóa  học không tồn tại", 404);
@@ -928,7 +1020,7 @@ class ItemServices
         $itemId = $item->id;
 
         $isConfirmed = Participation::where('item_id', $itemId)
-            ->where('schedule_id',  $schedule->id)
+            ->where('schedule_id',  $orderDetail->id)
             ->where('participant_user_id', $joinedUserId)
             ->count();
         if ($isConfirmed > 0) {
@@ -1008,9 +1100,6 @@ class ItemServices
             'day' => date('Y-m-d'),
         ]);
 
-        // No limit time class => just touch transaction related to approved user
-        // if ($item->nolimit_time == 1) {
-        //get transaction relate order id & user & item
         $trans = DB::table('transactions')
             ->join('order_details AS od', function ($query) use ($user) {
                 $query->on('od.id', '=', 'transactions.order_id')
@@ -1022,12 +1111,15 @@ class ItemServices
             ->where('od.item_id', $item->id)
             ->where('transactions.user_id', $author->id)
             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+            ->where('transactions.type', ConfigConstants::TRANSACTION_PARTNER)
             ->select('transactions.*')
             ->first();
         // approve author transaction
         if ($trans) {
-            $transService->approveWalletcTransaction($trans->id);
+
+            if ($item->subtype == "extra" || $item->subtype == "offline") {
+                $transService->approveWalletmTransaction($trans->id);
+            }
             // approve foundation transaction
             DB::table('transactions')
                 ->where('transactions.order_id', $trans->order_id)
@@ -1037,46 +1129,5 @@ class ItemServices
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE
                 ]);
         }
-        // } elseif ($item->got_bonus == 0) { // Normal class and still not get bonus => touch all transaction when reach % of approved users
-        //     $configM = new Configuration();
-        //     $needNumConfirm = $configM->get(ConfigConstants::CONFIG_NUM_CONFIRM_GOT_BONUS);
-        //     $totalReg = OrderDetail::where('item_id', $itemId)->count();
-        //     $totalConfirm = Participation::where('item_id', $itemId)->count();
-        //     //update author commssion when reach % of approved users
-        //     if ($totalConfirm / $totalReg >= $needNumConfirm) {
-        //         //get ALL transaction relate order id & item
-        //         $allTrans = DB::table('transactions')
-        //             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-        //             ->where('od.status', OrderConstants::STATUS_DELIVERED)
-        //             ->where('od.item_id', $item->id)
-        //             ->where('transactions.user_id', $author->id)
-        //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-        //             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-        //             ->select('transactions.*')
-        //             ->get();
-
-        //         // approve author transaction
-        //         if ($allTrans) {
-        //             foreach ($allTrans as $trans) {
-        //                 $transService->approveWalletcTransaction($trans->id);
-        //             }
-        //         }
-        //         // approve foundation transaction
-        //         DB::table('transactions')
-        //             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-        //             ->where('od.item_id', $item->id)
-        //             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-        //             ->where('transactions.user_id', $author->id)
-        //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-        //             ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
-        //             ->update([
-        //                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE
-        //             ]);
-
-        //         Item::find($itemId)->update([
-        //             'got_bonus' => 1
-        //         ]);
-        //     }
-        // }
     }
 }

@@ -1,3 +1,5 @@
+@inject('userServ', 'App\Services\UserServices')
+
 @extends('anylearn.me.layout')
 @section('spmb')
 class_edit
@@ -15,42 +17,76 @@ class_edit
     @csrf
     <input type="hidden" name="id" value="{{ !empty($courseId) ? $courseId : 0 }}">
     <input type="hidden" name="action" value="{{ empty($courseId) ? 'create' : 'update' }}">
-    <ul class="nav nav-tabs" id="classtab" role="tablist">
+    <div class="card p-3 mb-3 shadow">
+        <div class="form-group row">
+            <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại Lớp học') }}</label>
+            <div class="col-md-8">
+                <select class="form-control" name="subtype" required @if(!empty($course) && $course['info']->subtype != "") disabled @endif>
+                    <option value="">@lang('Vui lòng chọn Loại Lớp Học để khởi tạo')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Chính khóa (Mầm non, K12, Đại học)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_EXTRA }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_EXTRA ? 'selected' : '' }}>@lang('Lớp học Ngoại khóa (các môn kỹ năng tại trường/ trung tâm)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Lớp học trực tuyến')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>@lang('Học trên Ứng dụng')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_VIDEO }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_VIDEO ? 'selected' : '' }}>@lang('Học qua video')</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs " style="@if(empty($course)) display:none; @endif" id="classtab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'info' ? 'active' : '' }}" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true"><i class="fa fa-info-circle"></i> <span class="d-none d-sm-block">@lang('Thông tin')</span></button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'price' ? 'active' : '' }}" id="price-tab" data-bs-toggle="tab" data-bs-target="#price" type="button" role="tab" aria-controls="price" aria-selected="true"><i class="fa fa-dollar-sign"></i> <span class="d-none d-sm-block">@lang('Học Phí')</span></button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'contenttab' ? 'active' : '' }}" id="content-tab" data-bs-toggle="tab" data-bs-target="#contenttab" type="button" role="tab" aria-controls="contenttab" aria-selected="true"><i class="fa fa-font"></i> <span class="d-none d-sm-block">@lang('Giới thiệu')</span></button>
+        </li>
+        @if(!empty($course) && !in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_DIGITAL, \App\Constants\ItemConstants::SUBTYPE_VIDEO]))
+        <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule" aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
         </li>
+        @endif
         @if(!empty($course) && $course['info']->subtype == 'video')
         <li class="nav-item d-none" role="presentation" id="vdo">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'video' ? 'active' : '' }}" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="true"><i class="fas fa-play"></i> <span class="d-none d-sm-block">@lang('VIDEO')</span></button>
         </li>
         @endif
-        @if(!empty($course) && $course['info']->subtype == 'offline')
+        @if(!empty($course))
         <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'extrafee' ? 'active' : '' }}" id="extrafee-tab" data-bs-toggle="tab" data-bs-target="#extrafee" type="button" role="tab" aria-controls="extrafee" aria-selected="true"><i class="fas fa-file-invoice-dollar"></i> <span class="d-none d-sm-block">@lang('Phụ phí')</span></button>
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Tài liệu')</span></button>
         </li>
         @endif
-        <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'resource' ? 'active' : '' }}" id="resource-tab" data-bs-toggle="tab" data-bs-target="#resource" type="button" role="tab" aria-controls="resource" aria-selected="true"><i class="fa fa-image"></i> <span class="d-none d-sm-block">@lang('Hình ảnh')</span></button>
-        </li>
-        @if ($isSchool)
+        @if (!empty($courseId))
+        <!-- <li class="nav-item" role="presentation">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'templatemail' ? 'active' : '' }}" id="templatemail-tab" data-bs-toggle="tab" data-bs-target="#templatemail" type="button" role="tab" aria-controls="templatemail" aria-selected="true"><i class="fas fa-envelope"></i> <span class="d-none d-sm-block">@lang('Send Mail')</span></button>
+        </li> -->
+        @endif
+        @if (!empty($course) && $isSchool)
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'teachers' ? 'active' : '' }}" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="true"><i class="fa fa-chalkboard-teacher"></i> <span class="d-none d-sm-block">@lang('Giảng viên')</span></button>
         </li>
         @endif
+        @if(!empty($course))
         <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'seo' ? 'active' : '' }}" id="seo-tab" data-bs-toggle="tab" data-bs-target="#seo" type="button" role="tab" aria-controls="seo" aria-selected="true"><i class="fa fa-link"></i> <span class="d-none d-sm-block">@lang('SEO')</span></button>
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'rating' ? 'active' : '' }}" id="rating-tab" data-bs-toggle="tab" data-bs-target="#rating" type="button" role="tab" aria-controls="rating" aria-selected="true"><i class="fa fa-star"></i> <span class="d-none d-sm-block">@lang('Đánh giá')</span></button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'registers' ? 'active' : '' }}" id="registers-tab" data-bs-toggle="tab" data-bs-target="#registers" type="button" role="tab" aria-controls="registers" aria-selected="true"><i class="fa fa-users-cog"></i> <span class="d-none d-sm-block">@lang('Học viên')</span></button>
         </li>
+        @endif
     </ul>
 
-    <div class="tab-content border-top-2 mb-5" id="myTabContent">
+    <div class="tab-content border-top-2 mb-5 bg-white" style="@if(empty($course)) display:none; @endif" id="myTabContent">
         <div class="tab-pane fade {{ session('tab', 'info') == 'info' ? 'show active' : '' }} p-2" id="info" role="tabpanel" aria-labelledby="info-tab">
             @include('class.form.info')
+        </div>
+        <div class="tab-pane fade {{ session('tab', 'info') == 'price' ? 'show active' : '' }} p-2" id="price" role="tabpanel" aria-labelledby="price-tab">
+            @include('class.form.price')
+        </div>
+        <div class="tab-pane fade {{ session('tab', 'info') == 'contenttab' ? 'show active' : '' }} p-2" id="contenttab" role="tabpanel" aria-labelledby="content-tab">
+            @include('class.form.content')
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'schedule' ? 'show active' : '' }} p-2" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
             @include('class.form.schedule')
@@ -59,9 +95,9 @@ class_edit
             @include('class.form.video')
         </div>
         @if (!empty($courseId))
-        <div class="tab-pane fade {{ session('tab', 'info') == 'extrafee' ? 'show active' : '' }} p-2" id="extrafee" role="tabpanel" aria-labelledby="extrafee-tab">
-            @include('class.form.extrafee')
-        </div>
+        <!-- <div class="tab-pane fade {{ session('tab', 'info') == 'templatemail' ? 'show active' : '' }} p-2" id="templatemail" role="tabpanel" aria-labelledby="templatemail-tab"> -->
+            <!-- @include('class.form.templatemail') -->
+        <!-- </div> -->
         @endif
         <div class="tab-pane fade {{ session('tab', 'info') == 'resource' ? 'show active' : '' }} p-2" id="resource" role="tabpanel" aria-labelledby="resource-tab">
             @include('class.form.resource')
@@ -71,11 +107,11 @@ class_edit
             @include('class.form.teachers')
         </div>
         @endif
-        <div class="tab-pane fade {{ session('tab', 'info') == 'seo' ? 'show active' : '' }} p-2" id="seo" role="tabpanel" aria-labelledby="seo-tab">
-            @include('class.form.seo')
+        <div class="tab-pane fade {{ session('tab', 'info') == 'rating' ? 'show active' : '' }} p-2" id="rating" role="tabpanel" aria-labelledby="seo-tab">
+            @include('class.form.rating')
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'registers' ? 'show active' : '' }} p-2" id="registers" role="tabpanel" aria-labelledby="registers-tab">
-        @include('class.form.registered')
+            @include('class.form.registered')
         </div>
     </div>
 </form>
@@ -89,8 +125,8 @@ class_edit
     var allEditors = document.querySelectorAll('.editor');
     var editorConfig = {
         mediaEmbed: {
-                previewsInData: true
-            },
+            previewsInData: true
+        },
         simpleUpload: {
             uploadUrl: "{{ @route('upload.ckimage5') }}",
             withCredentials: true,
@@ -194,6 +230,31 @@ class_edit
             $('.time').mask('00:00');
         }
 
+    });
+
+    function changeTab(tabName) {
+        $("#" + tabName).tab('show');
+        window.scrollTo(0, 0);
+    }
+
+    $("select[name=subtype]").on("change", function(e) {
+        if ($(this).val() != "") {
+            $("#classtab").show();
+            $("#myTabContent").show();
+        }
+
+        if ($(this).val() == "video" || $(this).val() == "digital") {
+            $("#box_time").hide();
+            $("#box_price").hide();
+        } else {
+            $("#box_time").show();
+            $("#box_price").show();
+        }
+        if ($(this).val() == "offline" || $(this).val() == "extra") {
+            $("#box_activities").show();
+        } else {
+            $("#box_activities").hide();
+        }
     });
 </script>
 @endsection

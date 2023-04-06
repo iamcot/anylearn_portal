@@ -18,6 +18,7 @@
     <link href="/cdn/anylearn/fontawesome/css/all.css" rel="stylesheet">
     <link href="/cdn/anylearn/owl.carousel.min.css" rel="stylesheet">
     <link href="/cdn/vendor/jquery/jquery-ui-1.13.2/jquery-ui.min.css" rel="stylesheet">
+    {{-- <link href="/cdn/anylearn/style_landing2.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet"> --}}
     <link href="/cdn/anylearn/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     {{-- <link href="/cdn/anylearn/style_landing2.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet"> --}}
 
@@ -44,7 +45,7 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content" class="mb-4">
                 @include('anylearn.me.topbar')
-                @include('anylearn.me.avatar')
+                {{-- @include('anylearn.me.avatar') --}}
                 <div class="container-fluid">
                 @include('anylearn.widget.notify', ['notify' => session('notify', '')])
                     <div class="d-flex">
@@ -52,6 +53,7 @@
                         @include('anylearn.me.sidebar')
                         </div>
                         <div class="text-secondary is-content">
+                            @if($navText ?? '')
                             <h1 class="h5 text-gray-800 mb-3">
                             @if($hasBack ?? false)
                                 @if ($hasBack === true)
@@ -62,6 +64,7 @@
                             @endif
                                 {{ $navText ?? '' }}
                             </h1>
+                            @endif
                             @yield('body')
                         </div>
                     </div>

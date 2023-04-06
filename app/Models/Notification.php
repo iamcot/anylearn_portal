@@ -6,6 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\Mail\OrderSuccess;
 use App\Services\ItemServices;
 use App\Services\SmsServices;
 use DateTime;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use FCM;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Mail;
 use LaravelFCM\Facades\FCM as FacadesFCM;
 use LaravelFCM\Message\OptionsBuilder;
@@ -45,6 +47,7 @@ class Notification extends Model
             $obj['extra_content'] = 'copy';
             $obj['route'] = $copy;
         }
+        // dd($obj,$userId);
         $newNotif = $this->create($obj);
         if (!$newNotif) {
             return;
@@ -60,6 +63,7 @@ class Notification extends Model
                 }
             }
         }
+
         if (!$user->notif_token) {
             return;
         }
@@ -265,8 +269,10 @@ class Notification extends Model
     public function buildContent($template, $data)
     {
         $keys = [];
-        foreach (array_keys($data) as $key) {
-            $keys[] = '{' . $key . '}';
+        foreach ($data as $key => $value) {
+            if (!is_object($value)) {
+                $keys[] = '{' . $key . '}';
+            }
         }
 
         return str_replace(

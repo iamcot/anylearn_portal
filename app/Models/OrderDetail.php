@@ -10,6 +10,7 @@ class OrderDetail extends Model
 {
     protected $fillable = [
         'user_id', 'item_id', 'unit_price', 'paid_price', 'quanity', 'status', 'order_id', 'created_at'
+        , 'item_schedule_plan_id',
     ];
 
     public function item()
@@ -36,9 +37,8 @@ class OrderDetail extends Model
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('users', 'users.id', '=', 'orders.user_id') //this join is for main user
             ->join('users AS u2', 'u2.id', '=', 'od.user_id') //this join is for child user
-            ->join('schedules', 'schedules.item_id', '=', 'od.item_id')
             ->leftJoin('participations AS pa', function ($join) {
-                $join->on('pa.schedule_id', '=', 'schedules.id')
+                $join->on('pa.schedule_id', '=', 'od.id')
                     ->on('pa.participant_user_id', '=', 'u2.id');
             })
             ->leftJoin('item_user_actions AS iua', function ($query) {
@@ -53,10 +53,10 @@ class OrderDetail extends Model
                 'items.title',
                 'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
-                'schedules.date as date',
-                'schedules.time_start as time',
-                'schedules.time_end',
-                'schedules.content as schedule_content',
+                'items.date_start as date',
+                'items.time_start as time',
+                'items.time_end',
+                "'' as schedule_content",
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
@@ -79,7 +79,7 @@ class OrderDetail extends Model
                 ->orWhere('items.status', '>=', 90);
         })->get();
         // $open = $query2->where('items.date_start', '>=', $today)->get();
-        $open = $query2->where('orders.status', OrderConstants::STATUS_DELIVERED )->whereNull('pa.id')->where('items.user_status', 1)->get();
+        $open = $query2->where('orders.status', OrderConstants::STATUS_DELIVERED)->whereNull('pa.id')->where('items.user_status', 1)->get();
 
         $fav = DB::table('item_user_actions AS iua')
             ->join('items', 'items.id', '=', 'iua.item_id')
@@ -123,6 +123,56 @@ class OrderDetail extends Model
             'fav' => $fav,
         ];
     }
+    public function usersOrders($userId)
+    {
+        $query = DB::table('order_details')
+            ->join('orders', 'orders.id', '=', 'order_details.order_id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->join('users AS u2', 'u2.id', '=', 'order_details.user_id') //this join is for child user
+            ->join('item_schedule_plans as schedules', 'schedules.item_id', '=', 'order_details.item_id')
+            ->leftJoin('participations AS pa', function ($join) {
+                $join->on('pa.schedule_id', '=', 'schedules.id')
+                    ->on('pa.participant_user_id', '=', 'u2.id');
+            })
+            ->leftJoin('item_user_actions AS iua', function ($query) {
+                $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
+            })
+            ->where('order_details.status', 'delivered')
+            ->where('order_details.user_id', $userId)
+            ->orWhere('users.user_id', $userId)
+            ->where('users.is_child',1)
+            ->select(
+                'schedules.id',
+                'schedules.item_id as item_id',
+                'items.title',
+                'items.user_status',
+                'items.status',
+                'items.date_end',
+                'users.name',
+                DB::raw('ifnull(items.subtype, "") as item_subtype'),
+                'schedules.date_start as date',
+                'schedules.time_start as time',
+                'schedules.time_end',
+                'schedules.title as schedule_content',
+                'items.short_content as content',
+                'pa.id AS user_joined',
+                'items.user_status as author_status',
+                DB::raw('ifnull(items.location, "") AS location'),
+                'items.id as item_id',
+                'items.nolimit_time',
+                'u2.id AS child_id',
+                'u2.name AS child_name',
+                // DB::raw('ifnull(items.image, "") AS image'),
+                DB::raw('"" AS image'),
+                DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
+            )
+            ->orderBy('schedules.date_start')
+            ->orderBy('schedules.time_start');
+            // dd($query->get());
+        $result = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
+        return $result;
+    }
     public function searchall($userId, $title)
     {
         $query = DB::table('order_details')
@@ -137,9 +187,6 @@ class OrderDetail extends Model
             ->leftJoin('item_user_actions AS iua', function ($query) {
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
-            // ->where('items.status', '>', 0)
-            // ->where('users.status', '>', 0)
-            // ->where('items.user_status', '>', 0)
             ->where('items.title', 'Like', '%' . $title . '%')
             ->where('order_details.user_id', $userId)
             ->orWhere('users.is_child', $userId)

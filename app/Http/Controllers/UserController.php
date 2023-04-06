@@ -26,15 +26,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
+use App\Models\ItemSchedulePlan;
 use App\Services\ActivitybonusServices;
 use App\Services\InteractServices;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use PSpell\Config;
 use Symfony\Component\VarDumper\Cloner\Data;
 use Vanthao03596\HCVN\Models\District;
 use Vanthao03596\HCVN\Models\Province;
 use Vanthao03596\HCVN\Models\Ward;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class UserController extends Controller
 {
@@ -148,7 +152,7 @@ class UserController extends Controller
                         if ($exists) {
                             if (!empty($row[2])) {
                                 $data['user_id'] = $row[2];
-                            }  
+                            }
                             if (!empty($row[3])) {
                                 $data['sale_id'] = $row[3];
                             }
@@ -213,6 +217,35 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
+    public function meWork(Request $request)
+    {
+        $data = DB::table('item_activities as ia')
+        ->join('items as i','i.id','=','ia.item_id')
+        ->join('users as u','u.id','=','ia.user_id')
+        ->where('ia.user_id',auth()->user()->id)
+        ->select('ia.*','i.title','u.name')
+        ->get();
+
+        $this->data['data'] = $data;
+        return view(env('TEMPLATE', '') . 'me.work', $this->data);
+    }
+    public function activity(Request $request)
+    {
+        $data = DB::table('item_activities as ia')
+        ->join('items as i','i.id','=','ia.item_id')
+        ->join('users as u','u.id','=','ia.user_id')
+        ->select('ia.*','i.title','u.name')
+        ->get();
+
+        $this->data['data'] = $data;
+        return view('user.activity', $this->data);
+    }
+    public function meProfile()
+    {
+        $user = Auth::user();
+        $this->data['user'] = $user;
+        return view(env('TEMPLATE', '') . 'me.profile', $this->data);
+    }
     public function meEdit(Request $request)
     {
         $editUser = Auth::user();
@@ -222,16 +255,16 @@ class UserController extends Controller
 
             $input = $request->all();
             if ($editUser->image == null && isset($input['image']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Avatar,'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
             }
             if ($editUser->banner == null && isset($input['banner']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Banner,'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
             }
             if ($editUser->email == null && isset($input['email']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Email,'Bạn được cộng điểm vì lần đầu cập nhật email',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
             }
             if ($editUser->address == null && isset($input['address']) != null) {
-                $activityService->updateWalletC($editUser->id,ActivitybonusConstants::Activitybonus_Update_Address,'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ',null);
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
             }
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
@@ -239,7 +272,7 @@ class UserController extends Controller
             $input['commission_rate'] = $editUser->commission_rate;
             $userM = new User();
             $rs = $userM->saveMember($request, $input);
-            return redirect()->route('me.dashboard')->with('notify', $rs);
+            return redirect()->route('me.profile')->with('notify', $rs);
         }
         $friends = User::where('user_id', $editUser->id)->paginate();
         $editUser = $userService->userInfo($editUser->id);
@@ -248,83 +281,77 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
+    public function meTransHistory()
+    {
+        return view(env('TEMPLATE', '') . 'me.transactionhistory', $this->data);
+    }
+    public function meFriend()
+    {
+        $friends = DB::table('users')->where('user_id', '=', Auth::user()->id)->where('is_child', '=', 0)->get();
+        $this->data['friends'] = $friends;
+        return view(env('TEMPLATE', '') . 'me.friend', $this->data);
+    }
+    public function meIntroduce()
+    {
+        $user = Auth::user();
+        $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
+        $this->data['user'] = $user;
+        return view(env('TEMPLATE', '') . 'me.introduce', $this->data);
+    }
     public function meHistory(Request $request)
     {
         $trans = new Transaction();
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
-        $this->data['navText'] = __('Giao dịch của tôi');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
     }
     public function meChild(Request $request)
     {
+        $userService = new UserServices();
+        $user = Auth::user();
         $id = Auth::user()->id;
-        $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
-        $this->data['childuser'] = $childuser;
+
         $parent = Auth::user();
         if ($request->input('childedit')) {
+            $input = $request->all();
+            $id = $input['id'];
+            $userC = User::find($id);
 
             $input = $request->all();
-            $id = $input['childid'];
-            $userC = User::find($id);
-            $courses = DB::table('order_details')
-                ->join('items', 'order_details.item_id', '=', 'items.id')
-                ->where('order_details.user_id', $id)
-                ->orderBy('order_details.created_at', 'desc')->take(4)
-                ->get();
-            $this->data['courses'] = $courses;
-            $this->data['hasBack'] = route('me.child');
-            $this->data['userC'] = $userC;
+            $userC->name = $input['username'];
+            $userC->dob = $input['dob'];
+            $userC->sex = $input['sex'];
+            $userC->introduce = $input['introduce'];
+            $userC->save($input);
+            return redirect()->route('me.child')->with('notify', 'Cập nhật tài khoản con thành công');
             $this->data['navText'] = __('Quản lý tài khoản con');
-            if ($request->input('save')) {
-                $input = $request->all();
-                $this->data['navText'] = __('Quản lý tài khoản con');
-                $userC->name = $input['username'];
-                $userC->dob = $input['dob'];
-                $userC->sex = $input['sex'];
-                $userC->introduce = $input['introduce'];
-                $userC->save($input);
-                $this->data['userC'] = $userC;
-                return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-            }
-            if ($request->input('more')) {
-                return redirect()->route('me.orders');
-            }
-            $this->data['navText'] = __('Quản lý tài khoản con');
-            return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-
-            // return redirect()->route('me.editchild')->with([ 'id' => $id ]);
         }
-
         if ($request->input('create')) {
             $input = $request->all();
             $userChild = new User();
             $userChild->createChild($parent, $input);
             return redirect()->route('me.child')->with('notify', 'Tạo tài khoản mới thành công');
         }
+        $this->data['orderStats'] = $userService->orderStats($user->id);
+        $childuser = User::where('user_id', $id)->where('is_child', 1)->get();
+        $this->data['childuser'] = $childuser;
+        $this->data['user'] = $user;
         $this->data['navText'] = __('Quản lý tài khoản con');
         return view(env('TEMPLATE', '') . 'me.child', $this->data);
     }
-    // public function meChildEdit(Request $request)
-    // {
-    //     $id = session()->get('id');
-    //     $userC = User::find($id);
-    //     $this->data['userC'] = $userC;
-    //     $this->data['navText'] = __('Quản lý tài khoản con');
-    //     if($request->input('save')){
-    //         $input=$request->all();
-    //         $this->data['navText'] = __('Quản lý tài khoản con');
-    //         $userC->name = $input['username'];
-    //         $userC->dob = $input['dob'];
-    //         $userC->sex = $input['sex'];
-    //         $userC->introduce = $input['introduce'];
-    //         $userC -> save($input);
-    //         $this->data['userC'] = $userC;
-    //         return redirect()->route('me.editchild')->with([ 'id' => $id ]);
-    //     }
-    //     return view(env('TEMPLATE', '') . 'me.editchild', $this->data);
-    // }
+    public function meChildHistory($id)
+    {
+        $userC = User::find($id);
+        $courses = DB::table('order_details')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('order_details.user_id', $id)
+            ->orderBy('order_details.created_at', 'desc')
+            ->get();
+        $this->data['courses'] = $courses;
+        $this->data['userC'] = $userC;
+        return view(env('TEMPLATE', '') . 'me.childhistory', $this->data);
+    }
     public function mePassword(Request $request)
     {
         $editUser = Auth::user();
@@ -354,7 +381,6 @@ class UserController extends Controller
             }
         }
         $this->data['user'] = $editUser;
-        $this->data['navText'] = __('Đổi Mật Khẩu');
         return view(env('TEMPLATE', '') . 'me.resetpassword', $this->data);
     }
 
@@ -392,7 +418,45 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view('user.member_edit', $this->data);
     }
+    public function admitstudent(Request $request)
+    {
+        if ($request->input('check')) {
+            $input = $request->all();
+            $id = $input['id'];
+            $data = DB::table('order_details')
+                ->join('users', 'users.id', '=', 'order_details.user_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                ->where('order_details.id', $id)
+                ->where('items.user_id',auth()->user()->id)
+                ->select(
+                    'items.id as itemId',
+                    'items.title',
+                    'items.short_content',
+                    'items.image as iimage',
+                    'users.image as uimage',
+                    'users.introduce',
+                    'users.name',
+                    'users.id as userId',
+                    'users.phone',
+                    'users.email',
+                    'users.address',
+                    'order_details.created_at',
+                    DB::raw('(SELECT count(*) FROM participations
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
+            GROUP BY participations.item_id
+            ) AS confirm_count'),
+                )
+                ->first();
+                // dd($data);
+            $this->data['data'] = $data;
 
+            return view(env('TEMPLATE', '') . 'me.admitstudent', $this->data);
+        }
+        $this->data['data'] = null;
+
+        return view(env('TEMPLATE', '') . 'me.admitstudent', $this->data);
+    }
     public function modCreate(Request $request)
     {
         if ($request->input('save')) {
@@ -549,18 +613,35 @@ class UserController extends Controller
     public function locationList(Request $request)
     {
         $user = Auth::user();
-        $this->data['locations'] = UserLocation::where('user_id', $user->id)->paginate();
+        $userLocationId = $user->id;
+        $userService = new UserServices();
+        if ($request->get('user_id')) {
+            $userLocationId = $request->get('user_id');
+        }
+        $this->data['locations'] = UserLocation::where('user_id', $userLocationId)->paginate();
         $this->data['navText'] = __('Quản lý địa điểm/chi nhánh');
+        $this->data['layout'] = $userService->isMod() ? 'layout' : 'anylearn.me.layout';
+        if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
         return view(env('TEMPLATE', '') . 'me.user_location_list', $this->data);
     }
 
     public function locationEdit(Request $request, $id)
     {
         $location = UserLocation::find($id);
+        $userService = new UserServices();
         if ($request->get('save') == "save") {
             $input = $request->input();
-            $input['user_id'] = Auth::user()->id;
-            $userService = new UserServices();
+            if ($request->get('user_id')) {
+                $input['user_id'] = $request->get('user_id');
+            } else {
+                $input['user_id'] = Auth::user()->id;
+            }
+
             $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
             if ($geoCode !== false) {
                 $input['longitude'] = $geoCode['longitude'];
@@ -580,25 +661,42 @@ class UserController extends Controller
                 Log::error($e);
                 return redirect()->back()->with('notify',  "Cập nhật chỉ thất bại");
             }
-
+            if ($request->get('user_id')) {
+                return redirect()->route('location', ['user_id' => $request->get('user_id')])->with('notify', "Cập nhật địa chỉ thành công");
+            }
             return redirect()->route('location')->with('notify', "Cập nhật địa chỉ thành công");
         }
+        $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+            ->where('status', 1)
+            ->select('id', 'name')
+            ->get();
         $this->data['location'] = $location;
         $this->data['provinces'] = Province::orderby('name')->get();
         $this->data['districts'] = District::where('parent_code', $location->province_code)->orderBy('name')->get();
         $this->data['wards'] = Ward::where('parent_code', $location->district_code)->orderBy('name')->get();
         $this->data['navText'] = __('Chỉnh sửa địa điểm/chi nhánh');
         $this->data['hasBack'] = true;
+        $this->data['layout'] = $userService->isMod() ? 'layout' : 'anylearn.me.layout';
+        if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
         return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
     }
 
     public function locationCreate(Request $request)
     {
+        $userService = new UserServices();
         if ($request->get('save') == "save") {
             $input = $request->input();
-            $input['user_id'] = Auth::user()->id;
+            if ($request->get('user_id')) {
+                $input['user_id'] = $request->get('user_id');
+            } else {
+                $input['user_id'] = Auth::user()->id;
+            }
 
-            $userService = new UserServices();
             $geoCode = $userService->getUserLocationGeo($input['address'] . " " . $input['ward_path']);
             if ($geoCode !== false) {
                 $input['longitude'] = $geoCode['longitude'];
@@ -618,13 +716,22 @@ class UserController extends Controller
                 Log::error($e);
                 return redirect()->back()->with('notify',  "Tạo địa chỉ thất bại");
             }
-
+            if ($request->get('user_id')) {
+                return redirect()->route('location', ['user_id' => $request->get('user_id')])->with('notify', "Cập nhật địa chỉ thành công");
+            }
             return redirect()->route('location')->with('notify', "Tạo địa chỉ thành công");
         }
         $this->data['provinces'] = Province::orderby('name')->get();
+        if ($userService->isMod()) {
+            $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
         $this->data['navText'] = __('Thêm mới địa điểm/chi nhánh');
 
         $this->data['hasBack'] = true;
+        $this->data['layout'] = $userService->isMod() ? 'layout' : 'anylearn.me.layout';
         return view(env('TEMPLATE', '') . 'me.user_location_form', $this->data);
     }
 
@@ -649,36 +756,38 @@ class UserController extends Controller
             ->paginate();
 
         $this->data['orders'] = $data;
-        $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
+        // $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
     public function orders(Request $request)
-    {
+    { 
         $user = Auth::user();
-        $this->data['navText'] = __('Khoá học của tôi');
-
-        $input = $request->input('search');
-        $item = Item::all()->where('title', 'LIKE', '%' . $input . '%');
-        $inputselect = $request->input('myselect');
         $orderDetailM = new OrderDetail();
-        $id = auth()->user()->id;
-        $childuser = DB::table('users')->where('is_child', $id)->orWhere('id', $id)->get();
-        $this->data['childuser'] = $childuser;
-        $this->data['inputselect'] = $inputselect;
-        $this->data['input'] = $request->input('search');
-
-        if ($inputselect == 'all' || $inputselect == null) {
-            $this->data['orders'] = $orderDetailM->searchall($user->id, $input);
-        } elseif ($inputselect == $user->id) {
-            $this->data['orders'] = $orderDetailM->searchparents($user->id, $input);
-        } else {
-            $this->data['orders'] = $orderDetailM->searchall($inputselect, $input);
-        }
-        if ($request->input('reset')) {
-            return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
-        }
+        $data = $orderDetailM->usersOrders($user->id);
+        $this->data['data'] = $data;
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
+    }
+
+    public function schedule(Request $request, $itemId)
+    { 
+        $schedule = ItemSchedulePlan::where('item_id', $itemId)->first();       
+        $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
+        
+        $daylist = [];
+        $weekdays = explode(',', $schedule->weekdays);
+        foreach ($period as $date) {
+            if (in_array($date->format('w') + 1, $weekdays)) {
+                $daylist[] = $date->format('Y-m-d'); 
+            }
+        }
+
+        $this->data['schedule'] = $schedule;
+        $this->data['daylist'] = $daylist;
+        $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first(); 
+        $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
+
+        return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);
     }
 
     public function contractSign($id)
@@ -722,10 +831,21 @@ class UserController extends Controller
                 $contract->template = Contract::makeContent($template, $user, $contract);
             }
         }
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $fileService = new FileServices();
+            $fileuploaded = $fileService->doUploadImage($request, 'file');
+            if ($fileuploaded === false) {
+                return redirect()->back()->with('notify', 'Tải lên chứng chỉ không thành công.');
+            }
+            $userDocM = new UserDocument();
+            $userDocM->addDocWeb($fileuploaded, $user);
+            return redirect()->back()->with('notify', 'Tải lên chứng chỉ thành công.');
+        }
 
+        $this->data['files'] = UserDocument::where('user_id', $user->id)->get();
         // dd($contract);
         $this->data['contract'] = $contract;
-        $this->data['navText'] = __('Quản lý Hợp đồng');
+        // $this->data['navText'] = __('Quản lý Hợp Đồng/Chứng Chỉ');
         return view(env('TEMPLATE', '') . 'me.contract', $this->data);
     }
 
@@ -746,6 +866,40 @@ class UserController extends Controller
         $this->data['files'] = UserDocument::where('user_id', $user->id)->get();
         $this->data['navText'] = __('Quản lý Chứng chỉ');
         return view(env('TEMPLATE', '') . 'me.certificate', $this->data);
+    }
+    public function withdraw(Request $request)
+    {
+        $user = Auth::user();
+        if ($request->input('withdraw')) {
+            $input = $request->all();
+            if (Hash::check($input['password'], $user->password)) {
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'type' => ConfigConstants::TRANSACTION_WITHDRAW,
+                    'amount' => $input['withdraw'],
+                    'ref_amount' => $input['withdraw'],
+                    'pay_method' => UserConstants::WALLET_M,
+                    'pay_info' => '',
+                    'content' => 'Rút ' . $input['withdraw'] . ' cho đơn đối tác #' . ($user->id) . ' ' . $user->name,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'order_id' => null
+                ]);
+                return redirect()->back()->with('notify', 'Lệnh rút Tiền đã được gởi đi');
+            } else {
+                return redirect()->back()->with('notify', 'Mật khẩu không chính xác');
+            }
+        }
+        $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method', 'wallet_m')->where('type', '!=', ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
+        $totalAmount = DB::table('transactions')
+            ->where('type', 'withdraw')
+            ->where('status', 0)
+            ->sum('amount');
+        $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
+        $this->data['history'] = $history;
+        $this->data['totalAmount'] = $totalAmount;
+        $this->data['user'] = $user;
+        $this->data['contract'] = $contract;
+        return view(env('TEMPLATE', '') . 'me.withdraw', $this->data);
     }
     public function finance(Request $request)
     {

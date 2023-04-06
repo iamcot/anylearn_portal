@@ -32,7 +32,7 @@ class CourseController extends Controller
         $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
-            $rs = $courseService->createItem($input);
+            $rs = $courseService->createItem($request);
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo khóa học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {

@@ -1,5 +1,5 @@
 @inject('userServ','App\Services\UserServices')
-<nav class="navbar navbar-expand-lg navbar-light bg-topbg">
+<nav class="navbar navbar-expand-lg navbar-light bg-topbg navbar2">
     <div class="container">
         <a class="d-lg-none navbar-brand ">
             <img src="/cdn/anylearn/img/logo-color.svg" alt="" height="59">
@@ -39,7 +39,7 @@
                         <i class="fa fa-shopping-cart position-relative"><span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle">{{ $userServ->countItemInCart(Auth::user()->id) }}</span></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/me">
+                        <a class="dropdown-item" href="/me/profile">
                             <i class="fas fa-user-circle fa-sm fa-fw ms-2 text-secondary"></i>
                             @lang('Trang Quản lý')
                         </a>
@@ -57,7 +57,7 @@
                         @else
                            <span class="locale_flag-en"></span>
                         @endif
-                        
+
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="{{ url('/') . '?language=vi' }}">

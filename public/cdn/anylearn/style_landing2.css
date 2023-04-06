@@ -131,8 +131,11 @@ nav a {
     color: #fff !important;
     border-radius: 50px;
 }
+.nav-item.active>.nav-link{
+    color: #fff !important;
+}
 
-.nav-item.active>.nav-link {
+.navbar2>.nav-item.active>.nav-link {
     color: #fff !important;
 }
 

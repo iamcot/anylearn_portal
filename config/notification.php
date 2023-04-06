@@ -47,6 +47,7 @@ return [
         'title' => 'Đăng kí thành công',
         'template' => 'Bạn đã đăng ký {course} thành công. Kiểm tra lịch để đừng bỏ lỡ nhé.',
         'route' => '/account/calendar',
+        // 'email' => 'App\Mail\OrderSuccess',
     ],
     NotifConstants::COURSE_JOINED =>  [
         'title' => 'Có học viên vừa xác nhận tham gia',
@@ -80,7 +81,7 @@ return [
     /** Transaction */
 
     NotifConstants::TRANSACTIONN_UPDATE =>  [
-        'title' => 'Điểm của bạn có sự thay đổi',
+        'title' => 'Ví của bạn có sự thay đổi',
         'template' => '{content}',
         'route' => '/transaction',
     ],
@@ -201,9 +202,9 @@ return [
 
     NotifConstants::COURSE_REGISTER_APPROVE =>  [
         'title' => 'Đăng ký học đã được xác nhận thanh toán',
-        'template' => 'Khoá học bạn đăng ký đã được thanh toán. Vui lòng kiểm tra lịch học.',
+        'template' => 'Khoá học {className} bạn đăng ký đã được thanh toán. Vui lòng kiểm tra lịch học.',
         'route' => '/account/calendar',
-        // 'email' => 'App\Mail\OrderSuccess',
+        'email' => 'App\Mail\OrderSuccess',
     ],
 
     NotifConstants::COURSE_REGISTER_REJECT =>  [

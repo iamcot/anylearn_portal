@@ -1,17 +1,5 @@
 @inject('fileService', 'App\Services\FileServices')
 <div class="row p-5">
-    <div class="col-md-6 mb-2">
-        <h4>@lang('Hình ảnh chính')
-            <button class="btn btn-sm btn-primary pull-right" name="tab" value="resource"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
-        </h4>
-        <hr />
-        <input name="image" type="file" id="mainImageInp" />
-        <div id="mainImage" class="mt-2">
-            @if(!empty($course) && $course['info']->image)
-            <img src="{{ $course['info']->image }}" alt="$course['info']->title" class="img-fluid">
-            @endif
-        </div>
-    </div>
     <div class="col-md-6">
         @if(!empty($course['resource']))
         <h4>@lang('Danh sách tài liệu')
