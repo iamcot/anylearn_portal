@@ -38,17 +38,20 @@ cart
                     <td class="text-center">{{ $loop->index + 1 }}</td>
                     <td><img class="img-fluid" style="max-height: 80px" src="{{ $item->image }}"></td>
                     <td>
-                        @if ($item->class_name)
-                        {{ $item->class_name }}
-                        <span class="small text-danger">({{ $item->title }} )</span>
-                        @else
+                        <strong class="text-success">
                         {{ $item->title }}
-
-                        @endif
+                        </strong>
                         @if ($item->childId != $user->id)
-                        ({{ $item->childName }})
+                        <span class="text-primary">({{ $item->childName }})</span>
                         @endif
-
+                        <p class="small pt-2">
+                        @if($item->plan_location_name)
+                        Học tại {{ $item->plan_location_name }}; @foreach(explode(",", $item->plan_weekdays) as $day ) {{ $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }} {{ !$loop->last ? ", " : ". " }} @endforeach
+                        Bắt đầu từ {{ date("d/m/Y", strtotime($item->plan_date_start)) }}
+                        @else 
+                        Bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }}
+                        @endif
+                        </p>
                     </td>
 
                     <td class="text-end  pe-5">

@@ -14,6 +14,11 @@ img {
     background: #fff;
 }
 
+#article_content img {
+    text-align: center;
+    max-height: 100% !important;
+}
+
 .avatar {
     font-size: 1rem;
     position: relative;
@@ -859,6 +864,7 @@ nav a {
 footer {
     background-color: #F7F7F7;
     min-height: 300px;
+    overflow: hidden;
 }
 
 .topic_box {
@@ -952,6 +958,36 @@ footer .head_text {
 
 .collapse-module button[aria-expanded="true"]:after {
     content: '⇳ THU GỌN';
+}
+
+.avatar-profile {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(50%);
+}
+
+.avatar-5xl {
+    height: 10.5rem;
+    width: 10.5rem;
+}
+
+.avatar {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar img {
+    object-fit: cover;
+}
+
+.avatar .avatar-name,
+.avatar img {
+    width: 100%;
+    height: 100%;
+}
+
+.avatar img {
+    display: block;
 }
 
 

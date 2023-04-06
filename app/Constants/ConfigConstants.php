@@ -61,6 +61,7 @@ class ConfigConstants
     const TRANSACTION_FOUNDATION = 'foundation';
     const TRANSACTION_DEPOSIT_REFUND = 'deposit_refund';
     const TRANSACTION_COMMISSION_ADD = 'commission_add';
+    const TRANSACTION_PARTNER = 'partner';
 
     const TRANSACTION_FIN_SALARY =  'fin_salary';
     const TRANSACTION_FIN_OFFICE ='fin_office';

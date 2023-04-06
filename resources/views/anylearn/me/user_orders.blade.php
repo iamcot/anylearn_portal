@@ -3,303 +3,150 @@
 
 @extends('anylearn.me.layout')
 @section('spmb')
-orders
+    orders
 @endsection
 @section('body')
-    <ul class="nav nav-tabs" id="classtab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary {{ session('tab', 'open') == 'done' ? 'active' : '' }}" id="done-tab"
-                data-bs-toggle="tab" data-bs-target="#done" type="button" role="tab" aria-controls="done"
-                aria-selected="true">@lang('Đã xong')</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary {{ session('tab', 'open') == 'open' ? 'active' : '' }}" id="open-tab"
-                data-bs-toggle="tab" data-bs-target="#open" type="button" role="tab" aria-controls="open"
-                aria-selected="true">@lang('Đang mở')</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link text-secondary {{ session('tab', 'open') == 'fav' ? 'active' : '' }}" id="fav-tab"
-                data-bs-toggle="tab" data-bs-target="#fav" type="button" role="tab" aria-controls="fav"
-                aria-selected="true">@lang('Ưa thích')</button>
-        </li>
-    </ul>
-
-    <div class="tab-content border border-top-0 mb-5 shadow bg-white" id="myTabContent">
-        <div class="tab-pane fade {{ session('tab', 'open') == 'done' ? 'show active' : '' }} p-2" id="done"
-            role="tabpanel" aria-labelledby="done-tab">
-            @if (empty($orders['done']) || count($orders['done']) == 0)
-                <form action="" method="">
-                    <div class="input-group">
-                        <div class="row">
-                            <div class="input-group mb-3">
-                                <div class="row mr-1">
-                                    <div class="mx-auto">
-                                        <div class="input-group">
-                                            <!-- <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input"> -->
-                                            <!-- <input class="form-control border-end-0 border" name="search" type="search" value="{{ !empty($input) ? $input : null }}" placeholder="Tìm Khóa học" id="example-search-input"> -->
-                                            <input class="form-control border-end-0 border" name="search" type="search"
-                                                value="{{ !empty($input) ? $input : null }}"
-                                                placeholder="@lang('Tìm Khóa học')" id="example-search-input">
-                                            <span class="input-group-append">
-                                                <!-- <button class="btn btn-outline-secondary bg-white border-start-0  border ms-n5" type="submit"> -->
-                                                <button id="sm"
-                                                    class="btn btn-outline-secondary bg-white border-start-0  border ms-n5"
-                                                    type="submit">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="input-group-append">
-                                    &nbsp
-                                    <select name="myselect" class="custom-select" id="inputGroupSelect04"
-                                        onchange="this.form.submit()">
-                                        <option value="all">@lang('Tất cả tài khoản học')</option>
-                                        @foreach ($childuser as $item)
-                                            <option <?php if ($inputselect == $item->id) {
-                                                echo "selected='selected'";
-                                            } ?> value="{{ $item->id }}"> {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                                &nbsp&nbsp
-                                <!-- <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a> -->
-                                <a type="reset" href="{{ route('me.orders') }}"
-                                    style="margin-top:6px;text-decoration:none;">@lang('xóa bộ lọc')</a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <table class="table  text-secondary table-hover">
+    <div class="container mt-4">
+        <h1 class="mb-4">Khóa học của tôi</h1>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <input type="text" id="search-course-name" class="form-control" placeholder="Tìm kiếm tên khóa học...">
+            </div>
+            <div class="col-md-3">
+                <input type="date" id="search-registration-date" class="form-control" placeholder="Ngày đăng kí...">
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" aria-label="Trạng thái" id="search-status">
+                    <option value="all" selected>Chọn trạng thái</option>
+                    <option value="1">Đang mở</option>
+                    <option value="99">Đã xong</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" aria-label="Tài khoản học" id="search-user-account">
+                    <option value="all" selected>Chọn tài khoản</option>
+                    @foreach ($userServ->accountC(auth()->user()->id) as $row)
+                        <option value="{{ $row->name }}">{{ $row->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <table class="table table-striped" id="myTable">
+            <thead>
+                <tr>
+                    <th>Tên khóa học</th>
+                    <th>Ngày đăng kí</th>
+                    <th>Trạng thái</th>
+                    <th>Tài khoản học</th>
+                    <th>Lịch học</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($data as $row)
                     <tr>
-                        <p class="p-2">@lang('Không tìm thấy khóa học nào')</p>
+                        <td width="40%">{{ $row->title }}</td>
+                        <td>{{ $row->date }}</td>
+                        @if ($row->user_status == 1)
+                            <td>Đang mở</td>
+                        @else
+                            <td>Đã xong</td>
+                        @endif
+                        <td>{{ $row->child_name }}</td>
+                        <td><a href="{{ route('me.orders.schedule', ['id' => $row->item_id]) }}">Xem</a></td>
                     </tr>
-                </table>
-            @else
-                <form name="myform" action="" method="">
-                    <div class="input-group">
-                        <div class="row">
-                            <div class="input-group mb-3">
-                                <div class="row mr-1">
-                                    <div class="mx-auto">
-                                        <div class="input-group">
-                                            <input class="form-control border-end-0 border" name="search" type="search"
-                                                value="{{ !empty($input) ? $input : null }}" placeholder="@lang('Tìm Khóa học')"
-                                                id="example-search-input">
-                                            <span class="input-group-append">
-                                                <button id="sm"
-                                                    class="btn btn-outline-secondary bg-white border-start-0  border ms-n5"
-                                                    type="submit">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group-append">
-                                    &nbsp
-                                    <select name="myselect" class="custom-select" id="inputGroupSelect04"
-                                        onchange="this.form.submit()">
-                                        <option value="all">@lang('Tất cả tài khoản học')</option>
-                                        @foreach ($childuser as $item)
-                                            <option <?php if ($inputselect == $item->id) {
-                                                echo "selected='selected'";
-                                            } ?> value="{{ $item->id }}"> {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                                &nbsp&nbsp
-                                <a type="reset" href="{{ route('me.orders') }}"
-                                    style="margin-top:6px;text-decoration:none;">@lang('xóa bộ lọc')</a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <table class="table text-secondary table-hover table-borderless">
-                    <thead class="table-secondary text-secondary">
-                        <tr>
-                            <th class="border-0">@lang('Ngày đăng ký')</th>
-                            <th class="border-0">@lang('Ngày hoàn thành')</th>
-                            <th class="border-0">@lang('Tên khóa học')</th>
-                            <th class="border-0">@lang('Tài khoản học')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($orders['done'] as $item)
-                            <tr>
-                                <td>{{ date('d/m', strtotime($item->date)) }}</td>
-                                <td>{{ date('d/m', strtotime($item->date_end)) }}</td>
-                                <td>
-                                    <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
-                                </td>
-                                <td>
-                                    <div class="">{{ $item->name }}</div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-                </table>
-            @endif
-        </div>
-        <div class="tab-pane fade {{ session('tab', 'open') == 'open' ? 'show active' : '' }} p-2" id="open"
-            role="tabpanel" aria-labelledby="open-tab">
-            @if (empty($orders['open']) || count($orders['open']) == 0)
-                <form action="" method="">
-                    <div class="input-group">
-                        <div class="row">
-                            <div class="input-group mb-3">
-                                <div class="row mr-1">
-                                    <div class="mx-auto">
-                                        <div class="input-group">
-                                            <input class="form-control border-end-0 border" name="search" type="search"
-                                                value="{{ !empty($input) ? $input : null }}" placeholder="@lang('Tìm Khóa học')"
-                                                id="example-search-input">
-                                            <span class="input-group-append">
-                                                <button id="sm"
-                                                    class="btn btn-outline-secondary bg-white border-start-0  border ms-n5"
-                                                    type="submit">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group-append">
-                                    <!--  &nbsp -->
-                                    <select name="myselect" class="custom-select" id="inputGroupSelect04"
-                                        onchange="this.form.submit()">
-                                        <option value="all">@lang('Tất cả tài khoản học')</option>
-                                        @foreach ($childuser as $item)
-                                            <option <?php if ($inputselect == $item->id) {
-                                                echo "selected='selected'";
-                                            } ?> value="{{ $item->id }}"> {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                                &nbsp&nbsp
-                                <a type="reset" href="{{ route('me.orders') }}"
-                                    style="margin-top:6px;text-decoration:none;">@lang('xóa bộ lọc')</a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <table class="table  text-secondary table-hover">
-                    <tr>
-                        <p class="p-2">@lang('Không tìm thấy khóa học nào')</p>
-                    </tr>
-                </table>
-            @else
-                <form action="" method="">
-                    <div class="input-group">
-                        <div class="row">
-                            <div class="input-group mb-3">
-
-                                <div class="row mr-1">
-                                    <div class="mx-auto">
-                                        <div class="input-group">
-                                            <input class="form-control border-end-0 border" name="search" type="search"
-                                                value="{{ !empty($input) ? $input : null }}" placeholder="@lang('Tìm Khóa học')"
-                                                id="example-search-input">
-                                            <span class="input-group-append">
-                                                <button id="sm"
-                                                    class="btn btn-outline-secondary bg-white border-start-0  border ms-n5"
-                                                    type="submit">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group-append">
-                                    &nbsp
-                                    <select name="myselect" class="custom-select" id="inputGroupSelect04"
-                                        onchange="this.form.submit()">
-                                        <option value="all">@lang('Tất cả tài khoản học')</option>
-                                        @foreach ($childuser as $item)
-                                            <option <?php if ($inputselect == $item->id) {
-                                                echo "selected='selected'";
-                                            } ?> value="{{ $item->id }}"> {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                                &nbsp&nbsp
-                                <!-- <a type="reset" href="/me/orders" style="margin-top:6px;text-decoration:none;">xóa bộ lọc</a> -->
-                                <a type="reset" href="{{ route('me.orders') }}"
-                                    style="margin-top:6px;text-decoration:none;">@lang('xóa bộ lọc')</a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <table class="table  text-secondary table-hover">
-                    <thead class="table-secondary text-secondary">
-                        <tr>
-                            <th class="border-0">@lang('Ngày đăng ký')</th>
-                            <th class="border-0">@lang('Tên khóa học')</th>
-                            <th class="border-0">@lang('Tài khoản học')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($orders['open'] as $item)
-                            <tr>
-                                <td width="18%">{{ date('d/m', strtotime($item->date)) }} {{ $item->time }}</td>
-                                <td>
-                                    <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
-                                </td>
-                                <td>
-                                    <div class="">{{ $item->name }}</div>
-
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-                </table>
-            @endif
-        </div>
-        <div class="tab-pane fade {{ session('tab', 'open') == 'fav' ? 'show active' : '' }} p-2" id="fav"
-            role="tabpanel" aria-labelledby="fav-tab">
-            @if (empty($orders['fav']) || count($orders['fav']) == 0)
-                <p class="p-2">@lang('Bạn chưa đánh dấu khoá học nào là ưa thích.')</p>
-            @else
-                <table class="table text-secondary table-hover">
-                    <thead class="table-secondary text-secondary">
-                        <tr>
-                            <td>@lang('Tên khóa học')</td>
-                            <td>@lang('Hành động')</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($orders['fav'] as $item)
-                            <tr>
-                                <td>
-                                    <div class="">[{{ $item->item_subtype }}] {{ $item->title }}</div>
-                                </td>
-                                <td>
-                                    <a href="{{ $itemServ->classUrl($item->item_id) }}" target="_BLANK"
-                                        class="btn btn-success btn-sm border-0 rounded-pill">@lang('ĐĂNG KÝ')</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-                </table>
-            @endif
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 @endsection
-<script>
-    function customReset() {
-        document.getElementById("name").value = "";
-        document.getElementById("country").value = "";
-    }
-</script>
+@section('jscript')
+    @parent
+    <script>
+        const searchCourseName = document.querySelector('#search-course-name');
+        const searchRegistrationDate = document.querySelector('#search-registration-date');
+        const searchStatus = document.querySelector('#search-status');
+        const searchUserAccount = document.querySelector('#search-user-account');
+
+        searchCourseName.addEventListener('input', handleFilter);
+        searchRegistrationDate.addEventListener('input', handleFilter);
+        searchStatus.addEventListener('change', handleFilter);
+        searchUserAccount.addEventListener('change', handleFilter);
+
+        // console.log(searchCourseName, searchRegistrationDate, searchStatus, searchUserAccount);
+
+        function handleFilter() {
+
+            const courseName = searchCourseName.value.toLowerCase();
+            const registrationDate = searchRegistrationDate.value.toLowerCase();
+            const status = searchStatus.value;
+            const userAccount = searchUserAccount.value.toLowerCase();
+
+            const courses = JSON.parse('<?php echo json_encode($data); ?>');
+            // console.log(courseName, registrationDate, status, userAccount);
+
+            // Lọc các khóa học phù hợp với các tiêu chí tìm kiếm
+            const filteredCourses = courses.filter(course => {
+                const name = course.title.toLowerCase();
+                const date = course.date.toLowerCase();
+                const courseStatus = course.user_status;
+                const user = course.name.toLowerCase();
+                const toDate = new Date(); // ngày hiện tại
+                // console.log(courseStatus == status);
+                if (
+                    (name.includes(courseName)) &&
+                    (date.includes(registrationDate) || registrationDate == null) &&
+                    (status === 'all' || courseStatus == status) &&
+                    (user === userAccount || userAccount === 'all')
+                ) {
+                    return true;
+                }
+                return false;
+            });
+
+            // Hiển thị danh sách khóa học đã lọc
+            filtable(filteredCourses);
+        }
+
+        function filtable(courses) {
+            const tableBody = document.querySelector('#myTable tbody');
+            tableBody.innerHTML = '';
+            const statusText = {
+                1: 'Đang mở',
+                99: 'Đã xong'
+            };
+            for (const course of courses) {
+
+                const tableRow = document.createElement('tr');
+
+                const nameColumn = document.createElement('td');
+                nameColumn.textContent = course.title;
+                nameColumn.style.width = '40%';
+                tableRow.appendChild(nameColumn);
+
+                const dateColumn = document.createElement('td');
+                dateColumn.textContent = course.date;
+                tableRow.appendChild(dateColumn);
+
+                const statusColumn = document.createElement('td');
+                statusColumn.textContent = statusText[course.user_status];
+                tableRow.appendChild(statusColumn);
+
+                const userColumn = document.createElement('td');
+                userColumn.textContent = course.name;
+                tableRow.appendChild(userColumn);
+
+                // tạo ra tag a
+                const scheduleLink = document.createElement('a');
+                // thêm href // course.item_id = row->item_id
+                scheduleLink.href = "/me/orders/schedule?id=" + course.item_id;
+                scheduleLink.textContent = "Xem";
+                // tạo td và add tag a
+                const scheduleColumn = document.createElement('td');
+                scheduleColumn.appendChild(scheduleLink);
+                tableRow.appendChild(scheduleColumn);
+
+                tableBody.appendChild(tableRow);
+            }
+        }
+    </script>
+@endsection

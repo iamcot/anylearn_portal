@@ -74,22 +74,36 @@ Route::any('/password/update', 'Auth\OTPResetPasswordController@updatePassword')
 Route::get('/anylog.gif', 'CrmController@anylog')->name('anylog');
 
 Auth::routes();
-
 Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
+    Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
+    Route::get('/profile', 'UserController@meProfile')->name('me.profile');
     Route::get('/class', 'ClassController@list')->name('me.class');
     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
+    Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
 
     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
 
     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
+
     Route::any('/orders', 'UserController@orders')->name('me.orders');
+    Route::any('/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
     Route::any('/ischild', 'UserController@meChild')->name('me.child');
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
+
     Route::any('/history', 'UserController@meHistory')->name('me.history');
+    Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
+    Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
+    Route::any('/friend', 'UserController@meFriend')->name('me.friend');
+    Route::any('/work', 'UserController@meWork')->name('me.work');
+
+
+
+
 
 
 
@@ -160,11 +174,13 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
 
 
     Route::any('/user/members', 'UserController@members')->name('user.members');
+    Route::any('/user/activity', 'UserController@activity')->name('user.activity');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
     Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
     Route::any('/user/contract/{id}', 'UserController@contractInfo')->name('user.contract.info');
 
     Route::any('/crm/sale/{userId}', 'CrmController@memberSale')->name('crm.sale');
+    Route::any('/sale/request', 'CrmController@requestSale')->name('crm.requestsale');
     Route::any('/crm/save-note', 'CrmController@saveNote')->name('crm.save-note');
     Route::any('/crm/save-call', 'CrmController@saveCall')->name('crm.save-call');
     Route::any('/crm/save-chat', 'CrmController@saveChat')->name('crm.save-chat');

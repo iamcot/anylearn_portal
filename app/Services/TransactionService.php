@@ -9,6 +9,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\Models\Configuration;
+use App\Models\Contract;
 use App\Models\Item;
 use App\Models\ItemExtra;
 use App\Models\Notification;
@@ -27,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionService
 {
@@ -92,6 +94,26 @@ class TransactionService
         return true;
     }
 
+    public function approveWalletmTransaction($id)
+    {
+        $trans = Transaction::find($id);
+
+        $trans->update([
+            'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        User::find($trans->user_id)->update([
+            'wallet_m' => DB::raw('wallet_m + ' . $trans->amount),
+        ]);
+        // send notif
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
+            'content' => $trans->content
+        ]);
+        return true;
+    }
+
     private function statusText($status)
     {
         switch ($status) {
@@ -129,7 +151,7 @@ class TransactionService
             ->where('od.item_id', $itemId)
             ->count();
 
-        if ($alreadyRegister > 0) {
+        if ($alreadyRegister > 0 && $item->allow_re_register == 0) {
             return 'Bạn đã đăng ký khóa học này hoặc khóa học đang chờ thanh toán.';
         }
         $voucher = $request->get('voucher', '');
@@ -140,29 +162,9 @@ class TransactionService
             $status = OrderConstants::STATUS_DELIVERED;
             $amount = $item->price;
             $childUserDB = $childUser > 0 ? User::find($childUser) : null;
-            // $dbVoucher = null;
-            // $voucherM = new Voucher();
+
             $saleId = $this->findSaleIdFromBuyerOrItem($user->id, $item->id);
-            // if (!empty($voucher)) {
-            //     try {
-            //         $dbVoucher = $voucherM->getVoucherData($user->id, $voucher);
-            //         if ($dbVoucher->type == VoucherGroup::TYPE_CLASS) {
-            //             $usedVoucher = $voucherM->useVoucherClass($user->id, $item->id, $dbVoucher);
-            //             $openOrder = Order::create([
-            //                 'user_id' => $user->id,
-            //                 'amount' => $item->price,
-            //                 'quantity' => 1,
-            //                 'status' => $status,
-            //                 'payment' => UserConstants::VOUCHER,
-            //                 'sale_id' => $saleId,
-            //             ]);
-            //             $transStatus = ConfigConstants::TRANSACTION_STATUS_DONE;
-            //         }
-            //     } catch (\Exception $e) {
-            //         DB::rollback();
-            //         return $e->getMessage();
-            //     }
-            // }
+
             if (!$openOrder) {
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
@@ -215,6 +217,7 @@ class TransactionService
                 'unit_price' => $item->price,
                 'paid_price' => $item->price,
                 'status' => $status,
+                'item_schedule_plan_id' => !empty($input['plan']) ? $input['plan'] : null,
             ]);
             if (!empty($input['extrafee'])) {
                 foreach ($input['extrafee'] as $key) {
@@ -291,6 +294,7 @@ class TransactionService
                 'user_id' => $user->id,
                 'type' => ConfigConstants::TRANSACTION_COMMISSION,
                 'amount' => $directCommission,
+                'ref_amount' => $amount,
                 'pay_method' => UserConstants::WALLET_C,
                 'pay_info' => '',
                 'content' => 'Nhận điểm từ khóa học đã mua: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
@@ -299,15 +303,16 @@ class TransactionService
             ]);
 
             //pay author
-            $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+            $authorCommission = floor($amount * $commissionRate / 1);
 
             Transaction::create([
                 'user_id' => $author->id,
-                'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                'type' => ConfigConstants::TRANSACTION_PARTNER,
                 'amount' => $authorCommission,
-                'pay_method' => UserConstants::WALLET_C,
+                'ref_amount' => $amount,
+                'pay_method' => UserConstants::WALLET_M,
                 'pay_info' => '',
-                'content' => 'Nhận điểm từ bán khóa học: ' . $item->title,
+                'content' => 'Doanh thu từ bán khóa học: ' . $item->title,
                 'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                 'order_id' => $orderDetail->id, //TODO user order detail instead order id to know item
             ]);
@@ -626,14 +631,14 @@ class TransactionService
 
     public function approveRegistrationAfterWebPayment($orderId, $payment = OrderConstants::PAYMENT_ONEPAY)
     {
+        $userService = new UserServices();
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
             return false;
         }
         $user = User::find($openOrder->user_id);
-        $user->update([
-            'wallet_m' => DB::raw('wallet_m + ' . $openOrder->amount)
-        ]);
+
+
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -658,12 +663,25 @@ class TransactionService
             $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
             $item = Item::find($orderItem->item_id);
             $author = User::find($item->user_id);
-            $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
-                'course' => $item->title,
+            if ($item->subtype == "online" || $item->subtype == "video") {
+                $user->update([
+                    'wallet_m' => DB::raw('wallet_m + ' . $item->price)
+                ]);
+            }
+            $userService->MailToPartnerRegisterNew($item, $user->id, $author);
+            $dataOrder = $this->orderDetailToDisplay($orderItem->id);
+
+            $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
+                'username' => $user->name,
+                'className' => $dataOrder->title,
+                'orderData' => $dataOrder,
+                'extraFee' => $this->extraFee($orderItem->id),
             ]);
+
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
                 'username' => $author->name,
                 'course' => $item->title,
+                'orderid' => $openOrder->id,
             ]);
             SocialPost::create([
                 'type' => SocialPost::TYPE_CLASS_REGISTER,
@@ -674,13 +692,56 @@ class TransactionService
             ]);
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
-        $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
-            'name' => '',
-            'class' => '',
-            'school' => '',
-        ]);
 
         return true;
+    }
+
+    public function orderDetailsToDisplay($orderId)
+    {
+        return DB::table('order_details AS od')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->join('users AS u2', 'u2.id', '=', 'od.user_id')
+            ->leftJoin('item_schedule_plans AS isp', 'isp.id', '=', 'od.item_schedule_plan_id')
+            ->leftJoin('user_locations AS ul', 'ul.id', '=', 'isp.user_location_id')
+            ->where('od.order_id', $orderId)
+            ->select(
+                'od.*',
+                'items.title',
+                'items.image',
+                'items.date_start',
+                'items.is_paymentfee',
+                'u2.name as childName',
+                'u2.id as childId',
+                'isp.title AS plan_title',
+                'isp.weekdays AS plan_weekdays',
+                'isp.date_start AS plan_date_start',
+                'ul.title AS plan_location_name'
+            )
+            ->get();
+    }
+
+    public function orderDetailToDisplay($odId)
+    {
+        return DB::table('order_details AS od')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->join('users AS u2', 'u2.id', '=', 'od.user_id')
+            ->leftJoin('item_schedule_plans AS isp', 'isp.id', '=', 'od.item_schedule_plan_id')
+            ->leftJoin('user_locations AS ul', 'ul.id', '=', 'isp.user_location_id')
+            ->where('od.id', $odId)
+            ->select(
+                'od.*',
+                'items.title',
+                'items.image',
+                'items.date_start',
+                'items.is_paymentfee',
+                'u2.name as childName',
+                'u2.id as childId',
+                'isp.title AS plan_title',
+                'isp.weekdays AS plan_weekdays',
+                'isp.date_start AS plan_date_start',
+                'ul.title AS plan_location_name'
+            )
+            ->first();
     }
 
     public function paymentPending($orderId)

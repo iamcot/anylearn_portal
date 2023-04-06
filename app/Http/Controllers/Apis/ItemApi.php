@@ -30,7 +30,7 @@ class ItemApi extends Controller
             return response('Chưa có loại khóa học', 400);
         }
         $itemService = new ItemServices();
-        $newItem = $itemService->createItem($request->all(), ItemConstants::TYPE_CLASS, $user);
+        $newItem = $itemService->createItem($request, ItemConstants::TYPE_CLASS, $user);
         if ($newItem instanceof Validator) {
             return response($newItem->errors()->first(), 400);
         }
