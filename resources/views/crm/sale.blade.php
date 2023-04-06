@@ -206,7 +206,12 @@
                         </tbody>
                     </table>
                 </div>
+                @if ($idC != null)
+                <div class="card-footer"></div>
+                @else
                 <div class="card-footer">{{ $memberOrders->appends(request()->query())->links() }}</div>
+                @endif
+
             </div>
         </div>
 
