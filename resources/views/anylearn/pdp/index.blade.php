@@ -143,15 +143,19 @@
                         @include('anylearn.widget.rating', ['score' => $item->rating ?? 0])
                         @if ($item->ages_min > 0 && $item->ages_max > 0)
                             <p><strong>@lang('Độ tuổi:')</strong> {{ $item->ages_min . '-' . $item->ages_max }}</p>
+                        @else
+                        <p><strong>@lang('Độ tuổi:')</strong> Đang cập nhật </p>
                         @endif
                         @if ($item->seats > 0)
                             <p><strong>@lang('Số lượng'): </strong>
-                            @if ($registered > 0) 
+                            @if ($registered > 0)
                                 {{ $item->seats - $registered }}
-                            @else 
+                            @else
                                 {{ $item->seats }}
                             @endif
                             </p>
+                        @else
+                        <p><strong>@lang('Số lượng'): </strong> Không giới hạn </p>
                         @endif
                         <p><strong> @lang('Khai giảng:')</strong>
                             {{ date('d/m/Y', strtotime($item->date_start)) }}
@@ -168,7 +172,7 @@
                             </p>
 
                         </div>
-                        <div class="mt-1 mb-0">
+                        <div class="mt-1 mb-5">
                             @if (!auth()->check())
                                 @if ($item->activiy_trial == 1)
                                     <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}" class="btn btn-sm bg-none border">@lang('Học Thử')
@@ -196,35 +200,37 @@
                                 @endif
                             </form>
                             @endif
-
                         </div>
-                        <div class="col-lg-12 col-md-12 d-flex mt-3">
-                            <div class="flex-fill pt-2">
-                                @if (!auth()->check())
-                                    <a class="border-0 btn btn-success form-control rounded-pill"
-                                        href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}">@lang('Đăng ký học')</a>
+                            <div class="col-lg-12 col-md-12 d-flex mt-3">
+                                <div class="flex-fill pt-2">
+                                    @if (!auth()->check())
+                                        <a class="border-0 btn btn-success form-control rounded-pill"
+                                            href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}">@lang('Đăng ký học')</a>
+                                    @else
+                                        <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
+                                            <input type="hidden" name="class" value="{{ $item->id }}">
+                                            <button name="action" value="add2cart"
+                                                class="border-0 btn btn-success form-control rounded-pill">@lang('Đăng ký học')</button>
+                                        </form>
+                                    @endif
+                                </div>
+                                @if ($is_fav)
+                                    <div class="flex-end p-2"><a class=" text-danger"
+                                            href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
+                                                class="fas fa-2x fa-heart"></i></a></div>
                                 @else
-                                    <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
-                                        <input type="hidden" name="class" value="{{ $item->id }}">
-                                        <button name="action" value="add2cart"
-                                            class="border-0 btn btn-success form-control rounded-pill">@lang('Đăng ký học')</button>
-                                    </form>
+                                    <div class="flex-end p-2 text-success"><a class="text-danger"
+                                            href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
+                                                class="far fa-2x fa-heart"></i></a></div>
                                 @endif
+                                <div class="flex-end p-2 text-info"><a><i class="fas fa-2x fa-share-alt"></i></a></div>
                             </div>
-                            @if ($is_fav)
-                                <div class="flex-end p-2"><a class=" text-danger"
-                                        href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
-                                            class="fas fa-2x fa-heart"></i></a></div>
-                            @else
-                                <div class="flex-end p-2 text-success"><a class="text-danger"
-                                        href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
-                                            class="far fa-2x fa-heart"></i></a></div>
-                            @endif
-                            <div class="flex-end p-2 text-info"><a><i class="fas fa-2x fa-share-alt"></i></a></div>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
 
         <div class="mt-4">

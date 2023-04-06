@@ -87,7 +87,6 @@
                     </thead>
                 <tbody>
                     @foreach ($courseList as $course)
-                        @if ($course->status == 1)
                             <tr>
                                 <th class="text-center">{{ $course->id }}
                                     @if ($userServ->isMod() && $course->sum_reg == 0 && !$isSale)
@@ -163,7 +162,6 @@
 
 
                             </tr>
-                        @endif
                     @endforeach
                 </tbody>
                 </thead>
