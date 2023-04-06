@@ -5,7 +5,7 @@
         <div class="card shadow">
             <div class="card-header font-weight-bold">Kế hoạch học tập  <a href="?tab=schedule">Tạo mới</a></div>
             <div class="card-body p-0">
-                @if(empty($openings))
+                @if(isset($openings))
                 <p class="p-3">Lớp học chưa có kế hoạch nào,  <a href="?tab=schedule">Tạo mới</a></p>
                 @else
                 <table class="table">
@@ -66,7 +66,7 @@
                     <div class="form-group">
                         <label for="weekdays" class="form-label ">{{ __('Ngày trong tuần') }}*</label>
                         <ul class="list-inline">
-                            @for($i=1; $i<=7; $i++) 
+                            @for($i=1; $i<=7; $i++)
                             <li class="list-inline-item"><input type="checkbox" name="opening[d][{{ $i }}]" id="d{{ $i}}" @if(!empty($opening) && in_array($i, $opening->weekdays)) checked @endif> <label for="d{{  $i }}">{{ $i == 1 ? __('Chủ Nhật') : __("Thứ " . ($i)) }}</label> </li>
                                 @endfor
                         </ul>

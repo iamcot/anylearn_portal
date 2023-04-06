@@ -491,25 +491,25 @@ class ClassController extends Controller
     }
 
     public function authorConfirmJoinCourse(Request $request, $itemId)
-    { 
+    {
 
         $joinUserId = $request->get('join_user');
         $firstSchedule = DB::table('order_details')
-        ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
+        // ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
         ->where('order_details.item_id', $itemId)
         ->where('order_details.user_id', $joinUserId)
         ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-        ->whereNull('participations.id')
+        // ->whereNull('participations.id')
         ->select('order_details.id')
         ->first();
         $itemServ = new ItemServices();
         try {
             $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);
         } catch (\Exception $ex) {
-            return redirect()->back()->with(['tab' => 'registered', 'notify' => $ex->getMessage()]);
+            return redirect()->back()->with(['tab' => 'registers', 'notify' => $ex->getMessage()]);
         }
 
-        return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Thao tác thành công']);
+        return redirect()->back()->with(['tab' => 'registers', 'notify' => 'Thao tác thành công']);
     }
 
     public function authorCert(Request $request, $itemId, $userId)
@@ -518,11 +518,11 @@ class ClassController extends Controller
             ->where('type', 'cert')
             ->first();
         if (!$certTemplate) {
-            return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Chưa có mẫu chứng chỉ']);
+            return redirect()->back()->with(['tab' => 'registers', 'notify' => 'Chưa có mẫu chứng chỉ']);
         }
         $user = User::find($userId);
         if (!$user) {
-            return redirect()->back()->with(['tab' => 'registered', 'notify' => 'Thành viên không tồn tại']);
+            return redirect()->back()->with(['tab' => 'registers', 'notify' => 'Thành viên không tồn tại']);
         }
         $item = Item::find($itemId);
         $fileServ = new FileServices();

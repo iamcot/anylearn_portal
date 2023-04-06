@@ -127,12 +127,12 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                     <i class="fas fa-fw fa-gift"></i>
                     <span>@lang('Mã giới thiệu')</span></a>
                 </a> --}}
-                @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
+                {{-- @if (Auth::user()->role == 'school' || Auth::user()->role == 'teacher')
                 <a class="collapse-item " href="">
                     <i class="fas fa-fw fa-star"></i>
                     <span>@lang('Đánh giá khóa học')</span></a>
                 </a>
-                @endif
+                @endif --}}
                 <a class="collapse-item " href="https://www.facebook.com/anylearnhockhonggioihan">
                     <i class="fas fa-fw fa-comment-dots"></i>
                     <span>@lang('Cộng đồng')</span></a>

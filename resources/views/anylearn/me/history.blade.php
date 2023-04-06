@@ -88,18 +88,18 @@
 
             <table class="table table-striped table-hover">
               <thead>
-                <tr>
-                  <th scope="col">Nội dung</th>
+                <tr class="text-secondary">
+                  <th scope="col" >Nội dung</th>
                   <th scope="col">Số tiền</th>
-                  <th scope="col">Trạng thái</th>
+                  <th scope="col" class="text-end">Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($WALLETM as $row)
                 <tr>
-                  <td><b>{{ $row->content }}</b><br>{{ $row->created_at }}</td>
-                  <td class="text-danger">{{ abs($row->amount) }}</td>
-                  <td>@if ($row->status == 0)<b>@lang('Đang chờ')</b>@else<b class="text-danger">@lang('Đã xác nhận')</b>@endif</td>
+                  <td>{{ $row->content }}<br>{{ $row->created_at }}</td>
+                  <td>{{ abs($row->amount) }}</td>
+                  <td class="text-end">@if ($row->status == 0)<b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b class="badge bg-success">@lang('Đã xác nhận')</b>@endif</td>
                 </tr>
                 @endforeach
               </tbody>
@@ -108,22 +108,22 @@
           <div class="tab-pane fade" id="points" role="tabpanel" aria-labelledby="points-tab">
             <table class="table table-striped table-hover">
               <thead>
-                <tr>
+                <tr class="text-secondary">
                   <th scope="col">Nội dung</th>
                   <th scope="col">Số điểm</th>
-                  <th scope="col">Trạng thái</th>
+                  <th scope="col" class="text-end">Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($WALLETC as $row)
                 <tr>
-                  <td><b>{{ $row->content }}</b><br>{{ $row->created_at }}</td>
+                  <td>{{ $row->content }}<br>{{ $row->created_at }}</td>
                   @if ($row->amount >= 0)
-                  <td class="text-danger">+{{ abs($row->amount) }}</td>
+                  <td>+{{ abs($row->amount) }}</td>
                   @else
                   <td class="text-black">{{ abs($row->amount) }}</td>
                   @endif
-                  <td>@if ($row->status == 0)<b>@lang('Đang chờ')</b>@else<b class="text-danger">@lang('Đã xác nhận')</b>@endif</td>
+                  <td class="text-end">@if ($row->status == 0)<b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b class="badge bg-success">@lang('Đã xác nhận')</b>@endif</td>
                 </tr>
                 @endforeach
               </tbody>
