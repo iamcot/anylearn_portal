@@ -47,8 +47,8 @@
                     <tbody>
                         @foreach ($courseList as $course)
                             <tr class="text-secondary">
-                                <th >{{ $course->id }}</th>
-                                <td class="fw-bold col-3">[{{ $course->subtype }}] {{ $course->title }}</td>
+                                <td >{{ $course->id }}</td>
+                                <td class="col-3">[{{ $course->subtype }}] {{ $course->title }}</td>
                                 <td >{{ date('d/m/y', strtotime($course->date_start)) }}
                                     @if ($course->date_end)
                                         - {{ date('d/m/y', strtotime($course->date_end)) }}

@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <h3><span class="text-dark">{{ $user->name }}</span>
+                            <h3><span class="text-secondary">{{ $user->name }}</span>
                             </h3>
                             <div>Thành viên từ:
                                 {{ $user->is_registered == 0 ? 'Chưa đăng ký' : date('d/m/Y', strtotime($user->created_at)) }}
@@ -34,7 +34,7 @@
             <div class="card shadow mt-3">
                 <div class="card-header"><strong>Các tài khoản con</strong></div>
                 <div class="card-body p-0">
-                    <table class="table" id="mytabel">
+                    <table class="table text-secondary" id="mytabel">
                         <thead>
                             <tr>
                                 <th>#Mã</th>
