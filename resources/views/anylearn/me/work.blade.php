@@ -6,7 +6,7 @@
     <div class="container">
         <h1 class="text-center">Hoạt động người dùng</h1>
         <form>
-            <table class="table table-striped">
+            <table class="table table-striped text-secondary">
                 <thead>
                     <tr>
                         <th>Người đăng ký</th>

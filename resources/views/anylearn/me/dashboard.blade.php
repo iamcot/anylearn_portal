@@ -59,7 +59,7 @@
                         <tbody>
                             @foreach ($dashServ->topItempartner() as $row)
                                 <tr>
-                                    <th class="text-secondary">{{ $row->title }}</th>
+                                    <td class="pl-3 text-secondary">{{ $row->title }}</td>
                                     {{-- <td>{{ $row->reg_num }}</td> --}}
                                 </tr>
                             @endforeach

@@ -10,7 +10,7 @@
         <h1 class="mb-4">Khóa học của tôi</h1>
         <div class="row mb-3">
             <div class="col-md-3">
-                <input type="text" id="search-course-name" class="form-control" placeholder="Tìm kiếm tên khóa học...">
+                <input type="text" id="search-course-name" class="form-control" placeholder="Nhập tên khóa học...">
             </div>
             <div class="col-md-3">
                 <input type="date" id="search-registration-date" class="form-control" placeholder="Ngày đăng kí...">
@@ -32,7 +32,7 @@
             </div>
         </div>
         <table class="table table-striped" id="myTable">
-            <thead>
+            <thead style="color:#555">
                 <tr>
                     <th>Tên khóa học</th>
                     <th>Ngày đăng kí</th>
