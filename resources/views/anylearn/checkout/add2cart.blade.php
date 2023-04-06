@@ -30,11 +30,11 @@ add2cart
             </h5>
         </div>
         <div class="card-body">
-           
+
             <div class="form-check">
                 <input type="radio" class="form-check-input" id="child0" name="child" value="{{ $user->id }}" checked><label for="child0">{{ $user->name }} (@lang('Tôi'))</label>
             </div>
-           
+
             @if (count($children) > 0)
             @foreach ($children as $child)
             <div class="form-check">
@@ -62,7 +62,7 @@ add2cart
                 </li>
                 @endforeach
             </ul>
-            @else 
+            @else
                 <p>Lịch học bắt đầu từ {{ $item->time_start}}, ngày {{ date('d/m/Y', strtotime($item->date_start)) }}</p>
             @endif
         </div>
@@ -155,11 +155,7 @@ add2cart
                         </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
-@endsection
-@section('jscript')
-@parent
 @endsection

@@ -10,10 +10,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="chat_logwork" class="">{{ __('Số phút chat') }}</label>
-                        <input id="chat_logwork" type="number" class="form-control" name="salechat[logwork]" min=1 required>
-                    </div>
-                    <div class="form-group">
                         <label for="chat_content" class="">{{ __('Nội dung chat') }}</label>
                         <textarea id="chat_content" class="form-control" name="salechat[content]" rows="10" required></textarea>
                     </div>

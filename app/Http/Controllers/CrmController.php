@@ -6,6 +6,7 @@ use App\Constants\UserConstants;
 use App\Models\SaleActivity;
 use App\Models\Spm;
 use App\Models\User;
+use App\Models\Transaction;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,13 +26,29 @@ class CrmController extends Controller
         if ($user->role == UserConstants::ROLE_SALE && $saleUser->user_id != $user->id && $saleUser->sale_id != $user->id) {
             return redirect()->route('user.members')->with('notify', __('Bạn không có quyền với user này'));
         }
-        $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
+        if ($request->get('action')=='history') {
+            $input=$request->all();
+            // dd($request->id);
+            $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->where('order_details.user_id',$request->id)
+            ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
+            ->orderBy('orders.id', 'desc')
+            ->paginate(5);
+            $this->data['idC'] = $request->id;
+        } else{
+            $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
             ->join('order_details', 'order_details.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
             ->orderBy('orders.id', 'desc')
             ->paginate(5);
-
+            $this->data['idC'] = null;
+        }
+        $accountC = DB::table('users')->where('user_id',$userId)->get();
+        // dd($memberOrders);
+        $this->data['accountC'] = $accountC;
         $this->data['user'] = $user;
         $this->data['memberOrders'] = $memberOrders;
         $this->data['orderStats'] = $userService->orderStats($saleUser->id);
@@ -48,6 +65,11 @@ class CrmController extends Controller
             ->where('status', 1)
             ->orderby('id', 'desc')
             ->paginate(5);
+            
+        $this->data['points'] = Transaction::where('user_id', $userId)
+            ->where('pay_method', 'wallet_c')
+            ->select('content', 'created_at', 'amount')
+            ->get();
 
         return view('crm.sale', $this->data);
     }
@@ -84,6 +106,7 @@ class CrmController extends Controller
                 SaleActivity::create([
                     'type' => SaleActivity::TYPE_CALL,
                     'sale_id' => Auth::user()->id,
+                    'content' => $data['content'],
                     'member_id' => $data['memberId'],
                     'logwork' => $data['logwork'],
                     'created_at' => $data['date'] . ' ' . $data['time'] . ":00"
@@ -102,7 +125,6 @@ class CrmController extends Controller
                 'sale_id' => Auth::user()->id,
                 'member_id' => $data['memberId'],
                 'content' => $data['content'],
-                'logwork' => $data['logwork'],
                 'created_at' => $data['date'] . ' ' . $data['time'] . ":00"
             ]);
             return redirect()->back()->with('notify', 'Lưu log chat thành công.');

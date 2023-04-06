@@ -179,7 +179,7 @@
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thông số hệ thống')</span>
         </a>
-        <div id="collapseConfig" class="collapse {{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseConfig" class="collapse {{ in_array($route, ['category', 'config.homepopup', 'config.homeclasses', 'config.site', 'config.tag', 'config.banner','config.activitybonus']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ $route == 'category' ? 'active' : '' }}" href="{{ route('category') }}">
                     <i class="fas fa-fw fa-layer-group"></i>
@@ -196,6 +196,10 @@
                 <a class="collapse-item {{ $route == 'config.site' ? 'active' : '' }}" href="{{ route('config.site') }}">
                     <i class="fas fa-fw fa-cogs"></i>
                     <span>@lang('Các thông số')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.activitybonus' ? 'active' : '' }}" href="{{ route('config.activitybonus') }}">
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span>@lang('Cài đặt điểm thưởng')</span>
                 </a>
                 <a class="collapse-item {{ $route == 'config.tag' ? 'active' : '' }}" href="{{ route('config.tag') }}">
                     <i class="fas fa-fw fa-tags"></i>
