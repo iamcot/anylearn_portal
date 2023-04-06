@@ -491,18 +491,18 @@ class ClassController extends Controller
     }
 
     public function authorConfirmJoinCourse(Request $request, $itemId)
-    {
+    { 
+
         $joinUserId = $request->get('join_user');
         $firstSchedule = DB::table('order_details')
         ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
-        ->where('item_id', $itemId)
-        ->where('user_id', $joinUserId)
-        ->where('status', OrderConstants::STATUS_DELIVERED)
+        ->where('order_details.item_id', $itemId)
+        ->where('order_details.user_id', $joinUserId)
+        ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
         ->whereNull('participations.id')
         ->select('order_details.id')
         ->first();
         $itemServ = new ItemServices();
-
         try {
             $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);
         } catch (\Exception $ex) {
