@@ -11,7 +11,7 @@
         
         <div>
             <h2>Danh sách các buổi học</h2>
-            <table class="table table-striped" id="myTable">
+            <table class="table table-striped text-secondary" id="myTable">
             <thead>
                 <tr>
                     <th class="text-center">STT</th>    

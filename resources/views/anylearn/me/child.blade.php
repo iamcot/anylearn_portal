@@ -37,7 +37,7 @@
                     <table class="table text-secondary" id="mytabel">
                         <thead>
                             <tr>
-                                <th>#Mã</th>
+                                <th>#</th>
                                 <th>Tên</th>
                                 <th>Ngày Sinh</th>
                                 <th>Giới Tính</th>
@@ -62,7 +62,7 @@
                                             <a class="btn btn-sm btn-secondary mt-1" href="{{route('me.childhistory',['id' => $row->id])}}">
                                                 <i class="fas fa-info"></i>
                                             </a>
-                                            <button type="button" class="btn-edit btn btn-sm btn-primary mt-1"
+                                            <button type="button" class="btn-edit btn btn-sm btn-primary mt-1 pr-1 pl-1"
                                                 onclick="edit()">
                                                 <i class="fas fa-edit"></i>
                                             </button>
