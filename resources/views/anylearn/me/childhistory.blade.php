@@ -8,7 +8,6 @@
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-center">Lịch sử học tập của {{ $userC->name}}</h1>
-                <hr>
                 <table class="table table-striped">
                     <thead>
                         <tr>
