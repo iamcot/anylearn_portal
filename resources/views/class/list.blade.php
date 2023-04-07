@@ -162,7 +162,6 @@
 
 
                         </tr>
-                    @endif
                     @endforeach
                 </tbody>
                 </thead>

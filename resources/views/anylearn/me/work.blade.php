@@ -32,7 +32,7 @@
                         @if ($row->status == 1)
                         <td><span class="badge bg-success">Thành công</span></td>
                         @else
-                        <td><span class="badge bg-warning text-dark">Đang chờ</span></td>
+                        <td><span class="badge bg-warning text-white">Đang chờ</span></td>
                         @endif
                     </tr>
                     @endforeach

@@ -103,7 +103,7 @@
                                 <td>{{ number_format(abs($row->amount)) }}</td>
                                 <td class="text-end">
                                     @if ($row->status == 0)
-                                    <b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b
+                                    <b class="badge bg-secondary text-white">@lang('Đang chờ')</b>@else<b
                                             class="badge bg-success">@lang('Đã xác nhận')</b>
                                     @endif
                                 </td>
@@ -132,7 +132,7 @@
                                 @endif
                                 <td class="text-end">
                                     @if ($row->status == 0)
-                                    <b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b
+                                    <b class="badge bg-secondary text-white">@lang('Đang chờ')</b>@else<b
                                             class="badge bg-success">@lang('Đã xác nhận')</b>
                                     @endif
                                 </td>
