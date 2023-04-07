@@ -37,8 +37,8 @@ pending_orders
 </div> --}}
   <div class="container">
     <h1 class="text-center mb-4">Khoá học đang chờ thanh toán</h1>
-    <table class="table table-striped">
-      <thead style="color:#555">
+    <table class="table table-striped text-secondary">
+      <thead>
         <tr>
           <th>ID</th>
           <th>Tên khóa học</th>

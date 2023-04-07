@@ -11,7 +11,7 @@
             </h5>
             <div class="mt-3 text-center" id="search">
                 <form action="/helpcenter/s" method="get" id="helpcenterSearch">
-                    <button class="border-0 bg-white" name="a" value="search"><i
+                    <button class="border-0 bg-transparent" name="a" value="search"><i
                             class="fa fa-search text-success"></i></button>
                     <input type="text" name="s" class="form-control rounded-pill shadow"
                         placeholder="@lang('Bạn muốn hỏi gì...')">

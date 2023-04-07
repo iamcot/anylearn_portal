@@ -31,8 +31,8 @@
                 </select>
             </div>
         </div>
-        <table class="table table-striped" id="myTable">
-            <thead style="color:#555">
+        <table class="table table-striped text-secondary" id="myTable">
+            <thead>
                 <tr>
                     <th>Tên khóa học</th>
                     <th>Ngày đăng kí</th>

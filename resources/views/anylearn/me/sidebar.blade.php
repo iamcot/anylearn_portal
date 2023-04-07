@@ -132,7 +132,7 @@
                 <a class="collapse-item {{ in_array($route, ['me.orders']) ? 'active' : '' }}"
                     href="{{ route('me.orders') }}">
                     <i class="fas fa-fw fa-calendar"></i>
-                    <span>@lang('Khoá học tôi tham gia')</span></a>
+                    <span>@lang('Khoá học tham gia')</span></a>
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.pendingorders']) ? 'active' : '' }}"
                     href="{{ route('me.pendingorders') }}">

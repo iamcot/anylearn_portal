@@ -103,7 +103,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 
 
 
-    Route::any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
+    Route::any('/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
     Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
 
 
