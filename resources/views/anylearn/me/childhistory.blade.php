@@ -9,7 +9,7 @@
             <div class="col-md-12">
                 <h1 class="text-center">Lịch sử học tập của {{ $userC->name}}</h1>
                 <table class="table table-striped">
-                    <thead>
+                    <thead class="text-secondary">
                         <tr>
                             <th>Ngày Mua</th>
                             <th>Khóa học</th>
