@@ -16,7 +16,7 @@
         </h2>
         <div class="mt-3 text-center" id="search">
             <form action="/classes" method="get" id="schoolsearch" data-spm="search.0">
-                <button class="border-0 bg-white" name="a" value="search">
+                <button class="border-0 bg-transparent" name="a" value="search">
                     <i class="fa fa-search text-success"></i>
                 </button>
                 <input type="text" name="s" class="form-control rounded-pill shadow"
