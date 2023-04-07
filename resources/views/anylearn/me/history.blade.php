@@ -76,59 +76,71 @@
     <div class="container">
         <h1 class="text-center my-5">Giao dịch của tôi</h1>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="true">Lịch sử giao dịch</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="points-tab" data-bs-toggle="tab" data-bs-target="#points" type="button" role="tab" aria-controls="points" aria-selected="false">Lịch sử điểm thưởng</button>
-          </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button"
+                    role="tab" aria-controls="history" aria-selected="true">Lịch sử giao dịch</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="points-tab" data-bs-toggle="tab" data-bs-target="#points" type="button"
+                    role="tab" aria-controls="points" aria-selected="false">Lịch sử điểm thưởng</button>
+            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
 
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr class="text-secondary">
-                  <th scope="col" >Nội dung</th>
-                  <th scope="col">Số tiền</th>
-                  <th scope="col" class="text-end">Trạng thái</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($WALLETM as $row)
-                <tr>
-                  <td>{{ $row->content }}<br>{{ $row->created_at }}</td>
-                  <td>{{ abs($row->amount) }}</td>
-                  <td class="text-end">@if ($row->status == 0)<b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b class="badge bg-success">@lang('Đã xác nhận')</b>@endif</td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-          <div class="tab-pane fade" id="points" role="tabpanel" aria-labelledby="points-tab">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr class="text-secondary">
-                  <th scope="col">Nội dung</th>
-                  <th scope="col">Số điểm</th>
-                  <th scope="col" class="text-end">Trạng thái</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($WALLETC as $row)
-                <tr>
-                  <td>{{ $row->content }}<br>{{ $row->created_at }}</td>
-                  @if ($row->amount >= 0)
-                  <td>+{{ abs($row->amount) }}</td>
-                  @else
-                  <td class="text-black">{{ abs($row->amount) }}</td>
-                  @endif
-                  <td class="text-end">@if ($row->status == 0)<b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b class="badge bg-success">@lang('Đã xác nhận')</b>@endif</td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr class="text-secondary">
+                            <th scope="col">Nội dung</th>
+                            <th scope="col">Số tiền</th>
+                            <th scope="col" class="text-end">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($WALLETM as $row)
+                            <tr>
+                                <td>{{ $row->content }}<br>{{ $row->created_at }}</td>
+                                <td>{{ number_format(abs($row->amount)) }}</td>
+                                <td class="text-end">
+                                    @if ($row->status == 0)
+                                    <b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b
+                                            class="badge bg-success">@lang('Đã xác nhận')</b>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="points" role="tabpanel" aria-labelledby="points-tab">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr class="text-secondary">
+                            <th scope="col">Nội dung</th>
+                            <th scope="col">Số điểm</th>
+                            <th scope="col" class="text-end">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($WALLETC as $row)
+                            <tr>
+                                <td>{{ $row->content }}<br>{{ $row->created_at }}</td>
+                                @if ($row->amount >= 0)
+                                    <td>+{{ abs($row->amount) }}</td>
+                                @else
+                                    <td class="text-black">{{ abs($row->amount) }}</td>
+                                @endif
+                                <td class="text-end">
+                                    @if ($row->status == 0)
+                                    <b class="badge bg-secondary">@lang('Đang chờ')</b>@else<b
+                                            class="badge bg-success">@lang('Đã xác nhận')</b>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
+    </div>
 @endsection

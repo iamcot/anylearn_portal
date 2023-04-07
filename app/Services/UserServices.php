@@ -585,18 +585,31 @@ class UserServices
             ->where('c.status', '=', 99)
             ->select('c.commission')
             ->first();
-        $concession = $item->price*$commission->commission;
-        $orgprice = $item->price - $concession;
-        $data = [
-            'name' => $user->name,
-            'title' => $item->title,
-            'time' => $now,
-            'partner' => $author->name,
-            'commision' => $commission->commission,
-            'price' => $item->price,
-            'concession' => $concession,
-            'orgprice' => $orgprice
-        ];
+        if ($commission) {
+            $concession = $item->price * $commission->commission;
+            $orgprice = $item->price - $concession;
+            $data = [
+                'name' => $user->name,
+                'title' => $item->title,
+                'time' => $now,
+                'partner' => $author->name,
+                'commision' => $commission->commission,
+                'price' => $item->price,
+                'concession' => $concession,
+                'orgprice' => $orgprice
+            ];
+        } else {
+            $data = [
+                'name' => $user->name,
+                'title' => $item->title,
+                'time' => $now,
+                'partner' => $author->name,
+                'commision' => "Đang cập nhật",
+                'price' => $item->price,
+                'concession' => "Đang cập nhật",
+                'orgprice' => "Đang cập nhật"
+            ];
+        }
         Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
     }
 }

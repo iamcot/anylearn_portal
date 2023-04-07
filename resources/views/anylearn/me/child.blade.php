@@ -59,7 +59,8 @@
                                     <form action="" method="get">
                                         <td>
                                             <input type="hidden" name='id' value="{{ $row->id }}">
-                                            <a class="btn btn-sm btn-secondary mt-1" href="{{route('me.childhistory',['id' => $row->id])}}">
+                                            <a class="btn btn-sm btn-secondary mt-1"
+                                                href="{{ route('me.childhistory', ['id' => $row->id]) }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
                                             <button type="button" class="btn-edit btn btn-sm btn-primary mt-1"
@@ -156,7 +157,7 @@
 @section('jscript')
     @parent
     <script>
-        function edit() {
+        window.onload = function edit() {
             // Lấy tất cả các nút chỉnh sửa trong bảng
             const editButtons = $('#mytabel .btn-edit');
 

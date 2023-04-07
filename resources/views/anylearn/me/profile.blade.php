@@ -1,6 +1,5 @@
 @extends('anylearn.me.layout')
 <style>
-
     .bg-holder {
         position: absolute;
         width: 100%;
@@ -14,7 +13,7 @@
         backface-visibility: hidden;
         background-repeat: no-repeat;
         z-index: 0;
-        background-image: url("{{$user->banner}}");
+        background-image: url("{{ $user->banner }}");
     }
 
     button[aria-expanded="false"]:after {
@@ -31,8 +30,7 @@
             <div class="bg-holder rounded-3 rounded-bottom-0">
             </div>
             <div class="avatar avatar-5xl avatar-profile">
-                <img class="rounded-circle img-thumbnail shadow-sm"
-                    src="{{$user->image}}" alt="">
+                <img class="rounded-circle img-thumbnail shadow-sm" src="{{ $user->image }}" alt="">
             </div>
         </div>
         <div class="card-body">
@@ -61,23 +59,23 @@
 
                 </div>
                 <div class="col-lg-4">
-                    <label class="form-label" for="lastName">Ngày sinh:</label> {{ $user->dob}}
+                    <label class="form-label" for="lastName">Ngày sinh:</label> {{ $user->dob }}
 
                 </div>
                 <div class="col-lg-4">
-                    <label class="form-label" for="lastName">Giới tính:</label> {{ $user->sex}}
+                    <label class="form-label" for="lastName">Giới tính:</label> {{ $user->sex }}
 
                 </div>
                 <div class="col-lg-4">
-                    <label class="form-label" for="lastName">CMND/CCCD:</label> {{ $user->cert_id}}
+                    <label class="form-label" for="lastName">CMND/CCCD:</label> {{ $user->cert_id }}
 
                 </div>
                 <div class="col-lg-4">
-                    <label class="form-label" for="lastName">Mã giới thiệu:</label> {{ $user->refcode}}
+                    <label class="form-label" for="lastName">Mã giới thiệu:</label> {{ $user->refcode }}
 
                 </div>
                 <div class="col-lg-4">
-                    <label class="form-label" for="lastName">Số điện thoại:</label> {{ $user->phone}}
+                    <label class="form-label" for="lastName">Số điện thoại:</label> {{ $user->phone }}
 
                 </div>
                 <div class="col-lg-4">
@@ -85,9 +83,9 @@
 
                 </div>
             </div>
-            <p>{{ $user->introduce}}</p>
+            <p>{{ $user->introduce }}</p>
             <div class="collapse" id="collapseExample">
-                <p>{{ $user->full_content }}</p>
+                <p>{!! $user->full_content !!}</p>
             </div>
         </div>
         <div class="bg-light p-0 border-top d-grid card-footer">

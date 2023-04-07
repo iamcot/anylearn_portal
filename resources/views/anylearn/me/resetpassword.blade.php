@@ -7,7 +7,7 @@
     <div class="overflow-hidden z-index-1 card">
         <div class="p-0 card-body">
             <div class="h-100 g-0 row">
-                <div class="text-white text-center bg-secondary bg-gradient col-md-5">
+                <div class="text-white text-center bg-success bg-gradient col-md-5">
                     <div class="position-relative p-4 pt-md-5 pb-md-7">
                         <div class="bg-holder"></div>
                         <div class="z-index-1 position-relative"><a
@@ -58,7 +58,7 @@
                                 <span id='message'></span>
                             </div>
 
-                            <button name="save" value="save" class="btn btn-secondary shadow border-0 float-right">
+                            <button name="save" value="save" class="btn btn-success shadow border-0 float-right">
                                 <i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
                         </form>
                     </div>

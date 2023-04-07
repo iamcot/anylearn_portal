@@ -1,15 +1,34 @@
 @inject('userServ', 'App\Services\UserServices')
 @inject('dashServ', 'App\Services\DashboardServices')
 @extends('anylearn.me.layout')
+@php
+    $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @request('dateT') ?? date('Y-m-d'));
+@endphp
 @section('spmb')
     dashboard
 @endsection
 @section('rightFixedTop')
-<form class="row">
-    <div class="col-xs-2 mr-1 mt-4">
-        <a href="{{ route('me.withdraw') }}" type="button" class="btn btn-outline-success" data-mdb-ripple-color="dark">@lang('Rút Tiền')</a>
-    </div>
-</form>
+    <form class="row mr-1 mt-4">
+        <div class="col-xs-2 ">
+            <a href="{{ route('me.withdraw') }}" type="button" class="btn btn-outline-success"
+                data-mdb-ripple-color="dark">@lang('Rút Tiền')</a>
+        </div>
+    </form>
+    <form id="filter-form" class="mr-1 mt-4">
+        <div class="form-group row mt-3">
+            <div class="col-sm-5">
+                <input type="date" class="form-control" id="from-date" name="dateF"
+                    value="{{ request()->get('dateF') }}">
+            </div>
+            <div class="col-sm-5">
+                <input type="date" class="form-control" id="to-date" name="dateT"
+                    value="{{ request()->get('dateT') }}">
+            </div>
+            <div class="col-sm-2">
+                <button name="filter" value="filter" class="btn btn-success" id="filter-button">Xem</button>
+            </div>
+        </div>
+    </form>
 @endsection
 @section('body')
     <div class="row">
@@ -43,6 +62,7 @@
             <div class="card border-bottom-primary shadow">
                 <div class="card-header">
                     <h6 class="m-0 font-weight-bold text-primary">@lang('Biểu đồ doanh thu')</h6>
+
                 </div>
                 <div class="card-body p-0" style="min-height: 300px;">
                     <canvas id="myAreaChart"></canvas>
@@ -80,7 +100,7 @@
     </script>
     <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
     <script>
-        var chartData = JSON.parse("{{ json_encode($dashServ->revenuechartDataset()) }}".replace(/&quot;/g, '"'));
+        var chartData = JSON.parse("{{ json_encode($chartDataset) }}".replace(/&quot;/g, '"'));
         var ctx = document.getElementById("myAreaChart");
         var myLineChart = new Chart(ctx, {
             type: 'line',

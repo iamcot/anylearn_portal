@@ -34,7 +34,7 @@
                     <div class="modal-footer">
                         {{-- <button id="add2CartBtn" name="add2cart" value="add2cart"
                             class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button> --}}
-                            <button type="button" id="nex_step" onclick="next_step()"
+                        <button type="button" id="nex_step" onclick="next_step()"
                             class="btn btn-success rounded-pill border-0">@lang('ĐĂNG KÝ KHOÁ HỌC')</button>
 
                     </div>
@@ -45,7 +45,8 @@
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h5 class="modal-title m-0 text-primary }}"><b class="text-dark">@lang("Bạn đang đăng ký khóa học: ")</b> <br>{{ $class->title }}
+                    <h5 class="modal-title m-0 text-primary }}"><b class="text-dark">@lang('Bạn đang đăng ký khóa học: ')</b>
+                        <br>{{ $class->title }}
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -56,7 +57,8 @@
                                 <div class="col-md-8">
                                     <select name="child" class="form-select" id="inputGroupSelect04">
                                         @if (Auth::check())
-                                        <option value="">{{auth()->user()->name}} (@lang("Tôi"))</option>
+                                            <option value="">{{ auth()->user()->name }} (@lang('Tôi'))
+                                            </option>
                                         @endif
                                         @if (count($children) > 0)
                                             @foreach ($children as $child)
@@ -66,13 +68,14 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4 mt-2">
-                                    <a class="text-primary fw-bold" href="{{ route('me.child') }}">@lang('+ Thêm tài khoản')</a>
+                                    <a class="text-primary fw-bold"
+                                        href="{{ route('me.child') }}">@lang('+ Thêm tài khoản')</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button id="add2CartBtn" name="add2cart" value="add2cart"
+                        <button id="add2CartBtn" name="add2cart" value="add2cart"
                             class="btn btn-success rounded-pill border-0">@lang('XÁC NHẬN')</button>
                     </div>
                 </div>

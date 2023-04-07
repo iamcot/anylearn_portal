@@ -159,7 +159,10 @@
                             @else
                                 <td>{{ $course->date_start }}</td>
                             @endif
+
+
                         </tr>
+                    @endif
                     @endforeach
                 </tbody>
                 </thead>

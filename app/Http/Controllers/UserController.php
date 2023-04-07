@@ -220,11 +220,11 @@ class UserController extends Controller
     public function meWork(Request $request)
     {
         $data = DB::table('item_activities as ia')
-        ->join('items as i','i.id','=','ia.item_id')
-        ->join('users as u','u.id','=','ia.user_id')
-        ->where('ia.user_id',auth()->user()->id)
-        ->select('ia.*','i.title','u.name')
-        ->get();
+            ->join('items as i', 'i.id', '=', 'ia.item_id')
+            ->join('users as u', 'u.id', '=', 'ia.user_id')
+            ->where('ia.user_id', auth()->user()->id)
+            ->select('ia.*', 'i.title', 'u.name')
+            ->get();
 
         $this->data['data'] = $data;
         return view(env('TEMPLATE', '') . 'me.work', $this->data);
@@ -232,10 +232,10 @@ class UserController extends Controller
     public function activity(Request $request)
     {
         $data = DB::table('item_activities as ia')
-        ->join('items as i','i.id','=','ia.item_id')
-        ->join('users as u','u.id','=','ia.user_id')
-        ->select('ia.*','i.title','u.name')
-        ->get();
+            ->join('items as i', 'i.id', '=', 'ia.item_id')
+            ->join('users as u', 'u.id', '=', 'ia.user_id')
+            ->select('ia.*', 'i.title', 'u.name')
+            ->get();
 
         $this->data['data'] = $data;
         return view('user.activity', $this->data);
@@ -428,9 +428,11 @@ class UserController extends Controller
                 ->join('items', 'items.id', '=', 'order_details.item_id')
                 ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
                 ->where('order_details.id', $id)
-                ->where('items.user_id',auth()->user()->id)
+                ->where('items.user_id', auth()->user()->id)
                 ->select(
                     'items.id as itemId',
+                    'items.date_start',
+                    'items.price',
                     'items.title',
                     'items.short_content',
                     'items.image as iimage',
@@ -441,6 +443,7 @@ class UserController extends Controller
                     'users.phone',
                     'users.email',
                     'users.address',
+                    'users.dob',
                     'order_details.created_at',
                     DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
@@ -448,7 +451,7 @@ class UserController extends Controller
             ) AS confirm_count'),
                 )
                 ->first();
-                // dd($data);
+            // dd($data);
             $this->data['data'] = $data;
 
             return view(env('TEMPLATE', '') . 'me.admitstudent', $this->data);
@@ -761,7 +764,7 @@ class UserController extends Controller
     }
 
     public function orders(Request $request)
-    { 
+    {
         $user = Auth::user();
         $orderDetailM = new OrderDetail();
         $data = $orderDetailM->usersOrders($user->id);
@@ -770,21 +773,21 @@ class UserController extends Controller
     }
 
     public function schedule(Request $request, $itemId)
-    { 
-        $schedule = ItemSchedulePlan::where('item_id', $itemId)->first();       
+    {
+        $schedule = ItemSchedulePlan::where('item_id', $itemId)->first();
         $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
-        
+
         $daylist = [];
         $weekdays = explode(',', $schedule->weekdays);
         foreach ($period as $date) {
             if (in_array($date->format('w') + 1, $weekdays)) {
-                $daylist[] = $date->format('Y-m-d'); 
+                $daylist[] = $date->format('Y-m-d');
             }
         }
 
         $this->data['schedule'] = $schedule;
         $this->data['daylist'] = $daylist;
-        $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first(); 
+        $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
 
         return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);

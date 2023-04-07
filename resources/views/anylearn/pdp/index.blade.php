@@ -40,88 +40,6 @@
         }
     </style>
     <section class="container mt-5" id="spmc" data-spm="{{ $item->id }}">
-        {{-- <div class="card shadow border-0">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 imagebox">
-                        <img class="img-fluid rounded" src="{{ $item->image }}" />
-                    </div>
-                    <div class="col-lg-8 col-md-6 text-secondary">
-                        @include('anylearn.widget.breadcrumb', ['breadcrumb' => $breadcrumb])
-                        <h2 class="text-dark fw-bold">[{{ $item->subtype }}] {{ $item->title }}</h2>
-                        <p class=""><i
-                                class=" text-success fa fa-{{ $author->role == 'teacher' ? 'user' : 'university' }}"></i> <a
-                                href="{{ route('classes', [
-                                    'role' => $author->role,
-                                    'id' => $author->id,
-                                ]) }}"
-                                class="text-decoration-none text-success">{{ $author->name }}</a></p>
-                        <div>
-                            <ul class="list-unstyled list-inline">
-                                @foreach ($categories as $category)
-                                    <li class="list-inline-item border border-success rounded text-success p-1 fw-light">
-                                        {{ $category->title }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        <div>
-                            @include('anylearn.widget.rating', ['score' => $item->rating ?? 0])
-                        </div>
-                        @if ($item->ages_min > 0 && $item->ages_max > 0)
-                            <p>@lang('Độ tuổi'): {{ $item->ages_min . '-' . $item->ages_max }}</p>
-                        @endif
-                        @if ($item->seats > 0)
-                            <p>@lang('Số lượng'): {{ $item->seats }}</p>
-                        @endif
-                        <p><i class="text-success fa fa-calendar"></i> @lang('Khai giảng:')
-                            {{ date('d/m/Y', strtotime($item->date_start)) }}
-                            {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
-                        </p>
-                        <p>{!! $item->short_content !!}</p>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-lg-6 col-md-6">
-                            <h3>
-                                @if ($item->org_price > 0)
-                                    <span
-                                        class="bg-success badge mr-1">-{{ number_format((($item->org_price - $item->price) / $item->org_price) * 100, 0, '.', ',') }}%</span>
-                                    <span
-                                        class="text-secondary text-decoration-line-through mr-1">{{ number_format($item->org_price, 0, ',', '.') }}đ</span>
-                                @endif
-                                <span class="text-success fw-bold">{{ number_format($item->price, 0, ',', '.') }}đ</span>
-
-                            </h3>
-
-                        </div>
-                        <div class="col-lg-6 col-md-6 d-flex">
-                            <div class="flex-fill pt-2">
-                                @if (!auth()->check())
-                                    <a class="border-0 btn btn-success form-control rounded-pill"
-                                        href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}">@lang('Đăng ký học')</a>
-                                @else
-                                    <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
-                                        <input type="hidden" name="class" value="{{ $item->id }}">
-                                        <button name="action" value="add2cart"
-                                            class="border-0 btn btn-success form-control rounded-pill">@lang('Đăng ký học')</button>
-                                    </form>
-                                @endif
-                            </div>
-                            @if ($is_fav)
-                                <div class="flex-end p-2"><a class=" text-danger"
-                                        href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
-                                            class="fas fa-2x fa-heart"></i></a></div>
-                            @else
-                                <div class="flex-end p-2 text-success"><a class="text-danger"
-                                        href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
-                                            class="far fa-2x fa-heart"></i></a></div>
-                            @endif
-                            <div class="flex-end p-2 text-success"><a><i class="far fa-2x fa-share-square"></i></a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="card shadow border-0">
             <div class="card-body">
                 <div class="row mt-2">
@@ -144,18 +62,18 @@
                         @if ($item->ages_min > 0 && $item->ages_max > 0)
                             <p><strong>@lang('Độ tuổi:')</strong> {{ $item->ages_min . '-' . $item->ages_max }}</p>
                         @else
-                        <p><strong>@lang('Độ tuổi:')</strong> Đang cập nhật </p>
+                            <p><strong>@lang('Độ tuổi:')</strong> Đang cập nhật </p>
                         @endif
                         @if ($item->seats > 0)
                             <p><strong>@lang('Số lượng'): </strong>
-                            @if ($registered > 0)
-                                {{ $item->seats - $registered }}
-                            @else
-                                {{ $item->seats }}
-                            @endif
+                                @if ($registered > 0)
+                                    {{ $item->seats - $registered }}
+                                @else
+                                    {{ $item->seats }}
+                                @endif
                             </p>
                         @else
-                        <p><strong>@lang('Số lượng'): </strong> Không giới hạn </p>
+                            <p><strong>@lang('Số lượng'): </strong> Không giới hạn </p>
                         @endif
                         <p><strong> @lang('Khai giảng:')</strong>
                             {{ date('d/m/Y', strtotime($item->date_start)) }}
@@ -175,64 +93,67 @@
                         <div class="mt-1 mb-5">
                             @if (!auth()->check())
                                 @if ($item->activiy_trial == 1)
-                                    <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}" class="btn btn-sm bg-none border">@lang('Học Thử')
+                                    <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}"
+                                        class="btn btn-sm bg-none border">@lang('Học Thử')
                                     </a>
                                 @endif
                                 @if ($item->activiy_visit == 1)
-                                    <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}" class="btn btn-sm bg-none border">@lang('Tham Quan Trường')
+                                    <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}"
+                                        class="btn btn-sm bg-none border">@lang('Tham Quan Trường')
                                     </a>
                                 @endif
                                 @if ($item->activiy_test)
-                                    <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}" class="btn btn-sm bg-none border">@lang('Thi Đầu Vào')
+                                    <a href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}"
+                                        class="btn btn-sm bg-none border">@lang('Thi Đầu Vào')
                                     </a>
                                 @endif
                             @else
-                            <form>
-                                <input type="hidden" name="class" value="{{ $item->id }}">
-                                @if ($item->activiy_trial == 1)
-                                    <button  name="action" value="activiy_trial" class="btn btn-sm bg-none border">@lang('Học Thử')</button>
-                                @endif
-                                @if ($item->activiy_visit == 1)
-                                    <button  name="action" value="activiy_visit" class="btn btn-sm bg-none border">@lang('Tham Quan')</button>
-                                @endif
-                                @if ($item->activiy_test)
-                                    <button  name="action" value="activiy_test" class="btn btn-sm bg-none border">@lang('Kiểm Tra')</button>
-                                @endif
-                            </form>
+                                <form>
+                                    <input type="hidden" name="class" value="{{ $item->id }}">
+                                    @if ($item->activiy_trial == 1)
+                                        <button name="action" value="activiy_trial"
+                                            class="btn btn-sm bg-none border">@lang('Học Thử')</button>
+                                    @endif
+                                    @if ($item->activiy_visit == 1)
+                                        <button name="action" value="activiy_visit"
+                                            class="btn btn-sm bg-none border">@lang('Tham Quan')</button>
+                                    @endif
+                                    @if ($item->activiy_test)
+                                        <button name="action" value="activiy_test"
+                                            class="btn btn-sm bg-none border">@lang('Kiểm Tra')</button>
+                                    @endif
+                                </form>
                             @endif
                         </div>
-                            <div class="col-lg-12 col-md-12 d-flex mt-3">
-                                <div class="flex-fill pt-2">
-                                    @if (!auth()->check())
-                                        <a class="border-0 btn btn-success form-control rounded-pill"
-                                            href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}">@lang('Đăng ký học')</a>
-                                    @else
-                                        <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
-                                            <input type="hidden" name="class" value="{{ $item->id }}">
-                                            <button name="action" value="add2cart"
-                                                class="border-0 btn btn-success form-control rounded-pill">@lang('Đăng ký học')</button>
-                                        </form>
-                                    @endif
-                                </div>
-                                @if ($is_fav)
-                                    <div class="flex-end p-2"><a class=" text-danger"
-                                            href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
-                                                class="fas fa-2x fa-heart"></i></a></div>
+                        <div class="col-lg-12 col-md-12 d-flex mt-3">
+                            <div class="flex-fill pt-2">
+                                @if (!auth()->check())
+                                    <a class="border-0 btn btn-success form-control rounded-pill"
+                                        href="{{ route('login') . '?cb=' . urlencode($itemServ->classUrl($item->id)) }}">@lang('Đăng ký học')</a>
                                 @else
-                                    <div class="flex-end p-2 text-success"><a class="text-danger"
-                                            href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
-                                                class="far fa-2x fa-heart"></i></a></div>
+                                    <form action="{{ route('add2cart') }}" method="get" id="pdpAdd2Cart">
+                                        <input type="hidden" name="class" value="{{ $item->id }}">
+                                        <button name="action" value="add2cart"
+                                            class="border-0 btn btn-success form-control rounded-pill">@lang('Đăng ký học')</button>
+                                    </form>
                                 @endif
-                                <div class="flex-end p-2 text-info"><a><i class="fas fa-2x fa-share-alt"></i></a></div>
                             </div>
+                            @if ($is_fav)
+                                <div class="flex-end p-2"><a class=" text-danger"
+                                        href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
+                                            class="fas fa-2x fa-heart"></i></a></div>
+                            @else
+                                <div class="flex-end p-2 text-success"><a class="text-danger"
+                                        href="{{ route('class.like', ['itemId' => $item->id]) }}"><i
+                                            class="far fa-2x fa-heart"></i></a></div>
+                            @endif
+                            <div class="flex-end p-2 text-info"><a><i class="fas fa-2x fa-share-alt"></i></a></div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>
-
         <div class="mt-4">
             <ul class="nav nav-tabs" id="pdptab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -242,8 +163,8 @@
                 </li>
                 @if ($author->role == 'school')
                     <!-- <li class="nav-item" role="presentation">
-                                                                    <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
-                                                                </li> -->
+                                                                                            <button class="nav-link text-secondary fw-bold" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" aria-controls="teachers" aria-selected="false">GIẢNG VIÊN</button>
+                                                                                        </li> -->
                 @endif
                 @if ($item->subtype == 'video')
                     <li class="nav-item" role="presentation">

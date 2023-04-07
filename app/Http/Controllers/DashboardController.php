@@ -116,7 +116,7 @@ class DashboardController extends Controller
             $dt = $data2->selectRaw('SUM(od.unit_price) as total_unit_price')->groupBy('od.unit_price')->get();
             $totalUnitPrice = 0;
             foreach ($dt as $key) {
-                $totalUnitPrice = $totalUnitPrice+ $key->total_unit_price;
+                $totalUnitPrice = $totalUnitPrice + $key->total_unit_price;
             }
             $this->data['totalUnitPrice'] = $totalUnitPrice;
             $this->data['data'] = $data->paginate(20);
@@ -135,28 +135,32 @@ class DashboardController extends Controller
 
     public function meDashboard(Request $request)
     {
-        // $editUser = Auth::user();
-        // $userService = new UserServices();
+        $query = DB::table('order_details')
+            ->whereNotNull('created_at');
+        $input = $request->all();
+        if ($request->input('filter')) {
+            if ($input['dateF']) {
+                $query = $query->where('created_at', '>=', $input['dateF']);
+            }
+            if ($input['dateT']) {
+                $query = $query->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime($input['dateT'])));
+            }
+        } else {
+            $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
+        }
+        $results = $query->selectRaw('DATE(created_at) AS day, sum(order_details.unit_price) AS num')
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get();
+        $chartDataset = [
+            'labels' => [],
+            'data' => []
+        ];
+        foreach ($results as $row) {
+            $chartDataset['labels'][] = date('d/m', strtotime($row->day));
+            $chartDataset['data'][] = $row->num;
+        }
+        $this->data['chartDataset'] = $chartDataset;
 
-        //     // $input = $request->all();
-        //     // dd($input);
-        // if ($request->input('save')) {
-        //     $input = $request->all();
-        //     $input['role'] = $editUser->role;
-        //     $input['user_id'] = $editUser->user_id;
-        //     $input['boost_score'] = $editUser->boost_score;
-        //     $input['commission_rate'] = $editUser->commission_rate;
-        //     $userM = new User();
-        //     $rs = $userM->saveMember($request, $input);
-        //     return redirect()->route('me.edit')->with('notify', $rs);
-        // }
-
-        // $friends = User::where('user_id', $editUser->id)->paginate(20);
-        // $userI18n = $userService->userInfo($editUser->id);
-        // $this->data['friends'] = $friends;
-        // $this->data['user'] = $userI18n;
-        // $this->data['type'] = 'member';
-        // $this->data['navText'] = 'Trang tổng quan';
         return view(env('TEMPLATE', '') . 'me.dashboard', $this->data);
     }
 

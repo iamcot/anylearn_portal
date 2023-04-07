@@ -192,8 +192,8 @@ class PageController extends Controller
 
     public function pdp(Request $request, $itemId)
     {
-        if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test' ) {
-            return redirect()->route('add2cart', ['class' => $itemId,'action'=> $request->get('action')]);
+        if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test') {
+            return redirect()->route('add2cart', ['class' => $itemId, 'action' => $request->get('action')]);
         }
         $itemService = new ItemServices();
 
@@ -230,9 +230,9 @@ class PageController extends Controller
             ];
 
             $data['registered'] = OrderDetail::where('item_id', $itemId)
-            ->where('status', 'delivered')
-            ->count();
-            
+                ->where('status', 'delivered')
+                ->count();
+
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');

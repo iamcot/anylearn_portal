@@ -32,7 +32,9 @@
                                                 src="{{ $school->image ?? '/cdn/img/school-no-image.png' }}"></a>
                                     </div>
                                     <div class="description">
-                                        <h3 class="fw-bold"><a class="text-black" href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $school->name }}</a></h3>
+                                        <h3 class="fw-bold"><a class="text-black"
+                                                href="{{ route('classes', ['role' => 'school', 'id' => $school->id]) }}">{{ $school->name }}</a>
+                                        </h3>
                                         <div>
                                             <ul class="list-unstyled list-inline">
                                                 @foreach ($school->categories as $category)
@@ -66,7 +68,8 @@
                     <div class="card-body">
                         <h6>@lang('BỘ LỌC')</h6>
                         <div class="form-group mb-2">
-                            <input type="text" class="form-control rounded-pill text-secondary" name="s" placeholder="Nhập nội dung tìm kiếm">
+                            <input type="text" class="form-control rounded-pill text-secondary" name="s"
+                                placeholder="Nhập nội dung tìm kiếm" value="{{ request()->get('s') }}">
                         </div>
                         <div class="form-group mb-2">
                             <select class="form-control location-tree rounded-pill text-secondary"

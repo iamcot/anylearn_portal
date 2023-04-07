@@ -10,32 +10,32 @@
             <div class="input-group mb-3 mt-3">
                 <input type="text" class="form-control" name="id" placeholder="Nhập mã nhập học"
                     aria-label="Nhập mã nhập học" aria-describedby="button-addon2" />
-                <button class="btn btn-outline-primary" name="check" value="check" id="button-addon2"
+                <button class="btn btn-primary" name="check" value="check" id="button-addon2"
                     data-mdb-ripple-color="dark">
                     Xác nhận
                 </button>
             </div>
         </form>
-        @if ($data ==null)
+        @if ($data == null)
         @else
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <img src="{{ isset($data->iimage) ? $data->iimage : null }}" class="card-img-top" alt="..." />
+                                <div class="col-md-3">
+                                    <img src="{{ isset($data->iimage) ? $data->iimage : null }}" class="card-img-top"
+                                        alt="..." />
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-9">
                                     <h5 class="card-title">{{ $data->title }}</h5>
-                                    <p class="card-text">
-                                        {{ $data->short_content}}
+                                    <p>@lang('Khai giảng:') {{ date('d/m/Y', strtotime($data->date_start)) }}
                                     </p>
-                                    @if ($data->confirm_count == 0)
-                                    <a href="{{ route('class.author.confirmjoin' , ['itemId' =>  $data->itemId ]) }}?join_user={{ $data->userId }}" class="btn btn-success btn-sm button-0 end-0 float-right">Tiếp nhận học viên</a>
-                                    @else
-                                    <a class="btn btn-outline-success position-absolute bottom-0 end-0" disabled>Đã tiếp nhận</a>
-                                    @endif
+                                    <p>@lang('Học phí:') <strong>{{ number_format($data->price, 0, ',', '.') }}</strong></p>
+
+                                    <p class="card-text">
+                                        {{ $data->short_content }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -52,33 +52,39 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        @if ($data->uimage !=null)
-                        <div class="col-md-2">
-                            <img src="{{$data->uimage}}" alt="Profile Picture" class="img-fluid">
-                        </div>
+                        @if ($data->uimage != null)
+                            <div class="col-md-2">
+                                <img src="{{ $data->uimage }}" alt="Profile Picture" class="img-fluid">
+                            </div>
                         @endif
                         <div class="col-md-10">
-                            <h1 class="fw-bold mb-0">{{ $data->name}}</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Content -->
-        <section class="profile-content mt-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Thông tin giới thiệu</h5>
-                                <p class="card-text">{{ $data->introduce }}</p>
+                            <h2 class="fw-bold mb-0">Thông tin học viên: {{ $data->name }}</h2>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <p>Họ và tên: {{ $data->name }}</p>
+                                    <p>Ngày sinh: {{ $data->dob }}</p>
+                                    <p>Số điện thoại: {{ $data->phone }}</p>
+                                    <p>Email: {{ $data->email }}</p>
+                                    <p>Địa chỉ: {{ $data->address }}</p>
+                                    <p class="card-text">{!! $data->introduce !!}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer text-center">
+                    @if ($data->confirm_count == 0)
+                        <a href="{{ route('class.data.confirmjoin', ['itemId' => $data->itemId]) }}?join_user={{ $data->userId }}"
+                            class="btn btn-success text-white">Tiếp nhận
+                            học viên</a>
+                    @else
+                        <a class="btn btn-success text-white" disabled>Đã
+                            tiếp
+                            nhận</a>
+                    @endif
+                </div>
             </div>
-        </section>
+        </div>
     @endif
+
 @endsection

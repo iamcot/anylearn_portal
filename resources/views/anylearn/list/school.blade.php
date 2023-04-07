@@ -66,18 +66,7 @@
             <form action="" method="get" id="schoolsearch" data-spm="search.0">
                 <div class="card shadow">
                     <div class="card-body">
-                        <div class="d-flex flex-between-center pt-card card-header pb-2">
-                            <div class="d-flex gap-2 flex-xl-grow-1 align-items-center justify-content-xl-between">
-                                <h5 class="mb-0 text-700 fs-0 d-flex align-items-center">
-                                    <i class="fas fa-filter fa-w-16 fs--1 me-1"></i>
-                                    <span style="font-size: 16px;">@lang('BỘ LỌC')</span>
-                                </h5>
-                                <button class="ms-2 mt-0 mb-0 btn btn-outline-secondary btn-sm text-end"
-                                    style="font-size: 12px;">
-                                    <i class="fas fa-redo">@lang(' Xóa bộ lọc')</i>
-                                </button>
-                            </div>
-                        </div>
+                        <h2>@lang('BỘ LỌC')</h2>
                         <label for="customRange1" class="form-label">@lang('Giá')</label>
                         <input name="price" type="range" class="form-range" min="0" max="20000000" step="10000"
                             id="priceRange" value="{{ request()->get('price') ?? 1000000 }}" oninput="onPriceChange(this)">
@@ -85,7 +74,8 @@
                             0 - <span id="priceRangeShow">{{ number_format(request()->get('price') ?? 1000000) }}</span>
                         </div>
                         <div class="form-group mb-2">
-                            <input type="text" class="form-control rounded-pill text-secondary" name="s" placeholder="Nhập nội dung tìm kiếm">
+                            <input type="text" class="form-control rounded-pill text-secondary" name="s"
+                                placeholder="Nhập nội dung tìm kiếm" value="{{ request()->get('s') }}">
                         </div>
                         <div class="form-group mb-2">
                             <select class="form-control location-tree rounded-pill text-secondary"
