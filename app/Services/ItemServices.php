@@ -1020,8 +1020,9 @@ class ItemServices
             // return response("Khóa  học không tồn tại", 404);
         }
         $itemId = $item->id;
-
-        $who = Auth::user();
+        $userT = Auth::user();
+        $userC = DB::table('users')->where('user_id',$userT->id)->where('is_child',1)->orWhere('id',$userT->id)->get();
+        $who = $userC->pluck('id')->toArray();
 
         $isConfirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $orderDetail->id)
@@ -1032,7 +1033,7 @@ class ItemServices
             $Confirmed = Participation::where('item_id', $itemId)
                 ->where('schedule_id',  $orderDetail->id)
                 ->where('participant_user_id', $joinedUserId)->first();
-            if ($who->id == $Confirmed->participant_user_id) {
+            if (in_array($Confirmed->participant_user_id,$who)) {
                 if ($Confirmed->participant_confirm > 0) {
                     throw new Exception("Bạn đã xác nhận rồi");
                 } else {
@@ -1041,7 +1042,7 @@ class ItemServices
                     ]);
                 }
             }
-            if ($who->id == $Confirmed->organizer_user_id) {
+            if (in_array($Confirmed->organizer_user_id,$who)) {
                 if ($Confirmed->organizer_confirm > 0) {
                     throw new Exception("Bạn đã xác nhận rồi");
                 } else {
