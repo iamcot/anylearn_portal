@@ -27,6 +27,7 @@ use App\Models\Schedule;
 use App\Models\SocialPost;
 use App\Models\Tag;
 use App\Models\User;
+use Aws\Endpoint\Partition;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -1004,6 +1005,7 @@ class ItemServices
      */
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
+        $checkJoin = $request->input('join');
         $user = User::find($joinedUserId);
 
         $orderDetail = OrderDetail::find($scheduleId);
@@ -1019,13 +1021,41 @@ class ItemServices
         }
         $itemId = $item->id;
 
+        $who = Auth::user();
+
         $isConfirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $orderDetail->id)
             ->where('participant_user_id', $joinedUserId)
             ->count();
+
         if ($isConfirmed > 0) {
-            throw new Exception("Bạn đã xác nhận rồi");
-            // return response("Bạn đã xác nhận rồi", 400);
+            $Confirmed = Participation::where('item_id', $itemId)
+                ->where('schedule_id',  $orderDetail->id)
+                ->where('participant_user_id', $joinedUserId)->first();
+            if ($who->id == $Confirmed->participant_user_id) {
+                if ($Confirmed->participant_confirm > 0) {
+                    throw new Exception("Bạn đã xác nhận rồi");
+                } else {
+                    $Confirmed->update([
+                        "participant_confirm" => 1
+                    ]);
+                }
+            }
+            if ($who->id == $Confirmed->organizer_user_id) {
+                if ($Confirmed->organizer_confirm > 0) {
+                    throw new Exception("Bạn đã xác nhận rồi");
+                } else {
+                    $Confirmed->update([
+                        "organizer_confirm" => 1
+                    ]);
+                }
+            }
+        } else {
+            if ($checkJoin == null) {
+                throw new Exception("Bạn cần tiếp nhận học viên này trước");
+            } elseif ($checkJoin == 99) {
+                throw new Exception("Bạn cần phải được trường tiếp nhận, mã nhập học của bạn là: ".$scheduleId);
+            }
         }
 
         $unpaiedOrders = OrderDetail::where('item_id', $itemId)
@@ -1033,19 +1063,20 @@ class ItemServices
             ->where('status', OrderConstants::STATUS_NEW)
             ->count();
         if ($unpaiedOrders > 0) {
-            throw new Exception("Bạn chưa thanh toán cho khoá học này");
-
+            throw new Exception("Học viên chưa thanh toán cho khoá học này");
             // return response("Bạn chưa thanh toán cho khoá học này", 400);
         }
-
-        $rs = Participation::create([
-            'item_id' => $itemId,
-            'schedule_id' =>  $scheduleId,
-            'organizer_user_id' => $item->user_id,
-            'participant_user_id' => $joinedUserId,
-            'organizer_confirm' => 1,
-            'participant_confirm' => 1,
-        ]);
+        $checkExists = Participation::where('schedule_id', $scheduleId)->first();
+        if ($checkExists == null) {
+            $rs = Participation::create([
+                'item_id' => $itemId,
+                'schedule_id' =>  $scheduleId,
+                'organizer_user_id' => $item->user_id,
+                'participant_user_id' => $joinedUserId,
+                'organizer_confirm' => 0,
+                'participant_confirm' => 0,
+            ]);
+        }
         $author = User::find($item->user_id);
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
@@ -1071,7 +1102,14 @@ class ItemServices
             ->select('transactions.*')
             ->first();
         if ($directCommission) {
-            $transService->approveWalletcTransaction($directCommission->id);
+            $addmoney = Participation::where('item_id','=',$itemId)
+            ->where('schedule_id','=', $scheduleId)
+            ->where('participant_user_id','=', $joinedUserId)->first();
+            if ($addmoney->organizer_confirm == 1 & $addmoney->participant_confirm == 1) {
+                $transService->approveWalletcTransaction($directCommission->id);
+            } else {
+                return;
+            }
         }
 
         // approve up tree transaction, just 1 level

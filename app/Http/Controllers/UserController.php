@@ -418,6 +418,36 @@ class UserController extends Controller
         $this->data['type'] = 'member';
         return view('user.member_edit', $this->data);
     }
+    public function courseConfirm(Request $request)
+    {
+        $user = Auth::user();
+        $userC = DB::table('users')->where('user_id',$user->id)->where('is_child',1)->orWhere('id',$user->id)->get();
+        $userIds = $userC->pluck('id')->toArray();
+        $data = DB::table('order_details')
+        // ->join('participations', 'participations.schedule_id','=','order_details.id')
+        ->join('items','items.id','=','order_details.item_id')
+        ->join('users', 'users.id', '=', 'order_details.user_id')
+        ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+        ->whereIn('order_details.user_id',$userIds)
+        ->select(
+            'items.title',
+            'items.id as courseId',
+            'order_details.id',
+            'order_details.user_id',
+            'order_details.created_at',
+            DB::raw('(SELECT count(*) FROM participations
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
+            GROUP BY participations.item_id
+            ) AS participant_confirm_count'),
+            DB::raw('(SELECT count(*) FROM participations
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
+            GROUP BY participations.item_id
+            ) AS confirm_count')
+        )
+        ->get();
+        $this->data['data'] = $data;
+        return view(env('TEMPLATE', '') . 'me.courseconfirm', $this->data);
+    }
     public function admitstudent(Request $request)
     {
         if ($request->input('check')) {

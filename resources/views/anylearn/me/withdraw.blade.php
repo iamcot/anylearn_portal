@@ -72,27 +72,27 @@
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Số tiền hiện có:</label>
                                 <input type="text" class="form-control"
-                                    value="{{ number_format($user->wallet_m  - $totalAmount)}}" readonly>
+                                    value="{{ isset($user->wallet_m) ? number_format($user->wallet_m  - $totalAmount) : null}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Ngân Hàng:</label>
                                 <input type="text" class="form-control"
-                                    value="{{ $contract->bank_name}}" readonly>
+                                    value="{{ isset($contract->bank_name) ? $contract->bank_name : null}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Chi Nhánh:</label>
                                 <input type="text" class="form-control"
-                                    value="{{ $contract->bank_branch}}" readonly>
+                                    value="{{ isset($contract->bank_branch) ? $contract->bank_branch: null}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Người Hưởng Thụ:</label>
                                 <input type="text" class="form-control"
-                                    value="{{ $contract->bank_account}}" readonly>
+                                    value="{{ isset($contract->bank_account) ? $contract->bank_account: null}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputReceiverAccount">Tài khoản nhận tiền:</label>
                                 <input type="text" class="form-control" id="inputReceiverAccount"
-                                    placeholder="{{ $contract->bank_no }}" readonly>
+                                    placeholder="{{ isset($contract->bank_no) ? $contract->bank_no: null }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputAmount">Số tiền muốn rút:</label>

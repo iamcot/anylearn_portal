@@ -74,7 +74,7 @@
                 </div>
                 <div class="card-footer text-center">
                     @if ($data->confirm_count == 0)
-                        <a href="{{ route('class.data.confirmjoin', ['itemId' => $data->itemId]) }}?join_user={{ $data->userId }}"
+                        <a href="{{ route('class.author.confirmjoin', ['itemId' => $data->itemId]) }}?join_user={{ $data->userId }}&join=1"
                             class="btn btn-success text-white">Tiếp nhận
                             học viên</a>
                     @else

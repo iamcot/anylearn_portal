@@ -126,9 +126,14 @@
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('QUẢN LÝ KHÓA HỌC')</span>
         </a>
-        <div class="collapse {{ in_array($route, ['me.orders', 'me.pendingorders', 'me.history']) ? 'show' : '' }}"
+        <div class="collapse {{ in_array($route, ['me.orders','me.courseconfirm', 'me.pendingorders', 'me.history']) ? 'show' : '' }}"
             id="couser-collapse" style="">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
+                <a class="collapse-item {{ in_array($route, ['me.courseconfirm']) ? 'active' : '' }}"
+                    href="{{ route('me.courseconfirm') }}">
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>@lang('Xác nhận khóa học')</span></a>
+                </a>
                 <a class="collapse-item {{ in_array($route, ['me.orders']) ? 'active' : '' }}"
                     href="{{ route('me.orders') }}">
                     <i class="fas fa-fw fa-calendar"></i>
