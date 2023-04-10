@@ -931,7 +931,7 @@ class UserController extends Controller
         // dd($totalAmount);
         $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
         $this->data['history'] = $history;
-        $this->data['totalAmount'] = $totalAmount;
+        $this->data['totalAmount'] = ($user->wallet_m - abs($totalAmount) > 0) ? $user->wallet_m - abs($totalAmount) : 0;
         $this->data['user'] = $user;
         $this->data['contract'] = $contract;
         return view(env('TEMPLATE', '') . 'me.withdraw', $this->data);

@@ -71,8 +71,8 @@
                             @csrf
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Số tiền hiện có:</label>
-                                <input type="text" class="form-control"
-                                    value="{{ isset($user->wallet_m) ? number_format($user->wallet_m  - abs($totalAmount)) : null}}" readonly>
+                                <input type="text" class="form-control" min="0" max="{{ $totalAmount }}"
+                                    value="{{ isset($totalAmount) ? $totalAmount : null}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Ngân Hàng:</label>
@@ -96,8 +96,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputAmount">Số tiền muốn rút:</label>
-                                <input type="number" class="form-control" name="withdraw" id="inputAmount"
+                                <input type="number" class="form-control" name="withdraw" id="total-amount-input"
                                     placeholder="Nhập số tiền muốn rút" required>
+                                    <span id="total-amount-error" style="color: red;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="inputPassword">Mật khẩu:</label>
@@ -114,6 +115,22 @@
 @section('jscript')
 @parent
 <script>
-    $('#inputAmount').attr('max', {{ $user->wallet_m - $totalAmount}});
-</script>
+    const totalAmountInput = document.getElementById('total-amount-input');
+    const totalAmountError = document.getElementById('total-amount-error');
+    const totalAmount = Number('{{ $totalAmount }}');
+
+    totalAmountInput.min = 0;
+    totalAmountInput.max = totalAmount;
+
+    document.addEventListener('submit', (event) => {
+      const inputValue = Number(totalAmountInput.value);
+
+      if (inputValue < 0 || inputValue > totalAmount) {
+        event.preventDefault();
+        totalAmountError.innerText = `The input value must be between 0 and ${totalAmount}`;
+      } else {
+        totalAmountError.innerText = '';
+      }
+    });
+  </script>
 @endsection
