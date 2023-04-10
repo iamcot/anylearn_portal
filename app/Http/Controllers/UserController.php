@@ -925,8 +925,10 @@ class UserController extends Controller
         $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method', 'wallet_m')->where('type', '!=', ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
         $totalAmount = DB::table('transactions')
             ->where('type', 'withdraw')
+            ->where('user_id', $user->id)
             ->where('status', 0)
             ->sum('amount');
+        // dd($totalAmount);
         $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
         $this->data['history'] = $history;
         $this->data['totalAmount'] = $totalAmount;

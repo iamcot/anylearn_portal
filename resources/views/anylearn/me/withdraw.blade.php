@@ -72,7 +72,7 @@
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Số tiền hiện có:</label>
                                 <input type="text" class="form-control"
-                                    value="{{ isset($user->wallet_m) ? number_format($user->wallet_m  - $totalAmount) : null}}" readonly>
+                                    value="{{ isset($user->wallet_m) ? number_format($user->wallet_m  - abs($totalAmount)) : null}}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Ngân Hàng:</label>
