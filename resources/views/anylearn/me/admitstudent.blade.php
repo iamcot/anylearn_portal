@@ -17,6 +17,7 @@
             </div>
         </form>
         @if ($data == null)
+        <p class="p-3">Mã tiếp nhận không đúng.</p>
         @else
             <div class="row">
                 <div class="col-md-12">

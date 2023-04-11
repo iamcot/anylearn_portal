@@ -458,7 +458,7 @@ class ItemServices
     public function buildContentToPDP($content, $locale = I18nContent::DEFAULT)
     {
         try {
-            $contentObj = json_decode($content, true);
+            $contentObj = json_decode($content, true, 512, JSON_INVALID_UTF8_IGNORE);
             if (is_array($contentObj)) {
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {

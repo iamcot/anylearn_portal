@@ -45,7 +45,7 @@
                         <tbody>
                             @foreach ($history as $row)
                             <tr>
-                                <td>{{ $row->created_at}}</td>
+                                <td>{{ date("H:i d/m/y", strtotime($row->created_at)) }}</td>
                                 <td>{{ $row->content }}</td>
                                 <td>{{ number_format($row->amount) }}</td>
                                 @if ($row->status == 1)
@@ -67,7 +67,7 @@
                 <div class="card-body">
                     <div class="container">
                         <h1 class="my-4" id="titleform">Rút tiền</h1>
-                        <form>
+                        <form autocomplete="off" >
                             @csrf
                             <div class="form-group">
                                 <label for="inputCurrentBalance">Số tiền hiện có:</label>
@@ -95,14 +95,14 @@
                                     placeholder="{{ isset($contract->bank_no) ? $contract->bank_no: null }}" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="inputAmount">Số tiền muốn rút:</label>
-                                <input type="number" class="form-control" name="withdraw" id="total-amount-input"
+                                <label for="total-amount-input">Số tiền muốn rút:</label>
+                                <input autocomplete="off" type="number" class="form-control" name="withdraw" id="total-amount-input"
                                     placeholder="Nhập số tiền muốn rút" required>
                                     <span id="total-amount-error" style="color: red;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="inputPassword">Mật khẩu:</label>
-                                <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Nhập mật khẩu">
+                                <input autocomplete="new-password" type="password" name="password" class="form-control" id="inputPassword" placeholder="Nhập mật khẩu">
                             </div>
                             <button type="submit" class="btn btn-primary float-right" name="action" value="withdraw">Xác nhận rút tiền</button>
                         </form>

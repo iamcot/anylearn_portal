@@ -3,6 +3,10 @@ body {
     /* background-color: #F1F1F1; */
 }
 
+.nav-link {
+    cursor: pointer;
+}
+
 #wrapper #content-wrapper {
     background-color: rgb(247, 247, 247);
 }

@@ -1,13 +1,16 @@
 body {
     /* font-family: 'Quicksand', sans-serif; */
     font-family: 'Sarabun', sans-serif;
-
     /* background-color: #F1F1F1; */
 }
 
 img {
     max-width: 100% !important;
     max-height: 100%;
+}
+
+.nav-link {
+    cursor: pointer;
 }
 
 .panel-body {
@@ -1182,6 +1185,7 @@ footer .head_text {
         padding-top: 100px;
     }
 }
+
 footer {
     background-color: #F8F8F8;
     padding: 40px 0;
@@ -1248,6 +1252,7 @@ footer .app-links {
 footer .app-links p {
     color: #555;
 }
+
 footer a {
     color: #555;
 }
