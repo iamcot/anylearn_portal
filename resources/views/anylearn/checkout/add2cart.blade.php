@@ -18,7 +18,12 @@
                 <h3 class="fw-bold text-success">{{ $item->title }}</h3>
                 <p>Đối tác: {{ $author->name }}</p>
                 <p>@lang('Học phí:') <strong>{{ number_format($item->price, 0, ',', '.') }}</strong></p>
-                <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong> @lang('anyPoint cho giao dịch này')</p>
+                @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
+                @else
+                    <p>@lang('Bạn sẽ nhận') <strong>{{ number_format($commission, 0, ',', '.') }}</strong> @lang('anyPoint cho giao dịch này')
+                    </p>
+                @endif
+
             </div>
         </div>
         <div class="card mb-3 border-left-primary shadow">
@@ -49,148 +54,164 @@
             </div>
         </div>
         @if (!in_array($item->subtype, ['digital', 'video']))
-            <div class="card mb-3 border-left-primary shadow">
-                <div class="card-header">
-                    <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i>
-                        @lang('Chọn Lịch học')
-                    </h5>
-                </div>
-                <div class="card-body p-0">
-                    @if (count($plans) > 0)
-                        <div class="accordion" id="plans">
-                            @foreach ($plans as $location)
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header bg-success"
-                                        id="headingLocation{{ $location['location']['id'] }}">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseLocation{{ $location['location']['id'] }}"
-                                            aria-expanded="true"
-                                            aria-controls="collapseLocation{{ $location['location']['id'] }}">
-                                            {{ $location['location']['location_title'] }}
-                                        </button>
-                                    </h2>
-                                    <div id="collapseLocation{{ $location['location']['id'] }}"
-                                        class="accordion-collapse collapse @if ($loop->first) show @endif"
-                                        aria-labelledby="headingLocation{{ $location['location']['id'] }}"
-                                        data-bs-parent="#plans">
-                                        <div class="accordion-body">
-                                            <ul class="list-unstyled">
-                                                @foreach ($location['plans'] as $plan)
-                                                    <li class="mt-3">
-                                                        <label for="plan_{{ $plan['id'] }}">
-                                                            <input required id="plan_{{ $plan['id'] }}" type="radio"
-                                                                name="plan" value="{{ $plan['id'] }}">
-                                                            <strong>{{ $plan['title'] }}</strong>
-                                                            <br>Lịch học: @foreach (explode(',', $plan['weekdays']) as $day)
-                                                                {{ $day == 1 ? __('Chủ Nhật') : __('Thứ ' . $day) }}
-                                                                {{ !$loop->last ? ', ' : '. ' }}
-                                                            @endforeach
-                                                            Bắt đầu từ {{ date('d/m/Y', strtotime($plan['date_start'])) }}
-                                                        </label>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
+            @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
+            @else
+                <div class="card mb-3 border-left-primary shadow">
+                    <div class="card-header">
+                        <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i>
+                            @lang('Chọn Lịch học')
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        @if (count($plans) > 0)
+                            <div class="accordion" id="plans">
+                                @foreach ($plans as $location)
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header bg-success"
+                                            id="headingLocation{{ $location['location']['id'] }}">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseLocation{{ $location['location']['id'] }}"
+                                                aria-expanded="true"
+                                                aria-controls="collapseLocation{{ $location['location']['id'] }}">
+                                                {{ $location['location']['location_title'] }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapseLocation{{ $location['location']['id'] }}"
+                                            class="accordion-collapse collapse @if ($loop->first) show @endif"
+                                            aria-labelledby="headingLocation{{ $location['location']['id'] }}"
+                                            data-bs-parent="#plans">
+                                            <div class="accordion-body">
+                                                <ul class="list-unstyled">
+                                                    @foreach ($location['plans'] as $plan)
+                                                        <li class="mt-3">
+                                                            <label for="plan_{{ $plan['id'] }}">
+                                                                <input required id="plan_{{ $plan['id'] }}"
+                                                                    type="radio" name="plan"
+                                                                    value="{{ $plan['id'] }}">
+                                                                <strong>{{ $plan['title'] }}</strong>
+                                                                <br>Lịch học: @foreach (explode(',', $plan['weekdays']) as $day)
+                                                                    {{ $day == 1 ? __('Chủ Nhật') : __('Thứ ' . $day) }}
+                                                                    {{ !$loop->last ? ', ' : '. ' }}
+                                                                @endforeach
+                                                                Bắt đầu từ
+                                                                {{ date('d/m/Y', strtotime($plan['date_start'])) }}
+                                                            </label>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="p-3">Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }}</p>
-                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="p-3">Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }}
+                            </p>
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @endif
+
         @endif
         @if (!empty($extras) && count($extras) > 0)
-            <div class="card mb-3 border-left-primary shadow">
-                <div class="card-header">
-                    <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i>
-                        @lang('Chọn phụ phí')
-                    </h5>
+            @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
+            @else
+                <div class="card mb-3 border-left-primary shadow">
+                    <div class="card-header">
+                        <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-user"></i>
+                            @lang('Chọn phụ phí')
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach ($extras as $extra)
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="extra{{ $extra->id }}"
+                                    name="extrafee[]" value="{{ $extra->id }}">
+                                <label for="extra{{ $extra->id }}" class="form-check-label">{{ $extra->title }} -
+                                    {{ number_format($extra->price) }}₫ </label>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-                <div class="card-body">
-                    @foreach ($extras as $extra)
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="extra{{ $extra->id }}" name="extrafee[]"
-                                value="{{ $extra->id }}">
-                            <label for="extra{{ $extra->id }}" class="form-check-label">{{ $extra->title }} -
-                                {{ number_format($extra->price) }}₫ </label>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+            @endif
+
         @endif
         @if ($item->subtype == 'extra' || $item->subtype == 'offline')
-            <div class="card mb-3 border-left-primary shadow">
-                <div class="card-header">
-                    <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fas fa-people-carry"></i>
-                        @lang('Các hoạt động')
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @if ($item->activiy_trial == 1)
-                        <div class="form-check form-inline">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <input class="form-check-input" type="checkbox" name="activiy_trial" id="checkbox1">
-                                    <label class="form-check-label" for="checkbox1">
-                                        @lang('Học Thử')
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="date" class="form-control ml-2" id="trial_date" name="trial_date"
-                                        placeholder="Ngày">
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control ml-2" id="trial_note" name="trial_note"
-                                        placeholder="Ghi chú">
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($item->activiy_visit)
-                        <div class="form-check form-inline">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <input class="form-check-input" type="checkbox" name="activiy_visit" id="checkbox2">
-                                    <label class="form-check-label" for="checkbox2">
-                                        @lang('Thăm Quan Trường')
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="date" class="form-control ml-2" id="visit_date" name="visit_date"
-                                        placeholder="Ngày">
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control ml-2" id="visit_note" name="visit_note"
-                                        placeholder="Ghi chú">
+            @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
+                <div class="card mb-3 border-left-primary shadow">
+                    <div class="card-header">
+                        <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fas fa-people-carry"></i>
+                            @lang('Các hoạt động')
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if ($item->activiy_trial)
+                            <div class="form-check form-inline">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input class="form-check-input" type="checkbox" name="activiy_trial" id="checkbox1">
+                                        <label class="form-check-label" for="checkbox1">
+                                            @lang('Học Thử')
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control ml-2" id="trial_date" name="trial_date"
+                                            placeholder="Ngày">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control ml-2" id="trial_note"
+                                            name="trial_note" placeholder="Ghi chú">
+                                    </div>
                                 </div>
                             </div>
+                        @endif
+                        @if ($item->activiy_visit)
+                            <div class="form-check form-inline">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input class="form-check-input" type="checkbox" name="activiy_visit"
+                                            id="checkbox2">
+                                        <label class="form-check-label" for="checkbox2">
+                                            @lang('Thăm Quan Trường')
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control ml-2" id="visit_date"
+                                            name="visit_date" placeholder="Ngày">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control ml-2" id="visit_note"
+                                            name="visit_note" placeholder="Ghi chú">
+                                    </div>
+                                </div>
 
-                        </div>
-                    @endif
-                    @if ($item->activiy_test)
-                        <div class="form-check form-inline">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <input class="form-check-input" type="checkbox" name="activiy_test" id="checkbox3">
-                                    <label class="form-check-label" for="checkbox3">
-                                        @lang('Đăng Kí Thi Đầu Vào')
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="date" class="form-control ml-2" id="test_date" name="test_date"
-                                        placeholder="Ngày">
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control ml-2" id="test_note" name="test_note"
-                                        placeholder="Ghi chú">
+                            </div>
+                        @endif
+                        @if ($item->activiy_test)
+                            <div class="form-check form-inline">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input class="form-check-input" type="checkbox" name="activiy_test"
+                                            id="checkbox3">
+                                        <label class="form-check-label" for="checkbox3">
+                                            @lang('Đăng Kí Thi Đầu Vào')
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control ml-2" id="test_date" name="test_date"
+                                            placeholder="Ngày">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control ml-2" id="test_note" name="test_note"
+                                            placeholder="Ghi chú">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @endif
+
         @endif
         <div class="text-center mb-5 mt-5">
             @if (!isset($activiy))

@@ -242,23 +242,22 @@ class TransactionController extends Controller
             if ($request->get("activiy_trial") == "on") {
                 $input['date'] = $input['trial_date'];
                 $input['note'] = $input['trial_note'];
-                $itemService->activity("trial",$input,$input['class']);
-                $userService->mailActivity($user,"activiy_trial",$request->get('class'),$input['trial_date']);
+                $itemService->activity("trial", $input, $input['class']);
+                $userService->mailActivity($user, "activiy_trial", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_visit") == "on") {
 
                 $input['date'] = $input['visit_date'];
                 $input['note'] = $input['visit_note'];
-                $itemService->activity("visit",$input,$input['class']);
-                $userService->mailActivity($user,"activiy_visit",$request->get('class'),$input['visit_date']);
-
+                $itemService->activity("visit", $input, $input['class']);
+                $userService->mailActivity($user, "activiy_visit", $request->get('class'), $input['visit_date']);
             }
             if ($request->get("activiy_test") == "on") {
 
                 $input['date'] = $input['test_date'];
                 $input['note'] = $input['test_note'];
-                $itemService->activity("test",$input,$input['class']);
-                $userService->mailActivity($user,"activiy_test",$request->get('class'),$input['test_date']);
+                $itemService->activity("test", $input, $input['class']);
+                $userService->mailActivity($user, "activiy_test", $request->get('class'), $input['test_date']);
             }
             if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
                 if ($this->data['api_token']) {
@@ -280,29 +279,32 @@ class TransactionController extends Controller
             if ($request->get("activiy_trial") == "on") {
                 $input['date'] = $input['trial_date'];
                 $input['note'] = $input['trial_note'];
-                $itemService->activity("trial",$input,$input['class']);
-                $userService->mailActivity($user,"activiy_trial",$request->get('class'),$input['trial_date']);
+                $itemService->activity("trial", $input, $input['class']);
+                $userService->mailActivity($user, "activiy_trial", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_visit") == "on") {
                 $input['date'] = $input['visit_date'];
                 $input['note'] = $input['visit_note'];
-                $itemService->activity("visit",$input,$input['class']);
-                $userService->mailActivity($user,"activiy_visit",$request->get('class'),$input['trial_date']);
-
+                $itemService->activity("visit", $input, $input['class']);
+                $userService->mailActivity($user, "activiy_visit", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_test") == "on") {
                 $input['date'] = $input['test_date'];
                 $input['note'] = $input['test_note'];
-                $itemService->activity("test",$input,$input['class']);
-                $userService->mailActivity($user,"activiy_test",$request->get('class'),$input['trial_date']);
+                $itemService->activity("test", $input, $input['class']);
+                $userService->mailActivity($user, "activiy_test", $request->get('class'), $input['trial_date']);
             }
-            $returnObj = ['class' => $request->get('class')];
+            $item = Item::find($request->get('class'));
+            $returnObj = [
+                'itemId' => $request->get('class'),
+                'url' => $item->title
+            ];
             if ($this->data['api_token']) {
                 $returnObj['api_token'] = $this->data['api_token'];
             }
-            return redirect()->route('add2cart',$returnObj)->with('notify', 'Các Hoạt Động Học Thử/Thăm Quan/Thi Đầu Vào Đã đăng ký thành công!');
+            return redirect()->route('page.pdp', $returnObj)->with('notify', 'Các Hoạt Động Học Thử/Thăm Quan/Thi Đầu Vào Đã đăng ký thành công!');
         }
-        if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test' ){
+        if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test') {
             $this->data['activiy'] = $request->get('action');
         }
 
