@@ -192,6 +192,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($memberOrders)
                                 @foreach ($memberOrders as $item)
                                     <tr>
                                         <td>{{ $item->order_id }}</td>
@@ -203,13 +204,14 @@
                                         <td>{{ $item->status }}</td>
                                     </tr>
                                 @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
                 @if ($idC != null)
-                <div class="card-footer"></div>
+                    <div class="card-footer"></div>
                 @else
-                <div class="card-footer">{{ $memberOrders->appends(request()->query())->links() }}</div>
+                    <div class="card-footer">{{ $memberOrders->appends(request()->query())->links() }}</div>
                 @endif
 
             </div>
