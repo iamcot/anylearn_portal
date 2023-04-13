@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
 use Vanthao03596\HCVN\Models\Province;
+use Carbon\Carbon;
 
 class PageController extends Controller
 {
@@ -232,11 +233,40 @@ class PageController extends Controller
             $data['registered'] = OrderDetail::where('item_id', $itemId)
                 ->where('status', 'delivered')
                 ->count();
+            
+            // Auto shift date
+            $item = Item::where('id', $data['item']->id)->first();
+            $data['isDigital'] = false;
+           
+            if (Carbon::now()->format('Y-m-d') > $item->date_start) {
+                $startDate = new Carbon($item->date_start);
+                $endDate   = new Carbon($item->date_end);
+                
+                if ($item->subtype == 'online') {
+                    $item->date_start = $startDate->addDay(15);
+                    $item->date_end = $endDate->addDay(15);
+                }
+
+                if ($item->subtype == 'extra' || $item->subtype == 'offline') {
+                    $item->date_start = $startDate->addDay(30);
+                    $item->date_end = $endDate->addDay(30);
+                }
+
+                if ($item->subtype == 'digital' || $item->subtype == 'video') {
+                    $data['isDigital'] = true;
+                }
+
+                // Update view & database
+                $data['item']->date_start = $item->date_start;
+                $data['item']->date_end = $item->date_end;
+
+                $item->save();
+            }
 
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
-        }
+        } 
     }
     public function article(Request $request, $id)
     {
