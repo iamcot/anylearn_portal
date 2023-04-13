@@ -192,7 +192,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($memberOrders)
+                            @if ($memberOrders != null)
                                 @foreach ($memberOrders as $item)
                                     <tr>
                                         <td>{{ $item->order_id }}</td>
