@@ -237,7 +237,7 @@
                                 <td class="text-center">{{ $key + 1 }}</td>
                                 <td>{{ $value->content }}</td>
                                 <td>{{ $value->amount }}</td>
-                                <td>{{ date('H:i d/m/Y', strtotime($item->created_at)) }}</td>
+                                <td>{{ date('H:i d/m/Y', strtotime($value->created_at)) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
