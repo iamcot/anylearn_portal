@@ -27,24 +27,24 @@ class CrmController extends Controller
         if ($user->role == UserConstants::ROLE_SALE && $saleUser->user_id != $user->id && $saleUser->sale_id != $user->id) {
             return redirect()->route('user.members')->with('notify', __('Bạn không có quyền với user này'));
         }
-        if ($request->get('action')=='history') {
-            $input=$request->all();
+        if ($request->get('action') == 'history') {
+            $input = $request->all();
             // dd($request->id);
             $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
-            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
-            ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->where('order_details.user_id',$request->id)
-            ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
-            ->orderBy('orders.id', 'desc')
-            ->paginate(5);
+                ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('order_details.user_id', $request->id)
+                ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
+                ->orderBy('orders.id', 'desc')
+                ->paginate(5);
             $this->data['idC'] = $request->id;
-        } else{
+        } else {
             $memberOrders = DB::table('orders')->where('orders.user_id', $saleUser->id)
-            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
-            ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
-            ->orderBy('orders.id', 'desc')
-            ->paginate(5);
+                ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->select('items.title', 'items.image', 'items.id AS itemId', 'order_details.*')
+                ->orderBy('orders.id', 'desc')
+                ->paginate(5);
             $this->data['idC'] = null;
         }
         $accountC = User::where('id', $userId)->orWhere('is_child', 1)->where('user_id', $userId)->get();
@@ -78,17 +78,33 @@ class CrmController extends Controller
     public function requestSale(Request $request)
     {
         $data = DB::table('items')
-        ->join('users', 'items.user_id', '=', 'users.id')
-        ->leftJoin('items_categories', 'items.id', '=', 'items_categories.item_id')
-        ->leftJoin('categories', 'items_categories.category_id', '=', 'categories.id')
-        ->leftJoin('order_details', 'items.id', '=', 'order_details.item_id')
-        ->select('items.id','items.title', 'items.subtype', 'items.price', 'items.seats',
-                 'users.name', 'users.email', 'users.image',
-                 DB::raw('GROUP_CONCAT(categories.title SEPARATOR ", ") as category_names'),
-                 DB::raw('COALESCE(SUM(order_details.quanity), 0) as quanity_purchased'))
-        ->groupBy('items.id','items.title', 'items.subtype', 'items.price', 'items.seats',
-                  'users.name', 'users.email', 'users.image')
-        ->get();
+            ->join('users', 'items.user_id', '=', 'users.id')
+            ->leftJoin('items_categories', 'items.id', '=', 'items_categories.item_id')
+            ->leftJoin('categories', 'items_categories.category_id', '=', 'categories.id')
+            ->leftJoin('order_details', 'items.id', '=', 'order_details.item_id')
+            ->select(
+                'items.id',
+                'items.title',
+                'items.subtype',
+                'items.price',
+                'items.seats',
+                'users.name',
+                'users.email',
+                'users.image',
+                DB::raw('GROUP_CONCAT(categories.title SEPARATOR ", ") as category_names'),
+                DB::raw('COALESCE(SUM(order_details.quanity), 0) as quanity_purchased')
+            )
+            ->groupBy(
+                'items.id',
+                'items.title',
+                'items.subtype',
+                'items.price',
+                'items.seats',
+                'users.name',
+                'users.email',
+                'users.image'
+            )
+            ->get();
         $this->data['data'] = $data;
         return view('crm.requestsale', $this->data);
     }

@@ -192,7 +192,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($memberOrders != null)
+                            @if ($memberOrders->isEmpty())
+                            @else
                                 @foreach ($memberOrders as $item)
                                     <tr>
                                         <td>{{ $item->order_id }}</td>
@@ -205,6 +206,7 @@
                                     </tr>
                                 @endforeach
                             @endif
+
                         </tbody>
                     </table>
                 </div>
