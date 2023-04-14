@@ -236,20 +236,32 @@ class PageController extends Controller
             
             // Auto shift date
             $item = Item::where('id', $data['item']->id)->first();
+            $currentDate = Carbon::now();
             $data['isDigital'] = false;
-           
-            if (Carbon::now()->format('Y-m-d') > $item->date_start) {
-                $startDate = new Carbon($item->date_start);
-                $endDate   = new Carbon($item->date_end);
-                
+            
+            if ($currentDate->format('Y-m-d') > $item->date_start) {
+                $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
+                $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
+
                 if ($item->subtype == 'online') {
+                    if ($currentDate->diffInDays($startDate) > 15) {
+                        $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
+                        $startDate = $currentDate;
+                    }
+                    
                     $item->date_start = $startDate->addDay(15);
-                    $item->date_end = $endDate->addDay(15);
+                    $item->date_end   = $endDate->addDay(15);
                 }
 
                 if ($item->subtype == 'extra' || $item->subtype == 'offline') {
+                    if ($currentDate->diffInDays($startDate) > 30) {
+                        $period    = $endDate->diffInDays($startDate);
+                        $startDate = $currentDate;
+                        $endDate   = Carbon::now()->addDay($period);
+                    }
+
                     $item->date_start = $startDate->addDay(30);
-                    $item->date_end = $endDate->addDay(30);
+                    $item->date_end   = $endDate->addDay(30);
                 }
 
                 if ($item->subtype == 'digital' || $item->subtype == 'video') {
