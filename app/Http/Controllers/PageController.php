@@ -241,7 +241,6 @@ class PageController extends Controller
             $data['isDigital'] = false;
             
             if ($currentDate->format('Y-m-d') > $item->date_start) {
-                dd("1");
                 $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
                 $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
 
@@ -274,6 +273,7 @@ class PageController extends Controller
                 // Update view & database
                 $data['item']->date_start = $item->date_start;
                 $data['item']->date_end = $item->date_end;
+                dd("1",$item);
 
                 $item->save();
             }
