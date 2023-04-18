@@ -275,9 +275,10 @@ class PageController extends Controller
                 // Update view & database
                 $data['item']->date_start = $item->date_start;
                 $data['item']->date_end = $item->date_end;
-                dd("1",$item);
+                
 
                 $item->save();
+                dd("1",$item);
             }
 
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
