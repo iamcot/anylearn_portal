@@ -254,7 +254,7 @@ class PageController extends Controller
                     $item->date_start = $startDate->addDay(15);
                     $item->date_end   = $endDate->addDay(15);
                 }
-
+                dd("1",$item);
                 if ($item->subtype == 'extra' || $item->subtype == 'offline') {
                     if ($currentDate->diffInDays($startDate) > 30) {
                         $period    = $endDate->diffInDays($startDate);
@@ -265,7 +265,7 @@ class PageController extends Controller
                     $item->date_start = $startDate->addDay(30);
                     $item->date_end   = $endDate->addDay(30);
                 }
-
+                dd("1",$item);
                 if ($item->subtype == 'digital' || $item->subtype == 'video') {
                     $data['isDigital'] = true;
                 }
