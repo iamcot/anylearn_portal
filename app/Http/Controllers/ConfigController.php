@@ -268,8 +268,9 @@ class ConfigController extends Controller
     {
         if ($request->get('save')) {
             $totalSaved = 0;
-            $input = $request->input();
+            $input = $request->input();       
             $partnerVouchers = empty($input['partner_vouchers']) ? [] : explode("\n", $input['partner_vouchers']);
+            
             if ($input['voucher_type'] == VoucherGroup::TYPE_PARTNER) {
                 $data = [
                     'type' => VoucherGroup::TYPE_PARTNER,
@@ -278,7 +279,9 @@ class ConfigController extends Controller
                     'qtt' => count($partnerVouchers),
                     'value' => 0,
                     'status' => 1,
+                    'length'=> $input['length'],
                 ];
+               
                 $newGroup = VoucherGroup::create($data);
                 if ($newGroup) {
                     foreach ($partnerVouchers as $voucher) {
@@ -306,6 +309,7 @@ class ConfigController extends Controller
                     'value' => $input['value'],
                     'status' => 1,
                     'rule_min' => $input['rule_min'],
+                    'length' => $input['length'],
                 ];
                 $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
                 if ($exists > 0) {
@@ -347,7 +351,7 @@ class ConfigController extends Controller
                     }
                 }
             }
-
+            
             return redirect()->route('config.voucher')->with('notify', "Thêm thành công $totalSaved voucher");
         }
 
