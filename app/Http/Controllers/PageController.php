@@ -245,7 +245,7 @@ class PageController extends Controller
                 $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
                 $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
                 } catch (Exception $e) {
-                    dd($startDate);
+                    dd($e);
                 }
                 dd("1",$item);
                 if ($item->subtype == 'online') {
