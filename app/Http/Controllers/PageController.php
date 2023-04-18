@@ -243,7 +243,7 @@ class PageController extends Controller
             if ($currentDate->format('Y-m-d') > $item->date_start) {
                 $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
                 $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
-
+                dd("1",$item);
                 if ($item->subtype == 'online') {
                     if ($currentDate->diffInDays($startDate) > 15) {
                         $period    = $endDate->diffInDays($startDate);
