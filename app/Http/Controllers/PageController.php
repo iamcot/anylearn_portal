@@ -242,8 +242,10 @@ class PageController extends Controller
             
             if ($currentDate->format('Y-m-d') > $item->date_start) { 
                 try {
+                    dd($item->date_start);
                 $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
                 $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
+                
                 } catch (Exception $e) {
                     dd($e);
                 }
