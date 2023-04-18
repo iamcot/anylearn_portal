@@ -240,7 +240,7 @@ class PageController extends Controller
             $currentDate = Carbon::now();
             $data['isDigital'] = false;
             
-            if ($currentDate->format('Y-m-d') > $item->date_start) {
+            if ($currentDate->format('Y-m-d') > $item->date_start) { dd("1",$item);
                 $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
                 $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
                 dd("1",$item);
