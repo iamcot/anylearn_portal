@@ -234,15 +234,14 @@ class PageController extends Controller
                 ->where('status', 'delivered')
                 ->count();
             
-            // Auto shift date
-           
+            // Auto shift date   
             $item = Item::where('id', $data['item']->id)->first();
             $currentDate = Carbon::now();
             $data['isDigital'] = false;
             
             if ($currentDate->format('Y-m-d') > $item->date_start) { 
                 try {
-                    dd($item->date_start);
+                   
                 $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
                 $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
                 
