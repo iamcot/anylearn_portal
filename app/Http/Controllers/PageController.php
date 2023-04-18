@@ -267,7 +267,7 @@ class PageController extends Controller
                     $item->date_start = $startDate->addDay(30);
                     $item->date_end   = $endDate->addDay(30);
                 }
-                dd("1",$item);
+                
                 if ($item->subtype == 'digital' || $item->subtype == 'video') {
                     $data['isDigital'] = true;
                 }
