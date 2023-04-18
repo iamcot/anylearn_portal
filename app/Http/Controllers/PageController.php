@@ -245,8 +245,9 @@ class PageController extends Controller
 
                 if ($item->subtype == 'online') {
                     if ($currentDate->diffInDays($startDate) > 15) {
-                        $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
+                        $period    = $endDate->diffInDays($startDate);
                         $startDate = $currentDate;
+                        $endDate   = Carbon::now()->addDay($period);
                     }
                     
                     $item->date_start = $startDate->addDay(15);
