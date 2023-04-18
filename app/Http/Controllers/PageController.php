@@ -278,7 +278,7 @@ class PageController extends Controller
                 
 
                 $item->save();
-                dd("1",$item);
+                //dd("1",$item);
             }
 
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
