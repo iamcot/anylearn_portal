@@ -256,7 +256,7 @@ class PageController extends Controller
                     $item->date_start = $startDate->addDay(15);
                     $item->date_end   = $endDate->addDay(15);
                 }
-                dd("1",$item);
+    
                 if ($item->subtype == 'extra' || $item->subtype == 'offline') {
                     if ($currentDate->diffInDays($startDate) > 30) {
                         $period    = $endDate->diffInDays($startDate);
