@@ -235,25 +235,21 @@ class PageController extends Controller
                 ->count();
             
             // Auto shift date   
-            $item = Item::where('id', $data['item']->id)->first();
-            $currentDate = Carbon::now();
-            $data['isDigital'] = false;
+            $item  = Item::where('id', $data['item']->id)->first();
+            $today = Carbon::now();
             
-            if ($currentDate->format('Y-m-d') > $item->date_start) { 
-                try {
-                   dd($item->date_start, $item->date_end);
-                $startDate = Carbon::createFromFormat('Y-m-d', $item->date_start);
-                $endDate   = Carbon::createFromFormat('Y-m-d', $item->date_end);
-                
-                } catch (Exception $e) {
-                    dd($e);
-                }
-                dd("1",$item);
+            if ($today->format('Y-m-d') > $item->date_start) {
+                $startDate = $item->date_start ? Carbon::createFromFormat('Y-m-d', $item->date_start) : $today;
+                $endDate   = $item->date_end ? Carbon::createFromFormat('Y-m-d', $item->date_end) : $today;
+
                 if ($item->subtype == 'online') {
-                    if ($currentDate->diffInDays($startDate) > 15) {
-                        $period    = $endDate->diffInDays($startDate);
-                        $startDate = $currentDate;
-                        $endDate   = Carbon::now()->addDay($period);
+                    if ($today->diffInDays($startDate) > 15) {
+                        $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
+                        $startDate = $today;
+                        
+                        /**$period = $endDate->diffInDays($startDate);
+                        $startDate = $today;
+                        $endDate   = Carbon::now()->addDay($period);**/
                     }
                     
                     $item->date_start = $startDate->addDay(15);
@@ -261,10 +257,9 @@ class PageController extends Controller
                 }
     
                 if ($item->subtype == 'extra' || $item->subtype == 'offline') {
-                    if ($currentDate->diffInDays($startDate) > 30) {
-                        $period    = $endDate->diffInDays($startDate);
-                        $startDate = $currentDate;
-                        $endDate   = Carbon::now()->addDay($period);
+                    if ($today->diffInDays($startDate) > 30) {
+                        $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
+                        $startDate = $today;
                     }
 
                     $item->date_start = $startDate->addDay(30);
@@ -277,11 +272,8 @@ class PageController extends Controller
 
                 // Update view & database
                 $data['item']->date_start = $item->date_start;
-                $data['item']->date_end = $item->date_end;
-                
-                dd("1",$item);
+                $data['item']->date_end = $item->date_end;         
                 $item->save();
-                //dd("1",$item);
             }
 
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
