@@ -158,6 +158,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/config/voucher/create', 'ConfigController@voucherEdit')->name('config.voucher.create');
     Route::any('/config/voucher/{id}', 'ConfigController@voucherEdit')->name('config.voucher.edit');
     Route::any('/config/voucher/{id}/list', 'ConfigController@voucherList')->name('config.voucher.list');
+    Route::any('/config/voucher/{id}/csv', 'ConfigController@voucherCsv')->name('config.voucher.csv');
     Route::any('/config/voucher/{type}/{id}/close', 'ConfigController@voucherClose')->name('config.voucher.close');
 
     Route::get('/config/voucher-event', 'ConfigController@voucherEvent')->name('config.voucherevent');

@@ -27,9 +27,9 @@
                 </div>
             </div>
             <div class="form-group row normal_voucher">
-                <label for="length" class="col-md-2 col-form-label text-md-right">{{ __('Chiều dài') }}</label>
+                <label for="length" class="col-md-2 col-form-label text-md-right">{{ __('Chiều dài phần tự tạo') }}</label>
                 <div class="col-md-6">
-                    <input id="length" type="text" class="form-control @error('voucher') is-invalid @enderror" name="length" value="{{ old('length', !empty($voucher) ? $voucher->length : '') }}">
+                    <input id="length" type="text" class="form-control @error('voucher') is-invalid @enderror" name="length" value="{{ old('length', !empty($voucher) ? $voucher->length : '6') }}">
                 </div>
             </div>
             <div class="form-group row">

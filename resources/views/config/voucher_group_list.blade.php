@@ -49,6 +49,9 @@
                         <a class="btn btn-sm btn-{{ $voucher->status == 1 ? 'danger' : 'success' }}" href="{{ route('config.voucher.close', ['id' => $voucher->id, 'type' => 'group']) }}">
                         {{ $voucher->status == 1 ? 'Khóa' : 'Mở' }}
                         </a>
+                        <a target="" class="btn btn-sm btn-primary mt-1" href="{{ route('config.voucher.csv', ['id' => $voucher->id]) }}">
+                            Xuất file
+                        </a>
                     </td>
                 </tr>
                 @endforeach

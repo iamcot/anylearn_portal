@@ -213,6 +213,32 @@ class ConfigController extends Controller
         return view('config.voucher_list', $this->data);
     }
 
+    public function voucherCsv(Request $request, $id) {
+        $vouchers = DB::table('vouchers')
+        ->where('vouchers.voucher_group_id', $id)
+        ->orderby('vouchers.id', 'desc')
+        ->get();//->toArray();
+        // dd($vouchers);
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=anylearn_vouchers_". $id ."_" . now() . ".csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function () use ($vouchers) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            foreach ($vouchers as $row) {
+                // mb_convert_encoding($row, 'UTF-16LE', 'UTF-8');
+                fputcsv($file, [$row->voucher]);
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function voucherClose($type, $id)
     {
         if ($type == 'voucher') {
@@ -330,7 +356,7 @@ class ConfigController extends Controller
                         for ($i = 1; $i <= $newGroup->qtt; $i++) {
                             Voucher::create([
                                 'voucher_group_id' => $newGroup->id,
-                                'voucher' => Voucher::buildAutoVoucher($newGroup->prefix),
+                                'voucher' => Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6),
                                 'amount' => 1,
                                 'value' => $newGroup->value,
                                 'status' => 1,

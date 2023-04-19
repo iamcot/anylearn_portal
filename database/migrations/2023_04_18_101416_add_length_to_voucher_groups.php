@@ -14,7 +14,7 @@ class AddLengthToVoucherGroups extends Migration
     public function up()
     {
         Schema::table('voucher_groups', function (Blueprint $table) {
-            $table->unsignedTinyInteger('length')->default(0);
+            $table->unsignedTinyInteger('length')->default(6);
         });
     }
 
