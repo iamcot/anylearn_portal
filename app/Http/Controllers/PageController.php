@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
 use Vanthao03596\HCVN\Models\Province;
-use Carbon\Carbon;
 
 class PageController extends Controller
 {
@@ -233,48 +232,6 @@ class PageController extends Controller
             $data['registered'] = OrderDetail::where('item_id', $itemId)
                 ->where('status', 'delivered')
                 ->count();
-            
-            // Auto shift date   
-            $item  = Item::where('id', $data['item']->id)->first();
-            $today = Carbon::now();
-            
-            if ($today->format('Y-m-d') > $item->date_start) {
-                $startDate = $item->date_start ? Carbon::createFromFormat('Y-m-d', $item->date_start) : $today;
-                $endDate   = $item->date_end ? Carbon::createFromFormat('Y-m-d', $item->date_end) : $today;
-
-                if ($item->subtype == 'online') {
-                    if ($today->diffInDays($startDate) > 15) {
-                        $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
-                        $startDate = $today;
-                        
-                        /**$period = $endDate->diffInDays($startDate);
-                        $startDate = $today;
-                        $endDate   = Carbon::now()->addDay($period);**/
-                    }
-                    
-                    $item->date_start = $startDate->addDay(15);
-                    $item->date_end   = $endDate->addDay(15);
-                }
-    
-                if ($item->subtype == 'extra' || $item->subtype == 'offline') {
-                    if ($today->diffInDays($startDate) > 30) {
-                        $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
-                        $startDate = $today;
-                    }
-
-                    $item->date_start = $startDate->addDay(30);
-                    $item->date_end   = $endDate->addDay(30);
-                }
-                
-                if ($item->subtype == 'digital' || $item->subtype == 'video') {
-                    $data['isDigital'] = true;
-                }
-
-                // Update view & database
-                $data['item']->date_start = $item->date_start;
-                $data['item']->date_end = $item->date_end;         
-                $item->save();
-            }
 
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {

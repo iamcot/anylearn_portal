@@ -76,7 +76,7 @@
                             <p><strong>@lang('Số lượng'): </strong> Không giới hạn </p>
                         @endif
 
-                        <p {{ isset($isDigital) ? 'class=d-none' : '' }}>
+                        <p {{ (now()->format('Y-m-d') > $item->date_start) && ($item->subtype == 'digital' || $item->subtype == 'video') ? 'class=d-none' : '' }}>
                             <strong> @lang('Khai giảng:')</strong>
                             {{ date('d/m/Y', strtotime($item->date_start)) }}
                             {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
