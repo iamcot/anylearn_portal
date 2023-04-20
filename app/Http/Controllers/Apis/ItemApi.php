@@ -71,7 +71,7 @@ class ItemApi extends Controller
     public function list(Request $request)
     {
         $user = $request->get('_user');
-
+        
         $open = Item::where('user_id', $user->id)
             ->where('user_status', '<=', ItemConstants::USERSTATUS_ACTIVE)
             ->orderby('user_status', 'desc')
@@ -241,6 +241,20 @@ class ItemApi extends Controller
             ->where('iua.type', ItemUserAction::TYPE_RATING)
             ->select('iua.*', 'users.name AS user_name', 'users.id AS user_id', 'users.image AS user_image')
             ->get();
+        return response()->json($data);
+    }
+
+    public function subtypes()
+    {
+        $data = Item::select('subtype')->distinct()->get();
+
+        return response()->json($data);
+    }
+
+    public function getItemBySubtype(Request $request, $subtype)
+    {
+        $data = Item::where('subtype', $subtype)->get();
+       
         return response()->json($data);
     }
 }

@@ -49,6 +49,10 @@ Route::get('/ask/{askId}', 'Apis\AskApi@getThread');
 
 Route::post('/report/ecommerce', 'Apis\ConfigApi@reportEcommerce');
 
+// Add v3
+Route::get('/item/subtypes', 'Apis\ItemApi@subtypes');
+Route::get('/item/{subtype}', 'Apis\ItemApi@getItemBySubtype');
+
 Route::middleware(['language'])->group(function () {
     Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
     Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
@@ -59,7 +63,6 @@ Route::middleware(['language'])->group(function () {
     // Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
     // Route::get('/quote', 'Apis\ArticleApi@quote');
 // Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
-
 
 });
 
