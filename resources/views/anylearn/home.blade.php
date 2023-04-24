@@ -25,7 +25,7 @@
         </div>
         <div id="quote" class="mt-3">
             <img id="quote-top" src="/cdn/anylearn/img/quote-top.svg" class="img-fluid" alt="">
-            <img src="/cdn/anylearn/img/quote.png" class="img-fluid" alt="">
+            <img src="/cdn/anylearn/img/Bannerquotes.png" class="img-fluid" alt="">
             <span class="quote-text">{{ __($quote['quoteText']) }}<br>- {{ __($quote['quoteAuthor']) }}</span>
             <img id="quote-bottom" src="/cdn/anylearn/img/quote-bottom.svg" class="img-fluid" alt="">
         </div>
