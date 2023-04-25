@@ -141,8 +141,9 @@ Route::prefix('v3')->group(function () {
     Route::get('/event/{month}', 'Apis\ConfigApi@event');
     Route::get('/search', 'Apis\ConfigApi@search');
     Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
-    Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
-    Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
+    //Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
+    //Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
+    Route::get('/config/home/{role}', 'Apis\ConfigApi@homeV3');
     Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
     Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
     Route::get('/foundation', 'Apis\ConfigApi@foundation');
@@ -169,9 +170,7 @@ Route::prefix('v3')->group(function () {
         Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
     });
 
-    Route::middleware(['api.user'])->group(function () {
-        Route::get('/home/{role}', 'Apis\ConfigApi@homeV3');
-        
+    Route::middleware(['api.user'])->group(function () {  
         Route::get('/social/profile', 'Apis\SocialController@profile');
         Route::any('/social/{postId}/action', 'Apis\SocialController@action');
 
@@ -225,9 +224,5 @@ Route::prefix('v3')->group(function () {
         Route::get('/user/children', 'Apis\UserApi@listChildren');
         Route::post('/user/children', 'Apis\UserApi@saveChildren');
         Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
-
-        //--v3
-        Route::get('/user/point-box', 'Apis\UserApi@pointBox');
-
     });
 });

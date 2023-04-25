@@ -39,7 +39,6 @@ class ConfigApi extends Controller
 {
     public function homeV3(Request $request, $role = 'guest') 
     {
-        // Home Config
         $homeConfig = config('home_config'); 
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if (!empty($lastConfig)) {
@@ -48,84 +47,97 @@ class ConfigApi extends Controller
                 $homeConfig['popup'] = $homePopup;
             }
         }
-        $data['config'] = $homeConfig;
 
-        // Banner Config
-        $data['banners'] = [];
+        $bannerConfig = [];
         $newBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
         if ($newBanners) {
-            $data['banners'] = array_values(json_decode($newBanners->value, true));
+            $bannerConfig = array_values(json_decode($newBanners->value, true));
         }
 
-        // Promotion Config
-        $data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
-            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
-
-        // Pointbox
-        $pointBox['anypoint'] = $request->get('_user')->wallet_c;
-        $pointBox['goingClass'] = '';
-        $pointBox['ratingClass'] = ''; 
-
-        $classes = DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('participations as pa', 'pa.schedule_id', 'od.id')
-            ->join('items', 'items.id', 'od.item_id');
+        $asks = [];
+        $question = Ask::where('type', 'question')->orderby('id', 'desc')->first();
+        if ($question) {
+            $asks['question'] = $question->content;
+            $asks['comments'] = Ask::where('ask_id', $question->id)->where('type', 'comment')->get();
+            $asks['answers'] = Ask::where('ask_id', $question->id)->where('type', 'answer')->get();
+        }
         
-        if (!$classes)  {
-            $classes->where('orders.user_id', $request->get('_user')->id);
-            $gClass = $classes->orderby('pa.created_at', 'desc')->first();
-            $rClass = $classes->join('item_user_actions as iua', 
-                function ($join) {
-                    $join->on('iua.user_id', 'orders.user_id');
-                    $join->on('iua.item_id', 'od.item_id');
-                })
-                ->where('iua.type', 'rating')
-                ->orderby('iua.created_at', 'desc')
-                ->first();
+        $recommendations['route'] = '';
+        $recommendations['title'] = 'anyLEARN đề xuất';
+        $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get();
 
-            $pointBox['goingClass'] = $gClass ? $gClass->title : '';
-            $pointBox['ratingClass'] = $rClass ? $rClass->title : '';
-        }
-        $data['pointbox'] = $pointBox;
-
-        // Article Config
+        // Guest Response
+        $data['asks'] = $asks;
+        $data['config'] = $homeConfig;
+        $data['banners'] = $bannerConfig;
         $data['articles'] = Article::where('status', 1)
             ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
             ->orderby('id', 'desc')
-            ->take(10)->get()->makeHidden(['content']);
-
-        // Ask Config
-        $question = Ask::where('type', 'question')->orderby('id', 'desc')->first();
-        $data['asks']['question'] = $question->content;
-        $data['asks']['comments'] =  Ask::where('ask_id', $question->id)->where('type', 'comment')->get();
-        $data['asks']['answers'] = Ask::where('ask_id', $question->id)->where('type', 'answer')->get();
-
-        // Voucher Config
-        $data['vouchers'] = VoucherEvent::select('id', 'title')->orderby('id', 'desc')->take(2)->get();
-
-        // Repurchaseds
-        $data['repurchaseds']['title'] = 'Đăng ký lại';
-        $data['repurchaseds']['list'] = Order::join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('items', 'items.id', 'od.item_id')
-            ->where('orders.user_id', $request->get('_user')->id)
-            ->distinct('orders.item_id')->get();
-        $data['repurchaseds']['route'] = '';
+            ->take(10)
+            ->get()
+            ->makeHidden(['content']);
         
-        // Recommendations
-        $data['recommendations']['title'] = 'Đăng ký lại';
-        $data['recommendations']['list'] = Item::where('is_hot', 1)->take(10)->get();
-        $data['recommendations']['route'] = '';
+        $data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
+            ->where('status', 1)
+            ->orderby('id', 'desc')
+            ->take(5)
+            ->get();
+        
+        $data['vouchers'] = VoucherEvent::select('id', 'title')
+            ->orderby('id', 'desc')
+            ->take(2)
+            ->get();
 
-        // j4u
-        /*$searchLog = Spm::join(
-            DB::raw('(select distinct ip from spms where user_id = '. $request->get('_user')->id . ') as s2'),
-            's2.ip', 
-            'spms.ip'
-        )*/
-        $searchLog = Spm::where('user_id', $request->get('_user')->id)
-        ->where('spmc', 'search')
-        ->get('extra');
-        $data['j4u'] = [];
+        $data['recommendations'] = $recommendations;
+    
+        if ($role == 'member') {
+            $user = $request->get('_user')->id;
+
+            // PointBox
+            $pointBox['anypoint'] = $user->wallet_c;
+            $pointBox['goingClass'] = '';
+            $pointBox['ratingClass'] = ''; 
+
+            $classes = DB::table('orders')
+                ->join('order_details as od', 'od.order_id', 'orders.id')
+                ->join('participations as pa', 'pa.schedule_id', 'od.id')
+                ->join('items', 'items.id', 'od.item_id');
+            
+            if (!$classes)  {
+                $classes->where('orders.user_id', $request->get('_user')->id);
+                $gClass = $classes->orderby('pa.created_at', 'desc')->first();
+                $rClass = $classes->join('item_user_actions as iua', 
+                    function ($join) {
+                        $join->on('iua.user_id', 'orders.user_id');
+                        $join->on('iua.item_id', 'od.item_id');
+                    })
+                    ->where('iua.type', 'rating')
+                    ->orderby('iua.created_at', 'desc')
+                    ->first();
+
+                $pointBox['goingClass'] = $gClass ? $gClass->title : '';
+                $pointBox['ratingClass'] = $rClass ? $rClass->title : '';
+            }
+
+            // j4ue
+            /*$searchLog = Spm::join(
+                DB::raw('(select distinct ip from spms where user_id = '. $request->get('_user')->id . ') as s2'),
+                's2.ip', 
+                'spms.ip'
+            )*/
+            $searchLog = Spm::where('user_id', $request->get('_user')->id)
+            ->where('spmc', 'search')
+            ->get('extra');
+            $j4u = [];
+            
+            // Repurchased
+            $repurchaseds['title'] = 'Đăng ký lại';
+            $repurchaseds['route'] = '';
+            $repurchaseds['list'] = Order::join('order_details as od', 'od.order_id', 'orders.id')
+                ->join('items', 'items.id', 'od.item_id')
+                ->where('orders.user_id', $request->get('_user')->id)
+                ->distinct('orders.item_id')->get();
+        }
 
         return response()->json($data);
     } 
