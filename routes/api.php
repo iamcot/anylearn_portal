@@ -163,10 +163,6 @@ Route::prefix('v3')->group(function () {
     Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
     Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
-    //--v3
-    Route::get('/item/subtypes', 'Apis\ItemApi@subtypes');
-    //Route::get('/item/{subtype}', 'Apis\ItemApi@getItemBySubtype');
-
     Route::middleware(['language'])->group(function () {
         Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
         Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
@@ -174,6 +170,8 @@ Route::prefix('v3')->group(function () {
     });
 
     Route::middleware(['api.user'])->group(function () {
+        Route::get('/home/{role}', 'Apis\ConfigApi@homeV3');
+        
         Route::get('/social/profile', 'Apis\SocialController@profile');
         Route::any('/social/{postId}/action', 'Apis\SocialController@action');
 
