@@ -65,14 +65,34 @@ class ConfigApi extends Controller
         $recommendations['route'] = '';
         $recommendations['title'] = 'anyLEARN đề xuất';
         $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get(); # bootscore !!!
+        
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
 
-        $pointBox['anypoint'] = 0;
-        $pointBox['goingClass'] = '';
-        $pointBox['ratingClass'] = '';
+        $homeClasses = [];
+        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        if ($homeClassesDb) {
+            $appLocale = App::getLocale();
+            foreach (json_decode($homeClassesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
+                    ->where('status', 1)
+                    ->where('user_status', 1)
+                    ->get();
+                $homeClasses[] = [
+                    'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
+                    'classes' => $items
+                ];
+            }
+        }
 
         // Guest Response
         $data['asks'] = $asks;
         $data['config'] = $homeConfig;
+        $data['classes'] = $homeClasses; 
         $data['banners'] = $bannerConfig;
         $data['articles'] = Article::where('status', 1)
             ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
@@ -93,26 +113,27 @@ class ConfigApi extends Controller
             ->get();
 
         $data['recommendations'] = $recommendations;
-        $data['pointBox'] = [];
+        $data['pointBox'] = $data['j4u'] = $data['repurchaseds'] = []; 
     
         if ($role == 'member') {
-            $user = $request->get('_user');
-            return $user;
+            $user  = $request->get('_user');
+            $items = DB::table('orders')
+                ->join('order_details as od', 'od.order_id', 'orders.id')
+                ->join('items', 'items.id', 'od.item_id')
+                ->where('orders.user_id', $user->id);
 
-            // PointBox
+            $repurchaseds['route'] = '';
+            $repurchaseds['title'] = 'Đăng ký lại';
+            $repurchaseds['list']  = $items->distinct('orders.item_id')->get();
+             
             $pointBox['anypoint'] = $user->wallet_c;
             $pointBox['goingClass'] = '';
             $pointBox['ratingClass'] = ''; 
 
-            $classes = DB::table('orders')
-                ->join('order_details as od', 'od.order_id', 'orders.id')
-                ->join('participations as pa', 'pa.schedule_id', 'od.id')
-                ->join('items', 'items.id', 'od.item_id');
-            
-            if (!$classes)  {
-                $classes->where('orders.user_id', $request->get('_user')->id);
-                $gClass = $classes->orderby('pa.created_at', 'desc')->first();
-                $rClass = $classes->join('item_user_actions as iua', 
+            $items = $items->join('participations as pa', 'pa.schedule_id', 'od.id');
+            if ($items)  {
+                $gClass = $items->orderby('pa.created_at', 'desc')->first();  
+                $rClass = $items->join('item_user_actions as iua', 
                     function ($join) {
                         $join->on('iua.user_id', 'orders.user_id');
                         $join->on('iua.item_id', 'od.item_id');
@@ -135,14 +156,6 @@ class ConfigApi extends Controller
             ->where('spmc', 'search')
             ->get('extra');
             $j4u = [];
-            
-            // Repurchaseds
-            $repurchaseds['route'] = '';
-            $repurchaseds['title'] = 'Đăng ký lại';
-            $repurchaseds['list'] = Order::join('order_details as od', 'od.order_id', 'orders.id')
-                ->join('items', 'items.id', 'od.item_id')
-                ->where('orders.user_id', $request->get('_user')->id)
-                ->distinct('orders.item_id')->get();
 
             $data['j4u'] = $j4u;
             $data['pointBox'] = $pointBox;
