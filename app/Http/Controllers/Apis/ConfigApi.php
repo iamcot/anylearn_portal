@@ -64,7 +64,11 @@ class ConfigApi extends Controller
         
         $recommendations['route'] = '';
         $recommendations['title'] = 'anyLEARN đề xuất';
-        $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get();
+        $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get(); # bootscore !!!
+
+        $pointBox['anypoint'] = 0;
+        $pointBox['goingClass'] = '';
+        $pointBox['ratingClass'] = '';
 
         // Guest Response
         $data['asks'] = $asks;
@@ -76,7 +80,7 @@ class ConfigApi extends Controller
             ->take(10)
             ->get()
             ->makeHidden(['content']);
-        
+
         $data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
             ->where('status', 1)
             ->orderby('id', 'desc')
@@ -89,9 +93,11 @@ class ConfigApi extends Controller
             ->get();
 
         $data['recommendations'] = $recommendations;
+        $data['pointBox'] = [];
     
         if ($role == 'member') {
-            $user = $request->get('_user')->id;
+            $user = $request->get('_user');
+            return $user;
 
             // PointBox
             $pointBox['anypoint'] = $user->wallet_c;
@@ -119,7 +125,7 @@ class ConfigApi extends Controller
                 $pointBox['ratingClass'] = $rClass ? $rClass->title : '';
             }
 
-            // j4ue
+            // J4u
             /*$searchLog = Spm::join(
                 DB::raw('(select distinct ip from spms where user_id = '. $request->get('_user')->id . ') as s2'),
                 's2.ip', 
@@ -130,13 +136,17 @@ class ConfigApi extends Controller
             ->get('extra');
             $j4u = [];
             
-            // Repurchased
-            $repurchaseds['title'] = 'Đăng ký lại';
+            // Repurchaseds
             $repurchaseds['route'] = '';
+            $repurchaseds['title'] = 'Đăng ký lại';
             $repurchaseds['list'] = Order::join('order_details as od', 'od.order_id', 'orders.id')
                 ->join('items', 'items.id', 'od.item_id')
                 ->where('orders.user_id', $request->get('_user')->id)
                 ->distinct('orders.item_id')->get();
+
+            $data['j4u'] = $j4u;
+            $data['pointBox'] = $pointBox;
+            $data['repurchaseds'] = $repurchaseds;
         }
 
         return response()->json($data);
