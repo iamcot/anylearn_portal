@@ -31,9 +31,105 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use League\OAuth1\Client\Server\Trello;
+use App\Models\Ask;
+use App\Models\VoucherEvent;
+use App\Models\VoucherGroup;
 
 class ConfigApi extends Controller
 {
+    public function homeV3(Request $request, $role = 'guest') 
+    {
+        // Home Config
+        $homeConfig = config('home_config'); 
+        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
+        if (!empty($lastConfig)) {
+            $homePopup = json_decode($lastConfig->value, true);
+            if ($homePopup['status'] == 1) {
+                $homeConfig['popup'] = $homePopup;
+            }
+        }
+        $data['config'] = $homeConfig;
+
+        // Banner Config
+        $data['banners'] = [];
+        $newBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
+        if ($newBanners) {
+            $data['banners'] = array_values(json_decode($newBanners->value, true));
+        }
+
+        // Promotion Config
+        $data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
+            ->where('status', 1)->orderby('id', 'desc')->take(5)->get();
+
+        // Pointbox
+        $pointBox['anypoint'] = $request->get('_user')->wallet_c;
+        $pointBox['goingClass'] = '';
+        $pointBox['ratingClass'] = ''; 
+
+        $classes = DB::table('orders')
+            ->join('order_details as od', 'od.order_id', 'orders.id')
+            ->join('participations as pa', 'pa.schedule_id', 'od.id')
+            ->join('items', 'items.id', 'od.item_id');
+        
+        if (!$classes)  {
+            $classes->where('orders.user_id', $request->get('_user')->id);
+            $gClass = $classes->orderby('pa.created_at', 'desc')->first();
+            $rClass = $classes->join('item_user_actions as iua', 
+                function ($join) {
+                    $join->on('iua.user_id', 'orders.user_id');
+                    $join->on('iua.item_id', 'od.item_id');
+                })
+                ->where('iua.type', 'rating')
+                ->orderby('iua.created_at', 'desc')
+                ->first();
+
+            $pointBox['goingClass'] = $gClass ? $gClass->title : '';
+            $pointBox['ratingClass'] = $rClass ? $rClass->title : '';
+        }
+        $data['pointbox'] = $pointBox;
+
+        // Article Config
+        $data['articles'] = Article::where('status', 1)
+            ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
+            ->orderby('id', 'desc')
+            ->take(10)->get()->makeHidden(['content']);
+
+        // Ask Config
+        $question = Ask::where('type', 'question')->orderby('id', 'desc')->first();
+        $data['asks']['question'] = $question->content;
+        $data['asks']['comments'] =  Ask::where('ask_id', $question->id)->where('type', 'comment')->get();
+        $data['asks']['answers'] = Ask::where('ask_id', $question->id)->where('type', 'answer')->get();
+
+        // Voucher Config
+        $data['vouchers'] = VoucherEvent::select('id', 'title')->orderby('id', 'desc')->take(2)->get();
+
+        // Repurchaseds
+        $data['repurchaseds']['title'] = 'Đăng ký lại';
+        $data['repurchaseds']['list'] = Order::join('order_details as od', 'od.order_id', 'orders.id')
+            ->join('items', 'items.id', 'od.item_id')
+            ->where('orders.user_id', $request->get('_user')->id)
+            ->distinct('orders.item_id')->get();
+        $data['repurchaseds']['route'] = '';
+        
+        // Recommendations
+        $data['recommendations']['title'] = 'Đăng ký lại';
+        $data['recommendations']['list'] = Item::where('is_hot', 1)->take(10)->get();
+        $data['recommendations']['route'] = '';
+
+        // j4u
+        /*$searchLog = Spm::join(
+            DB::raw('(select distinct ip from spms where user_id = '. $request->get('_user')->id . ') as s2'),
+            's2.ip', 
+            'spms.ip'
+        )*/
+        $searchLog = Spm::where('user_id', $request->get('_user')->id)
+        ->where('spmc', 'search')
+        ->get('extra');
+        $data['j4u'] = [];
+
+        return response()->json($data);
+    } 
+
     public function homeV2(Request $request, $role = 'guest')
     {
         $newBanners = [];

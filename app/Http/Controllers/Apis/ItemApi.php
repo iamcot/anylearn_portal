@@ -243,18 +243,4 @@ class ItemApi extends Controller
             ->get();
         return response()->json($data);
     }
-
-    public function subtypes()
-    {
-        $data = Item::select('subtype')->distinct()->get();
-
-        return response()->json($data);
-    }
-
-    public function getItemBySubtype(Request $request, $subtype)
-    {
-        $data = Item::where('subtype', $subtype)->get();
-       
-        return response()->json($data);
-    }
 }
