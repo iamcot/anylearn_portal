@@ -64,7 +64,7 @@ class ConfigApi extends Controller
         
         $recommendations['route'] = '';
         $recommendations['title'] = 'anyLEARN đề xuất';
-        $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get(); # bootscore !!!
+        $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get(); #Problem: bootscore
         
         $configM = new Configuration();
         $isEnableIosTrans = $configM->enableIOSTrans($request);
@@ -115,35 +115,50 @@ class ConfigApi extends Controller
         $data['recommendations'] = $recommendations;
         $data['pointBox'] = $data['j4u'] = $data['repurchaseds'] = []; 
     
-        if ($role == 'member') {
+        if ($role == 'member') { 
             $user  = $request->get('_user');
+          
             $items = DB::table('orders')
                 ->join('order_details as od', 'od.order_id', 'orders.id')
                 ->join('items', 'items.id', 'od.item_id')
-                ->where('orders.user_id', $user->id);
+                ->join('categories', 'categories.id', 'item_category_id')
+                ->leftjoin(DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
+                    'rv.item_id',
+                    'items.id'
+                )
+                ->where('orders.user_id', $user->id)
+                ->select(
+                    'items.title as name',
+                    'items.image',
+                    'items.price',
+                    'categories.title as category',
+                    'rv.rating as rating'
+                );
 
             $repurchaseds['route'] = '';
             $repurchaseds['title'] = 'Đăng ký lại';
-            $repurchaseds['list']  = $items->distinct('orders.item_id')->get();
-             
+            $repurchaseds['list']  = $items->distinct('orders.item_id')->get(); 
+            
             $pointBox['anypoint'] = $user->wallet_c;
             $pointBox['goingClass'] = '';
             $pointBox['ratingClass'] = ''; 
 
             $items = $items->join('participations as pa', 'pa.schedule_id', 'od.id');
+           
             if ($items)  {
-                $gClass = $items->orderby('pa.created_at', 'desc')->first();  
-                $rClass = $items->join('item_user_actions as iua', 
+                $goingClass = $items->orderby('pa.created_at', 'desc')->first();   
+                $ratingClass = $items->join('item_user_actions as iua',   # Problem
                     function ($join) {
                         $join->on('iua.user_id', 'orders.user_id');
                         $join->on('iua.item_id', 'od.item_id');
                     })
+                    ->where('pa.organizer_confirm', 1)
                     ->where('iua.type', 'rating')
                     ->orderby('iua.created_at', 'desc')
                     ->first();
 
-                $pointBox['goingClass'] = $gClass ? $gClass->title : '';
-                $pointBox['ratingClass'] = $rClass ? $rClass->title : '';
+                $pointBox['goingClass'] = $goingClass ? $goingClass->name : '';
+                $pointBox['ratingClass'] = $ratingClass ? $ratingClass->name : '';
             }
 
             // J4u
@@ -152,11 +167,28 @@ class ConfigApi extends Controller
                 's2.ip', 
                 'spms.ip'
             )*/
-            $searchLog = Spm::where('user_id', $request->get('_user')->id)
-            ->where('spmc', 'search')
-            ->get('extra');
-            $j4u = [];
+            $j4u['route'] = '';
+            $j4u['title'] = 'Có thể bạn sẽ thích';
+            $j4u['list'] = $repurchaseds['list'];
 
+            /*$searchLog = Spm::where('user_id', $request->get('_user')->id)
+                ->where('spmc', 'search')
+                ->distinct('extra')
+                ->pluck('extra');
+            $j4u = Item::whereIn('title', $searchLog)->get();
+            $test = DB::table('orders')
+                ->join('order_details as od', 'od.order_id', 'orders.id')
+                ->join('items', 'items.id', 'od.item_id')
+                ->where('orders.user_id', $user->id)
+                ->orderby('od.created_at', 'desc')
+                ->first();
+
+            if ($test) {
+                $res = Item::where('subtype', $test->subtype)
+                    ->where('item_category_id', $test->item_category_id)
+                    ->get();
+            }*/
+                  
             $data['j4u'] = $j4u;
             $data['pointBox'] = $pointBox;
             $data['repurchaseds'] = $repurchaseds;
