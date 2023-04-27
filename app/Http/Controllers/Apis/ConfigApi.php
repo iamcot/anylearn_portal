@@ -63,6 +63,7 @@ class ConfigApi extends Controller
                     ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
+                    ->orderByRaw("FIND_IN_SET(id, '" . $block['classes'] . "')")
                     ->get();
                 $homeClasses[] = [
                     'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
