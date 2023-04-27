@@ -23,6 +23,7 @@ use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use App\Services\HomeServices;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -39,6 +40,7 @@ class ConfigApi extends Controller
 {
     public function homeV3(Request $request, $role = 'guest') 
     {
+        // Basic config
         $homeConfig = config('home_config'); 
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if (!empty($lastConfig)) {
@@ -54,21 +56,9 @@ class ConfigApi extends Controller
             $bannerConfig = array_values(json_decode($newBanners->value, true));
         }
 
-        $asks = [];
-        $question = Ask::where('type', 'question')->orderby('id', 'desc')->first();
-        if ($question) {
-            $asks['question'] = $question->content;
-            $asks['comments'] = Ask::where('ask_id', $question->id)->where('type', 'comment')->get();
-            $asks['answers'] = Ask::where('ask_id', $question->id)->where('type', 'answer')->get();
-        }
-        
-        $recommendations['route'] = '';
-        $recommendations['title'] = 'anyLEARN đề xuất';
-        $recommendations['list'] = Item::where('is_hot', 1)->take(10)->get(); #Problem: bootscore
-        
+        // Items by category - config on admin page
         $configM = new Configuration();
         $isEnableIosTrans = $configM->enableIOSTrans($request);
-
         $homeClasses = [];
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
         if ($homeClassesDb) {
@@ -88,110 +78,25 @@ class ConfigApi extends Controller
                 ];
             }
         }
-
-        // Guest Response
-        $data['asks'] = $asks;
+        
         $data['config'] = $homeConfig;
         $data['classes'] = $homeClasses; 
         $data['banners'] = $bannerConfig;
-        $data['articles'] = Article::where('status', 1)
-            ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
-            ->orderby('id', 'desc')
-            ->take(10)
-            ->get()
-            ->makeHidden(['content']);
 
-        $data['promotions'] = Article::where('type', Article::TYPE_PROMOTION)
-            ->where('status', 1)
-            ->orderby('id', 'desc')
-            ->take(5)
-            ->get();
-        
-        $data['vouchers'] = VoucherEvent::select('id', 'title')
-            ->orderby('id', 'desc')
-            ->take(2)
-            ->get();
-
-        $data['recommendations'] = $recommendations;
+        $homeS = new HomeServices(); 
+        $data['asks'] = $homeS->getAsk();
+        $data['articles'] = $homeS->getArticles();
+        $data['promotions'] = $homeS->getPromotions();
+        $data['vouchers'] = $homeS->getVoucherEvents();
+        $data['recommendations'] = $homeS->setTemplates('/', 'anyLEARN đề Xuất', $homeS->getRecommendations());        
         $data['pointBox'] = $data['j4u'] = $data['repurchaseds'] = []; 
     
-        if ($role == 'member') { 
-            $user  = $request->get('_user');
-          
-            $items = DB::table('orders')
-                ->join('order_details as od', 'od.order_id', 'orders.id')
-                ->join('items', 'items.id', 'od.item_id')
-                ->join('categories', 'categories.id', 'item_category_id')
-                ->leftjoin(DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
-                    'rv.item_id',
-                    'items.id'
-                )
-                ->where('orders.user_id', $user->id)
-                ->select(
-                    'items.title as name',
-                    'items.image',
-                    'items.price',
-                    'categories.title as category',
-                    'rv.rating as rating'
-                );
+        if ($role) { 
+            $user  = $request->get('_user');   
 
-            $repurchaseds['route'] = '';
-            $repurchaseds['title'] = 'Đăng ký lại';
-            $repurchaseds['list']  = $items->distinct('orders.item_id')->get(); 
-            
-            $pointBox['anypoint'] = $user->wallet_c;
-            $pointBox['goingClass'] = '';
-            $pointBox['ratingClass'] = ''; 
-
-            $items = $items->join('participations as pa', 'pa.schedule_id', 'od.id');
-           
-            if ($items)  {
-                $goingClass = $items->orderby('pa.created_at', 'desc')->first();   
-                $ratingClass = $items->join('item_user_actions as iua',   # Problem
-                    function ($join) {
-                        $join->on('iua.user_id', 'orders.user_id');
-                        $join->on('iua.item_id', 'od.item_id');
-                    })
-                    ->where('pa.organizer_confirm', 1)
-                    ->where('iua.type', 'rating')
-                    ->orderby('iua.created_at', 'desc')
-                    ->first();
-
-                $pointBox['goingClass'] = $goingClass ? $goingClass->name : '';
-                $pointBox['ratingClass'] = $ratingClass ? $ratingClass->name : '';
-            }
-
-            // J4u
-            /*$searchLog = Spm::join(
-                DB::raw('(select distinct ip from spms where user_id = '. $request->get('_user')->id . ') as s2'),
-                's2.ip', 
-                'spms.ip'
-            )*/
-            $j4u['route'] = '';
-            $j4u['title'] = 'Có thể bạn sẽ thích';
-            $j4u['list'] = $repurchaseds['list'];
-
-            /*$searchLog = Spm::where('user_id', $request->get('_user')->id)
-                ->where('spmc', 'search')
-                ->distinct('extra')
-                ->pluck('extra');
-            $j4u = Item::whereIn('title', $searchLog)->get();
-            $test = DB::table('orders')
-                ->join('order_details as od', 'od.order_id', 'orders.id')
-                ->join('items', 'items.id', 'od.item_id')
-                ->where('orders.user_id', $user->id)
-                ->orderby('od.created_at', 'desc')
-                ->first();
-
-            if ($test) {
-                $res = Item::where('subtype', $test->subtype)
-                    ->where('item_category_id', $test->item_category_id)
-                    ->get();
-            }*/
-                  
-            $data['j4u'] = $j4u;
-            $data['pointBox'] = $pointBox;
-            $data['repurchaseds'] = $repurchaseds;
+            $data['j4u'] = $homeS->setTemplates('/', 'Có thể bạn sẽ thích', $homeS->getJ4u($user));
+            $data['repurchaseds'] = $homeS->setTemplates('/', 'Đăng ký lại', $homeS->getRepurchaseds($user));
+            $data['pointBox'] = $homeS->getPointBox($user);
         }
 
         return response()->json($data);
