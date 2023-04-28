@@ -198,8 +198,8 @@ class HomeServices
                 'rv.item_id',
                 'items.id'
             )*/
-            ->where('items.status', 1)
-            ->where('user_status', 1)
+            //->where('items.status', 1)
+            //->where('user_status', 1)
             //->whereIn('items.title', $searchLog)
             ->select(
                 'items.id',
