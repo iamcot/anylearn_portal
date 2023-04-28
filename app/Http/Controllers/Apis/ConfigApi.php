@@ -79,9 +79,9 @@ class ConfigApi extends Controller
             }
         }
         
-        $data['config'] = $homeConfig;
+        /*$data['config'] = $homeConfig;
         $data['classes'] = $homeClasses; 
-        $data['banners'] = $bannerConfig;
+        $data['banners'] = $bannerConfig;*/
 
         $homeS = new HomeServices(); 
         $data['asks'] = $homeS->getAsk();
