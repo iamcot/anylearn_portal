@@ -211,6 +211,7 @@ class HomeServices
             )
             ->take(3)
             ->get();
+            $data[] = $searchByLog;
 
             foreach($searchByLog as $value) {
                 $data[] = $value;
