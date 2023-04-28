@@ -212,7 +212,7 @@ class HomeServices
             ->take(3)
             ->get();
 
-            $data[] = $searchByLog;
+            $data[] = 1;
             /*
             foreach($searchByLog as $value) {
                 $data[] = $value;
