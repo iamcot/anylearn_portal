@@ -104,9 +104,10 @@ class HomeServices
                 'items.price',
                 'categories.title as category',
                 'rv.rating',
-            )
-            ->distinct('items.id')
+                'od.created_at'
+            )  
             ->orderByDesc('od.created_at')
+            ->distinct('items.id')
             ->get();
     }
 
