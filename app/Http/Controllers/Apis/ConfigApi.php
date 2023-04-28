@@ -99,7 +99,7 @@ class ConfigApi extends Controller
             $data['pointBox'] = $homeS->getPointBox($user);
         }
 
-        return response()->json($data['j4u']);
+        return response()->json($data);
     } 
 
     public function homeV2(Request $request, $role = 'guest')
