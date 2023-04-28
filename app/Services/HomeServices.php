@@ -194,7 +194,7 @@ class HomeServices
             $searchByLog = DB::table('items')
             ->join('categories', 'categories.id', 'item_category_id')
             ->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = rating group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
             )
