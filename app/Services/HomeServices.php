@@ -199,8 +199,8 @@ class HomeServices
             ->where('user_status', 1)
             ->whereIn('items.title', $searchLog)
             ->select(
-                'items.id',
-                'items.title',
+                'items.id as id',
+                'items.title as title',
                 'items.image',
                 'items.price',
                 'categories.title as category',
