@@ -213,14 +213,14 @@ class HomeServices
             ->get();
 
             $data[] = $searchByLog;
-
+            /*
             foreach($searchByLog as $value) {
                 $data[] = $value;
-            }
+            }*/
         }
 
         // By list of registered items
-        $registeredData = $this->getRegisteredData($user);
+        /*$registeredData = $this->getRegisteredData($user);
         if ($registeredData) {
             $searchByRegisteredData = DB::table('items')
             ->join('categories', 'categories.id', 'item_category_id')
@@ -259,7 +259,7 @@ class HomeServices
             foreach($searchByRegisteredData as $value) {
                 $data[] = $value;
             }
-        }
+        }*/
         
         return $data;
     }
