@@ -193,11 +193,11 @@ class HomeServices
         if ($searchLog) {
             $searchByLog = DB::table('items')
             ->join('categories', 'categories.id', 'item_category_id')
-            ->leftjoin(
+            /*->leftjoin(
                 DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
-            )
+            )*/
             ->where('items.status', 1)
             ->where('user_status', 1)
             //->whereIn('items.title', $searchLog)
@@ -207,7 +207,7 @@ class HomeServices
                 'items.image',
                 'items.price',
                 'categories.title as category',
-                'rv.rating',
+                //'rv.rating',
             )
             ->take(3)
             ->get();
