@@ -199,8 +199,8 @@ class HomeServices
             ->where('user_status', 1)
             ->whereIn('items.title', $searchLog)
             ->select(
-                'items.id as id',
-                'items.title as title',
+                'items.id',
+                'items.title',
                 'items.image',
                 'items.price',
                 'categories.title as category',
@@ -230,10 +230,17 @@ class HomeServices
             ->whereIn('item_category_id', $registeredData->categoryIds)
             ->whereIn('subtype', $registeredData->subtypes)
             ->where('price', '>=', $registeredData->minPrice)
-            ->where('price', '<=', $registeredData->maxPrice)
-            ->where('ages_min', '>=', $registeredData->minAge)
-            ->where('ages_max', '<=', $registeredData->maxAge)
-            ->select(
+            ->where('price', '<=', $registeredData->maxPrice);
+
+            if ($registeredData->minAge) {
+                $searchByRegisteredData->where('ages_min', '>=', $registeredData->minAge);
+            }
+
+            if ($registeredData->maxAge) {
+                $searchByRegisteredData->where('ages_max', '<=', $registeredData->maxAge);
+            }
+             
+            $searchByRegisteredData = $searchByRegisteredData->select(
                 'items.id',
                 'items.title',
                 'items.image',
