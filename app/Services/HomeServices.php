@@ -183,10 +183,12 @@ class HomeServices
             'spms.ip'
         );*/
 
+
         $searchLog = Spm::where('user_id', $user->id)
             ->where('spmc', 'search')
             ->distinct('extra')
             ->pluck('extra');
+        $data[] = $searchLog;
         
         if ($searchLog) {
             $searchByLog = DB::table('items')
