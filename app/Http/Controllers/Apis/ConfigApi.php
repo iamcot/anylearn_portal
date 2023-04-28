@@ -91,13 +91,13 @@ class ConfigApi extends Controller
         $data['recommendations'] = $homeS->setTemplates('/', 'anyLEARN đề Xuất', $homeS->getRecommendations());        
         $data['pointBox'] = $data['j4u'] = $data['repurchaseds'] = []; 
     
-        if ($role) { 
+        /*if ($role) { 
             $user  = $request->get('_user');   
 
             $data['j4u'] = $homeS->setTemplates('/', 'Có thể bạn sẽ thích', $homeS->getJ4u($user));
             $data['repurchaseds'] = $homeS->setTemplates('/', 'Đăng ký lại', $homeS->getRepurchaseds($user));
             $data['pointBox'] = $homeS->getPointBox($user);
-        }
+        }*/
 
         return response()->json($data);
     } 
