@@ -200,7 +200,7 @@ class HomeServices
             )
             ->where('items.status', 1)
             ->where('user_status', 1)
-            ->whereIn('items.title', $searchLog)
+            //->whereIn('items.title', $searchLog)
             ->select(
                 'items.id',
                 'items.title',
@@ -211,6 +211,7 @@ class HomeServices
             )
             ->take(3)
             ->get();
+
             $data[] = $searchByLog;
 
             foreach($searchByLog as $value) {
