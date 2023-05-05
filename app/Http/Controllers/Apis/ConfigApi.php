@@ -21,7 +21,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
-use App\Services\TransactionService;
+use App\Services\J4uServices;
 use App\Services\UserServices;
 use App\Services\HomeServices;
 use DateTime;
@@ -37,71 +37,7 @@ use App\Models\VoucherEvent;
 use App\Models\VoucherGroup;
 
 class ConfigApi extends Controller
-{
-    public function homeV3(Request $request, $role = 'guest') 
-    {
-        // Basic config
-        $homeConfig = config('home_config'); 
-        $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
-        if (!empty($lastConfig)) {
-            $homePopup = json_decode($lastConfig->value, true);
-            if ($homePopup['status'] == 1) {
-                $homeConfig['popup'] = $homePopup;
-            }
-        }
-
-        $bannerConfig = [];
-        $newBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
-        if ($newBanners) {
-            $bannerConfig = array_values(json_decode($newBanners->value, true));
-        }
-
-        // Items by category - config on admin page
-        $configM = new Configuration();
-        $isEnableIosTrans = $configM->enableIOSTrans($request);
-        $homeClasses = [];
-        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
-        if ($homeClassesDb) {
-            $appLocale = App::getLocale();
-            foreach (json_decode($homeClassesDb->value, true) as $block) {
-                if (empty($block)) {
-                    continue;
-                }
-                $items = Item::whereIn('id', explode(",", $block['classes']))
-                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
-                    ->where('status', 1)
-                    ->where('user_status', 1)
-                    ->get();
-                $homeClasses[] = [
-                    'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
-                    'classes' => $items
-                ];
-            }
-        }
-        
-        $data['config'] = $homeConfig;
-        $data['classes'] = $homeClasses; 
-        $data['banners'] = $bannerConfig;
-
-        $homeS = new HomeServices(); 
-        $data['asks'] = $homeS->getAsk();
-        $data['articles'] = $homeS->getArticles();
-        $data['promotions'] = $homeS->getPromotions();
-        $data['vouchers'] = $homeS->getVoucherEvents();
-        $data['recommendations'] = $homeS->setTemplates('/', 'anyLEARN đề Xuất', $homeS->getRecommendations());        
-        $data['pointBox'] = $data['j4u'] = $data['repurchaseds'] = []; 
-    
-        if ($role) { 
-            $user  = $request->get('_user');   
-
-            $data['j4u'] = $homeS->setTemplates('/', 'Có thể bạn sẽ thích', $homeS->getJ4u($user));
-            $data['repurchaseds'] = $homeS->setTemplates('/', 'Đăng ký lại', $homeS->getRepurchaseds($user));
-            $data['pointBox'] = $homeS->getPointBox($user);
-        }
-
-        return response()->json($data);
-    } 
-
+{ 
     public function homeV2(Request $request, $role = 'guest')
     {
         $newBanners = [];

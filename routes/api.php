@@ -143,7 +143,7 @@ Route::prefix('v3')->group(function () {
     Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
     //Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
     //Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
-    Route::get('/config/home', 'Apis\ConfigApi@homeV3');
+    
     Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
     Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
     Route::get('/foundation', 'Apis\ConfigApi@foundation');
@@ -164,6 +164,9 @@ Route::prefix('v3')->group(function () {
     Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
     Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+    // Add --v3
+    Route::get('/home', 'Apis\HomeApi@index');
+
     Route::middleware(['language'])->group(function () {
         Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
         Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
@@ -171,7 +174,9 @@ Route::prefix('v3')->group(function () {
     });
 
     Route::middleware(['api.user'])->group(function () {  
-        Route::get('/config/home/{role}', 'Apis\ConfigApi@homeV3');
+        // Add --v3
+        Route::get('/home/{role}', 'Apis\HomeApi@index');
+
         Route::get('/social/profile', 'Apis\SocialController@profile');
         Route::any('/social/{postId}/action', 'Apis\SocialController@action');
 
