@@ -52,7 +52,7 @@ class HomeApi extends Controller
             $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
         }
 
-        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
+        //$data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
 
         return response()->json($data['classes']);
     }
