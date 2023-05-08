@@ -45,16 +45,16 @@ class HomeApi extends Controller
         $data['promotions'] = $commonS->getPromotions();  
         $data['repurchaseds'] = $data['pointBox'] = $data['j4u'] = []; 
         
-        if ($role) { 
+        if ($role == 'member') { 
             $user = $request->get('_user');  
             $data['pointBox'] = $this->getPointBox($user);
-            $data['j4u'] = $commonS->setTemplates('/', 'Có thể bạn sẽ thích', (new J4uServices)->query($user));
-            $data['repurchaseds'] = $commonS->setTemplates('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
+            $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
+            $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
         }
 
-        $data['recommendations'] = $commonS->setTemplates('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
+        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
 
-        return response()->json($data);
+        return response()->json($data['classes']);
     }
 
     public function getLatestQuestion()
@@ -79,6 +79,7 @@ class HomeApi extends Controller
 
         $homeClasses = [];
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        return $homeClassesDb;
         if ($homeClassesDb) {
             $appLocale = App::getLocale();
             foreach (json_decode($homeClassesDb->value, true) as $block) {
@@ -144,5 +145,5 @@ class HomeApi extends Controller
 
         return $data;
     }
-
 }
+

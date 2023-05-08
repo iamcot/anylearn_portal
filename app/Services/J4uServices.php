@@ -72,7 +72,6 @@ class J4uServices
                     $data->maxPrice = $item->price;
                 }
             }
-    
         }
     
         // Get data from dob - subaccounts 
@@ -100,44 +99,45 @@ class J4uServices
 
             if (!isset($data->maxAge) && isset($dob->maxAge)) {
                 $data->maxAge = $dob->maxAge;
-            }      
+            }  
+ 
+            $data->minAge = isset($data->minAge) ? $data->minAge : 0;
+            $data->maxAge = isset($data->maxAge) ? $data->maxAge : 60;
         }
 
         // Get data from user location
         $data->location = $user->address;
 
         return $data;
-
     }
 
-    public function query($user) 
+    public function get($user) 
     {
         $data = $this->collect($user);
         
-        $items = Item::query();
-
-       /*foreach($data->searchLogs as $value) {
+        $items = DB::query();
+        $items->fromRaw(DB::raw('(select * from items where user_status = 1 && status = 1) as items'));
+ 
+        foreach($data->searchLogs as $value) {
             $items = $items->orwhere('title', 'like', '%' . $value . '%');
-        }*/
+        }
 
-        $items->where('items.status', 1)
-            ->where('user_status', 1)
-            ->where(function ($query) {
-                $query->orwhere('title', 'like', '%' . 'A' . '%');
-            
+        $items = $items->orwhere(function ($query) use ($data) {
+            $query->whereNotIn('items.id', $data->itemIds)
+                ->whereIn('item_category_id', $data->categoryIds)
+                ->whereIn('subtype', $data->subtypes)
+                ->where('price', '>=', $data->minPrice)
+                ->where('price', '<=', $data->maxPrice)
+                ->where('ages_min', '>=', $data->minAge)
+                ->where('ages_max', '<=', $data->maxAge);
             })
-            ->whereNotIn('items.id', $data->itemIds)
-            ->whereIn('item_category_id', $data->categoryIds)
-            ->whereIn('subtype', $data->subtypes)
-            ->where('price', '>=', $data->minPrice)
-            ->where('price', '<=', $data->maxPrice)
-            
+            ->distinct('items.id')
+            ->orderByRaw('is_hot desc, boost_score desc, items.created_at desc')   
             ->take(10)
-            ->get();
+            ->get('title');
+
+        // Location
 
         return $items;
-
     }
-
-
 }
