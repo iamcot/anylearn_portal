@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Apis;
 
+use App\Constants\ConfigConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Configuration;
 use App\Models\User;
 use App\Services\CommonServices;
 use App\Services\J4uServices;
@@ -13,7 +16,7 @@ class SubtypeApi extends Controller
 {
     public function index(Request $request, $name) 
     {
-        $data['schools'] = DB::table('items')
+        /*$data['schools'] = DB::table('items')
             ->join('users', 'items.user_id', 'users.id')
             ->where('items.subtype', $name)
             ->where('users.role', 'school')
@@ -60,7 +63,26 @@ class SubtypeApi extends Controller
         }
         $data['pClasses'] = $pClasses;
 
-        return $data;
+        $cClasses = [];
+        foreach($data['partners'] as $item) {
+            $tmp = DB::table('items')
+                ->where('user_id', $item->id)
+                ->where('subtype', $name)
+                ->orderByRaw('is_hot desc, boost_score desc')
+                ->take(6)
+                ->get();
+
+            $pClasses[] = $commonS->setTemplate('/', 'Các lớp học của '. $item->name, $tmp);
+        }*/
+
+        $categories = [];
+        $categoriesDb = Configuration::where('key', ConfigConstants ::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        foreach($categoriesDb as $value) {
+            $categories[] = $categoriesDb->title;
+        }
+       return $categories;
+
+       //return $data;
 
     }
 

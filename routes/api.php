@@ -166,6 +166,7 @@ Route::prefix('v3')->group(function () {
 
     // Add --v3
     Route::get('/home', 'Apis\HomeApi@index');
+    Route::get('/subtypes/{name}', 'Apis\SubtypeApi@index');
 
     Route::middleware(['language'])->group(function () {
         Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
