@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Configuration;
+use App\Models\Item;
 use App\Models\User;
 use App\Services\CommonServices;
 use App\Services\J4uServices;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 class SubtypeApi extends Controller
 {
@@ -74,15 +76,24 @@ class SubtypeApi extends Controller
 
             $pClasses[] = $commonS->setTemplate('/', 'Các lớp học của '. $item->name, $tmp);
         }*/
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
 
         $categories = [];
-        $categoriesDb = Configuration::where('key', ConfigConstants ::CONFIG_HOME_SPECIALS_CLASSES)->first();
-        foreach($categoriesDb as $value) {
-            $categories[] = $categoriesDb->title;
+        $categoriesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+        if ($categoriesDb) {
+            $appLocale = App::getLocale();
+            foreach (json_decode($categoriesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $categories[] = isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']);
+            }
         }
-       return $categories;
 
-       //return $data;
+        return $categories;
+
+        //return $data;
 
     }
 
