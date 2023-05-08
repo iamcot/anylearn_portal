@@ -177,7 +177,7 @@ Route::prefix('v3')->group(function () {
     Route::middleware(['api.user'])->group(function () {  
         // Add --v3
         Route::get('/home/{role}', 'Apis\HomeApi@index');
-        Route::get('/subtypes/{name}', 'Apis\SubtypeApi@index');
+        //Route::get('/subtypes/{name}', 'Apis\SubtypeApi@index');
 
         Route::get('/social/profile', 'Apis\SocialController@profile');
         Route::any('/social/{postId}/action', 'Apis\SocialController@action');
