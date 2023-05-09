@@ -50,7 +50,9 @@ class CommonServices
                 'items.image', 
                 'items.price',
                 'categories.title as category',
-                'rv.rating'
+                'rv.rating',
+                'items.is_hot',
+                'items.boost_score'
             )
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
             ->get();
@@ -82,7 +84,10 @@ class CommonServices
                 'items.image',
                 'items.price',
                 'categories.title as category',
-                'rv.rating'
+                'rv.rating',
+                'od.create_at',
+                'price',
+                'is_hot'
             ) 
             ->distinct('items.id')
             ->orderByRaw('od.created_at desc, price desc, is_hot desc')

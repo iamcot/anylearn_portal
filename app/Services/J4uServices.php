@@ -144,6 +144,9 @@ class J4uServices
                 'items.price',
                 'categories.title as category',
                 'rv.rating',
+                'items.is_hot',
+                'items.boost_score',
+                'items.created_at'
             )
             ->orderByRaw('is_hot desc, boost_score desc, items.created_at desc')   
             ->take(10)
