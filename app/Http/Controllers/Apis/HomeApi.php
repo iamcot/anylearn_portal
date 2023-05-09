@@ -45,16 +45,16 @@ class HomeApi extends Controller
         $data['promotions'] = $commonS->getPromotions();  
         $data['repurchaseds'] = $data['pointBox'] = $data['j4u'] = []; 
         
-        if ($role == 'member') { 
+        if ($role == 'member') {
             $user = $request->get('_user');  
             $data['pointBox'] = $this->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
         }
 
-        //$data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
+        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
 
-        return response()->json($data['classes']);
+        return response()->json($data);
     }
 
     public function getLatestQuestion()

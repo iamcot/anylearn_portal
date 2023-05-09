@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\Item;
 use App\Models\Spm;
 use Carbon\Carbon;
 
@@ -116,10 +115,16 @@ class J4uServices
         $data = $this->collect($user);
         
         $items = DB::query();
-        $items->fromRaw(DB::raw('(select * from items where user_status = 1 && status = 1) as items'));
+        $items->fromRaw(DB::raw('(select * from items where user_status = 1 && status = 1) as items'))
+            ->join('categories', 'categories.id', 'item_category_id')
+            ->leftjoin(
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
+                'rv.item_id',
+                'items.id'
+            );
  
         foreach($data->searchLogs as $value) {
-            $items = $items->orwhere('title', 'like', '%' . $value . '%');
+            $items = $items->orwhere('items.title', 'like', '%' . $value . '%');
         }
 
         $items = $items->orwhere(function ($query) use ($data) {
@@ -131,10 +136,18 @@ class J4uServices
                 ->where('ages_min', '>=', $data->minAge)
                 ->where('ages_max', '<=', $data->maxAge);
             })
+            ->select(
+                'items.id',
+                'items.title',
+                'items.image',
+                'items.price',
+                'categories.title as category',
+                'rv.rating'
+            )
             ->distinct('items.id')
             ->orderByRaw('is_hot desc, boost_score desc, items.created_at desc')   
             ->take(10)
-            ->get('title');
+            ->get();
 
         // Location
 

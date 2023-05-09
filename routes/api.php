@@ -122,7 +122,6 @@ Route::middleware(['api.user'])->group(function () {
 
 });*/
 
-// Testing v3
 Route::prefix('v3')->group(function () {
     Route::get('/login', 'Apis\UserApi@login');
     Route::post('/login/facebook', 'Apis\UserApi@loginFacebook');
@@ -141,8 +140,8 @@ Route::prefix('v3')->group(function () {
     Route::get('/event/{month}', 'Apis\ConfigApi@event');
     Route::get('/search', 'Apis\ConfigApi@search');
     Route::get('/search-tags', 'Apis\ConfigApi@searchTags');
-    //Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
-    //Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
+    Route::get('/config/home/{role}', 'Apis\ConfigApi@home');
+    Route::get('/config/homev2/{role}', 'Apis\ConfigApi@homeV2');
     
     Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
     Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
@@ -164,20 +163,18 @@ Route::prefix('v3')->group(function () {
     Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
     Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
-    // Add --v3
-    Route::get('/home', 'Apis\HomeApi@index');
-    Route::get('/subtypes/{name}', 'Apis\SubtypeApi@index');
-
     Route::middleware(['language'])->group(function () {
         Route::get('/pdp/{id}', 'Apis\ItemApi@pdp');
         Route::get('/config/category/{catId?}', 'Apis\ConfigApi@category');
         Route::get('/user/{userId}/items', 'Apis\ItemApi@userItems');
     });
 
+    // Add --v3
+    Route::get('/home/{role}', 'Apis\HomeApi@index');
+
     Route::middleware(['api.user'])->group(function () {  
         // Add --v3
         Route::get('/home/{role}', 'Apis\HomeApi@index');
-        //Route::get('/subtypes/{name}', 'Apis\SubtypeApi@index');
 
         Route::get('/social/profile', 'Apis\SocialController@profile');
         Route::any('/social/{postId}/action', 'Apis\SocialController@action');
