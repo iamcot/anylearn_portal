@@ -69,31 +69,29 @@ class CommonServices
     public function getRepurchaseds($user) 
     {
         return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')        
-            ->join('items', 'items.id', 'od.item_id')
-            ->join('categories', 'categories.id', 'item_category_id')
-            ->where('orders.user_id', $user->id)
-            ->get();
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'od.item_id')
+            ->join('categories', 'categories.id', '=', 'ic.category_id')
             /*->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
-            )
+            )*/
             ->where('orders.user_id', $user->id)
             ->select(
                 'items.id',
                 'items.title',
                 'items.image',
                 'items.price',
-                'categories.title as category',
                 'rv.rating',
                 'od.created_at',
-                'price',
-                'is_hot'
-            ) 
-            ->distinct('items.id')
-            ->orderByRaw('od.created_at desc, price desc, is_hot desc')
-            ->get();*/
+                'items.is_hot',
+                DB::raw('group_concat(categories.title) as cats')
+            )
+            ->groupBy('items.id')
+            ->orderByRaw('od.created_at desc, items.price desc, items.is_hot desc')
+            ->get();
     }
 
     public function setTemplate($route, $title, $items)
