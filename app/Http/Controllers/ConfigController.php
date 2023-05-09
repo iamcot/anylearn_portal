@@ -354,12 +354,36 @@ class ConfigController extends Controller
                 $newGroup = VoucherGroup::create($data);
                 if ($newGroup) {
                     if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
-                        do {
+                        // do {
+                        //     $genVoucher = Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6);
+                        //     $exists = Voucher::where('voucher', $genVoucher)->count();
+                        //     if ($exists > 0) {
+                        //         continue;
+                        //     }
+                        //     try {
+                        //         Voucher::create([
+                        //             'voucher_group_id' => $newGroup->id,
+                        //             'voucher' => $genVoucher,
+                        //             'amount' => 1,
+                        //             'value' => $newGroup->value,
+                        //             'status' => 1,
+                        //             'expired' => 0
+                        //         ]);
+                        //         $totalSaved++;
+                        //     } catch (\Exception $ex) {
+                        //         Log::error($ex);
+                        //     }
+                        // } while ($totalSaved < $newGroup->qtt);
+                        $maxAttempts = 1000; // Số lần lặp tối đa
+                        $totalSaved = 0;
+                        while ($totalSaved < $newGroup->qtt && $maxAttempts > 0) {
                             $genVoucher = Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6);
                             $exists = Voucher::where('voucher', $genVoucher)->count();
                             if ($exists > 0) {
+                                $maxAttempts--;
                                 continue;
                             }
+
                             try {
                                 Voucher::create([
                                     'voucher_group_id' => $newGroup->id,
@@ -373,7 +397,13 @@ class ConfigController extends Controller
                             } catch (\Exception $ex) {
                                 Log::error($ex);
                             }
-                        } while ($totalSaved < $newGroup->qtt);
+
+                            $maxAttempts--;
+                        }
+                        if ($totalSaved < $newGroup->qtt) {
+                            return redirect()->back()->with('notify', 'Không thể tạo đủ số lượng mã voucher yêu cầu');
+                        }
+
                     } else {
                         try {
                             Voucher::create([
