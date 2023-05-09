@@ -85,7 +85,7 @@ class CommonServices
                 'items.price',
                 'categories.title as category',
                 'rv.rating',
-                'od.create_at',
+                'od.created_at',
                 'price',
                 'is_hot'
             ) 
