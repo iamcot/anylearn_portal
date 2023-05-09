@@ -374,7 +374,7 @@ class ConfigController extends Controller
                         //         Log::error($ex);
                         //     }
                         // } while ($totalSaved < $newGroup->qtt);
-                        $maxAttempts = 1000; // Số lần lặp tối đa
+                        $maxAttempts = 5000; // Số lần lặp tối đa
                         $totalSaved = 0;
                         while ($totalSaved < $newGroup->qtt && $maxAttempts > 0) {
                             $genVoucher = Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6);
