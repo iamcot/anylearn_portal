@@ -170,7 +170,7 @@ Route::prefix('v3')->group(function () {
     });
 
     // Add --v3
-    Route::get('/home/{role}', 'Apis\HomeApi@index');
+    Route::get('/home', 'Apis\HomeApi@index');
 
     Route::middleware(['api.user'])->group(function () {  
         // Add --v3
