@@ -79,7 +79,7 @@ class HomeApi extends Controller
 
         $homeClasses = [];
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
-        return $homeClassesDb;
+
         if ($homeClassesDb) {
             $appLocale = App::getLocale();
             foreach (json_decode($homeClassesDb->value, true) as $block) {
