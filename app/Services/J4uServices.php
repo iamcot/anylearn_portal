@@ -142,7 +142,8 @@ class J4uServices
                 'items.image',
                 'items.price',
                 'categories.title as category',
-                'rv.rating'
+                'rv.rating',
+                'items.created_at'
             )
             ->distinct('items.id')
             ->orderByRaw('is_hot desc, boost_score desc, items.created_at desc')   
