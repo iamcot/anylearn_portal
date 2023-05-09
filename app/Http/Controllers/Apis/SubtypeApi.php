@@ -76,7 +76,7 @@ class SubtypeApi extends Controller
 
             $pClasses[] = $commonS->setTemplate('/', 'Các lớp học của '. $item->name, $tmp);
         }*/
-        $configM = new Configuration();
+        /*$configM = new Configuration();
         $isEnableIosTrans = $configM->enableIOSTrans($request);
 
         $categories = [];
@@ -89,9 +89,27 @@ class SubtypeApi extends Controller
                 }
                 $categories[] = isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']);
             }
+        }*/
+        /*
+        $categories = DB::table('items')
+            ->where('subtype', $name) 
+            ->select('count(items.id) as nums, item_category_id as id')
+            ->groupBy('item_category_id')
+            ->orderByDesc('nums')
+            ->take(5)
+            ->get();
+        
+        /*$cClasses = [];
+        foreach($categories as $item) {
+            $tmp = DB::table('items')
+                ->where('item_category_id', $item->id)
+                ->where('subtype', $name)
+                ->get();
+                
+            $cClasses[] = $commonS->setTemplate('/', 'Các lớp học của '. $item->name, $tmp);
         }
 
-        return $categories;
+        return $categories;*/
 
         //return $data;
 
