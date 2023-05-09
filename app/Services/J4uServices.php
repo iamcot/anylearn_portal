@@ -145,9 +145,9 @@ class J4uServices
                 'categories.title as category',
                 'rv.rating',
             )
-            ->orderByDesce('is_hot')
-            ->orderByDesce('boost_score')
-            ->orderByDesce('items.created_at')
+            ->orderByDesc('is_hot')
+            ->orderByDesc('boost_score')
+            ->orderByDesc('items.created_at')
             ->take(10)
             ->get();
 
