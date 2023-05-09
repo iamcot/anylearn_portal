@@ -135,8 +135,7 @@ class J4uServices
                 ->where('price', '<=', $data->maxPrice)
                 ->where('ages_min', '>=', $data->minAge)
                 ->where('ages_max', '<=', $data->maxAge);
-            })
-            ->distinct('items.id')
+            })        
             ->select(
                 'items.id',
                 'items.title',
@@ -144,10 +143,12 @@ class J4uServices
                 'items.price',
                 'categories.title as category',
                 'rv.rating',
+                'items.is_hot',
+                'items.boost_score',
+                'items.created_at'
             )
-            ->orderByDesc('is_hot')
-            ->orderByDesc('boost_score')
-            ->orderByDesc('items.created_at')
+            ->distinct('items.id')
+            ->orderByRaw('is_hot desc, boost_score desc, items.created_at desc')   
             ->take(10)
             ->get();
 
