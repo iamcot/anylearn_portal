@@ -72,7 +72,8 @@ class CommonServices
             ->join('order_details as od', 'od.order_id', 'orders.id')
             ->join('items', 'items.id', 'od.item_id')
             ->join('categories', 'categories.id', 'item_category_id')
-            ->leftjoin(
+            ->get();
+            /*->leftjoin(
                 DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
@@ -91,7 +92,7 @@ class CommonServices
             ) 
             ->distinct('items.id')
             ->orderByRaw('od.created_at desc, price desc, is_hot desc')
-            ->get();
+            ->get();*/
     }
 
     public function setTemplate($route, $title, $items)
