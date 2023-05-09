@@ -70,10 +70,9 @@ class CommonServices
     {
         return DB::table('orders')
             ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->where('orders.user_id', $user->id)
-            ->get();
-            /*->join('items', 'items.id', 'od.item_id')
-            ->join('categories', 'categories.id', 'item_category_id')
+            
+            ->join('items', 'items.id', 'od.item_id')
+            //->join('categories', 'categories.id', 'item_category_id')
             ->where('orders.user_id', $user->id)
             ->get();
             /*->leftjoin(
