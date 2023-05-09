@@ -72,6 +72,7 @@ class CommonServices
             ->join('order_details as od', 'od.order_id', 'orders.id')
             ->join('items', 'items.id', 'od.item_id')
             ->join('categories', 'categories.id', 'item_category_id')
+            ->where('orders.user_id', $user->id)
             ->get();
             /*->leftjoin(
                 DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
