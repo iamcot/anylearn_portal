@@ -69,10 +69,9 @@ class CommonServices
     public function getRepurchaseds($user) 
     {
         return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            
+            ->join('order_details as od', 'od.order_id', 'orders.id')        
             ->join('items', 'items.id', 'od.item_id')
-            //->join('categories', 'categories.id', 'item_category_id')
+            ->join('categories', 'categories.id', 'item_category_id')
             ->where('orders.user_id', $user->id)
             ->get();
             /*->leftjoin(
