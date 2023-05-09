@@ -46,7 +46,8 @@ class HomeApi extends Controller
         $data['repurchaseds'] = $data['pointBox'] = $data['j4u'] = []; 
         
         if ($role == 'member') {
-            $user = $request->get('_user');  
+            $user = $request->get('_user'); 
+            return $user; 
             $data['pointBox'] = $this->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
