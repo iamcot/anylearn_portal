@@ -161,7 +161,7 @@ class UserController extends Controller
                         } else {
                             // Log::debug($row);
                             dd(3);
-                            User::create([
+                            /*User::create([
                                 'name' => $row[0],
                                 'dob' => $row[1],
                                 'sex' => $row[2],
@@ -175,7 +175,7 @@ class UserController extends Controller
                                 'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
                                 'refcode' => $row[4],
-                            ]);
+                            ]);*/
                             $countCreate++;
                             dd(1);
                         }
