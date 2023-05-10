@@ -140,7 +140,7 @@ class UserController extends Controller
                     }
                 }
                 fclose($fileHandle);
-                dd($header, $rows);
+                //dd($header, $rows);
                 $countUpdate = 0;
                 $countCreate = 0;
                 foreach ($rows as $row) {
