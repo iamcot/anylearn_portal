@@ -148,8 +148,7 @@ class UserController extends Controller
                         continue;
                     }
                     try {
-                        $exists = User::where('phone', $row[4])->first();
-                      
+                        $exists = User::where('phone', $row[4])->first();                 
                         if ($exists) {
                             dd(2);
                             if (!empty($row[6])) {
@@ -161,7 +160,6 @@ class UserController extends Controller
                             $countUpdate += User::where('phone', $row[4])->update($data);
                         } else {
                             // Log::debug($row);
-                            dd(1);
                             User::create([
                                 'name' => $row[0],
                                 'dob' => $row[1],
