@@ -159,9 +159,10 @@ class UserController extends Controller
                             $countUpdate += User::where('phone', $row[4])->update($data);
                         } else {
                             // Log::debug($row);
+                            //dd($rows);
                             User::create([
                                 'name' => $row[0],
-                                'dob' => $row[1],
+                                'dob' => Carbon::parse($row[1])->format('Y-m-d'),
                                 'sex' => $row[2],
                                 'address' => $row[3],
                                 'phone' => $row[4],
