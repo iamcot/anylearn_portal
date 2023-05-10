@@ -140,7 +140,7 @@ class UserController extends Controller
                     }
                 }
                 fclose($fileHandle);
-                // dd($header, $rows);
+                //dd($header, $rows);
                 $countUpdate = 0;
                 $countCreate = 0;
                 foreach ($rows as $row) {
@@ -161,14 +161,18 @@ class UserController extends Controller
                             // Log::debug($row);
                             User::create([
                                 'name' => $row[0],
-                                'phone' => $row[1],
-                                'sale_id' => $row[3],
+                                'dob' => $row[1],
+                                'sex' => $row[2],
+                                'address' => $row[3],
+                                'phone' => $row[4],
+                                'email' => $row[5],
+                                'sale_id' => $row[7],
+                                'source' => isset($row[8]) ? $row[8] : '',
                                 'is_registered' => 0,
-                                'source' => isset($row[4]) ? $row[4] : '',
                                 'role' => UserConstants::ROLE_MEMBER,
-                                'password' => Hash::make($row[1]),
+                                'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
-                                'refcode' => $row[1],
+                                'refcode' => $row[4],
                             ]);
                             $countCreate++;
                         }
