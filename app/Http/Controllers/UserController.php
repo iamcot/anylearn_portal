@@ -160,7 +160,6 @@ class UserController extends Controller
                             $countUpdate += User::where('phone', $row[4])->update($data);
                         } else {
                             // Log::debug($row);
-                            dd(3);
                             /*User::create([
                                 'name' => $row[0],
                                 'dob' => $row[1],
@@ -177,7 +176,6 @@ class UserController extends Controller
                                 'refcode' => $row[4],
                             ]);*/
                             $countCreate++;
-                            dd(1);
                         }
                     } catch (\Exception $ex) {
                         Log::error($ex);
