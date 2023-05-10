@@ -150,7 +150,6 @@ class UserController extends Controller
                     try {
                         $exists = User::where('phone', $row[4])->first();                 
                         if ($exists) {
-                            dd(2);
                             if (!empty($row[6])) {
                                 $data['user_id'] = $row[6];
                             }
@@ -160,7 +159,7 @@ class UserController extends Controller
                             $countUpdate += User::where('phone', $row[4])->update($data);
                         } else {
                             // Log::debug($row);
-                            /*User::create([
+                            User::create([
                                 'name' => $row[0],
                                 'dob' => $row[1],
                                 'sex' => $row[2],
@@ -174,11 +173,12 @@ class UserController extends Controller
                                 'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
                                 'refcode' => $row[4],
-                            ]);*/
+                            ]);
                             $countCreate++;
                         }
                     } catch (\Exception $ex) {
-                        Log::error($ex);
+                        //Log::error($ex);
+                        dd($ex->getMessage());
                     }
                 }
                 return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
