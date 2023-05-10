@@ -148,18 +148,18 @@ class UserController extends Controller
                         continue;
                     }
                     try {
-                        dd(1);
-                        $exists = User::where('phone', $row[1])->first();
+                        $exists = User::where('phone', $row[4])->first();
                         if ($exists) {
-                            if (!empty($row[2])) {
-                                $data['user_id'] = $row[2];
+                            if (!empty($row[6])) {
+                                $data['user_id'] = $row[6];
                             }
-                            if (!empty($row[3])) {
-                                $data['sale_id'] = $row[3];
+                            if (!empty($row[7])) {
+                                $data['sale_id'] = $row[7];
                             }
-                            $countUpdate += User::where('phone', $row[1])->update($data);
+                            $countUpdate += User::where('phone', $row[4])->update($data);
                         } else {
                             // Log::debug($row);
+                            dd(1);
                             User::create([
                                 'name' => $row[0],
                                 'dob' => $row[1],
