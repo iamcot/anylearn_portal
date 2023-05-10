@@ -228,7 +228,7 @@ class UserController extends Controller
             if (!empty($used)) {
                 return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
             }
-
+            $member['refcode'] = $member['phone'];
             $member = User::create($member);
             $member->role = UserConstants::ROLE_MEMBER;
             $member->refcode = $member['phone'];
