@@ -14,7 +14,7 @@
             <div class="form-group row">
                 <label for="phone" class="col-md-3 col-form-label text-md-right ">{{ __('Số điện thoại') }}</label>
                 <div class="col-md-8">
-                    <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required>
+                    <input id="phone" type="tel" pattern="[0-9]{10}" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required>
                     @error('phone')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
