@@ -177,8 +177,7 @@ class UserController extends Controller
                             $countCreate++;
                         }
                     } catch (\Exception $ex) {
-                        //Log::error($ex);
-                        dd($ex->getMessage());
+                        Log::error($ex);
                     }
                 }
                 return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
