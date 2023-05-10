@@ -15,13 +15,11 @@
                 <label for="phone" class="col-md-3 col-form-label text-md-right ">{{ __('Số điện thoại') }}</label>
                 <div class="col-md-8">
                     <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required>
+                    @error('phone')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="password" class="col-md-3 col-form-label text-md-right ">{{ __('Mật khẩu') }}</label>
-                <div class="col-md-8">
-                    <input id="password" type="text" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" required>
-                </div>
+               
             </div>
             <div class="form-group row">
                 <label for="address" class="col-md-3 col-form-label text-md-right ">{{ __('Khu vực') }}</label>
