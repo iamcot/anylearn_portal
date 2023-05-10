@@ -228,13 +228,13 @@ class UserController extends Controller
             if (!empty($used)) {
                 return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
             }
+           
+            $member['role'] = UserConstants::ROLE_MEMBER;
             $member['refcode'] = $member['phone'];
-            $member = User::create($member);
-            $member->role = UserConstants::ROLE_MEMBER;
-            $member->refcode = $member['phone'];
-            $member->password = Hash::make($member['phone']);
-            $member->status  = UserConstants::STATUS_INACTIVE;      
-            dd($member);
+            $member['password'] = Hash::make($member['phone']);
+            $member['status'] = UserConstants::STATUS_INACTIVE;
+            $member = User::create($member);      
+            
             if (!$member->save()) {
                 return redirect()->back()->with('notify', 'Thao tác không thành công!');
             }
