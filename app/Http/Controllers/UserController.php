@@ -148,6 +148,7 @@ class UserController extends Controller
                         continue;
                     }
                     try {
+                        dd(1);
                         $exists = User::where('phone', $row[1])->first();
                         if ($exists) {
                             if (!empty($row[2])) {
