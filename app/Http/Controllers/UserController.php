@@ -234,7 +234,7 @@ class UserController extends Controller
             $member->refcode = $member['phone'];
             $member->password = Hash::make($member['phone']);
             $member->status  = UserConstants::STATUS_INACTIVE;      
-
+            dd($member);
             if (!$member->save()) {
                 return redirect()->back()->with('notify', 'Thao tác không thành công!');
             }
