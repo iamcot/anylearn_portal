@@ -217,6 +217,26 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
+
+    public function addMember(Request $request) 
+    {
+        $user = Auth::user();   
+        if ($request->input('action') == 'addMember') {
+            if ($request->input('password') != $request->input('confirm')) {
+                return redirect()->back()->with('error', 'Cập nhật thành công');
+            }
+
+            $member = $request->except('action');
+            $member['role'] = UserConstants::ROLE_MEMBER;
+            $member['refcode'] = $user->id;
+            return $member;
+        }
+        
+        $this->data['navText'] = __('Thêm thành viên');
+
+        return view('user.add_member', $this->data);
+    }
+
     public function meWork(Request $request)
     {
         $data = DB::table('item_activities as ia')
