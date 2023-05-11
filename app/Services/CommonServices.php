@@ -16,7 +16,7 @@ class CommonServices
     {
         return Article::where('status', 1)
             ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
-            ->orderby('id', 'desc')
+            ->orderByDesc('id')
             ->take(10)
             ->get()
             ->makeHidden(['content']);
@@ -26,7 +26,7 @@ class CommonServices
     {
         return Article::where('type', Article::TYPE_PROMOTION)
             ->where('status', 1)
-            ->orderbyDesc('id')
+            ->orderByDesc('id')
             ->take(5)
             ->get();
     }

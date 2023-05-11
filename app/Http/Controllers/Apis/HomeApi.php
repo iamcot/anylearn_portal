@@ -48,14 +48,14 @@ class HomeApi extends Controller
         if ($role == 'member') {
             $user = $request->get('_user'); 
             
-            //$data['pointBox'] = $this->getPointBox($user);
+            $data['pointBox'] = $this->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
         }
 
         $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
 
-        return response()->json($data['j4u']);
+        return response()->json($data);
     }
 
     public function getLatestQuestion()
@@ -111,7 +111,7 @@ class HomeApi extends Controller
             ->where('pa.organizer_confirm', 0)
             ->where('pa.participant_confirm', 0)
             ->where('orders.user_id', $user->id)
-            ->orderBy('pa.created_at', 'desc')
+            ->orderByDesc('pa.created_at')
             ->first();
 
         $ratingClass = DB::table('orders')

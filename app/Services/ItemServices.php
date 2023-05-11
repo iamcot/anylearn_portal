@@ -114,8 +114,8 @@ class ItemServices
     public function getLastRegistered($id)
     {
         return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('items', 'items.id', 'od.item_id')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
             ->where('orders.user_id', $id)
             ->orderByDesc('od.created_at')
             ->first();
@@ -124,9 +124,9 @@ class ItemServices
     public function getLastCompleted($id)
     {
         return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('participations as pa', 'pa.schedule_id', 'od.id')
-            ->join('items', 'items.id', 'od.item_id')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->join('participations as pa', 'pa.schedule_id', '=', 'od.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
             ->where('pa.organizer_confirm', 1)
             ->where('pa.participant_confirm', 1)
             ->where('orders.user_id', $id)
