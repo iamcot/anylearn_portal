@@ -238,6 +238,7 @@ class UserController extends Controller
             $member['refcode'] = $member['phone'];
             $member['password'] = Hash::make($member['phone']);
             $member['status'] = UserConstants::STATUS_INACTIVE;
+            $member['is_registered'] = 0;
             $member = User::create($member);      
             
             if (!$member->save()) {
