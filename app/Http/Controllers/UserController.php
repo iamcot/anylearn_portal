@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
 use App\Models\ItemSchedulePlan;
+use App\Models\SaleActivity;
 use App\Services\ActivitybonusServices;
 use App\Services\InteractServices;
 use App\Services\TransactionService;
@@ -222,6 +223,44 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
+
+    public function addMember(Request $request) 
+    {
+        if ($request->input('action') == 'addMember') {
+            $member = $request->except('action', 'note');
+            $used   = User::where('phone', $member['phone'])->first();
+
+            if (!empty($used)) {
+                return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
+            }
+           
+            $member['role'] = UserConstants::ROLE_MEMBER;
+            $member['refcode'] = $member['phone'];
+            $member['password'] = Hash::make($member['phone']);
+            $member['status'] = UserConstants::STATUS_INACTIVE;
+            $member = User::create($member);      
+            
+            if (!$member->save()) {
+                return redirect()->back()->with('notify', 'Thao tác không thành công!');
+            }
+            
+            // Save note
+            SaleActivity ::create([
+                'type' => SaleActivity::TYPE_NOTE,
+                'sale_id' => Auth::user()->id,
+                'member_id' => $member->id,
+                'content' => $request->input('note'),
+            ]);
+
+            return redirect()->back()->with('notify', 'Thao tác thành công!');
+        }
+
+        $this->data['hasBack'] = route('user.members');
+        $this->data['navText'] = __('Thêm thành viên');
+
+        return view('user.add_member', $this->data);
+    }
+
     public function meWork(Request $request)
     {
         $data = DB::table('item_activities as ia')

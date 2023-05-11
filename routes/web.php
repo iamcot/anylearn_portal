@@ -178,6 +178,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
 
 
     Route::any('/user/members', 'UserController@members')->name('user.members');
+    Route::any('/user/members/add', 'UserController@addMember')->name('user.members.add');
     Route::any('/user/activity', 'UserController@activity')->name('user.activity');
     Route::any('/user/members/{userId}', 'UserController@memberEdit')->name('user.members.edit');
     Route::get('/user/contract', 'UserController@contractList')->name('user.contract');
@@ -216,7 +217,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
 
     //Route::middleware('access.item')->any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
-    // Route::middleware('access.item')->any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
+    //Route::middleware('access.item')->any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
 
 
     Route::get('/confirm', 'Controller@developing')->name('confirm');
