@@ -149,15 +149,19 @@ class UserController extends Controller
                         continue;
                     }
                     try {
+                        if ($row[1]) {
+                            $row[1] = strlen($row[1]) == 4 
+                                ? Carbon::parse($row[1])->format('Y-01-01') 
+                                : Carbon::createFromFormat('d/m/Y', $row[1])->format('Y-m-d');
+                        }
                         $exists = User::where('phone', $row[4])->first();                 
                         if ($exists) {
                             if (!$exists->is_registered) {
                                 $data = [
                                     'name' => $row[0],
-                                    'dob' => Carbon::parse($row[1])->format('Y-m-d'),
+                                    'dob' => $row[1],
                                     'sex' => $row[2],
                                     'address' => $row[3],
-                                    //'phone' => $row[4],
                                     'email' => $row[5],                   
                                     'source' => $row[8],
                                 ];
@@ -169,12 +173,13 @@ class UserController extends Controller
                                 $data['sale_id'] = $row[7];
                             }
                             $countUpdate += User::where('phone', $row[4])->update($data);
+
                         } else {
                             // Log::debug($row);
                             //dd($rows);
                             User::create([
                                 'name' => $row[0],
-                                'dob' => Carbon::parse($row[1])->format('Y-m-d'),
+                                'dob' => $row[1],
                                 'sex' => $row[2],
                                 'address' => $row[3],
                                 'phone' => $row[4],
@@ -191,6 +196,7 @@ class UserController extends Controller
                         }
                     } catch (\Exception $ex) {
                         Log::error($ex);
+                        //dd($ex->getMessage());
                     }
                 }
                 return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
