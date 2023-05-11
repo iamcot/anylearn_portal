@@ -157,7 +157,7 @@ class UserController extends Controller
                                     'dob' => Carbon::parse($row[1])->format('Y-m-d'),
                                     'sex' => $row[2],
                                     'address' => $row[3],
-                                    'phone' => $row[4],
+                                    //'phone' => $row[4],
                                     'email' => $row[5],                   
                                     'source' => $row[8],
                                 ];
