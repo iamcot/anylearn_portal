@@ -48,12 +48,12 @@ class HomeApi extends Controller
         if ($role == 'member') {
             $user = $request->get('_user'); 
             
-            $data['pointBox'] = $this->getPointBox($user);
-            $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
+            //$data['pointBox'] = $this->getPointBox($user);
+            //$data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
         }
 
-        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
+        //$data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
 
         return response()->json($data['repurchaseds']);
     }

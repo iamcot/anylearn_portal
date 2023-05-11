@@ -29,6 +29,14 @@ class CommonServices
             ->get();
     }
 
+    public function getVoucherEvents()
+    {
+        return VoucherEvent::select('id', 'title')
+            ->orderByDesc('id')
+            ->take(2)
+            ->get();
+    }
+
     public function getRecommendations()
     {
         return DB::table('orders')
@@ -58,48 +66,48 @@ class CommonServices
             ->get();
     }
 
-    public function getVoucherEvents()
-    {
-        return VoucherEvent::select('id', 'title')
-            ->orderByDesc('id')
-            ->take(2)
-            ->get();
-    }
+    
 
     public function getRepurchaseds($user) 
     {
         return DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
             ->join('items', 'items.id', '=', 'od.item_id')
-            ->join('items_categories as ic', 'ic.item_id', '=', 'od.item_id')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
             ->join('categories', 'categories.id', '=', 'ic.category_id')
-            /*->leftjoin(
+            ->leftjoin(
                 DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
-            )*/
+            )
             ->where('orders.user_id', $user->id)
             ->select(
                 'items.id',
                 'items.title',
                 'items.image',
                 'items.price',
+                'items.is_hot',
                 'rv.rating',
                 'od.created_at',
-                'items.is_hot',
-                DB::raw('group_concat(categories.title) as cats')
+                DB::raw('group_concat(categories.title) as categories')
             )
             ->groupBy('items.id')
-            ->orderByRaw('od.created_at desc, items.price desc, items.is_hot desc')
-            ->get();
+            ->orderByRaw('od.created_at desc, items.is_hot desc, items.price desc')
+            ->take(10)
+            ->get();  
     }
 
     public function setTemplate($route, $title, $items)
     {
+        foreach ($items as $item) {
+            $item->categories = explode(',', $item->categories);
+        }
+
         return [
             'route' => $route,
             'title' => $title,
             'items' => $items
         ];
     }
+
 }
