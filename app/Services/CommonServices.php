@@ -93,7 +93,7 @@ class CommonServices
             )
             ->distinct('items.id')
             ->groupBy('items.id')
-            ->orderByRaw('od.created_at desc, items.is_hot desc, items.price desc')
+            ->orderByRaw('items.is_hot desc, items.price desc')
             ->take(10)
             ->get();  
     }
