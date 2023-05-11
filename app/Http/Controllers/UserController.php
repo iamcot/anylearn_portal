@@ -151,6 +151,17 @@ class UserController extends Controller
                     try {
                         $exists = User::where('phone', $row[4])->first();                 
                         if ($exists) {
+                            if (!$exists->is_registered) {
+                                $data = [
+                                    'name' => $row[0],
+                                    'dob' => Carbon::parse($row[1])->format('Y-m-d'),
+                                    'sex' => $row[2],
+                                    'address' => $row[3],
+                                    'phone' => $row[4],
+                                    'email' => $row[5],                   
+                                    'source' => $row[8],
+                                ];
+                            }
                             if (!empty($row[6])) {
                                 $data['user_id'] = $row[6];
                             }
