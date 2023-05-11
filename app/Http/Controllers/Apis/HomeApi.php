@@ -49,13 +49,13 @@ class HomeApi extends Controller
             $user = $request->get('_user'); 
             
             //$data['pointBox'] = $this->getPointBox($user);
-            //$data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
+            $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
         }
 
-        //$data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
+        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
 
-        return response()->json($data['repurchaseds']);
+        return response()->json($data['j4u']);
     }
 
     public function getLatestQuestion()
@@ -105,9 +105,9 @@ class HomeApi extends Controller
     public function getPointBox($user) 
     { 
         $goingClass = DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id') 
-            ->join('participations as pa', 'pa.schedule_id', 'od.id')
-            ->join('items', 'items.id', 'od.item_id')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id') 
+            ->join('participations as pa', 'pa.schedule_id', '=', 'od.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
             ->where('pa.organizer_confirm', 0)
             ->where('pa.participant_confirm', 0)
             ->where('orders.user_id', $user->id)
@@ -115,13 +115,13 @@ class HomeApi extends Controller
             ->first();
 
         $ratingClass = DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('participations as pa', 'pa.schedule_id', 'od.id')
-            ->join('items', 'items.id', 'od.item_id')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->join('participations as pa', 'pa.schedule_id', '=', 'od.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
             ->leftjoin('item_user_actions as iua', 
                 function($join) {
-                    $join->on('od.item_id', 'iua.item_id');
-                    $join->on('orders.user_id', 'iua.user_id');
+                    $join->on('od.item_id', '=', 'iua.item_id');
+                    $join->on('orders.user_id', '=', 'iua.user_id');
                 }, 
             ) 
             ->where('orders.user_id', $user->id) 

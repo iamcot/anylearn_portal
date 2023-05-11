@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
+use App\Constants\OrderConstants;
 use App\Models\Article;
+use App\Models\Order;
 use App\Models\VoucherEvent;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +26,7 @@ class CommonServices
     {
         return Article::where('type', Article::TYPE_PROMOTION)
             ->where('status', 1)
-            ->orderby('id', 'desc')
+            ->orderbyDesc('id')
             ->take(5)
             ->get();
     }
@@ -40,33 +42,31 @@ class CommonServices
     public function getRecommendations()
     {
         return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('items', 'items.id', 'od.item_id')
-            ->join('categories', 'categories.id', 'item_category_id')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+            ->join('categories', 'categories.id', '=', 'ic.category_id')
             ->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
             )
-            ->leftJoin('transactions', function ($query) {
-                $query->on('transactions.order_id', '=', 'orders.id')
-                    ->where('transactions.type', '=', ConfigConstants::TRANSACTION_EXCHANGE);
-            })
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->select(
                 'items.id',
                 'items.title',
-                'items.image', 
+                'items.image',
                 'items.price',
-                'categories.title as category',
-                'rv.rating',
                 'items.is_hot',
-                'items.boost_score'
+                'rv.rating',
+                'od.created_at',
+                DB::raw('group_concat(categories.title) as categories')
             )
+            ->groupBy('items.id')
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
+            ->take(10)
             ->get();
     }
-
-    
 
     public function getRepurchaseds($user) 
     {

@@ -19,19 +19,20 @@ class J4uServices
             ->pluck('extra');
 
         // Get data from registered items 
-        $registereds = DB::table('orders')
-            ->join('order_details as od', 'od.order_id', 'orders.id')
-            ->join('items', 'items.id', 'od.item_id')
+        $registereds =  DB::table('orders')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
             ->where('orders.user_id', $user->id)
             ->select(
-                'od.item_id as id',
-                'item_category_id as categoryId',
-                'ages_min as minAge',
-                'ages_max as maxAge',
-                'subtype',
-                'price'
+                'od.item_id as id',   
+                'items.ages_min as minAge',
+                'items.ages_max as maxAge',
+                'items.subtype',
+                'items.price',
+                DB::raw('group_concat(ic.category_id) as categoryIds')
             )
-            ->distinct('od.item_id')
+            ->groupBy('items.id')
             ->get();
             
         if ($registereds) {
@@ -46,9 +47,11 @@ class J4uServices
                 
             foreach ($registereds as $item) {
                 $data->itemIds[] = $item->id; 
-    
-                if (!in_array($item->categoryId, $data->categoryIds)) {
-                    $data->categoryIds[] = $item->categoryId;
+                
+                foreach (explode(',', $item->categoryIds) as $id) {
+                    if (!in_array($id, $data->categoryIds)) {
+                        $data->categoryIds[] = $id;
+                    }
                 }
                    
                 if (!in_array($item->subtype, $data->subtypes)) {
@@ -116,9 +119,10 @@ class J4uServices
         
         $items = DB::query();
         $items->fromRaw(DB::raw('(select * from items where user_status = 1 && status = 1) as items'))
-            ->join('categories', 'categories.id', 'item_category_id')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+            ->join('categories', 'categories.id', '=', 'ic.category_id')
             ->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions group by(item_id)) as rv'), 
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
             );
@@ -141,14 +145,14 @@ class J4uServices
                 'items.title',
                 'items.image',
                 'items.price',
-                'categories.title as category',
-                'rv.rating',
                 'items.is_hot',
+                'rv.rating',
                 'items.boost_score',
-                'items.created_at'
+                'items.created_at',
+                DB::raw('group_concat(categories.title) as categories')
             )
-            ->distinct('items.id')
-            ->orderByRaw('is_hot desc, boost_score desc, items.created_at desc')   
+            ->groupBy('items.id')
+            ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
             ->take(10)
             ->get();
 
