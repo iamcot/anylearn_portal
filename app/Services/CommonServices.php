@@ -39,7 +39,7 @@ class CommonServices
 
     public function getRepurchaseds($user) 
     {
-        return DB::table('orders')
+        $test = DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
@@ -64,7 +64,8 @@ class CommonServices
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
             ->take(10)
-            ->get();  
+            ->get(); 
+                dd($test);
     }
 
     public function getRepurchasedsbySubtype($user, $subtype) 
