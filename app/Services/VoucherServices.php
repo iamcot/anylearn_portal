@@ -14,9 +14,13 @@ class VoucherServices
             ->get();
     }
 
-    public function getVoucherEventsBySubtype($subtypes)
+    public function getVoucherEventsBySubtype($subtype)
     {
-        return VoucherEvent::select('id', 'title')
+        // Add voucher_events.type = promote, trigger = subtype.id
+        $subtypes = array_flip(config('subtypes'));
+        return VoucherEvent::select('id', 'title', 'trigger')
+            ->where('type', 'promote' )
+            ->where('trigger', $subtypes[$subtype])
             ->orderByDesc('id')
             ->take(2)
             ->get();
