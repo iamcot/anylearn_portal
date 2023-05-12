@@ -30,7 +30,6 @@ class CommonServices
                 DB::raw('max(od.created_at) as created_at'),
                 DB::raw('group_concat(categories.title) as categories')
             )
-            ->distinct('items.id')
             ->groupBy('items.id')
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
             ->take(10)
@@ -60,7 +59,6 @@ class CommonServices
                 DB::raw('max(od.created_at) as created_at'),
                 DB::raw('group_concat(categories.title) as categories')
             )
-            ->distinct('items.id')
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
             ->take(10)
@@ -91,7 +89,6 @@ class CommonServices
                 DB::raw('max(od.created_at) as created_at'),
                 DB::raw('group_concat(categories.title) as categories')
             )
-            ->distinct('items.id')
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
             ->take(10)
