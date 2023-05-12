@@ -64,7 +64,9 @@ class MainSubtypesApi extends Controller
             ->select(
                 'users.id', 
                 'name', 
-                'users.image'
+                'users.image',
+                'users.is_hot',
+                'users.boost_score'
             )
             ->orderByRaw('users.is_hot desc, users.boost_score desc')
             ->distinct('users.id')
@@ -96,6 +98,7 @@ class MainSubtypesApi extends Controller
                     'items.image',
                     'items.price',
                     'items.is_hot',
+                    'items.boost_score',
                     'rv.rating',
                     DB::raw('group_concat(categories.title) as categories')
                 )
@@ -149,6 +152,7 @@ class MainSubtypesApi extends Controller
                     'items.image',
                     'items.price',
                     'items.is_hot',
+                    'items.boost_score',
                     'rv.rating',
                     DB::raw('group_concat(categories.title) as categories')
                 )
