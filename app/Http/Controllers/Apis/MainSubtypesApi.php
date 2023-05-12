@@ -21,6 +21,7 @@ class MainSubtypesApi extends Controller
             $data['partners'] = $this->getPartners($subtype);
             $data['partnerItems'] = $this->getItemsByPartners($subtype);
             $data['categoryItems'] = $this->getItemsByCategories($subtype);
+
             $data['vouchers'] = (new VoucherServices)->getVoucherEventsBySubtype($subtype);
             
             if ($role == 'member') {
@@ -161,5 +162,5 @@ class MainSubtypesApi extends Controller
 
         return $data;
     }
-
 }
+
