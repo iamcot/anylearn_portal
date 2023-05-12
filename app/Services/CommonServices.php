@@ -81,7 +81,8 @@ class CommonServices
             )
             ->where('orders.user_id', $user->id)
             ->where('items.subtype', $subtype)
-            ->select(
+            ->where('items.id', '771')
+            /*->select(
                 'items.id',
                 'items.title',
                 'items.image',
@@ -94,7 +95,7 @@ class CommonServices
             ->distinct('items.id')
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
-            ->take(10)
+            ->take(10)*/
             ->get(); 
         dd($data); 
     }
