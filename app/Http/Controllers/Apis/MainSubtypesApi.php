@@ -49,6 +49,11 @@ class MainSubtypesApi extends Controller
             ->join('users', 'items.user_id', '=', 'users.id')
             ->where('items.subtype', $subtype)
             ->where('users.role', 'school')
+            ->select(
+                'users.name',
+                'users.is_hot',
+                'users.boost_score'
+            )
             ->distinct('users.id')
             ->orderByRaw('users.is_hot desc, users.boost_score desc')
             ->take(5)
