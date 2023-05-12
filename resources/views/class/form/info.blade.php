@@ -103,6 +103,44 @@
         </div>
     </div>
 </div>
+@if ($userServ->isMod() || $userServ->haveAccess(Auth::user()->role, 'user.sale'))
+    <div class="card mb-3 shadow">
+        <div class="card-header  font-weight-bold">Thông tin hệ thống</div>
+        <div class="card-body">
+            @if ($userServ->haveAccess(Auth::user()->role, 'user.sale'))
+            <div class="form-group row">
+                <label for="sale_id" class="col-md-3 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
+                <div class="col-md-8">
+                    <input id="sale_id" type="text" class="form-control @error('sale_id') is-invalid @enderror" name="sale_id" value="{{ old('sale_id', !empty($course) ? $course['info']->sale_id : '') }}">
+                    <small>@lang('Có thể tham khảo ID ngoài danh sách nhân viên.')</small>
+                </div>
+            </div>
+            @endif
+            @if ($userServ->isMod())
+            <div class="form-group row">
+                <label for="commission_rate" class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng người bán') }}</label>
+                <div class="col-md-8">
+                    <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($course) ? $course['info']->commission_rate : '') }}">
+                    <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong hợp đồng.')</div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="company_rate" class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng công ty') }}</label>
+                <div class="col-md-8">
+                    @if ($companyCommission != null)
+                    @foreach ($companyCommission as $key => $config)
+                    @if ($config != null)
+                    {{ $key }}= {{ $config }};
+                    @endif
+                    @endforeach
+                    @endif
+                    <a class="btn btn-sm btn-danger" id="companyCommission-action" href="#"><i class="fa fa-edit"></i></a>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+@endif
 <div class="card mb-3 shadow">
     <div class="card-header font-weight-bold">Tuỳ chỉnh SEO</div>
     <div class="card-body">

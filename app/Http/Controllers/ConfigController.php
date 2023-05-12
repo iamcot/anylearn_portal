@@ -213,15 +213,16 @@ class ConfigController extends Controller
         return view('config.voucher_list', $this->data);
     }
 
-    public function voucherCsv(Request $request, $id) {
+    public function voucherCsv(Request $request, $id)
+    {
         $vouchers = DB::table('vouchers')
-        ->where('vouchers.voucher_group_id', $id)
-        ->orderby('vouchers.id', 'desc')
-        ->get();//->toArray();
+            ->where('vouchers.voucher_group_id', $id)
+            ->orderby('vouchers.id', 'desc')
+            ->get(); //->toArray();
         // dd($vouchers);
         $headers = [
             "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=anylearn_vouchers_". $id ."_" . now() . ".csv",
+            "Content-Disposition" => "attachment; filename=anylearn_vouchers_" . $id . "_" . now() . ".csv",
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0"
@@ -294,9 +295,9 @@ class ConfigController extends Controller
     {
         if ($request->get('save')) {
             $totalSaved = 0;
-            $input = $request->input();       
+            $input = $request->input();
             $partnerVouchers = empty($input['partner_vouchers']) ? [] : explode("\n", $input['partner_vouchers']);
-            
+
             if ($input['voucher_type'] == VoucherGroup::TYPE_PARTNER) {
                 $data = [
                     'type' => VoucherGroup::TYPE_PARTNER,
@@ -305,9 +306,9 @@ class ConfigController extends Controller
                     'qtt' => count($partnerVouchers),
                     'value' => 0,
                     'status' => 1,
-                    'length'=> $input['length'],
+                    'length' => $input['length'],
                 ];
-               
+
                 $newGroup = VoucherGroup::create($data);
                 if ($newGroup) {
                     foreach ($partnerVouchers as $voucher) {
@@ -353,31 +354,75 @@ class ConfigController extends Controller
                 $newGroup = VoucherGroup::create($data);
                 if ($newGroup) {
                     if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
-                        for ($i = 1; $i <= $newGroup->qtt; $i++) {
+                        // do {
+                        //     $genVoucher = Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6);
+                        //     $exists = Voucher::where('voucher', $genVoucher)->count();
+                        //     if ($exists > 0) {
+                        //         continue;
+                        //     }
+                        //     try {
+                        //         Voucher::create([
+                        //             'voucher_group_id' => $newGroup->id,
+                        //             'voucher' => $genVoucher,
+                        //             'amount' => 1,
+                        //             'value' => $newGroup->value,
+                        //             'status' => 1,
+                        //             'expired' => 0
+                        //         ]);
+                        //         $totalSaved++;
+                        //     } catch (\Exception $ex) {
+                        //         Log::error($ex);
+                        //     }
+                        // } while ($totalSaved < $newGroup->qtt);
+                        $maxAttempts = 5000; // Số lần lặp tối đa
+                        $totalSaved = 0;
+                        while ($totalSaved < $newGroup->qtt && $maxAttempts > 0) {
+                            $genVoucher = Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6);
+                            $exists = Voucher::where('voucher', $genVoucher)->count();
+                            if ($exists > 0) {
+                                $maxAttempts--;
+                                continue;
+                            }
+
+                            try {
+                                Voucher::create([
+                                    'voucher_group_id' => $newGroup->id,
+                                    'voucher' => $genVoucher,
+                                    'amount' => 1,
+                                    'value' => $newGroup->value,
+                                    'status' => 1,
+                                    'expired' => 0
+                                ]);
+                                $totalSaved++;
+                            } catch (\Exception $ex) {
+                                Log::error($ex);
+                            }
+
+                            $maxAttempts--;
+                        }
+                        if ($totalSaved < $newGroup->qtt) {
+                            return redirect()->back()->with('notify', 'Không thể tạo đủ số lượng mã voucher yêu cầu');
+                        }
+
+                    } else {
+                        try {
                             Voucher::create([
                                 'voucher_group_id' => $newGroup->id,
-                                'voucher' => Voucher::buildAutoVoucher($newGroup->prefix, $newGroup->length ?? 6),
-                                'amount' => 1,
+                                'voucher' => $newGroup->prefix,
+                                'amount' => $newGroup->qtt,
                                 'value' => $newGroup->value,
                                 'status' => 1,
                                 'expired' => 0
                             ]);
                             $totalSaved++;
+                        } catch (\Exception $ex) {
+                            Log::error($ex);
                         }
-                    } else {
-                        Voucher::create([
-                            'voucher_group_id' => $newGroup->id,
-                            'voucher' => $newGroup->prefix,
-                            'amount' => $newGroup->qtt,
-                            'value' => $newGroup->value,
-                            'status' => 1,
-                            'expired' => 0
-                        ]);
-                        $totalSaved++;
+
                     }
                 }
             }
-            
+
             return redirect()->route('config.voucher')->with('notify', "Thêm thành công $totalSaved voucher");
         }
 

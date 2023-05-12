@@ -55,7 +55,7 @@
         </section>
         @endif
         @endif
-        <section>
+        <section @if(!empty($isApp) && $isApp) class="mt-5"  @endif>
             @include('anylearn.widget.notify', ['notify' => session('notify', '')])
             <div class="container">
                 @yield('body')

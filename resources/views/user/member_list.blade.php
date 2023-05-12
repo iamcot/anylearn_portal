@@ -1,6 +1,13 @@
 @inject('userServ','App\Services\UserServices')
 @extends('layout')
 
+@section('rightFixedTop')
+    <div class="col-xs-2 mr-1">
+        <a class="btn btn-success btn-sm border-0 rounded-pill" href="{{ route('user.members.add') }}"><i class="fas fa-plus">
+            </i> <span class="mobile-no-text"> @lang('Thêm mới')</span></a>
+    </div>
+@endsection
+
 @section('body')
 <form>
     <div class="card shadow mb-2">
