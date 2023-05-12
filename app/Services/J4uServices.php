@@ -113,9 +113,10 @@ class J4uServices
         return $data;
     }
 
-    public function get($user) 
+    public function get($user, $subtype = '') 
     {
         $data = $this->collect($user);
+        $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
         
         $items = DB::query();
         $items->fromRaw(DB::raw('(select * from items where user_status = 1 && status = 1) as items'))
@@ -128,7 +129,10 @@ class J4uServices
             );
  
         foreach($data->searchLogs as $value) {
-            $items = $items->orwhere('items.title', 'like', '%' . $value . '%');
+            $items = $items->orwhere(function($query) use ($value) {
+                $query->where('items.title', 'like', '%' . $value . '%');
+            });
+
         }
 
         $items = $items->orwhere(function ($query) use ($data) {
