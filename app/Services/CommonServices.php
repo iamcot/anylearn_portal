@@ -92,7 +92,7 @@ class CommonServices
                 DB::raw('group_concat(categories.title) as categories')
             )
             ->distinct('items.id')
-            ->groupBy('items.i')
+            ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
             ->take(10)
             ->get(); 
