@@ -59,7 +59,7 @@ class CommonServices
                 'items.price',
                 'items.is_hot',
                 'rv.rating',
-                'od.created_at',
+                DB::raw('max(od.created_at) as created_at'),
                 DB::raw('group_concat(categories.title) as categories')
             )
             ->groupBy('items.id')
