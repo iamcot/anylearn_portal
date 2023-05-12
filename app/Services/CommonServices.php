@@ -82,6 +82,7 @@ class CommonServices
             ->where('orders.user_id', $user->id)
             ->where('items.subtype', $subtype)
             ->where('items.id', '771')
+            ->distinct('items.id')
             /*->select(
                 'items.id',
                 'items.title',
