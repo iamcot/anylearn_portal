@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\ItemConstants;
 use Illuminate\Support\Facades\DB;
 use App\Models\Spm;
 use Carbon\Carbon;
@@ -10,13 +11,38 @@ class J4uServices
 {
     public function collect($user)
     {
+        $items = [];
         $data = new \stdClass();
-        
+
         // Get data from search log      
-        $data->searchLogs = Spm::where('user_id', $user->id)
+        $searchLogs = Spm::where('user_id', $user->id)
             ->where('spmc', 'search')
             ->distinct('extra')
             ->pluck('extra');
+        
+        if ($searchLogs) {
+            $searcheds = DB::table('items')->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
+            foreach($searchLogs as $value) {
+                $searcheds->orwhere(function($query) use ($value) {
+                    $query->where('items.title', 'like', '%' . $value . '%');
+                    $query->where('items.status', ItemConstants::STATUS_ACTIVE);
+                    $query->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE);
+                });
+    
+            }
+
+            $items = $searcheds->select(
+                    'items.id',   
+                    'items.ages_min as minAge',
+                    'items.ages_max as maxAge',
+                    'items.subtype',
+                    'items.price',
+                    DB::raw('group_concat(ic.category_id) as categoryIds')
+                )
+                ->groupBy('items.id')
+                ->get()
+                ->toArray();
+        }
 
         // Get data from registered items 
         $registereds =  DB::table('orders')
@@ -33,7 +59,10 @@ class J4uServices
                 DB::raw('group_concat(ic.category_id) as categoryIds')
             )
             ->groupBy('items.id')
-            ->get();
+            ->get()
+            ->toArray();
+
+        $registereds = array_merge($items, $registereds);
             
         if ($registereds) {
             $data->categoryIds = [];
@@ -117,33 +146,25 @@ class J4uServices
     {
         $data = $this->collect($user);
         $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
+        //dd($data);
         
-        $items = DB::query();
-        $items->fromRaw(DB::raw('(select * from items where user_status = 1 && status = 1) as items'))
+        $items = DB::table('items')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
             ->join('categories', 'categories.id', '=', 'ic.category_id')
             ->leftjoin(
                 DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
                 'rv.item_id',
                 'items.id'
-            );
- 
-        foreach($data->searchLogs as $value) {
-            $items = $items->orwhere(function($query) use ($value) {
-                $query->where('items.title', 'like', '%' . $value . '%');
-            });
-
-        }
-
-        $items = $items->orwhere(function ($query) use ($data) {
-            $query->whereNotIn('items.id', $data->itemIds)
-                ->whereIn('item_category_id', $data->categoryIds)
-                ->whereIn('subtype', $data->subtypes)
-                ->where('price', '>=', $data->minPrice)
-                ->where('price', '<=', $data->maxPrice)
-                ->where('ages_min', '>=', $data->minAge)
-                ->where('ages_max', '<=', $data->maxAge);
-            })        
+            )
+            ->where('items.status', ItemConstants::STATUS_ACTIVE)
+            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+            //->whereNotIn('items.id', $data->itemIds)
+            ->whereIn('item_category_id', $data->categoryIds)
+            ->whereIn('subtype', $data->subtypes)
+            ->where('price', '>=', $data->minPrice)
+            ->where('price', '<=', $data->maxPrice)
+            ->where('ages_min', '>=', $data->minAge)
+            ->where('ages_max', '<=', $data->maxAge)  
             ->select(
                 'items.id',
                 'items.title',
