@@ -125,12 +125,10 @@ class MainSubtypesApi extends Controller
             ->join('categories', 'categories.id', '=', 'ic.category_id')
             ->where('items.subtype', $subtype)
             ->select(
-                'items.id as item_id',
                 'categories.id',
                 'categories.title'
             )
             ->distinct('categories.id')
-            ->groupBy('items.id')
             ->get();
     }
 
