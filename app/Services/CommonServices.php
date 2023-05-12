@@ -98,7 +98,7 @@ class CommonServices
     public function setTemplate($route, $title, $items)
     {
         foreach ($items as $item) {
-            $item->categories = explode(',', $item->categories);
+            $item->categories = array_unique(explode(',', $item->categories));
         }
 
         return [
