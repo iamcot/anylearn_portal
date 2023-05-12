@@ -69,7 +69,7 @@ class CommonServices
 
     public function getRepurchasedsbySubtype($user, $subtype) 
     {
-        $data= DB::table('orders')
+        return DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
@@ -81,9 +81,7 @@ class CommonServices
             )
             ->where('orders.user_id', $user->id)
             ->where('items.subtype', $subtype)
-            ->where('items.id', '771')
-            ->distinct('items.i')
-            /*->select(
+            ->select(
                 'items.id',
                 'items.title',
                 'items.image',
@@ -94,11 +92,10 @@ class CommonServices
                 DB::raw('group_concat(categories.title) as categories')
             )
             ->distinct('items.id')
-            ->groupBy('items.id')
+            ->groupBy('items.i')
             ->orderByRaw('items.is_hot desc, items.price desc')
-            ->take(10)*/
+            ->take(10)
             ->get(); 
-        dd($data); 
     }
 
     public function setTemplate($route, $title, $items)
