@@ -2,43 +2,11 @@
 
 namespace App\Services;
 
-use App\Constants\ConfigConstants;
 use App\Constants\OrderConstants;
-use App\Models\Article;
-use App\Models\Order;
-use App\Models\VoucherEvent;
 use Illuminate\Support\Facades\DB;
-
 
 class CommonServices
 {
-    public function getArticles() 
-    {
-        return Article::where('status', 1)
-            ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
-            ->orderByDesc('id')
-            ->take(10)
-            ->get()
-            ->makeHidden(['content']);
-    }
-
-    public function getPromotions()
-    {
-        return Article::where('type', Article::TYPE_PROMOTION)
-            ->where('status', 1)
-            ->orderByDesc('id')
-            ->take(5)
-            ->get();
-    }
-
-    public function getVoucherEvents()
-    {
-        return VoucherEvent::select('id', 'title')
-            ->orderByDesc('id')
-            ->take(2)
-            ->get();
-    }
-
     public function getRecommendations()
     {
         return DB::table('orders')

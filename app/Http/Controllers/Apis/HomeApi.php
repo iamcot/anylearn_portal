@@ -10,9 +10,11 @@ use App\Constants\ConfigConstants;
 use App\Models\Ask;
 use App\Models\Item;
 use App\Models\Configuration;
+use App\Services\ArticleServices;
 use App\Services\ItemServices;
 use App\Services\J4uServices;
 use App\Services\CommonServices;
+use App\Services\VoucherServices;
 
 class HomeApi extends Controller
 {
@@ -38,13 +40,15 @@ class HomeApi extends Controller
 
         $data['asks'] = $this->getLatestQuestion();
         $data['classes'] = $this->getItemsByCategories($request);
-        
+
+        $articleS = new ArticleServices();
+        $data['articles'] = $articleS->getArticles();
+        $data['promotions'] = $articleS->getPromotions(); 
+
         $commonS = new CommonServices();
-        $data['articles'] = $commonS->getArticles();
-        $data['vouchers'] = $commonS->getVoucherEvents();
-        $data['promotions'] = $commonS->getPromotions();  
+        $data['vouchers'] = (new VoucherServices)->getVoucherEvents();
         $data['repurchaseds'] = $data['pointBox'] = $data['j4u'] = []; 
-        
+
         if ($role == 'member') {
             $user = $request->get('_user'); 
             

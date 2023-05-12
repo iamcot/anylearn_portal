@@ -156,7 +156,7 @@ class J4uServices
             ->take(10)
             ->get();
 
-        // Location
+        // Location !!
 
         return $items;
     }
