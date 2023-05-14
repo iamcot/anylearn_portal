@@ -612,4 +612,22 @@ class UserServices
         }
         Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
     }
+    public function getPartnersBySubtype($subtype) 
+    {
+        return DB::table('users')
+            ->join('items', 'items.user_id', 'users.id')
+            ->whereIn('role', ['teacher', 'school'])  
+            ->where('items.subtype', $subtype)
+            ->select(
+                'users.id', 
+                'name', 
+                'users.image',
+                'users.is_hot',
+                'users.boost_score'
+            )
+            ->orderByRaw('users.is_hot desc, users.boost_score desc')
+            ->distinct('users.id')
+            ->take(6)
+            ->get();
+    }
 }

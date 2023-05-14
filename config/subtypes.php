@@ -1,1 +1,0 @@
-<?php return ['digital', 'extra', 'offline', 'online', 'video'];

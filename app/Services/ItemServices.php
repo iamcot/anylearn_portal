@@ -134,6 +134,98 @@ class ItemServices
             ->first();
     }
 
+    public function getItemsByPartners($partners, $subtype) 
+    {
+        $data = [];
+        $commonS = new CommonServices();
+
+        foreach($partners as $pt) {
+            $items = DB::table('items')
+                ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+                ->join('categories', 'categories.id', '=', 'ic.category_id')
+                ->leftjoin(
+                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                    'rv.item_id',
+                    'items.id'
+                )
+                ->where('items.status', ItemConstants::STATUS_ACTIVE)
+                ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+                ->where('items.user_id', $pt->id)
+                ->where('items.subtype', $subtype)
+                ->select(
+                    'items.id',
+                    'items.title',
+                    'items.image',
+                    'items.price',
+                    'items.is_hot',
+                    'items.boost_score',
+                    'rv.rating',
+                    DB::raw('group_concat(categories.title) as categories')
+                )
+                ->orderByRaw('items.is_hot desc, items.boost_score desc')
+                ->groupBy('items.id')
+                ->take(5)
+                ->get();
+
+            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $pt->name, $items);
+        }
+
+        return $data;   
+    }
+
+    public function getCategoriesBySubtype($subtype)
+    {
+        return DB::table('items')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+            ->join('categories', 'categories.id', '=', 'ic.category_id')
+            ->where('items.subtype', $subtype)
+            ->select(
+                'categories.id',
+                'categories.title'
+            )
+            ->distinct('categories.id')
+            ->get();
+    }
+
+    public function getItemsByCategories($categories, $subtype) 
+    {
+        $data = [];
+        $commonS = new CommonServices();
+
+        foreach($categories as $ct) {
+            $items = DB::table('items')
+                ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+                ->join('categories', 'categories.id', '=', 'ic.category_id')
+                ->leftjoin(
+                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                    'rv.item_id',
+                    'items.id'
+                )
+                ->where('items.status', ItemConstants::STATUS_ACTIVE)
+                ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+                ->where('subtype', $subtype)
+                ->where('ic.category_id', $ct->id)
+                ->select(
+                    'items.id',
+                    'items.title',
+                    'items.image',
+                    'items.price',
+                    'items.is_hot',
+                    'items.boost_score',
+                    'rv.rating',
+                    DB::raw('group_concat(categories.title) as categories')
+                )
+                ->orderByRaw('items.is_hot desc, items.boost_score desc')
+                ->groupBy('items.id')
+                ->take(5)
+                ->get();
+
+            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);  
+        }
+
+        return $data;
+    }
+
     public function pdpData(Request $request, $itemId, $user)
     {
         $item = Item::find($itemId);
