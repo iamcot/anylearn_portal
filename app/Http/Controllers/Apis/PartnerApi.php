@@ -35,7 +35,7 @@ class PartnerApi extends Controller
             $data['reviews'] = $itemS->getItemReviewsByPartner($id);
             $data['vourcher'] = $this->getVoucherByPartner($id); 
         
-            return $data;
+            return response()->json($data);
         }
         
         return response()->json(404);
