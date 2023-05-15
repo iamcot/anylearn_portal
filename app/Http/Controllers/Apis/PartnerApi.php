@@ -37,6 +37,9 @@ class PartnerApi extends Controller
         
             return $data;
         }
+        
+        return response()->json(404);
+        
     }
 
     public function getPartner($id)
@@ -57,7 +60,7 @@ class PartnerApi extends Controller
     public function getVoucherByPartner($id) 
     {
         $voucherE = VoucherEvent::where('trigger', $id)->first();
-        return $voucherE ? Voucher::whereIn('voucher_group_id', explode(',', $voucherE->targets))->first() : null;
+        return $voucherE ? Voucher::whereIn('voucher_group_id', explode(',', $voucherE->targets))->first() : '';
     }
 }
 
