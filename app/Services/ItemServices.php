@@ -116,6 +116,7 @@ class ItemServices
             ->join('users', 'users.id', '=', 'items.user_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+            ->whereNull('items.item_id')
             ->where('items.is_hot', $isHot)
             ->select(
                 'items.id',
