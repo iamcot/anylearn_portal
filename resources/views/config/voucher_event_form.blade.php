@@ -20,6 +20,8 @@
                             value="{{ App\Models\VoucherEvent::TYPE_REGISTER }}" >Đăng ký người dùng</option>
                         <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_CLASS ? "selected" : '' }}
                             value="{{ App\Models\VoucherEvent::TYPE_CLASS }}">Mua khóa học</option>
+                        <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_PARTNER ? "selected" : '' }}
+                            value="{{ App\Models\VoucherEvent::TYPE_PARTNER }}">Đối tác</option>
                     </select>
                 </div>
             </div>
