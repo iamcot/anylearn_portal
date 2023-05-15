@@ -220,7 +220,9 @@ class ItemServices
                 ->take(5)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);  
+            if (count($items) > 3) {
+                $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
+            }
         }
 
         return $data;
