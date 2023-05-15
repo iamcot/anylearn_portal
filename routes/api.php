@@ -67,6 +67,7 @@ Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
 Route::get('/v3/home', 'Apis\HomeApi@index');
 Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
+Route::get('/v3/partner/{id}', 'Apis\PartnerApi@index');
 
 Route::middleware(['api.user'])->group(function () {
 

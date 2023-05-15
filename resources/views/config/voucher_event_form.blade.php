@@ -5,7 +5,7 @@
     @csrf
     <input type="hidden" name="id" value="{{ !empty($event) ? $event->id : null }}">
     <div class="card shadow">
-        <div class="card-body">       
+        <div class="card-body">
             <div class="form-group row">
                 <label for="title" class="col-md-2 col-form-label text-md-right">{{ __('Tiêu đề') }}</label>
                 <div class="col-md-6">
@@ -16,16 +16,18 @@
                 <label for="type" class="col-md-2 col-form-label text-md-right">{{ __('Loại Sự kiện') }}</label>
                 <div class="col-md-6">
                     <select name="type" id="type" class="form-control">
-                        <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_REGISTER ? "selected" : '' }} 
+                        <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_REGISTER ? "selected" : '' }}
                             value="{{ App\Models\VoucherEvent::TYPE_REGISTER }}" >Đăng ký người dùng</option>
                         <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_CLASS ? "selected" : '' }}
                             value="{{ App\Models\VoucherEvent::TYPE_CLASS }}">Mua khóa học</option>
+                        <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_PARTNER ? "selected" : '' }}
+                            value="{{ App\Models\VoucherEvent::TYPE_PARTNER }}">Đối tác</option>
                         <option {{ !empty($event) && $event->type == App\Models\VoucherEvent::TYPE_PROMOTE ? "selected" : '' }}
                             value="{{ App\Models\VoucherEvent::TYPE_PROMOTE }}">Quảng cáo</option>
                     </select>
                 </div>
             </div>
-            
+
             <div class="form-group row">
                 <label for="trigger" class="col-md-2 col-form-label text-md-right">{{ __('ID khởi tạo') }}</label>
                 <div class="col-md-6">

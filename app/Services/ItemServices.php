@@ -134,7 +134,7 @@ class ItemServices
             ->first();
     }
 
-    public function getItemsByPartners($partners, $subtype) 
+    public function getItemsByPartners($partners, $subtype)
     {
         $data = [];
         $commonS = new CommonServices();
@@ -144,7 +144,7 @@ class ItemServices
                 ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
                 ->join('categories', 'categories.id', '=', 'ic.category_id')
                 ->leftjoin(
-                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'),
                     'rv.item_id',
                     'items.id'
                 )
@@ -170,7 +170,7 @@ class ItemServices
             $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $pt->name, $items);
         }
 
-        return $data;   
+        return $data;
     }
 
     public function getCategoriesBySubtype($subtype)
@@ -187,7 +187,7 @@ class ItemServices
             ->get();
     }
 
-    public function getItemsByCategories($categories, $subtype) 
+    public function getItemsByCategories($categories, $subtype)
     {
         $data = [];
         $commonS = new CommonServices();
@@ -197,7 +197,7 @@ class ItemServices
                 ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
                 ->join('categories', 'categories.id', '=', 'ic.category_id')
                 ->leftjoin(
-                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'),
                     'rv.item_id',
                     'items.id'
                 )
@@ -220,10 +220,46 @@ class ItemServices
                 ->take(5)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);  
+            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
         }
 
         return $data;
+    }
+
+    public function getItemsByPartner($id, $isHot = 0) {
+        return DB::table('items')
+            ->join('users', 'users.id', '=', 'items.user_id')
+            ->where('items.status', ItemConstants::STATUS_ACTIVE)
+            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+            ->where('items.is_hot', $isHot)
+            ->select(
+                'items.id',
+                'items.title',
+                'items.image',
+                'items.short_content',
+                'items.boost_score',
+                'items.created_at'
+            )
+            ->orderByRaw('items.boost_score desc', 'items.created_at desc')
+            ->take(4)
+            ->get();
+    }
+
+    public function getItemReviewsByPartner($id)
+    {
+        return DB::table('items')
+            ->join('item_user_actions as iua', 'iua.item_id', '=', 'items.id')
+            ->join('users', 'users.id', '=', 'iua.user_id')
+            ->where('items.user_id', $id)
+            ->where('iua.type', 'rating')
+            ->select(
+                'iua.*',
+                'users.name',
+                'users.image'
+            )
+            ->orderByDesc('iua.created_at')
+            ->take(3)
+            ->get();
     }
 
     public function pdpData(Request $request, $itemId, $user)
