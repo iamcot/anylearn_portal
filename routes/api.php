@@ -58,15 +58,17 @@ Route::middleware(['language'])->group(function () {
     // Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
     // Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
     // Route::get('/quote', 'Apis\ArticleApi@quote');
-// Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
-
-
+    // Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
 });
 
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+Route::get('/v3/filter', 'Apis\SearchFilterApi@index');
+
 Route::middleware(['api.user'])->group(function () {
+    Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
+
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');
 
