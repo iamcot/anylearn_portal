@@ -4,38 +4,113 @@ use App\Constants\ItemConstants;
 
  return [
     ItemConstants::SUBTYPE_DIGITAL  => [
-        'TRƯỜNG QUỐC TẾ MỸ (TAS)',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
     ],
     ItemConstants::SUBTYPE_EXTRA => [
-        'TRƯỜNG QUỐC TẾ MỸ (TAS)',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
     ], 
     ItemConstants::SUBTYPE_OFFLINE => [
-        'TRƯỜNG QUỐC TẾ MỸ (TAS)',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
     ], 
     ItemConstants::SUBTYPE_ONLINE => [
-        'TRƯỜNG QUỐC TẾ MỸ (TAS)',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
     ], 
     ItemConstants::SUBTYPE_VIDEO => [
-        'TRƯỜNG QUỐC TẾ MỸ (TAS)',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
-        'Trường Quốc tế KFC',
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
+        [
+            'id' => 1,
+            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+        ],
     ]  
 ];

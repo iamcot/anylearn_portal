@@ -65,16 +65,13 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
-Route::prefix('v3')->group(function () {
-    Route::get('/home', 'Apis\HomeApi@index');
-    Route::get('/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
-});
+Route::get('/v3/home', 'Apis\HomeApi@index');
+Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 
 Route::middleware(['api.user'])->group(function () {
-    Route::prefix('v3')->group(function () {
-        Route::get('/home/{role}', 'Apis\HomeApi@index');
-        Route::get('/main-subtypes/{subtype}/{role}', 'Apis\MainSubtypesApi@index');
-    });
+
+    Route::get('/v3/home/{role}', 'Apis\HomeApi@index');
+    Route::get('/v3/main-subtypes/{subtype}/{role}', 'Apis\MainSubtypesApi@index');
 
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');

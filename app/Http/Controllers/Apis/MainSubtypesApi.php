@@ -33,8 +33,10 @@ class MainSubtypesApi extends Controller
                 $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchasedsBySubtype($user, $subtype));           
             }
 
-            return $data;
+            return response()->json($data);
         }
+
+        return response()->json(404);
     }
 }
 
