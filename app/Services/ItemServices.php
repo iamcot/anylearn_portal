@@ -111,6 +111,40 @@ class ItemServices
         return false;
     }
 
+    public function getItemsByPartner($id, $isHot = 0) {
+        return DB::table('items')
+        ->join('users', 'users.id', '=', 'items.user_id')
+        ->where('items.status', ItemConstants::STATUS_ACTIVE)
+        ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+        ->where('items.is_hot', $isHot)
+        ->select(
+            'items.id',
+            'items.image',
+            'items.short_content',
+            'items.boost_score',
+            'items.created_at'
+        )
+        ->orderByRaw('items.boost_score desc', 'items.created_at desc')
+        ->take(4)
+        ->get();
+    }
+
+    public function getItemReviewsByPartner($id)
+    {
+        return DB::table('items')
+        ->join('item_user_actions as iua', 'iua.item_id', '=', 'items.id')
+        ->join('users', 'users.id', '=', 'iua.user_id')
+        ->where('items.user_id', $id)
+        ->where('iua.type', 'rating')
+        ->select(
+            'iua.*',
+            'users.name'
+        )
+        ->orderByDesc('iua.created_at')
+        ->take(3)
+        ->get();
+    }
+
     public function pdpData(Request $request, $itemId, $user)
     {
         $item = Item::find($itemId);
