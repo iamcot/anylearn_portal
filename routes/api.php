@@ -64,6 +64,8 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+Route::get('/v3/listing', 'Apis\ListingApi@index');
+
 Route::get('/v3/filter', 'Apis\SearchFilterApi@index');
 
 Route::get('/v3/home', 'Apis\HomeApi@index');
