@@ -14,6 +14,7 @@ class SearchFilterApi extends Controller
     public function index(Request $request, $role = 'guest')
     {
         $data['searcheds'] = Spm::where('spmc', 'search')
+            ->whereNotNull('extra')
             ->select(DB::raw('extra, max(created_at) as created_at'))
             ->groupBy('extra')
             ->orderByDesc('created_at')
@@ -25,11 +26,12 @@ class SearchFilterApi extends Controller
         if($role == 'member') {
             $user = $request->get('_user');
             $data['searcheds'] = Spm::where('spmc', 'search')
-            ->where('user_id', $user->id)
-            ->select(DB::raw('extra, max(created_at) as created_at'))
-            ->groupBy('extra')
-            ->orderByDesc('created_at')
-            ->pluck('extra');
+                ->whereNotNull('extra')
+                ->where('user_id', $user->id)
+                ->select(DB::raw('extra, max(created_at) as created_at'))
+                ->groupBy('extra')
+                ->orderByDesc('created_at')
+                ->pluck('extra');
         }
 
         return response()->json($data);
