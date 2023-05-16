@@ -19,7 +19,13 @@ class MapApi extends Controller
                 ->join('user_locations as ul', 'ul.user_id', '=', 'users.id')
                 ->where('users.role', 'school')
                 ->whereBetween('ul.longitude', [$top[0], $bot[0]])
-                ->whereBetween('ul.latitude', [$top[1], $bot[1]])
+                ->whereBetween('ul.latitude', [$bot[1], $top[1]])
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.image',
+                    'users.introduce'
+                )
                 ->get();
                 //status
 
@@ -27,4 +33,5 @@ class MapApi extends Controller
         return response()->json($data);
     }
 }
+
 
