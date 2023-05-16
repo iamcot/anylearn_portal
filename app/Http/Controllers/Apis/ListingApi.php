@@ -24,7 +24,8 @@ class ListingApi extends Controller
             }
 
             if ($request->get('categoryId')) {
-                $items->where('items.item_category_id', $request->get('categoryId'));
+                $items->join('items_categories as ic', 'ic.category_id', '=', 'items.item_category_id');
+                $items->where('ic.category_id', $request->get('categoryId'));
             }
 
             if ($request->get('price')) {
