@@ -11,8 +11,10 @@ class ListingApi extends Controller
 {
     public function index(Request $request) 
     {
+        $data = [];
         if ($request->all()) {
             $items = DB::table('items')
+                ->join('users', 'users.id', '=', 'items.user_id')
                 ->where('items.status', ItemConstants::STATUS_ACTIVE)
                 ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
                 ->whereNull('items.item_id');
@@ -37,15 +39,45 @@ class ListingApi extends Controller
             if ($request->get('search')) {
                 $items->where('items.title', 'like', '%'. $request->get('search') . '%');
             }
+
+            $partners = $items->select(
+                    'users.id',
+                    'users.name',
+                    DB::raw('group_concat(items.id) as itemIds')
+                )
+                ->groupBy('items.user_id')
+                ->get();
+
+            foreach($partners as $value) {
+
+                $partner = new \stdClass();
+                $partner->id = $value->id;
+                $partner->name = $value->name;
+
+                $partner->items = DB::table('items')
+                    ->leftjoin(
+                        DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                        'rv.item_id',
+                        'items.id'
+                    )
+                    ->whereIn('items.id', explode(',', $value->itemIds))
+                    ->select(
+                        'items.id',
+                        'items.title',
+                        'items.image',
+                        'items.price',
+                        'items.is_hot',
+                        'items.boost_score',
+                        'items.short_content',
+                        'rv.rating'
+                    )
+                    ->orderByRaw('items.is_hot desc, items.boost_score desc') 
+                    ->get();
+
+                $data[] = $partner;
+            }   
         }
 
-        $items = $items->select(
-            'items.user_id',
-             DB::raw('group_concat(items.id) as itemIds')
-        )
-        ->groupBy('items.user_id')
-        ->get();
-
-        return response()->json($data);
+        return response()->json($data);   
     }
 }
