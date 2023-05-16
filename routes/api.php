@@ -66,6 +66,8 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+Route::get('/v3/map', 'Apis\MapApi@index');
+
 Route::middleware(['api.user'])->group(function () {
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');
