@@ -60,11 +60,12 @@ Route::middleware(['language'])->group(function () {
     // Route::get('/quote', 'Apis\ArticleApi@quote');
 // Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
 
-
 });
 
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
+
+Route::get('/v3/listing', 'Apis\ListingApi@index');
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/social/profile', 'Apis\SocialController@profile');
