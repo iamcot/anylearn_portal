@@ -18,7 +18,7 @@ class MainSubtypesApi extends Controller
     { 
         if (in_array($subtype, config('subtype_list'))) {
             
-            $data['schools'] = config('subtype_categories')[$subtype];
+            $data['categories'] = config('subtype_categories')[$subtype];
             $data['partners'] = (new UserServices)->getPartnersBySubtype($subtype);
             $data['vouchers'] = (new VoucherServices)->getVoucherEventsBySubtype($subtype);
 

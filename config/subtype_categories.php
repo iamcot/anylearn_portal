@@ -6,111 +6,111 @@ use App\Constants\ItemConstants;
     ItemConstants::SUBTYPE_DIGITAL  => [
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
     ],
     ItemConstants::SUBTYPE_EXTRA => [
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
     ], 
     ItemConstants::SUBTYPE_OFFLINE => [
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
     ], 
     ItemConstants::SUBTYPE_ONLINE => [
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
     ], 
     ItemConstants::SUBTYPE_VIDEO => [
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
         [
             'id' => 1,
-            'name' => 'TRƯỜNG QUỐC TẾ MỸ (TAS)'
+            'name' => 'Category_name'
         ],
     ]  
 ];
