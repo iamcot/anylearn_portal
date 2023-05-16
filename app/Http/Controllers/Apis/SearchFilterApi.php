@@ -20,7 +20,7 @@ class SearchFilterApi extends Controller
             ->orderByDesc('created_at')
             ->pluck('extra');
 
-        $data['provinces'] = Province::select('code', 'name')->orderBy('name')->get();
+        $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])->select('code as value', 'name as label')->orderBy('name')->get();
         $data['categories'] = Category::select('id', 'title')->orderBy('title')->get();
 
         if($role == 'member') {
