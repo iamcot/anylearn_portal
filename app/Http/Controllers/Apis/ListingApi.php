@@ -28,7 +28,7 @@ class ListingApi extends Controller
             }
 
             if ($request->get('price')) {
-                $items->where('items.price', $request->get('price'));
+                $items->where('items.price', '<=', $request->get('price'));
             }
 
             if ($request->get('provinceCode')) {
