@@ -24,7 +24,9 @@ class MapApi extends Controller
                     'users.id',
                     'users.name',
                     'users.image',
-                    'users.introduce'
+                    'users.introduce',
+                    'ul.longitude',
+                    'ul.latitude'
                 )
                 ->get();
                 //status
