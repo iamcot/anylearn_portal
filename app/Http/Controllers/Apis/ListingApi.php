@@ -32,9 +32,9 @@ class ListingApi extends Controller
                 $items->where('items.price', '<=', $request->get('price'));
             }
 
-            if ($request->get('provinceCode')) {
+            if ($request->get('province')) {
                 $items->join('user_locations as ul', 'ul.user_id', '=', 'items.user_id');
-                $items->where('ul.province_code', $request->get('provinceCode'));
+                $items->where('ul.province_code', $request->get('province'));
             }
 
             if ($request->get('search')) {
@@ -48,7 +48,8 @@ class ListingApi extends Controller
                 )
                 ->groupBy('items.user_id')
                 ->get();
-
+            
+            $alphabetFilter = $dateFilter = $hotFilter = $priceFilter = $ratingFilter = '';
             foreach($partners as $value) {
 
                 $partner = new \stdClass();
@@ -70,12 +71,31 @@ class ListingApi extends Controller
                         'items.is_hot',
                         'items.boost_score',
                         'items.short_content',
+                        'items.created_at',
                         'rv.rating'
-                    )
-                    ->orderByRaw('items.is_hot desc, items.boost_score desc') 
-                    ->get();
+                    );
 
-                $data[] = $partner;
+                if ($request->get('alphaFilter')) {
+                    $partner->items->orderBy('items.title', $request->get('alphaFilter'));
+                }
+
+                if ($request->get('dateFilter')) {
+                    $partner->items->orderBy('items.created_at', $request->get('dateFilter'));
+                }
+
+                if ($request->get('hotFilter')) {
+                    $partner->items->orderBy('items.is_hot', $request->get('hotFilter'));
+                }
+
+                if ($request->get('priceFilter')) {
+                    $partner->items->orderBy('items.price', $request->get('priceFilter'));
+                }
+
+                if ($request->get('ratingFilter')) {
+                    $partner->items->orderBy('rv.rating', $request->get('ratingFilter'));
+                }   
+
+                $data[] = $partner->items->get();
             }   
         }
 
