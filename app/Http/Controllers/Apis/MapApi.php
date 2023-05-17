@@ -29,9 +29,8 @@ class MapApi extends Controller
                     'ul.latitude'
                 )
                 ->get();
-                //status
-
         }
+        
         return response()->json($data);
     }
 }
