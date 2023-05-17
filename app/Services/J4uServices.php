@@ -22,13 +22,13 @@ class J4uServices
         
         if ($searchLogs) {
             $searcheds = DB::table('items')->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
+            
             foreach($searchLogs as $value) {
                 $searcheds->orwhere(function($query) use ($value) {
                     $query->where('items.title', 'like', '%' . $value . '%');
                     $query->where('items.status', ItemConstants::STATUS_ACTIVE);
                     $query->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE);
                 });
-    
             }
 
             $items = $searcheds->select(
@@ -156,6 +156,7 @@ class J4uServices
                 'rv.item_id',
                 'items.id'
             )
+            ->whereNull('items.item_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
             //->whereNotIn('items.id', $data->itemIds)
@@ -178,7 +179,7 @@ class J4uServices
             )
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
-            ->take(10)
+            ->take(6)
             ->get();
 
         // Location !!

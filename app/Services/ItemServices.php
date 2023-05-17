@@ -148,6 +148,7 @@ class ItemServices
                     'rv.item_id',
                     'items.id'
                 )
+                ->whereNull('items.item_id')
                 ->where('items.status', ItemConstants::STATUS_ACTIVE)
                 ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
                 ->where('items.user_id', $pt->id)
@@ -164,7 +165,7 @@ class ItemServices
                 )
                 ->orderByRaw('items.is_hot desc, items.boost_score desc')
                 ->groupBy('items.id')
-                ->take(5)
+                ->take(6)
                 ->get();
 
             $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $pt->name, $items);
@@ -201,6 +202,7 @@ class ItemServices
                     'rv.item_id',
                     'items.id'
                 )
+                ->whereNull('items.item_id')
                 ->where('items.status', ItemConstants::STATUS_ACTIVE)
                 ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
                 ->where('subtype', $subtype)
@@ -217,10 +219,10 @@ class ItemServices
                 )
                 ->orderByRaw('items.is_hot desc, items.boost_score desc')
                 ->groupBy('items.id')
-                ->take(5)
+                ->take(6)
                 ->get();
 
-            if (count($items) > 3) {
+            if (count($items) > 0) {
                 $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
             }
         }

@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\APIs;
 
-use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Item;
 use App\Services\CommonServices;
 use App\Services\ItemServices;
 use App\Services\J4uServices;
@@ -16,6 +14,7 @@ class MainSubtypesApi extends Controller
 {
     public function index(Request $request, $subtype, $role='guest') 
     { 
+        $data = [];
         if (in_array($subtype, config('subtype_list'))) {
             
             $data['categories'] = config('subtype_categories')[$subtype];
@@ -31,12 +30,10 @@ class MainSubtypesApi extends Controller
                 $commonS = new CommonServices();
                 $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn quan tâm', (new J4uServices)->get($user, $subtype));
                 $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchasedsBySubtype($user, $subtype));           
-            }
-
-            return response()->json($data);
+            }    
         }
 
-        return response()->json(404);
+        return response()->json($data);
     }
 }
 

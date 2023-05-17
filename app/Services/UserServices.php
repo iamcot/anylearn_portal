@@ -616,11 +616,12 @@ class UserServices
     {
         return DB::table('users')
             ->join('items', 'items.user_id', 'users.id')
+            ->whereNull('items.item_id')
             ->whereIn('role', ['teacher', 'school'])  
             ->where('items.subtype', $subtype)
             ->select(
                 'users.id', 
-                'name', 
+                'users.name', 
                 'users.image',
                 'users.is_hot',
                 'users.boost_score'

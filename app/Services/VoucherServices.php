@@ -10,7 +10,7 @@ class VoucherServices
     {
         return VoucherEvent::select('id', 'title')
             ->orderByDesc('id')
-            ->take(2)
+            ->take(3)
             ->get();
     }
 
@@ -22,7 +22,7 @@ class VoucherServices
             ->where('type', 'promote' )
             ->where('trigger', $subtypes[$subtype])
             ->orderByDesc('id')
-            ->take(2)
+            ->take(3)
             ->get();
     }
 }
