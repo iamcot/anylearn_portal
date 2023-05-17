@@ -156,16 +156,16 @@ class J4uServices
                 'rv.item_id',
                 'items.id'
             )
-            //->whereNull('items.item_id')
+            ->whereNull('items.item_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
             //->whereNotIn('items.id', $data->itemIds)
-            ->whereIn('item_category_id', $data->categoryIds)
-            ->whereIn('subtype', $data->subtypes)
-            ->where('price', '>=', $data->minPrice)
-            ->where('price', '<=', $data->maxPrice)
-            ->where('ages_min', '>=', $data->minAge)
-            ->where('ages_max', '<=', $data->maxAge)  
+            ->whereIn('ic.category_id', $data->categoryIds)
+            ->whereIn('items.subtype', $data->subtypes)
+            ->where('items.price', '>=', $data->minPrice)
+            ->where('items.price', '<=', $data->maxPrice)
+            ->where('items.ages_min', '>=', $data->minAge)
+            ->where('items.ages_max', '<=', $data->maxAge)  
             ->select(
                 'items.id',
                 'items.title',
