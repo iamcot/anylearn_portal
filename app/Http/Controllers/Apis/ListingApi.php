@@ -49,9 +49,7 @@ class ListingApi extends Controller
                 ->groupBy('items.user_id')
                 ->get();
             
-            $alphabetFilter = $dateFilter = $hotFilter = $priceFilter = $ratingFilter = '';
             foreach($partners as $value) {
-
                 $partner = new \stdClass();
                 $partner->id = $value->id;
                 $partner->name = $value->name;
@@ -93,9 +91,10 @@ class ListingApi extends Controller
 
                 if ($request->get('ratingFilter')) {
                     $partner->items->orderBy('rv.rating', $request->get('ratingFilter'));
-                }   
+                }  
 
-                $data[] = $partner->items->get();
+                $partner->items = $partner->items->get(); 
+                $data[] = $partner;
             }   
         }
 
