@@ -59,12 +59,14 @@ Route::middleware(['language'])->group(function () {
     // Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
     // Route::get('/quote', 'Apis\ArticleApi@quote');
     // Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
+
 });
 
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
-Route::get('/v3/filter', 'Apis\SearchFilterApi@index');
+Route::get('/v3/search', 'Apis\SearchFilterApi@index');
+Route::get('/v3/listing', 'Apis\ListingApi@index');
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
