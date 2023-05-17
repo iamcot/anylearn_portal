@@ -13,16 +13,13 @@ class SearchFilterApi extends Controller
 {
     public function index(Request $request, $role = 'guest')
     {
-        $data['searcheds'] = Spm::where('spmc', 'search')
-            ->whereNotNull('extra')
-            ->select(DB::raw('extra, max(created_at) as created_at'))
-            ->groupBy('extra')
-            ->orderByDesc('created_at')
-            ->pluck('extra');
-
-        $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])->select('code as value', 'name as label')->orderBy('name')->get();
+        $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])
+            ->select('name as label', 'code as value')
+            ->orderBy('name')
+            ->get();
         $data['categories'] = Category::select('id', 'title')->orderBy('title')->get();
 
+        $data['lastSearch'] = [];
         if($role == 'member') {
             $user = $request->get('_user');
             $data['searcheds'] = Spm::where('spmc', 'search')
