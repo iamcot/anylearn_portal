@@ -22,7 +22,7 @@ class SearchFilterApi extends Controller
         $data['lastSearch'] = [];
         if($role == 'member') {
             $user = $request->get('_user');
-            $data['searcheds'] = Spm::where('spmc', 'search')
+            $data['lastSearch'] = Spm::where('spmc', 'search')
                 ->whereNotNull('extra')
                 ->where('user_id', $user->id)
                 ->select(DB::raw('extra, max(created_at) as created_at'))
