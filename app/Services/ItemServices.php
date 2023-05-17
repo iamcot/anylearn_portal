@@ -127,7 +127,7 @@ class ItemServices
                 'items.created_at'
             )
             ->orderByRaw('items.boost_score desc', 'items.created_at desc')
-            ->take(4)
+            ->take(6)
             ->get();
     }
 

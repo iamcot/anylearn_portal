@@ -13,8 +13,11 @@ class PartnerApi extends Controller
 {
     public function index(Request $request, $id) 
     {
-        $data['partner'] = $this->getPartner($id);
-        if ($data['partner']) {
+        $data = [];
+        $partner = $this->getPartner($id);
+
+        if ($partner) {
+            $data['partner'] = $partner;
 
             $sumReviews = DB::table('items')
             ->join('item_user_actions as iua', 'iua.item_id', '=', 'items.id')
@@ -33,12 +36,10 @@ class PartnerApi extends Controller
             $data['hotItems'] = $itemS->getItemsByPartner($id, 1);
             $data['normalItems'] = $itemS->getItemsByPartner($id);
             $data['reviews'] = $itemS->getItemReviewsByPartner($id);
-            $data['vourcher'] = $this->getVoucherByPartner($id); 
-        
-            return response()->json($data);
+            $data['vourcher'] = $this->getVoucherByPartner($id);     
         }
         
-        return response()->json(404);
+        return response()->json($data);
         
     }
 
@@ -59,7 +60,8 @@ class PartnerApi extends Controller
 
     public function getVoucherByPartner($id) 
     {
-        $voucherE = VoucherEvent::where('trigger', $id)->first();
+        // Add voucher_events.type = partner, trigger = partner.id
+        $voucherE = VoucherEvent::where('type', 'partner')->where('trigger', $id)->first();
         return $voucherE ? Voucher::whereIn('voucher_group_id', explode(',', $voucherE->targets))->first() : '';
     }
 }
