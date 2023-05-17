@@ -146,7 +146,7 @@ class J4uServices
     {
         $data = $this->collect($user);
         $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
-        dd($data);
+        //dd($data);
         
         $items = DB::table('items')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
@@ -156,7 +156,7 @@ class J4uServices
                 'rv.item_id',
                 'items.id'
             )
-            ->whereNull('items.item_id')
+            //->whereNull('items.item_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
             //->whereNotIn('items.id', $data->itemIds)
