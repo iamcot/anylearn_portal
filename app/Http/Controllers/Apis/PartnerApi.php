@@ -39,8 +39,7 @@ class PartnerApi extends Controller
             $data['vourcher'] = $this->getVoucherByPartner($id);     
         }
         
-        return response()->json($data);
-        
+        return response()->json($data);   
     }
 
     public function getPartner($id)
