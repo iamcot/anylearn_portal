@@ -50,7 +50,6 @@ class ListingApi extends Controller
                     DB::raw('group_concat(items.id) as itemIds')
                 )
                 ->groupBy('items.user_id')
-                ->take(6)
                 ->get();
             
             foreach($partners as $value) {
@@ -102,7 +101,7 @@ class ListingApi extends Controller
                     $partner->items->orderBy('rv.rating', $request->get('ratingFilter'));
                 }  
 
-                $partner->items = $partner->items->take(6)->get(); 
+                $partner->items = $partner->items->take(3)->get(); 
                 $data[] = $partner;
             }   
         }

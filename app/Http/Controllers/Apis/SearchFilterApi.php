@@ -19,8 +19,9 @@ class SearchFilterApi extends Controller
             ->select(DB::raw('extra, max(created_at) as created_at'))
             ->groupBy('extra')
             ->orderByDesc('created_at')
+            ->take(6)
             ->pluck('extra');
-            
+
         $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])
             ->select('name as label', 'code as value')
             ->orderBy('name')
@@ -39,6 +40,7 @@ class SearchFilterApi extends Controller
                 ->select(DB::raw('extra, max(created_at) as created_at'))
                 ->groupBy('extra')
                 ->orderByDesc('created_at')
+                ->take(6)
                 ->pluck('extra');
         }
 
