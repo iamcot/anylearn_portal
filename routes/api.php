@@ -70,7 +70,7 @@ Route::get('/v3/listing', 'Apis\ListingApi@index');
 Route::get('/v3/map', 'Apis\MapApi@index');
 
 Route::middleware(['api.user'])->group(function () {
-    Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
+    Route::get('/v3/search/{role}', 'Apis\SearchFilterApi@index');
 
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');
