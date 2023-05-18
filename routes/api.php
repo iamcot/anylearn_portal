@@ -68,7 +68,6 @@ Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 Route::get('/v3/search', 'Apis\SearchFilterApi@index');
 Route::get('/v3/listing', 'Apis\ListingApi@index');
 Route::get('/v3/map', 'Apis\MapApi@index');
-Route::get('/v3/map', 'Apis\MapApi@index');
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
