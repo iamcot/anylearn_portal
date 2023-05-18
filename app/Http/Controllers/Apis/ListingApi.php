@@ -23,9 +23,9 @@ class ListingApi extends Controller
                 $items->where('items.subtype', $request->get('subtype'));
             }
 
-            if ($request->get('categoryId')) {
+            if ($request->get('category')) {
                 $items->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
-                $items->where('ic.category_id', $request->get('categoryId'));
+                $items->where('ic.category_id', $request->get('category'));
             }
 
             if ($request->get('price')) {
@@ -73,43 +73,43 @@ class ListingApi extends Controller
                         'rv.rating'
                     );
 
-                if ($request->get('sortBy') == 'alphabetASC'){
+                if ($request->get('sort') == 'alphabet-asc'){
                     $partner->items->orderBy('items.title');
                 }
 
-                if ($request->get('sortBy') == 'alphabetDESC'){
+                if ($request->get('sort') == 'alphabet-desc'){
                     $partner->items->orderByDesc('items.title');
                 }
 
-                if ($request->get('sortBy') == 'dateASC') {
+                if ($request->get('sort') == 'date-asc') {
                     $partner->items->orderBy('items.created_at');
                 }
 
-                if ($request->get('sortBy') == 'dateDESC') {
+                if ($request->get('sort') == 'date-desc') {
                     $partner->items->orderByDesc('items.created_at');
                 }
 
-                if ($request->get('sortBy') == 'hotASC') {
+                if ($request->get('sort') == 'hot-asc') {
                     $partner->items->orderBy('items.is_hot');
                 }
 
-                if ($request->get('sortBy') == 'hotDESC') {
+                if ($request->get('sort') == 'hot-desc') {
                     $partner->items->orderByDesc('items.is_hot');
                 }
 
-                if ($request->get('sortBy') == 'priceASC') {
+                if ($request->get('sort') == 'price-asc') {
                     $partner->items->orderBy('items.price');
                 }
 
-                if ($request->get('sortBy') == 'priceDESC') {
+                if ($request->get('sort') == 'price-desc') {
                     $partner->items->orderByDesc('items.price');
                 }
 
-                if ($request->get('sortBy') == 'ratingASC') {
+                if ($request->get('sort') == 'rating-asc') {
                     $partner->items->orderBy('rv.rating');
                 }
                 
-                if ($request->get('sortBy') == 'ratingDESC') {
+                if ($request->get('sort') == 'rating-desc') {
                     $partner->items->orderByDesc('rv.rating');
                 }
 
