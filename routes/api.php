@@ -65,12 +65,9 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
-<<<<<<< HEAD
 Route::get('/v3/search', 'Apis\SearchFilterApi@index');
 Route::get('/v3/listing', 'Apis\ListingApi@index');
-=======
 Route::get('/v3/map', 'Apis\MapApi@index');
->>>>>>> BO-317
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
