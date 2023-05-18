@@ -65,11 +65,18 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+Route::get('/v3/home', 'Apis\HomeApi@index');
+Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
+
 Route::get('/v3/search', 'Apis\SearchFilterApi@index');
 Route::get('/v3/listing', 'Apis\ListingApi@index');
 Route::get('/v3/map', 'Apis\MapApi@index');
 
 Route::middleware(['api.user'])->group(function () {
+
+    Route::get('/v3/home/{role}', 'Apis\HomeApi@index');
+    Route::get('/v3/main-subtypes/{subtype}/{role}', 'Apis\MainSubtypesApi@index');
+
     Route::get('/v3/search/{role}', 'Apis\SearchFilterApi@index');
 
     Route::get('/social/profile', 'Apis\SocialController@profile');
@@ -125,4 +132,6 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/children', 'Apis\UserApi@listChildren');
     Route::post('/user/children', 'Apis\UserApi@saveChildren');
     Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
+
 });
+
