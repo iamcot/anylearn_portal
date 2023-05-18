@@ -31,12 +31,11 @@ class SearchFilterApi extends Controller
             ->orderBy('title')
             ->get();
 
-        if($role == 'member') {
-            $user = $request->get('_user');
+        if ($request->get('_user')) {  
 
             $data['lastSearch'] = Spm::where('spmc', 'search')
                 ->whereNotNull('extra')
-                ->where('user_id', $user->id)
+                ->where('user_id', $request->get('_user')->id)
                 ->select(DB::raw('extra, max(created_at) as created_at'))
                 ->groupBy('extra')
                 ->orderByDesc('created_at')

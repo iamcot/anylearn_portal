@@ -47,14 +47,14 @@ class HomeApi extends Controller
 
         $commonS = new CommonServices();
         $data['vouchers'] = (new VoucherServices)->getVoucherEvents();
-        $data['repurchaseds'] = $data['pointBox'] = $data['j4u'] = []; 
 
-        if ($role == 'member') {
-            $user = $request->get('_user'); 
-            
+        $user = $request->get('_user');
+        $data['repurchases'] = $data['pointBox'] = $data['j4u'] = []; 
+
+        if ($user) {          
             $data['pointBox'] = $this->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
-            $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchaseds($user));           
+            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));           
         }
 
         $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());

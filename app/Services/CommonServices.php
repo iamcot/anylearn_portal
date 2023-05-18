@@ -19,7 +19,6 @@ class CommonServices
                 'rv.item_id',
                 'items.id'
             )
-            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->select(
                 'items.id',
                 'items.title',
@@ -36,7 +35,7 @@ class CommonServices
             ->get();
     }
 
-    public function getRepurchaseds($user) 
+    public function getRepurchases($user) 
     {
         return DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
@@ -65,7 +64,7 @@ class CommonServices
             ->get(); 
     }
 
-    public function getRepurchasedsbySubtype($user, $subtype) 
+    public function getRepurchasesbySubtype($user, $subtype) 
     {
         return DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')        

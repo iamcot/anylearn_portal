@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class ListingApi extends Controller
 {
-    const ORDER_ASC = 'asc';
-    const ORDER_DESC = 'desc';
-
     public function index(Request $request) 
     {
         $data = [];
@@ -76,30 +73,45 @@ class ListingApi extends Controller
                         'rv.rating'
                     );
 
-                if ($request->get('alphaFilter') == Self::ORDER_ASC 
-                    || $request->get('alphaFilter') == Self::ORDER_DESC ) {
-                    $partner->items->orderBy('items.title', $request->get('alphaFilter'));
+                if ($request->get('sortBy') == 'alphabetASC'){
+                    $partner->items->orderBy('items.title');
                 }
 
-                if ($request->get('dateFilter') == Self::ORDER_ASC 
-                    || $request->get('dateFilter') == Self::ORDER_DESC) {
-                    $partner->items->orderBy('items.created_at', $request->get('dateFilter'));
+                if ($request->get('sortBy') == 'alphabetDESC'){
+                    $partner->items->orderByDesc('items.title');
                 }
 
-                if ($request->get('hotFilter') == Self::ORDER_ASC 
-                    || $request->get('hotFilter') == Self::ORDER_DESC) {
-                    $partner->items->orderBy('items.is_hot', $request->get('hotFilter'));
+                if ($request->get('sortBy') == 'dateASC') {
+                    $partner->items->orderBy('items.created_at');
                 }
 
-                if ($request->get('priceFilter') == Self::ORDER_ASC 
-                    || $request->get('priceFilter') == Self::ORDER_DESC ) {
-                    $partner->items->orderBy('items.price', $request->get('priceFilter'));
+                if ($request->get('sortBy') == 'dateDESC') {
+                    $partner->items->orderByDesc('items.created_at');
                 }
 
-                if ($request->get('ratingFilter') == Self::ORDER_ASC 
-                    || $request->get('ratingFilter') == Self::ORDER_DESC) {
-                    $partner->items->orderBy('rv.rating', $request->get('ratingFilter'));
-                }  
+                if ($request->get('sortBy') == 'hotASC') {
+                    $partner->items->orderBy('items.is_hot');
+                }
+
+                if ($request->get('sortBy') == 'hotDESC') {
+                    $partner->items->orderByDesc('items.is_hot');
+                }
+
+                if ($request->get('sortBy') == 'priceASC') {
+                    $partner->items->orderBy('items.price');
+                }
+
+                if ($request->get('sortBy') == 'priceDESC') {
+                    $partner->items->orderByDesc('items.price');
+                }
+
+                if ($request->get('sortBy') == 'ratingASC') {
+                    $partner->items->orderBy('rv.rating');
+                }
+                
+                if ($request->get('sortBy') == 'ratingDESC') {
+                    $partner->items->orderByDesc('rv.rating');
+                }
 
                 $partner->items = $partner->items->take(3)->get(); 
                 $data[] = $partner;

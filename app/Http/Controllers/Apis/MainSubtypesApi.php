@@ -25,11 +25,13 @@ class MainSubtypesApi extends Controller
             $data['partnerItems'] = $itemS->getItemsByPartners($data['partners'], $subtype);
             $data['categoryItems'] = $itemS->getItemsByCategories($itemS->getCategoriesBySubtype($subtype), $subtype);
             
-            if ($role == 'member') {
-                $user = $request->get('_user'); 
+            $user = $request->get('_user');
+            $data['repurchases'] = $data['j4u'] = []; 
+
+            if ($user) {
                 $commonS = new CommonServices();
                 $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn quan tâm', (new J4uServices)->get($user, $subtype));
-                $data['repurchaseds'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchasedsBySubtype($user, $subtype));           
+                $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchasesBySubtype($user, $subtype));           
             }    
         }
 
