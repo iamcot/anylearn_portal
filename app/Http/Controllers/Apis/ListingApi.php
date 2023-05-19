@@ -6,6 +6,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Spm;
 use Illuminate\Support\Facades\DB;
 
 class ListingApi extends Controller
@@ -118,6 +119,9 @@ class ListingApi extends Controller
                 $data[] = $partner;
             }   
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
 
         return response()->json($data);   
     }

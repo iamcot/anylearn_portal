@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Constants\ConfigConstants;
 use App\Models\Configuration;
+use App\Models\Spm;
 use App\Services\ArticleServices;
 use App\Services\ItemServices;
 use App\Services\J4uServices;
@@ -54,6 +55,9 @@ class HomeApi extends Controller
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));           
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
 
         return response()->json($data);
     }

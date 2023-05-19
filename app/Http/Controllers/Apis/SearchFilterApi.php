@@ -43,6 +43,9 @@ class SearchFilterApi extends Controller
                 ->pluck('extra');
         }
 
+        $spm = new Spm();
+        $spm->addSpm($request);
+
         return response()->json($data);
     }
 }

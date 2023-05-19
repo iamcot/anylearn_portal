@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIs;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Spm;
 use App\Services\ItemServices;
 use App\Services\UserServices;
 use App\Services\VoucherServices;
@@ -38,6 +39,9 @@ class PartnerApi extends Controller
             $data['reviews'] = $itemS->getItemReviewsByPartner($id);
             $data['vourcher'] = (new VoucherServices)->getVoucherByPartner($id);   
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
         
         return response()->json($data);   
     }

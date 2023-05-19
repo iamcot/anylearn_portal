@@ -4,6 +4,7 @@ namespace App\Http\Controllers\APIs;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Spm;
 use App\Services\CommonServices;
 use App\Services\ItemServices;
 use App\Services\J4uServices;
@@ -34,6 +35,9 @@ class MainSubtypesApi extends Controller
                 $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user, $subtype));           
             }    
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
 
         return response()->json($data);
     }
