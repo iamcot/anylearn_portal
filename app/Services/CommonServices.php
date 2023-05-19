@@ -3,10 +3,25 @@
 namespace App\Services;
 
 use App\Constants\OrderConstants;
+use App\Models\Ask;
 use Illuminate\Support\Facades\DB;
 
 class CommonServices
 {
+    public function getLatestQuestion()
+    {
+        $data = [];
+        $question = Ask::where('type', 'question')->orderbyDesc('id')->first();
+
+        if ($question) {
+            $data['question'] = $question->content;
+            $data['comments'] = Ask::where('ask_id', $question->id)->where('type', 'comment')->get();
+            $data['answers'] = Ask::where('ask_id', $question->id)->where('type', 'answer')->get();
+        }
+
+        return $data;
+    }
+
     public function getRecommendations()
     {
         return DB::table('orders')

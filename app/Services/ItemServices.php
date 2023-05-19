@@ -267,6 +267,36 @@ class ItemServices
         return $data;
     }
 
+    public function getConfigItemsByCategories(Request $request)
+    {
+        // Config on admin page
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
+
+        $homeClasses = [];
+        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+
+        if ($homeClassesDb) {
+            $appLocale = App::getLocale();
+            foreach (json_decode($homeClassesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
+                    ->where('status', 1)
+                    ->where('user_status', 1)
+                    ->get();
+                $homeClasses[] = [
+                    'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
+                    'classes' => $items
+                ];
+            }
+        }
+
+        return $homeClasses;
+    }
+
     public function pdpData(Request $request, $itemId, $user)
     {
         $item = Item::find($itemId);

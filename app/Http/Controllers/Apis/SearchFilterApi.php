@@ -11,7 +11,7 @@ use Vanthao03596\HCVN\Models\Province;
 
 class SearchFilterApi extends Controller
 {
-    public function index(Request $request, $role = 'guest')
+    public function index(Request $request)
     {
         $data['lastSearch'] = Spm::where('spmc', 'search')
             ->whereNotNull('extra')
@@ -32,7 +32,6 @@ class SearchFilterApi extends Controller
             ->get();
 
         if ($request->get('_user')) {  
-
             $data['lastSearch'] = Spm::where('spmc', 'search')
                 ->whereNotNull('extra')
                 ->where('user_id', $request->get('_user')->id)

@@ -12,7 +12,7 @@ use App\Services\VoucherServices;
 
 class MainSubtypesApi extends Controller
 {
-    public function index(Request $request, $subtype, $role='guest') 
+    public function index(Request $request, $subtype) 
     { 
         $data = [];
         if (in_array($subtype, config('subtype_list'))) {
