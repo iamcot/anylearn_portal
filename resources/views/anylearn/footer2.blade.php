@@ -1,5 +1,5 @@
 @inject('itemServ', 'App\Services\ItemServices')
-<footer class="bg-white text-light">
+<footer class="bg-white text-light " style="padding: 0;">
     <div class="container py-5">
         <div class="row">
             <div class="col-sm-3">
