@@ -2,11 +2,26 @@
 
 namespace App\Services;
 
-use App\Constants\OrderConstants;
+use App\Constants\ConfigConstants;
+use App\Models\Ask;
 use Illuminate\Support\Facades\DB;
 
 class CommonServices
 {
+    public function getLatestQuestion()
+    {
+        $data = [];
+        $question = Ask::where('type', 'question')->orderbyDesc('id')->first();
+
+        if ($question) {
+            $data['question'] = $question->content;
+            $data['comments'] = Ask::where('ask_id', $question->id)->where('type', 'comment')->get();
+            $data['answers'] = Ask::where('ask_id', $question->id)->where('type', 'answer')->get();
+        }
+
+        return $data;
+    }
+
     public function getRecommendations()
     {
         return DB::table('orders')
@@ -19,7 +34,6 @@ class CommonServices
                 'rv.item_id',
                 'items.id'
             )
-            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->select(
                 'items.id',
                 'items.title',
@@ -32,13 +46,13 @@ class CommonServices
             )
             ->groupBy('items.id')
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
-            ->take(10)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get();
     }
 
-    public function getRepurchaseds($user) 
+    public function getRepurchases($user, $subtype = '') 
     {
-        return DB::table('orders')
+        $data = DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
@@ -48,38 +62,13 @@ class CommonServices
                 'rv.item_id',
                 'items.id'
             )
-            ->where('orders.user_id', $user->id)
-            ->select(
-                'items.id',
-                'items.title',
-                'items.image',
-                'items.price',
-                'items.is_hot',
-                'rv.rating',
-                DB::raw('max(od.created_at) as created_at'),
-                DB::raw('group_concat(categories.title) as categories')
-            )
-            ->groupBy('items.id')
-            ->orderByRaw('items.is_hot desc, items.price desc')
-            ->take(10)
-            ->get(); 
-    }
+            ->where('orders.user_id', $user->id);
+        
+        if ($subtype) {
+            $data->where('items.subtype', $subtype);
+        }
 
-    public function getRepurchasedsbySubtype($user, $subtype) 
-    {
-        return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
-            ->join('items', 'items.id', '=', 'od.item_id')
-            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
-            ->join('categories', 'categories.id', '=', 'ic.category_id')
-            ->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
-                'rv.item_id',
-                'items.id'
-            )
-            ->where('orders.user_id', $user->id)
-            ->where('items.subtype', $subtype)
-            ->select(
+        return $data->select(
                 'items.id',
                 'items.title',
                 'items.image',
@@ -91,7 +80,7 @@ class CommonServices
             )
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
-            ->take(10)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get(); 
     }
 

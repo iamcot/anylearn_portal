@@ -59,27 +59,26 @@ Route::middleware(['language'])->group(function () {
     // Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
     // Route::get('/quote', 'Apis\ArticleApi@quote');
     // Route::get('/user/profile/{userId}', 'Apis\UserApi@profile');
+
 });
 
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
 Route::get('/v3/map', 'Apis\MapApi@index');
-
-Route::get('/v3/listing', 'Apis\ListingApi@index');
-
-Route::get('/v3/filter', 'Apis\SearchFilterApi@index');
-
 Route::get('/v3/home', 'Apis\HomeApi@index');
-Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
+Route::get('/v3/listing', 'Apis\ListingApi@index');
+Route::get('/v3/search', 'Apis\SearchFilterApi@index');
 Route::get('/v3/partner/{id}', 'Apis\PartnerApi@index');
+Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
 
 
-    Route::get('/v3/home/{role}', 'Apis\HomeApi@index');
-    Route::get('/v3/main-subtypes/{subtype}/{role}', 'Apis\MainSubtypesApi@index');
+    Route::get('/v3/auth/home', 'Apis\HomeApi@index');
+    Route::get('/v3/auth/search', 'Apis\SearchFilterApi@index');
+    Route::get('/v3/auth/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');
@@ -136,4 +135,6 @@ Route::middleware(['api.user'])->group(function () {
     Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
 
 });
+
+
 

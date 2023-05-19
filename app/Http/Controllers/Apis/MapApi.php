@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Apis;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Spm;
 use Illuminate\Support\Facades\DB;
 
 class MapApi extends Controller
@@ -30,6 +31,9 @@ class MapApi extends Controller
                 )
                 ->get();
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
         
         return response()->json($data);
     }

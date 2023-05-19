@@ -111,6 +111,43 @@ class ItemServices
         return false;
     }
 
+    public function getItemsByPartner($id, $isHot = 0) {
+        return DB::table('items')
+            ->join('users', 'users.id', '=', 'items.user_id')
+            ->where('items.status', ItemConstants::STATUS_ACTIVE)
+            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+            ->whereNull('items.item_id')
+            ->where('items.is_hot', $isHot)
+            ->select(
+                'items.id',
+                'items.title',
+                'items.image',
+                'items.short_content',
+                'items.boost_score',
+                'items.created_at'
+            )
+            ->orderByRaw('items.boost_score desc', 'items.created_at desc')
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
+            ->get();
+    }
+
+    public function getItemReviewsByPartner($id)
+    {
+        return DB::table('items')
+            ->join('item_user_actions as iua', 'iua.item_id', '=', 'items.id')
+            ->join('users', 'users.id', '=', 'iua.user_id')
+            ->where('items.user_id', $id)
+            ->where('iua.type', 'rating')
+            ->select(
+                'iua.*',
+                'users.name',
+                'users.image'
+            )
+            ->orderByDesc('iua.created_at')
+            ->take(3)
+            ->get();
+    }
+
     public function getLastRegistered($id)
     {
         return DB::table('orders')
@@ -148,6 +185,7 @@ class ItemServices
                     'rv.item_id',
                     'items.id'
                 )
+                ->whereNull('items.item_id')
                 ->where('items.status', ItemConstants::STATUS_ACTIVE)
                 ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
                 ->where('items.user_id', $pt->id)
@@ -164,7 +202,7 @@ class ItemServices
                 )
                 ->orderByRaw('items.is_hot desc, items.boost_score desc')
                 ->groupBy('items.id')
-                ->take(5)
+                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
             $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $pt->name, $items);
@@ -201,6 +239,7 @@ class ItemServices
                     'rv.item_id',
                     'items.id'
                 )
+                ->whereNull('items.item_id')
                 ->where('items.status', ItemConstants::STATUS_ACTIVE)
                 ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
                 ->where('subtype', $subtype)
@@ -217,49 +256,45 @@ class ItemServices
                 )
                 ->orderByRaw('items.is_hot desc, items.boost_score desc')
                 ->groupBy('items.id')
-                ->take(5)
+                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
+            if (count($items) > 0) {
+                $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
+            }
         }
 
         return $data;
     }
 
-    public function getItemsByPartner($id, $isHot = 0) {
-        return DB::table('items')
-            ->join('users', 'users.id', '=', 'items.user_id')
-            ->where('items.status', ItemConstants::STATUS_ACTIVE)
-            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
-            ->where('items.is_hot', $isHot)
-            ->select(
-                'items.id',
-                'items.title',
-                'items.image',
-                'items.short_content',
-                'items.boost_score',
-                'items.created_at'
-            )
-            ->orderByRaw('items.boost_score desc', 'items.created_at desc')
-            ->take(4)
-            ->get();
-    }
-
-    public function getItemReviewsByPartner($id)
+    public function getConfigItemsByCategories(Request $request)
     {
-        return DB::table('items')
-            ->join('item_user_actions as iua', 'iua.item_id', '=', 'items.id')
-            ->join('users', 'users.id', '=', 'iua.user_id')
-            ->where('items.user_id', $id)
-            ->where('iua.type', 'rating')
-            ->select(
-                'iua.*',
-                'users.name',
-                'users.image'
-            )
-            ->orderByDesc('iua.created_at')
-            ->take(3)
-            ->get();
+        // Config on admin page
+        $configM = new Configuration();
+        $isEnableIosTrans = $configM->enableIOSTrans($request);
+
+        $homeClasses = [];
+        $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
+
+        if ($homeClassesDb) {
+            $appLocale = App::getLocale();
+            foreach (json_decode($homeClassesDb->value, true) as $block) {
+                if (empty($block)) {
+                    continue;
+                }
+                $items = Item::whereIn('id', explode(",", $block['classes']))
+                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
+                    ->where('status', 1)
+                    ->where('user_status', 1)
+                    ->get();
+                $homeClasses[] = [
+                    'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
+                    'classes' => $items
+                ];
+            }
+        }
+
+        return $homeClasses;
     }
 
     public function pdpData(Request $request, $itemId, $user)

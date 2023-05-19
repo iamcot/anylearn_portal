@@ -50,6 +50,8 @@ class ConfigConstants
     const CONFIG_HOME_SPECIALS_CLASSES = 'home_special_classes';
     const CONFIG_APP_BANNERS = 'home_app_banners';
 
+    const CONFIG_NUM_ITEM_DISPLAY = 6;
+
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIs;
 
+use App\Constants\ConfigConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -11,28 +12,39 @@ use Vanthao03596\HCVN\Models\Province;
 
 class SearchFilterApi extends Controller
 {
-    public function index(Request $request, $role = 'guest')
+    public function index(Request $request)
     {
-        $data['searcheds'] = Spm::where('spmc', 'search')
+        $data['lastSearch'] = Spm::where('spmc', 'search')
             ->whereNotNull('extra')
+            ->where('ip', $request->ip())
             ->select(DB::raw('extra, max(created_at) as created_at'))
             ->groupBy('extra')
             ->orderByDesc('created_at')
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->pluck('extra');
 
-        $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])->select('code as value', 'name as label')->orderBy('name')->get();
-        $data['categories'] = Category::select('id', 'title')->orderBy('title')->get();
+        $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])
+            ->select('name as label', 'code as value')
+            ->orderBy('name')
+            ->get();
 
-        if($role == 'member') {
-            $user = $request->get('_user');
-            $data['searcheds'] = Spm::where('spmc', 'search')
+        $data['categories'] = Category::select('id', 'title')
+            ->orderBy('title')
+            ->get();
+
+        if ($request->get('_user')) {  
+            $data['lastSearch'] = Spm::where('spmc', 'search')
                 ->whereNotNull('extra')
-                ->where('user_id', $user->id)
+                ->where('user_id', $request->get('_user')->id)
                 ->select(DB::raw('extra, max(created_at) as created_at'))
                 ->groupBy('extra')
                 ->orderByDesc('created_at')
+                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->pluck('extra');
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
 
         return response()->json($data);
     }

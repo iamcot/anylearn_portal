@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Apis;
 
+use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Spm;
 use Illuminate\Support\Facades\DB;
 
 class ListingApi extends Controller
@@ -23,9 +25,9 @@ class ListingApi extends Controller
                 $items->where('items.subtype', $request->get('subtype'));
             }
 
-            if ($request->get('categoryId')) {
+            if ($request->get('category')) {
                 $items->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
-                $items->where('ic.category_id', $request->get('categoryId'));
+                $items->where('ic.category_id', $request->get('category'));
             }
 
             if ($request->get('price')) {
@@ -73,30 +75,53 @@ class ListingApi extends Controller
                         'rv.rating'
                     );
 
-                if ($request->get('alphaFilter')) {
-                    $partner->items->orderBy('items.title', $request->get('alphaFilter'));
+                if ($request->get('sort') == 'alphabet-asc'){
+                    $partner->items->orderBy('items.title');
                 }
 
-                if ($request->get('dateFilter')) {
-                    $partner->items->orderBy('items.created_at', $request->get('dateFilter'));
+                if ($request->get('sort') == 'alphabet-desc'){
+                    $partner->items->orderByDesc('items.title');
                 }
 
-                if ($request->get('hotFilter')) {
-                    $partner->items->orderBy('items.is_hot', $request->get('hotFilter'));
+                if ($request->get('sort') == 'date-asc') {
+                    $partner->items->orderBy('items.created_at');
                 }
 
-                if ($request->get('priceFilter')) {
-                    $partner->items->orderBy('items.price', $request->get('priceFilter'));
+                if ($request->get('sort') == 'date-desc') {
+                    $partner->items->orderByDesc('items.created_at');
                 }
 
-                if ($request->get('ratingFilter')) {
-                    $partner->items->orderBy('rv.rating', $request->get('ratingFilter'));
-                }  
+                if ($request->get('sort') == 'hot-asc') {
+                    $partner->items->orderBy('items.is_hot');
+                }
 
-                $partner->items = $partner->items->get(); 
+                if ($request->get('sort') == 'hot-desc') {
+                    $partner->items->orderByDesc('items.is_hot');
+                }
+
+                if ($request->get('sort') == 'price-asc') {
+                    $partner->items->orderBy('items.price');
+                }
+
+                if ($request->get('sort') == 'price-desc') {
+                    $partner->items->orderByDesc('items.price');
+                }
+
+                if ($request->get('sort') == 'rating-asc') {
+                    $partner->items->orderBy('rv.rating');
+                }
+                
+                if ($request->get('sort') == 'rating-desc') {
+                    $partner->items->orderByDesc('rv.rating');
+                }
+
+                $partner->items = $partner->items->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)->get(); 
                 $data[] = $partner;
             }   
         }
+
+        $spm = new Spm();
+        $spm->addSpm($request);
 
         return response()->json($data);   
     }
