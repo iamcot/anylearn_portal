@@ -31,7 +31,7 @@ class MainSubtypesApi extends Controller
             if ($user) {
                 $commonS = new CommonServices();
                 $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn quan tâm', (new J4uServices)->get($user, $subtype));
-                $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchasesBySubtype($user, $subtype));           
+                $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user, $subtype));           
             }    
         }
 
