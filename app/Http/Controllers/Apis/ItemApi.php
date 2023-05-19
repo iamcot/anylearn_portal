@@ -71,7 +71,7 @@ class ItemApi extends Controller
     public function list(Request $request)
     {
         $user = $request->get('_user');
-
+        
         $open = Item::where('user_id', $user->id)
             ->where('user_status', '<=', ItemConstants::USERSTATUS_ACTIVE)
             ->orderby('user_status', 'desc')
