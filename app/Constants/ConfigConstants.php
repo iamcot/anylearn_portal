@@ -51,6 +51,9 @@ class ConfigConstants
     const CONFIG_APP_BANNERS = 'home_app_banners';
 
     const CONFIG_NUM_ITEM_DISPLAY = 6;
+    const CONFIG_NUM_PARTNER_DISPLAY = 6;
+    const CONFIG_NUM_CATEGORY_DISPLAY = 6;
+    Const CONFIG_NUM_LAST_SEARCH_DISPLAY = 8;
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';

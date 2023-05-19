@@ -153,6 +153,7 @@ class ItemServices
         return DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'od.item_id')
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->where('orders.user_id', $id)
             ->orderByDesc('od.created_at')
             ->first();
@@ -219,10 +220,24 @@ class ItemServices
             ->where('items.subtype', $subtype)
             ->select(
                 'categories.id',
+                'categories.title',
+                DB::raw('count(items.id) as num')
+            )
+            ->groupBy('categories.id')
+            ->orderByDesc('num')
+            ->take(ConfigConstants::CONFIG_NUM_CATEGORY_DISPLAY)
+            ->get();
+
+        /*return DB::table('items')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+            ->join('categories', 'categories.id', '=', 'ic.category_id')
+            ->where('items.subtype', $subtype)
+            ->select(
+                'categories.id',
                 'categories.title'
             )
             ->distinct('categories.id')
-            ->get();
+            ->get();*/
     }
 
     public function getItemsByCategories($categories, $subtype) 
@@ -259,9 +274,7 @@ class ItemServices
                 ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
-            if (count($items) > 0) {
-                $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
-            }
+            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
         }
 
         return $data;
