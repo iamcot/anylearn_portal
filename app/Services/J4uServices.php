@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use Illuminate\Support\Facades\DB;
 use App\Models\Spm;
@@ -179,7 +180,7 @@ class J4uServices
             )
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
-            ->take(6)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get();
 
         // Location !!

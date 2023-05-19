@@ -127,7 +127,7 @@ class ItemServices
                 'items.created_at'
             )
             ->orderByRaw('items.boost_score desc', 'items.created_at desc')
-            ->take(6)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get();
     }
 
@@ -202,7 +202,7 @@ class ItemServices
                 )
                 ->orderByRaw('items.is_hot desc, items.boost_score desc')
                 ->groupBy('items.id')
-                ->take(6)
+                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
             $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $pt->name, $items);
@@ -256,7 +256,7 @@ class ItemServices
                 )
                 ->orderByRaw('items.is_hot desc, items.boost_score desc')
                 ->groupBy('items.id')
-                ->take(6)
+                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
             if (count($items) > 0) {

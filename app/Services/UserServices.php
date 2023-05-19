@@ -644,7 +644,7 @@ class UserServices
             )
             ->orderByRaw('users.is_hot desc, users.boost_score desc')
             ->distinct('users.id')
-            ->take(6)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get();
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\APIs;
 
+use App\Constants\ConfigConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -19,7 +20,7 @@ class SearchFilterApi extends Controller
             ->select(DB::raw('extra, max(created_at) as created_at'))
             ->groupBy('extra')
             ->orderByDesc('created_at')
-            ->take(6)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->pluck('extra');
 
         $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])
@@ -38,7 +39,7 @@ class SearchFilterApi extends Controller
                 ->select(DB::raw('extra, max(created_at) as created_at'))
                 ->groupBy('extra')
                 ->orderByDesc('created_at')
-                ->take(6)
+                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->pluck('extra');
         }
 

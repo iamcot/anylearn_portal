@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Apis;
 
+use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -113,7 +114,7 @@ class ListingApi extends Controller
                     $partner->items->orderByDesc('rv.rating');
                 }
 
-                $partner->items = $partner->items->take(3)->get(); 
+                $partner->items = $partner->items->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)->get(); 
                 $data[] = $partner;
             }   
         }

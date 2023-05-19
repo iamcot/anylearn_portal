@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\ConfigConstants;
 use App\Constants\OrderConstants;
 use App\Models\Ask;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,7 @@ class CommonServices
             )
             ->groupBy('items.id')
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
-            ->take(10)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get();
     }
 
@@ -75,7 +76,7 @@ class CommonServices
             )
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
-            ->take(10)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get(); 
     }
 
@@ -105,7 +106,7 @@ class CommonServices
             )
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
-            ->take(10)
+            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get(); 
     }
 
