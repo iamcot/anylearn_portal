@@ -6,6 +6,20 @@
                 <h4>TRUNG TÂM HỖ TRỢ</h4>
                 <ul>
                     <ul class="row">
+                        <!-- Thêm thông tin công ty -->
+                    <li class="col-xs-12 col-md-12">
+                        CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC anyLEARN
+                    </li>
+                    <li class="col-xs-12 col-md-12">
+                        Giấy CNĐKDN: 0316363793 cấp lần đầu ngày 02/07/2020
+                    </li>
+                    <li class="col-xs-12 col-md-12">
+                        Cấp bởi: Phòng đăng ký kinh doanh - Sở Kế hoạch Đầu tư thành phố Hồ Chí Minh.
+                    </li>
+                    <li class="col-xs-12 col-md-12">
+                        Địa chỉ: 161/4 Nguyễn Văn Thủ, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh
+                    </li>
+                    <!-- Kết thúc thông tin công ty -->
                         @foreach ($itemServ->footertopKnowledge() as $knowledge)
                             <li class="col-xs-12 col-md-12"><a class="text-secondary text-decoration-none"
                                     href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url]) }}">{{ $knowledge->title }}</a>
