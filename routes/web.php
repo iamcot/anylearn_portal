@@ -14,7 +14,7 @@
 use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+dd(1);
 // For existing pages - v3
 Route::middleware('version')->group(function () {
     Route::get('/', 'PageController@home')->name('home');
