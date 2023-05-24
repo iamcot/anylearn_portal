@@ -15,13 +15,13 @@ use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// For existing pages
+// For existing pages - v3
 Route::middleware('version')->group(function () {
     Route::get('/', 'PageController@home')->name('home');
     Route::get('/search', 'PageController@search')->name('search'); 
 }); 
 
-// For new pages
+// For new pages - v3
 Route::get('/subtype/{sutype}', 'ReactController@index')->name('subtype');
 Route::get('/partner/{id}', 'ReactController@index')->name('partner');
 Route::get('/listing', 'ReactController@index')->name('listing');

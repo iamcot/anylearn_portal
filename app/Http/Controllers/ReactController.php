@@ -8,6 +8,7 @@ class ReactController extends Controller
 {
     public function index(Request $request)
     {
+        //
         return view('anylearn3.index');
     }
 }
