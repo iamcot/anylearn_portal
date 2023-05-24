@@ -13,6 +13,7 @@ use App\Models\Contract;
 use App\Models\Item;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
+use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Participation;
 use App\Models\Schedule;
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class UserApi extends Controller
 {
@@ -742,4 +744,29 @@ class UserApi extends Controller
             ->get();
         return response()->json($orders);
     }
+
+    public function pointBox(Request $request) 
+    {
+        $classes = DB::table('orders')
+            ->join('order_details as od', 'od.order_id', 'orders.id')
+            ->join('participations as pa', 'pa.schedule_id', 'od.id')
+            ->join('items', 'items.id', 'od.item_id')
+            ->where('orders.user_id', $request->get('_user')->id);
+
+        $gClass = $classes->orderby('pa.created_at', 'desc')->first();
+        $rClass = $classes->join('item_user_actions as iua', 
+            function ($join) {
+                $join->on('iua.user_id', 'orders.user_id');
+                $join->on('iua.item_id', 'od.item_id');
+            })
+            ->where('iua.type', 'rating')
+            ->orderby('iua.created_at', 'desc')
+            ->first();
+
+        $data['anypoint'] = $request->get('_user')->wallet_c; 
+        $data['goingClass'] = $gClass ? $gClass->title : '';
+        $data['ratingClass'] = $rClass ? $rClass->title : '';
+        
+        return response()->json($data);
+    } 
 }
