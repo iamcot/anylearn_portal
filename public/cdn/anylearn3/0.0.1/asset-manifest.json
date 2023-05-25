@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/cdn/anylearn3/0.0.1/static/css/main.48f64fa3.css",
-    "main.js": "/cdn/anylearn3/0.0.1/static/js/main.4842682b.js",
+    "main.js": "/cdn/anylearn3/0.0.1/static/js/main.a612e6b3.js",
     "static/js/787.9fdd7567.chunk.js": "/cdn/anylearn3/0.0.1/static/js/787.9fdd7567.chunk.js",
     "static/media/5.jpg": "/cdn/anylearn3/0.0.1/static/media/5.d096dbdb63cd2f550854.jpg",
     "static/media/4.jpg": "/cdn/anylearn3/0.0.1/static/media/4.c8da9e4a034ed7403d01.jpg",
@@ -14,11 +14,11 @@
     "index.html": "/cdn/anylearn3/0.0.1/index.html",
     "static/media/index.cjs": "/cdn/anylearn3/0.0.1/static/media/index.cd351d7c31d0d3fccf96.cjs",
     "main.48f64fa3.css.map": "/cdn/anylearn3/0.0.1/static/css/main.48f64fa3.css.map",
-    "main.4842682b.js.map": "/cdn/anylearn3/0.0.1/static/js/main.4842682b.js.map",
+    "main.a612e6b3.js.map": "/cdn/anylearn3/0.0.1/static/js/main.a612e6b3.js.map",
     "787.9fdd7567.chunk.js.map": "/cdn/anylearn3/0.0.1/static/js/787.9fdd7567.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.48f64fa3.css",
-    "static/js/main.4842682b.js"
+    "static/js/main.a612e6b3.js"
   ]
 }
