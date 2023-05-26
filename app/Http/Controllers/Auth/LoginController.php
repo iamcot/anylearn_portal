@@ -111,17 +111,23 @@ class LoginController extends Controller
             return redirect()->intended('/inactive')->with('name', $name);
         }
         //$userM = new User();
-        //return redirect($userM->redirectToUpdateDocs());
+        //return redirect($userM->redirectToUpdateDocs());    
         $userService = new UserServices();
-        if ($request->session()->get('cb')) {
+        $cookie = cookie()->forever('api_token', $user->api_token);
+        if ($request->session()->get('cb')) {   
             return redirect()->to($request->session()->get('cb'));
         }
         else if ($userService->isMod()) {
-            return redirect($this->redirectTo);
+            return redirect($this->redirectTo)->withCookie($cookie);
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
-            return redirect('/me');
+            return redirect('/me')->withCookie($cookie);
         } else {
-            return redirect('/');
+            return redirect('/')->withCookie($cookie);
         }
+    }
+
+    public function logout(Request $request) {
+        Auth::guard()->logout();
+        return redirect('/')->withCookie(cookie()->forget('api_token'));
     }
 }
