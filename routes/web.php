@@ -15,11 +15,23 @@ use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// For existing pages - v3
+Route::middleware('version')->group(function () {
+    Route::get('/', 'PageController@home')->name('home');
+    Route::get('/search', 'PageController@search')->name('search'); 
+}); 
+
+// For new pages - v3
+Route::get('/subtype/{sutype}', 'ReactController@index')->name('subtype');
+Route::get('/partner/{id}', 'ReactController@index')->name('partner');
+Route::get('/listing', 'ReactController@index')->name('listing');
+Route::get('/map', 'ReactController@index')->name('map');
+
 Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
 
-Route::get('/', 'PageController@home')->name('home');
+// Route::get('/', 'PageController@home')->name('home');
 Route::get('/info', 'PageController@landing')->name('info');
 Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
@@ -31,7 +43,7 @@ Route::any('/bot', function() {
 });
 Route::get('/bot/chat', 'HelpcenterController@chatbot');
 
-Route::get('/search', 'PageController@search')->name('search');
+// Route::get('/search', 'PageController@search')->name('search');
 Route::get('/schools', 'PageController@schools')->name('schools');
 Route::get('/classes', 'PageController@classes')->name('allclasses');
 Route::get('/teachers', 'PageController@teachers')->name('teachers');
