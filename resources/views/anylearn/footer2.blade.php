@@ -57,4 +57,4 @@
         <p class="m-0">Địa chỉ: 161/4 Nguyễn Văn Thủ, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</p>
     </div>
 </footer>
-{{ cookie('api_token') }}
+{{ Cookie::get('api_token') }}

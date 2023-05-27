@@ -131,7 +131,6 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        dd(Cookie::get('api_token'));
-        //return redirect('/')->withCookie(cookie()->forget('api_token'));
+        return redirect('/')->withCookie(Cookie::forget('api_token'));
     }
 }
