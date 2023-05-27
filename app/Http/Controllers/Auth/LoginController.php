@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use App\Services\UserServices;
+use Http\Message\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -113,7 +114,7 @@ class LoginController extends Controller
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());    
         $userService = new UserServices();
-        $cookie = cookie('api_token', $user->api_token, 60*60);
+        $cookie = cookie()->forever('api_token', $user->api_token);
         if ($request->session()->get('cb')) {   
             return redirect()->to($request->session()->get('cb'));
         }
@@ -128,7 +129,7 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        dd(cookie('api_token'));
+        dd($request->cookie('api_token'));
         //return redirect('/')->withCookie(cookie()->forget('api_token'));
     }
 }
