@@ -115,7 +115,7 @@ class LoginController extends Controller
         //return redirect($userM->redirectToUpdateDocs());    
 
         $userService = new UserServices();
-        Cookie::queue('api_token', $user->api_token);
+        Cookie::queue(Cookie::forever('api_token', $user->api_token));
        
         if ($request->session()->get('cb')) {   
             return redirect()->to($request->session()->get('cb'));
