@@ -113,7 +113,7 @@ class LoginController extends Controller
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());    
         $userService = new UserServices();
-        $cookie = cookie()->forever('api_token', $user->api_token);
+        $cookie = cookie('api_token', $user->api_token, 60);
         if ($request->session()->get('cb')) {   
             return redirect()->to($request->session()->get('cb'));
         }
@@ -128,6 +128,6 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        return redirect('/')->withCookie(cookie()->forget('api_token'));
+        //return redirect('/')->withCookie(cookie()->forget('api_token'));
     }
 }
