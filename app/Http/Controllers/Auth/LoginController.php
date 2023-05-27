@@ -113,6 +113,7 @@ class LoginController extends Controller
         }
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());    
+        dd($request->cookie('api_token'));
         $userService = new UserServices();
         $cookie = cookie()->forever('api_token', $user->api_token);
         if ($request->session()->get('cb')) {   
