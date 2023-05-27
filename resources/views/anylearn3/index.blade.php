@@ -20,6 +20,5 @@
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
         @include('anylearn.footer2')
-        {{ cookie('api_token') }}
     </body>
 </html>
