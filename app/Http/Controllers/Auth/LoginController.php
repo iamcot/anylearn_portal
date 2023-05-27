@@ -116,7 +116,7 @@ class LoginController extends Controller
 
         $userService = new UserServices();
         Cookie::queue('api_token', $user->api_token);
-        dd(Cookie::get('api_token'));
+       
         if ($request->session()->get('cb')) {   
             return redirect()->to($request->session()->get('cb'));
         }
@@ -131,7 +131,7 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        
+        dd(Cookie::get('api_token'));
         //return redirect('/')->withCookie(cookie()->forget('api_token'));
     }
 }
