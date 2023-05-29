@@ -431,6 +431,16 @@ class ItemServices
         ];
     }
 
+    public function countCartItems($user)
+    {
+        return DB::table('orders')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->where('orders.user_id', $user->id)
+            ->where('orders.status', OrderConstants::STATUS_NEW)
+            ->groupby('orders.user_id')
+            ->count();
+    }
+
     public function getClassSchedulePlan($itemId)
     {
         $planWithLocation = DB::table('item_schedule_plans')
