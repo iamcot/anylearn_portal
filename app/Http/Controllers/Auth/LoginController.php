@@ -112,12 +112,12 @@ class LoginController extends Controller
             return redirect()->intended('/inactive')->with('name', $name);
         }
         //$userM = new User();
-        //return redirect($userM->redirectToUpdateDocs());    
+        //return redirect($userM->redirectToUpdateDocs());
 
         $userService = new UserServices();
         Cookie::queue(Cookie::forever('api_token', $user->api_token));
-       
-        if ($request->session()->get('cb')) {   
+
+        if ($request->session()->get('cb')) {
             return redirect()->to($request->session()->get('cb'));
         }
         else if ($userService->isMod()) {
@@ -131,7 +131,7 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        dd(Cookie::get('api_token'));
+        // dd(Cookie::get('api_token'));
         return redirect('/')->withCookie(Cookie::forget('api_token'));
     }
 }
