@@ -14,6 +14,7 @@ use App\Services\J4uServices;
 use App\Services\CommonServices;
 use App\Services\UserServices;
 use App\Services\VoucherServices;
+use Illuminate\Support\Facades\DB;
 
 class HomeApi extends Controller
 {
@@ -55,12 +56,13 @@ class HomeApi extends Controller
             $data['pointBox'] = (new UserServices)->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));  
-            /*$data['cartItems'] =  DB::table('orders')
+            $data['cartItems'] =  DB::table('orders')
                 ->join('order_details as od', 'od.order_id', '=', 'orders.id')
                 ->where('orders.user_id', $user->id)
                 ->where('orders.status', OrderConstants::STATUS_NEW)
-                ->groupby()
-            )*/
+                ->groupby('orders.user_id')
+                ->count();
+            
         }
 
         $spm = new Spm();
