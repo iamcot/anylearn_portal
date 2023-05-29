@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
@@ -112,22 +113,25 @@ class LoginController extends Controller
         }
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());    
+
         $userService = new UserServices();
-        $cookie = cookie()->forever('api_token', $user->api_token);
+        Cookie::queue(Cookie::forever('api_token', $user->api_token));
+       
         if ($request->session()->get('cb')) {   
             return redirect()->to($request->session()->get('cb'));
         }
         else if ($userService->isMod()) {
-            return redirect($this->redirectTo)->withCookie($cookie);
+            return redirect($this->redirectTo);
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
-            return redirect('/me')->withCookie($cookie);
+            return redirect('/me');
         } else {
-            return redirect('/')->withCookie($cookie);
+            return redirect('/');
         }
     }
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        return redirect('/')->withCookie(cookie()->forget('api_token'));
+        dd(Cookie::get('api_token'));
+        return redirect('/')->withCookie(Cookie::forget('api_token'));
     }
 }

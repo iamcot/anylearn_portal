@@ -5,6 +5,7 @@ namespace App\Http\Controllers\APIs;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Constants\ConfigConstants;
+use App\Constants\OrderConstants;
 use App\Models\Configuration;
 use App\Models\Spm;
 use App\Services\ArticleServices;
@@ -53,7 +54,13 @@ class HomeApi extends Controller
         if ($user) {          
             $data['pointBox'] = (new UserServices)->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
-            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));           
+            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));  
+            /*$data['cartItems'] =  DB::table('orders')
+                ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+                ->where('orders.user_id', $user->id)
+                ->where('orders.status', OrderConstants::STATUS_NEW)
+                ->groupby()
+            )*/
         }
 
         $spm = new Spm();
