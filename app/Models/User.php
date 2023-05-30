@@ -80,6 +80,10 @@ class User extends Authenticatable
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
+            'business_certificate' =>['required'],
+            'first_issued_date' => ['required'],
+            'issued_by' => ['required'],
+            'headquarters_address' => ['required'],
         ]);
     }
     public function createChild($parent, $input)
