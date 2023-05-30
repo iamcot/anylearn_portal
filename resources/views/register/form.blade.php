@@ -68,66 +68,67 @@
                             </div>
                         </div>
                         @if (request('r') !== 'member')
-                        <div class="form-group row">
-                            <label for="business_certificate"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận đăng ký doanh nghiệp') }}
-                                *</label>
-                            <div class="col-md-8">
-                                <input id="business_certificate" type="text"
-                                    class="form-control @error('business_certificate') is-invalid @enderror"
-                                    name="business_certificate" value="{{ old('business_certificate') }}"
-                                    autocomplete="off" autofocus>
-                                @error('business_certificate')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="form-group row">
+                                <label for="business_certificate"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận đăng ký doanh nghiệp') }}
+                                    *</label>
+                                <div class="col-md-8">
+                                    <input id="business_certificate" type="text"
+                                        class="form-control @error('business_certificate') is-invalid @enderror"
+                                        name="business_certificate" value="{{ old('business_certificate') }}"
+                                        autocomplete="off" autofocus>
+                                    @error('business_certificate')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="first_issued_date"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Ngày cấp lần đầu') }}*</label>
-                            <div class="col-md-8">
-                                <input id="first_issued_date" type="text"
-                                    class="form-control @error('first_issued_date') is-invalid @enderror"
-                                    name="first_issued_date" value="{{ old('first_issued_date') }}" autocomplete="off"
-                                    autofocus>
-                                @error('first_issued_date')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="form-group row">
+                                <label for="first_issued_date"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Ngày cấp lần đầu') }}*</label>
+                                <div class="col-md-8">
+                                    <input id="first_issued_date" type="text"
+                                        class="form-control datepicker @error('first_issued_date') is-invalid @enderror"
+                                        name="first_issued_date" value="{{ old('first_issued_date') }}" autocomplete="off"
+                                        autofocus>
+                                    @error('first_issued_date')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="issued_by"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Cấp bởi') }}*</label>
-                            <div class="col-md-8">
-                                <input id="issued_by" type="text"
-                                    class="form-control @error('issued_by') is-invalid @enderror" name="issued_by"
-                                    value="{{ old('issued_by') }}" autocomplete="off" autofocus>
-                                @error('issued_by')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+
+                            <div class="form-group row">
+                                <label for="issued_by"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Cấp bởi') }}*</label>
+                                <div class="col-md-8">
+                                    <input id="issued_by" type="text"
+                                        class="form-control @error('issued_by') is-invalid @enderror" name="issued_by"
+                                        value="{{ old('issued_by') }}" autocomplete="off" autofocus>
+                                    @error('issued_by')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="headquarters_address"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ trụ sở') }}*</label>
-                            <div class="col-md-8">
-                                <input id="headquarters_address" type="text"
-                                    class="form-control @error('headquarters_address') is-invalid @enderror"
-                                    name="headquarters_address" value="{{ old('headquarters_address') }}"
-                                    autocomplete="off" autofocus>
-                                @error('headquarters_address')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="form-group row">
+                                <label for="headquarters_address"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ trụ sở') }}*</label>
+                                <div class="col-md-8">
+                                    <input id="headquarters_address" type="text"
+                                        class="form-control @error('headquarters_address') is-invalid @enderror"
+                                        name="headquarters_address" value="{{ old('headquarters_address') }}"
+                                        autocomplete="off" autofocus>
+                                    @error('headquarters_address')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
                         @endif
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}
@@ -204,4 +205,16 @@
         @endif
     </div>
     </div>
-    @include('dialog.toc')
+@section('jscript')
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd', // Định dạng ngày tháng
+                autoclose: true, // Tự động đóng DatePicker sau khi chọn ngày
+                todayHighlight: true // Làm nổi bật ngày hiện tại trong DatePicker
+            });
+        });
+    </script>
+@endsection
+@endsection
+@include('dialog.toc')
