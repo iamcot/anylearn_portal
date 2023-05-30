@@ -42,6 +42,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('encrypt.cookie');
+
     }
 
     public function showLoginForm(Request $request)
