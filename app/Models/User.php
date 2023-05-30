@@ -102,7 +102,6 @@ class User extends Authenticatable
     }
     public function createNewMember($data)
     {
-        dd($data['business_certificate']);
         $obj = [
             'name' => $data['name'],
             'email' => isset($data['email']) ? $data['email'] : null,
@@ -173,7 +172,7 @@ class User extends Authenticatable
         } catch (\Exception $ex) {
             Log::error($ex);
         }
-
+        dd($newMember);
         return $newMember;
     }
 
