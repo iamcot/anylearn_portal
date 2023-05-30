@@ -88,7 +88,7 @@
                                 <label for="first_issued_date"
                                     class="col-md-4 col-form-label text-md-end">{{ __('Ngày cấp lần đầu') }}*</label>
                                 <div class="col-md-8">
-                                    <input id="first_issued_date" type="text"
+                                    <input id="first_issued_date" type="date"
                                         class="form-control datepicker @error('first_issued_date') is-invalid @enderror"
                                         name="first_issued_date" value="{{ old('first_issued_date') }}" autocomplete="off"
                                         autofocus>
@@ -205,16 +205,17 @@
         @endif
     </div>
     </div>
-@section('jscript')
-    <script>
-        $(document).ready(function() {
-            $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd', // Định dạng ngày tháng
-                autoclose: true, // Tự động đóng DatePicker sau khi chọn ngày
-                todayHighlight: true // Làm nổi bật ngày hiện tại trong DatePicker
-            });
-        });
-    </script>
+@section("jscript")
+<script>
+    $(document).ready(function() {
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd', // Định dạng ngày tháng
+        autoclose: true, // Tự động đóng DatePicker sau khi chọn ngày
+        todayHighlight: true // Làm nổi bật ngày hiện tại trong DatePicker
+    });
+});
+
+</script>
 @endsection
 @endsection
 @include('dialog.toc')
