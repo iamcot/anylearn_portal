@@ -67,19 +67,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}*</label>
-                            <div class="col-md-8">
-                                <input id="email" type="text"
-                                    class="form-control @error('email') is-invalid @enderror" name="email"
-                                    value="{{ old('email') }}" autocomplete="email" autofocus>
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                        @if (request('r') !== 'member')
                         <div class="form-group row">
                             <label for="business_certificate"
                                 class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận đăng ký doanh nghiệp') }}
@@ -87,7 +75,7 @@
                             <div class="col-md-8">
                                 <input id="business_certificate" type="text"
                                     class="form-control @error('business_certificate') is-invalid @enderror"
-                                    name="business_certificate" value="{{ old('business_certificate') }}" required
+                                    name="business_certificate" value="{{ old('business_certificate') }}"
                                     autocomplete="off" autofocus>
                                 @error('business_certificate')
                                     <span class="invalid-feedback" role="alert">
@@ -96,7 +84,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="first_issued_date"
                                 class="col-md-4 col-form-label text-md-end">{{ __('Ngày cấp lần đầu') }}</label>
@@ -112,7 +99,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="issued_by"
                                 class="col-md-4 col-form-label text-md-end">{{ __('Cấp bởi đơn vị nào') }}</label>
@@ -127,7 +113,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="headquarters_address"
                                 class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ trụ sở') }}</label>
@@ -143,7 +128,7 @@
                                 @enderror
                             </div>
                         </div>
-
+                        @endif
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}
                                 *</label>

@@ -115,8 +115,12 @@ class User extends Authenticatable
             'update_doc' => UserConstants::STATUS_ACTIVE,
             'refcode' => $data['phone'],
             'sale_id' => isset($data['sale_id']) ? $data['sale_id'] : null,
-
+            'business_certificate' => isset($data['business_certificate']) ? $data['business_certificate'] : null,
+            'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
+            'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
+            'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
         ];
+
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
         if (!empty($data['ref'])) {
             $refUser = $this->where('refcode', $data['ref'])->first();
