@@ -173,7 +173,6 @@ class User extends Authenticatable
         } catch (\Exception $ex) {
             Log::error($ex);
         }
-        dd($newMember);
         return $newMember;
     }
 
