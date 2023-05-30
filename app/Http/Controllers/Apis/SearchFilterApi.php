@@ -17,7 +17,7 @@ class SearchFilterApi extends Controller
         $data['lastSearch'] = Spm::where('spmc', 'search')
             ->whereNotNull('extra')
             ->where('ip', $request->ip())
-            ->select(DB::raw('extra, max(created_at) as created_at'))
+            ->select(DB::raw('id, extra, max(created_at) as created_at'))
             ->groupBy('extra')
             ->orderByDesc('id')
             ->take(ConfigConstants::CONFIG_NUM_LAST_SEARCH_DISPLAY)
