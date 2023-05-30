@@ -52,7 +52,6 @@ class HomeApi extends Controller
 
         if ($user) {          
             $data['pointBox'] = (new UserServices)->getPointBox($user);
-            $data['cartItems'] = (new ItemServices())->countCartItems($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
             $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));         
         }

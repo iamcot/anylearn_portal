@@ -74,6 +74,7 @@ Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 
 Route::middleware(['api.user'])->group(function () {
 
+    Route::get('/v3/auth/cart', 'Apis\CartApi@index');
     Route::get('/v3/auth/home', 'Apis\HomeApi@index');
     Route::get('/v3/auth/search', 'Apis\SearchFilterApi@index');
     Route::get('/v3/auth/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
