@@ -19,8 +19,8 @@ class SearchFilterApi extends Controller
             ->where('ip', $request->ip())
             ->select(DB::raw('extra, max(created_at) as created_at'))
             ->groupBy('extra')
-            ->orderByDesc('created_at')
-            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
+            ->orderByDesc('id')
+            ->take(ConfigConstants::CONFIG_NUM_LAST_SEARCH_DISPLAY)
             ->pluck('extra');
 
         $data['provinces'] = Province::whereIn('name', ['Hà Nội', 'Hồ Chí Minh'])
@@ -38,8 +38,8 @@ class SearchFilterApi extends Controller
                 ->where('user_id', $request->get('_user')->id)
                 ->select(DB::raw('extra, max(created_at) as created_at'))
                 ->groupBy('extra')
-                ->orderByDesc('created_at')
-                ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
+                ->orderByDesc('id')
+                ->take(ConfigConstants::CONFIG_NUM_LAST_SEARCH_DISPLAY)
                 ->pluck('extra');
         }
 

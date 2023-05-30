@@ -42,6 +42,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('encrypt.cookie');
+
     }
 
     public function showLoginForm(Request $request)
@@ -115,7 +117,7 @@ class LoginController extends Controller
         //return redirect($userM->redirectToUpdateDocs());
 
         $userService = new UserServices();
-        Cookie::queue(Cookie::forever('api_token', $user->api_token));
+        Cookie::queue(Cookie::forever('api_token', $user->api_token, null, null, false, false));
 
         if ($request->session()->get('cb')) {
             return redirect()->to($request->session()->get('cb'));
@@ -131,7 +133,6 @@ class LoginController extends Controller
 
     public function logout(Request $request) {
         Auth::guard()->logout();
-        // dd(Cookie::get('api_token'));
         return redirect('/')->withCookie(Cookie::forget('api_token'));
     }
 }

@@ -26,6 +26,8 @@ Route::get('/subtype/{sutype}', 'ReactController@index')->name('subtype');
 Route::get('/partner/{id}', 'ReactController@index')->name('partner');
 Route::get('/listing', 'ReactController@index')->name('listing');
 Route::get('/map', 'ReactController@index')->name('map');
+Route::get('/react/logout', 'Auth\LoginController@logout');
+
 
 Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
