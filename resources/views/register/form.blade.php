@@ -86,7 +86,7 @@
                         </div>
                         <div class="form-group row">
                             <label for="first_issued_date"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Ngày cấp lần đầu') }}</label>
+                                class="col-md-4 col-form-label text-md-end">{{ __('Ngày cấp lần đầu') }}*</label>
                             <div class="col-md-8">
                                 <input id="first_issued_date" type="text"
                                     class="form-control @error('first_issued_date') is-invalid @enderror"
@@ -101,7 +101,7 @@
                         </div>
                         <div class="form-group row">
                             <label for="issued_by"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Cấp bởi đơn vị nào') }}</label>
+                                class="col-md-4 col-form-label text-md-end">{{ __('Cấp bởi') }}*</label>
                             <div class="col-md-8">
                                 <input id="issued_by" type="text"
                                     class="form-control @error('issued_by') is-invalid @enderror" name="issued_by"
@@ -115,7 +115,7 @@
                         </div>
                         <div class="form-group row">
                             <label for="headquarters_address"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ trụ sở') }}</label>
+                                class="col-md-4 col-form-label text-md-end">{{ __('Địa chỉ trụ sở') }}*</label>
                             <div class="col-md-8">
                                 <input id="headquarters_address" type="text"
                                     class="form-control @error('headquarters_address') is-invalid @enderror"

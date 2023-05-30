@@ -102,6 +102,7 @@ class User extends Authenticatable
     }
     public function createNewMember($data)
     {
+        dd($data);
         $obj = [
             'name' => $data['name'],
             'email' => isset($data['email']) ? $data['email'] : null,
