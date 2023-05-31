@@ -92,8 +92,8 @@
                                 </div>
                             </div>
                         @else 
-                            <div class="my-1">
-                                <h6 class="mb-2">{{__('Thông tin tài khoản:')}}</h6>
+                            <div class="my-4">
+                                <h6 class="mb-4">{{ __('Thông tin tài khoản:') }}</h6>
                                 <div class="form-group row">
                                     <label for="name" class="col-md-4 col-form-label text-md-end"
                                         id="label_name">{{ __('Tên doanh nghiệp') }} *</label>
@@ -161,7 +161,7 @@
                             </div>
 
                             <div>
-                                <h6>{{__('Thông tin doanh nghiệp:')}}</h6>
+                                <h6 class="mb-4">{{ __('Thông tin doanh nghiệp:') }}</h6>
                                 <div class="form-group row">
                                     <label for="business_certificate"
                                         class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận ĐKDN') }}
