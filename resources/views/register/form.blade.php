@@ -28,7 +28,7 @@
 
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-end"
-                                id="label_name">{{ __('Họ và Tên') }} *</label>
+                                id="label_name">{{ __('Tên doanh nghiệp') }} *</label>
                             <div class="col-md-8">
                                 <input id="name" type="text"
                                     class="form-control @error('name') is-invalid @enderror" name="name"
@@ -70,7 +70,7 @@
                         @if (request('r') !== 'member')
                             <div class="form-group row">
                                 <label for="business_certificate"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận đăng ký doanh nghiệp') }}
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận ĐKDN') }}
                                     *</label>
                                 <div class="col-md-8">
                                     <input id="business_certificate" type="text"
