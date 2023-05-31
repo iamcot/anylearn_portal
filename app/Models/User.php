@@ -84,6 +84,7 @@ class User extends Authenticatable
             'first_issued_date' => $data['role'] === 'member' ? [] : ['required'],
             'issued_by' => $data['role'] === 'member' ? [] : ['required'],
             'headquarters_address' => $data['role'] === 'member' ? [] : ['required'],
+            'title' => $data['role'] === 'member' ? [] : ['required'],
         ]);
     }
     public function createChild($parent, $input)
