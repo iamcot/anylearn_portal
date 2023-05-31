@@ -160,7 +160,7 @@
                                         *</label>
                                     <div class="col-md-8">
                                         <input id="password-confirm" type="password" class="form-control"
-                                            name="password_confirmation" required autocomplete="new-password" minlength="8">
+                                            name="password_confirmation" required autocomplete="new-password">
                                     </div>
                                 </div>
                             </div>
