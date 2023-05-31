@@ -26,7 +26,7 @@
                         <input type="hidden" name="role" value="{{ $role }}">
                         <input id="sale_id" type="hidden" name="sale_id" value="{{ request('s') }}">
                         <div>
-                            <h6>{{__('Thông tin tài khoản:')__}}</h6>
+                            <h6>{{__('Thông tin tài khoản:')}}</h6>
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-end"
                                     id="label_name">{{ __('Tên doanh nghiệp') }} *</label>
