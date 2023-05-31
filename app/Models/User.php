@@ -124,6 +124,7 @@ class User extends Authenticatable
             'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
             'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
             'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
+            'title' => isset($data['title']) ? $data['title'] : null,
         ];
 
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];

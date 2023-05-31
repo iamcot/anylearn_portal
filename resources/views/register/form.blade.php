@@ -25,11 +25,12 @@
                             value="{{ !empty($user) ? $user->refcode : old('ref') }}">
                         <input type="hidden" name="role" value="{{ $role }}">
                         <input id="sale_id" type="hidden" name="sale_id" value="{{ request('s') }}">
-                        
+
                         @if (request('r') == 'member')
                             <div class="my-1">
                                 <div class="form-group row">
-                                    <label for="name" class="col-md-4 col-form-label text-md-end" id="label_name">{{ __('Họ và tên') }} *</label>
+                                    <label for="name" class="col-md-4 col-form-label text-md-end"
+                                        id="label_name">{{ __('Họ và tên') }} *</label>
                                     <div class="col-md-8">
                                         <input id="name" type="text"
                                             class="form-control @error('name') is-invalid @enderror" name="name"
@@ -42,7 +43,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Số điện thoại') }} *</label>
+                                    <label for="phone"
+                                        class="col-md-4 col-form-label text-md-end">{{ __('Số điện thoại') }} *</label>
                                     <div class="col-md-8">
                                         <input id="phone" type="text"
                                             class="form-control @error('phone') is-invalid @enderror" name="phone"
@@ -55,7 +57,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }} *</label>
+                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}
+                                        *</label>
                                     <div class="col-md-8">
                                         <input id="email" type="text"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
@@ -68,11 +71,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }} *</label>
+                                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}
+                                        *</label>
                                     <div class="col-md-8">
                                         <input id="password" type="password"
-                                            class="form-control @error('password') is-invalid @enderror" name="password" required
-                                            autocomplete="new-password">
+                                            class="form-control @error('password') is-invalid @enderror" name="password"
+                                            required autocomplete="new-password">
                                         <!--p class="small">@lang('*Tối thiểu 8 ký tự')</p-->
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
@@ -91,11 +95,12 @@
                                     </div>
                                 </div>
                             </div>
-                        @else 
+                        @else
                             <div class="my-2 ">
                                 <h6 class="mb-2">{{ __('Thông tin tài khoản:') }}</h6>
                                 <div class="form-group row">
-                                    <label for="name" class="col-md-4 col-form-label text-md-end" id="label_name">{{ __('Tên doanh nghiệp') }} *</label>
+                                    <label for="name" class="col-md-4 col-form-label text-md-end"
+                                        id="label_name">{{ __('Tên doanh nghiệp') }} *</label>
                                     <div class="col-md-8">
                                         <input id="name" type="text"
                                             class="form-control @error('name') is-invalid @enderror" name="name"
@@ -108,7 +113,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Số điện thoại') }} *</label>
+                                    <label for="phone"
+                                        class="col-md-4 col-form-label text-md-end">{{ __('Số điện thoại') }} *</label>
                                     <div class="col-md-8">
                                         <input id="phone" type="text"
                                             class="form-control @error('phone') is-invalid @enderror" name="phone"
@@ -121,7 +127,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }} *</label>
+                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}
+                                        *</label>
                                     <div class="col-md-8">
                                         <input id="email" type="text"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
@@ -134,11 +141,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }} *</label>
+                                    <label for="password"
+                                        class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }} *</label>
                                     <div class="col-md-8">
                                         <input id="password" type="password"
-                                            class="form-control @error('password') is-invalid @enderror" name="password" required
-                                            autocomplete="new-password">
+                                            class="form-control @error('password') is-invalid @enderror" name="password"
+                                            required autocomplete="new-password">
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -147,7 +155,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Nhập lại mật khẩu') }} *</label>
+                                    <label for="password-confirm"
+                                        class="col-md-4 col-form-label text-md-end">{{ __('Nhập lại mật khẩu') }}
+                                        *</label>
                                     <div class="col-md-8">
                                         <input id="password-confirm" type="password" class="form-control"
                                             name="password_confirmation" required autocomplete="new-password">
@@ -157,13 +167,27 @@
                             <div class="my-4">
                                 <h6 class="mb-2">{{ __('Thông tin doanh nghiệp:') }}</h6>
                                 <div class="form-group row">
+                                    <label for="title" class="col-md-4 col-form-label text-md-end">{{ __('Người đại diện') }}
+                                        *</label>
+                                    <div class="col-md-8">
+                                        <input id="title" type="text"
+                                            class="form-control @error('title') is-invalid @enderror" name="title"
+                                            value="{{ old('title') }}" autocomplete="off" autofocus required>
+                                        @error('title')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label for="business_certificate"
                                         class="col-md-4 col-form-label text-md-end">{{ __('Số giấy CNĐKDN') }} *</label>
                                     <div class="col-md-8">
                                         <input id="business_certificate" type="text"
                                             class="form-control @error('business_certificate') is-invalid @enderror"
                                             name="business_certificate" value="{{ old('business_certificate') }}"
-                                            autocomplete="off" autofocus required >
+                                            autocomplete="off" autofocus required>
                                         @error('business_certificate')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -177,8 +201,8 @@
                                     <div class="col-md-8">
                                         <input id="first_issued_date" type="date"
                                             class="form-control datepicker @error('first_issued_date') is-invalid @enderror"
-                                            name="first_issued_date" value="{{ old('first_issued_date') }}" autocomplete="off"
-                                            autofocus required >
+                                            name="first_issued_date" value="{{ old('first_issued_date') }}"
+                                            autocomplete="off" autofocus required>
                                         @error('first_issued_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -192,8 +216,9 @@
                                         class="col-md-4 col-form-label text-md-end">{{ __('Cấp bởi') }} *</label>
                                     <div class="col-md-8">
                                         <input id="issued_by" type="text"
-                                            class="form-control @error('issued_by') is-invalid @enderror" name="issued_by"
-                                            value="{{ old('issued_by') }}" autocomplete="off" autofocus required >
+                                            class="form-control @error('issued_by') is-invalid @enderror"
+                                            name="issued_by" value="{{ old('issued_by') }}" autocomplete="off" autofocus
+                                            required>
                                         @error('issued_by')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -218,7 +243,7 @@
                                 </div>
                             </div>
                         @endif
-                        
+
                         <div class="form-group row">
                             <div class="text-center">
                                 <div class="form-check form-check-inline">
@@ -269,17 +294,16 @@
         @endif
     </div>
     </div>
-@section("jscript")
-<script>
-    $(document).ready(function() {
-    $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd', // Định dạng ngày tháng
-        autoclose: true, // Tự động đóng DatePicker sau khi chọn ngày
-        todayHighlight: true // Làm nổi bật ngày hiện tại trong DatePicker
-    });
-});
-
-</script>
+@section('jscript')
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd', // Định dạng ngày tháng
+                autoclose: true, // Tự động đóng DatePicker sau khi chọn ngày
+                todayHighlight: true // Làm nổi bật ngày hiện tại trong DatePicker
+            });
+        });
+    </script>
 @endsection
 @endsection
 @include('dialog.toc')
