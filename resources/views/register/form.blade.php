@@ -155,7 +155,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="my-2">
+                            <div class="my-4">
                                 <h6 class="mb-2">{{ __('Thông tin doanh nghiệp:') }}</h6>
                                 <div class="form-group row">
                                     <label for="business_certificate"
