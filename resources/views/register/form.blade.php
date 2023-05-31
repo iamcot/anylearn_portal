@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         @if (request('r') !== 'member')
-                            <h2>__('Thông tin doanh nghiệp:'')</h2>
+                            <h2>{{ __('Thông tin doanh nghiệp:')}}</h2>
                             <div class="form-group row">
                                 <label for="business_certificate"
                                     class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận ĐKDN') }}
