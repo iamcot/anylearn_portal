@@ -138,7 +138,7 @@
                                     <div class="col-md-8">
                                         <input id="password" type="password"
                                             class="form-control @error('password') is-invalid @enderror" name="password" required
-                                            placeholder="{{ __('Tối thiểu 8 ký tự.')}}"autocomplete="new-password">
+                                            autocomplete="new-password">
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
