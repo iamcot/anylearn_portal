@@ -67,6 +67,31 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}
+                                *</label>
+
+                            <div class="col-md-8">
+                                <input id="password" type="password"
+                                    class="form-control @error('password') is-invalid @enderror" name="password" required
+                                    autocomplete="new-password">
+                                <p class="small">@lang('*Tối thiểu 8 ký tự')</p>
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="password-confirm"
+                                class="col-md-4 col-form-label text-md-end">{{ __('Nhập lại mật khẩu') }} *</label>
+
+                            <div class="col-md-8">
+                                <input id="password-confirm" type="password" class="form-control"
+                                    name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                        </div>
                         @if (request('r') !== 'member')
                             <div class="form-group row">
                                 <label for="business_certificate"
@@ -130,31 +155,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Mật khẩu') }}
-                                *</label>
-
-                            <div class="col-md-8">
-                                <input id="password" type="password"
-                                    class="form-control @error('password') is-invalid @enderror" name="password" required
-                                    autocomplete="new-password">
-                                <p class="small">@lang('*Tối thiểu 8 ký tự')</p>
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="password-confirm"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Nhập lại mật khẩu') }} *</label>
-
-                            <div class="col-md-8">
-                                <input id="password-confirm" type="password" class="form-control"
-                                    name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
+                        
                         <div class="form-group row">
                             <div class="text-center">
                                 <div class="form-check form-check-inline">
