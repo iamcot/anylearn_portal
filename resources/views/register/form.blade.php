@@ -159,7 +159,7 @@
                                 <h6 class="mb-2">{{ __('Thông tin doanh nghiệp:') }}</h6>
                                 <div class="form-group row">
                                     <label for="business_certificate"
-                                        class="col-md-4 col-form-label text-md-end">{{ __('Số giấy chứng nhận ĐKDN') }}
+                                        class="col-md-4 col-form-label text-md-end">{{ __('Số giấy CNĐKDN') }}
                                         *</label>
                                     <div class="col-md-8">
                                         <input id="business_certificate" type="text"
