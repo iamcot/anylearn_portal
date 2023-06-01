@@ -5,112 +5,112 @@ use App\Constants\ItemConstants;
  return [
     ItemConstants::SUBTYPE_DIGITAL  => [
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 1,
+            'name' => 'Category A'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 2,
+            'name' => 'Category B'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 3,
+            'name' => 'Category C'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 4,
+            'name' => 'Category D'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 5,
+            'name' => 'Category E'
         ],
     ],
     ItemConstants::SUBTYPE_EXTRA => [
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 1,
+            'name' => 'Category A'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 2,
+            'name' => 'Category B'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 3,
+            'name' => 'Category C'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 4,
+            'name' => 'Category D'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 5,
+            'name' => 'Category E'
         ],
     ], 
     ItemConstants::SUBTYPE_OFFLINE => [
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 1,
+            'name' => 'Category A'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 2,
+            'name' => 'Category B'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 3,
+            'name' => 'Category C'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 4,
+            'name' => 'Category D'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 5,
+            'name' => 'Category E'
         ],
     ], 
     ItemConstants::SUBTYPE_ONLINE => [
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 1,
+            'name' => 'Category A'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 2,
+            'name' => 'Category B'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 3,
+            'name' => 'Category C'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 4,
+            'name' => 'Category D'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 5,
+            'name' => 'Category E'
         ],
     ], 
     ItemConstants::SUBTYPE_VIDEO => [
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 1,
+            'name' => 'Category A'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 2,
+            'name' => 'Category B'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 3,
+            'name' => 'Category C'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 4,
+            'name' => 'Category D'
         ],
         [
-            'id' => 1,
-            'name' => 'Category_name'
+            'id'   => 5,
+            'name' => 'Category E'
         ],
     ]  
 ];
