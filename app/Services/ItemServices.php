@@ -122,6 +122,7 @@ class ItemServices
                 'items.id',
                 'items.title',
                 'items.image',
+                'items.price',
                 'items.short_content',
                 'items.boost_score',
                 'items.created_at'
