@@ -6,7 +6,7 @@
                 <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
                 <a href="{{ route('refpage', ['code' => 'anylearn']) }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1">Trở thành đối tác anyLEARN</a>
                 <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
-                <a href="#" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Tải ứng dụng</a>
+                <a href="#download-app" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Tải ứng dụng</a>
             </div>
             <div class="flex items-center">
                 <a href="{{ route('helpcenter') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block"><i class="fa fa-bell"></i> Thông báo</a>
