@@ -285,6 +285,7 @@ class ClassController extends Controller
             $this->data['opening'] = ItemSchedulePlan::find($request->get('plan'));
             $this->data['opening']->weekdays = explode(",", $this->data['opening']->weekdays);
         }
+        // dd($this->data['openings']);
 
         if (!$request->session()->get('tab') && $request->get('tab')) {
             $request->session()->flash('tab', $request->get('tab'));
@@ -348,7 +349,6 @@ class ClassController extends Controller
                 ->where('status', 1)
                 ->select('id', 'name')
                 ->get();
-
             return view('class.edit', $this->data);
         } else {
             $this->data['hasBack'] = route('me.class');
