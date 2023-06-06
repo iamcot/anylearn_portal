@@ -49,9 +49,9 @@ class ListingApi extends Controller
                     DB::raw('group_concat(items.id) as itemIds')
                 )
                 ->groupBy('items.user_id')
-                ->get();
+                ->paginate(6, ['*'], 'page', $request->get('page'));
             
-            foreach($partners as $value) {
+            foreach($partners->items() as $value) {
                 $partner = new \stdClass();
                 $partner->id = $value->id;
                 $partner->name = $value->name;
