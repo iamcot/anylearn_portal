@@ -1,45 +1,35 @@
 @inject('itemServ', 'App\Services\ItemServices')
-<footer>
-    <div class="container">
+<footer class="bg-white text-light " style="padding: 0;">
+    <div class="container py-5">
         <div class="row">
             <div class="col-sm-3">
                 <h4>TRUNG TÂM HỖ TRỢ</h4>
-                <ul>
-                    <ul class="row">
-                        @foreach ($itemServ->footertopKnowledge() as $knowledge)
-                            <li class="col-xs-12 col-md-12"><a class="text-secondary text-decoration-none"
+                <ul class="list-unstyled">
+                    @foreach ($itemServ->footertopKnowledge() as $knowledge)
+                            <li><a class="text-secondary text-decoration-none"
                                     href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url]) }}">{{ $knowledge->title }}</a>
                             </li>
                         @endforeach
-                    </ul>
                 </ul>
-
             </div>
             <div class="col-sm-3">
                 <h4>ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
-                <ul>
-                    <a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">
-                        <li>Điều Khoản Sử Dụng</li>
-                    </a>
-                    <a href="/privacy" class="text-secondary text-decoration-none">
-                        <li>Chính Sách Bảo Mật</li>
-                    </a>
+                <ul class="list-unstyled">
+                    <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều Khoản Sử Dụng</a></li>
+                    <li><a href="/privacy" class="text-secondary text-decoration-none">Chính Sách Bảo Mật</a></li>
                 </ul>
-                <h4 class="mt-2">
-                    <p>TẢI ỨNG DỤNG anyLEARN</p>
-                </h4>
+                <h4 class="mt-2">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div class="app-links">
-                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img
-                            src="/cdn/img/ggplay.png" class="img-fluid" width="40%"></a>
-                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img
-                            src="/cdn/img/appstore.png" class="img-fluid" width="45%"></a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="40%"></a>
+                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img src="/cdn/img/appstore.png" class="img-fluid" width="45%"></a>
                 </div>
             </div>
             <div class="col-sm-3">
                 <h4>TIN TỨC</h4>
-                <ul class="list-unstyled text-secondary">
-                    @foreach($itemServ->footerNews() as $news)
-                    <p><a data-spm="footer-news.{{ $news->id }}" href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none"><li>{{ $news->title }}</li></a></p>
+                <ul class="list-unstyled">
+                     @foreach($itemServ->footerNews() as $news)
+                    {{-- <p><a data-spm="footer-news.{{ $news->id }}" href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none"><li>{{ $news->title }}</li></a></p> --}}
+                     <li><a href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none">{{ $news->title }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -58,13 +48,12 @@
                             alt=""></a>
                 </div>
             </div>
-            {{-- <div class="col-sm-3 mt-2">
-
-            </div>
-            <div class="col-sm-3 mt-2">
-
-            </div> --}}
-
         </div>
+    </div>
+    <div class="container-fluid bg-secondary text-center py-3">
+        <p class="m-0">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC anyLEARN</p>
+        <p class="m-0">Giấy CNĐKDN: 0316363793 cấp lần đầu ngày 02/07/2020</p>
+        <p class="m-0">Cấp bởi: Phòng đăng ký kinh doanh - Sở Kế hoạch Đầu tư thành phố Hồ Chí Minh.</p>
+        <p class="m-0">Địa chỉ: 161/4 Nguyễn Văn Thủ, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</p>
     </div>
 </footer>

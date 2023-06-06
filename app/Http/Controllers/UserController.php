@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\I18nContent;
 use App\Models\ItemSchedulePlan;
+use App\Models\SaleActivity;
 use App\Services\ActivitybonusServices;
 use App\Services\InteractServices;
 use App\Services\TransactionService;
@@ -140,40 +141,62 @@ class UserController extends Controller
                     }
                 }
                 fclose($fileHandle);
-                // dd($header, $rows);
+                //dd($header, $rows);
                 $countUpdate = 0;
                 $countCreate = 0;
                 foreach ($rows as $row) {
-                    if (empty($row[1])) {
+                    if (empty($row[4])) {
                         continue;
                     }
                     try {
-                        $exists = User::where('phone', $row[1])->first();
+                        if ($row[1]) {
+                            $row[1] = strlen($row[1]) == 4 
+                                ? Carbon::parse($row[1])->format('Y-01-01') 
+                                : Carbon::createFromFormat('d/m/Y', $row[1])->format('Y-m-d');
+                        }
+                        $exists = User::where('phone', $row[4])->first();                 
                         if ($exists) {
-                            if (!empty($row[2])) {
-                                $data['user_id'] = $row[2];
+                            if (!$exists->is_registered) {
+                                $data = [
+                                    'name' => $row[0],
+                                    'dob' => $row[1],
+                                    'sex' => $row[2],
+                                    'address' => $row[3],
+                                    'email' => $row[5],                   
+                                    'source' => $row[8],
+                                ];
                             }
-                            if (!empty($row[3])) {
-                                $data['sale_id'] = $row[3];
+                            if (!empty($row[6])) {
+                                $data['user_id'] = $row[6];
                             }
-                            $countUpdate += User::where('phone', $row[1])->update($data);
+                            if (!empty($row[7])) {
+                                $data['sale_id'] = $row[7];
+                            }
+                            $countUpdate += User::where('phone', $row[4])->update($data);
+
                         } else {
                             // Log::debug($row);
+                            //dd($rows);
                             User::create([
                                 'name' => $row[0],
-                                'phone' => $row[1],
-                                'sale_id' => $row[3],
+                                'dob' => $row[1],
+                                'sex' => $row[2],
+                                'address' => $row[3],
+                                'phone' => $row[4],
+                                'email' => $row[5],
+                                'sale_id' => $row[7],
+                                'source' => isset($row[8]) ? $row[8] : '',
                                 'is_registered' => 0,
-                                'source' => isset($row[4]) ? $row[4] : '',
                                 'role' => UserConstants::ROLE_MEMBER,
-                                'password' => Hash::make($row[1]),
+                                'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
-                                'refcode' => $row[1],
+                                'refcode' => $row[4],
                             ]);
                             $countCreate++;
                         }
                     } catch (\Exception $ex) {
                         Log::error($ex);
+                        //dd($ex->getMessage());
                     }
                 }
                 return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
@@ -217,6 +240,45 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Thành viên');
         return view('user.member_list', $this->data);
     }
+
+    public function addMember(Request $request) 
+    {
+        if ($request->input('action') == 'addMember') {
+            $member = $request->except('action', 'note');
+            $used   = User::where('phone', $member['phone'])->first();
+
+            if (!empty($used)) {
+                return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
+            }
+           
+            $member['role'] = UserConstants::ROLE_MEMBER;
+            $member['refcode'] = $member['phone'];
+            $member['password'] = Hash::make($member['phone']);
+            $member['status'] = UserConstants::STATUS_INACTIVE;
+            $member['is_registered'] = 0;
+            $member = User::create($member);      
+            
+            if (!$member->save()) {
+                return redirect()->back()->with('notify', 'Thao tác không thành công!');
+            }
+            
+            // Save note
+            SaleActivity ::create([
+                'type' => SaleActivity::TYPE_NOTE,
+                'sale_id' => Auth::user()->id,
+                'member_id' => $member->id,
+                'content' => $request->input('note'),
+            ]);
+
+            return redirect()->back()->with('notify', 'Thao tác thành công!');
+        }
+
+        $this->data['hasBack'] = route('user.members');
+        $this->data['navText'] = __('Thêm thành viên');
+
+        return view('user.add_member', $this->data);
+    }
+
     public function meWork(Request $request)
     {
         $data = DB::table('item_activities as ia')

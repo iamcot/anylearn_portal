@@ -102,6 +102,7 @@ class PageController extends Controller
                 $items = Item::whereIn('id', explode(",", $block['classes']))
                     ->where('status', 1)
                     ->where('user_status', 1)
+                    ->orderByRaw("FIND_IN_SET(id, '" . $block['classes'] . "')")
                     ->get();
                 $locale = App::getLocale();
                 if (!empty($block['title'][$locale])) {

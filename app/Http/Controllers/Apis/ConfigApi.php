@@ -21,8 +21,9 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
-use App\Services\TransactionService;
+use App\Services\J4uServices;
 use App\Services\UserServices;
+use App\Services\HomeServices;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -31,9 +32,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use League\OAuth1\Client\Server\Trello;
+use App\Models\Ask;
+use App\Models\VoucherEvent;
+use App\Models\VoucherGroup;
 
 class ConfigApi extends Controller
-{
+{ 
     public function homeV2(Request $request, $role = 'guest')
     {
         $newBanners = [];
@@ -63,6 +67,7 @@ class ConfigApi extends Controller
                     ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
+                    ->orderByRaw("FIND_IN_SET(id, '" . $block['classes'] . "')")
                     ->get();
                 $homeClasses[] = [
                     'title' => isset($block['title'][$appLocale]) ? $block['title'][$appLocale] : json_encode($block['title']),
