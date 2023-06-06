@@ -18,7 +18,7 @@
                     <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều Khoản Sử Dụng</a></li>
                     <li><a href="/privacy" class="text-secondary text-decoration-none">Chính Sách Bảo Mật</a></li>
                 </ul>
-                <h4 class="mt-2">TẢI ỨNG DỤNG anyLEARN</h4>
+                <h4 class="mt-2" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div class="app-links">
                     <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="40%"></a>
                     <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img src="/cdn/img/appstore.png" class="img-fluid" width="45%"></a>
