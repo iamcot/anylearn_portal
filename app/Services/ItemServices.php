@@ -308,27 +308,12 @@ class ItemServices
         // Auto shift date   
         $today = Carbon::now();
         if ($today->format('Y-m-d') > $item->date_start) {
-            $startDate = $item->date_start ? Carbon::createFromFormat('Y-m-d', $item->date_start) : $today;
-            $endDate   = $item->date_end ? Carbon::createFromFormat('Y-m-d', $item->date_end) : $today;
-
-            if ($item->subtype == 'online') {
-                if ($today->diffInDays($startDate) > 15) {
-                    $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
-                    $startDate = $today;
-                }
-                
-                $item->date_start = $startDate->addDay(15);
-                $item->date_end   = $endDate->addDay(15);
-            }
-
             if ($item->subtype == 'extra' || $item->subtype == 'offline') {
-                if ($today->diffInDays($startDate) > 30) {
-                    $endDate   = Carbon::now()->addDay($endDate->diffInDays($startDate));
-                    $startDate = $today;
-                }
-
-                $item->date_start = $startDate->addDay(30);
-                $item->date_end   = $endDate->addDay(30);
+                $item->date_start = $today->addDay(30);
+                $item->date_end   = null;
+            } else {
+                $item->date_start = $today->addDay(15);
+                $item->date_end   = null;
             }
               
             $item->save();

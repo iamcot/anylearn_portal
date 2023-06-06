@@ -75,12 +75,14 @@
                         @else
                             <p><strong>@lang('Số lượng'): </strong> Không giới hạn </p>
                         @endif
-
-                        <p {{ (now()->format('Y-m-d') > $item->date_start) && ($item->subtype == 'digital' || $item->subtype == 'video') ? 'class=d-none' : '' }}>
+                            
+                        @if($item->subtype != 'digital' && $item->subtype != 'video')
+                        <p>
                             <strong> @lang('Khai giảng:')</strong>
                             {{ date('d/m/Y', strtotime($item->date_start)) }}
                             {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
                         </p>
+                        @endif
 
                         <div class="price">
                             <p>
