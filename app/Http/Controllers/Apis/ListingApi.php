@@ -13,7 +13,7 @@ class ListingApi extends Controller
 {
     public function index(Request $request) 
     {
-        $data = [];
+        $data = new \stdClass();
         if ($request->all()) {
             $items = DB::table('items')
                 ->join('users', 'users.id', '=', 'items.user_id')
@@ -49,12 +49,16 @@ class ListingApi extends Controller
                     DB::raw('group_concat(items.id) as itemIds')
                 )
                 ->groupBy('items.user_id')
-                ->paginate(6, ['*'], 'page', $request->get('page'));
+                ->paginate($request->get('size'), ['*'], 'page', $request->get('page'));
+            
+            $data->total = round($partners->total() / $request->get('size'));
+            $data->current  = $request->get('page');
             
             foreach($partners->items() as $value) {
                 $partner = new \stdClass();
                 $partner->id = $value->id;
                 $partner->name = $value->name;
+            
 
                 $partner->items = DB::table('items')
                     ->leftjoin(
@@ -116,8 +120,8 @@ class ListingApi extends Controller
                 }
 
                 $partner->items = $partner->items->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)->get(); 
-                $data[] = $partner;
-            }   
+                $data->partners[] = $partner;
+            } 
         }
 
         $spm = new Spm();
