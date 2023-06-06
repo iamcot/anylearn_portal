@@ -52,13 +52,12 @@ class ListingApi extends Controller
                 ->paginate($request->get('size'), ['*'], 'page', $request->get('page'));
             
             $data->total = round($partners->total() / $request->get('size'));
-            $data->current  = $request->get('page');
+            $data->current  = (int) $request->get('page');
             
             foreach($partners->items() as $value) {
                 $partner = new \stdClass();
                 $partner->id = $value->id;
-                $partner->name = $value->name;
-            
+                $partner->name = $value->name; 
 
                 $partner->items = DB::table('items')
                     ->leftjoin(
