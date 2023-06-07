@@ -54,6 +54,7 @@ class ConfigConstants
     const CONFIG_NUM_PARTNER_DISPLAY = 6;
     const CONFIG_NUM_CATEGORY_DISPLAY = 6;
     Const CONFIG_NUM_LAST_SEARCH_DISPLAY = 8;
+    Const CONFIG_NUM_VOUCHER_DISPLAY = 3;
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';
