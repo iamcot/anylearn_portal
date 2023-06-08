@@ -60,7 +60,7 @@ class VoucherServices
             ->where('type', 'partner')
             ->where('trigger', $id)
             ->orderByDesc('id')
-            ->first();
+            ->get();
 
         return $this->getFixedVouchers($events);
     }
