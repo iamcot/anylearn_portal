@@ -64,7 +64,9 @@ class VoucherServices
             ->where('trigger', $id)
             ->orderByDesc('id')
             ->get();
+        
+        $vouchers = $this->getFixedVouchers($events);
 
-        return $this->getFixedVouchers($events);
+        return $vouchers ? $vouchers[0] : null;
     }
 }
