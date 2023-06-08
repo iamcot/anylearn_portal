@@ -237,7 +237,7 @@ class PageController extends Controller
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
-        }
+        } 
     }
     public function article(Request $request, $id)
     {

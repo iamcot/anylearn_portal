@@ -39,7 +39,8 @@ class User extends Authenticatable
         'refcode', 'title', 'num_friends', 'package_id', 'banner', 'first_name', 'full_content',
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
         'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
-        'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source',
+        'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source', 'business_certificate', 'first_issued_date',
+        'issued_by', 'headquarters_address'
     ];
 
     /**
@@ -79,6 +80,11 @@ class User extends Authenticatable
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
+            'business_certificate' => $data['role'] === 'member' ? [] : ['required'],
+            'first_issued_date' => $data['role'] === 'member' ? [] : ['required'],
+            'issued_by' => $data['role'] === 'member' ? [] : ['required'],
+            'headquarters_address' => $data['role'] === 'member' ? [] : ['required'],
+            'title' => $data['role'] === 'member' ? [] : ['required'],
         ]);
     }
     public function createChild($parent, $input)
@@ -115,8 +121,13 @@ class User extends Authenticatable
             'update_doc' => UserConstants::STATUS_ACTIVE,
             'refcode' => $data['phone'],
             'sale_id' => isset($data['sale_id']) ? $data['sale_id'] : null,
-
+            'business_certificate' => isset($data['business_certificate']) ? $data['business_certificate'] : null,
+            'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
+            'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
+            'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
+            'title' => isset($data['title']) ? $data['title'] : null,
         ];
+
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
         if (!empty($data['ref'])) {
             $refUser = $this->where('refcode', $data['ref'])->first();
@@ -168,7 +179,6 @@ class User extends Authenticatable
         } catch (\Exception $ex) {
             Log::error($ex);
         }
-
         return $newMember;
     }
 
