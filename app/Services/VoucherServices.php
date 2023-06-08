@@ -21,7 +21,7 @@ class VoucherServices
                 $voucher = new \stdClass();      
                 $voucher->id = $event->id;
                 $voucher->title = $event->title;
-                $voucher->code = $groups; 
+                $voucher->code = $groups[0]; 
                 $vouchers[] = $voucher; 
             }
 
