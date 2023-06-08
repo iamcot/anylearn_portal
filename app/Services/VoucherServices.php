@@ -35,7 +35,11 @@ class VoucherServices
 
     public function getVoucherEvents()
     {
-        $events = VoucherEvent::select('id', 'title', 'targets')->orderByDesc('id')->get();
+        $events = VoucherEvent::select('id', 'title', 'targets')
+            ->where('type', 'class')
+            ->orderByDesc('id')
+            ->get();
+
         return $this->getFixedVouchers($events);
     }
 
