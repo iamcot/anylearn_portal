@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
-use App\Models\Voucher;
 use App\Models\VoucherEvent;
 use App\Models\VoucherGroup;
 
@@ -22,7 +21,7 @@ class VoucherServices
                 $voucher = new \stdClass();      
                 $voucher->id = $event->id;
                 $voucher->title = $event->title;
-                $voucher->code = $groups; 
+                $voucher->code = $groups[0]; 
                 $vouchers[] = $voucher; 
             }
 
@@ -37,10 +36,10 @@ class VoucherServices
     public function getVoucherEvents()
     {
         $events = VoucherEvent::select('id', 'title', 'targets')
+            ->where('type', 'class')
             ->orderByDesc('id')
-            ->take(30)
             ->get();
-    
+
         return $this->getFixedVouchers($events);
     }
 
@@ -52,7 +51,6 @@ class VoucherServices
             ->where('type', 'promote' )
             ->where('trigger', $subtypes[$subtype])
             ->orderByDesc('id')
-            ->take(30)
             ->get();
 
         return $this->getFixedVouchers($events);
@@ -61,8 +59,12 @@ class VoucherServices
     public function getVoucherByPartner($id) 
     {
         // Add voucher_events.type = partner, trigger = partner.id
-        $events = VoucherEvent::where('type', 'partner')->where('trigger', $id)->first();
-        // return $events ? Voucher::whereIn('voucher_group_id', explode(',', $events->targets))->first() : '';
+        $events = VoucherEvent::select('id', 'title', 'targets')
+            ->where('type', 'partner')
+            ->where('trigger', $id)
+            ->orderByDesc('id')
+            ->get();
+
         return $this->getFixedVouchers($events);
     }
 }
