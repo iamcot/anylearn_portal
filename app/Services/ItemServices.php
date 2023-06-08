@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class ItemServices
 {
@@ -318,6 +319,21 @@ class ItemServices
         if (!$item) {
             throw new Exception("Trang không tồn tại", 404);
         }
+        
+        // Auto shift date   
+        $today = Carbon::now();
+        if ($today->format('Y-m-d') > $item->date_start) {
+            if ($item->subtype == 'extra' || $item->subtype == 'offline') {
+                $item->date_start = $today->addDay(30);
+                $item->date_end   = null;
+            } else {
+                $item->date_start = $today->addDay(15);
+                $item->date_end   = null;
+            }
+              
+            $item->save();
+        }
+
         $item = $item->makeVisible(['content']);
         $locale = App::getLocale();
         if ($locale != I18nContent::DEFAULT) {

@@ -5,7 +5,7 @@
         <div class="card shadow">
             <div class="card-header font-weight-bold">Kế hoạch học tập  <a href="?tab=schedule">Tạo mới</a></div>
             <div class="card-body p-0">
-                @if(isset($openings))
+                @if(!isset($openings))
                 <p class="p-3">Lớp học chưa có kế hoạch nào,  <a href="?tab=schedule">Tạo mới</a></p>
                 @else
                 <table class="table">
