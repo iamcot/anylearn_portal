@@ -33,6 +33,7 @@ class VoucherServices
 
         return $vouchers;
     }
+
     public function getVoucherEvents()
     {
         $events = VoucherEvent::select('id', 'title', 'targets')
@@ -61,6 +62,7 @@ class VoucherServices
     {
         // Add voucher_events.type = partner, trigger = partner.id
         $events = VoucherEvent::where('type', 'partner')->where('trigger', $id)->first();
-        return $events ? Voucher::whereIn('voucher_group_id', explode(',', $events->targets))->first() : '';
+        // return $events ? Voucher::whereIn('voucher_group_id', explode(',', $events->targets))->first() : '';
+        return $this->getFixedVouchers($events);
     }
 }
