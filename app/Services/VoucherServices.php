@@ -11,7 +11,6 @@ class VoucherServices
     private function getFixedVouchers($events)
     {
         $vouchers = [];
-        dd($events);
         foreach($events as $event) {
             $groups = VoucherGroup::whereIn('id', explode(',', $event->targets))
                 ->where('generate_type', 'manual')
