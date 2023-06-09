@@ -546,6 +546,15 @@ class TransactionController extends Controller
             ];
         }
 
+        $this->data['pending'] = DB::table('orders')
+        ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
+        ->where('orders.user_id', $user->id)
+        ->select(
+            'orders.*',
+            DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+        )
+        ->take(5)->get();
+
         return view(env('TEMPLATE', '') . 'checkout.cart', $this->data);
     }
 
