@@ -30,7 +30,8 @@
 
         .actual-price {
             font-weight: 600;
-            color: #007bff;
+            color: rgb(75, 163, 91) !important;
+            font-size: 2rem;
             margin-right: 10px;
         }
 
