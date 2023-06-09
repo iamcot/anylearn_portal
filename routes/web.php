@@ -111,6 +111,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 
 
     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
+    Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
     Route::any('/notification', 'UserController@notification')->name('me.notification');
     Route::any('/contract', 'UserController@contract')->name('me.contract');
     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');

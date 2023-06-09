@@ -10,6 +10,38 @@ cart
 @section('body')
 <div class="card mb-5 shadow">
     <p class="p-5">@lang('Bạn không có đơn hàng nào. Nhấn nút quay lại và tìm hiểu thêm về các khoá học của anyLEARN nhé.')</p>
+
+    @if(!empty($pending) && count($pending) > 0)
+        <section>
+            <hr>
+            <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Opps, Bạn có đơn hàng đang chờ thanh toán.') </p>
+            <table class="table table-striped text-secondary">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên khóa học</th>
+                    <th>Số tiền</th>
+                    <th>Ngày</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($pending as $row)
+                <tr>
+                    <td>{{ $row->id }}</td>
+                    <td width="50%">{{ $row->classes }}</td>
+                    <td>{{ number_format($row->amount) }} đồng</td>
+                    <td>{{ $row->created_at }}</td>
+                    <td>
+                    <a href="{{ route('me.cancelpending', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm border-0 rounded-pill">HỦY</a>    
+                        
+                    <a href="{{ route('checkout.paymenthelp', ['order_id' => $row->id]) }}" class="btn btn-success btn-sm border-0 rounded-pill">Thanh toán</a></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        </section>
+        @endif
 </div>
 @endsection
 @else

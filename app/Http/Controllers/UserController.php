@@ -855,6 +855,20 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
+    public function cancelPending(Request $request, $orderId) {
+        $user = $request->get('_user') ?? Auth::user();
+        $order = Order::find($orderId);
+        if ($order->user_id != $user->id) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này')); 
+        }
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            return redirect()->back()->with('notify', 'Trạng thái đơn hàng không đúng');
+        }
+        $transService = new TransactionService();
+        $transService->rejectRegistration($orderId);
+        return redirect()->back()->with('notify', 'Thao tác thành công');
+    }
+
     public function orders(Request $request)
     {
         $user = Auth::user();

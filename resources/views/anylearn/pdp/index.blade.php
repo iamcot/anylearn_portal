@@ -82,6 +82,14 @@
                             {{ date('d/m/Y', strtotime($item->date_start)) }}
                             {{ $num_schedule <= 1 ? '' : '(có ' . $num_schedule . ' buổi học)' }}
                         </p>
+                            @if (count($plans) > 0) 
+                                <p>Các chi nhánh có khóa học này</p>
+                                <ul>
+                                @foreach($plans as $plan)
+                                <li>{{ $plan['location']['location_title'] }}, địa chỉ: {{ $plan['location']['address'] }}</li>
+                                @endforeach
+                                </ul>
+                            @endif
                         @endif
 
                         <div class="price">

@@ -10,9 +10,9 @@
         @if(empty($order))
         <p class="p-2">@lang('Bạn không có đơn hàng nào. Nhấn nút quay lại và tìm hiểu thêm về các khoá học của anyLEARN nhé.')</p>
         @if(!empty($pending))
-        <section>
+        <section class="p-2">
             <hr>
-            <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Opps, Bạn có đơn hàng đang chờ thanh toán.') </p>
+            <p class="bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Opps, Bạn có đơn hàng đang chờ thanh toán.') </p>
             <table class="table table-striped text-secondary">
             <thead>
                 <tr>
@@ -30,7 +30,9 @@
                     <td width="50%">{{ $row->classes }}</td>
                     <td>{{ number_format($row->amount) }} đồng</td>
                     <td>{{ $row->created_at }}</td>
-                    <td><a href="{{ route('checkout.paymenthelp', ['order_id' => $row->id]) }}" class="btn btn-success btn-sm border-0 rounded-pill">Thanh toán</a></td>
+                    <td>
+                    <a href="{{ route('order.reject', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm mt-1 col-10">HỦY</a>    
+                    <a href="{{ route('checkout.paymenthelp', ['order_id' => $row->id]) }}" class="btn btn-success btn-sm border-0 rounded-pill">Thanh toán</a></td>
                 </tr>
                 @endforeach
             </tbody>
