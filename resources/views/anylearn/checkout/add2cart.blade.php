@@ -107,7 +107,7 @@
                             </div>
                         @else
                             <p class="p-3">Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }} </p>
-                            @if($item->time_start)<p class="p-3">Giờ học {{ $item->time_start }} </p>@endif
+                            @if($item->time_start)<br>Giờ học {{ $item->time_start }}.@endif
                         @endif
                     </div>
                 </div>
