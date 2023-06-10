@@ -377,7 +377,7 @@ class ItemServices
             }
         }
         $plans = $this->getClassSchedulePlan($itemId);
-        $numSchedule = array_sum(array_map("count", $plans));
+        $numSchedule = 0;//array_sum(array_map("count", $plans));
 
         $itemUserActionM = new ItemUserAction();
         $item->num_favorite = $itemUserActionM->numFav($itemId);
