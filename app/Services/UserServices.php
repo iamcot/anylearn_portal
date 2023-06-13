@@ -88,6 +88,11 @@ class UserServices
         return array_keys($this->roles);
     }
 
+    public function userModules($role)
+    {
+        return $this->roles[$role];
+    }
+
     public function isMod()
     {
         $user = Auth::user();
