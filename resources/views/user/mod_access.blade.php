@@ -14,10 +14,11 @@
         </div>
     </div>
 
-    <div class="card mt-3">
+    <div class="card my-3">
         <div class="card-header">Phân quyền modules</div>
         <div class="card-body">
-            <form>
+            <form method="post">
+                @csrf
                 <table class="table table-striped table-hover table-bordered">
                 <thead class="">
                     <tr>
@@ -31,13 +32,13 @@
                     <tr>
                         <td>{{ $key }}</td>
                         <td>{{ $module }}</td>
-                        <td class="text-center"><input type="checkbox" value="{{ $key }}" {{ in_array($key, $allowed) || empty($allowed) ? 'checked' : '' }}></td>
+                        <td class="text-center"><input type="checkbox" name="modules[]" value="{{ $key }}" {{ in_array($key, $allowed) || empty($allowed) ? 'checked' : '' }}></td>
                     </tr>
                     @endforeach
                 </tbody>
                 </table>
                 <div class="d-flex justify-content-end mt-3 px-4">
-                    <button class="btn btn-primary px-4 shadow" type="submit" value="save">Save</button>
+                    <button class="btn btn-primary px-4 shadow" type="submit" name="save" value="save">Save</button>
                 </div>
             </form>
         </div>

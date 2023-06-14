@@ -118,7 +118,10 @@ class UserServices
         if (!isset($this->roles[$role])) {
             return false;
         }
-        $grantAccess = $this->roles[$role];
+
+        $user = Auth::user();
+        $grantAccess = isset($user->modules) ? explode(',', $user->modules) : $this->roles[$role];
+
         if (empty($grantAccess)) {
             if (isset($this->blocked[$role]) && in_array($routeName, $this->blocked[$role])) {
                 return  false;

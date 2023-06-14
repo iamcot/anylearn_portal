@@ -76,15 +76,6 @@ class UserController extends Controller
             ->orderby('role')
             ->paginate(UserConstants::PP);
         $this->data['navText'] = __('Quản lý Quản trị viên');
-
-        if (isset($userId)) {
-            $mod = User::find($userId);
-
-            $this->data['acl'] = true;
-            $this->data['modules'] = config('modules');
-            $this->data['allowed'] = $userService->userModules($mod->role);
-        }
-        
         return view('user.mods', $this->data);
     }
 
@@ -97,10 +88,19 @@ class UserController extends Controller
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
-        $this->data['mod'] = User::find($userId);
+        $mod = User::find($userId); 
+        if ($request->get('save')) {
+            $mod->modules = implode(',', $request->get('modules'));
+
+            if ($mod->save()) {
+                return redirect()->back()->with('notify', __('Thao tác thành công'));
+            }
+        }
+
+        $this->data['mod'] = $mod;
         $this->data['modules'] = config('modules');
         $this->data['navText'] = __('Quản lý Truy cập');
-        $this->data['allowed'] = $userService->userModules($this->data['mod']->role);
+        $this->data['allowed'] = isset($mod->modules) ? explode(',', $mod->modules) : $userService->userModules($mod->role);
         
         return view('user.mod_access', $this->data);
     }
