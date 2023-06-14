@@ -40,7 +40,7 @@ class User extends Authenticatable
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
         'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
         'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source', 'business_certificate', 'first_issued_date',
-        'issued_by', 'headquarters_address'
+        'issued_by', 'headquarters_address', 'modules'
     ];
 
     /**
@@ -220,7 +220,7 @@ class User extends Authenticatable
             'contact_phone' => $input['phone'],
             'omicall_id' => $input['omicall_id'],
             'omicall_pwd' => $input['omicall_pwd'],
-
+            'modules' => null, # reset acl
         ];
         if ($input['role'] != UserConstants::ROLE_FIN_PARTNER) {
             $obj['phone'] = $input['phone'];
