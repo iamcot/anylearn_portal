@@ -220,7 +220,6 @@ class User extends Authenticatable
             'contact_phone' => $input['phone'],
             'omicall_id' => $input['omicall_id'],
             'omicall_pwd' => $input['omicall_pwd'],
-            'modules' => null, # reset acl
         ];
         if ($input['role'] != UserConstants::ROLE_FIN_PARTNER) {
             $obj['phone'] = $input['phone'];
@@ -228,7 +227,11 @@ class User extends Authenticatable
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
-        return $this->find($input['id'])->update($obj);
+        $mod = $this->find($input['id']);
+        if ($input['role'] != $mod->role) {
+            $obj['modules'] = null; # reset acl
+        }
+        return $mod->update($obj);
     }
     public function changePassword(Request $request, $input)
     {

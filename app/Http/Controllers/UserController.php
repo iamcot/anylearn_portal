@@ -90,7 +90,7 @@ class UserController extends Controller
 
         $mod = User::find($userId); 
         if ($request->get('save')) {
-            $mod->modules = implode(',', $request->get('modules'));
+            $mod->modules = implode(',', $request->get('modules') ? $request->get('modules') : []);
 
             if ($mod->save()) {
                 return redirect()->back()->with('notify', __('Thao tác thành công'));
