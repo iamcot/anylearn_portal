@@ -14,7 +14,7 @@ class AddModulesToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('modules')->nullable();
+            $table->text('modules')->nullable();
         });
     }
 
