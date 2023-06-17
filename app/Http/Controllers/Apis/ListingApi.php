@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Apis;
 
 use App\Constants\ConfigConstants;
-use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Spm;
+use App\Services\CommonServices;
 use Illuminate\Support\Facades\DB;
 
 class ListingApi extends Controller
@@ -14,45 +14,13 @@ class ListingApi extends Controller
     public function index(Request $request) 
     {
         $data = new \stdClass();
-        if ($request->all()) {
-            $items = DB::table('items')
-                ->join('users', 'users.id', '=', 'items.user_id')
-                ->where('items.status', ItemConstants::STATUS_ACTIVE)
-                ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
-                ->whereNull('items.item_id');
+        if ($request->get('page')) {
+            $partners = (new CommonServices)
+                ->getSearchResults($request)
+                ->paginate($request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION), ['*'], 'page', $request->get('page'));
 
-            if ($request->get('subtype')) {
-                $items->where('items.subtype', $request->get('subtype'));
-            }
-
-            if ($request->get('category')) {
-                $items->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
-                $items->where('ic.category_id', $request->get('category'));
-            }
-
-            if ($request->get('price')) {
-                $items->where('items.price', '<=', $request->get('price'));
-            }
-
-            if ($request->get('province')) {
-                $items->join('user_locations as ul', 'ul.user_id', '=', 'items.user_id');
-                $items->where('ul.province_code', $request->get('province'));
-            }
-
-            if ($request->get('search')) {
-                $items->where('items.title', 'like', '%'. $request->get('search') . '%');
-            }
-
-            $partners = $items->select(
-                    'users.id',
-                    'users.name',
-                    DB::raw('group_concat(items.id) as itemIds')
-                )
-                ->groupBy('items.user_id')
-                ->paginate($request->get('size'), ['*'], 'page', $request->get('page'));
-            
-            $data->total = round($partners->total() / $request->get('size'));
-            $data->current  = (int) $request->get('page');
+            $data->numPage = ceil($partners->total() / $request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION));
+            $data->currentPage = (int) $request->get('page');
             
             foreach($partners->items() as $value) {
                 $partner = new \stdClass();
@@ -119,7 +87,7 @@ class ListingApi extends Controller
                 }
 
                 $partner->items = $partner->items->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)->get(); 
-                $data->partners[] = $partner;
+                $data->searchResults[] = $partner;
             } 
         }
 

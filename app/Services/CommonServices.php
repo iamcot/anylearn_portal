@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
+use App\Constants\UserConstants;
 use App\Models\Ask;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CommonServices
@@ -84,6 +87,57 @@ class CommonServices
             ->get(); 
     }
 
+    public function getSearchResults(Request $request, $searchMap = false)
+    {
+        $items = DB::table('items')
+            ->join('users', 'users.id', '=', 'items.user_id')
+            ->join('user_locations as ul', 'ul.user_id', '=', 'users.id')
+            ->where('items.status', ItemConstants::STATUS_ACTIVE)
+            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
+            ->whereNull('items.item_id');
+
+        if ($request->get('subtype')) {
+            $items->where('items.subtype', $request->get('subtype'));
+        }
+
+        if ($request->get('category')) {
+            $items->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
+            $items->where('ic.category_id', $request->get('category'));
+        }
+
+        if ($request->get('price')) {
+            $items->where('items.price', '<=', $request->get('price'));
+        }
+
+        if ($request->get('province')) {
+            $items->join('user_locations as ul', 'ul.user_id', '=', 'items.user_id');
+            $items->where('ul.province_code', $request->get('province'));
+        }
+
+        if ($request->get('province')) {
+            $items->where('ul.province_code', $request->get('province'));
+        }
+
+        if ($request->get('search')) {
+            $items->where('items.title', 'like', '%'. $request->get('search') . '%');
+        }
+
+        if ($searchMap) {
+            $items->where('users.role',  UserConstants::ROLE_SCHOOL);
+        }
+
+        return $items->select(DB::raw('
+                users.id, 
+                users.name, 
+                users.image,
+                users.introduce,
+                ul.longitude,
+                ul.latitude,
+                group_concat(items.id) as itemIds
+            '))
+            ->groupBy('items.user_id');
+    } 
+    
     public function setTemplate($route, $title, $items)
     {
         foreach ($items as $item) {
@@ -96,5 +150,5 @@ class CommonServices
             'items' => $items
         ];
     }
-
 }
+
