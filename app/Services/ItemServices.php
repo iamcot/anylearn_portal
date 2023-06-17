@@ -538,9 +538,11 @@ class ItemServices
         }
 
         if ($request->input('s')) {
-            $courses = $courses->where('items.id',  $request->input('s'))
-                ->orwhere('items.title',  'like', '%'.$request->input('s').'%')
-                ->orwhere('items.subtype', $request->input('s'));
+            $courses = $courses->where(function ($query) use ($request) {
+                $query->where('items.id',  $request->input('s'));
+                $query->orwhere('items.title',  'like', '%' . $request->input('s') . '%');
+                $query->orwhere('items.subtype', $request->input('s'));
+            });
         }
 
         $requester = Auth::user();
