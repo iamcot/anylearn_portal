@@ -110,11 +110,6 @@ class CommonServices
         }
 
         if ($request->get('province')) {
-            $items->join('user_locations as ul', 'ul.user_id', '=', 'items.user_id');
-            $items->where('ul.province_code', $request->get('province'));
-        }
-
-        if ($request->get('province')) {
             $items->where('ul.province_code', $request->get('province'));
         }
 
@@ -136,6 +131,7 @@ class CommonServices
                 group_concat(items.id) as itemIds
             '))
             ->groupBy('items.user_id');
+
     } 
     
     public function setTemplate($route, $title, $items)
