@@ -537,6 +537,12 @@ class ItemServices
             $courses = $courses->whereDate('created_at', '>', $request->input('date'));
         }
 
+        if ($request->input('s')) {
+            $courses = $courses->where('items.id',  $request->input('s'))
+                ->orwhere('items.title',  'like', '%'.$request->input('s').'%')
+                ->orwhere('items.subtype', $request->input('s'));
+        }
+
         $requester = Auth::user();
         // if ($requester->role == UserConstants::ROLE_SALE) {
         //     $courses = $courses->join('users AS author', 'author.id', '=', 'items.user_id')
