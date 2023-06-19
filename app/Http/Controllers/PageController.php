@@ -131,9 +131,14 @@ class PageController extends Controller
     }
     public function ref(Request $request, $code = "")
     {
-        if (Auth::user()) {
-            return redirect()->back();
+        if (!session()->has('urlPrevious')) {
+            session(['urlPrevious' => url()->previous()]);
         }
+
+        if (Auth::user()) {
+            return redirect()->to(session('urlPrevious'));
+        }
+        ####################################################
         if (empty($code)) {
             return redirect('/');
         }
