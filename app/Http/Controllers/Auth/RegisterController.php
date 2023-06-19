@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -55,11 +56,14 @@ class RegisterController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        $data['user'] = $refUser;
+        
+        return Auth::login($user);
+        
+        /*$data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
         $data['sale_id'] = $request->get('s');
-
+        
         $data['role'] = $request->get('r');
         if ($data['role'] == 'member') {
             return view('register.member', $data);
@@ -68,7 +72,7 @@ class RegisterController extends Controller
         } else if ($data['role'] == 'teacher') {
             return view('register.teacher', $data);
         }
-        return view('register.index', $data);
+        return view('register.index', $data);*/
     }
 
     /**
