@@ -269,8 +269,6 @@
                     </form>
                 </div>
             @else
-                {{ url()->previous() }}
-                {{ dd(1) }}
                 <div class="col-lg-6 offset-lg-3 register_form">
                     <div class="row p1 text-center" style="margin-top:100px;">
                         <h5 class="text-light text-center">@lang('Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!')</h5>
