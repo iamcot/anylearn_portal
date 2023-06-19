@@ -132,6 +132,7 @@ class PageController extends Controller
     public function ref(Request $request, $code = "")
     {
         if (Auth::user()) {
+            dd(url()->previous());
             return redirect('/');
         }
         if (empty($code)) {
