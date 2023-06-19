@@ -24,6 +24,7 @@ use Hamcrest\Core\HasToString;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -130,6 +131,9 @@ class PageController extends Controller
     }
     public function ref(Request $request, $code = "")
     {
+        if (Auth::user()) {
+            return redirect('/');
+        }
         if (empty($code)) {
             return redirect('/');
         }
