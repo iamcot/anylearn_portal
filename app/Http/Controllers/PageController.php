@@ -130,6 +130,7 @@ class PageController extends Controller
     }
     public function ref(Request $request, $code = "")
     {
+        dd($request->all());
         if (empty($code)) {
             return redirect('/');
         }
