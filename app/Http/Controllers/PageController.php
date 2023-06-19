@@ -130,9 +130,11 @@ class PageController extends Controller
     }
     public function ref(Request $request, $code = "")
     {
-        dd($request->all());
         if (empty($code)) {
             return redirect('/');
+        }
+        if (Auth::user()) {
+            return redirect()->back();
         }
         $refUser = User::where('refcode', $code)->first();
         if (!$refUser) {
