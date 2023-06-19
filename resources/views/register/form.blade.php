@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                         @else
-                            {{ url()->previous() }}
+                            {{ dd(1) }}
                             <div class="my-2 ">
                                 <h6 class="mb-2">{{ __('Thông tin tài khoản:') }}</h6>
                                 <div class="form-group row">
