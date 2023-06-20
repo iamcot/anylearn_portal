@@ -45,7 +45,6 @@ class RegisterController extends Controller
 
     public function registerRefPage(Request $request, $code)
     {
-        dd(session('urlPrevious'));
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
 
@@ -53,12 +52,13 @@ class RegisterController extends Controller
         if (empty($code)) {
             return redirect('/');
         }
+        
         // Redirect to the previous page
         if (session()->has('urlPrevious')) {
             Auth::login($user);
             return redirect()->to(session('urlPrevious'));
         }
-        
+
         $refUser = User::where('refcode', $code)->first();
         if (!$refUser) {
             return redirect('/');
