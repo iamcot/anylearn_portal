@@ -141,7 +141,7 @@ class PageController extends Controller
         if (!session()->has('urlPrevious') || url()->previous() != url()->current()) {
             session(['urlPrevious' => url()->previous()]);
         }
-        dd(session('urlPrevious')); 
+        //dd(session('urlPrevious')); 
         if ($request->get('has-account') || Auth::user()) {
             $this->data['isReg'] = true;
         }
