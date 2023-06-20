@@ -138,7 +138,7 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        if (!session()->has('urlPrevious') || session('urlPrevious') != url()->current()) {
+        if (!session()->has('urlPrevious') || url()->previous() != url()->current()) {
             session(['urlPrevious' => url()->previous()]);
         }
         //dd(session('urlPrevious')); 
