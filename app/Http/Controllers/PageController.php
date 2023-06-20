@@ -140,7 +140,10 @@ class PageController extends Controller
         }
         // Setup the previous page url
         if (explode('?', url()->previous())[0] != url()->current()) {
-            session(['urlRegisterPrevious' => url()->previous()]);
+            $urlPrevious = url()->previous() == route('login') && session()->has('urlLoginPrevious')
+            ? session('urlLoginPrevious')
+            : url()->previous();
+            session(['urlRegisterPrevious' => $urlPrevious]);            
         }
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
