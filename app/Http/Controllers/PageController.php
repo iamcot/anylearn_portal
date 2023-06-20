@@ -131,9 +131,10 @@ class PageController extends Controller
     }
     public function ref(Request $request, $code = "")
     {
-        if (!session()->has('urlPrevious')) {
+        if (!session()->has('urlPrevious') || session('urlPrevious') != url()->current()) {
             session(['urlPrevious' => url()->previous()]);
-        } 
+        }
+
         dd(session('urlPrevious'));  
         ####################################################
         if (empty($code)) {
