@@ -137,8 +137,10 @@ class PageController extends Controller
         $refUser = User::where('refcode', $code)->first();
         if (!$refUser) {
             return redirect('/');
-        }dd(route('refpage', ['code' => 'anylearn']), $code);
-        if ((!session()->has('urlPrevious')) || url()->previous() != url()->current()) {
+        }
+        // Set up previous url
+        if ((!session()->has('urlPrevious') && explode('?', url()->previous())[0] != url()->current()) 
+            || url()->previous() != url()->current()) { 
             session(['urlPrevious' => url()->previous()]);
         }
         //dd(session('urlPrevious')); 
