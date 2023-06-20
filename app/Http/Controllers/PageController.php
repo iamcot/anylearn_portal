@@ -138,7 +138,7 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        // Setup previous url
+        // Setup the previous page url
         if (explode('?', url()->previous())[0] != url()->current()) {
             session(['urlPrevious' => url()->previous()]);
         }
