@@ -48,6 +48,10 @@ class LoginController extends Controller
         if ($request->get('cb')) {
             $request->session()->flash('cb', $request->get('cb'));
         }
+        // Setup the previous page url
+        if (url()->previous() != url()->current()) {
+            session(['urlLoginPrevious' => url()->previous()]);
+        }
         return view('auth.login');
     }
 
@@ -121,8 +125,7 @@ class LoginController extends Controller
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');
         } else {
-            dd(url()->previous());
-            return redirect()->back();
+            return session()->has('urlLoginPrevious') ? redirect()->to(session('urlLoginPrevious')) : redirect('/');
         }
     }
 }
