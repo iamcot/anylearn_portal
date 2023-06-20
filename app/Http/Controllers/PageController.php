@@ -138,15 +138,16 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        # Set up previous url
+        # Setup previous url
         if (explode('?', url()->previous())[0] != url()->current()) {
             session(['urlPrevious' => url()->previous()]);
         }
-        dd(1, session('urlPrevious'));
+        # dd(1, session('urlPrevious'));
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
-            return redirect()->to(session('urlPrevious'));
+            return session()->has('urlPrevious') ? redirect()->to(session('urlPrevious')) : redirect('/');
         }
+
         $this->data['user'] = $refUser;
         $this->data['newUser'] = Auth::user();
         $this->data['role'] = $request->get('r');
