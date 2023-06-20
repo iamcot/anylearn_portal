@@ -91,7 +91,6 @@ class CommonServices
     {
         $items = DB::table('items')
             ->join('users', 'users.id', '=', 'items.user_id')
-            ->join('user_locations as ul', 'ul.user_id', '=', 'users.id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
             ->whereNull('items.item_id');
@@ -110,6 +109,7 @@ class CommonServices
         }
 
         if ($request->get('province')) {
+            $items->join('user_locations as ul', 'ul.user_id', '=', 'users.id');
             $items->where('ul.province_code', $request->get('province'));
         }
 
@@ -118,16 +118,24 @@ class CommonServices
         }
 
         if ($searchMap) {
-            $items->where('users.role',  UserConstants::ROLE_SCHOOL);
-        }
+            if (!$request->get('province')) {    
+                $items->join('user_locations as ul', 'ul.user_id', '=', 'users.id');
+            }
 
-        return $items->select(DB::raw('
+            $items->where('users.role',  UserConstants::ROLE_SCHOOL);
+            return $items->select(DB::raw('
                 users.id, 
                 users.name, 
                 users.image,
                 users.introduce,
                 ul.longitude,
-                ul.latitude,
+                ul.latitude
+            '));
+        }
+
+        return $items->select(DB::raw('
+                users.id, 
+                users.name, 
                 group_concat(items.id) as itemIds
             '))
             ->groupBy('items.user_id');
