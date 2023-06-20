@@ -133,7 +133,8 @@ class PageController extends Controller
     {
         if (!session()->has('urlPrevious')) {
             session(['urlPrevious' => url()->previous()]);
-        }   
+        } 
+        dd(session('urlPrevious'));  
         ####################################################
         if (empty($code)) {
             return redirect('/');
