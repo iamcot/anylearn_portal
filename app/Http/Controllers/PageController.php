@@ -144,7 +144,7 @@ class PageController extends Controller
             session(['urlPrevious' => url()->previous()]);
             dd(session('urlPrevious'), session()->has('urlPrevious'), explode('?', url()->previous())[0], url()->current());
         }
-        dd(1);
+        dd(1, session('urlPrevious'));
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
             return redirect()->to(session('urlPrevious'));
