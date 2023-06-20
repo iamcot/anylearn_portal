@@ -63,7 +63,7 @@ class MapApi extends Controller
                 }
             }
 
-            $margin = 1000;
+            $margin = 1;
             $data->bounds = [
                 'top' => ($xMin - $margin) . ',' . ($yMax + $margin),
                 'bot' => ($xMax + $margin) . ',' . ($yMin - $margin),
