@@ -138,11 +138,9 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        // Set up previous url
-        if ((!session()->has('urlPrevious') && explode('?', url()->previous())[0] != url()->current()) 
-        /*|| (session()->has('urlPrevious') && url()->previous() != url()->current())*/) { 
+        # Set up previous url
+        if (explode('?', url()->previous())[0] != url()->current()) {
             session(['urlPrevious' => url()->previous()]);
-            dd(session('urlPrevious'), session()->has('urlPrevious'), explode('?', url()->previous())[0], url()->current());
         }
         dd(1, session('urlPrevious'));
         if ($request->get('has-account') || Auth::user()) {
