@@ -121,6 +121,7 @@ class LoginController extends Controller
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');
         } else {
+            dd(url()->previous());
             return redirect()->back();
         }
     }
