@@ -57,10 +57,13 @@ class RegisterController extends Controller
             return redirect('/');
         }
         
-        Auth::login($user);
-        return view('register.index');
+        // redirect to the previous page
+        if (session()->has('urlPrevious')) {
+            Auth::login($user);
+            return redirect()->to(session('urlPrevious'));
+        }
         
-        /*$data['user'] = $refUser;
+        $data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
         $data['sale_id'] = $request->get('s');
@@ -73,7 +76,7 @@ class RegisterController extends Controller
         } else if ($data['role'] == 'teacher') {
             return view('register.teacher', $data);
         }
-        return view('register.index', $data);*/
+        return view('register.index', $data);
     }
 
     /**

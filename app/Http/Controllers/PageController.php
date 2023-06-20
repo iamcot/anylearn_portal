@@ -134,9 +134,6 @@ class PageController extends Controller
         if (!session()->has('urlPrevious')) {
             session(['urlPrevious' => url()->previous()]);
         }   
-        if (Auth::user() && session()->has('urlPrevious')) {
-            return redirect()->to(session('urlPrevious'));
-        }
         ####################################################
         if (empty($code)) {
             return redirect('/');
