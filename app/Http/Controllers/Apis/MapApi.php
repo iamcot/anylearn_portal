@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Apis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Spm;
+use App\Services\CommonServices;
 use Illuminate\Support\Facades\DB;
 
 class MapApi extends Controller
 {
     public function index(Request $request)
     {
+        // Get school list based on given bounds 
         $data = [];
-        if ($request->all()) {
+        if ($request->get('top') && $request->get('bot')) {
             $top = explode(',', $request->get('top'));
             $bot = explode(',', $request->get('bot'));
             
@@ -30,6 +32,42 @@ class MapApi extends Controller
                     'ul.latitude'
                 )
                 ->get();
+        }
+
+        // Get bounds based on searched school list 
+        if ($request->except(['top', 'bot'])) {
+            $data = new \stdClass();
+            $data->schools = (new CommonServices)->getSearchResults($request, true)->get();
+            $xMax = $xMin = $yMax = $yMin = 0;
+
+            foreach ($data->schools as $key => $partner) {
+                if ($key == 0) {
+                    $xMin = $partner->longitude;
+                    $yMin = $partner->latitude;
+                }
+
+                if ($partner->longitude > $xMax) {
+                    $xMax = $partner->longitude;
+                }
+
+                if ($partner->longitude < $xMin) {
+                    $xMin = $partner->longitude;
+                }
+
+                if ($partner->latitude > $yMax) {
+                    $yMax = $partner->latitude;
+                }
+
+                if ($partner->latitude < $yMin) {
+                    $yMin = $partner->latitude;
+                }
+            }
+
+            $margin = 1;
+            $data->bounds = [
+                'top' => ($xMin - $margin) . ',' . ($yMax + $margin),
+                'bot' => ($xMax + $margin) . ',' . ($yMin - $margin),
+            ];
         }
 
         $spm = new Spm();
