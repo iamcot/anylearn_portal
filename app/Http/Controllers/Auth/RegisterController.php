@@ -52,19 +52,12 @@ class RegisterController extends Controller
         if (empty($code)) {
             return redirect('/');
         }
-
-        // Redirect to the previous page
-        if (session()->has('urlPrevious')) {
-            Auth::login($user);
-            dd(session('urlPrevious'));
-            return redirect()->to(session('urlPrevious'));
-        }
-
          $refUser = User::where('refcode', $code)->first();
         if (!$refUser) {
             return redirect('/');
         }
-        
+
+        Auth::login($user);
         $data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
