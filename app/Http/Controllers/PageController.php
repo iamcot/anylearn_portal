@@ -144,6 +144,7 @@ class PageController extends Controller
         }
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
+            dd(session('urlRegisterPrevious'));
             return session()->has('urlRegisterPrevious') ? redirect()->to(session('urlRegisterPrevious')) : redirect('/');
         }
 
