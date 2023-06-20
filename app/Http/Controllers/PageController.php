@@ -130,13 +130,7 @@ class PageController extends Controller
         return view(env('TEMPLATE', '') . 'home', $this->data);
     }
     public function ref(Request $request, $code = "")
-    {
-        if (!session()->has('urlPrevious') || session('urlPrevious') != url()->current()) {
-            session(['urlPrevious' => url()->previous()]);
-        }
-
-        dd(session('urlPrevious'));  
-        ####################################################
+    {  
         if (empty($code)) {
             return redirect('/');
         }
@@ -144,6 +138,10 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
+        if (!session()->has('urlPrevious') || session('urlPrevious') != url()->current()) {
+            session(['urlPrevious' => url()->previous()]);
+        }
+        //dd(session('urlPrevious')); 
         if ($request->get('has-account') || Auth::user()) {
             $this->data['isReg'] = true;
         }
