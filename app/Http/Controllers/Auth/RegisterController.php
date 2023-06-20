@@ -57,13 +57,14 @@ class RegisterController extends Controller
             return redirect('/');
         }
         
-        return Auth::login($user);
+        Auth::login($user);
+        return view('register.index');
         
         /*$data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
         $data['sale_id'] = $request->get('s');
-        
+
         $data['role'] = $request->get('r');
         if ($data['role'] == 'member') {
             return view('register.member', $data);
