@@ -87,7 +87,7 @@ class CommonServices
             ->get(); 
     }
 
-    public function getSearchResults(Request $request, $searchMap = false)
+    public function getSearchResults(Request $request)
     {
         $items = DB::table('items')
             ->join('users', 'users.id', '=', 'items.user_id')
@@ -117,29 +117,12 @@ class CommonServices
             $items->where('items.title', 'like', '%'. $request->get('search') . '%');
         }
 
-        if ($searchMap) {
-            if (!$request->get('province')) {    
-                $items->join('user_locations as ul', 'ul.user_id', '=', 'users.id');
-            }
-
-            $items->where('users.role',  UserConstants::ROLE_SCHOOL);
-            return $items->select(DB::raw('
-                users.id, 
-                users.name, 
-                users.image,
-                users.introduce,
-                ul.longitude,
-                ul.latitude
-            '));
-        }
-
         return $items->select(DB::raw('
                 users.id, 
                 users.name, 
                 group_concat(items.id) as itemIds
             '))
             ->groupBy('items.user_id');
-
     } 
     
     public function setTemplate($route, $title, $items)

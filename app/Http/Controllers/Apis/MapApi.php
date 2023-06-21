@@ -36,10 +36,22 @@ class MapApi extends Controller
 
         // Get bounds based on searched school list 
         if ($request->except(['top', 'bot'])) {
+            $partnerIds = (new CommonServices)->getSearchResults($request)->pluck('id')->toArray();
             $data = new \stdClass();
-            $data->schools = (new CommonServices)->getSearchResults($request, true)->get();
-            $xMax = $xMin = $yMax = $yMin = 0;
+            $data->schools = DB::table('users')
+                ->join('user_locations as ul', 'ul.user_id', '=', 'users.id')
+                ->where('users.role', 'school')
+                ->whereIn('users.id', $partnerIds)
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.image',
+                    'users.introduce',
+                    'ul.longitude',
+                    'ul.latitude'
+                )->get();
 
+            $xMax = $xMin = $yMax = $yMin = 0;
             foreach ($data->schools as $key => $partner) {
                 if ($key == 0) {
                     $xMin = $partner->longitude;
