@@ -87,7 +87,7 @@ class CommonServices
             ->get(); 
     }
 
-    public function getSearchResults(Request $request)
+    public function getSearchResults(Request $request, $searchMap = false)
     {
         $items = DB::table('items')
             ->join('users', 'users.id', '=', 'items.user_id')
@@ -115,6 +115,21 @@ class CommonServices
 
         if ($request->get('search')) {
             $items->where('items.title', 'like', '%'. $request->get('search') . '%');
+        }
+
+        if ($searchMap) {
+            if (!$request->get('province')) {
+                $items->join('user_locations as ul', 'ul.user_id', '=', 'users.id');
+            }
+            $items->where('users.role', UserConstants::ROLE_SCHOOL);
+            return $items->select(DB::raw('
+                    users.id, 
+                    users.name,
+                    users.image, 
+                    users.introduce,
+                    group_concat(distinct ul.id) as locations
+                '))
+                ->groupBy('items.user_id');
         }
 
         return $items->select(DB::raw('

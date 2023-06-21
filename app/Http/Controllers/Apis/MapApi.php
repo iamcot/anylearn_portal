@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Apis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Spm;
+use App\Models\UserLocation;
 use App\Services\CommonServices;
 use Illuminate\Support\Facades\DB;
 
@@ -35,48 +36,50 @@ class MapApi extends Controller
         }
 
         // Get bounds based on searched school list 
-        if ($request->except(['top', 'bot'])) {
-            $partnerIds = (new CommonServices)->getSearchResults($request)->pluck('id')->toArray();
-            $data = new \stdClass();
-            $data->schools = DB::table('users')
-                ->join('user_locations as ul', 'ul.user_id', '=', 'users.id')
-                ->where('users.role', 'school')
-                ->whereIn('users.id', $partnerIds)
-                ->select(
-                    'users.id',
-                    'users.name',
-                    'users.image',
-                    'users.introduce',
-                    'ul.longitude',
-                    'ul.latitude'
-                )->get();
+        if ($request->except(['top', 'bot'])) {$data = new \stdClass();
+            $data    = new \stdClass();
+            $schools = (new CommonServices)->getSearchResults($request, true)->get();
+
+            $mapBounds = [];
+            foreach ($schools as $val) {
+                $school = $val;
+                $school->locations = UserLocation::whereIn('id', explode(',', $val->locations))
+                    ->whereNotNull('latitude')
+                    ->whereNotNull('longitude')
+                    ->get();
+                $data->schools[] = $school;
+                $mapBounds = array_merge($mapBounds, $school->locations->toArray()); 
+            }
 
             $xMax = $xMin = $yMax = $yMin = 0;
-            foreach ($data->schools as $key => $partner) {
+            foreach ($mapBounds as $key => $val) {
+                $longitude = $val['longitude'];
+                $latitude  = $val['latitude'];
+
                 if ($key == 0) {
-                    $xMin = $partner->longitude;
-                    $yMin = $partner->latitude;
+                    $xMin = $longitude;
+                    $yMin = $latitude;
                 }
 
-                if ($partner->longitude > $xMax) {
-                    $xMax = $partner->longitude;
+                if ($longitude > $xMax) {
+                    $xMax = $longitude;
                 }
 
-                if ($partner->longitude < $xMin) {
-                    $xMin = $partner->longitude;
+                if ($longitude < $xMin) {
+                    $xMin = $longitude;
                 }
 
-                if ($partner->latitude > $yMax) {
-                    $yMax = $partner->latitude;
+                if ($latitude > $yMax) {
+                    $yMax = $latitude;
                 }
 
-                if ($partner->latitude < $yMin) {
-                    $yMin = $partner->latitude;
+                if ($latitude < $yMin) {
+                    $yMin = $latitude;
                 }
             }
 
-            $margin = 1;
-            $data->bounds = [
+            $margin = 2;
+            $data->mapBounds = [
                 'top' => ($xMin - $margin) . ',' . ($yMax + $margin),
                 'bot' => ($xMax + $margin) . ',' . ($yMin - $margin),
             ];
