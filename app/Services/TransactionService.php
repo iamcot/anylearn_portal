@@ -499,14 +499,16 @@ class TransactionService
         $order = Order::find($orderId);
         $value = floatval($value);
         $amount = false;
+        $ruleMax = $ruleMax < 1 && $ruleMax > 0 ? $value / $ruleMax : $ruleMax;
+       
         if ($order->amount >= $ruleMin && $order->amount < $ruleMax) {
             $amount = $order->amount - ($value * $order->amount / $ruleMax);
-        } 
-        else if ($value >= 1000) {
+        } else if ($value >= 1000) {
             $amount =  ($value > $order->amount) ? 0 : ($order->amount - $value);
         } else if ($value > 0 && $value < 1) {
             $amount = $order->amount - ($order->amount * $value);
         }  
+
         if ($amount === false) {
             return false;
         }
