@@ -52,8 +52,8 @@ class MapApi extends Controller
         }
 
         $data->mapBounds = $request->except(['top', 'bot']) 
-            ? $commonS->calculateMapBounds($schools) 
-            : $mapBounds;
+            ? $commonS->calculateMapBounds($mapBounds) 
+            : [];
 
         $spm = new Spm();
         $spm->addSpm($request);
