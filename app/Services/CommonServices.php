@@ -139,6 +139,41 @@ class CommonServices
             '))
             ->groupBy('items.user_id');
     } 
+
+    public function calculateMapBounds($locations, $margin = 1) 
+    {
+        $xMax = $xMin = $yMax = $yMin = 0;
+        foreach ($locations as $key => $val) {
+            $longitude = $val['longitude'];
+            $latitude  = $val['latitude'];
+
+            if ($key == 0) {
+                $xMin = $longitude;
+                $yMin = $latitude;
+            }
+
+            if ($longitude > $xMax) {
+                $xMax = $longitude;
+            }
+
+            if ($longitude < $xMin) {
+                $xMin = $longitude;
+            }
+
+            if ($latitude > $yMax) {
+                $yMax = $latitude;
+            }
+
+            if ($latitude < $yMin) {
+                $yMin = $latitude;
+            }
+        }
+
+        return [
+            'top' => ($xMin - $margin) . ',' . ($yMax + $margin),
+            'bot' => ($xMax + $margin) . ',' . ($yMin - $margin),
+        ];
+    }
     
     public function setTemplate($route, $title, $items)
     {
