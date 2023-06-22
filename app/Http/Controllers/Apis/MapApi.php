@@ -34,7 +34,7 @@ class MapApi extends Controller
                     'users.introduce',
                     DB::raw('group_concat(ul.id) as locations')
                 )
-                ->group_by('users.id')
+                ->groupBy('users.id')
                 ->get();
         } else {
             // Get bounds based on searched school list 
