@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeRuleMaxTypeVoucherGroups extends Migration
+class AddRuleMaxToVoucherGroups extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ChangeRuleMaxTypeVoucherGroups extends Migration
     public function up()
     {
         Schema::table('voucher_groups', function (Blueprint $table) {
-            $table->string('rule_max')->change();
+            $table->string('rule_max')->nullable()->after('rule_min');
         });
     }
 
@@ -26,7 +26,7 @@ class ChangeRuleMaxTypeVoucherGroups extends Migration
     public function down()
     {
         Schema::table('voucher_groups', function (Blueprint $table) {
-            $table->unsignedInteger('rule_max')->change();
+            $table->dropColumn('rule_max');
         });
     }
 }
