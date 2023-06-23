@@ -87,7 +87,7 @@ class CommonServices
             ->get(); 
     }
 
-    public function getSearchResults(Request $request)
+    public function getSearchResults(Request $request, $searchMap = false)
     {
         $items = DB::table('items')
             ->join('users', 'users.id', '=', 'items.user_id')
@@ -117,6 +117,21 @@ class CommonServices
             $items->where('items.title', 'like', '%'. $request->get('search') . '%');
         }
 
+        if ($searchMap) {
+            if (!$request->get('province')) {
+                $items->join('user_locations as ul', 'ul.user_id', '=', 'users.id');
+            }
+            $items->where('users.role', UserConstants::ROLE_SCHOOL);
+            return $items->select(DB::raw('
+                    users.id, 
+                    users.name,
+                    users.image, 
+                    users.introduce,
+                    group_concat(distinct ul.id) as locations
+                '))
+                ->groupBy('items.user_id');
+        }
+
         return $items->select(DB::raw('
                 users.id, 
                 users.name, 
@@ -124,6 +139,41 @@ class CommonServices
             '))
             ->groupBy('items.user_id');
     } 
+
+    public function calculateMapBounds($locations, $margin = 1) 
+    {
+        $xMax = $xMin = $yMax = $yMin = 0;
+        foreach ($locations as $key => $val) {
+            $longitude = $val['longitude'];
+            $latitude  = $val['latitude'];
+
+            if ($key == 0) {
+                $xMin = $longitude;
+                $yMin = $latitude;
+            }
+
+            if ($longitude > $xMax) {
+                $xMax = $longitude;
+            }
+
+            if ($longitude < $xMin) {
+                $xMin = $longitude;
+            }
+
+            if ($latitude > $yMax) {
+                $yMax = $latitude;
+            }
+
+            if ($latitude < $yMin) {
+                $yMin = $latitude;
+            }
+        }
+
+        return [
+            'top' => ($xMin - $margin) . ',' . ($yMax + $margin),
+            'bot' => ($xMax + $margin) . ',' . ($yMin - $margin),
+        ];
+    }
     
     public function setTemplate($route, $title, $items)
     {
