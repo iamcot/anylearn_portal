@@ -38,9 +38,9 @@
                     <td>{{ $voucher->type }}</td>
                     <td>{{ $voucher->generate_type }}</td>
                     <td>{{ $voucher->prefix }}</td>
-                    <td>{{ number_format($voucher->value, 0, ",", ".") }}</td>
+                    <td>{{ $voucher->rule_value >= 1000 ? number_format($voucher->value, 0, ",", ".") : $voucher->value }}</td>
                     <td>{{ number_format($voucher->rule_min, 0, ",", ".") }}</td>
-                    <td>{{ number_format($voucher->rule_max, 0, ",", ".") }}</td>
+                    <td>{{ $voucher->rule_max >= 1000 ? number_format($voucher->rule_max, 0, ",", ".") : $voucher->rule_max }}</td>
                     <td>{{ $voucher->qtt }}</td>
                     <td>{{ $voucher->ext }}</td>
                     <td>{{ $voucher->updated_at }}</td>
