@@ -232,22 +232,12 @@ class TransactionService
                         'amount' => DB::raw('amount + ' . $orderextra->price),
                     ]);
                 }
-                // dd($input['extrafee'],$orderDetail->id);
             }
 
-            // if ($dbVoucher && $dbVoucher->type == VoucherGroup::TYPE_PAYMENT) {
-            //     try {
-            //         $voucherM->useVoucherPayment($user->id, $openOrder->id, $dbVoucher);
-            //     } catch (\Exception $e) {
-            //         DB::rollback();
-            //         return $e->getMessage();
-            //     }
-            // }
             $this->recalculateOrderAmount($openOrder->id);
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
-                $voucher = Voucher::find($usingVoucher->voucher_id);
-                $this->recalculateOrderAmountWithVoucher($openOrder->id, $voucher->value);
+                VoucherUsed::find($usingVoucher->id)->delete();
             }
 
             // voucher event
@@ -426,12 +416,6 @@ class TransactionService
                     VoucherUsed::find($usingVoucher->id)->delete();
                 }
                 $this->recalculateOrderAmount($order->id);
-
-                // if ($usingVoucher) {
-                //     $this->recalculateOrderAmount($order->id);
-                //     $voucher = Voucher::find($usingVoucher->voucher_id);
-                //     $this->recalculateOrderAmountWithVoucher($order->id, $voucher->value);
-                // }
             }
         });
         return true;
@@ -494,24 +478,33 @@ class TransactionService
         return true;
     }
 
-    public function recalculateOrderAmountWithVoucher($orderId, $value, $ruleMin = null, $ruleMax = null)
+    public function calculateVoucherValue($voucherDb, $orderAmount) {
+        if ($voucherDb->rule_max > 0) {
+            if ($orderAmount >= $voucherDb->rule_max) {
+                return $voucherDb->value;
+            } else {
+                $ratio = $orderAmount / $voucherDb->rule_max;
+                return round(($voucherDb->value * $ratio), 0);
+            }
+        }
+
+        return $voucherDb->value;
+    }
+
+    public function recalculateOrderAmountWithVoucher($orderId, $value)
     {
         $order = Order::find($orderId);
         $value = floatval($value);
         $amount = false;
-        $ruleMax = $ruleMax < 1 && $ruleMax > 0 ? $value / $ruleMax : $ruleMax;
-       
-        if ($value >= 1000 && $order->amount >= $ruleMin && $order->amount < $ruleMax) {
-            $amount = $order->amount - ($value * $order->amount / $ruleMax);
-        } else if ($value >= 1000) {
+        if ($value >= 1000) {
             $amount =  ($value > $order->amount) ? 0 : ($order->amount - $value);
         } else if ($value > 0 && $value < 1) {
             $amount = $order->amount - ($order->amount * $value);
-        }  
+        }
         if ($amount === false) {
             return false;
         }
-  
+
         Order::find($orderId)->update(
             ['amount' => $amount],
         );

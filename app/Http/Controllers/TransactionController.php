@@ -652,7 +652,7 @@ class TransactionController extends Controller
                 ->first();
             
             $transService = new TransactionService();
-            $res = $transService->recalculateOrderAmountWithVoucher($orderId, $voucherDB->value, $voucherDB->rule_min, $voucherDB->rule_max);
+            $res = $transService->recalculateOrderAmountWithVoucher($orderId, $transService->calculateVoucherValue($voucherDB, $order->amount));
             if (!$res) {
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }
