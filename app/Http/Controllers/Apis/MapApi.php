@@ -41,12 +41,16 @@ class MapApi extends Controller
             $schools = $commonS->getSearchResults($request, true)->get();
         }
  
-        foreach ($schools as $val) {
-            $school = $val;
-            $school->locations = UserLocation::whereIn('id', explode(',', $val->locations))
+        foreach ($schools as $school) {
+            $school->locations = UserLocation::whereIn('id', explode(',', $school->locations))
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
                 ->get();
+
+            foreach ($school->locations as $location) {
+                $location->image = !$location->image ? $school->image : $location->image;
+            } 
+
             $data->schools[] = $school;
             $mapBounds = array_merge($mapBounds, $school->locations->toArray()); 
         }
