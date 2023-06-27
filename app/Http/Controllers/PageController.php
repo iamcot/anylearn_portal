@@ -139,7 +139,7 @@ class PageController extends Controller
             return redirect('/');
         }
         if ($request->get('cb')) {
-            $request->session->flash('cb', $request->get('cb'));            
+            $request->session()->flash('cb', $request->get('cb'));            
         }
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
