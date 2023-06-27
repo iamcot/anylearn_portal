@@ -143,6 +143,7 @@ class PageController extends Controller
         }
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
+            dd(session()->get('cb'));
             return session()->has('cb') ? redirect()->to(session()->get('cb')) : redirect('/');     
         }
 
