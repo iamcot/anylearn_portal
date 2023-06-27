@@ -139,12 +139,11 @@ class PageController extends Controller
             return redirect('/');
         }
         if ($request->get('cb')) {
-            session(['cb'=> $request->get('cb')]);  
-            dd(session()->get('cb'));    
+            session(['cb'=> $request->get('cb')]);     
         }
         if ($request->get('has-account') || Auth::user()) {
             //$this->data['isReg'] = true;
-            return redirect()->back();       
+            return session()->has('cb') ? redirect()->to(session()->get('cb')) : redirect('/');     
         }
 
         $this->data['user'] = $refUser;
