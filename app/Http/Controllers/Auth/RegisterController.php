@@ -45,6 +45,7 @@ class RegisterController extends Controller
 
     public function registerRefPage(Request $request, $code)
     {
+        dd(session()->get('cb'));
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
 
