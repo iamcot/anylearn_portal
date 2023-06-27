@@ -116,8 +116,7 @@ class LoginController extends Controller
         $userService = new UserServices();
         if ($request->session()->get('cb')) {
             return redirect()->to($request->session()->get('cb'));
-        }
-        else if ($userService->isMod()) {
+        } else if ($userService->isMod()) {
             return redirect($this->redirectTo);
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');
