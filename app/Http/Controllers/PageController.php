@@ -139,7 +139,7 @@ class PageController extends Controller
             return redirect('/');
         }
         // Setup the previous page url
-        $request->session->refresh();
+        $request->session()->reflash();
         $urlPrevious = url()->previous();
         if (explode('?', $urlPrevious)[0] != url()->current() && $urlPrevious != route('login')) {
             session(['cb' => $urlPrevious]);            
