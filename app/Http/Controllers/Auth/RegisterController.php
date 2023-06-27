@@ -57,7 +57,7 @@ class RegisterController extends Controller
             return redirect('/');
         }
         Auth::login($user);
-        return redirect()->back();
+        return session()->has('cb') ? redirect()->to(session()->get('cb')) : redirect('/');
         /*$data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
