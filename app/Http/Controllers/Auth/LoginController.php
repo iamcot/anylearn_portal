@@ -46,7 +46,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         if ($request->get('cb')) {
-            $request->session()->flash('cb', $request->get('cb'));
+            $request->session()->put('cb', $request->get('cb'));
         }
 
         return view('auth.login');
