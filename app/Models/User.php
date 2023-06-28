@@ -40,7 +40,7 @@ class User extends Authenticatable
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
         'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
         'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source', 'business_certificate', 'first_issued_date',
-        'issued_by', 'headquarters_address'
+        'issued_by', 'headquarters_address', 'modules'
     ];
 
     /**
@@ -80,11 +80,11 @@ class User extends Authenticatable
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'ref' => [new ValidRef()],
             'role' => ['required', 'in:member,teacher,school'],
-            'business_certificate' => $data['role'] === 'member' ? [] : ['required'],
-            'first_issued_date' => $data['role'] === 'member' ? [] : ['required'],
-            'issued_by' => $data['role'] === 'member' ? [] : ['required'],
-            'headquarters_address' => $data['role'] === 'member' ? [] : ['required'],
-            'title' => $data['role'] === 'member' ? [] : ['required'],
+            'business_certificate' => $data['role'] !== 'school' ? [] : ['required'],
+            'first_issued_date' => $data['role'] !== 'school' ? [] : ['required'],
+            'issued_by' => $data['role'] !== 'school' ? [] : ['required'],
+            'headquarters_address' => $data['role'] !== 'school' ? [] : ['required'],
+            'title' => $data['role'] !== 'school' ? [] : ['required'],
         ]);
     }
     public function createChild($parent, $input)
@@ -220,7 +220,6 @@ class User extends Authenticatable
             'contact_phone' => $input['phone'],
             'omicall_id' => $input['omicall_id'],
             'omicall_pwd' => $input['omicall_pwd'],
-
         ];
         if ($input['role'] != UserConstants::ROLE_FIN_PARTNER) {
             $obj['phone'] = $input['phone'];
@@ -228,7 +227,11 @@ class User extends Authenticatable
         if (!empty($input['password'])) {
             $obj['password'] = Hash::make($input['password']);
         }
-        return $this->find($input['id'])->update($obj);
+        $mod = $this->find($input['id']);
+        if ($input['role'] != $mod->role) {
+            $obj['modules'] = null; # reset acl
+        }
+        return $mod->update($obj);
     }
     public function changePassword(Request $request, $input)
     {

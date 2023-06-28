@@ -78,6 +78,33 @@ class UserController extends Controller
         $this->data['navText'] = __('Quản lý Quản trị viên');
         return view('user.mods', $this->data);
     }
+
+    public function modAccess(Request $request, $userId)
+    {
+        $user = Auth::user();
+        $userService = new UserServices();
+
+        if (!$userService->haveAccess($user->role, 'user.mods')) {
+            return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+
+        $mod = User::find($userId); 
+        if ($request->get('save')) {
+            $mod->modules = implode(',', $request->get('modules') ? $request->get('modules') : []);
+
+            if ($mod->save()) {
+                return redirect()->back()->with('notify', __('Thao tác thành công'));
+            }
+        }
+
+        $this->data['mod'] = $mod;
+        $this->data['modules'] = config('modules');
+        $this->data['navText'] = __('Quản lý Truy cập');
+        $this->data['allowed'] = isset($mod->modules) ? explode(',', $mod->modules) : $userService->userModules($mod->role);
+        
+        return view('user.mod_access', $this->data);
+    }
+
     public function modspartner(Request $request)
     {
         $userService = new UserServices();
@@ -853,6 +880,20 @@ class UserController extends Controller
         $this->data['orders'] = $data;
         // $this->data['navText'] = __('Khoá học đang chờ bạn thanh toán');
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
+    }
+
+    public function cancelPending(Request $request, $orderId) {
+        $user = $request->get('_user') ?? Auth::user();
+        $order = Order::find($orderId);
+        if ($order->user_id != $user->id) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này')); 
+        }
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            return redirect()->back()->with('notify', 'Trạng thái đơn hàng không đúng');
+        }
+        $transService = new TransactionService();
+        $transService->rejectRegistration($orderId);
+        return redirect()->back()->with('notify', 'Thao tác thành công');
     }
 
     public function orders(Request $request)

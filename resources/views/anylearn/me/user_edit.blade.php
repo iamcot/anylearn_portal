@@ -66,13 +66,13 @@
                                                 <label class="form-label" for="firstName">{{ __('Họ và tên*') }}</label>
                                                 <input placeholder="Họ và tên*" name="name" type="text" id="name"
                                                     class="form-control @error('name') is-invalid @enderror"
-                                                    value="{{ old('name', !empty($user) ? $user->name : '') }} " required>
+                                                    value="{{ old('name', !empty($user) ? $user->name : '') }}" required>
                                             </div>
                                             <div class="col-lg-6">
-                                                <label class="form-label" for="lastName">{{ __('Ngày sinh*') }}</label>
-                                                <input placeholder="Ngày sinh*" name="dob" type="date" id="dob"
+                                                <label class="form-label" for="dob">{{ __('Ngày sinh') }}</label>
+                                                <input placeholder="Ngày sinh" name="dob" type="date" id="dob"
                                                     class="form-control @error('dob') is-invalid @enderror"
-                                                    value="{{ old('dob', !empty($user) ? $user->dob : '') }} " required>
+                                                    value="{{ old('dob', !empty($user) ? $user->dob : '') }}" required>
                                             </div>
                                         </div>
                                         <div class="mb-3 g-3 row">
@@ -202,14 +202,14 @@
                                                         <label for="introduce" class="form-label">{{ __('Giới Thiệu Ngắn (Bio)') }}
                                                             [{{ $locale }}]</label>
                                                         <div class="col-md-12">
-                                                            <textarea name="introduce[{{ $locale }}]" class="_editor form-control" >{{ old('introduce', !empty($userDT) ? $userDT['info']->introduce[$locale] : '') }}</textarea>
+                                                            <textarea name="introduce[{{ $locale }}]" class="_editor form-control" >{{ old('introduce', !empty($user) ? $user->introduce[$locale] : '') }}</textarea>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="editor{{ $locale }}" class="form-label @error('full_content') is-invalid @enderror">{{ __('Thông tin giới thiệu') }}
                                                             [{{ $locale }}]</label>
                                                         <div class="col-md-12">
-                                                            <textarea class="editor" id="editor{{ $locale }}" name="full_content[{{ $locale }}]">{{ old('full_content', !empty($userDT) ? $userDT['info']->full_content[$locale] : '') }}</textarea>
+                                                            <textarea class="editor" id="editor{{ $locale }}" name="full_content[{{ $locale }}]">{{ old('full_content', !empty($user) ? $user->full_content[$locale] : '') }}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>

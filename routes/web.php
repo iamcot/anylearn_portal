@@ -127,6 +127,7 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
 
 
     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
+    Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
     Route::any('/notification', 'UserController@notification')->name('me.notification');
     Route::any('/contract', 'UserController@contract')->name('me.contract');
     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
@@ -191,7 +192,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/user/mods/{userId}', 'UserController@modEdit')->name('user.mods.edit');
     Route::get('/user/mods', 'UserController@mods')->name('user.mods');
     Route::get('/user/modspartner', 'UserController@modspartner')->name('user.modspartner');
-
+    Route::any('/user/mods/access/{userId}', 'UserController@modAccess')->name('user.mods.access');
 
     Route::any('/user/members', 'UserController@members')->name('user.members');
     Route::any('/user/members/add', 'UserController@addMember')->name('user.members.add');

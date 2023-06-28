@@ -335,16 +335,17 @@ class ItemServices
         }
 
         $item = $item->makeVisible(['content']);
-        $locale = App::getLocale();
+        $locale = App::getLocale() ?? I18nContent::DEFAULT;
+    
         if ($locale != I18nContent::DEFAULT) {
             $i18 = new I18nContent();
             $item18nData = $i18->i18nItem($item->id, $locale);
-            // dd($item18nData);
             $supportCols = array_keys(I18nContent::$itemCols);
+
             foreach ($item18nData as $col => $content) {
-                if (in_array($col, $supportCols) && $content != "") {
+                if (in_array($col, $supportCols)) {
                     if ($col == 'content') {
-                        $item->$col = $this->buildContentToPDP($content, $locale);
+                        $item->content = $this->buildContentToPDP($content, $locale);
                     } else {
                         $item->$col = $content;
                     }
@@ -391,7 +392,7 @@ class ItemServices
             }
         }
         $plans = $this->getClassSchedulePlan($itemId);
-        $numSchedule = array_sum(array_map("count", $plans));
+        $numSchedule = 0;//array_sum(array_map("count", $plans));
 
         $itemUserActionM = new ItemUserAction();
         $item->num_favorite = $itemUserActionM->numFav($itemId);
@@ -404,7 +405,6 @@ class ItemServices
             ->where('item_id', $itemId)
             ->select('categories.id', 'categories.url', 'categories.title')
             ->get();
-        $locale = App::getLocale();
         foreach ($categories as $row) {
             if ($locale != I18nContent::DEFAULT) {
                 $i18 = new I18nContent();
@@ -412,7 +412,7 @@ class ItemServices
                 // dd($item18nData);
                 $supportCols = array_keys(I18nContent::$categoryCols);
                 foreach ($item18nData as $col => $content) {
-                    if (in_array($col, $supportCols) && $content != "") {
+                    if (in_array($col, $supportCols)) {
                         $row->$col = $content;
                     }
                 }
@@ -685,7 +685,7 @@ class ItemServices
     public function buildContentToPDP($content, $locale = I18nContent::DEFAULT)
     {
         try {
-            $contentObj = json_decode($content, true, 512, JSON_INVALID_UTF8_IGNORE);
+            $contentObj = json_decode(json_encode(json_decode($content, true)) , true);
             if (is_array($contentObj)) {
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
@@ -694,6 +694,7 @@ class ItemServices
                             . $contentObj[$type];
                     }
                 }
+
                 return $buildContent;
             }
         } catch (\Exception $ex) {

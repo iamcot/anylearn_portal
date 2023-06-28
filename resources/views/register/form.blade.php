@@ -26,7 +26,7 @@
                         <input type="hidden" name="role" value="{{ $role }}">
                         <input id="sale_id" type="hidden" name="sale_id" value="{{ request('s') }}">
 
-                        @if (request('r') == 'member')
+                        @if (request('r') != 'school')
                             <div class="my-1">
                                 <div class="form-group row">
                                     <label for="name" class="col-md-4 col-form-label text-md-end"
