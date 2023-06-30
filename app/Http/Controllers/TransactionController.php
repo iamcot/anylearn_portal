@@ -646,10 +646,13 @@ class TransactionController extends Controller
                 return redirect()->back()->with('notify', $ex->getMessage());
             }
 
-            $voucherDB = Voucher::where('voucher', $voucher)->first();
-
+            $voucherDB = DB::table('vouchers')
+                ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
+                ->where('vouchers.voucher', $voucher)
+                ->first();
+            
             $transService = new TransactionService();
-            $res = $transService->recalculateOrderAmountWithVoucher($orderId, $voucherDB->value);
+            $res = $transService->recalculateOrderAmountWithVoucher($orderId, $transService->calculateVoucherValue($voucherDB, $order->amount));
             if (!$res) {
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }

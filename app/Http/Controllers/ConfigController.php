@@ -336,6 +336,7 @@ class ConfigController extends Controller
                     'value' => $input['value'],
                     'status' => 1,
                     'rule_min' => $input['rule_min'],
+                    'rule_max' => $input['rule_max'],
                     'length' => $input['length'],
                 ];
                 $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
