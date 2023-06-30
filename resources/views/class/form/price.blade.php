@@ -53,7 +53,7 @@
         </div>
     </div>
 </div>
-@if(!empty($course['info']) && $course['info']->subtype == 'offline')
+@if(!empty($course['info']) &&  in_array($course['info']->subtype, ['offline', 'extra']))
 <div class="card mb-3 shadow">
     <div class="card-header"><strong>Quản lý phụ phí</strong></div>
     <div class="card-body p-0">
@@ -61,7 +61,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="col-md-3 text-right">Tên phụ phí</th>
+                        <th class="text-right">Tên phụ phí</th>
                         <th>Đơn giá</th>
                         <th></th>
                     </tr>
@@ -104,7 +104,7 @@
 @else
 <div class="card">
     <div class="card-body">
-        <p>Phụ phí chỉ hỗ trợ sau khi tạo khoá học. Và chỉ hỗ trợ Lớp học chính khoá</p>
+        <p>Phụ phí chỉ hỗ trợ sau khi tạo khoá học. Và chỉ hỗ trợ Lớp học chính khoá hoặc ngoại khóa</p>
     </div>
 </div>
 @endif

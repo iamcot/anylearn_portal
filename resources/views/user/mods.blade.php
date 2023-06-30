@@ -14,9 +14,9 @@
                     <th width="5%" scope="col">#ID</th>
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="20%" scope="col">Họ tên</th>
-                    <th width="20%" scope="col">SDT</th>
+                    <th width="15%" scope="col">SDT</th>
                     <th width="20%" scope="col">Email</th>
-                    <th width="15%" class="text-right" scope="col">Thao tác</th>
+                    <th width="20%" class="text-right" scope="col">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,8 +29,9 @@
                     <td>{{ $mod->email }}</td>
                     <td class="text-right">
                         @if($mod->id != 1)
-                        {!! $userServ->statusOperation($mod->id, $mod->status) !!}
-                        <a class="btn btn-sm btn-info" href="{{ route('user.mods.edit', ['userId' => $mod->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
+                            {!! $userServ->statusOperation($mod->id, $mod->status) !!}
+                            <a class="btn btn-sm btn-info" href="{{ route('user.mods.edit', ['userId' => $mod->id]) }}"><i class="fas fa-edit"></i> Sửa</a>
+                            <a class="btn btn-sm btn-warning" href="{{ route('user.mods.access', ['userId' => $mod->id]) }}"><i class="fas fa-user-edit"></i> Mods</a>
                         @endif
                     </td>
                 </tr>

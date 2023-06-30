@@ -25,6 +25,7 @@ pending_orders
 <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
 <td class="text-center" scope="row">{{ $row->created_at }}</td>
 <td class="text-right">
+<a href="{{ route('me.cancelpending', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm border-0 rounded-pill">HỦY</a> 
     <a href="{{ route('checkout.paymenthelp', ['order_id' => $row->id]) }}" class="btn btn-success btn-sm border-0 rounded-pill">Thanh toán</a>
 </td>
 </tr>
@@ -57,7 +58,9 @@ pending_orders
                     <td width="50%">{{ $row->classes }}</td>
                     <td>{{ number_format($row->amount) }} đồng</td>
                     <td>{{ $row->created_at }}</td>
-                    <td><a href="{{ route('checkout.paymenthelp', ['order_id' => $row->id]) }}" class="btn btn-success btn-sm border-0 rounded-pill">Thanh toán</a></td>
+                    <td>
+                    <a href="{{ route('me.cancelpending', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm border-0 rounded-pill">HỦY</a> 
+                    <a href="{{ route('checkout.paymenthelp', ['order_id' => $row->id]) }}" class="btn btn-success btn-sm border-0 rounded-pill">Thanh toán</a></td>
                 </tr>
                 @endforeach
                 @endif
