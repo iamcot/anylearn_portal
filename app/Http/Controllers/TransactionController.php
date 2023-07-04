@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\NotifConstants;
@@ -218,6 +219,11 @@ class TransactionController extends Controller
         }
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
+        }
+        if ($request->has('action')) {
+            $this->data['checkActiviy'] = $request->input('action');
+        } else {
+            $this->data['checkActiviy'] = null;
         }
         $userService = new UserServices();
         $itemService = new ItemServices();
@@ -650,7 +656,7 @@ class TransactionController extends Controller
                 ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
                 ->where('vouchers.voucher', $voucher)
                 ->first();
-            
+
             $transService = new TransactionService();
             $res = $transService->recalculateOrderAmountWithVoucher($orderId, $transService->calculateVoucherValue($voucherDB, $order->amount));
             if (!$res) {
