@@ -7,7 +7,7 @@
                 <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
                 <!--a href="{{ route('allclasses') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Kênh học tập</!--a>
                 <span-- class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span-->
-                <a href="{{ route('refpage', ['code' => 'anylearn']) }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1">Đối tác anyLEARN</a>
+                <a href="{{ route('refpage', ['code' => 'anylearn']) }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1">Trở thành đối tác anyLEARN</a>
                 <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
                 <a href="#download-app" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Tải ứng dụng</a>
             </div>
