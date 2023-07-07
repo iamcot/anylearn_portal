@@ -15,7 +15,7 @@ class ArticleServices
         return Article::where('status', 1)
             ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
             ->orderByDesc('id')
-            ->take(5)
+            ->take(6)
             ->get()
             ->makeHidden(['content']);
     }

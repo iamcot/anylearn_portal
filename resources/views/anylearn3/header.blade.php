@@ -12,11 +12,11 @@
                 <a href="#download-app" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Tải ứng dụng</a>
             </div>
             <div class="flex items-center">
-                {{-- <a href="{{ route('helpcenter') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block"><i class="fa fa-bell"></i> Thông báo</a> --}}
-                {{-- <span class="text-white hover:text-gray-300 px-1 py-1 hidden sm:block">|</span> --}}
+                <!-- <a href="{{ route('helpcenter') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block"><i class="fa fa-bell"></i> Thông báo</a> --}}
+                <span class="text-white hover:text-gray-300 px-1 py-1 hidden sm:block">|</span> --}}
                 <a href="{{ route('helpcenter') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block"><i class="fa fa-question-circle"></i> Hỗ trợ</a>
                 <a href="{{ route('helpcenter') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 sm:hidden">Hỗ trợ</a>
-                <span class="text-white hover:text-gray-300 px-1 py-1">|</span>
+                <span class="text-white hover:text-gray-300 px-1 py-1">|</span> -->
 
                 @if (!Auth::user())
                     <a href="{{ route('login') }}" class="text-white px-2 py-1 rounded-md">Đăng nhập</a>
