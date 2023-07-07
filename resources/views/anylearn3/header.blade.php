@@ -21,7 +21,7 @@
                 @if (!Auth::user())
                     <a href="{{ route('login') }}" class="text-white px-2 py-1 rounded-md">Đăng nhập</a>
                     <span class="text-white hover:text-gray-300 px-1 py-1">|</span>
-                    <a href="{{ route('refpage') }}" class="text-white px-2 py-1 rounded-md">Đăng ký</a>
+                    <a href="{{ route('refpage', ['code' => 'anylearn']) }}" class="text-white px-2 py-1 rounded-md">Đăng ký</a>
                 @else
                     <a href="{{ route('auth.logout') }}" class="text-white px-2 py-1 rounded-md">Đăng xuất</a>
                 @endif
