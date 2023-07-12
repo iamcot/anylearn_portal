@@ -56,6 +56,12 @@
                 <div class="col-md-6">
                     <input id="ext" type="text" class="form-control @error('expired') is-invalid @enderror" name="ext" value="{{ old('ext', !empty($voucher) ? $voucher->ext : '') }}">
                 </div>
+            </div> 
+            <div class="form-group row" id="rule_max_box">
+                <label for="rule_max" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị đơn tối đa') }}</label>
+                <div class="col-md-6">
+                    <input id="rule_max" type="text" class="form-control @error('rule_max') is-invalid @enderror" name="rule_max" value="{{ old('rule_min', !empty($voucher) ? $voucher->rule_min : '') }}">
+                </div>
             </div>
             <div class="form-group row" id="rule_min_box">
                 <label for="rule_min" class="col-md-2 col-form-label text-md-right">{{ __('Giá trị đơn tối thiểu') }}</label>

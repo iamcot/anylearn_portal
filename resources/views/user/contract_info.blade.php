@@ -78,6 +78,14 @@
                 <button class="btn btn-sm btn-danger float-right" name="action" value="{{ \App\Constants\UserConstants::CONTRACT_DELETED }}">Từ chối hợp đồng</button>
             </div>
         </div> -->
+        <div class="card-footer">
+              @lang('Xem và tải xuống mẫu hợp đồng:')
+              @if ($contract->role =="school")
+                  <a target="_blank" href="/admin/config/guide/contract_school/{{ $contract->id }}">@lang('Hợp đồng Trường học')</a>
+              @else
+                <a target="_blank" href="/admin/config/guide/contract_teacher/{{ $contract->id }}">@lang('Hợp đồng Giảng viên')</a>
+              @endif
+</div>
     </div>
 </form>
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
