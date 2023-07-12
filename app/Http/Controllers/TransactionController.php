@@ -743,6 +743,7 @@ class TransactionController extends Controller
 
         try {
             $response = $processor->processPayment();
+            dd($response);
         } catch (\Exception $e) {
             $response = new ServiceResponse(false, 'EXCEPTION', $e);
         }
