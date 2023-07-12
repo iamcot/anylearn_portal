@@ -785,7 +785,7 @@ class TransactionController extends Controller
 
     public function paymentResult(Request $request, $payment = 'onepaylocal')
     {
-        //dd($request->all());
+        dd($request->all());
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
