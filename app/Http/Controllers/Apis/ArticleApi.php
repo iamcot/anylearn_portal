@@ -27,6 +27,7 @@ class ArticleApi extends Controller
 
         $tags = Tag::where('type', 'article')
             ->where('status', 1)
+            ->distinct('tag')
             ->pluck('tag');
 
         return response()->json([
