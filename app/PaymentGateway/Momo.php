@@ -155,7 +155,7 @@ class Momo implements PaymentInterface {
         ."&orderInfo=".$orderInfo."&returnUrl=".$returnUrl."&notifyUrl="
         .$notifyurl."&extraData=".$extraData;
 
-        $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET'));
+        $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', 'SJPsTqt63TwgVAEQHkQQ8w52Wg3AnSLQ'));
 
         $data =  [
             'partnerCode' => $partnerCode,
