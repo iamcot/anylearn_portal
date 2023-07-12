@@ -727,7 +727,8 @@ class TransactionController extends Controller
 
         $input = [
             'amount' => $openOrder->amount,
-            'orderid' => $openOrder->id,
+            //'orderid' => $openOrder->id,
+            'orderid' => $payment == 'momo' ? Processor::generatePaymentToken($openOrder->id) : $openOrder->id,
             'ip' => $request->ip(),
             'save_card' => $saveCard,
             'token_num' => $tokenNum,
@@ -788,21 +789,20 @@ class TransactionController extends Controller
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
-        $orderId = $result['orderId'];
+        //$orderId = $result['orderId'];
+        $orderId = $payment == 'momo' 
+            ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+            : $result['orderId'];
+
         $order = Order::find($orderId);
         $user = User::find($order->user_id); 
-
-        if ($payment == 'momo') {
-            $result['status']  = $result['errorCode'] == 0 ? 1 : 0;
-            $result['message'] = $result['errorCode'] == 0 ? $result['errorCode'] : 'Giao dịch không thành công!'; 
-        }
 
         if (!isset($result['status'])) {
             return redirect()->route('cart', ['api_token' => $user->api_token]);
         }
 
         if ($result['status'] == 1) {
-            $orderId = $result['orderId'];
+            //$orderId = $result['orderId'];
             $transService = new TransactionService();
             $transService->approveRegistrationAfterWebPayment($orderId, $payment);
 
@@ -894,7 +894,7 @@ class TransactionController extends Controller
         }
 
         try {
-            $query = $request->getQueryString();
+            $query = $request->getQueryString(); 
             $url = $processor->processReturnData($query);
             if (!empty($url)) {
                 return redirect($url);

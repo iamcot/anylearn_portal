@@ -52,7 +52,8 @@ class Momo implements PaymentInterface {
      * @return string
      */
     public function processReturnData($response) {
-        $data = $this->processFeedbackData($response);
+        parse_str($response, $arrResponse);
+        $data = $this->processFeedbackData($arrResponse);
 
         return $this->buildUrl($data);
     }
@@ -106,7 +107,7 @@ class Momo implements PaymentInterface {
         foreach($data as $key => $value) {
             $flatdata[] = urlencode($key) . '=' . urlencode($value);
          }
-        return env('CALLBACK_SERVER') . '?' . implode("&", $flatdata);
+        return env('CALLBACK_SERVER') . '/momo?' . implode("&", $flatdata);
     }
 
      /**
@@ -144,7 +145,7 @@ class Momo implements PaymentInterface {
         $accessKey = env('PAYMENT_MOMO_ACCESS', 'LlFWon5lIJZE5YgW');
         $serectkey = env('PAYMENT_MOMO_SECRET', 'SJPsTqt63TwgVAEQHkQQ8w52Wg3AnSLQ');
         $orderInfo = 'Pay with Momo';
-        $returnUrl = env('CALLBACK_SERVER') . '/momo'; //env('APP_URL') . '/api/payment/return/momo';
+        $returnUrl = env('APP_URL') . '/payment-return/momo'; //'/api/payment/return/momo';
         $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
         $requestId = time()."";
         $requestType = "captureMoMoWallet";
