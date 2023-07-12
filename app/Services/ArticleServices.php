@@ -20,6 +20,22 @@ class ArticleServices
             ->makeHidden(['content']);
     }
 
+    public function getArticlesByType($type = Article::TYPE_READ) {
+        return Article::where('status', 1)
+            ->where('type', $type)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc');
+    }
+
+    public function getHotArticlesByType($type = Article::TYPE_READ) {
+        return Article::where('status', 1)
+            ->where('type', $type)
+            ->where('is_hot', 1)
+            ->orderby('id', 'desc')
+            ->take(6)
+            ->get();
+    }
+
     public function getPromotions()
     {
         return Article::where('type', Article::TYPE_PROMOTION)

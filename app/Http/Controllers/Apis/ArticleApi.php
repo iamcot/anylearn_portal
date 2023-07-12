@@ -4,13 +4,38 @@ namespace App\Http\Controllers\Apis;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Article;
 use App\Models\Ask;
+use App\Models\Article;
+use App\Models\Tag;
+use App\Services\ArticleServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ArticleApi extends Controller
 {
+    public function articles(Request $request) {       
+        $articles = new \StdClass();
+        $articleServices = new ArticleServices();
+
+        $art = $articleServices
+            ->getArticlesByType()
+            ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
+
+        $articles->data = $art->items();
+        $articles->numPage = ceil($art->total() / $request->get('size', 12));
+        $articles->currentPage = (int) $request->get('page');
+
+        $tags = Tag::where('type', 'article')
+            ->where('status', 1)
+            ->pluck('tag');
+
+        return response()->json([
+            'hotArticles' => $articleServices->getHotArticlesByType(),
+            'articles' => $articles,
+            'tags' => $tags,
+        ]);
+    }
+
     public function index()
     {
         $videos = Article::where('status', 1)

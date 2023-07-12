@@ -71,6 +71,7 @@ Route::get('/v3/listing', 'Apis\ListingApi@index');
 Route::get('/v3/search', 'Apis\SearchFilterApi@index');
 Route::get('/v3/partner/{id}', 'Apis\PartnerApi@index');
 Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
+Route::get('/v3/articles', 'Apis\ArticleApi@articles');
 
 Route::middleware(['api.user'])->group(function () {
 
