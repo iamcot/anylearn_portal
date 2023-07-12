@@ -23,7 +23,7 @@ class ArticleApi extends Controller
 
         $articles->data = $art->items();
         $articles->numPage = ceil($art->total() / $request->get('size', 12));
-        $articles->currentPage = (int) $request->get('page');
+        $articles->currentPage = (int) $request->get('page', 1);
 
         $tags = Tag::where('type', 'article')
             ->where('status', 1)
