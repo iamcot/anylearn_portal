@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/cdn/anylearn3/0.0.1/static/css/main.db1c6a7a.css",
-    "main.js": "/cdn/anylearn3/0.0.1/static/js/main.44217185.js",
+    "main.css": "/cdn/anylearn3/0.0.1/static/css/main.51b01fb1.css",
+    "main.js": "/cdn/anylearn3/0.0.1/static/js/main.ecc9c84e.js",
     "static/js/787.9fdd7567.chunk.js": "/cdn/anylearn3/0.0.1/static/js/787.9fdd7567.chunk.js",
     "static/media/5.jpg": "/cdn/anylearn3/0.0.1/static/media/5.d096dbdb63cd2f550854.jpg",
     "static/media/4.jpg": "/cdn/anylearn3/0.0.1/static/media/4.c8da9e4a034ed7403d01.jpg",
     "static/media/1.jpg": "/cdn/anylearn3/0.0.1/static/media/1.99b73b2670436f9c327b.jpg",
     "static/media/3.jpg": "/cdn/anylearn3/0.0.1/static/media/3.8feef176b7b8cca36ce1.jpg",
     "static/media/2.jpg": "/cdn/anylearn3/0.0.1/static/media/2.f2f0ba900fb93cc572dc.jpg",
-    "static/media/logoSVG.svg": "/cdn/anylearn3/0.0.1/static/media/logoSVG.f781a1cb92f2881d2b503dd473592946.svg",
     "static/media/Google_Play-Badge-Logo.wine.svg": "/cdn/anylearn3/0.0.1/static/media/Google_Play-Badge-Logo.wine.f4734b1f54ed83fe5cd18eaaf1295658.svg",
+    "static/media/logo-full.png": "/cdn/anylearn3/0.0.1/static/media/logo-full.8fed31cee985957e87c7.png",
     "static/media/App_Store_(iOS)-Badge-Alternative-Logo.wine.svg": "/cdn/anylearn3/0.0.1/static/media/App_Store_(iOS)-Badge-Alternative-Logo.wine.525865049ad4a38fecce3373c8b54181.svg",
     "index.html": "/cdn/anylearn3/0.0.1/index.html",
-    "main.db1c6a7a.css.map": "/cdn/anylearn3/0.0.1/static/css/main.db1c6a7a.css.map",
-    "main.44217185.js.map": "/cdn/anylearn3/0.0.1/static/js/main.44217185.js.map",
+    "main.51b01fb1.css.map": "/cdn/anylearn3/0.0.1/static/css/main.51b01fb1.css.map",
+    "main.ecc9c84e.js.map": "/cdn/anylearn3/0.0.1/static/js/main.ecc9c84e.js.map",
     "787.9fdd7567.chunk.js.map": "/cdn/anylearn3/0.0.1/static/js/787.9fdd7567.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.db1c6a7a.css",
-    "static/js/main.44217185.js"
+    "static/css/main.51b01fb1.css",
+    "static/js/main.ecc9c84e.js"
   ]
 }
