@@ -140,11 +140,11 @@ class Momo implements PaymentInterface {
      */
     private function createPaymentRequest($amount, $orderid) {
         $domain = $this->getServer() . '/gw_payment/transactionProcessor';
-        $partnerCode = env('PAYMENT_MOMO_PARTNER');
-        $accessKey = env('PAYMENT_MOMO_ACCESS');
-        $serectkey = env('PAYMENT_MOMO_SECRET');
+        $partnerCode = env('PAYMENT_MOMO_PARTNER', 'MOMO9JIR20230710');
+        $accessKey = env('PAYMENT_MOMO_ACCESS', 'LlFWon5lIJZE5YgW');
+        $serectkey = env('PAYMENT_MOMO_SECRET', 'SJPsTqt63TwgVAEQHkQQ8w52Wg3AnSLQ');
         $orderInfo = 'Pay with Momo';
-        $returnUrl = env('APP_URL') . '/api/payment/return/momo';
+        $returnUrl = env('CALLBACK_SERVER') . '/momo'; //env('APP_URL') . '/api/payment/return/momo';
         $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
         $requestId = time()."";
         $requestType = "captureMoMoWallet";

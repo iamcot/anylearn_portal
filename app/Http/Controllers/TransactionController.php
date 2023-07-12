@@ -786,16 +786,23 @@ class TransactionController extends Controller
 
     public function paymentResult(Request $request, $payment = 'onepaylocal')
     {
+        //dd($request->all());
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
         $orderId = $result['orderId'];
         $order = Order::find($orderId);
-        $user = User::find($order->user_id);
+        $user = User::find($order->user_id); 
+
+        if ($payment == 'momo') {
+            $result['status']  = $result['errorCode'] == 0 ? 1 : 0;
+            $result['message'] = $result['errorCode'] == 0 ? $result['errorCode'] : 'Giao dịch không thành công!'; 
+        }
 
         if (!isset($result['status'])) {
             return redirect()->route('cart', ['api_token' => $user->api_token]);
         }
+
         if ($result['status'] == 1) {
             $orderId = $result['orderId'];
             $transService = new TransactionService();
