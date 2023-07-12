@@ -16,7 +16,7 @@ class Momo implements PaymentInterface {
         if (empty($orderId) && !App::environment('live')) {
             $orderId = time();
         }
-        if ($amount <= 0 || empty($orderId)) {
+        if ($amount < 1000 || empty($orderId)) {
             return 'REQUIRE_AMOUNT_OR_ORDERID';
         }
 
@@ -80,7 +80,9 @@ class Momo implements PaymentInterface {
         if (isset($response['errorCode']) && $response['errorCode'] == self::SUCCESS_CODE) {
             $data['status'] = 1;
         } else {
-            $data['message'] = isset($response['message']) ? $response['message'] : '';
+            //$data['message'] = isset($response['message']) ? $response['message'] : '';
+            $data['message'] = 'Thanh toán không thành công!';
+
         }
 
         return $data;
@@ -144,7 +146,7 @@ class Momo implements PaymentInterface {
         $partnerCode = env('PAYMENT_MOMO_PARTNER', 'MOMO9JIR20230710');
         $accessKey = env('PAYMENT_MOMO_ACCESS', 'LlFWon5lIJZE5YgW');
         $serectkey = env('PAYMENT_MOMO_SECRET', 'SJPsTqt63TwgVAEQHkQQ8w52Wg3AnSLQ');
-        $orderInfo = 'Pay with Momo';
+        $orderInfo = 'Vui lòng thanh toán đơn hàng của bạn';
         $returnUrl = env('APP_URL') . '/payment-return/momo'; //'/api/payment/return/momo';
         $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
         $requestId = time()."";
