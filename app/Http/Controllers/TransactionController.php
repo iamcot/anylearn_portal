@@ -792,7 +792,7 @@ class TransactionController extends Controller
         $orderId = $result['orderId'];
         $order = Order::find($orderId);
         $user = User::find($order->user_id); 
-
+        dd($payment, $request->all());
         if ($payment == 'momo') {
             $result['status']  = $result['errorCode'] == 0 ? 1 : 0;
             $result['message'] = $result['errorCode'] == 0 ? $result['errorCode'] : 'Giao dịch không thành công!'; 
