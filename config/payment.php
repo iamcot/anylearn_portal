@@ -6,5 +6,9 @@
     'onepaylocal' => [
         'title' => 'Thanh toán trực tuyến bằng thẻ',
         'status' => 1,
+    ],
+    'momo' => [
+        'title' => 'Thanh toán bằng ví MoMo',
+        'status' => 1,
     ], 
 ];

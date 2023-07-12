@@ -229,7 +229,9 @@ cart
                         <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng')</strong></label>
                     </li>
                     @endif
-
+                    <li class="p-2"><input required type="radio" name="payment" value="momo" id="radio_momo">
+                        <label for="radio_momo"><strong>@lang('Thanh toán bằng ví Momo')</strong></label>
+                    </li>
                 </ul>
                 <p class="fw-bold" style="display: none;" id="save_card_block"><input type="checkbox" name="save_card" id="save_card"> <label for="save_card">@lang('Lưu thông tin thẻ cho lần thanh toán sau.')</label></p>
                 @else
