@@ -12,7 +12,7 @@
 @endsection
 
 @section('body')
-    @if (sizeof($courseList) == 0)
+    @if (sizeof($courseList) == 0 && !request()->get('s'))
         <div class=" mt-5 pt-5">
             @lang('Chưa có lớp học nào. <a href=":url"><i class="fas fa-plus"></i> Thêm mới</a>', ['url' => route('me.class.create')])
         </div>

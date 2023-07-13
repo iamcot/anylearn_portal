@@ -28,7 +28,7 @@ class OrderDetail extends Model
         return $this->belongsTo('App\Models\Order', 'order_id', 'id');
     }
 
-
+//@TODO fix lại nếu có item_schedule_plans thì lấy từ đó, ko thì sẽ lấy ngày hiện tại
     public function userRegistered($userId)
     {
         $today = date('Y-m-d');
@@ -49,14 +49,14 @@ class OrderDetail extends Model
             ->where('users.status', '>', 0)
             ->where('items.user_status', '>', 0)
             ->select(
-                'schedules.id',
+                'od.id',
                 'items.title',
                 'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
                 'items.date_start as date',
                 'items.time_start as time',
                 'items.time_end',
-                "'' as schedule_content",
+                DB::raw("'' as schedule_content"),
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
@@ -69,8 +69,8 @@ class OrderDetail extends Model
                 DB::raw('"" AS image'),
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
-            ->orderBy('schedules.date')
-            ->orderBy('schedules.time_start');
+            ->orderBy('items.date_start')
+            ->orderBy('items.time_start');
         $query2 = clone $query;
         // $done = $query->where('items.date_start', '<', $today)->get();
         $done = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->where(function ($q) {
@@ -143,18 +143,18 @@ class OrderDetail extends Model
             ->orWhere('users.user_id', $userId)
             ->where('users.is_child',1)
             ->select(
-                'schedules.id',
-                'schedules.item_id as item_id',
+                'oorder_detailsd.id',
+                'order_details.item_id',
                 'items.title',
                 'items.user_status',
                 'items.status',
                 'items.date_end',
                 'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
-                'schedules.date_start as date',
-                'schedules.time_start as time',
-                'schedules.time_end',
-                'schedules.title as schedule_content',
+                'items.date_start as date',
+                'items.time_start as time',
+                'items.time_end',
+                DB::raw("'' as schedule_content"),
                 'items.short_content as content',
                 'pa.id AS user_joined',
                 'items.user_status as author_status',
@@ -167,8 +167,8 @@ class OrderDetail extends Model
                 DB::raw('"" AS image'),
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
-            ->orderBy('schedules.date_start')
-            ->orderBy('schedules.time_start');
+            ->orderBy('items.date_start')
+            ->orderBy('items.time_start');
             // dd($query->get());
         $result = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
         return $result;

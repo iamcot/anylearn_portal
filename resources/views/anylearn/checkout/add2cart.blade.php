@@ -106,11 +106,11 @@
                                 @endforeach
                             </div>
                         @else
-                            <p class="p-3">Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }} 
+                            <p class="p-3">Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }}
                             @if($item->time_start)<br>Giờ học {{ $item->time_start }}.@endif
 
                             </p>
-                         
+
                         @endif
                     </div>
                 </div>
@@ -118,7 +118,7 @@
 
         @endif
         @if (!empty($extras) && count($extras) > 0)
-            @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
+            @if ($checkActiviy)
             @else
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
@@ -141,7 +141,7 @@
 
         @endif
         @if ($item->subtype == 'extra' || $item->subtype == 'offline')
-            @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
+            @if ($item->activiy_test || $item->activiy_trial || $item->activiy_visit)
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
                         <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fas fa-people-carry"></i>

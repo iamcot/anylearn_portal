@@ -86,6 +86,29 @@ class ConfigController extends Controller
         return redirect()->back()->with('notify', $rs);
     }
 
+    public function guidepdf($type, $id)
+    {
+        $contract = DB::table('contracts')
+        ->join('users', 'users.id', '=', 'contracts.user_id')
+        ->where('contracts.id', $id)
+            ->select('users.name', 'users.phone', 'users.title', 'contracts.*')
+            ->first();
+        if (!isset(ConfigConstants::$guideTitle[$type])) {
+            return redirect()->back();
+        }
+        $this->data['guideType'] = $type;
+        $this->data['data'] = null;
+        $data = Configuration::where('key', $type)->first();
+        if ($data) {
+            $this->data['data'] = $data->value;
+        }
+        $this->data['contract']  = $contract;
+        $this->data['navText'] = __(ConfigConstants::$guideTitle[$type]);
+        $fileService = new FileServices();
+        $fileService->getImagesOfData($this->data['data']);
+
+        return view('config.guidepdf', $this->data);
+    }
     public function banner(Request $request)
     {
         $key = ConfigConstants::CONFIG_APP_BANNERS;
@@ -336,6 +359,7 @@ class ConfigController extends Controller
                     'value' => $input['value'],
                     'status' => 1,
                     'rule_min' => $input['rule_min'],
+                    'rule_max' => $input['rule_max'],
                     'length' => $input['length'],
                 ];
                 $exists = VoucherGroup::where('prefix', $input['prefix'])->count();
