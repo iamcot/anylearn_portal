@@ -16,7 +16,7 @@ class Momo implements PaymentInterface {
         if (empty($orderId) && !App::environment('live')) {
             $orderId = time();
         }
-        if ($amount < 1000 || empty($orderId)) {
+        if ($amount <= 0 || empty($orderId)) {
             return 'REQUIRE_AMOUNT_OR_ORDERID';
         }
 

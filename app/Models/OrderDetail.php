@@ -143,7 +143,7 @@ class OrderDetail extends Model
             ->orWhere('users.user_id', $userId)
             ->where('users.is_child',1)
             ->select(
-                'oorder_detailsd.id',
+                'order_details.id',
                 'order_details.item_id',
                 'items.title',
                 'items.user_status',
