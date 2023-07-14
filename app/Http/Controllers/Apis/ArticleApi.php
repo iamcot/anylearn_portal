@@ -18,13 +18,19 @@ class ArticleApi extends Controller
         $articleServices = new ArticleServices();
 
         $art = $articleServices
-            ->getArticlesByType()
+            ->getArticlesByType($request->get('type') ? $request->get('type'): Article::TYPE_READ)
             ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
 
         $articles->data = $art->items();
         $articles->numPage = ceil($art->total() / $request->get('size', 12));
         $articles->currentPage = (int) $request->get('page', 1);
-
+        $asks =  DB::table('asks')
+            ->where('asks.type', Ask::TYPE_QUESTION)
+            ->where('asks.status', 1)
+            ->join('users', 'users.id', '=', 'asks.user_id')
+            ->select('asks.*', 'users.name', 'users.image AS user_image', 'users.role AS user_role')
+            ->orderBy('asks.id', 'desc')
+            ->take(3)->get();
         $tags = Tag::where('type', 'article')
             ->where('status', 1)
             ->distinct('tag')
@@ -34,6 +40,7 @@ class ArticleApi extends Controller
             'hotArticles' => $articleServices->getHotArticlesByType(),
             'articles' => $articles,
             'tags' => $tags,
+            'asks' => $asks,
         ]);
     }
 
