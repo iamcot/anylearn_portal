@@ -13,18 +13,17 @@ use Illuminate\Support\Facades\Log;
 
 class ArticleApi extends Controller
 {
-    public function articles(Request $request) {       
+    public function articles(Request $request) {
         $articles = new \StdClass();
         $articleServices = new ArticleServices();
 
         $art = $articleServices
-            ->getArticlesByType()
+            ->getArticlesByType($request->get('type') ? $request->get('type'): Article::TYPE_READ)
             ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
 
         $articles->data = $art->items();
         $articles->numPage = ceil($art->total() / $request->get('size', 12));
         $articles->currentPage = (int) $request->get('page', 1);
-
         $tags = Tag::where('type', 'article')
             ->where('status', 1)
             ->distinct('tag')
