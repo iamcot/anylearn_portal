@@ -9,8 +9,6 @@ use App\Models\Article;
 use App\Models\Tag;
 use App\Services\ArticleServices;
 use Illuminate\Support\Facades\DB;
-use App\Constants\ConfigConstants;
-
 use Illuminate\Support\Facades\Log;
 
 class ArticleApi extends Controller
@@ -21,10 +19,10 @@ class ArticleApi extends Controller
 
         $art = $articleServices
             ->getArticlesByType()
-            ->paginate($request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION), ['*'], 'page', $request->get('page'));
+            ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
 
         $articles->data = $art->items();
-        $articles->numPage = ceil($art->total() / $request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION));
+        $articles->numPage = ceil($art->total() / $request->get('size', 12));
         $articles->currentPage = (int) $request->get('page', 1);
 
         $tags = Tag::where('type', 'article')
