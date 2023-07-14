@@ -561,6 +561,8 @@ class TransactionController extends Controller
         )
         ->take(5)->get();
 
+        $this->data['momoStatus'] = isset($payments['momo']) ? $payments['momo']['status'] : 0;
+
         return view(env('TEMPLATE', '') . 'checkout.cart', $this->data);
     }
 

@@ -229,8 +229,7 @@ cart
                         <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng')</strong></label>
                     </li>
                     @endif
-                    {{ dd($payments)}}
-                    @if ($payments['momo']['status'] && $order->amount >= 1000 && $order->amount <= 50000000)
+                    @if ($momoStatus && $order->amount >= 1000 && $order->amount <= 50000000)
                     <li class="p-2"><input required type="radio" name="payment" value="momo" id="radio_momo">
                         <label for="radio_momo"><strong>@lang('Thanh toán bằng ví Momo')</strong></label>
                     </li>
