@@ -9,6 +9,6 @@
     ],
     'momo' => [
         'title' => 'Thanh toán bằng ví MoMo',
-        'status' => 1,
+        'status' => 0,
     ], 
 ];
