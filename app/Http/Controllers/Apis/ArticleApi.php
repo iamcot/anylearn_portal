@@ -20,7 +20,11 @@ class ArticleApi extends Controller
         $art = $articleServices
             ->getArticlesByType($request->get('type') ? $request->get('type'): Article::TYPE_READ)
             ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
-
+        if ($request->get('tags') !=null) {
+            $art = $articleServices
+            ->getArticlesByTags($request->get('tags') ? $request->get('tags') : null)
+            ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
+        }
         $articles->data = $art->items();
         $articles->numPage = ceil($art->total() / $request->get('size', 12));
         $articles->currentPage = (int) $request->get('page', 1);
@@ -28,10 +32,11 @@ class ArticleApi extends Controller
             ->where('status', 1)
             ->distinct('tag')
             ->pluck('tag');
-
+        $hotEvent = $articleServices->getHotArticlesByType(Article::TYPE_EVENT);
         return response()->json([
             'hotArticles' => $articleServices->getHotArticlesByType(),
             'articles' => $articles,
+            'hotEvent' => $hotEvent,
             'tags' => $tags,
         ]);
     }
@@ -74,7 +79,6 @@ class ArticleApi extends Controller
 
         return response()->json($data);
     }
-
     public function loadArticle($id)
     {
         $data = Article::find($id);

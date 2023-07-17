@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class ArticleServices
 {
-    public function getArticles() 
+    public function getArticles()
     {
         return Article::where('status', 1)
             ->whereIn('type', [Article::TYPE_READ, Article::TYPE_VIDEO])
@@ -19,14 +19,19 @@ class ArticleServices
             ->get()
             ->makeHidden(['content']);
     }
-
     public function getArticlesByType($type = Article::TYPE_READ) {
         return Article::where('status', 1)
             ->where('type', $type)
             ->orderby('is_hot', 'desc')
             ->orderby('id', 'desc');
     }
-
+    public function getArticlesByTags($tags = null)
+    {
+        return Article::where('status', 1)
+            ->where('tags', $tags)
+            ->orderby('is_hot', 'desc')
+            ->orderby('id', 'desc');
+    }
     public function getHotArticlesByType($type = Article::TYPE_READ) {
         return Article::where('status', 1)
             ->where('type', $type)
