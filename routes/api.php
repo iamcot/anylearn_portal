@@ -40,6 +40,7 @@ Route::get('/item/{itemId}/reviews', 'Apis\ItemApi@reviews');
 
 Route::get('/article', 'Apis\ArticleApi@index');
 Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
+
 Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
 
 Route::get('/quote', 'Apis\ArticleApi@quote');
