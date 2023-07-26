@@ -109,7 +109,7 @@ class Momo implements PaymentInterface {
         foreach($data as $key => $value) {
             $flatdata[] = urlencode($key) . '=' . urlencode($value);
          }
-        return env('CALLBACK_SERVER') . '/momo?' . implode("&", $flatdata);
+        return env('CALLBACK_SERVER_MOMO') . '?' . implode("&", $flatdata);
     }
 
      /**
