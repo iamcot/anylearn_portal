@@ -9,6 +9,6 @@
     ],
     'momo' => [
         'title' => 'Thanh toán bằng ví MoMo',
-        'status' => 0,
+        'status' => env('PAYMENT_MOMO_PARTNER') ? 1 :  0,
     ], 
 ];

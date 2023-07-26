@@ -143,9 +143,9 @@ class Momo implements PaymentInterface {
      */
     private function createPaymentRequest($amount, $orderid) {
         $domain = $this->getServer() . '/gw_payment/transactionProcessor';
-        $partnerCode = env('PAYMENT_MOMO_PARTNER', 'MOMO9JIR20230710');
-        $accessKey = env('PAYMENT_MOMO_ACCESS', 'LlFWon5lIJZE5YgW');
-        $serectkey = env('PAYMENT_MOMO_SECRET', 'SJPsTqt63TwgVAEQHkQQ8w52Wg3AnSLQ');
+        $partnerCode = env('PAYMENT_MOMO_PARTNER', '');
+        $accessKey = env('PAYMENT_MOMO_ACCESS', '');
+        $serectkey = env('PAYMENT_MOMO_SECRET', '');
         $orderInfo = 'Vui lòng thanh toán đơn hàng của bạn';
         $returnUrl = env('APP_URL') . '/payment-return/momo'; //'/api/payment/return/momo';
         $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
@@ -158,7 +158,7 @@ class Momo implements PaymentInterface {
         ."&orderInfo=".$orderInfo."&returnUrl=".$returnUrl."&notifyUrl="
         .$notifyurl."&extraData=".$extraData;
 
-        $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', 'SJPsTqt63TwgVAEQHkQQ8w52Wg3AnSLQ'));
+        $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', ''));
 
         $data =  [
             'partnerCode' => $partnerCode,
