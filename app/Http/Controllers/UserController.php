@@ -280,6 +280,7 @@ class UserController extends Controller
 
             $member['role'] = UserConstants::ROLE_MEMBER;
             $member['refcode'] = $member['phone'];
+            $member['sale_id'] = Auth::user()->id;
             $member['password'] = Hash::make($member['phone']);
             $member['status'] = UserConstants::STATUS_INACTIVE;
             $member['is_registered'] = 0;

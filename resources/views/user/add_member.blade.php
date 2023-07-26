@@ -16,7 +16,7 @@
                 <div class="col-md-8">
                     <input id="phone" type="tel" pattern="[0-9]{10}" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required>
                     @error('phone')
-                        <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                
