@@ -45,7 +45,7 @@
         $contract->ref,
         $contract->ref_title,
         $contract->address,
-        $contract->commission,
+        (1-$contract->commission)*100 . '%',
         $contract->bank_name,
         $contract->bank_branch,
         $contract->bank_no,
