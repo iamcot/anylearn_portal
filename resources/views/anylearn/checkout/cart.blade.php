@@ -231,7 +231,7 @@ cart
                     @endif
                     @if ($momoStatus && $order->amount >= 1000 && $order->amount <= 50000000)
                     <li class="p-2"><input required type="radio" name="payment" value="momo" id="radio_momo">
-                        <label for="radio_momo"><strong>@lang('Thanh toán bằng ví Momo')</strong></label>
+                        <label for="radio_momo"><strong>@lang('Thanh toán bằng ví MoMo')</strong></label>
                     </li>
                     @endif
                 </ul>
