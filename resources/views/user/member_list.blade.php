@@ -170,7 +170,7 @@
                     <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'users', 'id' =>  $user->id ]) }}">{!! $userServ->hotIcon($user->is_hot) !!}</a></td>
                     <td>{{ $user->boost_score }}</td>
                     @endif
-                    <td>{{ $user->role }}</td>
+                    <td><a target="_blank" href="{{ route('class') }}?ref_id={{ $user->id }}">{{ $user->role }}</a></td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}</td>
                     <td>{{ $user->email }}</td>
