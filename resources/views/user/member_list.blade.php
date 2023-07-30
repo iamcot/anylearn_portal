@@ -119,7 +119,8 @@
 @endif
 <div class="card shadow">
     <div class="card-header">
-        Tổng tìm kiếm: <strong class="text-danger">{{ $members->total() }}</strong>
+        Tổng tìm kiếm: <strong class="text-danger">{{ $members->total() }}</strong>, 
+        Tổng anyPoint: <strong class="text-danger">{{ $members->sumC }}</strong>
     </div>
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
@@ -175,7 +176,7 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->address }}</td>
                     <td>{{ number_format($user->wallet_c) }}</td>
-                    <td>{{ $user->refname ? $user->refname . ' (' . $user->refphone . ')' : '' }}</td>
+                    <td>@if($user->refname) <a href="?ref_id={{ $user->refid }}">{{ $user->refname . ' (' . $user->refphone . ')'  }} </a>@endif</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>
                     <td class="text-center">{!! $userServ->requiredDocIcon($user) !!}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($user->updated_at)) }}</td>

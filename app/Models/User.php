@@ -410,6 +410,7 @@ class User extends Authenticatable
                 ->whereDate('lo.created_at', '<=', $request->input('datelo'));
             });
         }
+        $copy = clone $members;
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
             $members = $members->where(function ($query) use ($requester) {
@@ -417,8 +418,7 @@ class User extends Authenticatable
                     ->orWhere('users.user_id', $requester->id);
             });
             $members = $members
-                ->orderBy('lastsa.last_contact')
-                ->orderBy('id');
+                ->orderBy('lastsa.last_contact');
         } elseif ($requester->role == UserConstants::ROLE_SALE_MANAGER) {
             $members = $members->where(function ($query) use ($requester) {
                 $saleManager = explode(',', env('SALE_MANAGER'));
@@ -428,18 +428,17 @@ class User extends Authenticatable
                     return $query->whereIn('users.sale_id', $saleManager)
                         ->orWhereIn('users.user_id', $saleManager);
                 } else {
-                    dd("no array");
                     return $query;
                 }
             });
             $members = $members
-                ->orderBy('lastsa.last_contact')
-                ->orderBy('id');
-        } {
-            $members = $members->orderby('users.is_hot', 'desc')
+                ->orderBy('lastsa.last_contact');
+        } 
+            
+        $members = $members->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
                 ->orderby('users.id', 'desc');
-        }
+        
         $members = $members
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
             ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
@@ -456,6 +455,7 @@ class User extends Authenticatable
                 'users.wallet_c',
                 'u2.name AS refname',
                 'u2.phone AS refphone',
+                'u2.id AS refid',
                 'users.updated_at',
                 'users.update_doc',
                 'users.is_hot',
@@ -467,6 +467,7 @@ class User extends Authenticatable
             );
         if (!$file) {
             $members = $members->paginate(UserConstants::PP);
+            $members->sumC = $copy->sum('users.wallet_c');
         } else {
             $members = $members->get();
             if ($members) {
