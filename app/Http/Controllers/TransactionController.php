@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\NotifConstants;
@@ -47,7 +47,7 @@ class TransactionController extends Controller
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ActivitybonusConstants::Activitybonus_Bonus])
             ->orderby('id', 'desc')
             ->with('user')
             ->paginate(20);

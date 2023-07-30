@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Models\I18nContent;
+use App\Services\ActivitybonusServices;
 use App\Services\FileServices;
 use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
@@ -167,6 +169,13 @@ class User extends Authenticatable
                         'ref_id' => $newMember->id,
                         'day' => date('Y-m-d'),
                     ]);
+                    $activityService = new ActivitybonusServices();
+                    $activityService->updateWalletC($newMember->user_id, 
+                    ActivitybonusConstants::Activitybonus_Referral, 
+                    'Cộng điểm giới thiệu thành viên mới ' . $newMember->name, 
+                    null,
+                    true);
+                    
                 }
 
                 // if (!empty($newMember->user_id)) {
@@ -175,6 +184,7 @@ class User extends Authenticatable
                 // }
             }
             $this->updateUpTree($newMember->user_id);
+           
             $newMember->commission_rate = (float)$newMember->commission_rate;
         } catch (\Exception $ex) {
             Log::error($ex);
@@ -294,8 +304,23 @@ class User extends Authenticatable
             $needDelete[] = $currentData->banner;
             $obj['banner'] = $banner['url'];
         }
+        $editUser = $this->find($input['id']);
+        $activityService = new ActivitybonusServices();
 
-        $rs = $this->find($input['id'])->update($obj);
+            if ($editUser->image == null && isset($input['image']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
+            }
+            if ($editUser->banner == null && isset($input['banner']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
+            }
+            if ($editUser->email == null && isset($input['email']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
+            }
+            if ($editUser->address == null && isset($input['address']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
+            }
+
+        $rs = $editUser->update($obj);
         if ($rs) {
             $i18 = new I18nContent();
             foreach (I18nContent::$supports as $locale) {

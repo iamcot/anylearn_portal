@@ -70,7 +70,6 @@ class CrmController extends Controller
 
         $this->data['points'] = Transaction::where('user_id', $userId)
             ->where('pay_method', 'wallet_c')
-            ->select('content', 'created_at', 'amount')
             ->get();
 
         return view('crm.sale', $this->data);

@@ -39,7 +39,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>#Mã</th>
+                                <th>#ID</th>
                                 <th>Tên</th>
                                 <th>Ngày Sinh</th>
                                 <th>Giới Tính</th>
@@ -61,8 +61,8 @@
                                     <form action="" method="get">
                                         <td>
                                             <input type="hidden" name='id' value="{{ $row->id }}">
-                                            <button class="btn btn-sm btn-secondary mt-1" name="action" value="history">
-                                                <i class="fas fa-filter"></i> Bộ Lọc
+                                            <button class="btn btn-sm btn-info" name="action" value="history">
+                                                Xem đơn hàng
                                             </button>
                                         </td>
                                     </form>
@@ -176,7 +176,7 @@
                     @if ($idC != null)
                         <a href="{{ route('crm.sale', ['userId' => $memberProfile->id]) }}"
                             class="btn btn-sm btn-secondary mt-1 float-right">
-                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-sync"></i>
                         </a>
                     @endif
                 </div>
@@ -217,9 +217,7 @@
                 @endif
 
             </div>
-        </div>
-
-        <div class="card shadow mt-3">
+            <div class="card shadow mt-3">
             <div class="card-header"><strong>Lịch sử nhận điểm thưởng</strong></div>
             <div class="card-body p-0">
                 <table class="table">
@@ -228,6 +226,7 @@
                             <th>STT</th>
                             <th>Thông tin</th>
                             <th>Điểm</th>
+                            <th>Status</th>
                             <th>Ngày nhận</th>
                         </tr>
                     </thead>
@@ -237,6 +236,7 @@
                                 <td class="text-center">{{ $key + 1 }}</td>
                                 <td>{{ $value->content }}</td>
                                 <td>{{ $value->amount }}</td>
+                                <td class="text-{{ $value->status == 0 ? 'grey' : 'success' }}">{{ $value->status == 0 ? 'Chưa Nhận' : 'Đã Nhận' }}</td>
                                 <td>{{ date('H:i d/m/Y', strtotime($value->created_at)) }}</td>
                             </tr>
                         @endforeach
@@ -244,6 +244,9 @@
                 </table>
             </div>
         </div>
+        </div>
+
+        
     </div>
 @endsection
 @include('dialog.crm_sale_add_call')
