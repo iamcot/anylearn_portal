@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\NotifConstants;
@@ -46,7 +47,7 @@ class TransactionController extends Controller
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ActivitybonusConstants::Activitybonus_Bonus])
             ->orderby('id', 'desc')
             ->with('user')
             ->paginate(20);
@@ -218,6 +219,11 @@ class TransactionController extends Controller
         }
         if (!$user) {
             return redirect()->back()->with('notify', __('Bạn cần đăng nhập để làm thao tác này.'));
+        }
+        if ($request->has('action')) {
+            $this->data['checkActiviy'] = $request->input('action');
+        } else {
+            $this->data['checkActiviy'] = null;
         }
         $userService = new UserServices();
         $itemService = new ItemServices();
@@ -555,6 +561,8 @@ class TransactionController extends Controller
         )
         ->take(5)->get();
 
+        $this->data['momoStatus'] = env('PAYMENT_MOMO_PARTNER', '') != '' ? 1 :  0;
+
         return view(env('TEMPLATE', '') . 'checkout.cart', $this->data);
     }
 
@@ -650,7 +658,7 @@ class TransactionController extends Controller
                 ->join('voucher_groups AS vg', 'vg.id', '=', 'vouchers.voucher_group_id')
                 ->where('vouchers.voucher', $voucher)
                 ->first();
-            
+
             $transService = new TransactionService();
             $res = $transService->recalculateOrderAmountWithVoucher($orderId, $transService->calculateVoucherValue($voucherDB, $order->amount));
             if (!$res) {
@@ -698,7 +706,7 @@ class TransactionController extends Controller
             $qrservice = new QRServices();
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
-        if (!in_array($payment, ['onepaylocal', 'onepaytg', 'onepayfee'])) {
+        if (!in_array($payment, ['onepaylocal', 'onepaytg', 'onepayfee', 'momo'])) {
             $existsBank = UserBank::where('id', $payment)->where('user_id', $user->id)->first();
             if (!$existsBank) {
                 return redirect()->back()->with('notify', 'Phương thức thanh toán không tồn tại');
@@ -721,7 +729,8 @@ class TransactionController extends Controller
 
         $input = [
             'amount' => $openOrder->amount,
-            'orderid' => $openOrder->id,
+            //'orderid' => $openOrder->id,
+            'orderid' => $payment == 'momo' ? Processor::generatePaymentToken($openOrder->id) : $openOrder->id,
             'ip' => $request->ip(),
             'save_card' => $saveCard,
             'token_num' => $tokenNum,
@@ -782,15 +791,20 @@ class TransactionController extends Controller
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
-        $orderId = $result['orderId'];
+        //$orderId = $result['orderId'];
+        $orderId = $payment == 'momo' 
+            ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+            : $result['orderId'];
+
         $order = Order::find($orderId);
-        $user = User::find($order->user_id);
+        $user = User::find($order->user_id); 
 
         if (!isset($result['status'])) {
             return redirect()->route('cart', ['api_token' => $user->api_token]);
         }
+
         if ($result['status'] == 1) {
-            $orderId = $result['orderId'];
+            //$orderId = $result['orderId'];
             $transService = new TransactionService();
             $transService->approveRegistrationAfterWebPayment($orderId, $payment);
 
@@ -882,7 +896,7 @@ class TransactionController extends Controller
         }
 
         try {
-            $query = $request->getQueryString();
+            $query = $request->getQueryString(); 
             $url = $processor->processReturnData($query);
             if (!empty($url)) {
                 return redirect($url);

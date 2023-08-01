@@ -24,6 +24,7 @@ use Hamcrest\Core\HasToString;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -129,7 +130,7 @@ class PageController extends Controller
         return view(env('TEMPLATE', '') . 'home', $this->data);
     }
     public function ref(Request $request, $code = "")
-    {
+    {  
         if (empty($code)) {
             return redirect('/');
         }
@@ -137,9 +138,14 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-        if ($request->get('has-account') || Auth::user()) {
-            $this->data['isReg'] = true;
+        if ($request->get('cb')) {
+            session()->put('cb', $request->get('cb'));  
         }
+        if ($request->get('has-account') || Auth::user()) {
+            //$this->data['isReg'] = true;
+            return redirect()->back();     
+        }
+
         $this->data['user'] = $refUser;
         $this->data['newUser'] = Auth::user();
         $this->data['role'] = $request->get('r');

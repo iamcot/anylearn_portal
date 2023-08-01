@@ -28,7 +28,7 @@ class OrderDetail extends Model
         return $this->belongsTo('App\Models\Order', 'order_id', 'id');
     }
 
-
+//@TODO fix lại nếu có item_schedule_plans thì lấy từ đó, ko thì sẽ lấy ngày hiện tại
     public function userRegistered($userId)
     {
         $today = date('Y-m-d');
@@ -144,7 +144,7 @@ class OrderDetail extends Model
             ->orWhere('users.user_id', $userId)
             ->where('users.is_child',1)
             ->select(
-                'oorder_detailsd.id',
+                'order_details.id',
                 'order_details.item_id',
                 'items.title',
                 'items.user_status',

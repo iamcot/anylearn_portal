@@ -245,6 +245,7 @@ class UserServices
                 User::find($user->id)->update([
                     'wallet_c' => ($user->wallet_c + $input['amount'])
                 ]);
+                $obj['pay_method'] = UserConstants::WALLET_C;
                 $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $user->id, [
                     'username' => $user->name,
                     'amount' => number_format($input['amount'], 0, ',', '.'),
@@ -257,6 +258,7 @@ class UserServices
                     'wallet_c' => ($user->wallet_c - $input['amount'])
                 ]);
                 $obj['amount'] = $obj['amount'] > 0 ? $obj['amount'] * -1 : $obj['amount'];
+                $obj['pay_method'] = UserConstants::WALLET_C;
                 $notifServ->createNotif(NotifConstants::TRANS_WITHRAW_APPROVED, $user->id, [
                     'amount' => number_format($input['amount'] * $configs[ConfigConstants::CONFIG_BONUS_RATE], 0, ',', '.'),
                 ]);

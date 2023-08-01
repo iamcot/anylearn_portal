@@ -52,7 +52,8 @@ class Momo implements PaymentInterface {
      * @return string
      */
     public function processReturnData($response) {
-        $data = $this->processFeedbackData($response);
+        parse_str($response, $arrResponse);
+        $data = $this->processFeedbackData($arrResponse);
 
         return $this->buildUrl($data);
     }
@@ -79,7 +80,9 @@ class Momo implements PaymentInterface {
         if (isset($response['errorCode']) && $response['errorCode'] == self::SUCCESS_CODE) {
             $data['status'] = 1;
         } else {
-            $data['message'] = isset($response['message']) ? $response['message'] : '';
+            //$data['message'] = isset($response['message']) ? $response['message'] : '';
+            $data['message'] = 'Thanh toán không thành công!';
+
         }
 
         return $data;
@@ -106,7 +109,7 @@ class Momo implements PaymentInterface {
         foreach($data as $key => $value) {
             $flatdata[] = urlencode($key) . '=' . urlencode($value);
          }
-        return env('CALLBACK_SERVER') . '?' . implode("&", $flatdata);
+        return env('CALLBACK_SERVER_MOMO') . '?' . implode("&", $flatdata);
     }
 
      /**
@@ -140,11 +143,11 @@ class Momo implements PaymentInterface {
      */
     private function createPaymentRequest($amount, $orderid) {
         $domain = $this->getServer() . '/gw_payment/transactionProcessor';
-        $partnerCode = env('PAYMENT_MOMO_PARTNER');
-        $accessKey = env('PAYMENT_MOMO_ACCESS');
-        $serectkey = env('PAYMENT_MOMO_SECRET');
-        $orderInfo = 'Pay with Momo';
-        $returnUrl = env('APP_URL') . '/api/payment/return/momo';
+        $partnerCode = env('PAYMENT_MOMO_PARTNER', '');
+        $accessKey = env('PAYMENT_MOMO_ACCESS', '');
+        $serectkey = env('PAYMENT_MOMO_SECRET', '');
+        $orderInfo = 'Vui lòng thanh toán đơn hàng của bạn';
+        $returnUrl = env('APP_URL') . '/payment-return/momo'; //'/api/payment/return/momo';
         $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
         $requestId = time()."";
         $requestType = "captureMoMoWallet";
@@ -155,7 +158,7 @@ class Momo implements PaymentInterface {
         ."&orderInfo=".$orderInfo."&returnUrl=".$returnUrl."&notifyUrl="
         .$notifyurl."&extraData=".$extraData;
 
-        $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET'));
+        $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', ''));
 
         $data =  [
             'partnerCode' => $partnerCode,

@@ -88,7 +88,7 @@ class UserController extends Controller
             return redirect('/')->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
 
-        $mod = User::find($userId); 
+        $mod = User::find($userId);
         if ($request->get('save')) {
             $mod->modules = implode(',', $request->get('modules') ? $request->get('modules') : []);
 
@@ -101,7 +101,7 @@ class UserController extends Controller
         $this->data['modules'] = config('modules');
         $this->data['navText'] = __('Quản lý Truy cập');
         $this->data['allowed'] = isset($mod->modules) ? explode(',', $mod->modules) : $userService->userModules($mod->role);
-        
+
         return view('user.mod_access', $this->data);
     }
 
@@ -177,11 +177,11 @@ class UserController extends Controller
                     }
                     try {
                         if ($row[1]) {
-                            $row[1] = strlen($row[1]) == 4 
-                                ? Carbon::parse($row[1])->format('Y-01-01') 
+                            $row[1] = strlen($row[1]) == 4
+                                ? Carbon::parse($row[1])->format('Y-01-01')
                                 : Carbon::createFromFormat('d/m/Y', $row[1])->format('Y-m-d');
                         }
-                        $exists = User::where('phone', $row[4])->first();                 
+                        $exists = User::where('phone', $row[4])->first();
                         if ($exists) {
                             if (!$exists->is_registered) {
                                 $data = [
@@ -189,7 +189,7 @@ class UserController extends Controller
                                     'dob' => $row[1],
                                     'sex' => $row[2],
                                     'address' => $row[3],
-                                    'email' => $row[5],                   
+                                    'email' => $row[5],
                                     'source' => $row[8],
                                 ];
                             }
@@ -268,7 +268,7 @@ class UserController extends Controller
         return view('user.member_list', $this->data);
     }
 
-    public function addMember(Request $request) 
+    public function addMember(Request $request)
     {
         if ($request->input('action') == 'addMember') {
             $member = $request->except('action', 'note');
@@ -277,18 +277,19 @@ class UserController extends Controller
             if (!empty($used)) {
                 return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
             }
-           
+
             $member['role'] = UserConstants::ROLE_MEMBER;
             $member['refcode'] = $member['phone'];
+            $member['sale_id'] = Auth::user()->id;
             $member['password'] = Hash::make($member['phone']);
             $member['status'] = UserConstants::STATUS_INACTIVE;
             $member['is_registered'] = 0;
-            $member = User::create($member);      
-            
+            $member = User::create($member);
+
             if (!$member->save()) {
                 return redirect()->back()->with('notify', 'Thao tác không thành công!');
             }
-            
+
             // Save note
             SaleActivity ::create([
                 'type' => SaleActivity::TYPE_NOTE,
@@ -339,22 +340,9 @@ class UserController extends Controller
     {
         $editUser = Auth::user();
         $userService = new UserServices();
-        $activityService = new ActivitybonusServices();
         if ($request->input('save')) {
-
             $input = $request->all();
-            if ($editUser->image == null && isset($input['image']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
-            }
-            if ($editUser->banner == null && isset($input['banner']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
-            }
-            if ($editUser->email == null && isset($input['email']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
-            }
-            if ($editUser->address == null && isset($input['address']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
-            }
+            
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;
@@ -667,7 +655,7 @@ class UserController extends Controller
         $contract = DB::table('contracts')
             ->join('users', 'users.id', '=', 'contracts.user_id')
             ->where('contracts.id', $id)
-            ->select('users.name', 'users.phone', 'contracts.*')
+            ->select('users.name', 'users.phone','users.role', 'contracts.*')
             ->first();
         if ($request->get('action') != null) {
             $notifM = new Notification();
@@ -886,7 +874,7 @@ class UserController extends Controller
         $user = $request->get('_user') ?? Auth::user();
         $order = Order::find($orderId);
         if ($order->user_id != $user->id) {
-            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này')); 
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
             return redirect()->back()->with('notify', 'Trạng thái đơn hàng không đúng');

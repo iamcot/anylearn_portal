@@ -72,10 +72,10 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">@lang('ĐĂNG NHẬP')</a>
+                        <a class="nav-link" href="/login?cb={{ urlencode(url()->full()) }}">@lang('ĐĂNG NHẬP')</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn">@lang('ĐĂNG KÝ')</a>
+                        <a class="btn btn-success rounded-pill fw-bold" href="/ref/anylearn?cb={{ urlencode(url()->full()) }}">@lang('ĐĂNG KÝ')</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" style="margin-top:-2px;" href="#"
