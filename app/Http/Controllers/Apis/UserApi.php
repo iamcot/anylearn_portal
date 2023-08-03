@@ -499,8 +499,7 @@ class UserApi extends Controller
         $notif = Notification::find($id)->update([
             'read' => DB::raw('now()')
         ]);
-        return response()->json($notif);
-        // return response('OK', 200);
+        return response('OK', 200);
     }
 
     public function allFriends(Request $request)
