@@ -499,7 +499,8 @@ class UserApi extends Controller
         $notif = Notification::find($id)->update([
             'read' => DB::raw('now()')
         ]);
-        return response('OK', 200);
+        return response()->json($notif);
+        // return response('OK', 200);
     }
 
     public function allFriends(Request $request)
@@ -745,7 +746,7 @@ class UserApi extends Controller
         return response()->json($orders);
     }
 
-    public function pointBox(Request $request) 
+    public function pointBox(Request $request)
     {
         $classes = DB::table('orders')
             ->join('order_details as od', 'od.order_id', 'orders.id')
@@ -754,7 +755,7 @@ class UserApi extends Controller
             ->where('orders.user_id', $request->get('_user')->id);
 
         $gClass = $classes->orderby('pa.created_at', 'desc')->first();
-        $rClass = $classes->join('item_user_actions as iua', 
+        $rClass = $classes->join('item_user_actions as iua',
             function ($join) {
                 $join->on('iua.user_id', 'orders.user_id');
                 $join->on('iua.item_id', 'od.item_id');
@@ -763,10 +764,10 @@ class UserApi extends Controller
             ->orderby('iua.created_at', 'desc')
             ->first();
 
-        $data['anypoint'] = $request->get('_user')->wallet_c; 
+        $data['anypoint'] = $request->get('_user')->wallet_c;
         $data['goingClass'] = $gClass ? $gClass->title : '';
         $data['ratingClass'] = $rClass ? $rClass->title : '';
-        
+
         return response()->json($data);
-    } 
+    }
 }
