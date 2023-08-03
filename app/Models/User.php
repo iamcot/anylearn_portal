@@ -42,7 +42,7 @@ class User extends Authenticatable
         'is_test', 'is_signed', 'dob_place', '3rd_id', '3rd_type', '3rd_token', 'is_child',
         'sale_id', 'cert_id', 'sex', 'cert_exp', 'cert_location',
         'omicall_id', 'omicall_pwd', 'contact_phone', 'is_registered', 'source', 'business_certificate', 'first_issued_date',
-        'issued_by', 'headquarters_address', 'modules'
+        'issued_by', 'headquarters_address', 'modules', 'sale_priority'
     ];
 
     /**
@@ -277,6 +277,10 @@ class User extends Authenticatable
             'commission_rate' => $input['commission_rate'],
         ];
 
+        if (in_array($input['sale_priority'], array_keys(UserConstants::$salePriority))) {
+            $obj['sale_priority'] = $input['sale_priority'];
+        }
+
         if (isset($input['sale_id'])) {
             $obj['sale_id'] = $input['sale_id'];
         }
@@ -463,6 +467,7 @@ class User extends Authenticatable
                 'lastsa.last_contact',
                 'users.is_registered',
                 'users.source',
+                'users.sale_priority',
                 DB::raw("(SELECT content FROM sale_activities WHERE `type` = 'note' AND member_id = users.id ORDER BY sale_activities.id DESC limit 1) AS last_note")
             );
         if (!$file) {

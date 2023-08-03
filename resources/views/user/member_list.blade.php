@@ -124,16 +124,17 @@
     </div>
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
-            <thead class="">
+            <thead>
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
-                    <th class="text-center">Thao tác</th>
+                    <th class="text-center" width="5%" scope="col">Thao tác</th>
                     <th class="text-center">Liên hệ</th>
                     @if(!$isSale)
                     <th class="text-center">Hot</th>
                     <!-- <th class="text-center">Boost</th> -->
                     @endif
                     <th width="10%" scope="col">Vai trò</th>
+                    <th width="5%" scope="col">Ưu tiên</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="5%" scope="col">SDT</th>
                     <th width="5%" scope="col">Email</th>
@@ -143,7 +144,6 @@
                     <th width="5%" scope="col">H/H</th>
                     <th class="text-center" width="5%" scope="col">C/T</th>
                     <th class="text-center">Cập nhật</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -171,7 +171,21 @@
                     <!-- <td>{{ $user->boost_score }}</td> -->
                     @endif
                     <td><a target="_blank" href="{{ route('class') }}?ref_id={{ $user->id }}">{{ $user->role }}</a></td>
-                    <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
+                    <td>
+                        <span style="
+                            display: block;
+                            padding: 2px 8px;
+                            font-size: 12px; 
+                            color: {{ $user->sale_priority > 1 ? '#fff ': '#000' }};
+                            border: 1px solid {{ $user->sale_priority == 0 ? '#ccc' : $priorityColor[$user->sale_priority]}}; 
+                            border-radius: 8px; 
+                            background: {{ $priorityColor[$user->sale_priority] }}">
+                            Priority</span>                    
+                    </td>
+                    <td>
+                        {!! $userServ->statusIcon($user->status) !!}
+                        <span class="ml-1">{{ $user->name }}</span>
+                    </td>
                     <td>{{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}</td>
                     <td>{{ $user->email }}</td>
                     <!-- <td>{{ $user->address }}</td> -->

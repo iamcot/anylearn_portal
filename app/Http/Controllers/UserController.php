@@ -265,6 +265,7 @@ class UserController extends Controller
 
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
+        $this->data['priorityColor'] = UserConstants::$salePriority;
         return view('user.member_list', $this->data);
     }
 

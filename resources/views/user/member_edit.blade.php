@@ -58,12 +58,19 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="sale_priority" class="col-md-2 col-form-label text-md-right">{{ __('Độ ưu tiên') }}</label>
+                    <div class="col-md-8">
+                        <input id="sale_priority" type="text" class="form-control @error('sale_priority') is-invalid @enderror" name="sale_priority" value="{{ old('sale_priority', !empty($user) ? $user->sale_priority : '') }}">
+                        <small>Độ ưu tiên phải là một trong các giá trị sau: 0, 1, 2, 3, 99</small>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="user_id" class="col-md-2 col-form-label text-md-right">{{ __('ID người giới thiệu') }}</label>
                     <div class="col-md-8">
                         <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', !empty($user) ? $user->user_id : '') }}">
                         <small>Có thể tham khảo ID ngoài danh sách thành viên.</small>
                     </div>
-                </div>
+                </div>              
                 @if($userServ->haveAccess(Auth::user()->role, 'user.sale'))
                 <div class="form-group row">
                     <label for="sale_id" class="col-md-2 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>
