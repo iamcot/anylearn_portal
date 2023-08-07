@@ -25,5 +25,14 @@ class Processor {
         } 
         return self::$processor;
     }
+
+    static public function generatePaymentToken($orderId, $lenght = 20) {
+        $randomString = str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+        return $orderId ? $orderId . 'Al' . substr($randomString, 0, $lenght) : $orderId;
+    }
+
+    static public function getOrderIdFromPaymentToken($paymentToken) {
+        return stristr($paymentToken, 'Al', true);
+    }
     
 }

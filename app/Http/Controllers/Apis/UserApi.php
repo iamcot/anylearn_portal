@@ -524,17 +524,19 @@ class UserApi extends Controller
         } else {
             $lastContract = Contract::find($contractId);
         }
-
-        $configM = new Configuration();
-        if ($lastContract->type == UserConstants::ROLE_TEACHER) {
-            $key = ConfigConstants::CONTRACT_TEACHER;
-            $template = $configM->get($key);
-            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-        } else {
-            $key = ConfigConstants::CONTRACT_SCHOOL;
-            $template = $configM->get($key);
-            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+        if ($lastContract != null) {
+            $configM = new Configuration();
+            if ($lastContract->type == UserConstants::ROLE_TEACHER) {
+                $key = ConfigConstants::CONTRACT_TEACHER;
+                $template = $configM->get($key);
+                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+            } else {
+                $key = ConfigConstants::CONTRACT_SCHOOL;
+                $template = $configM->get($key);
+                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+            }
         }
+
         return response()->json($lastContract);
     }
 
@@ -745,7 +747,7 @@ class UserApi extends Controller
         return response()->json($orders);
     }
 
-    public function pointBox(Request $request) 
+    public function pointBox(Request $request)
     {
         $classes = DB::table('orders')
             ->join('order_details as od', 'od.order_id', 'orders.id')
@@ -754,7 +756,7 @@ class UserApi extends Controller
             ->where('orders.user_id', $request->get('_user')->id);
 
         $gClass = $classes->orderby('pa.created_at', 'desc')->first();
-        $rClass = $classes->join('item_user_actions as iua', 
+        $rClass = $classes->join('item_user_actions as iua',
             function ($join) {
                 $join->on('iua.user_id', 'orders.user_id');
                 $join->on('iua.item_id', 'od.item_id');
@@ -763,10 +765,10 @@ class UserApi extends Controller
             ->orderby('iua.created_at', 'desc')
             ->first();
 
-        $data['anypoint'] = $request->get('_user')->wallet_c; 
+        $data['anypoint'] = $request->get('_user')->wallet_c;
         $data['goingClass'] = $gClass ? $gClass->title : '';
         $data['ratingClass'] = $rClass ? $rClass->title : '';
-        
+
         return response()->json($data);
-    } 
+    }
 }

@@ -119,7 +119,8 @@
 @endif
 <div class="card shadow">
     <div class="card-header">
-        Tổng tìm kiếm: <strong class="text-danger">{{ $members->total() }}</strong>
+        Tổng tìm kiếm: <strong class="text-danger">{{ $members->total() }}</strong>, 
+        Tổng anyPoint: <strong class="text-danger">{{ $members->sumC }}</strong>
     </div>
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
@@ -130,13 +131,13 @@
                     <th class="text-center">Liên hệ</th>
                     @if(!$isSale)
                     <th class="text-center">Hot</th>
-                    <th class="text-center">Boost</th>
+                    <!-- <th class="text-center">Boost</th> -->
                     @endif
                     <th width="10%" scope="col">Vai trò</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="5%" scope="col">SDT</th>
                     <th width="5%" scope="col">Email</th>
-                    <th width="10%" scope="col">Address</th>
+                    <!-- <th width="10%" scope="col">Address</th> -->
                     <th>Ví C</th>
                     <th width="10%" scope="col">Người G/T</th>
                     <th width="5%" scope="col">H/H</th>
@@ -167,15 +168,15 @@
 
                     @if(!$isSale)
                     <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'users', 'id' =>  $user->id ]) }}">{!! $userServ->hotIcon($user->is_hot) !!}</a></td>
-                    <td>{{ $user->boost_score }}</td>
+                    <!-- <td>{{ $user->boost_score }}</td> -->
                     @endif
-                    <td>{{ $user->role }}</td>
+                    <td><a target="_blank" href="{{ route('class') }}?ref_id={{ $user->id }}">{{ $user->role }}</a></td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>{{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->address }}</td>
+                    <!-- <td>{{ $user->address }}</td> -->
                     <td>{{ number_format($user->wallet_c) }}</td>
-                    <td>{{ $user->refname ? $user->refname . ' (' . $user->refphone . ')' : '' }}</td>
+                    <td>@if($user->refname) <a href="?ref_id={{ $user->refid }}">{{ $user->refname . ' (' . $user->refphone . ')'  }} </a>@endif</td>
                     <td>{{ $user->commission_rate * 100 }}%</td>
                     <td class="text-center">{!! $userServ->requiredDocIcon($user) !!}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($user->updated_at)) }}</td>

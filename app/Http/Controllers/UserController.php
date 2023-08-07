@@ -280,6 +280,7 @@ class UserController extends Controller
 
             $member['role'] = UserConstants::ROLE_MEMBER;
             $member['refcode'] = $member['phone'];
+            $member['sale_id'] = Auth::user()->id;
             $member['password'] = Hash::make($member['phone']);
             $member['status'] = UserConstants::STATUS_INACTIVE;
             $member['is_registered'] = 0;
@@ -339,22 +340,9 @@ class UserController extends Controller
     {
         $editUser = Auth::user();
         $userService = new UserServices();
-        $activityService = new ActivitybonusServices();
         if ($request->input('save')) {
-
             $input = $request->all();
-            if ($editUser->image == null && isset($input['image']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
-            }
-            if ($editUser->banner == null && isset($input['banner']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
-            }
-            if ($editUser->email == null && isset($input['email']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
-            }
-            if ($editUser->address == null && isset($input['address']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
-            }
+            
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;

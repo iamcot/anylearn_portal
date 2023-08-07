@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
 use App\Constants\FileConstants;
 use App\Constants\UserConstants;
 use App\Models\I18nContent;
+use App\Services\ActivitybonusServices;
 use App\Services\FileServices;
 use App\Validators\UniquePhone;
 use App\Validators\ValidRef;
@@ -167,6 +169,13 @@ class User extends Authenticatable
                         'ref_id' => $newMember->id,
                         'day' => date('Y-m-d'),
                     ]);
+                    $activityService = new ActivitybonusServices();
+                    $activityService->updateWalletC($newMember->user_id, 
+                    ActivitybonusConstants::Activitybonus_Referral, 
+                    'Cộng điểm giới thiệu thành viên mới ' . $newMember->name, 
+                    null,
+                    true);
+                    
                 }
 
                 // if (!empty($newMember->user_id)) {
@@ -175,6 +184,7 @@ class User extends Authenticatable
                 // }
             }
             $this->updateUpTree($newMember->user_id);
+           
             $newMember->commission_rate = (float)$newMember->commission_rate;
         } catch (\Exception $ex) {
             Log::error($ex);
@@ -294,8 +304,23 @@ class User extends Authenticatable
             $needDelete[] = $currentData->banner;
             $obj['banner'] = $banner['url'];
         }
+        $editUser = $this->find($input['id']);
+        $activityService = new ActivitybonusServices();
 
-        $rs = $this->find($input['id'])->update($obj);
+            if ($editUser->image == null && isset($input['image']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
+            }
+            if ($editUser->banner == null && isset($input['banner']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
+            }
+            if ($editUser->email == null && isset($input['email']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
+            }
+            if ($editUser->address == null && isset($input['address']) != null) {
+                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
+            }
+
+        $rs = $editUser->update($obj);
         if ($rs) {
             $i18 = new I18nContent();
             foreach (I18nContent::$supports as $locale) {
@@ -385,6 +410,7 @@ class User extends Authenticatable
                 ->whereDate('lo.created_at', '<=', $request->input('datelo'));
             });
         }
+        $copy = clone $members;
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
             $members = $members->where(function ($query) use ($requester) {
@@ -392,8 +418,7 @@ class User extends Authenticatable
                     ->orWhere('users.user_id', $requester->id);
             });
             $members = $members
-                ->orderBy('lastsa.last_contact')
-                ->orderBy('id');
+                ->orderBy('lastsa.last_contact');
         } elseif ($requester->role == UserConstants::ROLE_SALE_MANAGER) {
             $members = $members->where(function ($query) use ($requester) {
                 $saleManager = explode(',', env('SALE_MANAGER'));
@@ -403,18 +428,17 @@ class User extends Authenticatable
                     return $query->whereIn('users.sale_id', $saleManager)
                         ->orWhereIn('users.user_id', $saleManager);
                 } else {
-                    dd("no array");
                     return $query;
                 }
             });
             $members = $members
-                ->orderBy('lastsa.last_contact')
-                ->orderBy('id');
-        } {
-            $members = $members->orderby('users.is_hot', 'desc')
+                ->orderBy('lastsa.last_contact');
+        } 
+            
+        $members = $members->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
                 ->orderby('users.id', 'desc');
-        }
+        
         $members = $members
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
             ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
@@ -431,6 +455,7 @@ class User extends Authenticatable
                 'users.wallet_c',
                 'u2.name AS refname',
                 'u2.phone AS refphone',
+                'u2.id AS refid',
                 'users.updated_at',
                 'users.update_doc',
                 'users.is_hot',
@@ -442,6 +467,7 @@ class User extends Authenticatable
             );
         if (!$file) {
             $members = $members->paginate(UserConstants::PP);
+            $members->sumC = $copy->sum('users.wallet_c');
         } else {
             $members = $members->get();
             if ($members) {
