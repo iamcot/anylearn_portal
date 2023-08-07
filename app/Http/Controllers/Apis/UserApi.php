@@ -541,23 +541,22 @@ class UserApi extends Controller
 
     public function saveContract(Request $request)
     {
-        // $user = $request->get('_user');
-        // $contractJson = $request->get('contract');
-        return response()->json("contract");
-        // $contract = json_decode($contractJson, true);
-        // if (empty($contract)) {
-        //     return response("Không có thông tin hợp đồng.", 400);
-        // }
-        // $userServ = new UserServices();
-        // $result = $userServ->saveContract($user, $contract);
+        $user = $request->get('_user');
+        $contractJson = $request->get('contract');
+        $contract = json_decode($contractJson, true);
+        if (empty($contract)) {
+            return response("Không có thông tin hợp đồng.", 400);
+        }
+        $userServ = new UserServices();
+        $result = $userServ->saveContract($user, $contract);
 
-        // if ($result === true) {
-        //     return response()->json([
-        //         'result' => true,
-        //     ]);
-        // } else {
-        //     return response($result, 400);
-        // }
+        if ($result === true) {
+            return response()->json([
+                'result' => true,
+            ]);
+        } else {
+            return response($result, 400);
+        }
     }
 
     public function signContract(Request $request, $contractId)
