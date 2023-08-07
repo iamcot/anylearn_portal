@@ -352,7 +352,7 @@ class UserApi extends Controller
             )
             ->paginate($pageSize);
 
-            $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
+        $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
         return response()->json([
             'banner' => $banner,
             'list' => $list,
@@ -525,16 +525,16 @@ class UserApi extends Controller
             $lastContract = Contract::find($contractId);
         }
 
-            $configM = new Configuration();
-            if ($lastContract->type == UserConstants::ROLE_TEACHER) {
-                $key = ConfigConstants::CONTRACT_TEACHER;
-                $template = $configM->get($key);
-                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-            } else {
-                $key = ConfigConstants::CONTRACT_SCHOOL;
-                $template = $configM->get($key);
-                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-            }
+        $configM = new Configuration();
+        if ($lastContract->type == UserConstants::ROLE_TEACHER) {
+            $key = ConfigConstants::CONTRACT_TEACHER;
+            $template = $configM->get($key);
+            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+        } else {
+            $key = ConfigConstants::CONTRACT_SCHOOL;
+            $template = $configM->get($key);
+            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+        }
 
         return response()->json($lastContract);
     }
@@ -755,11 +755,13 @@ class UserApi extends Controller
             ->where('orders.user_id', $request->get('_user')->id);
 
         $gClass = $classes->orderby('pa.created_at', 'desc')->first();
-        $rClass = $classes->join('item_user_actions as iua',
+        $rClass = $classes->join(
+            'item_user_actions as iua',
             function ($join) {
                 $join->on('iua.user_id', 'orders.user_id');
                 $join->on('iua.item_id', 'od.item_id');
-            })
+            }
+        )
             ->where('iua.type', 'rating')
             ->orderby('iua.created_at', 'desc')
             ->first();
