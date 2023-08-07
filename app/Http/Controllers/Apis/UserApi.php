@@ -524,7 +524,7 @@ class UserApi extends Controller
         } else {
             $lastContract = Contract::find($contractId);
         }
-
+        dd($lastContract);
         $configM = new Configuration();
         if ($lastContract->type == UserConstants::ROLE_TEACHER) {
             $key = ConfigConstants::CONTRACT_TEACHER;
@@ -541,7 +541,6 @@ class UserApi extends Controller
     public function saveContract(Request $request)
     {
         $user = $request->get('_user');
-        dd($user);
         $contractJson = $request->get('contract');
         $contract = json_decode($contractJson, true);
         if (empty($contract)) {
