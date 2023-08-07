@@ -541,6 +541,7 @@ class UserApi extends Controller
     public function saveContract(Request $request)
     {
         $user = $request->get('_user');
+        dd($user);
         $contractJson = $request->get('contract');
         $contract = json_decode($contractJson, true);
         if (empty($contract)) {
