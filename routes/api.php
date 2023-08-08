@@ -66,6 +66,7 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+
 Route::get('/v3/map', 'Apis\MapApi@index');
 Route::get('/v3/home', 'Apis\HomeApi@index');
 Route::get('/v3/listing', 'Apis\ListingApi@index');
@@ -75,6 +76,7 @@ Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 Route::get('/v3/articles', 'Apis\ArticleApi@articles');
 
 Route::middleware(['api.user'])->group(function () {
+    Route::get('/v3/meAPI', 'Apis\MeApi@index');
 
     Route::get('/v3/auth/cart', 'Apis\CartApi@index');
     Route::get('/v3/auth/home', 'Apis\HomeApi@index');
