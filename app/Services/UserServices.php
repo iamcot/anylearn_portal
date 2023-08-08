@@ -638,16 +638,16 @@ class UserServices
             ->first();
     }
 
-    public function getPartnersBySubtype($subtype) 
+    public function getPartnersBySubtype($subtype)
     {
         return DB::table('users')
             ->join('items', 'items.user_id', 'users.id')
             ->whereNull('items.item_id')
-            ->whereIn('role', ['teacher', 'school'])  
+            ->whereIn('role', ['teacher', 'school'])
             ->where('items.subtype', $subtype)
             ->select(
-                'users.id', 
-                'users.name', 
+                'users.id',
+                'users.name',
                 'users.image',
                 'users.is_hot',
                 'users.boost_score'
@@ -658,10 +658,10 @@ class UserServices
             ->get();
     }
 
-    public function getPointBox($user) 
-    { 
+    public function getPointBox($user)
+    {
         $goingClass = DB::table('orders')
-            ->join('order_details as od', 'od.order_id', '=', 'orders.id') 
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('participations as pa', 'pa.schedule_id', '=', 'od.id')
             ->join('items', 'items.id', '=', 'od.item_id')
             ->where('pa.organizer_confirm', 0)
@@ -674,13 +674,13 @@ class UserServices
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('participations as pa', 'pa.schedule_id', '=', 'od.id')
             ->join('items', 'items.id', '=', 'od.item_id')
-            ->leftjoin('item_user_actions as iua', 
+            ->leftjoin('item_user_actions as iua',
                 function($join) {
                     $join->on('od.item_id', '=', 'iua.item_id');
                     $join->on('orders.user_id', '=', 'iua.user_id');
-                }, 
-            ) 
-            ->where('orders.user_id', $user->id) 
+                },
+            )
+            ->where('orders.user_id', $user->id)
             ->where('pa.participant_confirm', 1)
             ->where('pa.organizer_confirm', 1)
             ->whereNull('iua.id')
@@ -690,15 +690,15 @@ class UserServices
                 'iua.id'
             )
             ->orderByDesc('pa.created_at')
-            ->first(); 
-        
+            ->first();
+
         $itemS = new ItemServices();
         $goingClass = $goingClass ? $goingClass : $itemS->getLastRegistered($user->id);
         $ratingClass = $ratingClass ? $ratingClass : $itemS->getLastCompleted($user->id);
-        
-        $data['anypoint']  = $user->wallet_c; 
-        $data['goingClass'] = $goingClass ? $goingClass->title : ''; 
-        $data['ratingClass'] = $ratingClass ? $ratingClass->title : ''; 
+
+        $data['anypoint']  = $user->wallet_c;
+        $data['goingClass'] = $goingClass ? $goingClass->title : '';
+        $data['ratingClass'] = $ratingClass ? $ratingClass->title : '';
 
         return $data;
     }
