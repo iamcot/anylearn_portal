@@ -19,8 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('version')->group(function () {
     Route::get('/', 'PageController@home')->name('home');
     Route::get('/search', 'PageController@search')->name('search');
-    Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp'); 
-}); 
+    Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+    Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+    Route::get('/articles', 'PageController@article');
+});
 
 // For new pages - v3
 Route::get('/subtype/{sutype}', 'ReactController@index')->name('subtype');
