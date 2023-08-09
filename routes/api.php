@@ -78,7 +78,9 @@ Route::get('/v3/articles', 'Apis\ArticleApi@articles');
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/meAPI', 'Apis\MeApi@index');
     Route::get('/v3/admitstudent/{id}', 'Apis\MeApi@admitStudentAPI');
-
+    Route::get('/v3/getchild', 'Apis\MeApi@getChildAccountsAPI');
+    Route::get('/v3/child/{id}', 'Apis\MeApi@childAccountAPI');
+    Route::get('/v3/child', 'Apis\MeApi@childAccountAPI');
 
     Route::get('/v3/auth/cart', 'Apis\CartApi@index');
     Route::get('/v3/auth/home', 'Apis\HomeApi@index');
