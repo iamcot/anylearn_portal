@@ -23,13 +23,14 @@
                                     <span class="text-dark">{{ $memberProfile->name }}</span>
                                     <div class="p-1 ml-1">
                                         <span style="
-                                            padding: 3px 10px; 
+                                            padding: 2px 10px; 
                                             font-size: 12px; 
-                                            color: {{ $memberProfile->sale_priority > 1 ? '#fff ': '#000' }};
-                                            border: 1px solid {{ $memberProfile->sale_priority == 0 ? '#ccc' : $priorityColor[$memberProfile->sale_priority]}}; 
-                                            border-radius: 8px; 
-                                            background: {{ $priorityColor[$memberProfile->sale_priority] }}">
-                                        Priority
+                                            font-weight: bold;
+                                            color: {{ $memberProfile->sale_priority == 0 || $memberProfile->sale_priority == 3 ? '#555 ': '#fff' }};
+                                            border: 1px solid {{ $memberProfile->sale_priority == 0 ? '#ccc' : $priorityColors[$memberProfile->sale_priority]}}; 
+                                            border-radius: 15px; 
+                                            background: {{ $priorityColors[$memberProfile->sale_priority] }}">
+                                        {{ $priorityLevels[$memberProfile->sale_priority] }}
                                         </span>    
                                     </div>
                                 </div>

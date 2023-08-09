@@ -134,7 +134,6 @@
                     <!-- <th class="text-center">Boost</th> -->
                     @endif
                     <th width="10%" scope="col">Vai trò</th>
-                    <th width="5%" scope="col">Ưu tiên</th>
                     <th width="15%" scope="col">Họ tên</th>
                     <th width="5%" scope="col">SDT</th>
                     <th width="5%" scope="col">Email</th>
@@ -171,22 +170,19 @@
                     <!-- <td>{{ $user->boost_score }}</td> -->
                     @endif
                     <td><a target="_blank" href="{{ route('class') }}?ref_id={{ $user->id }}">{{ $user->role }}</a></td>
+                    <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
                     <td>
                         <span style="
-                            display: block;
-                            padding: 2px 8px;
+                            padding: 0 6px; 
                             font-size: 12px; 
-                            color: {{ $user->sale_priority > 1 ? '#fff ': '#000' }};
-                            border: 1px solid {{ $user->sale_priority == 0 ? '#ccc' : $priorityColor[$user->sale_priority]}}; 
-                            border-radius: 8px; 
-                            background: {{ $priorityColor[$user->sale_priority] }}">
-                            Priority</span>                    
+                            font-weight: bold;
+                            color: {{ $user->sale_priority == 0 || $user->sale_priority == 3 ? '#555 ': '#fff' }};
+                            border: 1px solid {{ $user->sale_priority == 0 ? '#eee' : 'transparent' }}; 
+                            border-radius: 5px; 
+                            background: {{ $priorityColors[$user->sale_priority] }}">
+                            {{ $priorityLevels[$user->sale_priority] }}</span>
+                        {{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}
                     </td>
-                    <td>
-                        {!! $userServ->statusIcon($user->status) !!}
-                        <span class="ml-1">{{ $user->name }}</span>
-                    </td>
-                    <td>{{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}</td>
                     <td>{{ $user->email }}</td>
                     <!-- <td>{{ $user->address }}</td> -->
                     <td>{{ number_format($user->wallet_c) }}</td>
