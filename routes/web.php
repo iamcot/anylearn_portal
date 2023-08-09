@@ -21,7 +21,7 @@ Route::middleware('version')->group(function () {
     Route::get('/search', 'PageController@search')->name('search');
     Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
     Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
-    Route::get('/article', 'PageController@article');
+    Route::get('/articles', 'PageController@article');
 });
 
 // For new pages - v3
