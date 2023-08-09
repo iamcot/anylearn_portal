@@ -21,7 +21,7 @@ Route::middleware('version')->group(function () {
     Route::get('/search', 'PageController@search')->name('search');
     Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
     Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
-    Route::get('/articles', 'PageController@article');
+    Route::get('/article', 'PageController@article');
 });
 
 // For new pages - v3
@@ -69,7 +69,7 @@ Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::any('/class/{itemId}/{url}/video/{lessonId}', 'PageController@videoPage')->name('page.video');
 //Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
-Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+// Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
