@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Apis;
 
+use App\Constants\OrderConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\OrderDetail;
 use App\Services\DashboardServices;
 use Illuminate\Support\Facades\DB;
 
@@ -52,5 +54,64 @@ class MeApi extends Controller
             'studentsInPeriod' => $dashServ->userCountpanertAPI(false,$user),
             'chartDataset' => $chartDataset
         ]);
+    }
+    public function admitStudentAPI(Request $request,$id)
+    {
+            $user = $request->get('_user');
+            $data = OrderDetail::select(
+                'items.id as itemId',
+                'items.date_start',
+                'items.price',
+                'items.title',
+                'items.short_content',
+                'items.image as iimage',
+                'users.image as uimage',
+                'users.introduce',
+                'users.name',
+                'users.id as userId',
+                'users.phone',
+                'users.email',
+                'users.address',
+                'users.dob',
+                'order_details.created_at',
+                DB::raw('(SELECT count(*) FROM participations
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id
+            GROUP BY participations.item_id
+            ) AS confirm_count'),
+            )
+                ->join('users', 'users.id', '=', 'order_details.user_id')
+                ->join('items', 'items.id', '=', 'order_details.item_id')
+                ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+                ->where('order_details.id', $id)
+                ->where('items.user_id', $user->id)
+                ->first();
+
+        $userData = [
+            'uimage' => $data->uimage,
+            'introduce' => $data->introduce,
+            'name' => $data->name,
+            'userId' => $data->userId,
+            'phone' => $data->phone,
+            'email' => $data->email,
+            'address' => $data->address,
+            'dob' => $data->dob,
+        ];
+
+        $itemData = [
+            'itemId' => $data->itemId,
+            'date_start' => $data->date_start,
+            'price' => $data->price,
+            'title' => $data->title,
+            'short_content' => $data->short_content,
+            'iimage' => $data->iimage,
+            'created_at' => $data->created_at,
+            'confirm_count' => $data->confirm_count,
+        ];
+
+        return response()->json([
+            'user' => $userData,
+            'item' => $itemData,
+        ]);
+
     }
 }
