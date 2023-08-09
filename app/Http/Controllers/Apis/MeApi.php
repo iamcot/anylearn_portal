@@ -85,7 +85,9 @@ class MeApi extends Controller
                 ->where('order_details.id', $id)
                 ->where('items.user_id', $user->id)
                 ->first();
-
+        if (!$data) {
+            return response()->json(['message' => 'Invalid request'], 400);
+        }
         $userData = [
             'uimage' => $data->uimage,
             'introduce' => $data->introduce,
