@@ -5,112 +5,112 @@ use App\Constants\ItemConstants;
  return [
     ItemConstants::SUBTYPE_DIGITAL  => [
         [
-            'id'   => 1,
-            'name' => 'Category A'
+            'id'   => 7,
+            'name' => 'Ngôn Ngữ'
         ],
         [
-            'id'   => 2,
-            'name' => 'Category B'
-        ],
-        [
-            'id'   => 3,
-            'name' => 'Category C'
+            'id'   => 18,
+            'name' => 'Khoa học'
         ],
         [
             'id'   => 4,
-            'name' => 'Category D'
+            'name' => 'Guitar'
         ],
         [
-            'id'   => 5,
-            'name' => 'Category E'
+            'id'   => 3,
+            'name' => 'Piano'
+        ],
+        [
+            'id'   => 19,
+            'name' => 'Xã Hội'
         ],
     ],
     ItemConstants::SUBTYPE_EXTRA => [
         [
             'id'   => 1,
-            'name' => 'Category A'
+            'name' => 'Tiếng Anh'
         ],
         [
-            'id'   => 2,
-            'name' => 'Category B'
+            'id'   => 9,
+            'name' => 'Toán Tư Duy'
         ],
         [
-            'id'   => 3,
-            'name' => 'Category C'
+            'id'   => 13,
+            'name' => 'Lập Trình'
         ],
         [
-            'id'   => 4,
-            'name' => 'Category D'
+            'id'   => 15,
+            'name' => 'Lập trình'
         ],
         [
-            'id'   => 5,
-            'name' => 'Category E'
+            'id'   => 16,
+            'name' => 'Mỹ Thuật'
         ],
-    ], 
+    ],
     ItemConstants::SUBTYPE_OFFLINE => [
         [
-            'id'   => 1,
-            'name' => 'Category A'
+            'id'   => 28,
+            'name' => 'Học viện tài năng'
         ],
         [
-            'id'   => 2,
-            'name' => 'Category B'
+            'id'   => 25,
+            'name' => 'Hệ phổ thông song ngữ'
         ],
         [
-            'id'   => 3,
-            'name' => 'Category C'
+            'id'   => 26,
+            'name' => 'Hệ tư thục'
         ],
         [
-            'id'   => 4,
-            'name' => 'Category D'
+            'id'   => 24,
+            'name' => 'Hệ phổ thông quốc tế'
         ],
         [
-            'id'   => 5,
-            'name' => 'Category E'
+            'id'   => 23,
+            'name' => 'Hệ mầm non'
         ],
-    ], 
+    ],
     ItemConstants::SUBTYPE_ONLINE => [
         [
-            'id'   => 1,
-            'name' => 'Category A'
+            'id'   => 12,
+            'name' => 'STEAM'
         ],
         [
-            'id'   => 2,
-            'name' => 'Category B'
+            'id'   => 10,
+            'name' => 'Ngôn ngữ - Thuyết trình'
         ],
         [
-            'id'   => 3,
-            'name' => 'Category C'
+            'id'   => 11,
+            'name' => 'Tiếng Việt'
         ],
         [
-            'id'   => 4,
-            'name' => 'Category D'
+            'id'   => 14,
+            'name' => 'Công nghệ'
         ],
         [
-            'id'   => 5,
-            'name' => 'Category E'
+            'id'   => 20,
+            'name' => 'Rèn ý chí - động lực'
         ],
-    ], 
+    ],
     ItemConstants::SUBTYPE_VIDEO => [
         [
-            'id'   => 1,
-            'name' => 'Category A'
+            'id'   => 21,
+            'name' => 'Rèn tư duy'
         ],
         [
-            'id'   => 2,
-            'name' => 'Category B'
+            'id'   => 22,
+            'name' => 'Nuôi dạy con'
         ],
         [
-            'id'   => 3,
-            'name' => 'Category C'
+            'id'   => 8,
+            'name' => 'MC - Giao tiếp'
         ],
         [
-            'id'   => 4,
-            'name' => 'Category D'
+            'id'   => 6,
+            'name' => 'Luyện chữ đẹp'
         ],
         [
-            'id'   => 5,
-            'name' => 'Category E'
+            'id'   => 11,
+            'name' => 'Tiếng Việt'
         ],
-    ]  
+    ]
 ];
