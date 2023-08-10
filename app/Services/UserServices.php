@@ -595,15 +595,16 @@ class UserServices
             ->where('c.status', '=', 99)
             ->select('c.commission')
             ->first();
+
         if ($commission) {
-            $concession = $item->price * $commission->commission;
+            $concession = $item->price * (1 - $commission->commission);
             $orgprice = $item->price - $concession;
             $data = [
                 'name' => $user->name,
                 'title' => $item->title,
                 'time' => $now,
                 'partner' => $author->name,
-                'commision' => $commission->commission,
+                'commision' => 1 - $commission->commission,
                 'price' => $item->price,
                 'concession' => $concession,
                 'orgprice' => $orgprice
