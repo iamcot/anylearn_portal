@@ -32,6 +32,7 @@ class OrderDetail extends Model
     public function userRegistered($userId)
     {
         $today = date('Y-m-d');
+        $todayTime = date("H:i:s");
         $query = DB::table('order_details AS od')
             ->join('orders', 'orders.id', '=', 'od.order_id')
             ->join('items', 'items.id', '=', 'od.item_id')
@@ -45,6 +46,7 @@ class OrderDetail extends Model
             ->leftJoin('item_user_actions AS iua', function ($query) {
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
+            ->leftJoin('item_schedule_plans AS isp', 'isp.id', '=', 'od.item_schedule_plan_id')
             ->where('orders.user_id', $userId)
             ->where('items.status', '>', 0)
             ->where('users.status', '>', 0)
@@ -54,8 +56,10 @@ class OrderDetail extends Model
                 'items.title',
                 'users.name',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
-                'items.date_start as date',
-                'items.time_start as time',
+                // 'items.date_start as date',
+                // 'items.time_start as time',
+                DB::raw("CASE WHEN isp.date_start IS NOT NULL THEN isp.date_start ELSE '". $today ."' END AS date"),
+                DB::raw("CASE WHEN isp.time_start IS NOT NULL THEN isp.time_start ELSE '". $todayTime ."' END AS time"),
                 'items.time_end',
                 DB::raw("'' as schedule_content"),
                 'items.short_content as content',
