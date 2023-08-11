@@ -24,6 +24,7 @@
                     <a href="{{ route('refpage', ['code' => 'anylearn']) }}" class="text-white pl-2 py-1 rounded-md">Đăng ký</a>
                 @else
                     <a href="{{ route('me.dashboard') }}" class="text-white pl-2 py-1 rounded-md">Trang quản lý</a>
+                    <span class="text-white hover:text-gray-300 px-1 py-1">|</span>
                     <a href="{{ route('auth.logout') }}" class="text-white pl-2 py-1 rounded-md">Đăng xuất</a>
                 @endif
             </div>
