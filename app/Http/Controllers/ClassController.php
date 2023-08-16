@@ -8,6 +8,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCodeNotifTemplate;
 use App\ItemExtra;
 use App\Models\Category;
 use App\Models\Configuration;
@@ -85,7 +86,7 @@ class ClassController extends Controller
         $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
-            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS);
+            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS); 
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo lớp học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {
@@ -103,7 +104,7 @@ class ClassController extends Controller
                     return redirect()->route('me.class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
                 }
             }
-        }
+        } 
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([
             ConfigConstants::CONFIG_DISCOUNT,
@@ -116,7 +117,6 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
-
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
@@ -124,7 +124,7 @@ class ClassController extends Controller
                 ->select('id', 'name')
                 ->get();
             return view('class.edit', $this->data);
-        } else {
+        } else { 
             $this->data['hasBack'] = route('me.class');
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }
@@ -227,6 +227,16 @@ class ClassController extends Controller
         if ($request->input('action') == 'update') {
             try {
                 $rs = $courseService->updateItem($request, $input);
+                if ($input['code']) {
+                    $courseService->createItemCodes($courseId, $input['code']);
+                } 
+                if ($input['email'] || $input['notif']) {
+                    $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+                    $notifTemplate->update([
+                        'email_template' => $input['email'],
+                        'notif_template' => $input['notif'], 
+                    ]);
+                }                  
             } catch (Exception $e) {
                 Log::error($e);
                 return redirect()->back()->with(['tab' => $input['tab'], 'notify' => 'Có lỗi xảy ra khi cập nhật, vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.']);
@@ -238,7 +248,7 @@ class ClassController extends Controller
                 return redirect()->back()->with(['notify' => $rs, 'tab' => $input['tab']]);
             }
         }
-        $courseDb =  $courseService->itemInfo($courseId);
+        $courseDb = $courseService->itemInfo($courseId);
         if (empty($courseDb)) {
             return redirect()->route('class')->with('notify', __('Lớp học không tồn tại'));
         }
@@ -343,6 +353,11 @@ class ClassController extends Controller
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
         $this->data['extra'] = ModelsItemExtra::where('item_id', $courseId)->get();
+        
+        $this->data['notifTemplates'] = $courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL 
+            ? ItemCodeNotifTemplate::where('item_id', $courseId)->first()
+            : null;
+
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])

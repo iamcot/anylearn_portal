@@ -43,6 +43,11 @@ class_edit
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'contenttab' ? 'active' : '' }}" id="content-tab" data-bs-toggle="tab" data-bs-target="#contenttab" type="button" role="tab" aria-controls="contenttab" aria-selected="true"><i class="fa fa-font"></i> <span class="d-none d-sm-block">@lang('Giới thiệu')</span></button>
         </li>
+        @if(!empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL)
+        <li class="nav-item" role="presentation" id="digital-code">
+            <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'code' ? 'active' : '' }}" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="code" aria-selected="true"><i class="	fa fa-bolt"></i> <span class="d-none d-sm-block">@lang('Kích hoạt')</span></button>
+        </li>
+        @endif
         @if(!empty($course) && !in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_DIGITAL, \App\Constants\ItemConstants::SUBTYPE_VIDEO]))
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'schedule' ? 'active' : '' }}" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule" aria-selected="true"><i class="fa fa-calendar-alt"></i> <span class="d-none d-sm-block">@lang('Lịch học')</span></button>
@@ -77,16 +82,19 @@ class_edit
         </li>
         @endif
     </ul>
-
+    
     <div class="tab-content border-top-2 mb-5 bg-white" style="@if(empty($course)) display:none; @endif" id="myTabContent">
         <div class="tab-pane fade {{ session('tab', 'info') == 'info' ? 'show active' : '' }} p-2" id="info" role="tabpanel" aria-labelledby="info-tab">
-            @include('class.form.info')
+            @include('class.form.info') 
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'price' ? 'show active' : '' }} p-2" id="price" role="tabpanel" aria-labelledby="price-tab">
             @include('class.form.price')
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'contenttab' ? 'show active' : '' }} p-2" id="contenttab" role="tabpanel" aria-labelledby="content-tab">
             @include('class.form.content')
+        </div>
+        <div class="tab-pane fade {{ session('tab', 'info') == 'code' ? 'show active' : '' }} p-2" id="code" role="tabpanel" aria -labelledby="code-tab">
+            @include('class.form.code')
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'schedule' ? 'show active' : '' }} p-2" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
             @include('class.form.schedule')
@@ -254,6 +262,12 @@ class_edit
             $("#box_activities").show();
         } else {
             $("#box_activities").hide();
+        }
+
+        if ($(this).val() == "digital") {
+            $('#digital-code').show();
+        } else {
+            $('#digital-code').hide();
         }
     });
 </script>
