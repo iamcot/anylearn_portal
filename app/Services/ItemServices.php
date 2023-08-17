@@ -737,17 +737,6 @@ class ItemServices
         }
     }
 
-    public function createItemCodes($itemId, $codes) {
-        $codes = str_replace(' ', '', $codes);
-        $codes = explode("\n", str_replace(["\r\n", "\r"], "\n", $codes));
-
-        $data = [];
-        foreach ($codes as $code) {
-            $data[] = array('item_id' => $itemId, 'code' => $code);
-        }
-        return DB::table('item_codes')->insertOrIgnore($data);
-    }
-
     public function createItem($request, $itemType = ItemConstants::TYPE_CLASS, $userApi = null)
     {
         $input = $request->all();
@@ -858,21 +847,36 @@ class ItemServices
             // }
 
             // Add item codes to subtype_digital
-            if ($newCourse->subtype == ItemConstants::SUBTYPE_DIGITAL && isset($input['code'])) {
-                $this->createItemCodes($newCourse->id, $input['code']);
-
-                if (isset($input['email']) || isset($input['notif'])) {
-                    ItemCodeNotifTemplate::create([
-                        'item_id' => $newCourse->id,
-                        'email_template' => $input['email'],
-                        'notif_template' => $input ['notif'],
-                    ]);
-                } 
+            if ($newCourse->subtype == ItemConstants::SUBTYPE_DIGITAL) {
+                if (isset($input['code'])) {
+                    $this->createItemCodes($newCourse->id, $input['code']);
+                }
+                ItemCodeNotifTemplate::create([
+                    'item_id' => $newCourse->id,
+                    'email_template' => $input['email'],
+                    'notif_template' => $input ['notif'],
+                ]);
             }
-           
             return $newCourse->id;
         }
         return false;
+    }
+
+    public function createItemCodes($itemId, $codes) {
+        $codes = str_replace(' ', '', $codes);
+        $codes = explode("\n", str_replace(["\r\n", "\r"], "\n", $codes));
+
+        $data = [];
+        $datetime = Carbon::now();
+        foreach ($codes as $code) {
+            $data[] = array(
+                'item_id' => $itemId, 
+                'code' => $code,
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            );
+        }
+        return DB::table('item_codes')->insertOrIgnore($data);
     }
 
     public function updateItem(Request $request, $input, $userApi = null)

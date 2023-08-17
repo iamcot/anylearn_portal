@@ -236,16 +236,24 @@ class ClassController extends Controller
         if ($request->input('action') == 'update') {
             try {
                 $rs = $courseService->updateItem($request, $input);
-                if ($input['code']) {
-                    $courseService->createItemCodes($courseId, $input['code']);
-                } 
-                if ($input['email'] || $input['notif']) {
-                    $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-                    $notifTemplate->update([
-                        'email_template' => $input['email'],
-                        'notif_template' => $input['notif'], 
-                    ]);
-                }                  
+
+                $isDigitalCourse = Item::where('id', $courseId)
+                    ->where('subtype', ItemConstants::SUBTYPE_DIGITAL)
+                    ->first();
+
+                if ($isDigitalCourse) {
+                    if (isset($input['code'])) {
+                        $courseService->createItemCodes($courseId, $input['code']);
+                    } 
+
+                    if (isset($input['email']) || isset($input['notif'])) {
+                        $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+                        $notifTemplate->update([
+                            'email_template' => $input['email'],
+                            'notif_template' => $input['notif'], 
+                        ]);
+                    }  
+                }                
             } catch (Exception $e) {
                 Log::error($e);
                 return redirect()->back()->with(['tab' => $input['tab'], 'notify' => 'Có lỗi xảy ra khi cập nhật, vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.']);
