@@ -8,6 +8,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCode;
 use App\ItemCodeNotifTemplate;
 use App\ItemExtra;
 use App\Models\Category;
@@ -46,6 +47,13 @@ use Illuminate\Support\Str;
 
 class ClassController extends Controller
 {
+    public function codes(Request $request)
+    {
+        $this->data['itemCodes'] = ItemCode::orderBy('created_at', 'desc')->paginate(5);
+        $this->data['navText'] = __('Thông tin kích hoạt');
+        return view('class.codes', $this->data);
+    }
+
     public function list(Request $request)
     {
         $user = Auth::user();
@@ -117,6 +125,7 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
+        $this->data['action'] = 'create';
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])

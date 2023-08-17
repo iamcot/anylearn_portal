@@ -17,7 +17,7 @@
             <label for="email" class="col-md-3 col-form-label text-md-right ">{{ __('Mẫu thông báo email') }}</label>
             <div class="col-md-8">
                 <textarea id="email" onchange="hp();" class="form-control @error('email') is-invalid @enderror" name="email" rows="2">{{ old('email', !empty($notifTemplates) ? $notifTemplates->email_template : '') }}</textarea>
-                <p class="mt-1 small">@lang('Nhập &#123;&#123; code }} để thay thế cho phần mã gửi tới khách hàng của bạn.')</p>
+                <p class="mt-1 small">@lang('Nhập {code} để thay thế cho phần mã gửi tới khách hàng của bạn.')</p>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
             <label for="notif" class="col-md-3 col-form-label text-md-right ">{{ __('Mẫu thông báo điện thoại') }}</label>
             <div class="col-md-8">
                 <textarea id="notif" onchange="hp();" class="form-control @error('notif') is-invalid @enderror" name="notif" rows="2">{{ old('notif', !empty($notifTemplates) ? $notifTemplates->notif_template : '') }}</textarea>
-                <p class="mt-1 small">@lang('Nhập &#123;&#123; code }} để thay thế cho phần mã gửi tới khách hàng của bạn.')</p>
+                <p class="mt-1 small">@lang('Nhập {code} để thay thế cho phần mã gửi tới khách hàng của bạn.')</p>
             </div>  
         </div>
     </div>

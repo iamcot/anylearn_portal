@@ -43,7 +43,7 @@ class_edit
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'contenttab' ? 'active' : '' }}" id="content-tab" data-bs-toggle="tab" data-bs-target="#contenttab" type="button" role="tab" aria-controls="contenttab" aria-selected="true"><i class="fa fa-font"></i> <span class="d-none d-sm-block">@lang('Giới thiệu')</span></button>
         </li>
-        @if(!empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL)
+        @if((!empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL) || $action = 'create')
         <li class="nav-item" role="presentation" id="digital-code">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'code' ? 'active' : '' }}" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab" aria-controls="code" aria-selected="true"><i class="	fa fa-bolt"></i> <span class="d-none d-sm-block">@lang('Kích hoạt')</span></button>
         </li>

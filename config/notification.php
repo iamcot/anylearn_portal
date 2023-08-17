@@ -200,6 +200,14 @@ return [
         'copy' => true,
     ],
 
+    NotifConstants::DIGITAL_COURSE_ACTIVATION =>  [
+        'title' => 'Thông tin kích hoạt khóa học',
+        'template' => 'Mã kích hoạt {partner} của bạn là: {code} (chạm để copy)',
+        'route' => '',
+        'copy' => true,
+        'email' => 'App\Mail\DigitalCourseActivation',
+    ],
+
     NotifConstants::COURSE_REGISTER_APPROVE =>  [
         'title' => 'Đăng ký học đã được xác nhận thanh toán',
         'template' => 'Khoá học {className} bạn đăng ký đã được thanh toán. Vui lòng kiểm tra lịch học.',

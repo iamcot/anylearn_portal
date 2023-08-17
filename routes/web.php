@@ -103,12 +103,8 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/friend', 'UserController@meFriend')->name('me.friend');
     Route::any('/work', 'UserController@meWork')->name('me.work');
 
-
-
     Route::any('/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
     Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
-
-
 
     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
     Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
@@ -217,6 +213,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
     Route::middleware('access.item')->any('/class/{id}/del', 'ClassController@del')->name('class.del');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
+    Route::any('/codes', 'ClassController@codes')->name('codes');
 
     //Route::middleware('access.item')->any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
     //Route::middleware('access.item')->any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');

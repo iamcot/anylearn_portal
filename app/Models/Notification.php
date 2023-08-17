@@ -30,14 +30,14 @@ class Notification extends Model
         'send', 'read', 'route', 'type', 'is_send',
     ];
 
-    public function createNotif($type, $userId, $data, $copy = "", $route = "", $template = "")
+    public function createNotif($type, $userId, $data, $copy = "", $route = "", $notifTemplate = "", $emailTemplate = "")
     {
         $config = config('notification.' . $type);
         $obj = [
             'type' => $type,
             'user_id' => $userId,
             'title' => $config['title'],
-            'content' => $this->buildContent(!empty($template) ? $template : $config['template'], $data),
+            'content' => $this->buildContent(!empty($notifTemplate) ? $notifTemplate : $config['template'], $data),
             'route' => !empty($route) ? $route : $config['route'],
         ];
         if (!empty($config['args']) && !empty($data['args'])) {
@@ -57,6 +57,11 @@ class Notification extends Model
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
+                    if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
+                        $data['content'] =  $this->buildContent(
+                            !empty($notifTemplate) ? $emailTemplate : $config['template'], $data
+                        );
+                    }
                     Mail::to($user->email)->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
