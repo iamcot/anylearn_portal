@@ -6,6 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCodeNotifTemplate;
 use App\Mail\OrderSuccess;
 use App\Services\ItemServices;
 use App\Services\SmsServices;
@@ -96,6 +97,17 @@ class Notification extends Model
                 'send' => DB::raw("now()")
             ]);
         }
+    }
+
+    public function notifActivation($itemCode) 
+    {
+        $notifTemplate = ItemCodeNotifTemplate::where('item_id', $itemCode->item_id)->first();
+        $this->createNotif(NotifConstants::DIGITAL_COURSE_ACTIVATION, $itemCode->user_id, [          
+               'code'    => $itemCode->code,
+            ], '', '',
+            $notifTemplate ? $notifTemplate->notif_template : '',
+            $notifTemplate ? $notifTemplate->email_template : '',
+        );
     }
 
     public function firebaseMessage($notifDB, $token)

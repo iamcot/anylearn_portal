@@ -29,18 +29,18 @@
             <i class="fas fa-fw fa-university"></i>
             <span>@lang('Quản lý Lớp học')</span></a>        
     </li-->
-    <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit', 'codes']) ?  'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" aria-expanded="{{ in_array($route, ['class', 'class.create', 'class.edit', 'codes']) ? true : false }}" aria-controls="collapsePages">
+    <li class="nav-item {{ in_array($route, ['class', 'class.create', 'class.edit', 'codes', 'codes.refresh']) ?  'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" aria-expanded="{{ in_array($route, ['class', 'class.create', 'class.edit', 'codes', 'codes.refresh']) ? true : false }}" aria-controls="collapsePages">
         <i class="fas fa-fw fa-university"></i>
             <span>@lang('Quản lý lớp học')</span></a> 
         </a>
-        <div id="collapseUserAction" class="collapse {{ in_array($route, ['class', 'class.create', 'class.edit', 'codes']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseUserAction" class="collapse {{ in_array($route, ['class', 'class.create', 'class.edit', 'codes', 'codes.refresh']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ strpos($route, 'class') !== false ? 'active' : '' }}" href="{{ route('class') }}">
                     <i class="fas fa-fw fa-fire"></i>
                     <span>@lang('Danh sách lớp học')</span></a>
                 </a>
-                <a class="collapse-item {{ $route == 'codes' ? 'active' : '' }}" href="{{ route('codes') }}">
+                <a class="collapse-item {{ in_array($route, ['codes', 'codes.refresh']) ? 'active' : '' }}" href="{{ route('codes') }}">
                 <i class="fas fa-fw fa-bolt"></i>
                     <span>@lang('Thông tin kích hoạt')</span></a>
                 </a>

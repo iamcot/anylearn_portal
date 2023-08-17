@@ -693,7 +693,7 @@ class TransactionService
             ]);
 
             if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL) {
-                $this->activateDigitalCourses($openOrder->user_id, $orderItem, $author);  
+                $this->activateDigitalCourses($openOrder->user_id, $orderItem);  
             }   
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
@@ -701,24 +701,15 @@ class TransactionService
         return true;
     }
 
-    public function activateDigitalCourses($userId, $orderDetail, $partner) {
+    public function activateDigitalCourses($userId, $orderDetail) {
         $itemCode = ItemCode::where('item_id', $orderDetail->item_id)->whereNull('user_id')->first();
         if ($itemCode) {
             $itemCode->update([
                 'user_id' => $userId,
                 'order_detail_id' => $orderDetail->id,
             ]);
-    
             $notifServ = new Notification();
-            $notifTemplate = ItemCodeNotifTemplate::where('item_id', $orderDetail->item_id)->first();
-
-            $notifServ->createNotif(NotifConstants::DIGITAL_COURSE_ACTIVATION, $userId, [          
-                    'partner' => $partner->name,
-                    'code'    => $itemCode->code,
-                ], '', '',
-                $notifTemplate->notif_template,
-                $notifTemplate->email_template,
-            );
+            $notifServ->notifActivation($itemCode);
         }
 
         return false;

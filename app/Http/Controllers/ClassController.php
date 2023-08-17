@@ -31,6 +31,7 @@ use App\Models\UserLocation;
 use App\Services\ActivitybonusServices;
 use App\Services\FileServices;
 use App\Services\ItemServices;
+use App\Services\TransactionService;
 use App\Services\UserServices;
 use App\Services\VideoServices;
 use BotMan\BotMan\Messages\Attachments\Video;
@@ -49,9 +50,39 @@ class ClassController extends Controller
 {
     public function codes(Request $request)
     {
-        $this->data['itemCodes'] = ItemCode::orderBy('created_at', 'desc')->paginate(5);
+        $this->data['itemCodes'] = ItemCode::orderBy('user_id', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
         $this->data['navText'] = __('Thông tin kích hoạt');
         return view('class.codes', $this->data);
+    }
+
+    public function reSendItemCode(Request $request, $idItemCode) 
+    {
+        $itemCode = ItemCode::find($idItemCode);
+        if (!empty($itemCode)) {
+            $notifServ = new Notification();
+            $notifServ->notifActivation($itemCode);
+            return redirect()->back()->with(['notify', 'Thao tác thành công']);
+        }
+
+        return redirect()->back()->with(['notify', 'Có lỗi xảy ra, vui lòng thử lại!']);
+    }
+
+    public function refreshItemCode(Request $request, $idItemCode) 
+    {
+        $itemCode = ItemCode::find($idItemCode);
+        if (!empty($itemCode)) {
+            if ($request->input('action') == 'update') {
+                $itemCode->update($request->except(['action', '_token', 'code']));
+                return redirect()->route('codes')->with(['notify', 'Thao tác thành công']);
+            }
+            $this->data['itemCode'] = $itemCode;
+            return view('class.refresh_item_code', $this->data);
+        }
+
+        return redirect()->back()->with(['notify', 'Có lỗi xảy ra, vui lòng thử lại!']);
     }
 
     public function list(Request $request)
