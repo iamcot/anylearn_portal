@@ -12,9 +12,9 @@ class Configuration extends Model
         'key', 'value', 'type'
     ];
 
-    public function createOrUpdate($key, $value, $type)
+    public function createOrUpdate($key, $value, $type, $force = false)
     {
-        if ($value == "") {
+        if ($value == "" && !$force) {
             return;
         }
         $find = $this->where('key', $key)->first();

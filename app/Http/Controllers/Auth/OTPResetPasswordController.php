@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\User;
+use App\Services\OtpServices;
 use App\Services\SmsServices;
+use App\Services\ZaloServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class OTPResetPasswordController  extends Controller
 {
@@ -14,13 +18,32 @@ class OTPResetPasswordController  extends Controller
     {
         if ($request->get('phone')) {
             $phone = $request->get('phone');
-            $smsServ = new SmsServices();
-            $result = $smsServ->smsOTP($phone);
-            if (!$result) {
+            $otpService = new OtpServices();
+            try {
+                $genOtp = $otpService->genOtp($phone);
+            } catch (\Exception $e) {
+                Log::error($e);
+                return redirect()->back()->withErrors([
+                    'phone' => 'Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại'
+                ]);
+            }
+            $zaloService = new ZaloServices(true);
+            $znsResult = $zaloService->sendZNS(ZaloServices::ZNS_OTP, $phone, $genOtp);
+            
+            if (!$znsResult['result']) {
+                Notification::find($genOtp['notification_id'])->update([
+                    'is_send' => 0,
+                    'extra_content' => json_encode($znsResult['error'])
+                ]);
                 return redirect()->back()->withErrors([
                     'phone' => 'Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại'
                 ]);
             } else {
+                Notification::find($genOtp['notification_id'])->update([
+                    'is_send' => 1,
+                    'send' =>  date('Y-m-d H:i:s'),
+                    'extra_content' => $znsResult['data']
+                ]);
                 return redirect()->route('password.resetotp')->withInput(['phone' => $phone]);
             }
         }
@@ -43,9 +66,9 @@ class OTPResetPasswordController  extends Controller
                 'password' => 'Vui lòng nhập lại mật khẩu'
             ]);
         }
-        $smsServ = new SmsServices();
+        $otpService = new OtpServices();
         try {
-            $result = $smsServ->verifyOTP($phone, $otp);
+            $result = $otpService->verifyOTP($phone, $otp);
             if ($result) {
                 User::where('phone', $phone)->update([
                     'password' => Hash::make($password)

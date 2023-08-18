@@ -15,6 +15,7 @@ use App\Models\Voucher;
 use App\Models\VoucherEvent;
 use App\Models\VoucherGroup;
 use App\Services\FileServices;
+use App\Services\ZaloServices;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -26,6 +27,42 @@ use Vanthao03596\HCVN\Models\Ward;
 
 class ConfigController extends Controller
 {
+    public function zaloOA(Request $request)
+    {
+        $zaloServ = new ZaloServices();
+        $loginUrl = $zaloServ->generateUrl();
+        if ($loginUrl) {
+            return redirect($loginUrl);
+        }
+        echo "NO_URL";
+    }
+
+    public function zalo(Request $request)
+    {
+        $code = $request->get('code');
+        if (empty($code)) {
+            echo 'NO CODE AVAILABLE';
+        }
+
+        $configM = new Configuration();
+        $configM->createOrUpdate(ConfigConstants::ZALO_CODE, $code, ConfigConstants::TYPE_ZALO);
+        $zaloServ = new ZaloServices();
+        $tokenObj = $zaloServ->getToken($code, ZaloServices::GRANT_TYPE_CODE);
+        if (
+            empty($tokenObj['access_token'])
+            || empty($tokenObj['refresh_token'])
+            || empty($tokenObj['expires_in'])
+        ) {
+            echo 'NO_TOKEN_COLLECT';
+            return;
+        }
+        $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN, $tokenObj['access_token'], ConfigConstants::TYPE_ZALO, true);
+        $configM->createOrUpdate(ConfigConstants::ZALO_REFRESH, $tokenObj['refresh_token'], ConfigConstants::TYPE_ZALO, true);
+        $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN_EXP, ($tokenObj['expires_in'] + time()), ConfigConstants::TYPE_ZALO, true);
+        $zaloServ = new ZaloServices();
+        echo 'UPDATE_NEW_CODE_SUCCESS';
+    }
+    
     public function site(Request $request)
     {
         $configM = new Configuration();
@@ -89,8 +126,8 @@ class ConfigController extends Controller
     public function guidepdf($type, $id)
     {
         $contract = DB::table('contracts')
-        ->join('users', 'users.id', '=', 'contracts.user_id')
-        ->where('contracts.id', $id)
+            ->join('users', 'users.id', '=', 'contracts.user_id')
+            ->where('contracts.id', $id)
             ->select('users.name', 'users.phone', 'users.title', 'contracts.*')
             ->first();
         if (!isset(ConfigConstants::$guideTitle[$type])) {
@@ -427,7 +464,6 @@ class ConfigController extends Controller
                         if ($totalSaved < $newGroup->qtt) {
                             return redirect()->back()->with('notify', 'Không thể tạo đủ số lượng mã voucher yêu cầu');
                         }
-
                     } else {
                         try {
                             Voucher::create([
@@ -442,7 +478,6 @@ class ConfigController extends Controller
                         } catch (\Exception $ex) {
                             Log::error($ex);
                         }
-
                     }
                 }
             }

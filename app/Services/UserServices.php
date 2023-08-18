@@ -620,7 +620,11 @@ class UserServices
                 'orgprice' => "Đang cập nhật"
             ];
         }
-        Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
+        try {
+            Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
+        } catch(\Exception $e) {
+            Log::error($e);
+        }
     }
 
     public function getPartner($id)

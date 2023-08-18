@@ -224,6 +224,10 @@
                     <i class="fas fa-fw fa-images"></i>
                     <span>@lang('Banners')</span>
                 </a>
+                <a class="collapse-item" target="_blank" href="{{ route('zalo.oa') }}">
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span>@lang('Zalo OA')</span>
+                </a>
 
             </div>
         </div>
