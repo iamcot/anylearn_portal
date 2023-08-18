@@ -742,6 +742,7 @@ class TransactionService
                 'items.image',
                 'items.date_start',
                 'items.is_paymentfee',
+                'items.subtype',
                 'u2.name as childName',
                 'u2.id as childId',
                 'isp.title AS plan_title',

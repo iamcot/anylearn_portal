@@ -60,7 +60,8 @@ class Notification extends Model
                 try {
                     if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
                         $data['content'] =  $this->buildContent(
-                            !empty($notifTemplate) ? $emailTemplate : $config['template'], $data
+                            !empty($notifTemplate) ? $emailTemplate : $config['template'],
+                            $data
                         );
                     }
                     Mail::to($user->email)->send(new $config['email']($data));
@@ -99,12 +100,19 @@ class Notification extends Model
         }
     }
 
-    public function notifActivation($itemCode) 
+    public function notifActivation($itemCode)
     {
         $notifTemplate = ItemCodeNotifTemplate::where('item_id', $itemCode->item_id)->first();
-        $this->createNotif(NotifConstants::DIGITAL_COURSE_ACTIVATION, $itemCode->user_id, [          
-               'code'    => $itemCode->code,
-            ], '', '',
+        $item = Item::find($itemCode->item_id);
+        $this->createNotif(
+            NotifConstants::DIGITAL_COURSE_ACTIVATION,
+            $itemCode->user_id,
+            [
+                'class' =>  $item->title,
+                'code'    => $itemCode->code,
+            ],
+            $itemCode->code,
+            '',
             $notifTemplate ? $notifTemplate->notif_template : '',
             $notifTemplate ? $notifTemplate->email_template : '',
         );

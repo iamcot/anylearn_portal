@@ -202,7 +202,7 @@ return [
 
     NotifConstants::DIGITAL_COURSE_ACTIVATION =>  [
         'title' => 'Thông tin kích hoạt khóa học',
-        'template' => 'Mã kích hoạt của bạn là: {code} (chạm để copy)',
+        'template' => 'Mã kích hoạt khóa học {class} của bạn là: {code} (chạm để copy)',
         'route' => '',
         'copy' => true,
         'email' => 'App\Mail\DigitalCourseActivation',

@@ -50,9 +50,16 @@ class ClassController extends Controller
 {
     public function codes(Request $request)
     {
-        $this->data['itemCodes'] = ItemCode::orderBy('user_id', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $this->data['itemCodes'] = DB::table('item_codes')
+        ->join('items', 'items.id', '=', 'item_codes.item_id')
+        ->leftjoin('users', 'users.id', '=', 'item_codes.user_id')
+        ->orderBy('items.id', 'desc')
+        ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone')
+        ->paginate(20);
+        
+        // ItemCode::orderBy('user_id', 'desc')
+        //     ->orderBy('created_at', 'desc')
+        //     ->paginate(15);
 
         $this->data['navText'] = __('Thông tin kích hoạt');
         return view('class.codes', $this->data);

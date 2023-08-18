@@ -12,9 +12,10 @@
         <div class="card-body p-0 table-responsive">
             <table class="table table-bordered table-striped">
                 <thead>
-                    <th class="text-center">#</th>
+                    <th class="text-center">Partner Id</th>
+                    <th>ID#Khóa học</th>
                     <th>Code</th>
-                    <th>UserID</th>
+                    <th>Người dùng</th>
                     <th>Đơn hàng</th>    
                     <th>Cập nhật</th>
                     <th width="16%">Thao tác</th>
@@ -22,16 +23,17 @@
                 <tbody>
                     @foreach ($itemCodes as $code)
                         <tr>
-                            <th class="text-center">{{ $code->id }}</th>
+                            <th class="text-center">{{ $code->partner_id }}</th>
+                            <td>{{ $code->item_id }}#{{ $code->class }}</td>
                             <td>{{ $code->code }}</td>
-                            <td>{{ $code->user_id }}</td>
+                            <td>{{ $code->user_id  ? ($code->name . "(" . $code->phone . ")") : "" }}</td>
                             <td>{{ $code->order_detail_id }}</td>
                             <td>{{ $code->updated_at }}</td>
                             <td>
                                 @if(isset($code->user_id))
-                                <a class="btn btn-sm btn-info mt-1" href="{{ route('codes.resend', ['id' => $code->id]) }}"><i class="fa fa-paper-plane"></i> Gửi lại</a>
+                                <a class="btn btn-sm btn-primary mt-1" href="{{ route('codes.resend', ['id' => $code->id]) }}"><i class="fa fa-paper-plane"></i> Gửi lại</a>
                                 @else
-                                <a class="btn btn-sm btn-info mt-1" href="{{ route('codes.refresh', ['id' => $code->id]) }}"><i class="	fa fa-bolt"></i> Sử dụng</a> 
+                                <a class="btn btn-sm btn-success mt-1" href="{{ route('codes.refresh', ['id' => $code->id]) }}"><i class="	fa fa-bolt"></i> Sử dụng</a> 
                                 @endif
                             </td>
                         </tr>
