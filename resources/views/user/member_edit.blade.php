@@ -60,8 +60,11 @@
                 <div class="form-group row">
                     <label for="sale_priority" class="col-md-2 col-form-label text-md-right">{{ __('Độ ưu tiên') }}</label>
                     <div class="col-md-8">
-                        <input id="sale_priority" type="text" class="form-control @error('sale_priority') is-invalid @enderror" name="sale_priority" value="{{ old('sale_priority', !empty($user) ? $user->sale_priority : '') }}">
-                        <small>Độ ưu tiên phải là một trong các giá trị sau: 0, 1, 2, 3, 99</small>
+                        <select name="sale_priority" id="sale_priority" class="form-control">
+                            @foreach([0 => "NEW",1 => "URGENT",2 => "ASAP",3 => "NEED",99 => "DONE"] as $key => $prio)
+                                <option value="{{ $key }}" {{ ( !empty($user) && $user->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="form-group row">

@@ -28,7 +28,7 @@
                                             font-weight: bold;
                                             color: {{ $memberProfile->sale_priority == 0 || $memberProfile->sale_priority == 3 ? '#555 ': '#fff' }};
                                             border: 1px solid {{ $memberProfile->sale_priority == 0 ? '#ccc' : $priorityColors[$memberProfile->sale_priority]}}; 
-                                            border-radius: 15px; 
+                                            border-radius: 5px; 
                                             background: {{ $priorityColors[$memberProfile->sale_priority] }}">
                                         {{ $priorityLevels[$memberProfile->sale_priority] }}
                                         </span>    
