@@ -25,6 +25,8 @@ Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
 Route::get('/ref/{code}', 'PageController@ref')->name('refpage');
 Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');
+Route::middleware(['auth', 'access.mod'])->get('/zalo-oa', 'ConfigController@zaloOA')->name('zalo.oa');
+Route::middleware(['auth', 'access.mod'])->get('/zalo', 'ConfigController@zalo');
 
 Route::any('/bot', function() {
     app('botman')->listen();

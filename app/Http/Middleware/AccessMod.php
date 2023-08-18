@@ -18,7 +18,7 @@ class AccessMod
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if (!in_array($user->role, UserConstants::$modRoles)) {
+        if (!$user->status || !in_array($user->role, UserConstants::$modRoles)) {
             return redirect('/')->with('notify', __('Bạn không có quyền truy xuất dữ liệu này'));
         }
         return $next($request);
