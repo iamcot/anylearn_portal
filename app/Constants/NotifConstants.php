@@ -28,6 +28,7 @@ class NotifConstants
     const COURSE_REGISTER_PENDING = 'course_register_pending';
     const COURSE_REGISTER_REJECT = 'course_register_reject';
     const COURSE_CERT_SENT = 'course_cert_sent';
+    const DIGITAL_COURSE_ACTIVATION = 'digital_course_activation';
 
     /** Transaction */
     const TRANS_DEPOSIT_SENT = 'trans_deposit_sent';

@@ -45,6 +45,12 @@ class ConfigConstants
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 
+    const ZALO_CODE= 'zalo_code';
+    const ZALO_REFRESH = 'zalo_refresh';
+    const ZALO_TOKEN = 'zalo_token';
+    const ZALO_TOKEN_EXP = 'zalo_token_exp';
+
+
     const CONFIG_HOME_POPUP = 'home_popup';
     const CONFIG_HOME_POPUP_WEB = 'home_popup_web';
     const CONFIG_HOME_SPECIALS_CLASSES = 'home_special_classes';
@@ -59,6 +65,8 @@ class ConfigConstants
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';
+    const TYPE_ZALO = 'zalo';
+
 
     const TRANSACTION_DEPOSIT = 'deposit';
     const TRANSACTION_WITHDRAW = 'withdraw';

@@ -133,9 +133,9 @@ class OrderDetail extends Model
         $query = DB::table('order_details')
             ->join('orders', 'orders.id', '=', 'order_details.order_id')
             ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->join('users', 'users.id', '=', 'orders.user_id')
             ->join('users AS u2', 'u2.id', '=', 'order_details.user_id') //this join is for child user
-            ->join('item_schedule_plans as schedules', 'schedules.item_id', '=', 'order_details.item_id')
+            ->leftjoin('item_schedule_plans as schedules', 'schedules.item_id', '=', 'order_details.item_id')
             ->leftJoin('participations AS pa', function ($join) {
                 $join->on('pa.schedule_id', '=', 'schedules.id')
                     ->on('pa.participant_user_id', '=', 'u2.id');
@@ -144,12 +144,13 @@ class OrderDetail extends Model
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
             ->where('order_details.status', 'delivered')
-            ->where('order_details.user_id', $userId)
-            ->orWhere('users.user_id', $userId)
-            ->where('users.is_child',1)
+            ->where('users.id', $userId)
+            // ->orWhere('users.id', $userId)
+            // ->where('users.is_child',1)
             ->select(
                 'order_details.id',
                 'order_details.item_id',
+                'order_details.created_at',
                 'items.title',
                 'items.user_status',
                 'items.status',
@@ -172,8 +173,7 @@ class OrderDetail extends Model
                 DB::raw('"" AS image'),
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
-            ->orderBy('items.date_start')
-            ->orderBy('items.time_start');
+            ->orderBy('order_details.created_at', 'desc');
             // dd($query->get());
         $result = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
         return $result;

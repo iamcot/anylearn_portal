@@ -8,6 +8,8 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCode;
+use App\ItemCodeNotifTemplate;
 use App\ItemExtra;
 use App\Models\Category;
 use App\Models\Configuration;
@@ -29,6 +31,7 @@ use App\Models\UserLocation;
 use App\Services\ActivitybonusServices;
 use App\Services\FileServices;
 use App\Services\ItemServices;
+use App\Services\TransactionService;
 use App\Services\UserServices;
 use App\Services\VideoServices;
 use BotMan\BotMan\Messages\Attachments\Video;
@@ -45,6 +48,50 @@ use Illuminate\Support\Str;
 
 class ClassController extends Controller
 {
+    public function codes(Request $request)
+    {
+        $this->data['itemCodes'] = DB::table('item_codes')
+        ->join('items', 'items.id', '=', 'item_codes.item_id')
+        ->leftjoin('users', 'users.id', '=', 'item_codes.user_id')
+        ->orderBy('items.id', 'desc')
+        ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone')
+        ->paginate(20);
+        
+        // ItemCode::orderBy('user_id', 'desc')
+        //     ->orderBy('created_at', 'desc')
+        //     ->paginate(15);
+
+        $this->data['navText'] = __('Thông tin kích hoạt');
+        return view('class.codes', $this->data);
+    }
+
+    public function reSendItemCode(Request $request, $idItemCode) 
+    {
+        $itemCode = ItemCode::find($idItemCode);
+        if (!empty($itemCode)) {
+            $notifServ = new Notification();
+            $notifServ->notifActivation($itemCode);
+            return redirect()->back()->with(['notify', 'Thao tác thành công']);
+        }
+
+        return redirect()->back()->with(['notify', 'Có lỗi xảy ra, vui lòng thử lại!']);
+    }
+
+    public function refreshItemCode(Request $request, $idItemCode) 
+    {
+        $itemCode = ItemCode::find($idItemCode);
+        if (!empty($itemCode)) {
+            if ($request->input('action') == 'update') {
+                $itemCode->update($request->except(['action', '_token', 'code']));
+                return redirect()->route('codes')->with(['notify', 'Thao tác thành công']);
+            }
+            $this->data['itemCode'] = $itemCode;
+            return view('class.refresh_item_code', $this->data);
+        }
+
+        return redirect()->back()->with(['notify', 'Có lỗi xảy ra, vui lòng thử lại!']);
+    }
+
     public function list(Request $request)
     {
         $user = Auth::user();
@@ -85,7 +132,7 @@ class ClassController extends Controller
         $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
-            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS);
+            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS); 
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo lớp học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {
@@ -103,7 +150,7 @@ class ClassController extends Controller
                     return redirect()->route('me.class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
                 }
             }
-        }
+        } 
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([
             ConfigConstants::CONFIG_DISCOUNT,
@@ -116,7 +163,7 @@ class ClassController extends Controller
         $this->data['isSchool'] = false;
         $this->data['navText'] = __('Tạo lớp học');
         $this->data['hasBack'] = route('class');
-
+        $this->data['action'] = 'create';
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
@@ -124,7 +171,7 @@ class ClassController extends Controller
                 ->select('id', 'name')
                 ->get();
             return view('class.edit', $this->data);
-        } else {
+        } else { 
             $this->data['hasBack'] = route('me.class');
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }
@@ -227,6 +274,24 @@ class ClassController extends Controller
         if ($request->input('action') == 'update') {
             try {
                 $rs = $courseService->updateItem($request, $input);
+
+                $isDigitalCourse = Item::where('id', $courseId)
+                    ->where('subtype', ItemConstants::SUBTYPE_DIGITAL)
+                    ->first();
+
+                if ($isDigitalCourse) {
+                    if (isset($input['code'])) {
+                        $courseService->createItemCodes($courseId, $input['code']);
+                    } 
+
+                    if (isset($input['email']) || isset($input['notif'])) {
+                        $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+                        $notifTemplate->update([
+                            'email_template' => $input['email'],
+                            'notif_template' => $input['notif'], 
+                        ]);
+                    }  
+                }                
             } catch (Exception $e) {
                 Log::error($e);
                 return redirect()->back()->with(['tab' => $input['tab'], 'notify' => 'Có lỗi xảy ra khi cập nhật, vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.']);
@@ -238,7 +303,7 @@ class ClassController extends Controller
                 return redirect()->back()->with(['notify' => $rs, 'tab' => $input['tab']]);
             }
         }
-        $courseDb =  $courseService->itemInfo($courseId);
+        $courseDb = $courseService->itemInfo($courseId);
         if (empty($courseDb)) {
             return redirect()->route('class')->with('notify', __('Lớp học không tồn tại'));
         }
@@ -343,6 +408,11 @@ class ClassController extends Controller
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
         $this->data['extra'] = ModelsItemExtra::where('item_id', $courseId)->get();
+        
+        $this->data['notifTemplates'] = $courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL 
+            ? ItemCodeNotifTemplate::where('item_id', $courseId)->first()
+            : null;
+
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])

@@ -8,6 +8,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCodeNotifTemplate;
 use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;
@@ -834,6 +835,7 @@ class ItemServices
 
         $input['content'] = $this->buildContentToSave($input['content']);
         $newCourse = Item::create($input);
+
         if ($newCourse) {
             $i18nModel = new I18nContent();
 
@@ -868,9 +870,38 @@ class ItemServices
                 Item::find($newCourse->id)->update(['image' => $courseImage]);
             }
             // }
+
+            // Add item codes to subtype_digital
+            if ($newCourse->subtype == ItemConstants::SUBTYPE_DIGITAL) {
+                if (isset($input['code'])) {
+                    $this->createItemCodes($newCourse->id, $input['code']);
+                }
+                ItemCodeNotifTemplate::create([
+                    'item_id' => $newCourse->id,
+                    'email_template' => $input['email'],
+                    'notif_template' => $input ['notif'],
+                ]);
+            }
             return $newCourse->id;
         }
         return false;
+    }
+
+    public function createItemCodes($itemId, $codes) {
+        $codes = str_replace(' ', '', $codes);
+        $codes = explode("\n", str_replace(["\r\n", "\r"], "\n", $codes));
+
+        $data = [];
+        $datetime = Carbon::now();
+        foreach ($codes as $code) {
+            $data[] = array(
+                'item_id' => $itemId, 
+                'code' => $code,
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            );
+        }
+        return DB::table('item_codes')->insertOrIgnore($data);
     }
 
     public function updateItem(Request $request, $input, $userApi = null)

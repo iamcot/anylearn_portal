@@ -7,6 +7,7 @@ use App\Constants\ConfigConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCode;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Notification;
@@ -200,7 +201,6 @@ class UserController extends Controller
                                 $data['sale_id'] = $row[7];
                             }
                             $countUpdate += User::where('phone', $row[4])->update($data);
-
                         } else {
                             // Log::debug($row);
                             //dd($rows);
@@ -265,6 +265,8 @@ class UserController extends Controller
 
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
+        $this->data['priorityLevels'] = UserConstants::$salePriorityLevels;
+        $this->data['priorityColors'] = UserConstants::$salePriorityColors;
         return view('user.member_list', $this->data);
     }
 
@@ -291,7 +293,7 @@ class UserController extends Controller
             }
 
             // Save note
-            SaleActivity ::create([
+            SaleActivity::create([
                 'type' => SaleActivity::TYPE_NOTE,
                 'sale_id' => Auth::user()->id,
                 'member_id' => $member->id,
@@ -342,7 +344,7 @@ class UserController extends Controller
         $userService = new UserServices();
         if ($request->input('save')) {
             $input = $request->all();
-            
+
             $input['role'] = $editUser->role;
             $input['user_id'] = $editUser->user_id;
             $input['boost_score'] = $editUser->boost_score;
@@ -498,30 +500,30 @@ class UserController extends Controller
     public function courseConfirm(Request $request)
     {
         $user = Auth::user();
-        $userC = DB::table('users')->where('user_id',$user->id)->where('is_child',1)->orWhere('id',$user->id)->get();
+        $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
         $userIds = $userC->pluck('id')->toArray();
         $data = DB::table('order_details')
-        // ->join('participations', 'participations.schedule_id','=','order_details.id')
-        ->join('items','items.id','=','order_details.item_id')
-        ->join('users', 'users.id', '=', 'order_details.user_id')
-        ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-        ->whereIn('order_details.user_id',$userIds)
-        ->select(
-            'items.title',
-            'items.id as courseId',
-            'order_details.id',
-            'order_details.user_id',
-            'order_details.created_at',
-            DB::raw('(SELECT count(*) FROM participations
+            // ->join('participations', 'participations.schedule_id','=','order_details.id')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->whereIn('order_details.user_id', $userIds)
+            ->select(
+                'items.title',
+                'items.id as courseId',
+                'order_details.id',
+                'order_details.user_id',
+                'order_details.created_at',
+                DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
-            DB::raw('(SELECT count(*) FROM participations
+                DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count')
-        )
-        ->get();
+            )
+            ->get();
         $this->data['data'] = $data;
         return view(env('TEMPLATE', '') . 'me.courseconfirm', $this->data);
     }
@@ -655,7 +657,7 @@ class UserController extends Controller
         $contract = DB::table('contracts')
             ->join('users', 'users.id', '=', 'contracts.user_id')
             ->where('contracts.id', $id)
-            ->select('users.name', 'users.phone','users.role', 'contracts.*')
+            ->select('users.name', 'users.phone', 'users.role', 'contracts.*')
             ->first();
         if ($request->get('action') != null) {
             $notifM = new Notification();
@@ -870,7 +872,8 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.pending_orders', $this->data);
     }
 
-    public function cancelPending(Request $request, $orderId) {
+    public function cancelPending(Request $request, $orderId)
+    {
         $user = $request->get('_user') ?? Auth::user();
         $order = Order::find($orderId);
         if ($order->user_id != $user->id) {
@@ -893,22 +896,42 @@ class UserController extends Controller
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
-    public function schedule(Request $request, $itemId)
+    public function schedule(Request $request, $orderDetailId)
     {
-        $schedule = ItemSchedulePlan::where('item_id', $itemId)->first();
-        $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
+        $user = Auth::user();
+        $orderDetail = DB::table('order_details')
+        ->join('orders', 'orders.id', '=', 'order_details.order_id')
+        ->where('order_details.id', $orderDetailId)
+        ->where('orders.user_id', $user->id)
+        ->select(
+            'order_details.item_id',
+        )->first();
+        if (!$orderDetail) {
+            return redirect()->back()->with('notify', 'Đơn hàng không đúng');
+        }
+        $item = Item::find($orderDetail->item_id);
+        $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
+        if ($schedule) {
 
-        $daylist = [];
-        $weekdays = explode(',', $schedule->weekdays);
-        foreach ($period as $date) {
-            if (in_array($date->format('w') + 1, $weekdays)) {
-                $daylist[] = $date->format('Y-m-d');
+            $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
+
+            $daylist = [];
+            $weekdays = explode(',', $schedule->weekdays);
+            foreach ($period as $date) {
+                if (in_array($date->format('w') + 1, $weekdays)) {
+                    $daylist[] = $date->format('Y-m-d');
+                }
             }
+            $this->data['schedule'] = $schedule;
+            $this->data['daylist'] = $daylist;
+            $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
         }
 
-        $this->data['schedule'] = $schedule;
-        $this->data['daylist'] = $daylist;
-        $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
+        if ($item->subtype == 'digital') {
+            $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
+            $this->data['code'] = $code->code;
+        }
+        $this->data['item'] = $item;
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
 
         return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);
