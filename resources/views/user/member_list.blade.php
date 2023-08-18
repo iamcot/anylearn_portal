@@ -124,10 +124,10 @@
     </div>
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
-            <thead class="">
+            <thead>
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
-                    <th class="text-center">Thao tác</th>
+                    <th class="text-center" width="5%" scope="col">Thao tác</th>
                     <th class="text-center">Liên hệ</th>
                     @if(!$isSale)
                     <th class="text-center">Hot</th>
@@ -143,7 +143,6 @@
                     <th width="5%" scope="col">H/H</th>
                     <th class="text-center" width="5%" scope="col">C/T</th>
                     <th class="text-center">Cập nhật</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -172,7 +171,18 @@
                     @endif
                     <td><a target="_blank" href="{{ route('class') }}?ref_id={{ $user->id }}">{{ $user->role }}</a></td>
                     <td>{!! $userServ->statusIcon($user->status) !!} {{ $user->name }}</td>
-                    <td>{{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}</td>
+                    <td>
+                        <span style="
+                            padding: 0 6px; 
+                            font-size: 12px; 
+                            font-weight: bold;
+                            color: {{ $user->sale_priority == 0 || $user->sale_priority == 3 ? '#555 ': '#fff' }};
+                            border: 1px solid {{ $user->sale_priority == 0 ? '#eee' : 'transparent' }}; 
+                            border-radius: 5px; 
+                            background: {{ $priorityColors[$user->sale_priority] }}">
+                            {{ $priorityLevels[$user->sale_priority] }}</span>
+                        {{ $user->phone }} {{ $user->is_registered == 0 ? "(Chưa đăng ký)" : ""}}
+                    </td>
                     <td>{{ $user->email }}</td>
                     <!-- <td>{{ $user->address }}</td> -->
                     <td>{{ number_format($user->wallet_c) }}</td>

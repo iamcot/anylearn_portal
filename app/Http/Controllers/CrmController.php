@@ -57,6 +57,8 @@ class CrmController extends Controller
 
         $this->data['sale'] = $user;
         $this->data['memberProfile'] = $saleUser;
+        $this->data['priorityLevels'] = UserConstants::$salePriorityLevels;
+        $this->data['priorityColors'] = UserConstants::$salePriorityColors;
         $this->data['navText'] = $saleUser->name;
         $this->data['lastNote'] = SaleActivity::where('type', SaleActivity::TYPE_NOTE)
             ->where('member_id', $userId)

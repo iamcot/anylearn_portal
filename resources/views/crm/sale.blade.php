@@ -17,12 +17,30 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-sm-9">
-                            <h3><span class="text-dark">{{ $memberProfile->name }}</span>, ID: {{ $memberProfile->id }}
-                                <a class="ml-2 phonecall" href="#" data-phone="{{ $memberProfile->phone }}"
-                                    title="{{ $memberProfile->phone }}"><i class="fa fa-phone"></i></a>
-
-                            </h3>
+                        <div class="col-sm-10">
+                            <h5 class="w-100 d-flex flex-row justify-content-between">
+                                <div class="d-flex align-self-center">
+                                    <span class="text-dark">{{ $memberProfile->name }}</span>
+                                    <div class="p-1 ml-1">
+                                        <span style="
+                                            padding: 2px 10px; 
+                                            font-size: 12px; 
+                                            font-weight: bold;
+                                            color: {{ $memberProfile->sale_priority == 0 || $memberProfile->sale_priority == 3 ? '#555 ': '#fff' }};
+                                            border: 1px solid {{ $memberProfile->sale_priority == 0 ? '#ccc' : $priorityColors[$memberProfile->sale_priority]}}; 
+                                            border-radius: 5px; 
+                                            background: {{ $priorityColors[$memberProfile->sale_priority] }}">
+                                        {{ $priorityLevels[$memberProfile->sale_priority] }}
+                                        </span>    
+                                    </div>
+                                </div>
+                                <div>
+                                    <span> ID: {{ $memberProfile->id }}</span>
+                                    <a class="ml-2 phonecall" href="#" data-phone="{{ $memberProfile->phone }}"
+                                        title="{{ $memberProfile->phone }}"><i class="fa fa-phone"></i>
+                                    </a>
+                                </div>
+                            </h5>
                             <div>Thành viên từ:
                                 {{ $memberProfile->is_registered == 0 ? 'Chưa đăng ký' : date('d/m/Y', strtotime($memberProfile->created_at)) }}
                             </div>

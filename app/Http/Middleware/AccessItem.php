@@ -21,7 +21,7 @@ class AccessItem
         $user = Auth::user();
         $itemId = $request->route()->parameter('id');
         $itemDb = Item::find($itemId);
-        if (!in_array($user->role, UserConstants::$modRoles) && $itemDb->user_id != $user->id) {
+        if (!$user->status || !in_array($user->role, UserConstants::$modRoles) && $itemDb->user_id != $user->id) {
             return redirect('/')->with('notify', __('Bạn không có quyền truy xuất dữ liệu này'));
         }
         return $next($request);

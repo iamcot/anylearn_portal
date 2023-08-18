@@ -684,6 +684,19 @@ class TransactionService
                 'orderid' => $openOrder->id,
             ]);
             
+
+            //ZALO to buyer
+            $zaloService = new ZaloServices(true);
+            $zaloService->sendZNS(ZaloServices::ZNS_ORDER_CONFIRMED, $user->phone, [
+                'id' => $dataOrder->id,
+                'created_at' => $dataOrder->created_at,
+                'student' => $dataOrder->childName,
+                'price' => $dataOrder->unit_price,
+                'name' => $user->name,
+                'class' => $dataOrder->title,
+            ]);
+            //@TODO Zalo to partner
+            
             SocialPost::create([
                 'type' => SocialPost::TYPE_CLASS_REGISTER,
                 'user_id' => $user->id,
