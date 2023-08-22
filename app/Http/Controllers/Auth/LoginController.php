@@ -47,6 +47,8 @@ class LoginController extends Controller
     {
         if ($request->get('cb')) {
             $request->session()->put('cb', $request->get('cb'));
+        } else {
+            $request->session()->put('cb', url()->previous());
         }
 
         return view('auth.login');
@@ -112,7 +114,7 @@ class LoginController extends Controller
             return redirect()->intended('/inactive')->with('name', $name);
         }
         //$userM = new User();
-        //return redirect($userM->redirectToUpdateDocs());
+        //return redirect($userM->redirectToUpdateDocs());        
         $userService = new UserServices();
         if ($request->session()->get('cb')) {
             return redirect()->to($request->session()->get('cb'));
