@@ -966,10 +966,6 @@ class UserController extends Controller
         }
         $contract = Contract::where('user_id', $user->id)
             ->orderby('id', 'desc')->first();
-        if ($contract) {
-            $newCommissionValue = 1 - $contract->commission;
-            $contract->commission = $newCommissionValue;
-        }
         if (!empty($contract)) {
             $configM = new Configuration();
             if ($contract->type == UserConstants::ROLE_TEACHER) {
