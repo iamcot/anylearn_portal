@@ -19,7 +19,11 @@ class Role
         // if (Auth::check()) {
         //     return redirect('login');
         // }
-        $role = auth()->user()->role;
+        $user = auth()->user();
+        if (!$user->status) {
+            return redirect("/");
+        }
+        $role = $user->role;
         if(in_array($role,["admin","mod","content","sale","fin","fin_partner","sale_content","sale_manager"])){
             return $next($request);
         }

@@ -51,6 +51,9 @@
                 @if(!empty($course) && !in_array( $course['info']->subtype, [\App\Constants\ItemConstants::SUBTYPE_DIGITAL, \App\Constants\ItemConstants::SUBTYPE_VIDEO]))
                 <a class="shadow nav-link {{ session('tab') == 'schedule' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="schedule-tab" data-toggle="pill" href="#v-pills-schedule" role="tab" aria-controls="v-pills-schedule" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-calendar-alt"></i> <span class="mobile-no-text">@lang('Lịch học')</span></a>
                 @endif
+                @if((!empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL) || isset($action))
+                <a class="shadow nav-link {{ session('tab') == 'code' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="code-tab" data-toggle="pill" href="#v-pills-code" role="tab" aria-controls="v-pills-code" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-bolt"></i> <span class="mobile-no-text">@lang('Mã kích hoạt')</span></a>
+                @endif
                 @if(!empty($course['info']) && $course['info']->subtype == 'video')
                 <a class="shadow nav-link {{ session('tab') == 'video' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="video-tab" data-toggle="pill" href="#v-pills-video" role="tab" aria-controls="v-pills-video" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-play"></i> <span class="mobile-no-text">@lang('Videos')</span></a>
                 @endif
@@ -73,6 +76,9 @@
                 </div>
                 <div class="tab-pane fade {{ session('tab', 'info') == 'contenttab' ? 'show active' : '' }}" id="v-pills-content" role="tabpanel" aria-labelledby="v-pills-content-tab">
                     @include('class.form.content')
+                </div>
+                <div class="tab-pane fade {{ session('tab', 'info') == 'code' ? 'show active' : '' }}" id="v-pills-code" role="tabpanel" aria-labelledby="v-pills-code-tab">
+                    @include('class.form.code')
                 </div>
               
                 <div class="tab-pane fade {{ session('tab') == 'schedule' ? 'show active' : '' }}" id="v-pills-schedule" role="tabpanel" aria-labelledby="v-pills-schedule-tab">

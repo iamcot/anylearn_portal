@@ -31,9 +31,10 @@ checkout-finish
                         @if ($item->childId != $user->id)
                         <span class="text-primary">({{ $item->childName }})</span>
                         @endif
-
+                        @if($item->subtype != 'digital' && $item->subtype != 'video')
                         <br>Học tại {{ $item->plan_location_name }}; @foreach(explode(",", $item->plan_weekdays) as $day ) {{ $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }} {{ !$loop->last ? ", " : ". " }} @endforeach
                         Bắt đầu từ {{ date("d/m/Y", strtotime($item->plan_date_start)) }}
+                        @endif
 
                     </td>
                     <td class="text-right">{{ number_format($item->paid_price, 0, ',', '.') }}</td>

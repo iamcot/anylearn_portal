@@ -40,21 +40,21 @@ orders
                         <th>Ngày đăng kí</th>
                         <th>Trạng thái</th>
                         <th>Tài khoản học</th>
-                        <th>Lịch học</th>
+                        <th>Lịch học/Mã code</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($data as $row)
                     <tr>
                         <td width="40%">{{ $row->title }}</td>
-                        <td>{{ $row->date }}</td>
+                        <td>{{ date("H:i d/m/Y", strtotime($row->created_at)) }}</td>
                         @if ($row->user_status == 1)
                         <td>Đang mở</td>
                         @else
                         <td>Đã xong</td>
                         @endif
                         <td>{{ $row->child_name }}</td>
-                        <td><a href="{{ route('me.orders.schedule', ['id' => $row->item_id]) }}">Xem</a></td>
+                        <td><a target="_blank"  class="btn btn-sm btn-success" href="{{ route('me.orders.schedule', ['id' => $row->id]) }}">Xem</a></td>
                     </tr>
                     @endforeach
                 </tbody>

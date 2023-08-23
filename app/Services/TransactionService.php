@@ -8,6 +8,8 @@ use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
+use App\ItemCode;
+use App\ItemCodeNotifTemplate;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Item;
@@ -25,6 +27,7 @@ use App\Models\VoucherEventLog;
 use App\Models\VoucherGroup;
 use App\Models\VoucherUsed;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification as NotificationsNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -635,7 +638,6 @@ class TransactionService
         }
         $user = User::find($openOrder->user_id);
 
-
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
@@ -656,6 +658,7 @@ class TransactionService
             ]);
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
         $voucherEvent = new VoucherEventLog();
+
         foreach ($orderDetails as $orderItem) {
             $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
             $item = Item::find($orderItem->item_id);
@@ -674,12 +677,26 @@ class TransactionService
                 'orderData' => $dataOrder,
                 'extraFee' => $this->extraFee($orderItem->id),
             ]);
-
+            
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
                 'username' => $author->name,
                 'course' => $item->title,
                 'orderid' => $openOrder->id,
             ]);
+            
+
+            //ZALO to buyer
+            $zaloService = new ZaloServices(true);
+            $zaloService->sendZNS(ZaloServices::ZNS_ORDER_CONFIRMED, $user->phone, [
+                'id' => $dataOrder->id,
+                'created_at' => $dataOrder->created_at,
+                'student' => $dataOrder->childName,
+                'price' => $dataOrder->unit_price,
+                'name' => $user->name,
+                'class' => $dataOrder->title,
+            ]);
+            //@TODO Zalo to partner
+            
             SocialPost::create([
                 'type' => SocialPost::TYPE_CLASS_REGISTER,
                 'user_id' => $user->id,
@@ -687,10 +704,28 @@ class TransactionService
                 'image' => $item->image,
                 'day' => date('Y-m-d'),
             ]);
+
+            if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL) {
+                $this->activateDigitalCourses($openOrder->user_id, $orderItem);  
+            }   
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
 
         return true;
+    }
+
+    public function activateDigitalCourses($userId, $orderDetail) {
+        $itemCode = ItemCode::where('item_id', $orderDetail->item_id)->whereNull('user_id')->first();
+        if ($itemCode) {
+            $itemCode->update([
+                'user_id' => $userId,
+                'order_detail_id' => $orderDetail->id,
+            ]);
+            $notifServ = new Notification();
+            $notifServ->notifActivation($itemCode);
+        }
+
+        return false;
     }
 
     public function orderDetailsToDisplay($orderId)
@@ -707,6 +742,7 @@ class TransactionService
                 'items.image',
                 'items.date_start',
                 'items.is_paymentfee',
+                'items.subtype',
                 'u2.name as childName',
                 'u2.id as childId',
                 'isp.title AS plan_title',

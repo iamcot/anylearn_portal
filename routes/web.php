@@ -44,6 +44,8 @@ Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
 Route::get('/ref/{code}', 'PageController@ref')->name('refpage');
 Route::post('/ref/{code}', 'Auth\RegisterController@registerRefPage');
+Route::middleware(['auth', 'access.mod'])->get('/zalo-oa', 'ConfigController@zaloOA')->name('zalo.oa');
+Route::middleware(['auth', 'access.mod'])->get('/zalo', 'ConfigController@zalo');
 
 Route::any('/bot', function() {
     app('botman')->listen();
@@ -69,7 +71,7 @@ Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::any('/class/{itemId}/{url}/video/{lessonId}', 'PageController@videoPage')->name('page.video');
 //Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
-Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+// Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
@@ -122,12 +124,8 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/friend', 'UserController@meFriend')->name('me.friend');
     Route::any('/work', 'UserController@meWork')->name('me.work');
 
-
-
     Route::any('/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
     Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
-
-
 
     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
     Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
@@ -236,10 +234,12 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
     Route::middleware('access.item')->any('/class/{id}/del', 'ClassController@del')->name('class.del');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');
+    Route::any('/codes', 'ClassController@codes')->name('codes');
+    Route::any('/codes/resend/{id}', 'ClassController@reSendItemCode')->name('codes.resend');
+    Route::any('/codes/refresh/{id}', 'ClassController@refreshItemCode')->name('codes.refresh');
 
     //Route::middleware('access.item')->any('/class/{itemId}/authorConfirmJoin', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
     //Route::middleware('access.item')->any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
-
 
     Route::get('/confirm', 'Controller@developing')->name('confirm');
     Route::get('/product', 'Controller@developing')->name('product');

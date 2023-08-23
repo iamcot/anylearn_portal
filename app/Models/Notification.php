@@ -6,6 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
+use App\ItemCodeNotifTemplate;
 use App\Mail\OrderSuccess;
 use App\Services\ItemServices;
 use App\Services\SmsServices;
@@ -30,14 +31,14 @@ class Notification extends Model
         'send', 'read', 'route', 'type', 'is_send',
     ];
 
-    public function createNotif($type, $userId, $data, $copy = "", $route = "", $template = "")
+    public function createNotif($type, $userId, $data, $copy = "", $route = "", $notifTemplate = "", $emailTemplate = "")
     {
         $config = config('notification.' . $type);
         $obj = [
             'type' => $type,
             'user_id' => $userId,
             'title' => $config['title'],
-            'content' => $this->buildContent(!empty($template) ? $template : $config['template'], $data),
+            'content' => $this->buildContent(!empty($notifTemplate) ? $notifTemplate : $config['template'], $data),
             'route' => !empty($route) ? $route : $config['route'],
         ];
         if (!empty($config['args']) && !empty($data['args'])) {
@@ -57,6 +58,12 @@ class Notification extends Model
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
+                    if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
+                        $data['content'] =  $this->buildContent(
+                            !empty($notifTemplate) ? $emailTemplate : $config['template'],
+                            $data
+                        );
+                    }
                     Mail::to($user->email)->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
@@ -91,6 +98,24 @@ class Notification extends Model
                 'send' => DB::raw("now()")
             ]);
         }
+    }
+
+    public function notifActivation($itemCode)
+    {
+        $notifTemplate = ItemCodeNotifTemplate::where('item_id', $itemCode->item_id)->first();
+        $item = Item::find($itemCode->item_id);
+        $this->createNotif(
+            NotifConstants::DIGITAL_COURSE_ACTIVATION,
+            $itemCode->user_id,
+            [
+                'class' =>  $item->title,
+                'code'    => $itemCode->code,
+            ],
+            $itemCode->code,
+            '',
+            $notifTemplate ? $notifTemplate->notif_template : '',
+            $notifTemplate ? $notifTemplate->email_template : '',
+        );
     }
 
     public function firebaseMessage($notifDB, $token)

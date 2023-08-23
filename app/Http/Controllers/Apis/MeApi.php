@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Apis;
 
 use App\Constants\OrderConstants;
+use App\Constants\UserConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\OrderDetail;
 use App\Models\User;
+use App\Models\UserLocation;
 use App\Services\DashboardServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -176,6 +178,48 @@ class MeApi extends Controller
             }
         }
         return response()->json(['message' => 'Invalid request'], 400);
+    }
+    public function meWork(Request $request)
+    {
+        $data = DB::table('item_activities as ia')
+        ->join('items as i', 'i.id', '=', 'ia.item_id')
+        ->join('users as u', 'u.id', '=', 'ia.user_id')
+        ->where('ia.user_id', auth()->user()->id)
+            ->select('ia.*', 'i.title', 'u.name')
+            ->get();
+
+        $responseData = [
+            'data' => $data,
+        ];
+
+        return response()->json($responseData, 200);
+    }
+    // Assuming this code is part of a controller
+    public function locationList(Request $request)
+    {
+        $userService = new UserServices();
+
+        $user = $request->get('_user');
+        $userLocationId = $user->id;
+        if ($request->get('user_id')) {
+            $userLocationId = $request->get('user_id');
+        }
+        $locations = UserLocation::where('user_id', $userLocationId)->paginate();
+        $partners = [];
+
+        if ($userService->isMod()) {
+            $partners = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
+                ->where('status', 1)
+                ->select('id', 'name')
+                ->get();
+        }
+
+        $responseData = [
+            'locations' => $locations,
+            'partners' => $partners,
+        ];
+
+        return response()->json($responseData, 200);
     }
 
 }

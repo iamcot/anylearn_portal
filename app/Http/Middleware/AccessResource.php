@@ -26,7 +26,7 @@ class AccessResource
             return $next($request);
         }
         $itemDb = Item::find($resourceDb->item_id);
-        if (!in_array($user->role, UserConstants::$modRoles) && $itemDb->user_id != $user->id) {
+        if (!$user->status || !in_array($user->role, UserConstants::$modRoles) && $itemDb->user_id != $user->id) {
             return redirect('/')->with('notify', __('Bạn không có quyền truy xuất dữ liệu này'));
         }
         return $next($request);
