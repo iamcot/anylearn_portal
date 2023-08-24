@@ -112,10 +112,11 @@ class ClassController extends Controller
                     ->join('order_details as od', 'od.order_id', '=', 'orders.id')
                     ->join('items', 'items.id', '=', 'od.item_id')
                     ->where('items.subtype', ItemConstants::SUBTYPE_DIGITAL)
+                    ->where('orders.status', OrderConstants::STATUS_DELIVERED)
                     ->where('orders.user_id', $request->input('user_id'))
                     ->where('od.id', $request->input('order_detail_id'))
                     ->first();
-                dd($validation);
+
                 if ($validation) {
                     $itemCode->update($request->except(['action', '_token', 'code']));
                     return redirect()->route('codes')->with('notify', 'Thao tác thành công.');
