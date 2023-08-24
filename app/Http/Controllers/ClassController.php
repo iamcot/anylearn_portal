@@ -106,8 +106,12 @@ class ClassController extends Controller
     public function refreshItemCode(Request $request, $idItemCode) 
     {
         $itemCode = ItemCode::find($idItemCode);
-        if (!empty($itemCode)) {
+        if ($itemCode) {
             if ($request->input('action') == 'update') {
+                // if (ItemCode::where('order_detail_id', $request->input('order_detail_id'))->first()) {
+                //    return redirect()->back()->with('notify', 'Đơn hàng này đã được kích hoạt!.');
+                //}
+
                 $validation = DB::table('orders')
                     ->join('order_details as od', 'od.order_id', '=', 'orders.id')
                     ->join('items', 'items.id', '=', 'od.item_id')
@@ -124,7 +128,7 @@ class ClassController extends Controller
 
                 return redirect()->back()->with('notify', 'Vui lòng kiểm tra lại thông tin bạn vừa nhập!!');
             }
-
+            
             $this->data['hasBack'] = route('codes');
             $this->data['itemCode'] = $itemCode;
 

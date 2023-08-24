@@ -100,6 +100,7 @@ class UserController extends Controller
 
         $this->data['mod'] = $mod;
         $this->data['modules'] = config('modules');
+        $this->data['hasBack'] = route('user.mods');
         $this->data['navText'] = __('Quản lý Truy cập');
         $this->data['allowed'] = isset($mod->modules) ? explode(',', $mod->modules) : $userService->userModules($mod->role);
 

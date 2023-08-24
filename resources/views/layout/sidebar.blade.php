@@ -298,7 +298,7 @@
         </a>
         <div id="collapseMods" class="collapse {{ strpos($route, 'mods') !== false ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
-                <a class="collapse-item {{ $route == 'user.mods' ? 'active' : '' }}" href="{{ route('user.mods') }}">
+                <a class="collapse-item {{ in_array($route,  ['user.mods', 'user.mods.access']) ? 'active' : '' }}" href="{{ route('user.mods') }}">
                     <i class="fas fa-user-tie"></i>
                     <span>Quản trị viên</span>
                 </a>
