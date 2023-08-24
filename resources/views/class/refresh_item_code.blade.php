@@ -10,7 +10,7 @@
 @section('body')
     <div class="card shadow">
         <div class="card-header"> 
-            <h5 class="m-0" >Thông tin kích hoạt</h5>
+            <strong>Thông tin kích hoạt</strong>
         </div> 
         <div class="card-body p-0">
             <form method="post" class="py-2">
@@ -36,7 +36,7 @@
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label text-md-right "></label>
                     <div class="col-md-8">
-                        <button class="btn btn-primary border-0 rounded" name="action" value="update">@lang('Lưu thay đổi')</button>
+                        <button class="btn btn-primary border-0 rounded" name="action" value="update">@lang('Sử dụng mã')</button>
                     </div>
                 </div>             
             </form>
