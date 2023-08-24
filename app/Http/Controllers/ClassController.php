@@ -115,7 +115,7 @@ class ClassController extends Controller
                     ->where('orders.user_id', $request->input('user_id'))
                     ->where('od.id', $request->input('order_detail_id'))
                     ->first();
-
+                dd($validation);
                 if ($validation) {
                     $itemCode->update($request->except(['action', '_token', 'code']));
                     return redirect()->route('codes')->with('notify', 'Thao tác thành công.');
