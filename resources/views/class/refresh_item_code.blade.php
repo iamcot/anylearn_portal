@@ -18,13 +18,13 @@
                 <div class="form-group row">
                     <label for="user_id" class="col-md-3 col-form-label text-md-right ">{{ __('UserID') }}</label>
                     <div class="col-md-8">
-                        <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', $itemCode->user_id) }}">
+                        <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', $itemCode->user_id) }}" required>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="order_detail_id" class="col-md-3 col-form-label text-md-right ">{{ __('Đơn hàng') }}</label>
                     <div class="col-md-8">
-                        <input id="order_detail_id" type="text" class="form-control @error('order_detail_id') is-invalid @enderror" name="order_detail_id" value="{{ old('order_detail_id', $itemCode->order_detail_id) }}">
+                        <input id="order_detail_id" type="text" class="form-control @error('order_detail_id') is-invalid @enderror" name="order_detail_id" value="{{ old('order_detail_id', $itemCode->order_detail_id) }}" required>
                     </div>
                 </div>
                 <div class="form-group row">

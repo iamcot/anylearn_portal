@@ -112,7 +112,6 @@ class ClassController extends Controller
                     ->join('order_details as od', 'od.order_id', '=', 'orders.id')
                     ->join('items', 'items.id', '=', 'od.item_id')
                     ->where('items.subtype', ItemConstants::SUBTYPE_DIGITAL)
-                    ->where('ic.order_detail_id', '!=', $request->input('order_detail_id'))
                     ->where('orders.user_id', $request->input('user_id'))
                     ->where('od.id', $request->input('order_detail_id'))
                     ->first();
