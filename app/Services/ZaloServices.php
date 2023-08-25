@@ -44,6 +44,7 @@ class ZaloServices
             if ($tokenExp < time()) {
                 $code = $configM->get(ConfigConstants::ZALO_CODE);
                 $tokenObj = $this->getToken($code, self::GRANT_TYPE_REFRESH, $refresh);
+                $tokenObj['access_token'] = isset($tokenObj['access_token']) ? $tokenObj['access_token'] : null;
                 $this->access_token = $tokenObj['access_token'];
                 $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN, $tokenObj['access_token'], ConfigConstants::TYPE_ZALO, true);
                 $configM->createOrUpdate(ConfigConstants::ZALO_REFRESH, $tokenObj['refresh_token'], ConfigConstants::TYPE_ZALO, true);

@@ -28,7 +28,7 @@ class WebAppAuth
         if (Auth::check()) {
             return $next($request);
         } else {
-            return route('login');
+            return redirect()->route('login');
         }
     }
 }
