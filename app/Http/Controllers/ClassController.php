@@ -110,7 +110,7 @@ class ClassController extends Controller
             if ($request->input('action') == 'update') {
                 // if (ItemCode::where('order_detail_id', $request->input('order_detail_id'))->first()) {
                 //    return redirect()->back()->with('notify', 'Đơn hàng này đã được kích hoạt!.');
-                //}
+                // }
 
                 $validation = DB::table('orders')
                     ->join('order_details as od', 'od.order_id', '=', 'orders.id')
@@ -126,7 +126,7 @@ class ClassController extends Controller
                     return redirect()->route('codes')->with('notify', 'Thao tác thành công.');
                 }
 
-                return redirect()->back()->with('notify', 'Vui lòng kiểm tra lại thông tin bạn vừa nhập!!');
+                return redirect()->back()->with('notify', 'Vui lòng kiểm tra lại thông tin đơn hàng!!');
             }
             
             $this->data['hasBack'] = route('codes');
