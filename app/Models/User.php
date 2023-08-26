@@ -277,7 +277,8 @@ class User extends Authenticatable
             'commission_rate' => $input['commission_rate'],
         ];
 
-        if (in_array($input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
+        if (isset($input['sale_priority']) 
+            && in_array($input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
             $obj['sale_priority'] = $input['sale_priority'];
         }
 
