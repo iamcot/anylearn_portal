@@ -1,5 +1,4 @@
 @extends('layout')
-
 @section('body')
 <form method="POST" action="{{ route('config.guide', ['type' => $guideType]) }}">
 @csrf
