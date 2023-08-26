@@ -336,6 +336,8 @@ class ConfigController extends Controller
                 $newEvent = VoucherEvent::create($data);
                 if (!$newEvent) {
                     return redirect()->back()->with('notify', 'Tạo sự kiện mới thất bại');
+                } else {
+                    return redirect()->route('config.voucherevent')->with('notify', 'Thao tác thành công.');
                 }
             } else {
                 VoucherEvent::find($input['id'])->update($data);
@@ -412,7 +414,11 @@ class ConfigController extends Controller
                     $data['ext'] = implode(",", $classIds);
                 }
 
-                $newGroup = VoucherGroup::create($data);
+                try {
+                    $newGroup = VoucherGroup::create($data);
+                } catch(\Exception $e) {
+                    return redirect()->back()->with('notify', $e->getMessage());
+                }
                 if ($newGroup) {
                     if ($newGroup->generate_type == VoucherGroup::GENERATE_AUTO) {
                         // do {

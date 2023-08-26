@@ -14,7 +14,7 @@ class ZaloServices
     const ZALO_APP_SECRET = "WEB5s6cmh3hj6cIDOJLx";
 
     const ZNS_ORDER_CONFIRMED = 'ZNS_ORDER_CONFIRMED';
-    const TEMPLATE_ORDER_CONFIRMED_ID = '275146';
+    const TEMPLATE_ORDER_CONFIRMED_ID = '277980';
 
     const ZNS_OTP = 'ZNS_OTP';
     const TEMPLATE_OTP_ID = '275670';
