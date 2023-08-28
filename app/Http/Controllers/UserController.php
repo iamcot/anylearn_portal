@@ -230,7 +230,7 @@ class UserController extends Controller
                         //dd($ex->getMessage());
                     }
                 }
-                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . (count($rows) - 1) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công ' . $countCreate . ' trên tổng số ' . (count($rows) - 1) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
             }
         }
 
