@@ -8,7 +8,6 @@
             <label for="role" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại đối tượng') }}</label>
             <div class="col-md-8">
                 <select id="role" class="form-control" name="role" required>
-                    <option value="">@lang('Chọn loại đối tượng bạn muốn tạo!')</option>
                     <option value="{{ \App\Constants\UserConstants::ROLE_MEMBER }}" {{ old('role') == \App\Constants\UserConstants::ROLE_MEMBER ? 'selected' : '' }}>@lang('Phụ huynh / Người học')</option>
                     <option value="{{ \App\Constants\UserConstants::ROLE_TEACHER }}" {{ old('role') == \App\Constants\UserConstants::ROLE_TEACHER ? 'selected' : '' }}>@lang('Chuyên gia / Giảng viên')</option>
                     <option value="{{ \App\Constants\UserConstants::ROLE_SCHOOL }}" {{ old('role') == \App\Constants\UserConstants::ROLE_SCHOOL ? 'selected' : '' }}>@lang('Doanh nghiệp / Trường học')</option>
