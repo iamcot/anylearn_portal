@@ -558,7 +558,20 @@ class UserApi extends Controller
             return response($result, 400);
         }
     }
-
+    public function saveContractV3(Request $request)
+    {
+        $user = $request->get('_user');
+        $inputs = $request->all();
+        $userServ = new UserServices();
+        $result = $userServ->saveContract($user, $inputs);
+        if ($result === true) {
+            return response()->json([
+                'result' => true,
+            ]);
+        } else {
+            return response($result, 400);
+        }
+    }
     public function signContract(Request $request, $contractId)
     {
         $user = $request->get('_user');
