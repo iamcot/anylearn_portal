@@ -35,6 +35,7 @@
             </thead>
             <tbody>
                 @if(!empty($transaction))
+                dd($transaction);
                 @foreach($transaction as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
@@ -42,7 +43,7 @@
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">
-                        @if(!empty($row->pay_info)) 
+                        @if($row->pay_info) 
                             @foreach(json_decode($row->pay_info, true) as $k => $v ) 
                                 {{ $k . ": " . $v . ' | ' }} 
                             @endforeach 
