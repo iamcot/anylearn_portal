@@ -23,20 +23,7 @@ class MeApi extends Controller
 
         $query = DB::table('order_details')
             ->whereNotNull('created_at');
-
-        $input = $request->all();
-
-        if ($request->input('filter')) {
-            if ($input['dateF']) {
-                $query = $query->where('created_at', '>=', $input['dateF']);
-            }
-            if ($input['dateT']) {
-                $query = $query->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime($input['dateT'])));
-            }
-        } else {
-            $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
-        }
-
+        $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
         $results = $query->selectRaw('DATE(created_at) AS day, sum(order_details.unit_price) AS num')
             ->groupBy(DB::raw('DATE(created_at)'))
             ->get();
