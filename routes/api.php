@@ -79,9 +79,6 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/meAPI', 'Apis\MeApi@index');
     Route::get('/v3/meWork', 'Apis\MeApi@meWork');
     Route::get('/v3/admitstudent/{id}', 'Apis\MeApi@admitStudentAPI');
-
-    Route::get('/v3/filter/{role}', 'Apis\SearchFilterApi@index');
-
     Route::get('/v3/getchild', 'Apis\MeApi@getChildAccountsAPI');
     Route::get('/v3/child/{id}', 'Apis\MeApi@childAccountAPI');
     Route::get('/v3/child', 'Apis\MeApi@childAccountAPI');
@@ -109,7 +106,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/notification/{id}', 'Apis\UserApi@notifRead');
     Route::get('/user/all-friends', 'Apis\UserApi@allFriends');
     Route::get('/user/contract/{contractId?}', 'Apis\UserApi@getContract');
-    Route::any('/user/update_contract', 'Apis\UserApi@saveContract');
+    Route::post('/user/contract', 'Apis\UserApi@saveContract');
     Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
     Route::get('/user/delete', 'Apis\UserApi@deleteAccount');
