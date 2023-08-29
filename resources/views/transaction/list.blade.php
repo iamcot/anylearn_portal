@@ -35,7 +35,7 @@
             </thead>
             <tbody>
                 @if(!empty($transaction))
-                dd($transaction);
+                {{ dd($transaction) }};
                 @foreach($transaction as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
