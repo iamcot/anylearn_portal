@@ -42,10 +42,7 @@
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">
-                        @if($row->pay_info) 
-                            @if(json_decode($row->pay_info, true)) 
-                                dd($row->pay_info);
-                            @endif
+                        @if(!empty($row->pay_info)) 
                             @foreach(json_decode($row->pay_info, true) as $k => $v ) 
                                 {{ $k . ": " . $v . ' | ' }} 
                             @endforeach 
