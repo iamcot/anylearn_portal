@@ -36,7 +36,6 @@
             <tbody>
                 @if(!empty($transaction))
                 @foreach($transaction as $row)
-                {{ dd($row) }}
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
                     <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
