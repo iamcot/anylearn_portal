@@ -18,7 +18,7 @@
 </form>
 @endsection
 
-@section('body')
+@section('body') 
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">
@@ -35,6 +35,7 @@
             </thead>
             <tbody>
                 @if(!empty($transaction))
+                {{ dd($transaction) }}
                 @foreach($transaction as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
