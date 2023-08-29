@@ -9,17 +9,19 @@
             <div class="col-md-8">
                 <select id="role" class="form-control" name="role" required>
                     <option value="">@lang('Chọn loại đối tượng bạn muốn tạo!')</option>
-                    <option value="{{ \App\Constants\UserConstants::ROLE_MEMBER }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\UserConstants::ROLE_MEMBER ? 'selected' : '' }}>@lang('Phụ huynh / Người học')</option>
-                    <option value="{{ \App\Constants\UserConstants::ROLE_TEACHER }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\UserConstants::ROLE_TEACHER ? 'selected' : '' }}>@lang('Chuyên gia / Giảng viên')</option>
-                    <option value="{{ \App\Constants\UserConstants::ROLE_SCHOOL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\UserConstants::ROLE_SCHOOL ? 'selected' : '' }}>@lang('Doanh nghiệp / Trường học')</option>
+                    <option value="{{ \App\Constants\UserConstants::ROLE_MEMBER }}" {{ old('role') == \App\Constants\UserConstants::ROLE_MEMBER ? 'selected' : '' }}>@lang('Phụ huynh / Người học')</option>
+                    <option value="{{ \App\Constants\UserConstants::ROLE_TEACHER }}" {{ old('role') == \App\Constants\UserConstants::ROLE_TEACHER ? 'selected' : '' }}>@lang('Chuyên gia / Giảng viên')</option>
+                    <option value="{{ \App\Constants\UserConstants::ROLE_SCHOOL }}" {{ old('role') == \App\Constants\UserConstants::ROLE_SCHOOL ? 'selected' : '' }}>@lang('Doanh nghiệp / Trường học')</option>
                 </select>
             </div>
         </div>
     </div>
-    <div id="add-member" class="card mb-3 shadow d-none">
+    <div id="add-member" class="card mb-3 shadow {{ old('role') ? '' : 'd-none' }}">
         <div class="card-body">
             <div class="form-group row">
-                <label for="name" class="col-md-3 col-form-label text-md-right ">{{ __('Họ và tên') }}</label>
+                <label for="name" class="col-md-3 col-form-label text-md-right ">
+                    {{ old('role') != \App\Constants\UserConstants::ROLE_SCHOOL ? __('Họ và tên') : __('Tên doanh nghiệp') }}
+                </label>
                 <div class="col-md-8">
                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required>
                 </div>
@@ -31,8 +33,7 @@
                     @error('phone')
                         <div class="alert-danger">{{ $message }}</div>
                     @enderror
-                </div>
-               
+                </div>     
             </div>
             <div class="form-group row">
                 <label for="address" class="col-md-3 col-form-label text-md-right ">{{ __('Khu vực') }}</label>
@@ -59,7 +60,6 @@
     </div>
 </form>
 @endsection
-
 @section('jscript')
 <script>
     $("#role").on("change", function(e) {

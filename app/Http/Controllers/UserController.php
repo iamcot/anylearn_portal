@@ -281,7 +281,9 @@ class UserController extends Controller
             $used   = User::where('phone', $member['phone'])->first();
 
             if (!empty($used)) {
-                return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
+                return redirect()->back()->withInput($request->all())->withErrors([
+                    'phone' => 'Số điện thoại đã được sử dụng!',
+                ]);
             }
 
             $member['refcode'] = $member['phone'];
@@ -305,7 +307,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('notify', 'Thao tác thành công!');
         }
-
+        
         $this->data['hasBack'] = route('user.members');
         $this->data['navText'] = __('Thêm thành viên');
 
