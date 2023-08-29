@@ -106,7 +106,8 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/notification/{id}', 'Apis\UserApi@notifRead');
     Route::get('/user/all-friends', 'Apis\UserApi@allFriends');
     Route::get('/user/contract/{contractId?}', 'Apis\UserApi@getContract');
-    Route::post('/user/contract', 'Apis\UserApi@saveContract');
+    Route::post('/user/contract/save', 'Apis\UserApi@saveContract');
+    Route::any('/user/contract', 'Apis\UserApi@saveContract');
     Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
     Route::get('/user/delete', 'Apis\UserApi@deleteAccount');
