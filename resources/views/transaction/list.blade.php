@@ -43,11 +43,12 @@
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">
                         @if($row->pay_info) 
-                            {{ dd(json_decode($row->pay_info, true)) }}
+                            {{ dd(row->pay_info, true) }}
                             @foreach(json_decode($row->pay_info, true) as $k => $v ) 
                                 {{ $k . ": " . $v . ' | ' }} 
                             @endforeach 
-                        @endif</td>
+                        @endif
+                    </td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($row->updated_at)) }}</td>
                     <td class="text-right">
                         {!! $transServ->statusOperation($row->id, $row->status) !!}
