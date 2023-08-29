@@ -6,8 +6,13 @@ class OrderConstants {
     const STATUS_SHIPED = 'shiped';
     const STATUS_DELIVERED = 'delivered';
     const STATUS_FAIL = 'fail';
-    const STATUS_CANCER_BUYER = 'cancer_buyer';
-    const STATUS_CANCER_SELLER = 'cancer_seller';
+    const STATUS_CANCEL_BUYER = 'cancel_buyer';
+    const STATUS_CANCEL_SELLER = 'cancel_seller';
+    const STATUS_CANCEL_SYSTEM = 'cancel_system';
+    const STATUS_RETURN_BUYER = 'return_buyer';
+    const STATUS_RETURN_SELLER = 'return_seller';
+    const STATUS_RETURN_SYSTEM = 'return_system';
+    const STATUS_REFUND= 'refund';
 
     const PAYMENT_ATM = 'atm';
     const PAYMENT_ONEPAY = 'onepaylocal';

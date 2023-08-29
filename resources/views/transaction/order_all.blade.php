@@ -86,14 +86,14 @@
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th></th>
                     <th class="text-center">User (SDT)</th>
-                    <th class="text-center">Địa chỉ</th>
+                    <!-- <th class="text-center">Địa chỉ</th> -->
                     <th>Khoá học</th>
-                    <th class="text-center">Số tiền</th>
+                    <th class="text-center">Số tiền / Giảm giá</th>
                     <th class="text-center">Ưu đãi</th>
-                    <th class="text-center">Giảm giá</th>
+                    <th class="text-center">Ngày</th>
                     <th class="text-center">Thanh toán</th>
                     <th class="text-center">Trạng Thái</th>
-                    <th class="text-center">Ngày</th>
+                    <th width="10%"></th>
                 </tr>
             </thead>
             <tbody>
@@ -103,11 +103,18 @@
                     <th class="text-center" scope="row">{{ $row->id }}</th>
                     <td><a target="_blank" class="btn btn-sm btn-success mt-1" href="{{ route('crm.sale', ['userId' => $row->user_id]) }}"><i class="fas fa-briefcase"></i></a></td>
                     <td width="15%" class="text-center" scope="row">{{ $row->name . '(' . $row->phone . ')'}}</td>
-                    <td width="15%" class="text-center" scope="row">{{ $row->address }}</td>
+                    <!-- <td width="15%" class="text-center" scope="row">{{ $row->address }}</td> -->
                     <td width="25%">
                         {{ $row->classes }}
                     </td>
-                    <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
+                    <td class="text-center" scope="row">{{ number_format($row->amount) }}
+                        <br>
+                        @if(!empty($row->voucher))
+                        {{ $row->voucher_value }}
+                        @elseif(!empty($row->anypoint))
+                        {{ $row->anypoint }}(~{{ $row->anypoint * 1000 }})
+                        @endif
+                    </td>
                     <td>
                         @if(!empty($row->voucher))
                         {{ $row->voucher }}
@@ -115,31 +122,28 @@
                         anyPoint
                         @endif
                     </td>
-                    <td>
-                        @if(!empty($row->voucher))
-                        {{ $row->voucher_value }}
-                        @elseif(!empty($row->anypoint))
-                        {{ $row->anypoint }}(~{{ $row->anypoint * 1000 }})
-                        @endif
-                    </td>
-                    <td class="text-center" scope="row">{{ $row->payment }} <br> <span class="tooltiptext">
-                    @if($row->payment =='atm')
-                    Thanh toán bằng hình thức chuyển khoản
-                    @elseif($row->payment =='onepaylocal')
-                    Thanh toán thông qua onepay
-                    @elseif($row->payment =='free')
-                    Thanh toán sử dụng voucher hoặc đổi điểm anypoint
-                    @else
-                    Chưa có chú thích cho phần này
-                    @endif
-                    </span></td>
-                    <td class="text-center" scope="row"><span class="badge badge-{{ $transServ->colorStatus($row->status) }}">{{ $row->status }}</span>
-                        @if($row->status == App\Constants\OrderConstants::STATUS_PAY_PENDING)
-                        <a data-orderid="{{$row->id}}" data-orderamount="{{$row->amount}}" href="{{ route('order.approve', ['orderId' => $row->id]) }}" class="btn btn-success btn-sm admin-approve col-10">Duyệt đơn</a>
-                        <a href="{{ route('order.reject', ['orderId' => $row->id]) }}" class="btn btn-danger btn-sm mt-1 col-10">Từ chối</a>
-                        @endif
-                    </td>
+                 
                     <td class="text-center" scope="row">{{ $row->created_at }}</td>
+
+                    <td class="text-center" scope="row">{{ $row->payment }} <br> <span class="tooltiptext">
+                            @if($row->payment =='atm')
+                            Thanh toán bằng hình thức chuyển khoản
+                            @elseif($row->payment =='onepaylocal')
+                            Thanh toán thông qua onepay
+                            @elseif($row->payment =='free')
+                            Thanh toán sử dụng voucher hoặc đổi điểm anypoint
+                            @else
+                            Chưa có chú thích cho phần này
+                            @endif
+                        </span></td>
+
+                    <td class="text-center" scope="row">
+                        <span class="badge badge-{{ $transServ->colorStatus($row->status) }}">{{ $row->status }}</span>
+
+                    </td>
+                    <td>
+                        {!! $transServ->actionStatus($row->status, $row) !!}
+                    </td>
 
                 </tr>
                 @endforeach
@@ -165,7 +169,16 @@
     gtag('config', 'UA-170883972-1', {
         'send_page_view': false
     });
-    $(".admin-approve").on("click", function(event) {
+    $('.btn-need-confirm').on("click", function(event) {
+        var href = $(this).attr("href");
+      
+        if (!confirm("Bạn có chắc muốn thực hiện thao tác này ?")) {
+            return false;
+        }
+    });
+
+</script>
+    <!-- $(".admin-approve").on("click", function(event) {
         var orderId = $(this).data('orderid');
         var orderAmount = $(this).data('orderamount');
         gtag("event", "purchase", {
@@ -175,6 +188,6 @@
             "items": []
         });
         return;
-    });
-</script>
+    }); -->
+
 @endsection

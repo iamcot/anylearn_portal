@@ -192,6 +192,37 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
+    public function returnOrder($orderId, $trigger) {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $order = Order::find($orderId);
+        if ($order->status != OrderConstants::STATUS_DELIVERED) {
+            return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
+        }
+        $transService = new TransactionService();
+        $transService->returnOrder($orderId, OrderConstants::STATUS_RETURN_SYSTEM);
+        return redirect()->back()->with('notify', 'Thao tác thành công');
+    }
+
+    public function refundOrder($orderId) {
+        $userService = new UserServices();
+        $user = Auth::user();
+        if (!$userService->isMod($user->role)) {
+            return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
+        }
+        $order = Order::find($orderId);
+        if (!in_array($order->status, [OrderConstants::STATUS_RETURN_SYSTEM])) {
+            return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
+        }
+
+        $transService = new TransactionService();
+        $transService->refundOrder($orderId);
+        return redirect()->back()->with('notify', 'Thao tác thành công');
+    }
+
     public function rejectOrder($orderId)
     {
         $userService = new UserServices();
@@ -204,7 +235,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
-        $transService->rejectRegistration($orderId);
+        $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
 

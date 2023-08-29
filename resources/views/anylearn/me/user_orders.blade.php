@@ -33,6 +33,7 @@ orders
     </div>
     <div class="card shadow">
         <div class="card-body p-0">
+        <p class="small p-3">Các khóa học đã được xác nhận. Để hoàn trả khóa học, vui lòng liên hệ hotline <a href="tel:0374900344">+84 37 490 0344</a></p>
             <table class="table table-striped text-secondary" id="myTable">
                 <thead>
                     <tr>
@@ -41,6 +42,7 @@ orders
                         <th>Trạng thái</th>
                         <th>Tài khoản học</th>
                         <th>Lịch học/Mã code</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +57,7 @@ orders
                         @endif
                         <td>{{ $row->child_name }}</td>
                         <td><a target="_blank"  class="btn btn-sm btn-success" href="{{ route('me.orders.schedule', ['id' => $row->id]) }}">Xem</a></td>
+                        <td></td>
                     </tr>
                     @endforeach
                 </tbody>
