@@ -100,6 +100,7 @@ class UserController extends Controller
 
         $this->data['mod'] = $mod;
         $this->data['modules'] = config('modules');
+        $this->data['hasBack'] = route('user.mods');
         $this->data['navText'] = __('Quản lý Truy cập');
         $this->data['allowed'] = isset($mod->modules) ? explode(',', $mod->modules) : $userService->userModules($mod->role);
 
@@ -182,7 +183,7 @@ class UserController extends Controller
                                 ? Carbon::parse($row[1])->format('Y-01-01')
                                 : Carbon::createFromFormat('d/m/Y', $row[1])->format('Y-m-d');
                         }
-                        $exists = User::where('phone', $row[4])->first();
+                        $exists = User::where('phone', $row[4])->first(); 
                         if ($exists) {
                             if (!$exists->is_registered) {
                                 $data = [
@@ -193,6 +194,9 @@ class UserController extends Controller
                                     'email' => $row[5],
                                     'source' => $row[8],
                                 ];
+                                if  (isset($row[9]) && in_array($row[9], UserConstants::$memberRoles)) {
+                                    $data['role'] = $row[9];
+                                }
                             }
                             if (!empty($row[6])) {
                                 $data['user_id'] = $row[6];
@@ -203,7 +207,6 @@ class UserController extends Controller
                             $countUpdate += User::where('phone', $row[4])->update($data);
                         } else {
                             // Log::debug($row);
-                            //dd($rows);
                             User::create([
                                 'name' => $row[0],
                                 'dob' => $row[1],
@@ -214,7 +217,9 @@ class UserController extends Controller
                                 'sale_id' => $row[7],
                                 'source' => isset($row[8]) ? $row[8] : '',
                                 'is_registered' => 0,
-                                'role' => UserConstants::ROLE_MEMBER,
+                                'role' => isset($row[9]) && in_array($row[9], UserConstants::$memberRoles)
+                                    ? $row[9] 
+                                    : UserConstants::ROLE_MEMBER,
                                 'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
                                 'refcode' => $row[4],
@@ -222,11 +227,11 @@ class UserController extends Controller
                             $countCreate++;
                         }
                     } catch (\Exception $ex) {
-                        Log::error($ex);
+                        //Log::error($ex);
                         //dd($ex->getMessage());
                     }
                 }
-                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công' . $countCreate . ' trên tổng số' . count($rows) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
+                return redirect()->back()->with('notify', 'Cập nhật thành công ' . $countUpdate . ', Tạo mới thành công ' . $countCreate . ' trên tổng số ' . (count($rows) - 1) . '. Chú ý nếu tạo user mới thì chỉ gán cho cột sale_id');
             }
         }
 
@@ -271,16 +276,17 @@ class UserController extends Controller
     }
 
     public function addMember(Request $request)
-    {
+    { 
         if ($request->input('action') == 'addMember') {
             $member = $request->except('action', 'note');
             $used   = User::where('phone', $member['phone'])->first();
 
             if (!empty($used)) {
-                return redirect()->back()->withErrors(['phone' => 'Số điện thoại đã được sử dụng!']);
+                return redirect()->back()->withInput($request->all())->withErrors([
+                    'phone' => 'Số điện thoại đã được sử dụng!',
+                ]);
             }
 
-            $member['role'] = UserConstants::ROLE_MEMBER;
             $member['refcode'] = $member['phone'];
             $member['sale_id'] = Auth::user()->id;
             $member['password'] = Hash::make($member['phone']);
@@ -302,7 +308,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('notify', 'Thao tác thành công!');
         }
-
+        
         $this->data['hasBack'] = route('user.members');
         $this->data['navText'] = __('Thêm thành viên');
 
