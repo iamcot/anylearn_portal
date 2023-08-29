@@ -41,7 +41,13 @@
                     <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
-                    <td class="text-center" scope="row">@if($row->pay_info) @foreach(json_decode($row->pay_info, true) as $k => $v ) {{ $k . ": " . $v . ' | ' }} @endforeach @endif</td>
+                    <td class="text-center" scope="row">
+                        @if($row->pay_info) 
+                            {{ dd(json_decode($row->pay_info, true)) }}
+                            @foreach(json_decode($row->pay_info, true) as $k => $v ) 
+                                {{ $k . ": " . $v . ' | ' }} 
+                            @endforeach 
+                        @endif</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($row->updated_at)) }}</td>
                     <td class="text-right">
                         {!! $transServ->statusOperation($row->id, $row->status) !!}
