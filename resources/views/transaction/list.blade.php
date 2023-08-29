@@ -44,7 +44,7 @@
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
                     <td class="text-center" scope="row">
                         @if($row->pay_info) 
-                            @foreach(json_decode($row->pay_info, true) as $k => $v ) 
+                            @foreach(json_decode($row->pay_info, true) as $k => $v) 
                                 {{ $k . ": " . $v . ' | ' }} 
                             @endforeach 
                         @endif
