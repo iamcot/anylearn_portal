@@ -23,7 +23,7 @@ class Contract extends Model
             if (in_array($key, ['dob', 'cert_date', 'created_at', 'updated_at'])) {
                 $contractArray["{" . $key . "}"] = date('d/m/Y', strtotime($value));
             } elseif ($key == 'commission') {
-                $contractArray["{commission}"] = ($value * 100) . "%";
+                $contractArray["{commission}"] = ((1 - $value)* 100) . "%";
             } elseif ($key == 'signed' && !empty($value)) {
                 $contractArray["{signed}"] = '<img src="' . $value . '" style="width:100px;">';
             } else {
