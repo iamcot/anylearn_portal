@@ -24,6 +24,7 @@ class ZaloServices
     const OA_STATE = 'anylearn';
     const OA_CHALLENGE = 'vwIliF0AjbWFu4lV4g0fciDAI8OUie7tx2nM06_jdd8';
     const OA_CALLBACK = 'https://anylearn.vn/zalo';
+    const OA_CALLBACK_TEST = 'https://test.anylearn.vn/zalo';
 
     const GRANT_TYPE_CODE = 'authorization_code';
     const GRANT_TYPE_REFRESH = 'refresh_token';
@@ -69,7 +70,7 @@ class ZaloServices
         );
         $zalo = new Zalo($config);
         $helper = $zalo->getRedirectLoginHelper();
-        $callbackUrl = self::OA_CALLBACK;
+        $callbackUrl = $this->isTest ? self::OA_CALLBACK_TEST : self::OA_CALLBACK;
         $codeChallenge = self::OA_CHALLENGE;
         $state = self::OA_STATE;
         $loginUrl = $helper->getLoginUrlByOA($callbackUrl, $codeChallenge, $state);

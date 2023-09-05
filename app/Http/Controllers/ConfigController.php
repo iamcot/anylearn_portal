@@ -29,7 +29,7 @@ class ConfigController extends Controller
 {
     public function zaloOA(Request $request)
     {
-        $zaloServ = new ZaloServices();
+        $zaloServ = new ZaloServices(false, true);
         $loginUrl = $zaloServ->generateUrl();
         if ($loginUrl) {
             return redirect($loginUrl);
