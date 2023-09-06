@@ -168,10 +168,11 @@ class MeApi extends Controller
     }
     public function meWork(Request $request)
     {
+        $user = $request->get('_user');
         $data = DB::table('item_activities as ia')
         ->join('items as i', 'i.id', '=', 'ia.item_id')
         ->join('users as u', 'u.id', '=', 'ia.user_id')
-        ->where('ia.user_id', auth()->user()->id)
+        ->where('ia.user_id', $user->id)
             ->select('ia.*', 'i.title', 'u.name')
             ->get();
 
