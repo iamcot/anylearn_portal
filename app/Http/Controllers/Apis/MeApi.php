@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Apis;
 
+use App\Constants\ItemConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Models\OrderDetail;
 use App\Models\User;
 use App\Models\UserLocation;
 use App\Services\DashboardServices;
+use App\Services\ItemServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 
@@ -237,5 +239,12 @@ class MeApi extends Controller
             ->get();
         return response()->json(['data' => $data]);
     }
-
+    public function list(Request $request)
+    {
+        $user = $request->get('_user');
+        $classService = new ItemServices();
+        $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
+        $response = $courseList;
+        return response()->json($response);
+    }
 }
