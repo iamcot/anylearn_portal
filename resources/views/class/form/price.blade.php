@@ -123,7 +123,7 @@
         var hp = document.getElementById("price").value;
         var hpg = document.getElementById("org_price").value;
         if ((hpg != "" || hpg > 0) && hpg < hp) {
-            console.log(hp, hpg);
+            console.log(hpg, ht, hpg > 0, hpg < hp);
             document.getElementById("org_price").value = hp;
         }
     }
