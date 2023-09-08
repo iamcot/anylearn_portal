@@ -3,7 +3,7 @@
     <div class="container py-5">
         <div class="row">
             <div class="col-sm-3">
-                <h4>TRUNG TÂM HỖ TRỢ</h4>
+                <h4><a href="/articles" class="text-decoration-none text-black pb-2">TRUNG TÂM HỖ TRỢ</a> </h4>
                 <ul class="list-unstyled">
                     @foreach ($itemServ->footertopKnowledge() as $knowledge)
                             <li><a class="text-secondary text-decoration-none"
@@ -13,19 +13,19 @@
                 </ul>
             </div>
             <div class="col-sm-3">
-                <h4>ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
+                <h4 class="text-decoration-none text-black pb-2">ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
                 <ul class="list-unstyled">
                     <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều Khoản Sử Dụng</a></li>
                     <li><a href="/privacy" class="text-secondary text-decoration-none">Chính Sách Bảo Mật</a></li>
                 </ul>
-                <h4 class="mt-2" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
+                <h4 class=" text-decoration-none text-black" id="download-app" >TẢI ỨNG DỤNG anyLEARN</h4>
                 <div class="app-links">
                     <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="40%"></a>
-                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img src="/cdn/img/appstore.png" class="img-fluid" width="45%"></a>
+                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img src="/cdn/img/appstore.png" class="img-fluid" width="40%"></a>
                 </div>
             </div>
             <div class="col-sm-3">
-                <h4>TIN TỨC</h4>
+                <h4 class="text-decoration-none text-black pb-2">TIN TỨC</h4>
                 <ul class="list-unstyled">
                      @foreach($itemServ->footerNews() as $news)
                     {{-- <p><a data-spm="footer-news.{{ $news->id }}" href="{{ $itemServ->articleUrl($news->id) }}" class="text-secondary text-decoration-none"><li>{{ $news->title }}</li></a></p> --}}
@@ -34,11 +34,11 @@
                 </ul>
             </div>
             <div class="col-sm-3">
-                <h4>THANH TOÁN</h4>
+                <h4 class="text-decoration-none text-black pb-2">THANH TOÁN</h4>
                 <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/onepay.png" width="20%" class="img-fluid">
-                <h4 class="mt-2">THEO DÕI CHÚNG TÔI</h4>
+                <h4 class="mt-2 text-decoration-none text-black pb-2">THEO DÕI CHÚNG TÔI</h4>
                 <div class="social-links">
                     <a target="_blank" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><img
                             src="/cdn/img/youtube.png" alt=""></a>
