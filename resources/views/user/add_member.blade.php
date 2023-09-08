@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div id="add-member" class="card mb-3 shadow {{ old('role') ? '' : 'd-none' }}">
+    <div id="add-member" class="card mb-3 shadow">
         <div class="card-body">
             <div class="form-group row">
                 <label for="name" class="col-md-3 col-form-label text-md-right ">
