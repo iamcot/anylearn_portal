@@ -132,7 +132,7 @@ class PageController extends Controller
 
     public function ref(Request $request, $code = "")
     {  
-        if (empty($code)) {
+        if (empty($code) || Auth::id()) {
             return redirect('/');
         }
 
@@ -140,14 +140,12 @@ class PageController extends Controller
         if (!$refUser) {
             return redirect('/');
         }
-    
-        dd(Auth::id());
 
         if ($request->get('cb')) {
             session()->put('cb', $request->get('cb'));  
         }
 
-        if ($request->get('has-account') || Auth::user()) {
+        if ($request->get('has-account')) {
             //$this->data['isReg'] = true;
             return redirect()->back();     
         }
