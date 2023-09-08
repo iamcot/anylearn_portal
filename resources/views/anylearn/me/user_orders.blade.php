@@ -33,7 +33,6 @@ orders
     </div>
     <div class="card shadow">
         <div class="card-body p-0">
-        <p class="small p-3">Các khóa học đã được xác nhận. Để hoàn trả khóa học, vui lòng liên hệ hotline <a href="tel:0374900344">+84 37 490 0344</a></p>
             <table class="table table-striped text-secondary" id="myTable">
                 <thead>
                     <tr>

@@ -598,7 +598,7 @@ class TransactionService
         }
 
         $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);  
-        Mail::to('test@gmail.com')->send(
+        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
             new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
         );
     }

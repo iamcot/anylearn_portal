@@ -7,6 +7,10 @@ order-return
 <h1 class="mb-4">Danh sách đơn hàng</h1>
 <div class="card shadow">
     <div class="card-body p-0 table-responsive">
+        <p class="small px-3 py-2 m-0">
+            Để hoàn trả đơn hàng, vui lòng thực hiện thao tác <strong>Hoàn trả</strong> bên dưới hoặc liên hệ hotline 
+            <a href="tel:0374900344">+84 37 490 0344</a>.
+        </p>
         <table class="table table-striped text-secondary">
             <thead>
                 <tr>
@@ -22,7 +26,7 @@ order-return
             <tbody>
                 @foreach($orders as $row)
                 <tr>
-                    <th class="text-center">{{ $row->id }}</th>
+                    <td class="text-center">{{ $row->id }}</td>
                     <td>{{ $row->classes }}</td>
                     <td class="text-center">{{ number_format($row->quantity) }}</td>
                     <td class="text-center">{{ number_format($row->amount) }}</td>    
