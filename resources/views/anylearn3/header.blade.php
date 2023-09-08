@@ -19,7 +19,7 @@
                 <span class="text-white hover:text-gray-300 px-1 py-1">|</span> -->
 
                 @if (!Auth::user())
-                    <a href="/login?cb={{ urlencode(url()->full()) }}" class="text-white px-2 py-1 rounded-md">Đăng nhập</a>
+                    <a href="/login" class="text-white px-2 py-1 rounded-md">Đăng nhập</a>
                     <span class="text-white hover:text-gray-300 px-1 py-1">|</span>
                     <a href="/ref/anylearn?cb={{ urlencode(url()->full()) }}" class="text-white pl-2 py-1 rounded-md">Đăng ký</a>
                 @else
