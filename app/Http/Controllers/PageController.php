@@ -153,6 +153,7 @@ class PageController extends Controller
         $this->data['user'] = $refUser;
         $this->data['newUser'] = Auth::user();
         $this->data['role'] = $request->get('r');
+
         if ($this->data['role'] == 'member') {
             return view('register.member', $this->data);
         } else if ($this->data['role'] == 'school') {
@@ -160,6 +161,7 @@ class PageController extends Controller
         } else if ($this->data['role'] == 'teacher') {
             return view('register.teacher', $this->data);
         }
+
         return view('register.index', $this->data);
     }
 
