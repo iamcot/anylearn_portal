@@ -13,6 +13,13 @@ class ZaloServices
     const ZALO_APP_ID = "2002287060275958653";
     const ZALO_APP_SECRET = "WEB5s6cmh3hj6cIDOJLx";
 
+    const ZNS_ORDER_RETURN = 'ZNS_ORDER_RETURN';
+    const TEMPLATE_ORDER_RETURN_ID = '281162';
+
+    const ZNS_ORDER_REFUND = 'ZNS_ORDER_REFUND';
+    const TEMPLATE_ORDER_REFUND_ID = '281184';
+    const REFUND_POLICY = 7;
+
     const ZNS_ORDER_CONFIRMED = 'ZNS_ORDER_CONFIRMED';
     const TEMPLATE_ORDER_CONFIRMED_ID = '277980';
 
@@ -24,11 +31,9 @@ class ZaloServices
     const OA_STATE = 'anylearn';
     const OA_CHALLENGE = 'vwIliF0AjbWFu4lV4g0fciDAI8OUie7tx2nM06_jdd8';
     const OA_CALLBACK = 'https://anylearn.vn/zalo';
-    const OA_CALLBACK_TEST = 'https://test.anylearn.vn/zalo';
 
     const GRANT_TYPE_CODE = 'authorization_code';
     const GRANT_TYPE_REFRESH = 'refresh_token';
-
 
     private $access_token;
 
@@ -70,7 +75,7 @@ class ZaloServices
         );
         $zalo = new Zalo($config);
         $helper = $zalo->getRedirectLoginHelper();
-        $callbackUrl = $this->isTest ? self::OA_CALLBACK_TEST : self::OA_CALLBACK;
+        $callbackUrl = self::OA_CALLBACK;
         $codeChallenge = self::OA_CHALLENGE;
         $state = self::OA_STATE;
         $loginUrl = $helper->getLoginUrlByOA($callbackUrl, $codeChallenge, $state);
@@ -149,8 +154,59 @@ class ZaloServices
             return $this->orderConfirmedBody($phone, $data);
         } else if ($type == self::ZNS_OTP) {
             return $this->otpBody($phone, $data);
+        } else if ($type == self::ZNS_ORDER_RETURN) {
+            return $this->orderReturnBody($phone, $data);
+        } else if ($type == self::ZNS_ORDER_REFUND) {
+            return $this->orderRefundBody($phone, $data);
         }
         return false;
+    }
+
+    private function orderReturnBody($phone, $data)
+    {
+        if ($phone == "" || empty($orderData)) {
+            throw new \Exception("Chưa có phone hoặc nội dung.");
+        }
+        $body = [
+            'phone' => $this->correctPhone($phone),
+            'template_id' => self::TEMPLATE_ORDER_RETURN_ID,
+            'template_data' => [
+                "date" => date("h:i:s d/m/Y", strtotime($data['created_at'])),
+                "price" => $data['price'],
+                "name" => $data['name'],
+                "class" => $data['class'],
+                "id" => $data['id'], # use order_detail_id
+            ],
+            'tracking_id' => md5(time()),
+        ];
+        if ($this->isTest) {
+            $body['mode'] = 'development';
+        }
+
+        return json_encode($body);
+    }
+
+    private function orderRefundBody($phone, $data)
+    {
+        if ($phone == "" || empty($data)) {
+            throw new \Exception("Chưa có phone hoặc nội dung.");
+        }
+        $body = [
+            'phone' => $this->correctPhone($phone),
+            'template_id' => self::TEMPLATE_ORDER_REFUND_ID,
+            'template_data' => [
+                "policy" => self::REFUND_POLICY,   
+                "amount" => $data['amount'],
+                "order_id" => $data['id'],
+                "name" => $data['name'],    
+            ],
+            'tracking_id' => md5(time()),
+        ];
+        if ($this->isTest) {
+            $body['mode'] = 'development';
+        }
+
+        return json_encode($body);
     }
 
     private function orderConfirmedBody($phone, $orderData)

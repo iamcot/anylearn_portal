@@ -10,6 +10,7 @@ class OrderConstants {
     const STATUS_CANCEL_SELLER = 'cancel_seller';
     const STATUS_CANCEL_SYSTEM = 'cancel_system';
     const STATUS_RETURN_BUYER = 'return_buyer';
+    const STATUS_RETURN_BUYER_PENDING = 'return_buyer_pending';
     const STATUS_RETURN_SELLER = 'return_seller';
     const STATUS_RETURN_SYSTEM = 'return_system';
     const STATUS_REFUND= 'refund';

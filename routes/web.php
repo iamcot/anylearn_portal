@@ -99,6 +99,9 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
     Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
 
+    Route::get('/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
+    Route::get('/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
+
     Route::any('/history', 'UserController@meHistory')->name('me.history');
     Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
     Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');

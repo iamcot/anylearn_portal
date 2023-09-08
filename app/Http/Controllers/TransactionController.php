@@ -192,6 +192,40 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
+    public function deliveredOrders()
+    {
+        $orders = DB::table('orders')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->where('orders.user_id', Auth::id())
+            ->whereIn('orders.status', [
+                    OrderConstants::STATUS_DELIVERED, 
+                    OrderConstants::STATUS_RETURN_BUYER,
+                    OrderConstants::STATUS_RETURN_BUYER_PENDING,
+                    OrderConstants::STATUS_REFUND,
+                ])
+            ->selectRaw("orders.*, group_concat(items.title SEPARATOR ', ') as classes")
+            ->groupBy('od.order_id')
+            ->orderBy('orders.id', 'desc')
+            ->paginate(20);
+
+            $this->data['orders'] =  $orders;
+            return view(env('TEMPLATE', '') . 'me.order_return', $this->data);
+
+    }
+
+    public function sendReturnRequest($orderId) {
+        $order = Order::find($orderId);
+        if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
+            return redirect()->back()->with('notify', 'Có lỗi xảy ra vui lòng thử lại!!');
+        }
+
+        $transService = new TransactionService();
+        $transService->sendReturnRequest($orderId);
+        
+        return redirect()->back()->with('notify', 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!');
+    }
+
     public function returnOrder($orderId, $trigger) {
         $userService = new UserServices();
         $user = Auth::user();
@@ -199,7 +233,8 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $order = Order::find($orderId);
-        if ($order->status != OrderConstants::STATUS_DELIVERED) {
+        if ($order->status != OrderConstants::STATUS_DELIVERED 
+            && $order->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
