@@ -48,9 +48,8 @@ class LoginController extends Controller
 
     public function showLoginForm(Request $request)
     {
-        if ($request->get('cb')) {
-            $request->session()->put('cb', $request->get('cb'));
-        }
+        $urlNext = $request->get('cb') ? $request->get('cb') : url()->previous();
+        $request->session()->put('cb', $urlNext);
 
         return view('auth.login');
     }
@@ -115,12 +114,11 @@ class LoginController extends Controller
             return redirect()->intended('/inactive')->with('name', $name);
         }
         //$userM = new User();
-        //return redirect($userM->redirectToUpdateDocs());    
-
+        //return redirect($userM->redirectToUpdateDocs());
         $userService = new UserServices();
         Cookie::queue(Cookie::forever('api_token', $user->api_token, null, null, false, false));
-       
-        if ($request->session()->get('cb')) {   
+
+        if ($request->session()->get('cb')) {
             return redirect()->to($request->session()->get('cb'));
         } else if ($userService->isMod()) {
             return redirect($this->redirectTo);
