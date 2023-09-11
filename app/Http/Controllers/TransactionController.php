@@ -202,6 +202,7 @@ class TransactionController extends Controller
                     OrderConstants::STATUS_DELIVERED, 
                     OrderConstants::STATUS_RETURN_BUYER,
                     OrderConstants::STATUS_RETURN_BUYER_PENDING,
+                    OrderConstants::STATUS_RETURN_SYSTEM,
                     OrderConstants::STATUS_REFUND,
                 ])
             ->selectRaw("orders.*, group_concat(items.title SEPARATOR ', ') as classes")
