@@ -889,7 +889,7 @@ class UserController extends Controller
             return redirect()->back()->with('notify', 'Trạng thái đơn hàng không đúng');
         }
         $transService = new TransactionService();
-        $transService->rejectRegistration($orderId);
+        $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
 

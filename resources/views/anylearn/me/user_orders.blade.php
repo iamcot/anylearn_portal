@@ -41,6 +41,7 @@ orders
                         <th>Trạng thái</th>
                         <th>Tài khoản học</th>
                         <th>Lịch học/Mã code</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,7 @@ orders
                         @endif
                         <td>{{ $row->child_name }}</td>
                         <td><a target="_blank"  class="btn btn-sm btn-success" href="{{ route('me.orders.schedule', ['id' => $row->id]) }}">Xem</a></td>
+                        <td></td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -99,6 +99,9 @@ Route::middleware(['auth'])->prefix('me')->group(function () {
     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
     Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
 
+    Route::get('/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
+    Route::get('/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
+
     Route::any('/history', 'UserController@meHistory')->name('me.history');
     Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
     Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
@@ -232,6 +235,8 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/order-open', 'TransactionController@orderOpen')->name('order.open');
     Route::get('/order-all', 'TransactionController@allOrder')->name('order.all');
     Route::get('/order-approve/{orderId}', 'TransactionController@approveOrder')->name('order.approve');
+    Route::get('/order-return/{orderId}/{trigger}', 'TransactionController@returnOrder')->name('order.return');
+    Route::get('/order-refund/{orderId}', 'TransactionController@refundOrder')->name('order.refund');
     Route::get('/order-reject/{orderId}', 'TransactionController@rejectOrder')->name('order.reject');
     Route::get('/transaction/commission', 'TransactionController@commission')->name('transaction.commission');
     Route::get('/transaction/{id}/status/{status}', 'TransactionController@status')->name('transaction.status.touch');

@@ -216,8 +216,22 @@ return [
     ],
 
     NotifConstants::COURSE_REGISTER_REJECT =>  [
-        'title' => 'Đơn hàng bạn đang ký đã bị từ chối',
+        'title' => 'Đơn hàng bạn đang đăng ký đã bị từ chối',
         'template' => 'Đơn hàng bạn đặt đã bị từ chối. Vui lòng thử lại hoặc liên hệ với hotline để được hỗ trợ.',
+        'route' => '',
+        // 'email' => 'App\Mail\OrderSuccess',
+    ],
+
+    NotifConstants::COURSE_RETURN =>  [
+        'title' => 'Đơn hàng bạn mua đang được hoàn trả',
+        'template' => 'Đơn hàng bạn mua đã bị hủy, chúng tôi đã tiến hành hoàn tiền cho bạn trong thời gian sớm nhất.',
+        'route' => '',
+        // 'email' => 'App\Mail\OrderSuccess',
+    ],
+
+    NotifConstants::COURSE_REFUND =>  [
+        'title' => 'Đơn hàng bạn đã mua đang được hoàn tiền',
+        'template' => 'Đơn hàng hủy của bạn đang được hoàn tiền. Thời gian hoàn tiền dự kiến trong vòng 3 ngày làm việc.',
         'route' => '',
         // 'email' => 'App\Mail\OrderSuccess',
     ],
