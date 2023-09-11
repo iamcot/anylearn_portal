@@ -34,7 +34,7 @@ order-return
                     <td>              
                         @if ($row->status == \App\Constants\OrderConstants::STATUS_RETURN_BUYER_PENDING)
                             <span class="badge badge-pill badge-info">@lang('Đang xử lý')</span>
-                        @elseif ($row->status == \App\Constants\OrderConstants::STATUS_RETURN_BUYER)
+                        @elseif ($row->status == \App\Constants\OrderConstants::STATUS_RETURN_SYSTEM)
                             <span class="badge badge-pill badge-success">@lang('Đã hoàn trả')</span>
                         @endif   
                     </td>

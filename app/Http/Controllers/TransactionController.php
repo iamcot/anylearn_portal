@@ -200,7 +200,6 @@ class TransactionController extends Controller
             ->where('orders.user_id', Auth::id())
             ->whereIn('orders.status', [
                     OrderConstants::STATUS_DELIVERED, 
-                    OrderConstants::STATUS_RETURN_BUYER,
                     OrderConstants::STATUS_RETURN_BUYER_PENDING,
                     OrderConstants::STATUS_RETURN_SYSTEM,
                     OrderConstants::STATUS_REFUND,
