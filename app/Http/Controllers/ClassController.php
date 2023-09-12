@@ -483,8 +483,9 @@ class ClassController extends Controller
 
     public function delSchedule($id)
     {
-        $rs = Schedule::where('item_id', $id)->delete();
-        return redirect()->back()->with([
+        //$rs = Schedule::where('item_id', $id)->delete();
+        $rs = ItemSchedulePlan::find($id)->delete(); 
+        return redirect(strtok(url()->previous(), '?'))->with([
             'tab' => 'schedule',
             'notify' => ($rs > 0)
         ]);
