@@ -50,18 +50,44 @@ class ClassController extends Controller
 {
     public function codes(Request $request)
     {
-        $this->data['itemCodes'] = DB::table('item_codes')
+        /*$this->data['itemCodes'] = DB::table('item_codes')
         ->join('items', 'items.id', '=', 'item_codes.item_id')
         ->leftjoin('users', 'users.id', '=', 'item_codes.user_id')
         ->orderBy('items.id', 'desc')
         ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone')
-        ->paginate(20);
-        
-        // ItemCode::orderBy('user_id', 'desc')
-        //     ->orderBy('created_at', 'desc')
-        //     ->paginate(15);
+        ->paginate(20);*/
 
-        $this->data['navText'] = __('Thông tin kích hoạt');
+        $itemCodes = DB::table('item_codes')
+            ->join('items', 'items.id', '=', 'item_codes.item_id')
+            ->leftjoin('users', 'users.id', '=', 'item_codes.user_id');
+        
+        if ($request->get('action') == 'search') {
+            if ($request->get('codeName')) {
+                $itemCodes->where('item_codes.code', 'like', '%'. $request->get('codeName') . '%');
+            }
+
+            if ($request->get('itemName')) {
+                $itemCodes->where('items.title', 'like', '%'. $request->get('itemName') . '%');
+            }
+
+            if ($request->get('userName')) {
+                $itemCodes->where('users.name', 'like', '%'. $request->get('userName') . '%');
+            }
+
+            if ($request->get('codeStatus') != null) {
+                if ($request->get('codeStatus') == 1) {
+                    $itemCodes->whereNotNull('item_codes.user_id');
+                } else {
+                    $itemCodes->whereNull('item_codes.user_id');
+                }    
+            }
+        }
+
+        $this->data['navText'] = __('Quản lý Thông tin kích hoạt');
+        $this->data['itemCodes'] = $itemCodes->orderBy('items.id', 'desc')
+            ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone')
+            ->paginate(20);
+        
         return view('class.codes', $this->data);
     }
 
@@ -71,25 +97,44 @@ class ClassController extends Controller
         if (!empty($itemCode)) {
             $notifServ = new Notification();
             $notifServ->notifActivation($itemCode);
-            return redirect()->back()->with(['notify', 'Thao tác thành công']);
+            return redirect()->back()->with('notify', 'Thao tác thành công.');
         }
 
-        return redirect()->back()->with(['notify', 'Có lỗi xảy ra, vui lòng thử lại!']);
+        return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại!!');
     }
 
     public function refreshItemCode(Request $request, $idItemCode) 
     {
         $itemCode = ItemCode::find($idItemCode);
-        if (!empty($itemCode)) {
+        if ($itemCode) {
             if ($request->input('action') == 'update') {
-                $itemCode->update($request->except(['action', '_token', 'code']));
-                return redirect()->route('codes')->with(['notify', 'Thao tác thành công']);
+                // if (ItemCode::where('order_detail_id', $request->input('order_detail_id'))->first()) {
+                //    return redirect()->back()->with('notify', 'Đơn hàng này đã được kích hoạt!.');
+                // }
+
+                $validation = DB::table('orders')
+                    ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+                    ->join('items', 'items.id', '=', 'od.item_id')
+                    ->where('items.subtype', ItemConstants::SUBTYPE_DIGITAL)
+                    ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+                    ->where('orders.user_id', $request->input('user_id'))
+                    ->where('od.id', $request->input('order_detail_id'))
+                    ->first();
+
+                if ($validation) {
+                    $itemCode->update($request->except(['action', '_token', 'code']));
+                    return redirect()->route('codes')->with('notify', 'Thao tác thành công.');
+                }
+
+                return redirect()->back()->with('notify', 'Vui lòng kiểm tra lại thông tin đơn hàng!!');
             }
+            
+            $this->data['hasBack'] = route('codes');
             $this->data['itemCode'] = $itemCode;
+
             return view('class.refresh_item_code', $this->data);
         }
-
-        return redirect()->back()->with(['notify', 'Có lỗi xảy ra, vui lòng thử lại!']);
+        return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại!!');
     }
 
     public function list(Request $request)
@@ -236,7 +281,7 @@ class ClassController extends Controller
                     'title' => $input['titleextrafee'],
                     'price' => $input['priceextrafee']
                 ]);
-                return redirect()->back()->with(['notify' => "Chỉnh sữa thành công", 'tab' =>  'price']);
+                return redirect()->back()->with(['notify' => "Chỉnh sửa thành công", 'tab' =>  'price']);
             }
         }
         if ($request->input('action') == 'createChapter') {

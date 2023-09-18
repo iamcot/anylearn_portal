@@ -84,7 +84,7 @@ Route::get('/helpcenter', 'HelpcenterController@index')->name('helpcenter');
 Route::get('/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
 Route::get('/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
 
-Route::get('/partner/helpcenter', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
+Route::get('/help/partner', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
 // Route::get('/partner/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.parnter.topic');
 // Route::get('/partner/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.parnter.knowledge');
 

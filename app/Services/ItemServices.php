@@ -320,8 +320,8 @@ class ItemServices
         if (!$item) {
             throw new Exception("Trang không tồn tại", 404);
         }
-        
-        // Auto shift date   
+
+        // Auto shift date
         $today = Carbon::now();
         if ($today->format('Y-m-d') > $item->date_start) {
             if ($item->subtype == 'extra' || $item->subtype == 'offline') {
@@ -331,13 +331,13 @@ class ItemServices
                 $item->date_start = $today->addDay(15);
                 $item->date_end   = null;
             }
-              
+
             $item->save();
         }
 
         $item = $item->makeVisible(['content']);
         $locale = App::getLocale() ?? I18nContent::DEFAULT;
-    
+
         if ($locale != I18nContent::DEFAULT) {
             $i18 = new I18nContent();
             $item18nData = $i18->i18nItem($item->id, $locale);
@@ -770,7 +770,9 @@ class ItemServices
         $orgInputs = $input;
 
         foreach (I18nContent::$itemCols as $col => $type) {
-            $input[$col] = $input[$col][I18nContent::DEFAULT];
+            if (is_array($input[$col])) {
+                $input[$col] = $input[$col][I18nContent::DEFAULT];
+            }
         }
 
         $validator = $this->validate($input);
@@ -895,7 +897,7 @@ class ItemServices
         $datetime = Carbon::now();
         foreach ($codes as $code) {
             $data[] = array(
-                'item_id' => $itemId, 
+                'item_id' => $itemId,
                 'code' => $code,
                 'created_at' => $datetime,
                 'updated_at' => $datetime,
@@ -1436,4 +1438,39 @@ class ItemServices
                 ]);
         }
     }
+    public function DigitalCourse(Request $request, $courseId){
+        $input = $request->all();
+        $courseService = new ItemServices();
+        $isDigitalCourse = Item::where('id', $courseId)
+            ->where('subtype', ItemConstants::SUBTYPE_DIGITAL)
+            ->first();
+        if ($isDigitalCourse) {
+            if (isset($input['code'])) {
+                $courseService->createItemCodes($courseId, $input['code']);
+            }
+
+            if (isset($input['email']) || isset($input['notif'])) {
+                $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+                $notifTemplate->update([
+                    'email_template' => $input['email'],
+                    'notif_template' => $input['notif'],
+                ]);
+            }
+        }
+    }
+    public function getDigitalCourse($courseId)
+{
+    // Thực hiện logic để lấy thông tin về khóa học số hóa có ID là $courseId
+    // Đây có thể là một truy vấn cơ sở dữ liệu hoặc xử lý logic khác tùy vào ứng dụng của bạn
+
+    $digitalCourse = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+
+    if (!$digitalCourse) {
+        return response()->json(['message' => 'Không tìm thấy khóa học số hóa'], 404);
+    }
+
+    // Thực hiện các xử lý khác nếu cần
+
+    return response()->json($digitalCourse);
+}
 }

@@ -44,10 +44,15 @@ class ZaloServices
             if ($tokenExp < time()) {
                 $code = $configM->get(ConfigConstants::ZALO_CODE);
                 $tokenObj = $this->getToken($code, self::GRANT_TYPE_REFRESH, $refresh);
-                $this->access_token = $tokenObj['access_token'];
-                $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN, $tokenObj['access_token'], ConfigConstants::TYPE_ZALO, true);
-                $configM->createOrUpdate(ConfigConstants::ZALO_REFRESH, $tokenObj['refresh_token'], ConfigConstants::TYPE_ZALO, true);
-                $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN_EXP, ($tokenObj['expires_in'] + time()), ConfigConstants::TYPE_ZALO, true);
+
+                if (!empty($tokenObj['access_token']) 
+                && !empty($tokenObj['refresh_token'])
+                && !empty($tokenObj['expires_in'])) {
+                    $this->access_token = $tokenObj['access_token'];
+                    $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN, $tokenObj['access_token'], ConfigConstants::TYPE_ZALO, true);
+                    $configM->createOrUpdate(ConfigConstants::ZALO_REFRESH, $tokenObj['refresh_token'], ConfigConstants::TYPE_ZALO, true);
+                    $configM->createOrUpdate(ConfigConstants::ZALO_TOKEN_EXP, ($tokenObj['expires_in'] + time()), ConfigConstants::TYPE_ZALO, true);
+                }
             } else {
                 $this->access_token = $token;
             }
@@ -99,6 +104,12 @@ class ZaloServices
 
     public function sendZNS($type, $phone,  $data)
     {
+        if (empty($this->access_token)) {
+            return [
+                'result' => false,
+                'error' => "NO_TOKEN"
+            ];
+        }
         try {
             $body = $this->buildBody($type, $phone, $data);
             $response = $this->_post(self::ZNS_ENDPOINT, $body);
