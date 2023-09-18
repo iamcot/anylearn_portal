@@ -43,11 +43,21 @@ class ItemApi extends Controller
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
             ->first()->makeVisible(['content']);
+
         if (!$item) {
-            return response("Không có dữ liệu", 404);
+            return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
+
+        $itemService = new ItemServices();
+        $digital = $itemService->getDigitalCourse($id);
+
+        // Thêm trường 'digital' vào dữ liệu đối tượng $item
+
+        $item->digital = $digital->original;
+
         return response()->json($item);
     }
+
 
     public function save(Request $request, $id)
     {
@@ -62,16 +72,18 @@ class ItemApi extends Controller
 
         $itemService = new ItemServices();
         $newItem = $itemService->updateItem($request, $request->all(), $user);
+        $digital = $itemService->DigitalCourse($request,$id);
         if ($newItem instanceof Validator) {
             return response($newItem->errors()->first(), 400);
         }
-        return response()->json(['result' => $newItem === false ? false : true]);
+        return response()->json(['result' => $newItem, 'digital' => $digital]);
+        // return response()->json(['result' => $newItem === false ? false : true]);
     }
 
     public function list(Request $request)
     {
         $user = $request->get('_user');
-        
+
         $open = Item::where('user_id', $user->id)
             ->where('user_status', '<=', ItemConstants::USERSTATUS_ACTIVE)
             ->orderby('user_status', 'desc')
@@ -138,7 +150,7 @@ class ItemApi extends Controller
             return response('Trang không tồn tại', 404);
         }
         $pageSize = $request->get('pageSize', 9999);
-        // DB::enableQueryLog(); 
+        // DB::enableQueryLog();
         $configM = new Configuration();
         $isEnableIosTrans = $configM->enableIOSTrans($request);
 
