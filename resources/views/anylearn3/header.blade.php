@@ -4,10 +4,13 @@
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 block sm:hidden"><i class="fa fa-home"></i></a>
                 <a href="{{ route('home') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Trang chủ</a>
-                <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
+                @if (!Auth::user())
+                     <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
                 <!--a href="{{ route('allclasses') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Kênh học tập</!--a>
                 <span-- class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span-->
                 <a href="{{ route('refpage', ['code' => 'anylearn']) }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1">Trở thành đối tác anyLEARN</a>
+                @endif
+
                 <span class="text-white hover:text-gray-300 py-1 hidden sm:block">|</span>
                 <a href="#download-app" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Tải ứng dụng</a>
             </div>

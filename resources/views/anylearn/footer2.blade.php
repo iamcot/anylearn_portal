@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-sm-3">
                 <h4><a href="/articles" class="text-decoration-none text-black pb-2">TRUNG TÂM HỖ TRỢ</a> </h4>
-                <ul class="list-unstyled">
+                <ul class="list-unstyled pt-2">
                     @foreach ($itemServ->footertopKnowledge() as $knowledge)
-                            <li><a class="text-secondary text-decoration-none"
+                            <li><a class="text-secondary text-decoration-none  "
                                     href="{{ route('helpcenter.knowledge', ['id' => $knowledge->id, 'url' => $knowledge->url]) }}">{{ $knowledge->title }}</a>
                             </li>
                         @endforeach
@@ -20,8 +20,8 @@
                 </ul>
                 <h4 class=" text-decoration-none text-black" id="download-app" >TẢI ỨNG DỤNG anyLEARN</h4>
                 <div class="app-links">
-                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="40%"></a>
-                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img src="/cdn/img/appstore.png" class="img-fluid" width="40%"></a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="900" height="auto"></a>
+                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id1518155412"><img src="/cdn/img/appstore.png" class="img-fluid" width="1000"></a>
                 </div>
             </div>
             <div class="col-sm-3">

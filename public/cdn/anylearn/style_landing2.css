@@ -743,7 +743,13 @@ footer .social-links a:hover {
 }
 
 footer .app-links {
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+        /* Sử dụng flexbox để đặt các thành phần trên cùng một hàng */
+        justify-content: space-between;
+        /* Các thành phần sẽ căn giữa và cách nhau một khoảng cách */
+        align-items: center;
+        /* Căn giữa theo chiều dọc */
 }
 
 footer .app-links p {
