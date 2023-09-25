@@ -129,19 +129,23 @@ class PageController extends Controller
         // dd($this->data['banners']);
         return view(env('TEMPLATE', '') . 'home', $this->data);
     }
+
     public function ref(Request $request, $code = "")
     {  
-        if (empty($code)) {
+        if (empty($code) || Auth::id()) {
             return redirect('/');
         }
+
         $refUser = User::where('refcode', $code)->first();
         if (!$refUser) {
             return redirect('/');
         }
+
         if ($request->get('cb')) {
             session()->put('cb', $request->get('cb'));  
         }
-        if ($request->get('has-account') || Auth::user()) {
+
+        if ($request->get('has-account')) {
             //$this->data['isReg'] = true;
             return redirect()->back();     
         }
@@ -149,6 +153,7 @@ class PageController extends Controller
         $this->data['user'] = $refUser;
         $this->data['newUser'] = Auth::user();
         $this->data['role'] = $request->get('r');
+
         if ($this->data['role'] == 'member') {
             return view('register.member', $this->data);
         } else if ($this->data['role'] == 'school') {
@@ -156,6 +161,7 @@ class PageController extends Controller
         } else if ($this->data['role'] == 'teacher') {
             return view('register.teacher', $this->data);
         }
+
         return view('register.index', $this->data);
     }
 

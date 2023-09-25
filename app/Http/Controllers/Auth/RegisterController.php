@@ -45,17 +45,18 @@ class RegisterController extends Controller
 
     public function registerRefPage(Request $request, $code)
     {
-        $this->validator($request->all())->validate();
-        event(new Registered($user = $this->create($request->all())));
-
-        $data = [];
         if (empty($code)) {
             return redirect('/');
         }
-         $refUser = User::where('refcode', $code)->first();
+
+        $refUser = User::where('refcode', $code)->first();
         if (!$refUser) {
             return redirect('/');
         }
+
+        $this->validator($request->all())->validate();
+        event(new Registered($user = $this->create($request->all())));
+
         Auth::login($user);
         return session()->has('cb') ? redirect()->to(session()->get('cb')) : redirect('/');  
         

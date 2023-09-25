@@ -10,6 +10,7 @@ use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\ItemCode;
 use App\ItemCodeNotifTemplate;
+use App\Mail\ReturnRequest;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Item;
@@ -35,6 +36,13 @@ use Illuminate\Support\Facades\Mail;
 
 class TransactionService
 {
+    public $returnRefundStatus = [
+        OrderConstants::STATUS_REFUND,
+        OrderConstants::STATUS_RETURN_BUYER,
+        OrderConstants::STATUS_RETURN_SELLER,
+        OrderConstants::STATUS_RETURN_SYSTEM,
+    ];
+
     public function statusOperation($id, $oldStatus)
     {
         if ($oldStatus == ConfigConstants::TRANSACTION_STATUS_PENDING) {
@@ -136,7 +144,7 @@ class TransactionService
      */
     public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
     {
-
+        
         $childUser = $request->get('child', '');
         $input = $request->all();
         $item = Item::find($itemId);
@@ -172,7 +180,7 @@ class TransactionService
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
                     ->orderBy('id', 'desc')
-                    ->first();
+                    ->first(); 
                 if ($openOrder) {
                     $status = OrderConstants::STATUS_NEW;
                     $transStatus = ConfigConstants::TRANSACTION_STATUS_PENDING;
@@ -197,7 +205,7 @@ class TransactionService
 
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
-                ]);
+                ]); 
                 Transaction::create([
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_ORDER,
@@ -481,7 +489,8 @@ class TransactionService
         return true;
     }
 
-    public function calculateVoucherValue($voucherDb, $orderAmount) {
+    public function calculateVoucherValue($voucherDb, $orderAmount)
+    {
         if ($voucherDb->rule_max > 0) {
             if ($orderAmount >= $voucherDb->rule_max) {
                 return $voucherDb->value;
@@ -581,9 +590,133 @@ class TransactionService
         }
     }
 
-    public function rejectRegistration($orderId)
-    {
+    public function sendReturnRequest($orderId) {
+        
+        $order = Order::find($orderId);
+        if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
+            return false;
+        }
 
+        $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);  
+        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
+            new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
+        );
+    }
+
+    public function returnOrder($orderId, $trigger)
+    {
+        $openOrder = Order::find($orderId);
+        if ($openOrder->status != OrderConstants::STATUS_DELIVERED
+            && $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
+            return false;
+        }
+           
+        $user = User::find($openOrder->user_id);
+        $zaloService = new ZaloServices(true);
+        $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
+
+        // Hoàn anypoint được cộng cho mỗi khoá học
+        foreach ($orderDetails as $od) {
+            $anypoint = Transaction::where('order_id', $od->id)
+                ->where('type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->first();
+            
+            if ($anypoint) {
+                if ($anypoint->status == ConfigConstants::TRANSACTION_STATUS_DONE)  {
+                    $user->update([
+                        'wallet_c' => $user->wallet_c - $anypoint->amount 
+                    ]);
+                }
+
+                $zaloService->sendZNS(ZaloServices::ZNS_ORDER_RETURN, $user->phone, [
+                    "date" => $od->created_at,
+                    "price" => $od->price,
+                    "name" => $user->name,
+                    "class" => Item::find($od->item_id)->title,
+                    "id" => $od->id,
+                ]);
+            }
+        }
+
+        $allTrans = Transaction::where('order_id', $openOrder->id)
+            ->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE])
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
+            ->get();    
+
+        foreach($allTrans as $tnx) {
+            if ($tnx->type == ConfigConstants::TRANSACTION_ORDER) {
+                Transaction::find($tnx->id)->update([
+                    'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
+                ]);
+            }
+            
+            // Hoàn anypoint bị đổi cho đơn hàng
+            if ($tnx->type == ConfigConstants::TRANSACTION_EXCHANGE) {
+                $user->update([
+                    'wallet_c' => $user->wallet_c + $tnx->amount
+                ]);
+
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $tnx->amount,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'pay_info' => '',
+                    'content' => 'Hoàn điểm vì đơn hàng bị trả lại',
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'order_id' => $tnx->order_id
+                ]);
+            }
+        }
+        
+        OrderDetail::where('order_id', $openOrder->id)->update([
+            'status' => $trigger
+        ]);
+
+        Order::find($openOrder->id)->update([
+            'status' => $trigger,
+        ]);
+  
+        $notifServ = new Notification();
+        $notifServ->createNotif(NotifConstants::COURSE_RETURN, $openOrder->user_id, []);
+        Log::debug("System return transaction & orders", ["orderId" => $openOrder->id]);
+
+        return true;
+    }
+
+    public function refundOrder($orderId)
+    {
+        $openOrder = Order::find($orderId);
+        if ($openOrder->status != OrderConstants::STATUS_RETURN_SYSTEM) {
+            return false;
+        }
+       
+        $openOrder->update([
+            'status' => OrderConstants::STATUS_REFUND
+        ]);
+
+        OrderDetail::where('order_id', $orderId)->update([
+            'status' => OrderConstants::STATUS_REFUND
+        ]);
+
+        $user = User::find($openOrder->user_id);
+
+        $zaloService = new ZaloServices(true);
+        $zaloService->sendZNS(ZaloServices::ZNS_ORDER_REFUND, $user->phone, [
+            'name' => $user->name,
+            'amount' => $openOrder->amount,
+            "id" => $openOrder->id,
+        ]);
+  
+        $notifServ = new Notification();  
+        $notifServ->createNotif(NotifConstants::COURSE_REFUND, $openOrder->user_id, []);
+        Log::debug("Refund orders", ["orderId" => $openOrder->id]);
+
+        return true;
+    }
+
+    public function rejectRegistration($orderId, $trigger)
+    {
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
             return false;
@@ -614,10 +747,10 @@ class TransactionService
         // $user = User::find($openOrder->user_id);
         $notifServ = new Notification();
         OrderDetail::where('order_id', $openOrder->id)->update([
-            'status' => OrderConstants::STATUS_CANCER_SELLER
+            'status' => $trigger
         ]);
         Order::find($openOrder->id)->update([
-            'status' => OrderConstants::STATUS_CANCER_SELLER,
+            'status' => $trigger,
         ]);
         Transaction::where('order_id', $openOrder->id)
             ->update([
@@ -677,13 +810,13 @@ class TransactionService
                 'orderData' => $dataOrder,
                 'extraFee' => $this->extraFee($orderItem->id),
             ]);
-            
+
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
                 'username' => $author->name,
                 'course' => $item->title,
                 'orderid' => $openOrder->id,
             ]);
-            
+
 
             //ZALO to buyer
             $zaloService = new ZaloServices(true);
@@ -696,7 +829,7 @@ class TransactionService
                 'class' => $dataOrder->title,
             ]);
             //@TODO Zalo to partner
-            
+
             SocialPost::create([
                 'type' => SocialPost::TYPE_CLASS_REGISTER,
                 'user_id' => $user->id,
@@ -706,15 +839,16 @@ class TransactionService
             ]);
 
             if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL) {
-                $this->activateDigitalCourses($openOrder->user_id, $orderItem);  
-            }   
+                $this->activateDigitalCourses($openOrder->user_id, $orderItem);
+            }
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
 
         return true;
     }
 
-    public function activateDigitalCourses($userId, $orderDetail) {
+    public function activateDigitalCourses($userId, $orderDetail)
+    {
         $itemCode = ItemCode::where('item_id', $orderDetail->item_id)->whereNull('user_id')->first();
         if ($itemCode) {
             $itemCode->update([
@@ -912,8 +1046,30 @@ class TransactionService
         if ($status == OrderConstants::STATUS_DELIVERED) {
             return 'success';
         }
+        if ($status == OrderConstants::STATUS_RETURN_BUYER_PENDING) {
+            return 'warning';
+        }
+        if (in_array($status, $this->returnRefundStatus)) {
+            return 'danger';
+        }
         return 'secondary';
     }
+
+
+    public function actionStatus($status, $orderData)
+    {
+        if ($status == OrderConstants::STATUS_PAY_PENDING) {
+            return "<a data-orderid='$orderData->id' data-orderamount='$orderData->amount' href=" . route('order.approve', ['orderId' => $orderData->id]) . " class='btn btn-success btn-sm admin-approve col-10 btn-need-confirm'>Approve</a>
+            <a href=" . route('order.reject', ['orderId' => $orderData->id]) . " class='btn btn-danger btn-sm mt-1 col-10 btn-need-confirm'>Cancel</a>";
+        }
+        if ($status == OrderConstants::STATUS_DELIVERED || $status == OrderConstants::STATUS_RETURN_BUYER_PENDING) {
+            return "<a data-orderid='$orderData->id' data-orderamount='$orderData->amount' href=" . route('order.return', ['orderId' => $orderData->id, 'trigger' => OrderConstants::STATUS_RETURN_SYSTEM]) . " class='btn btn-danger btn-sm admin-approve col-10 btn-need-confirm'>Return</a>";
+        }
+        if (in_array($status, $this->returnRefundStatus) && $status != OrderConstants::STATUS_REFUND) {
+            return "<a data-orderid='$orderData->id' data-orderamount='$orderData->amount' href=" . route('order.refund', ['orderId' => $orderData->id]) . " class='btn btn-danger btn-sm admin-approve col-10 btn-need-confirm'>Refund</a>";
+        }
+    }
+
     public function withdraw($anypoint)
     {
         $userServ = new UserServices();

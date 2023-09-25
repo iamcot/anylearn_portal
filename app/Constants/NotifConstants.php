@@ -27,6 +27,10 @@ class NotifConstants
     const COURSE_REGISTER_APPROVE = 'course_register_approve';
     const COURSE_REGISTER_PENDING = 'course_register_pending';
     const COURSE_REGISTER_REJECT = 'course_register_reject';
+    const COURSE_RETURN = 'course_return';
+    const COURSE_REFUND = 'course_refund';
+
+
     const COURSE_CERT_SENT = 'course_cert_sent';
     const DIGITAL_COURSE_ACTIVATION = 'digital_course_activation';
 

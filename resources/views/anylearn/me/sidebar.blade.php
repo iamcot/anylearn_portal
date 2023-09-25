@@ -124,7 +124,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Theo dõi Học tập')</span>
         </a>
-        <div class="collapse {{ in_array($route, ['me.orders','me.courseconfirm', 'me.pendingorders', 'me.history']) ? 'show' : '' }}" id="couser-collapse" style="">
+        <div class="collapse {{ in_array($route, ['me.orders','me.courseconfirm', 'me.pendingorders', 'me.history', 'me.order.return']) ? 'show' : '' }}" id="couser-collapse" style="">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ in_array($route, ['me.courseconfirm']) ? 'active' : '' }}" href="{{ route('me.courseconfirm') }}">
                     <i class="fas fa-fw fa-calendar"></i>
@@ -137,6 +137,10 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                 <a class="collapse-item {{ in_array($route, ['me.pendingorders']) ? 'active' : '' }}" href="{{ route('me.pendingorders') }}">
                     <i class="fas fa-fw fa-shopping-cart"></i>
                     <span>@lang('Chờ thanh toán')</span></a>
+                </a>
+                <a class="collapse-item {{ in_array($route, ['me.order.return']) ? 'active' : '' }}" href="{{ route('me.order.return') }}">
+                    <i class="fas fa-fw fas fa-undo"></i>
+                    <span>@lang('Hoàn trả đơn hàng')</span></a>
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.history']) ? 'active' : '' }}" href="{{ route('me.history') }}">
                     <i class="fas fa-fw fa-wallet"></i>
