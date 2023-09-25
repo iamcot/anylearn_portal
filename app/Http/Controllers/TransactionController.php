@@ -857,7 +857,9 @@ class TransactionController extends Controller
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
-        //$orderId = $result['orderId'];
+        if (!isset($result['orderId'])) {
+            return redirect('/')->with('notify', 'Yêu cầu không hợp lệ');
+        }
         $orderId = $payment == 'momo' 
             ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
             : $result['orderId'];
@@ -935,7 +937,13 @@ class TransactionController extends Controller
 
             $result = $processor->processFeedbackData($query);
             if ($result['status'] == 1) {
-                $orderId = $result['orderId'];
+                if (!isset($result['orderId'])) {
+                   echo 'Yêu cầu không hợp lệ';
+                }
+                $orderId = $payment == 'momo' 
+                    ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+                    : $result['orderId'];
+        
                 $transService = new TransactionService();
                 $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $result['orderId'], 'result' => $rs]);

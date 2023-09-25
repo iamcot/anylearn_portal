@@ -2,6 +2,7 @@
 
 use App\DataObjects\ServiceResponse;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 
 class Momo implements PaymentInterface {
     const NAME = 'momo';
@@ -38,7 +39,7 @@ class Momo implements PaymentInterface {
             $response = new ServiceResponse(false, 'NOT_VALID_RESPONSE');
             return $response;
         }
-
+        // Log::debug($response);
         if (empty($response->data)) {
             $response->status = false;
             $response->errorCode = 'NOT_VALID_DATA';
@@ -72,12 +73,12 @@ class Momo implements PaymentInterface {
         $data = array_merge($data,[
             'orderId' => isset($response['orderId']) ? $response['orderId'] : '',
             'amount' => isset($response['amount']) ? $response['amount'] : '',
-            'transId' => isset($response['transId']) ? $response['transId'] : '',
+            'transId' => isset($response['requestId']) ? $response['requestId'] : '',
             'payType' => isset($response['payType']) ? $response['payType'] : '',
             'payment' => self::NAME,
         ]);
 
-        if (isset($response['errorCode']) && $response['errorCode'] == self::SUCCESS_CODE) {
+        if (isset($response['resultCode']) && $response['resultCode'] == self::SUCCESS_CODE) {
             $data['status'] = 1;
         } else {
             //$data['message'] = isset($response['message']) ? $response['message'] : '';
@@ -94,7 +95,7 @@ class Momo implements PaymentInterface {
             'message' => 'Order confirmed',
             'data' => [
                 'billId' => isset($response['orderId']) ? $response['orderId'] : '',
-                'momoTransId' => isset($response['transId']) ? $response['transId'] : '',
+                'momoTransId' => isset($response['requestId']) ? $response['requestId'] : '',
                 'amount' => isset($response['amount']) ? $response['amount'] : '',
             ],
         ];
@@ -122,13 +123,14 @@ class Momo implements PaymentInterface {
             $result = $this->createPaymentRequest($amount, $orderid);
             $signature = $result['signature'];
             $data = json_decode($result['result'],true);
-            if (!isset($data['errorCode'])) {
+            Log::debug($data);
+            if (!isset($data['resultCode'])) {
                 return new ServiceResponse(false, "NOT_VALID_RESPONSE");
             }
-            if ($data['errorCode'] == 0 && isset($data['payUrl'])) {
+            if ($data['resultCode'] == 0 && isset($data['payUrl'])) {
                 return new ServiceResponse(true, 0, $data['payUrl']);
             } else {
-                return new ServiceResponse(false, $data['errorCode'], $data);
+                return new ServiceResponse(false, $data['resultCode'], $data);
             }
         } catch (\Exception $e) {
             return new ServiceResponse(false, 'EXCEPTION', $e);
@@ -142,7 +144,7 @@ class Momo implements PaymentInterface {
      * @return array()
      */
     private function createPaymentRequest($amount, $orderid) {
-        $domain = $this->getServer() . '/gw_payment/transactionProcessor';
+        $domain = $this->getServer() . '/v2/gateway/api/create';
         $partnerCode = env('PAYMENT_MOMO_PARTNER', '');
         $accessKey = env('PAYMENT_MOMO_ACCESS', '');
         $serectkey = env('PAYMENT_MOMO_SECRET', '');
@@ -150,31 +152,39 @@ class Momo implements PaymentInterface {
         $returnUrl = env('APP_URL') . '/payment-return/momo'; //'/api/payment/return/momo';
         $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
         $requestId = time()."";
-        $requestType = "captureMoMoWallet";
+        $requestType = "captureWallet";
         $extraData = '';
 
-        $signRaw = "partnerCode=".$partnerCode."&accessKey=".$accessKey
-        ."&requestId=".$requestId."&amount=".$amount."&orderId=".$orderid
-        ."&orderInfo=".$orderInfo."&returnUrl=".$returnUrl."&notifyUrl="
-        .$notifyurl."&extraData=".$extraData;
+        $signRaw = "accessKey=" . $accessKey
+        . "&amount=" . $amount
+        . "&extraData=" . $extraData
+        . "&ipnUrl="  . $notifyurl
+        . "&orderId=" . $orderid
+        . "&orderInfo=" . $orderInfo
+        . "&partnerCode=" . $partnerCode
+        . "&redirectUrl=" . $returnUrl
+        . "&requestId=" . $requestId
+        . "&requestType=" . $requestType;
+        
 
         $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', ''));
 
         $data =  [
             'partnerCode' => $partnerCode,
-            'accessKey' => $accessKey,
             'requestId' => $requestId,
-            'amount' => strval($amount),
+            'amount' => $amount,
             'orderId' => strval($orderid),
             'orderInfo' => $orderInfo,
-            'returnUrl' => $returnUrl,
-            'notifyUrl' => $notifyurl,
-            'extraData' => $extraData,
+            'redirectUrl' => $returnUrl,
+            'ipnUrl' => $notifyurl,
             'requestType' => $requestType,
+            'extraData' => $extraData,
+            'lang' => 'vi',
             'signature' => $signature
         ];
 
         $result = CurlHelper::Post($domain, json_encode($data));
+        // Log::debug($result);
     
         return [
             'result' => $result,
