@@ -25,7 +25,8 @@ class ListingApi extends Controller
             foreach($partners->items() as $value) {
                 $partner = new \stdClass();
                 $partner->id = $value->id;
-                $partner->name = $value->name; 
+                $partner->name = $value->name;
+                $partner->image = $value->image; 
 
                 $partner->items = DB::table('items')
                     ->leftjoin(

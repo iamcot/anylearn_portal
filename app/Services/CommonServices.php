@@ -135,6 +135,7 @@ class CommonServices
         return $items->select(DB::raw('
                 users.id, 
                 users.name, 
+                users.image,
                 group_concat(items.id) as itemIds
             '))
             ->groupBy('items.user_id');
