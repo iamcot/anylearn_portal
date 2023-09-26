@@ -934,13 +934,13 @@ class TransactionController extends Controller
         try {
             
             if ($payment == 'momo') {
-                Log::info("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
+                Log::debug("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
                 $query = $request->all();
             } else {
-                Log::info("[NOTIFY $payment RESULT]:", ['data' => $request->fullUrl()]);
+                Log::debug("[NOTIFY $payment RESULT]:", ['data' => $request->fullUrl()]);
                 $query = $request->getQueryString();
             }
-
+            Log::debug($query);
             $result = $processor->processFeedbackData($query);
             if ($result['status'] == 1) {
                 if (!isset($result['orderId'])) {
