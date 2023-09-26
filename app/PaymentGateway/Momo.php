@@ -73,7 +73,7 @@ class Momo implements PaymentInterface {
         $data = array_merge($data,[
             'orderId' => isset($response['orderId']) ? $response['orderId'] : '',
             'amount' => isset($response['amount']) ? $response['amount'] : '',
-            'transId' => isset($response['requestId']) ? $response['requestId'] : '',
+            'transId' => isset($response['transId']) ? $response['transId'] : '',
             'payType' => isset($response['payType']) ? $response['payType'] : '',
             'payment' => self::NAME,
         ]);
