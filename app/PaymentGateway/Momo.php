@@ -150,7 +150,7 @@ class Momo implements PaymentInterface {
         $serectkey = env('PAYMENT_MOMO_SECRET', '');
         $orderInfo = 'Vui lòng thanh toán đơn hàng của bạn';
         $returnUrl = env('APP_URL') . '/payment-return/momo'; //'/api/payment/return/momo';
-        $notifyurl = env('APP_URL') . '/api/payment/notify/momo';
+        $notifyurl = env('APP_URL') . '/payment-notify/momo';
         $requestId = time()."";
         $requestType = "captureWallet";
         $extraData = '';
