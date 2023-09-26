@@ -932,8 +932,14 @@ class TransactionController extends Controller
             return;
         }
         try {
-            Log::info("[NOTIFY RESULT]:", ['data' => $request->fullUrl()]);
-            $query = $request->getQueryString();
+            
+            if ($payment == 'momo') {
+                Log::info("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
+                $query = $request->all();
+            } else {
+                Log::info("[NOTIFY $payment RESULT]:", ['data' => $request->fullUrl()]);
+                $query = $request->getQueryString();
+            }
 
             $result = $processor->processFeedbackData($query);
             if ($result['status'] == 1) {
@@ -946,7 +952,7 @@ class TransactionController extends Controller
         
                 $transService = new TransactionService();
                 $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
-                Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $result['orderId'], 'result' => $rs]);
+                Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
             }
             $data = $processor->prepareNotifyResponse($request->all(), $result);
             if (is_array($data)) {
