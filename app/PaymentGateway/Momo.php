@@ -95,7 +95,7 @@ class Momo implements PaymentInterface {
             'message' => 'Order confirmed',
             'data' => [
                 'billId' => isset($response['orderId']) ? $response['orderId'] : '',
-                'momoTransId' => isset($response['requestId']) ? $response['requestId'] : '',
+                'momoTransId' => isset($response['transId']) ? $response['transId'] : '',
                 'amount' => isset($response['amount']) ? $response['amount'] : '',
             ],
         ];
