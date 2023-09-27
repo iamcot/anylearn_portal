@@ -166,7 +166,7 @@ class Momo implements PaymentInterface {
         . "&requestId=" . $requestId
         . "&requestType=" . $requestType;
         
-
+        Log::debug("signRaw=" . $signRaw);
         $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', ''));
 
         $data =  [
