@@ -7,6 +7,7 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\ReturnRequest;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
@@ -16,6 +17,7 @@ use App\Services\ItemServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class MeApi extends Controller
 {
@@ -271,12 +273,19 @@ class MeApi extends Controller
     }
     public function sendReturnRequest(Request $request,$orderId)
     {
+        $user = $request->get('_user');
+
         $order = Order::find($orderId);
         if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
             return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại!!'], 400);
-    }
-        $transService = new TransactionService();
-        $transService->sendReturnRequest($orderId);
+        }
+        if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
+            return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại!!'], 400);
+        }
+        $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
+        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
+            new ReturnRequest(['orderId' => $orderId, 'name' => $user->name])
+        );
         return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
     }
 }
