@@ -195,7 +195,7 @@ class Momo implements PaymentInterface {
     }
 
     private function getServer() {
-        if (App::environment('prod')) {
+        if (App::environment('production')) {
             return env('PAYMENT_MOMO_SERVER', '');
         } else return 'https://test-payment.momo.vn';
     }
