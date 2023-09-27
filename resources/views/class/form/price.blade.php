@@ -120,9 +120,10 @@
 @parent
 <script>
     function hp() {
-        var hp = document.getElementById("price").value;
-        var hpg = document.getElementById("org_price").value;
+        var hp = parseInt(document.getElementById("price").value);
+        var hpg = parseInt(document.getElementById("org_price").value);
         if ((hpg != "" || hpg > 0) && hpg < hp) {
+            console.log(hpg, hp, hpg > 0, hpg < hp);
             document.getElementById("org_price").value = hp;
         }
     }

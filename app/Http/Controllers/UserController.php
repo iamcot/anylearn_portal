@@ -889,7 +889,7 @@ class UserController extends Controller
             return redirect()->back()->with('notify', 'Trạng thái đơn hàng không đúng');
         }
         $transService = new TransactionService();
-        $transService->rejectRegistration($orderId);
+        $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
 
@@ -935,7 +935,7 @@ class UserController extends Controller
 
         if ($item->subtype == 'digital') {
             $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
-            $this->data['code'] = $code->code;
+            $this->data['code'] = $code ? $code->code : '********';
         }
         $this->data['item'] = $item;
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
