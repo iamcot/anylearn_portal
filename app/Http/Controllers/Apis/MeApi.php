@@ -7,11 +7,13 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
 use App\Models\UserLocation;
 use App\Services\DashboardServices;
 use App\Services\ItemServices;
+use App\Services\TransactionService;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 
@@ -246,5 +248,35 @@ class MeApi extends Controller
         $courseList = $classService->itemList($request, in_array($user->role, UserConstants::$modRoles) ? null : $user->id, ItemConstants::TYPE_CLASS);
         $response = $courseList;
         return response()->json($response);
+    }
+    public function deliveredOrders(Request $request)
+    {
+        $user = $request->get('_user');
+        $response = DB::table('orders')
+        ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+        ->join('items', 'items.id', '=', 'od.item_id')
+        ->where('orders.user_id', $user->id)
+            ->whereIn('orders.status', [
+                OrderConstants::STATUS_DELIVERED,
+                OrderConstants::STATUS_RETURN_BUYER_PENDING,
+                OrderConstants::STATUS_RETURN_SYSTEM,
+                OrderConstants::STATUS_REFUND,
+            ])
+            ->selectRaw("orders.*, group_concat(items.title SEPARATOR ', ') as classes")
+            ->groupBy('od.order_id')
+            ->orderBy('orders.id', 'desc')
+            ->paginate(20);
+
+        return response()->json($response);
+    }
+    public function sendReturnRequest(Request $request,$orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
+            return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại!!'], 400);
+        }
+        $transService = new TransactionService();
+        $transService->sendReturnRequest($orderId);
+        return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
     }
 }

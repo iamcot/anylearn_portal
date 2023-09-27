@@ -74,8 +74,8 @@ Route::any('/class/{itemId}/{url}/video/{lessonId}', 'PageController@videoPage')
 // Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
-Route::get('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
-Route::get('/payment-return/{payment}', 'TransactionController@return')->name('checkout.return');
+Route::any('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
+Route::any('/payment-return/{payment}', 'TransactionController@return')->name('checkout.return');
 Route::get('/payment-result/{payment}', 'TransactionController@paymentResult')->name('checkout.result');
 
 Route::get('/guide', 'PageController@guide')->name('guide');

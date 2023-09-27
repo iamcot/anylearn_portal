@@ -857,7 +857,9 @@ class TransactionController extends Controller
         $result = $request->all();
         Log::info('Payment Result, ', ['data' => $request->fullUrl()]);
 
-        //$orderId = $result['orderId'];
+        if (!isset($result['orderId'])) {
+            return redirect('/')->with('notify', 'Yêu cầu không hợp lệ');
+        }
         $orderId = $payment == 'momo' 
             ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
             : $result['orderId'];
@@ -930,17 +932,29 @@ class TransactionController extends Controller
             return;
         }
         try {
-            Log::info("[NOTIFY RESULT]:", ['data' => $request->fullUrl()]);
-            $query = $request->getQueryString();
-
+            
+            if ($payment == 'momo') {
+                Log::debug("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
+                $query = $request->all();
+            } else {
+                Log::debug("[NOTIFY $payment RESULT]:", ['data' => $request->fullUrl()]);
+                $query = $request->getQueryString();
+            }
+            Log::debug($query);
             $result = $processor->processFeedbackData($query);
             if ($result['status'] == 1) {
-                $orderId = $result['orderId'];
+                if (!isset($result['orderId'])) {
+                   echo 'Yêu cầu không hợp lệ';
+                }
+                $orderId = $payment == 'momo' 
+                    ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+                    : $result['orderId'];
+        
                 $transService = new TransactionService();
                 $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
-                Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $result['orderId'], 'result' => $rs]);
+                Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
             }
-            $data = $processor->prepareNotifyResponse($request->all(), $result);
+            $data = $processor->prepareNotifyResponse($query, $result);
             if (is_array($data)) {
                 return response()->json($data);
             } else {
