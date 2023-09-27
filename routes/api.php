@@ -85,9 +85,9 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/child', 'Apis\MeApi@childAccountAPI');
     Route::get('/v3/class', 'Apis\MeApi@list');
 
-    Route::get('/v3/order-return', 'MeApi@deliveredOrders');
+    Route::get('/v3/order-return', 'Apis\MeApi@deliveredOrders');
 
-    Route::post('/v3/order-return/send-request/{orderId}', 'MeApi@sendReturnRequest');
+    Route::post('/v3/order-return/send-request/{orderId}', 'Apis\MeApi@sendReturnRequest');
 
     Route::get('/v3/auth/cart', 'Apis\CartApi@index');
     Route::get('/v3/auth/home', 'Apis\HomeApi@index');
