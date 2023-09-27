@@ -182,6 +182,7 @@ class Momo implements PaymentInterface {
             'lang' => 'vi',
             'signature' => $signature
         ];
+        Log::debug($data);
 
         $result = CurlHelper::Post($domain, json_encode($data));
         // Log::debug($result);
