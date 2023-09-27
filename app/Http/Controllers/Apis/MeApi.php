@@ -283,9 +283,9 @@ class MeApi extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại!!'], 400);
         }
         $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
-        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
-            new ReturnRequest(['orderId' => $orderId, 'name' => $user->name])
-        );
+        // Mail::to(env('MAIL_FROM_ADDRESS'))->send(
+        //     new ReturnRequest(['orderId' => $orderId, 'name' => $user->name])
+        // );
         return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
     }
 }
