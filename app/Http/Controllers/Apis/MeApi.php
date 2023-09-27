@@ -264,8 +264,7 @@ class MeApi extends Controller
             ])
             ->selectRaw("orders.*, group_concat(items.title SEPARATOR ', ') as classes")
             ->groupBy('od.order_id')
-            ->orderBy('orders.id', 'desc')
-            ->paginate(20);
+            ->orderBy('orders.id', 'desc');
 
         return response()->json($response);
     }
