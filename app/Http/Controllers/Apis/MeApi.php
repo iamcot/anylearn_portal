@@ -264,7 +264,8 @@ class MeApi extends Controller
             ])
             ->selectRaw("orders.*, group_concat(items.title SEPARATOR ', ') as classes")
             ->groupBy('od.order_id')
-            ->orderBy('orders.id', 'desc');
+            ->orderBy('orders.id', 'desc')
+            ->get();
 
         return response()->json($response);
     }
@@ -273,7 +274,7 @@ class MeApi extends Controller
         $order = Order::find($orderId);
         if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
             return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại!!'], 400);
-        }
+    }
         $transService = new TransactionService();
         $transService->sendReturnRequest($orderId);
         return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
