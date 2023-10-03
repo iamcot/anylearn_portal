@@ -126,6 +126,9 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/transaction/register/{itemId}', 'Apis\TransactionApi@placeOrderOneItem');
 
     Route::post('/item/create', 'Apis\ItemApi@create');
+    Route::get('/item/schadule/{id}', 'Apis\ItemApi@schadule');
+    Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchadule');
+
     Route::get('/item/{id}/edit', 'Apis\ItemApi@edit');
     Route::post('/item/{id}/edit', 'Apis\ItemApi@save');
     Route::get('/item/list', 'Apis\ItemApi@list');
