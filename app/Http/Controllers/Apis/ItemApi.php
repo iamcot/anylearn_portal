@@ -255,4 +255,8 @@ class ItemApi extends Controller
             ->get();
         return response()->json($data);
     }
+    public function Schadule($itemId) {
+        $itemService = new ItemServices();
+
+    }
 }
