@@ -1076,7 +1076,7 @@ class ItemServices
         return false;
     }
 
-    private function updateClassSchedule(Request $request, $input)
+    public function updateClassSchedule(Request $request, $input)
     {
         $itemId = $input['id'];
 
