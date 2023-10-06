@@ -238,6 +238,9 @@ class ItemApi extends Controller
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }
+        if($user->role !== "school" || $user->role !== 'teacher'){
+            return response('Bạn phải là chuyên gia mới có quyền thực hiện thao tác này', 403);
+        }
         $rating = $request->get('rating', 5);
         $comment = $request->get('comment', '');
         $itemUserActionM = new ItemUserAction();
