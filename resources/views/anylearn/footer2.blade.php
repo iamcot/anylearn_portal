@@ -38,7 +38,7 @@
                 <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
                 <img src="/cdn/img/onepay.png" width="20%" class="img-fluid">
-                <img src="/cdn/img/MomoLogo.png" width="20%" class="img-fluid">
+                <img src="/cdn/img/MoMoLogo.png" width="20%" class="img-fluid">
 
                 <h4 class="mt-2 text-decoration-none text-black pb-2">THEO DÕI CHÚNG TÔI</h4>
                 <div class="social-links">
