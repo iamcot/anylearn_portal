@@ -54,7 +54,7 @@ class OtpServices
             ->orderby('id', 'desc')
             ->first();
         if (!$haveNotif) {
-            Log::debug($phone,$otp,$user->id);
+            Log::debug($phone . "@" . $otp . "@" .$user->id);
             throw new \Exception("OTP không đúng");
         }
         if ($setRead) {
