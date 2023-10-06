@@ -698,7 +698,7 @@ class UserApi extends Controller
         $otpService = new OtpServices();
         // $smsServ = new SmsServices();
         try {
-            $result = $otpService->verifyOTP($phone, $otp);
+            $result = $otpService->verifyOTP($phone, $otp, OtpServices::SERVIVCE_ZALO, false);
             // $result = $smsServ->verifyOTP($phone, $otp, false);
             if ($result) {
                 return response()->json([
