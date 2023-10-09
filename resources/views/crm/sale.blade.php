@@ -7,6 +7,7 @@
         <div class="col-lg-6">
             <div class="card shadow">
                 <div class="card-body">
+                    <form action="{{ route('crm.change-priority', ['userId' => $memberProfile->id]) }}">
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="imagebox border">
@@ -19,19 +20,21 @@
                         </div>
                         <div class="col-sm-10">
                             <h5 class="w-100 d-flex flex-row justify-content-between">
-                                <div class="d-flex align-self-center">
-                                    <span class="text-dark">{{ $memberProfile->name }}</span>
-                                    <div class="p-1 ml-1">
-                                        <span style="
-                                            padding: 2px 10px; 
+                                <div class="d-flex">
+                                    <div class="d-flex flex-column justify-content-center"><span class="text-dark">{{ $memberProfile->name }}</span></div>
+                                    <div class="ml-2">
+                                        <select name="priority" style="
+                                            padding: 2px 4px; 
                                             font-size: 12px; 
                                             font-weight: bold;
                                             color: {{ $memberProfile->sale_priority == 0 || $memberProfile->sale_priority == 3 ? '#555 ': '#fff' }};
                                             border: 1px solid {{ $memberProfile->sale_priority == 0 ? '#ccc' : $priorityColors[$memberProfile->sale_priority]}}; 
                                             border-radius: 5px; 
                                             background: {{ $priorityColors[$memberProfile->sale_priority] }}">
-                                        {{ $priorityLevels[$memberProfile->sale_priority] }}
-                                        </span>    
+                                            @foreach([0 => "NEW",1 => "URGENT",2 => "ASAP",3 => "NEED",99 => "DONE"] as $key => $prio)
+                                                <option value="{{ $key }}" {{ ( !empty($user) && $memberProfile->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
+                                            @endforeach
+                                        </select>    
                                     </div>
                                 </div>
                                 <div>
@@ -47,7 +50,11 @@
                             <div>anyPoint: <strong
                                     class="text-danger">{{ number_format($memberProfile->wallet_c, 0, ',', '.') }}</strong>
                             </div>
+                            <div class="w-100 d-flex flex-row justify-content-end">
+                                <button class="btn btn-sm btn-primary" name="action" value="btnSalePrio">Lưu thay đổi</button>
+                            </div>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
