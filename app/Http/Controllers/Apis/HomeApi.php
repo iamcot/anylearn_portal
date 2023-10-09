@@ -19,6 +19,7 @@ class HomeApi extends Controller
     public function index(Request $request) 
     {  
         $homeConfig = config('home_config'); 
+        $configM = new Configuration();
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if (!empty($lastConfig)) {
             $homePopup = json_decode($lastConfig->value, true);
@@ -49,6 +50,7 @@ class HomeApi extends Controller
 
         $user = $request->get('_user');
         $data['repurchases'] = $data['pointBox'] = $data['j4u'] = []; 
+        $data['ios_transaction'] = $configM->enableIOSTrans($request);
 
         if ($user) {          
             $data['pointBox'] = (new UserServices)->getPointBox($user);

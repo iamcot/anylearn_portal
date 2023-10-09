@@ -3,6 +3,7 @@
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OtpServices
 {
@@ -18,7 +19,7 @@ class OtpServices
             throw new \Exception("User không tồn tại.");
         }
         $data = [
-            'type' => self::SERVIVCE_ZALO,
+            'type' => $service,
             'title' => self::NOTIFICATION_TITLE,
             'user_id' => $user->id,
             'content' => $otp,
@@ -26,7 +27,7 @@ class OtpServices
         ];
         // $data['send'] = date('Y-m-d H:i:s');
         Notification::where('user_id', $user->id)
-            ->where('type', self::SERVIVCE_ZALO)
+            ->where('type', $service)
             ->where('title', self::NOTIFICATION_TITLE)
             ->whereNull('read')
             ->update([
@@ -53,6 +54,7 @@ class OtpServices
             ->orderby('id', 'desc')
             ->first();
         if (!$haveNotif) {
+            Log::debug($phone . "@" . $otp . "@" .$user->id);
             throw new \Exception("OTP không đúng");
         }
         if ($setRead) {

@@ -20,6 +20,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'admin/upload/ckimage',
-        'admin/upload/ckimage5'
+        'admin/upload/ckimage5',
+        'payment-notify/momo'
     ];
 }
