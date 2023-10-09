@@ -166,7 +166,7 @@ class Momo implements PaymentInterface {
         . "&requestId=" . $requestId
         . "&requestType=" . $requestType;
         
-
+        Log::debug("signRaw=" . $signRaw);
         $signature =  hash_hmac('sha256', $signRaw, env('PAYMENT_MOMO_SECRET', ''));
 
         $data =  [
@@ -182,6 +182,8 @@ class Momo implements PaymentInterface {
             'lang' => 'vi',
             'signature' => $signature
         ];
+        Log::debug($domain);
+        Log::debug($data);
 
         $result = CurlHelper::Post($domain, json_encode($data));
         // Log::debug($result);
@@ -193,7 +195,7 @@ class Momo implements PaymentInterface {
     }
 
     private function getServer() {
-        if (App::environment('prod')) {
+        if (App::environment('production')) {
             return env('PAYMENT_MOMO_SERVER', '');
         } else return 'https://test-payment.momo.vn';
     }
