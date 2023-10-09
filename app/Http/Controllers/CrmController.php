@@ -76,6 +76,17 @@ class CrmController extends Controller
 
         return view('crm.sale', $this->data);
     }
+
+    public function changeSalePriority(Request $request, $userId) 
+    {
+        $user = User::find($userId);
+        if ($user && in_array($request->input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
+            $user->update(['sale_priority' => $request->input('priority')]);
+            return redirect()->back()->with('notify', 'Thao tác thành công.');
+        }
+        return redirect()->back()->with('notify', 'Có lỗi xảy ra vui lòng thử lại!!');
+    }
+
     public function requestSale(Request $request)
     {
         $data = DB::table('items')
