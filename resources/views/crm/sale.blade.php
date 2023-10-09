@@ -24,6 +24,8 @@
                                     <div class="d-flex flex-column justify-content-center"><span class="text-dark">{{ $memberProfile->name }}</span></div>
                                     <div class="ml-2">
                                         <select name="priority" style="
+                                            outline: none;
+                                            text-align: center;
                                             padding: 2px 4px; 
                                             font-size: 12px; 
                                             font-weight: bold;
