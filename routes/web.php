@@ -213,6 +213,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::any('/crm/save-chat', 'CrmController@saveChat')->name('crm.save-chat');
     Route::any('/crm/activity-del/{id}', 'CrmController@delActivity')->name('crm.activity.del');
     Route::get('/crm/activity/{id}', 'CrmController@viewActivityContent')->name('crm.activity');
+    Route::get('/crm/change-priority/{userId}', 'CrmController@changeSalePriority')->name('crm.change-priority');
 
     Route::any('/user/no-profile', 'UserController@userNoProfile')->name('user.noprofile');
     Route::any('/user/remind-profile/{userId}', 'UserController@remindProfile')->name('user.noprofile.remind');
