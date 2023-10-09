@@ -22,9 +22,11 @@ use App\Models\User;
 use App\Models\UserDocument;
 use App\Services\FileServices;
 use App\Services\ItemServices;
+use App\Services\OtpServices;
 use App\Services\SmsServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use App\Services\ZaloServices;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -352,7 +354,7 @@ class UserApi extends Controller
             )
             ->paginate($pageSize);
 
-            $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
+        $banner = $configM->get($role == UserConstants::ROLE_TEACHER ? ConfigConstants::CONFIG_TEACHER_BANNER : ConfigConstants::CONFIG_SCHOOL_BANNER);
         return response()->json([
             'banner' => $banner,
             'list' => $list,
@@ -674,11 +676,28 @@ class UserApi extends Controller
     public function sentOtpResetPass(Request $request)
     {
         $phone = $request->get('phone');
-        $smsServ = new SmsServices();
-        $result = $smsServ->smsOTP($phone);
-        if (!$result) {
+        $otpService = new OtpServices();
+        try {
+            $genOtp = $otpService->genOtp($phone);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response('Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại', 400);
+        }
+        $zaloService = new ZaloServices(true);
+        $znsResult = $zaloService->sendZNS(ZaloServices::ZNS_OTP, $phone, $genOtp);
+
+        if (!$znsResult['result']) {
+            Notification::find($genOtp['notification_id'])->update([
+                'is_send' => 0,
+                'extra_content' => json_encode($znsResult['error'])
+            ]);
             return response('Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại', 400);
         } else {
+            Notification::find($genOtp['notification_id'])->update([
+                'is_send' => 1,
+                'send' =>  date('Y-m-d H:i:s'),
+                'extra_content' => $znsResult['data']
+            ]);
             return response()->json([
                 'result' => true,
                 'phone' => $phone,
@@ -690,9 +709,11 @@ class UserApi extends Controller
     {
         $phone = $request->get('phone');
         $otp = $request->get('otp');
-        $smsServ = new SmsServices();
+        $otpService = new OtpServices();
+        // $smsServ = new SmsServices();
         try {
-            $result = $smsServ->verifyOTP($phone, $otp, false);
+            $result = $otpService->verifyOTP($phone, $otp, OtpServices::SERVIVCE_ZALO, false);
+            // $result = $smsServ->verifyOTP($phone, $otp, false);
             if ($result) {
                 return response()->json([
                     'result' => true,
@@ -713,9 +734,12 @@ class UserApi extends Controller
         if ($password != $passwordConfirm) {
             return response('Vui lòng nhập lại mật khẩu', 400);
         }
-        $smsServ = new SmsServices();
+        // $smsServ = new SmsServices();
+        $otpService = new OtpServices();
+
         try {
-            $result = $smsServ->verifyOTP($phone, $otp);
+            $result = $otpService->verifyOTP($phone, $otp);
+            // $result = $smsServ->verifyOTP($phone, $otp);
             if ($result) {
                 User::where('phone', $phone)->update([
                     'password' => Hash::make($password)
@@ -768,11 +792,13 @@ class UserApi extends Controller
             ->where('orders.user_id', $request->get('_user')->id);
 
         $gClass = $classes->orderby('pa.created_at', 'desc')->first();
-        $rClass = $classes->join('item_user_actions as iua',
+        $rClass = $classes->join(
+            'item_user_actions as iua',
             function ($join) {
                 $join->on('iua.user_id', 'orders.user_id');
                 $join->on('iua.item_id', 'od.item_id');
-            })
+            }
+        )
             ->where('iua.type', 'rating')
             ->orderby('iua.created_at', 'desc')
             ->first();
