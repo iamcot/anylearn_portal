@@ -24,7 +24,10 @@
                         <td>{{ $open->location }}</td>
                         <td>{{ $open->date_start }} {{ $open->time_start }} </td>
                         <td>{{ $open->weekdays }}</td>
-                        <td><a href="?plan={{ $open->id }}&tab=schedule">Sửa</a></td>
+                        <td>
+                            <a class="mr-2" href="?plan={{ $open->id }}&tab=schedule"><i class='fas fa-edit'></i> Sửa</a>
+                            <a href="{{ route('me.class.del.schedule', ['id' => $open->id]) }}"><i class='fas fa-trash'></i> Xóa</a>
+                        </td>
                     </tr>
                 @endforeach
                 </table>
