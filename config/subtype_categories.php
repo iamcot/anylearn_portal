@@ -6,68 +6,72 @@ use App\Constants\ItemConstants;
     ItemConstants::SUBTYPE_DIGITAL  => [
         [
             'id'   => 7,
-            'name' => 'Ngôn Ngữ'
+            'name' => 'Tiếng Anh'
         ],
         [
             'id'   => 18,
-            'name' => 'Khoa học'
+            'name' => 'Ngoại ngữ'
         ],
         [
             'id'   => 4,
-            'name' => 'Guitar'
+            'name' => 'Toán tư duy'
         ],
         [
             'id'   => 3,
-            'name' => 'Piano'
+            'name' => 'Toán phổ thông'
         ],
         [
             'id'   => 19,
-            'name' => 'Xã Hội'
+            'name' => 'Lập trình'
+        ],
+        [
+            'id'   => 19,
+            'name' => 'Nhạc cụ'
+        ],
+        [
+            'id'   => 19,
+            'name' => 'Mỹ thuật'
         ],
     ],
     ItemConstants::SUBTYPE_EXTRA => [
         [
             'id'   => 1,
-            'name' => 'Tiếng Anh'
+            'name' => 'Toán học'
         ],
         [
             'id'   => 9,
-            'name' => 'Toán Tư Duy'
+            'name' => 'Ngôn ngữ'
         ],
         [
             'id'   => 13,
-            'name' => 'Lập Trình'
+            'name' => 'Công nghệ'
         ],
         [
             'id'   => 15,
-            'name' => 'Lập trình'
+            'name' => 'Nghệ thuật'
         ],
         [
             'id'   => 16,
-            'name' => 'Mỹ Thuật'
+            'name' => 'Thể thao'
+        ],
+        [
+            'id'   => 16,
+            'name' => 'Kỹ năng'
         ],
     ],
     ItemConstants::SUBTYPE_OFFLINE => [
         [
             'id'   => 28,
-            'name' => 'Học viện tài năng'
+            'name' => 'Trường đơn ngữ quốc tế'
         ],
         [
             'id'   => 25,
-            'name' => 'Hệ phổ thông song ngữ'
+            'name' => 'Trường song ngữ quốc tế'
         ],
         [
             'id'   => 26,
-            'name' => 'Hệ tư thục'
-        ],
-        [
-            'id'   => 24,
-            'name' => 'Hệ phổ thông quốc tế'
-        ],
-        [
-            'id'   => 23,
-            'name' => 'Hệ mầm non'
-        ],
+            'name' => 'Trường tư thục tiêu chuẩn quốc tế'
+        ]
     ],
     ItemConstants::SUBTYPE_ONLINE => [
         [
