@@ -76,23 +76,27 @@ use App\Constants\ItemConstants;
     ItemConstants::SUBTYPE_ONLINE => [
         [
             'id'   => 12,
-            'name' => 'STEAM'
+            'name' => 'Toán học'
         ],
         [
             'id'   => 10,
-            'name' => 'Ngôn ngữ - Thuyết trình'
+            'name' => 'Vật lý'
         ],
         [
             'id'   => 11,
-            'name' => 'Tiếng Việt'
+            'name' => 'Tiếng Anh'
         ],
         [
             'id'   => 14,
-            'name' => 'Công nghệ'
+            'name' => 'Thuyết trình'
         ],
         [
             'id'   => 20,
-            'name' => 'Rèn ý chí - động lực'
+            'name' => 'Mỹ thuật'
+        ],
+        [
+            'id'   => 20,
+            'name' => 'Kỹ năng'
         ],
     ],
     ItemConstants::SUBTYPE_VIDEO => [
@@ -115,6 +119,28 @@ use App\Constants\ItemConstants;
         [
             'id'   => 11,
             'name' => 'Tiếng Việt'
+        ],
+    ],
+    ItemConstants::SUBTYPE_PRESCHOOL => [
+        [
+            'id'   => 21,
+            'name' => 'Mầm non'
+        ],
+        [
+            'id'   => 22,
+            'name' => 'Mầm non'
+        ],
+        [
+            'id'   => 8,
+            'name' => 'Mầm non'
+        ],
+        [
+            'id'   => 6,
+            'name' => 'Mầm non'
+        ],
+        [
+            'id'   => 11,
+            'name' => 'Mầm non'
         ],
     ]
 ];
