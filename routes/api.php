@@ -142,6 +142,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/item/{itemId}/touch-fav', 'Apis\ItemApi@touchFav');
     Route::post('/item/{itemId}/save-rating', 'Apis\ItemApi@saveRating');
 
+
     Route::post('/ask/create/{type}', 'Apis\AskApi@create');
     Route::post('/ask/{askId}/edit', 'Apis\AskApi@edit');
     Route::get('/ask/{askId}/select', 'Apis\AskApi@selectAnswer');

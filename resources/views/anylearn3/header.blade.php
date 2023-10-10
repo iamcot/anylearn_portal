@@ -1,6 +1,6 @@
 <header>
     <div class="bg-blue-600 border-b border-gray-200">
-        <div class="mx-auto max-w-5xl py-1 flex justify-between px-2 font-medium text-xs">
+        <div class="container py-1 flex justify-between px-2 font-medium text-xs">
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 block sm:hidden"><i class="fa fa-home"></i></a>
                 <a href="{{ route('home') }}" class="text-white hover:text-gray-300 rounded-md px-2 py-1 hidden sm:block">Trang chủ</a>
