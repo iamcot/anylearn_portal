@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/cdn/anylearn3/0.0.1/static/css/main.751458a7.css",
-    "main.js": "/cdn/anylearn3/0.0.1/static/js/main.ddcc987e.js",
+    "main.css": "/cdn/anylearn3/0.0.1/static/css/main.ee519a76.css",
+    "main.js": "/cdn/anylearn3/0.0.1/static/js/main.9139e7a2.js",
     "static/js/787.9fdd7567.chunk.js": "/cdn/anylearn3/0.0.1/static/js/787.9fdd7567.chunk.js",
     "static/media/5.jpg": "/cdn/anylearn3/0.0.1/static/media/5.d096dbdb63cd2f550854.jpg",
     "static/media/4.jpg": "/cdn/anylearn3/0.0.1/static/media/4.c8da9e4a034ed7403d01.jpg",
@@ -14,12 +14,12 @@
     "static/media/logo-full.png": "/cdn/anylearn3/0.0.1/static/media/logo-full.8fed31cee985957e87c7.png",
     "static/media/App_Store_(iOS)-Badge-Alternative-Logo.wine.svg": "/cdn/anylearn3/0.0.1/static/media/App_Store_(iOS)-Badge-Alternative-Logo.wine.525865049ad4a38fecce3373c8b54181.svg",
     "index.html": "/cdn/anylearn3/0.0.1/index.html",
-    "main.751458a7.css.map": "/cdn/anylearn3/0.0.1/static/css/main.751458a7.css.map",
-    "main.ddcc987e.js.map": "/cdn/anylearn3/0.0.1/static/js/main.ddcc987e.js.map",
+    "main.ee519a76.css.map": "/cdn/anylearn3/0.0.1/static/css/main.ee519a76.css.map",
+    "main.9139e7a2.js.map": "/cdn/anylearn3/0.0.1/static/js/main.9139e7a2.js.map",
     "787.9fdd7567.chunk.js.map": "/cdn/anylearn3/0.0.1/static/js/787.9fdd7567.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.751458a7.css",
-    "static/js/main.ddcc987e.js"
+    "static/css/main.ee519a76.css",
+    "static/js/main.9139e7a2.js"
   ]
 }
