@@ -13,6 +13,7 @@ class ItemConstants
     const SUBTYPE_OFFLINE = 'offline';
     const SUBTYPE_EXTRA = 'extra';
     const SUBTYPE_VIDEO = 'video';
+    const SUBTYPE_PRESCHOOL = 'Preschool';
 
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
