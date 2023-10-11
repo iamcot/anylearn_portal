@@ -124,23 +124,15 @@ use App\Constants\ItemConstants;
     ItemConstants::SUBTYPE_PRESCHOOL => [
         [
             'id'   => 21,
-            'name' => 'Mầm non'
+            'name' => 'Mầm non tư thục'
         ],
         [
             'id'   => 22,
-            'name' => 'Mầm non'
+            'name' => 'Mầm non song ngữ'
         ],
         [
             'id'   => 8,
-            'name' => 'Mầm non'
-        ],
-        [
-            'id'   => 6,
-            'name' => 'Mầm non'
-        ],
-        [
-            'id'   => 11,
-            'name' => 'Mầm non'
-        ],
+            'name' => 'Mầm non quốc tế'
+        ]
     ]
 ];
