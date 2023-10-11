@@ -21,9 +21,10 @@ class_edit
         <div class="form-group row">
             <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại Lớp học') }}</label>
             <div class="col-md-8">
-                <select class="form-control" name="subtype" required @if(!empty($course) && $course['info']->subtype != "") disabled @endif>
+                <select class="form-control" name="subtype" required @if(!empty($course) && $course['info']->subtype != "") @endif>
                     <option value="">@lang('Vui lòng chọn Loại Lớp Học để khởi tạo')</option>
-                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Chính khóa (Mầm non, K12, Đại học)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Phổ thông (K12, Đại học)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_PRESCHOOL ? 'selected' : '' }}>@lang('Lớp học Mầm non')</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_EXTRA }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_EXTRA ? 'selected' : '' }}>@lang('Lớp học Ngoại khóa (các môn kỹ năng tại trường/ trung tâm)')</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Lớp học trực tuyến')</option>
                     <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>@lang('Học trên Ứng dụng')</option>
@@ -32,7 +33,6 @@ class_edit
             </div>
         </div>
     </div>
-
     <ul class="nav nav-tabs " style="@if(empty($course)) display:none; @endif" id="classtab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link text-secondary fw-light {{ session('tab', 'info') == 'info' ? 'active' : '' }}" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true"><i class="fa fa-info-circle"></i> <span class="d-none d-sm-block">@lang('Thông tin')</span></button>
@@ -82,10 +82,10 @@ class_edit
         </li>
         @endif
     </ul>
-    
+
     <div class="tab-content border-top-2 mb-5 bg-white" style="@if(empty($course)) display:none; @endif" id="myTabContent">
         <div class="tab-pane fade {{ session('tab', 'info') == 'info' ? 'show active' : '' }} p-2" id="info" role="tabpanel" aria-labelledby="info-tab">
-            @include('class.form.info') 
+            @include('class.form.info')
         </div>
         <div class="tab-pane fade {{ session('tab', 'info') == 'price' ? 'show active' : '' }} p-2" id="price" role="tabpanel" aria-labelledby="price-tab">
             @include('class.form.price')
