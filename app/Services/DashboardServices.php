@@ -257,6 +257,22 @@ class DashboardServices
             ->take($num)->get();
         return $query;
     }
+    public function topItempartnerAPI($num = 10,$user)
+    {
+        $query = DB::table('items')->where('items.user_id', $user->id)
+            ->leftJoin('order_details AS od', 'od.item_id', '=', 'items.id');
+        if ($this->dateF) {
+            $query = $query->where('od.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT) {
+            $query = $query->where('od.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        $query = $query->groupBy('items.title')
+        ->orderBy('reg_num', 'DESC')
+        ->select('items.title', DB::raw('count(od.id) AS reg_num'))
+        ->take($num)->get();
+        return $query;
+    }
     public function saleActivities($saleId, $getAll = true)
     {
         $query = DB::table('users')
