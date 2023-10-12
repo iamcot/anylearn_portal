@@ -40,7 +40,7 @@ class MeApi extends Controller
         ];
         $topItem = $dashServ->topItempartnerAPI(10,$user);
         foreach ($results as $row) {
-            $chartDataset['labels'][] = date('d/m', strtotime($row->day));
+            $chartDataset['labels'][] = date('d/m/y', strtotime($row->day));
             $chartDataset['data'][] = $row->num;
         }
 
