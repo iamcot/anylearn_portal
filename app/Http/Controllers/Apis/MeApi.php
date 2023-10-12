@@ -25,11 +25,11 @@ class MeApi extends Controller
     {
         $dashServ = new DashboardServices();
         $user = $request->get('_user');
-        $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @request('dateT') ?? date('Y-m-d'));
+        $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-365 days')), @request('dateT') ?? date('Y-m-d'));
 
         $query = DB::table('order_details')
             ->whereNotNull('created_at');
-        $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
+        $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-365 days')));
         $results = $query->selectRaw('DATE(created_at) AS day, sum(order_details.unit_price) AS num')
             ->groupBy(DB::raw('DATE(created_at)'))
             ->get();
@@ -38,7 +38,7 @@ class MeApi extends Controller
             'labels' => [],
             'data' => []
         ];
-
+        $topItem = $dashServ->topItempartner();
         foreach ($results as $row) {
             $chartDataset['labels'][] = date('d/m', strtotime($row->day));
             $chartDataset['data'][] = $row->num;
@@ -49,7 +49,8 @@ class MeApi extends Controller
             'revenueInPeriod' => $dashServ->gmvpartnerAPI(false, $user),
             'totalStudents' => $dashServ->userCountpanertAPI(true, $user),
             'studentsInPeriod' => $dashServ->userCountpanertAPI(false, $user),
-            'chartDataset' => $chartDataset
+            'chartDataset' => $chartDataset,
+            'topItem' => $topItem
         ]);
     }
     public function admitStudentAPI(Request $request, $id)
