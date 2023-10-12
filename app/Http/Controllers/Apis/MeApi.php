@@ -28,6 +28,7 @@ class MeApi extends Controller
         $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-365 days')), @request('dateT') ?? date('Y-m-d'));
 
         $query = DB::table('order_details')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
             ->where('items.user_id', $user->id)
             ->whereNotNull('created_at');
         $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-365 days')));
