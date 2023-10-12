@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.updateotp') }}">
                         @csrf
-                        <p>@lang('Vui lòng kiểm tra mã xác thực gửi tới ZALO số điện thoại của bạn và tiến hành đổi mật khẩu mới.')</p>
+                        <p>Vui lòng kiểm tra mã xác thực gửi tới {{ env('OTP_SERVICE', 'zalo') }} số điện thoại của bạn và tiến hành đổi mật khẩu mới.</p>
                         <div class="form-group row">
                             <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Phone') }}</label>
 

@@ -18,7 +18,8 @@ class OTPResetPasswordController  extends Controller
     {
         if ($request->get('phone')) {
             $phone = $request->get('phone');
-            $otpService = new OtpServices();
+            $service = env('OTP_SERVICE', OtpServices::SERVIVCE_ZALO);
+            $otpService = new OtpServices($service);
             try {
                 $genOtp = $otpService->genOtp($phone);
             } catch (\Exception $e) {
@@ -27,13 +28,13 @@ class OTPResetPasswordController  extends Controller
                     'phone' => 'Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại'
                 ]);
             }
-            $zaloService = new ZaloServices(true);
-            $znsResult = $zaloService->sendZNS(ZaloServices::ZNS_OTP, $phone, $genOtp);
             
-            if (!$znsResult['result']) {
+            $result = $otpService->sendOTP($phone, $genOtp);
+            
+            if (!$result['result']) {
                 Notification::find($genOtp['notification_id'])->update([
                     'is_send' => 0,
-                    'extra_content' => json_encode($znsResult['error'])
+                    'extra_content' => json_encode($result['data'])
                 ]);
                 return redirect()->back()->withErrors([
                     'phone' => 'Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại'
@@ -42,7 +43,7 @@ class OTPResetPasswordController  extends Controller
                 Notification::find($genOtp['notification_id'])->update([
                     'is_send' => 1,
                     'send' =>  date('Y-m-d H:i:s'),
-                    'extra_content' => $znsResult['data']
+                    'extra_content' => $result['data']
                 ]);
                 return redirect()->route('password.resetotp')->withInput(['phone' => $phone]);
             }
@@ -66,7 +67,8 @@ class OTPResetPasswordController  extends Controller
                 'password' => 'Vui lòng nhập lại mật khẩu'
             ]);
         }
-        $otpService = new OtpServices();
+        $service = env('OTP_SERVICE', OtpServices::SERVIVCE_ZALO);
+        $otpService = new OtpServices($service);
         try {
             $result = $otpService->verifyOTP($phone, $otp);
             if ($result) {
