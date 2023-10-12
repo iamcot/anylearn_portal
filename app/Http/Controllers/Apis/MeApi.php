@@ -27,11 +27,13 @@ class MeApi extends Controller
         $user = $request->get('_user');
         $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-365 days')), @request('dateT') ?? date('Y-m-d'));
 
-        $query = DB::table('order_details')
-            ->whereNotNull('created_at');
-        $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-365 days')));
-        $results = $query->selectRaw('DATE_FORMAT(created_at, "%Y-%m") AS month, sum(order_details.unit_price) AS num')
-            ->groupBy(DB::raw('DATE_FORMAT(created_at, "%Y-%m")'))
+        $query = DB::table('order_details AS od')
+            ->join('items AS i', 'od.item_id', '=', 'i.id')
+            ->where('i.user_id', $user->id)
+            ->whereNotNull('od.created_at');
+        $query = $query->where('od.created_at', '>=', date('Y-m-d', strtotime('-365 days')));
+        $results = $query->selectRaw('DATE_FORMAT(od.created_at, "%Y-%m") AS month, sum(od.unit_price) AS num')
+            ->groupBy(DB::raw('DATE_FORMAT(od.created_at, "%Y-%m")'))
             ->get();
 
         $chartDataset = [
