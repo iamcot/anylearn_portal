@@ -28,6 +28,7 @@ class MeApi extends Controller
         $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-365 days')), @request('dateT') ?? date('Y-m-d'));
 
         $query = DB::table('order_details')
+            ->where('items.user_id', $user->id)
             ->whereNotNull('created_at');
         $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-365 days')));
         $results = $query->selectRaw('DATE_FORMAT(created_at, "%Y-%m") AS month, sum(order_details.unit_price) AS num')
