@@ -30,8 +30,8 @@ class MeApi extends Controller
         $query = DB::table('order_details')
             ->whereNotNull('created_at');
         $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-365 days')));
-        $results = $query->selectRaw('DATE(created_at) AS day, sum(order_details.unit_price) AS num')
-            ->groupBy(DB::raw('DATE(created_at)'))
+        $results = $query->selectRaw('DATE_FORMAT(created_at, "%Y-%m") AS month, sum(order_details.unit_price) AS num')
+            ->groupBy(DB::raw('DATE_FORMAT(created_at, "%Y-%m")'))
             ->get();
 
         $chartDataset = [
@@ -40,7 +40,7 @@ class MeApi extends Controller
         ];
         $topItem = $dashServ->topItempartnerAPI(10,$user);
         foreach ($results as $row) {
-            $chartDataset['labels'][] = date('d/m/y', strtotime($row->day));
+            $chartDataset['labels'][] = date('d/m/y', strtotime($row->month));
             $chartDataset['data'][] = $row->num;
         }
 
@@ -284,9 +284,9 @@ class MeApi extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra, vui lòng thử lại!!'], 400);
         }
         $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
-        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
-            new ReturnRequest(['orderId' => $orderId, 'name' => $user->name])
-        );
+        // Mail::to(env('MAIL_FROM_ADDRESS'))->send(
+        //     new ReturnRequest(['orderId' => $orderId, 'name' => $user->name])
+        // );
         return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
     }
 }
