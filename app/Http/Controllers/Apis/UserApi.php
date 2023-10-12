@@ -662,27 +662,28 @@ class UserApi extends Controller
     public function sentOtpResetPass(Request $request)
     {
         $phone = $request->get('phone');
-        $otpService = new OtpServices();
+        $service = env('OTP_SERVICE', OtpServices::SERVIVCE_ZALO);
+        $otpService = new OtpServices($service);
         try {
             $genOtp = $otpService->genOtp($phone);
         } catch (\Exception $e) {
             Log::error($e);
             return response('Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại', 400);
         }
-        $zaloService = new ZaloServices(true);
-        $znsResult = $zaloService->sendZNS(ZaloServices::ZNS_OTP, $phone, $genOtp);
+        
+        $result = $otpService->sendOTP($phone, $genOtp);
 
-        if (!$znsResult['result']) {
+        if (!$result['result']) {
             Notification::find($genOtp['notification_id'])->update([
                 'is_send' => 0,
-                'extra_content' => json_encode($znsResult['error'])
+                'extra_content' => json_encode($result['error'])
             ]);
             return response('Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại', 400);
         } else {
             Notification::find($genOtp['notification_id'])->update([
                 'is_send' => 1,
                 'send' =>  date('Y-m-d H:i:s'),
-                'extra_content' => $znsResult['data']
+                'extra_content' => $result['data']
             ]);
             return response()->json([
                 'result' => true,
@@ -695,11 +696,10 @@ class UserApi extends Controller
     {
         $phone = $request->get('phone');
         $otp = $request->get('otp');
-        $otpService = new OtpServices();
-        // $smsServ = new SmsServices();
+        $service = env('OTP_SERVICE', OtpServices::SERVIVCE_ZALO);
+        $otpService = new OtpServices($service);
         try {
-            $result = $otpService->verifyOTP($phone, $otp, OtpServices::SERVIVCE_ZALO, false);
-            // $result = $smsServ->verifyOTP($phone, $otp, false);
+            $result = $otpService->verifyOTP($phone, $otp, false);
             if ($result) {
                 return response()->json([
                     'result' => true,
@@ -720,12 +720,11 @@ class UserApi extends Controller
         if ($password != $passwordConfirm) {
             return response('Vui lòng nhập lại mật khẩu', 400);
         }
-        // $smsServ = new SmsServices();
-        $otpService = new OtpServices();
+        $service = env('OTP_SERVICE', OtpServices::SERVIVCE_ZALO);
+        $otpService = new OtpServices($service);
 
         try {
             $result = $otpService->verifyOTP($phone, $otp);
-            // $result = $smsServ->verifyOTP($phone, $otp);
             if ($result) {
                 User::where('phone', $phone)->update([
                     'password' => Hash::make($password)
