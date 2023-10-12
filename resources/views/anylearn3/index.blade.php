@@ -18,7 +18,9 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         @include('anylearn3.header')
-        <div id="root"></div>
+        <div id="root">
+
+        </div>
         @include('anylearn.footer2')
     </body>
 </html>
