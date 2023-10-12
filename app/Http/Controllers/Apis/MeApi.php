@@ -32,7 +32,7 @@ class MeApi extends Controller
             ->where('items.user_id', $user->id)
             ->whereNotNull('od.created_at');
         $query = $query->where('od.created_at', '>=', date('Y-m-d', strtotime('-365 days')));
-        $results = $query->selectRaw('DATE_FORMAT(od.created_at, "%Y-%m") AS month, sum(order_details.unit_price) AS num')
+        $results = $query->selectRaw('DATE_FORMAT(od.created_at, "%Y-%m") AS month, sum(od.unit_price) AS num')
             ->groupBy(DB::raw('DATE_FORMAT(od.created_at, "%Y-%m")'))
             ->get();
 
