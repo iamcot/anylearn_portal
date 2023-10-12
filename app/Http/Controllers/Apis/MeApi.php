@@ -29,7 +29,7 @@ class MeApi extends Controller
 
         $query = DB::table('order_details AS od')
             ->join('items AS i', 'order_details.item_id', '=', 'items.id')
-            ->where('items.user_id', $user->id)
+            ->where('i.user_id', $user->id)
             ->whereNotNull('od.created_at');
         $query = $query->where('od.created_at', '>=', date('Y-m-d', strtotime('-365 days')));
         $results = $query->selectRaw('DATE_FORMAT(od.created_at, "%Y-%m") AS month, sum(od.unit_price) AS num')
