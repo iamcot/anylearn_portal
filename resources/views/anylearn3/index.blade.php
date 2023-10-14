@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <meta charset="utf-8"/><link rel="icon" href="/cdn/anylearn3/0.0.1/logo.png"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="anyLEARN"/><link rel="apple-touch-icon" href="/cdn/anylearn3/0.0.1/logo.png"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/><link rel="manifest" href="/cdn/anylearn3/0.0.1/manifest.json"/><title>anyLEARN</title><script defer="defer" src="/cdn/anylearn3/0.0.1/static/js/main.b2c16204.js"></script><link href="/cdn/anylearn3/0.0.1/static/css/main.11d9b9ab.css" rel="stylesheet">
+        <meta charset="utf-8"/><link rel="icon" href="/cdn/anylearn3/0.0.1/logo.png"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="anyLEARN"/><link rel="apple-touch-icon" href="/cdn/anylearn3/0.0.1/logo.png"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/><link rel="manifest" href="/cdn/anylearn3/0.0.1/manifest.json"/><title>anyLEARN</title><script defer="defer" src="/cdn/anylearn3/0.0.1/static/js/main.14614a47.js"></script><link href="/cdn/anylearn3/0.0.1/static/css/main.e285ef2f.css" rel="stylesheet">
         <link rel="canonical" href="@yield('canonical')" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link href="/cdn/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -18,7 +18,9 @@
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         @include('anylearn3.header')
-        <div id="root"></div>
+        <div id="root">
+
+        </div>
         @include('anylearn.footer2')
     </body>
 </html>
