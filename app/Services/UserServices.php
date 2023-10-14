@@ -650,6 +650,8 @@ class UserServices
             ->whereNull('items.item_id')
             ->whereIn('role', ['teacher', 'school'])
             ->where('items.subtype', $subtype)
+            ->where('items.status', 1)
+            ->where('items.user_status', 1)
             ->select(
                 'users.id',
                 'users.name',
