@@ -211,7 +211,9 @@ class ItemServices
                 ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $pt->name, $items);
+            if (count($items) > 0) {
+                $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $pt->name, $items);
+            }
         }
 
         return $data;
