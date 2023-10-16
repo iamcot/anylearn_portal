@@ -18,6 +18,7 @@ use App\Services\DashboardServices;
 use App\Services\ItemServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -332,21 +333,38 @@ class MeApi extends Controller
     }
     function addExtrafee(Request $request, $courseId)
     {
-        $user = $request->get('_user');
-        $input = $request->all();
-        if ($input['idextrafee'] == null) {
-            $rs = ItemExtra::create([
-                'title' => $input['titleextrafee'],
-                'price' => $input['priceextrafee'],
-                'item_id' => $courseId
-            ]);
-        } else {
-            $rs = ItemExtra::find($input['idextrafee'])->update([
-                'title' => $input['titleextrafee'],
-                'price' => $input['priceextrafee']
-            ]);
-        }
+        try {
+            $user = $request->get('_user');
+            $input = $request->all();
 
-        return response()->json($rs);
+            // Khai báo $rs ở đây để đảm bảo nó có giá trị trong mọi trường hợp
+            $rs = null;
+
+            // Kiểm tra nếu idextrafee không tồn tại hoặc là null
+            if (!isset($input['idextrafee']) || $input['idextrafee'] === null) {
+                $rs = ItemExtra::create([
+                    'title' => $input['titleextrafee'],
+                    'price' => $input['priceextrafee'],
+                    'item_id' => $courseId
+                ]);
+            } else {
+                $itemExtra = ItemExtra::find($input['idextrafee']);
+
+                if ($itemExtra) {
+                    $itemExtra->update([
+                        'title' => $input['titleextrafee'],
+                        'price' => $input['priceextrafee']
+                    ]);
+                    $rs = $itemExtra;
+                } else {
+                    return response()->json(['error' => 'Không tìm thấy mục phụ phí'], 400);
+                }
+            }
+
+            // Trả về JsonResponse với mã trạng thái 200 và dữ liệu $rs
+            return new JsonResponse($rs, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
     }
 }
