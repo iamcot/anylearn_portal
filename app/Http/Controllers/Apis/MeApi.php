@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\ReturnRequest;
 use App\Models\Category;
+use App\Models\ItemExtra;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
@@ -41,7 +42,7 @@ class MeApi extends Controller
             'labels' => [],
             'data' => []
         ];
-        $topItem = $dashServ->topItempartnerAPI(10,$user);
+        $topItem = $dashServ->topItempartnerAPI(10, $user);
         foreach ($results as $row) {
             $chartDataset['labels'][] = date('d/m/y', strtotime($row->month));
             $chartDataset['data'][] = $row->num;
@@ -180,9 +181,9 @@ class MeApi extends Controller
     {
         $user = $request->get('_user');
         $data = DB::table('item_activities as ia')
-        ->join('items as i', 'i.id', '=', 'ia.item_id')
-        ->join('users as u', 'u.id', '=', 'ia.user_id')
-        ->where('ia.user_id', $user->id)
+            ->join('items as i', 'i.id', '=', 'ia.item_id')
+            ->join('users as u', 'u.id', '=', 'ia.user_id')
+            ->where('ia.user_id', $user->id)
             ->select('ia.*', 'i.title', 'u.name')
             ->get();
 
@@ -225,9 +226,9 @@ class MeApi extends Controller
         $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
         $userIds = $userC->pluck('id')->toArray();
         $data = DB::table('order_details')
-        ->join('items', 'items.id', '=', 'order_details.item_id')
-        ->join('users', 'users.id', '=', 'order_details.user_id')
-        ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->whereIn('order_details.user_id', $userIds)
             ->select(
                 'items.title',
@@ -259,9 +260,9 @@ class MeApi extends Controller
     {
         $user = $request->get('_user');
         $response = DB::table('orders')
-        ->join('order_details as od', 'od.order_id', '=', 'orders.id')
-        ->join('items', 'items.id', '=', 'od.item_id')
-        ->where('orders.user_id', $user->id)
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->where('orders.user_id', $user->id)
             ->whereIn('orders.status', [
                 OrderConstants::STATUS_DELIVERED,
                 OrderConstants::STATUS_RETURN_BUYER_PENDING,
@@ -275,7 +276,7 @@ class MeApi extends Controller
 
         return response()->json($response);
     }
-    public function sendReturnRequest(Request $request,$orderId)
+    public function sendReturnRequest(Request $request, $orderId)
     {
         $user = $request->get('_user');
 
@@ -292,17 +293,19 @@ class MeApi extends Controller
         // );
         return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
     }
-    function getCategories(Request $request) {
+    function getCategories(Request $request)
+    {
         $user = $request->get('_user');
         $category = Category::all();
         return response()->json($category);
     }
-    function getStudents(Request $request, $courseId) {
+    function getStudents(Request $request, $courseId)
+    {
         $user = $request->get('_user');
         $students = DB::table('order_details')
-        // ->leftJoin('participations', 'participations.')
-        ->join('users', 'users.id', '=', 'order_details.user_id')
-        ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            // ->leftJoin('participations', 'participations.')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->where('order_details.item_id', $courseId)
             ->select(
                 'users.name',
@@ -326,5 +329,24 @@ class MeApi extends Controller
             ->get();
 
         return response()->json($students);
+    }
+    function addExtrafee(Request $request, $courseId)
+    {
+        $user = $request->get('_user');
+        $input = $request->all();
+        if ($input['idextrafee'] == null) {
+            $rs = ItemExtra::create([
+                'title' => $input['titleextrafee'],
+                'price' => $input['priceextrafee'],
+                'item_id' => $courseId
+            ]);
+        } else {
+            $rs = ItemExtra::find($input['idextrafee'])->update([
+                'title' => $input['titleextrafee'],
+                'price' => $input['priceextrafee']
+            ]);
+        }
+
+        return response()->json($rs);
     }
 }
