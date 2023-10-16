@@ -8,9 +8,15 @@ class Cors
 {
     public function handle($request, Closure $next)
     {
-        return $next($request)
-            ->header('Access-Control-Allow-Origin', 'http://localhost:3000')
+        $response = $next($request);
+
+        $response
+            ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Origin, Accept');
+            ->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, X-Token-Auth, Authorization')
+            ->header('Access-Control-Allow-Credentials', 'true')
+            ->header('Access-Control-Max-Age', '86400');
+
+        return $response;
     }
 }
