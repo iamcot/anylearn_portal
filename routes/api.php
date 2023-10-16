@@ -84,6 +84,8 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/child/{id}', 'Apis\MeApi@childAccountAPI');
     Route::get('/v3/child', 'Apis\MeApi@childAccountAPI');
     Route::get('/v3/class', 'Apis\MeApi@list');
+    Route::get('/v3/categories', 'Apis\MeApi@getCategories');
+
 
     Route::get('/v3/order-return', 'Apis\MeApi@deliveredOrders');
 

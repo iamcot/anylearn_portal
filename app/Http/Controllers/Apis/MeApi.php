@@ -8,6 +8,7 @@ use App\Constants\UserConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\ReturnRequest;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
@@ -290,5 +291,10 @@ class MeApi extends Controller
         //     new ReturnRequest(['orderId' => $orderId, 'name' => $user->name])
         // );
         return response()->json(['message' => 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!'], 200);
+    }
+    function getCategories(Request $request) {
+        $user = $request->get('_user');
+        $category = Category::all();
+        return response()->json($category);
     }
 }
