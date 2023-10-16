@@ -36,6 +36,20 @@ class ItemApi extends Controller
         }
         return response()->json(['result' => $newItem === false ? false : true]);
     }
+    public function update(Request $request)
+    {
+        $user = $request->get('_user');
+        $input = $request->all();
+        if (empty($request->get('type'))) {
+            return response('Chưa có loại khóa học', 400);
+        }
+        $itemService = new ItemServices();
+        $updateItem = $itemService->updateItem($request, $input, $user);
+        if ($updateItem instanceof Validator) {
+            return response($updateItem->errors()->first(), 400);
+        }
+        return response()->json(['result' => $updateItem === false ? false : true]);
+    }
     public function edit(Request $request, $id)
     {
         $user = $request->get('_user');
