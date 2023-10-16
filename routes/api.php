@@ -86,6 +86,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/class', 'Apis\MeApi@list');
     Route::get('/v3/categories', 'Apis\MeApi@getCategories');
     Route::get('/v3/students/{id}', 'Apis\MeApi@getStudents');
+    Route::get('/v3/getextrafee/{id}', 'Apis\MeApi@getExtrafee');
     Route::get('/v3/extrafee/{id}', 'Apis\MeApi@addExtrafee');
 
     Route::get('/v3/order-return', 'Apis\MeApi@deliveredOrders');

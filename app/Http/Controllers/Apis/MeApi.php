@@ -366,4 +366,9 @@ class MeApi extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
+    function getExtrafee(Request $request, $courseId){
+        $user = $request->get('_user');
+        $rs = ItemExtra::where('item_id',$courseId)->get();
+        return response()->json($rs, 200);
+    }
 }
