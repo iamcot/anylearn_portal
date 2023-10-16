@@ -43,7 +43,6 @@
 </head>
 
 <body data-spm="@yield('spmb')">
-    <script id="omiWidget" type="text/javascript" src="https://cdn.omicrm.com/widget/main.js#domain=infoanylearn;"></script>
     <section>
         @if(empty($isApp) || !$isApp)
         <header>
