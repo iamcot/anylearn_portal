@@ -18,7 +18,6 @@ use App\Services\DashboardServices;
 use App\Services\ItemServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -362,7 +361,7 @@ class MeApi extends Controller
             }
 
             // Trả về JsonResponse với mã trạng thái 200 và dữ liệu $rs
-            return new JsonResponse($rs, 200);
+            return response()->json($rs, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
