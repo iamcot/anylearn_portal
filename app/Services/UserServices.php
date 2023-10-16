@@ -650,6 +650,8 @@ class UserServices
             ->whereNull('items.item_id')
             ->whereIn('role', ['teacher', 'school'])
             ->where('items.subtype', $subtype)
+            ->where('items.status', 1)
+            ->where('items.user_status', 1)
             ->select(
                 'users.id',
                 'users.name',
@@ -671,6 +673,7 @@ class UserServices
             ->join('items', 'items.id', '=', 'od.item_id')
             ->where('pa.organizer_confirm', 0)
             ->where('pa.participant_confirm', 0)
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->where('orders.user_id', $user->id)
             ->orderByDesc('pa.created_at')
             ->first();
@@ -688,6 +691,7 @@ class UserServices
             ->where('orders.user_id', $user->id)
             ->where('pa.participant_confirm', 1)
             ->where('pa.organizer_confirm', 1)
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->whereNull('iua.id')
             ->select(
                 'orders.user_id',
