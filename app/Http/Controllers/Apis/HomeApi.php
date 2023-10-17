@@ -16,9 +16,9 @@ use App\Services\VoucherServices;
 
 class HomeApi extends Controller
 {
-    public function index(Request $request) 
-    {  
-        $homeConfig = config('home_config'); 
+    public function index(Request $request)
+    {
+        $homeConfig = config('home_config');
         $configM = new Configuration();
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP)->first();
         if (!empty($lastConfig)) {
@@ -27,35 +27,36 @@ class HomeApi extends Controller
                 $homeConfig['popup'] = $homePopup;
             }
         }
+        $data['ios_transaction'] = $configM->enableIOSTrans($request);
 
         $bannerConfig = [];
         $newBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
         if ($newBanners) {
             $bannerConfig = array_values(json_decode($newBanners->value, true));
         }
-        
+
         $data['config'] = $homeConfig;
         $data['banners'] = $bannerConfig;
-        
+
         $articleS = new ArticleServices();
         $data['articles'] = $articleS->getArticles();
-        $data['promotions'] = $articleS->getPromotions(); 
+        $data['promotions'] = $articleS->getPromotions();
 
         $commonS = new CommonServices();
         $data['asks'] = $commonS->getLatestQuestion();
-        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations());
+        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations($data['ios_transaction']));
 
         $data['classes'] = (new ItemServices)->getConfigItemsByCategories($request);
         $data['vouchers'] = (new VoucherServices)->getVoucherEvents();
 
         $user = $request->get('_user');
-        $data['repurchases'] = $data['pointBox'] = $data['j4u'] = []; 
-        $data['ios_transaction'] = $configM->enableIOSTrans($request);
+        $data['repurchases'] = $data['pointBox'] = $data['j4u'] = [];
 
-        if ($user) {          
+
+        if ($user) {
             $data['pointBox'] = (new UserServices)->getPointBox($user);
             $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user));
-            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user));         
+            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user, '', $data['ios_transaction']));
         }
 
         $spm = new Spm();

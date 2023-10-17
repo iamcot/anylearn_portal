@@ -144,7 +144,7 @@ class J4uServices
         return $data;
     }
 
-    public function get($user, $subtype = '') 
+    public function get($user, $subtype = '', $isIOSReview = 0) 
     {
         $data = $this->collect($user);
         $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
@@ -173,6 +173,10 @@ class J4uServices
 
         if(isset($data->maxAge)) {
             $items->where('items.ages_max', '<=', $data->maxAge);
+        }
+
+        if ($isIOSReview) {
+            $items = $items->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
         }
             
         $items = $items->select(                
