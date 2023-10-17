@@ -148,7 +148,7 @@ class J4uServices
     {
         $data = $this->collect($user);
         $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
-        //dd($data);
+        dd($data);
         
         $items = DB::table('items')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
