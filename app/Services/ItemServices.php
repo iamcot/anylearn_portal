@@ -287,12 +287,8 @@ class ItemServices
         return $data;
     }
 
-    public function getConfigItemsByCategories(Request $request)
+    public function getConfigItemsByCategories(Request $request, $allowIOS = 1)
     {
-        // Config on admin page
-        $configM = new Configuration();
-        $isEnableIosTrans = $configM->enableIOSTrans($request);
-
         $homeClasses = [];
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
 
@@ -303,7 +299,7 @@ class ItemServices
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
-                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
+                    ->whereNotIn("subtype", !$allowIOS ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL] : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();

@@ -25,7 +25,7 @@ class CommonServices
         return $data;
     }
 
-    public function getRecommendations($isIOSReview = 0)
+    public function getRecommendations($allowIOS = 1)
     {
         $data = DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')
@@ -49,7 +49,7 @@ class CommonServices
                 DB::raw('max(od.created_at) as created_at'),
                 DB::raw('group_concat(categories.title) as categories')
             );
-        if ($isIOSReview) {
+        if (!$allowIOS) {
             $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
         }
         return $data->groupBy('items.id')
@@ -58,7 +58,7 @@ class CommonServices
             ->get();
     }
 
-    public function getRepurchases($user, $subtype = '', $isIOSReview = 0)
+    public function getRepurchases($user, $subtype = '', $allowIOS = 1)
     {
         $data = DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')
@@ -78,7 +78,7 @@ class CommonServices
             $data->where('items.subtype', $subtype);
         }
 
-        if ($isIOSReview) {
+        if (!$allowIOS) {
             $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
         }
 

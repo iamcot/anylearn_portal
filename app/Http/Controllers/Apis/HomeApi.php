@@ -46,7 +46,7 @@ class HomeApi extends Controller
         $data['asks'] = $commonS->getLatestQuestion();
         $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations($data['ios_transaction']));
 
-        $data['classes'] = (new ItemServices)->getConfigItemsByCategories($request);
+        $data['classes'] = (new ItemServices)->getConfigItemsByCategories($request, $data['ios_transaction']);
         $data['vouchers'] = (new VoucherServices)->getVoucherEvents();
 
         $user = $request->get('_user');
