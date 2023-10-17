@@ -7,6 +7,7 @@ use App\Constants\ItemConstants;
 use Illuminate\Support\Facades\DB;
 use App\Models\Spm;
 use Carbon\Carbon;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class J4uServices
 {
@@ -164,10 +165,17 @@ class J4uServices
             ->whereIn('ic.category_id', $data->categoryIds)
             ->whereIn('items.subtype', $data->subtypes)
             ->where('items.price', '>=', $data->minPrice)
-            ->where('items.price', '<=', $data->maxPrice)
-            ->where('items.ages_min', '>=', $data->minAge)
-            ->where('items.ages_max', '<=', $data->maxAge)  
-            ->select(
+            ->where('items.price', '<=', $data->maxPrice);
+
+            if ($data->minAge) {
+                $items->where('items.ages_min', '>=', $data->minAge);
+            }
+
+            if($data->maxAge) {
+                $items->where('items.ages_max', '<=', $data->maxAge);
+            }
+            
+            $items->select(
                 'items.id',
                 'items.title',
                 'items.image',
