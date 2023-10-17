@@ -176,7 +176,8 @@ class J4uServices
             $items->where('items.ages_max', '<=', $data->maxAge);
         }
             
-        $items->select(                'items.id',
+        $items = $items->select(                
+            'items.id',
             'items.title',
             'items.image',
             'items.price',
