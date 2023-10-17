@@ -168,30 +168,30 @@ class J4uServices
             ->where('items.price', '>=', $data->minPrice)
             ->where('items.price', '<=', $data->maxPrice);
 
-            if ($data->minAge) {
-                $items->where('items.ages_min', '>=', $data->minAge);
-            }
+        if (isset($data->minAge)) {
+            $items->where('items.ages_min', '>=', $data->minAge);
+        }
 
-            if($data->maxAge) {
-                $items->where('items.ages_max', '<=', $data->maxAge);
-            }
+        if(isset($data->maxAge)) {
+            $items->where('items.ages_max', '<=', $data->maxAge);
+        }
             
-            $items->select(
-                'items.id',
-                'items.title',
-                'items.image',
-                'items.price',
-                'items.is_hot',
-                'rv.rating',
-                'items.boost_score',
-                'items.created_at',
-                DB::raw('group_concat(categories.title) as categories')
-            )
-            ->groupBy('items.id')
-            ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
-            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
-            ->get();
-
+        $items->select(                'items.id',
+            'items.title',
+            'items.image',
+            'items.price',
+            'items.is_hot',
+            'rv.rating',
+            'items.boost_score',
+            'items.created_at',
+            DB::raw('group_concat(categories.title) as categories')
+        )
+        ->groupBy('items.id')
+        ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
+        ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
+        ->get();
+        
+        dd($items);
         // Location !!
 
         return $items;
