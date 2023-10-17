@@ -148,7 +148,6 @@ class J4uServices
     {
         $data = $this->collect($user);
         $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
-        $data->minAge = null;
         //dd($data);
         
         $items = DB::table('items')
@@ -192,7 +191,6 @@ class J4uServices
         ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
         ->get();
         
-        dd($items);
         // Location !!
 
         return $items;
