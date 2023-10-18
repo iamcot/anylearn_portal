@@ -147,7 +147,7 @@ class PageController extends Controller
 
         if ($request->get('has-account')) {
             //$this->data['isReg'] = true;
-            return redirect()->route('/login');     
+            return redirect()->route('login');     
         }
 
         $this->data['user'] = $refUser;
