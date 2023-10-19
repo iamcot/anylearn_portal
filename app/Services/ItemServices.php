@@ -262,7 +262,7 @@ class ItemServices
                 ->get();
 
             if (count($items) > 0) {
-                $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
+                $data[] = $commonS->setTemplate('/', 'Các lớp học '. $ct->title, $items);
             }
         }
 
