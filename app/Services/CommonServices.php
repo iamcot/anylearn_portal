@@ -25,18 +25,20 @@ class CommonServices
         return $data;
     }
 
-    public function getRecommendations()
+    public function getRecommendations($allowIOS = 1)
     {
-        return DB::table('orders')
-            ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
+        $data = DB::table('orders')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
             ->join('categories', 'categories.id', '=', 'ic.category_id')
             ->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'),
                 'rv.item_id',
                 'items.id'
             )
+            ->where('items.status', 1)
+            ->where('items.user_status', 1)
             ->select(
                 'items.id',
                 'items.title',
@@ -46,45 +48,54 @@ class CommonServices
                 'rv.rating',
                 DB::raw('max(od.created_at) as created_at'),
                 DB::raw('group_concat(categories.title) as categories')
-            )
-            ->groupBy('items.id')
+            );
+        if (!$allowIOS) {
+            $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
+        }
+        return $data->groupBy('items.id')
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
             ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
             ->get();
     }
 
-    public function getRepurchases($user, $subtype = '') 
+    public function getRepurchases($user, $subtype = '', $allowIOS = 1)
     {
         $data = DB::table('orders')
-            ->join('order_details as od', 'od.order_id', '=', 'orders.id')        
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
             ->join('categories', 'categories.id', '=', 'ic.category_id')
             ->leftjoin(
-                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'),
                 'rv.item_id',
                 'items.id'
             )
-            ->where('orders.user_id', $user->id);
-        
+            ->where('orders.user_id', $user->id)
+            ->where('items.status', 1)
+            ->where('items.user_status', 1);
+
         if ($subtype) {
             $data->where('items.subtype', $subtype);
         }
 
+        if (!$allowIOS) {
+            $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
+        }
+
         return $data->select(
-                'items.id',
-                'items.title',
-                'items.image',
-                'items.price',
-                'items.is_hot',
-                'rv.rating',
-                DB::raw('max(od.created_at) as created_at'),
-                DB::raw('group_concat(categories.title) as categories')
-            )
+            'items.id',
+            'items.title',
+            'items.image',
+            'items.price',
+            'items.is_hot',
+            'rv.rating',
+            DB::raw('max(od.created_at) as created_at'),
+            DB::raw('group_concat(categories.title) as categories')
+        )
             ->groupBy('items.id')
             ->orderByRaw('items.is_hot desc, items.price desc')
             ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
-            ->get(); 
+            ->get();
     }
 
     public function getSearchResults(Request $request, $searchMap = false)
@@ -114,7 +125,7 @@ class CommonServices
         }
 
         if ($request->get('search')) {
-            $items->where('items.title', 'like', '%'. $request->get('search') . '%');
+            $items->where('items.title', 'like', '%' . $request->get('search') . '%');
         }
 
         if ($searchMap) {
@@ -139,9 +150,9 @@ class CommonServices
                 group_concat(items.id) as itemIds
             '))
             ->groupBy('items.user_id');
-    } 
+    }
 
-    public function calculateMapBounds($locations, $margin = 1) 
+    public function calculateMapBounds($locations, $margin = 1)
     {
         $xMax = $xMin = $yMax = $yMin = 0;
         foreach ($locations as $key => $val) {
@@ -175,7 +186,7 @@ class CommonServices
             'bot' => ($xMax + $margin) . ',' . ($yMin - $margin),
         ];
     }
-    
+
     public function setTemplate($route, $title, $items)
     {
         foreach ($items as $item) {
@@ -189,4 +200,3 @@ class CommonServices
         ];
     }
 }
-

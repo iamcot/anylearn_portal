@@ -7,6 +7,7 @@ use App\Constants\ItemConstants;
 use Illuminate\Support\Facades\DB;
 use App\Models\Spm;
 use Carbon\Carbon;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class J4uServices
 {
@@ -143,7 +144,7 @@ class J4uServices
         return $data;
     }
 
-    public function get($user, $subtype = '') 
+    public function get($user, $subtype = '', $allowIOS = 1) 
     {
         $data = $this->collect($user);
         $data->subtypes = $subtype ? array($subtype) : $data->subtypes; 
@@ -164,25 +165,36 @@ class J4uServices
             ->whereIn('ic.category_id', $data->categoryIds)
             ->whereIn('items.subtype', $data->subtypes)
             ->where('items.price', '>=', $data->minPrice)
-            ->where('items.price', '<=', $data->maxPrice)
-            ->where('items.ages_min', '>=', $data->minAge)
-            ->where('items.ages_max', '<=', $data->maxAge)  
-            ->select(
-                'items.id',
-                'items.title',
-                'items.image',
-                'items.price',
-                'items.is_hot',
-                'rv.rating',
-                'items.boost_score',
-                'items.created_at',
-                DB::raw('group_concat(categories.title) as categories')
-            )
-            ->groupBy('items.id')
-            ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
-            ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
-            ->get();
+            ->where('items.price', '<=', $data->maxPrice);
 
+        if (isset($data->minAge)) {
+            $items->where('items.ages_min', '>=', $data->minAge);
+        }
+
+        if(isset($data->maxAge)) {
+            $items->where('items.ages_max', '<=', $data->maxAge);
+        }
+
+        if (!$allowIOS) {
+            $items = $items->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
+        }
+            
+        $items = $items->select(                
+            'items.id',
+            'items.title',
+            'items.image',
+            'items.price',
+            'items.is_hot',
+            'rv.rating',
+            'items.boost_score',
+            'items.created_at',
+            DB::raw('group_concat(categories.title) as categories')
+        )
+        ->groupBy('items.id')
+        ->orderByRaw('items.is_hot desc, items.boost_score desc, items.created_at desc')   
+        ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
+        ->get();
+        
         // Location !!
 
         return $items;

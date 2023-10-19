@@ -371,4 +371,15 @@ class MeApi extends Controller
         $rs = ItemExtra::where('item_id',$courseId)->get();
         return response()->json($rs, 200);
     }
+    function location(Request $request)
+    {
+        $user = $request->get('_user');
+        $userLocationId = $user->id;
+        $userService = new UserServices();
+        if ($request->get('user_id')) {
+            $userLocationId = $request->get('user_id');
+        }
+        $locations = UserLocation::where('user_id', $userLocationId);
+        return response()->json($locations, 200);
+    }
 }

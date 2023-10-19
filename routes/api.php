@@ -89,6 +89,8 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/getextrafee/{id}', 'Apis\MeApi@getExtrafee');
     Route::get('/v3/extrafee/{id}', 'Apis\MeApi@addExtrafee');
 
+    Route::get('/v3/locations', 'Apis\MeApi@locations');
+
     Route::get('/v3/order-return', 'Apis\MeApi@deliveredOrders');
 
     Route::get('/v3/order-return/send-request/{orderId}', 'Apis\MeApi@sendReturnRequest');
@@ -131,6 +133,8 @@ Route::middleware(['api.user'])->group(function () {
 
     Route::post('/item/create', 'Apis\ItemApi@create');
     Route::post('/item/update', 'Apis\ItemApi@update');
+    Route::post('/item/updateitem', 'Apis\ItemApi@updateItem');
+
 
     Route::get('/item/schadule/{id}', 'Apis\ItemApi@schadule');
     Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchadule');

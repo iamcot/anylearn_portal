@@ -50,6 +50,17 @@ class ItemApi extends Controller
         }
         return response()->json(['result' => $updateItem === false ? false : true]);
     }
+    public function updateItem(Request $request)
+    {
+        $user = $request->get('_user');
+        $input = $request->all();
+        if (empty($request->get('type'))) {
+            return response('Chưa có loại khóa học', 400);
+        }
+        $updateItem = Item::find($input['id']);
+        $updateItem->update($input);
+        return response()->json(['result' => $updateItem === false ? false : true]);
+    }
     public function edit(Request $request, $id)
     {
         $user = $request->get('_user');
