@@ -65,7 +65,7 @@ class ItemApi extends Controller
         // Update the item
         $updateItem->update($input);
 
-        return response()->json(['result' => true]);
+        return response()->json(['result' => $input]);
     }
 
     public function edit(Request $request, $id)
