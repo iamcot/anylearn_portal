@@ -133,6 +133,8 @@ Route::middleware(['api.user'])->group(function () {
 
     Route::post('/item/create', 'Apis\ItemApi@create');
     Route::post('/item/update', 'Apis\ItemApi@update');
+    Route::post('/item/updateitem', 'Apis\ItemApi@updateItem');
+
 
     Route::get('/item/schadule/{id}', 'Apis\ItemApi@schadule');
     Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchadule');
