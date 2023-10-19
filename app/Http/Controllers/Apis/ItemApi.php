@@ -58,9 +58,16 @@ class ItemApi extends Controller
             return response('Chưa có loại khóa học', 400);
         }
         $updateItem = Item::find($input['id']);
+
+        if (!$updateItem) {
+            return response('Không tìm thấy mục để cập nhật', 404);
+        }
+        // Update the item
         $updateItem->update($input);
-        return response()->json(['result' => $updateItem === false ? false : true]);
+
+        return response()->json(['result' => true]);
     }
+
     public function edit(Request $request, $id)
     {
         $user = $request->get('_user');
