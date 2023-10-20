@@ -73,7 +73,8 @@ class ItemApi extends Controller
             return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
 
-        dd($item->content);
+        $jsonContent = json_encode($item->content);
+        dd($jsonContent);
         $itemService = new ItemServices();
         $digital = $itemService->getDigitalCourse($id);
 
