@@ -58,6 +58,45 @@ class ItemApi extends Controller
             return response('Chưa có loại khóa học', 400);
         }
         $updateItem = Item::find($input['id']);
+        if (!empty($input['nolimit_time']) && $input['nolimit_time'] == 'on') {
+            $input['nolimit_time'] = 1;
+        } else {
+            $input['nolimit_time'] = 0;
+        }
+        if (!empty($input['allow_re_register']) && $input['allow_re_register'] == 'on') {
+            $input['allow_re_register'] = 1;
+        } else {
+            $input['allow_re_register'] = 0;
+        }
+        if (!empty($input['activiy_trial']) && $input['activiy_trial'] == 'on') {
+            $input['activiy_trial'] = 1;
+        } else {
+            $input['activiy_trial'] = 0;
+        }
+        if (!empty($input['activiy_test']) && $input['activiy_test'] == 'on') {
+            $input['activiy_test'] = 1;
+        } else {
+            $input['activiy_test'] = 0;
+        }
+        if (!empty($input['activiy_visit']) && $input['activiy_visit'] == 'on') {
+            $input['activiy_visit'] = 1;
+        } else {
+            $input['activiy_visit'] = 0;
+        }
+
+        if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
+            $input['is_paymentfee'] = 1;
+        } else {
+            $input['is_paymentfee'] = 0;
+        }
+
+        if (!empty($input['ages_range'])) {
+            $agesRange = explode("-", $input['ages_range']);
+            if (count($agesRange) == 2) {
+                $input['ages_min'] = $agesRange[0];
+                $input['ages_max'] = $agesRange[1];
+            }
+        }
         $updateItem->update($input);
         return response()->json(['result' => $updateItem === false ? false : true]);
     }
