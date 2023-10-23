@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Apis;
 
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Configuration;
 use App\Models\Spm;
 use App\Services\CommonServices;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +16,14 @@ class ListingApi extends Controller
     public function index(Request $request) 
     {
         $data = new \stdClass();
+       
+        $configM = new Configuration();
+        $data['ios_transaction'] = $configM->enableIOSTrans($request);
+        $platform = $request->get('p', '');
+        $allowIos = $platform == 'ios' ? $data['ios_transaction'] : 1;
         if ($request->get('page')) {
             $partners = (new CommonServices)
-                ->getSearchResults($request)
+                ->getSearchResults($request, false, $allowIos)
                 ->paginate($request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION), ['*'], 'page', $request->get('page'));
 
             $data->numPage = ceil($partners->total() / $request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION));
@@ -35,6 +42,7 @@ class ListingApi extends Controller
                         'items.id'
                     )
                     ->whereIn('items.id', explode(',', $value->itemIds))
+                    ->whereNotIn("items.subtype", !$allowIos ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE] : [])
                     ->select(
                         'items.id',
                         'items.title',

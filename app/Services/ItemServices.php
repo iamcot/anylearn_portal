@@ -299,7 +299,7 @@ class ItemServices
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
-                    ->whereNotIn("subtype", !$allowIOS ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL] : [])
+                    ->whereNotIn("subtype", !$allowIOS ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE] : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
