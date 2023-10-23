@@ -18,9 +18,8 @@ class ListingApi extends Controller
         $data = new \stdClass();
        
         $configM = new Configuration();
-        $data['ios_transaction'] = $configM->enableIOSTrans($request);
         $platform = $request->get('p', '');
-        $allowIos = $platform == 'ios' ? $data['ios_transaction'] : 1;
+        $allowIos = $platform == 'ios' ? $configM->enableIOSTrans($request) : 1;
         if ($request->get('page')) {
             $partners = (new CommonServices)
                 ->getSearchResults($request, false, $allowIos)
