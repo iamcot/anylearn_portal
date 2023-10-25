@@ -153,9 +153,7 @@ class PageController extends Controller
 
         if ($request->get('cb')) {
             session()->put('cb', $request->get('cb'));  
-            dd(Request::create($request->get('cb'))->is('class/*'));
-            if (dd(app('router')->getRoutes()->match())) {
-                
+            if (Request::create($request->get('cb'))->is('class/*')) {
                 $this->data['role'] = 'member';
             }
         }
