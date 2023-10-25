@@ -75,7 +75,7 @@ class RegisterController extends Controller
         } else if ($data['role'] == 'teacher') {
             return view('register.teacher', $data);
         }
-        
+
         return view('register.index', $data);
     }
 
