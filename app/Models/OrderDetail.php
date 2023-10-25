@@ -174,8 +174,8 @@ class OrderDetail extends Model
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('order_details.created_at', 'desc');
-            // dd($query->get());
-        $result = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
+        // dd($query->get());
+        $result = $query->distinct()->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
         return $result;
     }
     public function searchall($userId, $title)
