@@ -46,7 +46,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         $urlNext = $request->get('cb') ? $request->get('cb') : url()->previous();
-        $request->session()->put('cb', $urlNext);
+        $request->session()->flash('cb', $urlNext);
 
         return view('auth.login');
     }
