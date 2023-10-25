@@ -50,7 +50,7 @@ class CommonServices
                 DB::raw('group_concat(categories.title) as categories')
             );
         if (!$allowIOS) {
-            $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
+            $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE]);
         }
         return $data->groupBy('items.id')
             ->orderbyRaw('items.is_hot desc, items.boost_score desc')
@@ -79,7 +79,7 @@ class CommonServices
         }
 
         if (!$allowIOS) {
-            $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
+            $data = $data->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE]);
         }
 
         return $data->select(
@@ -98,13 +98,17 @@ class CommonServices
             ->get();
     }
 
-    public function getSearchResults(Request $request, $searchMap = false)
+    public function getSearchResults(Request $request, $searchMap = false, $allowIOS = 1)
     {
         $items = DB::table('items')
             ->join('users', 'users.id', '=', 'items.user_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
             ->whereNull('items.item_id');
+
+        if (!$allowIOS) {
+            $items = $items->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE]);
+        }
 
         if ($request->get('subtype')) {
             $items->where('items.subtype', $request->get('subtype'));
