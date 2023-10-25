@@ -35,7 +35,7 @@
 
                  <p id="footer-download">TẢI APP NGAY TẠI</p>
                  <p>
-                     <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
+                     <a href="itms-apps://apps.apple.com/vn/app/anylearn/id6453411038">
                          <img src="/cdn/onepage/images/ios.png" style="max-width:50%" alt="">
                      </a>
                  </p>
