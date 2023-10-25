@@ -221,7 +221,7 @@
                                     <div style="font-size:12px;font-style:normal;font-weight:normal;line-height:19px"
                                         align="center">
                                         <a style="text-decoration:underline;color:#1bc1b6"
-                                            href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-o/"
+                                            href="https://apps.apple.com/vn/app/anylearn/id6453411038"
                                             target="_blank"
                                             data-saferedirecturl="https://www.google.com/url?q=https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-o/&amp;source=gmail&amp;ust=1676032798837000&amp;usg=AOvVaw2jWycnX7lXtP1IPRzU9rTV"><img
                                                 style="border:0;display:block;height:auto;width:100%;max-width:157px"
@@ -238,11 +238,12 @@
                                         <a style="text-decoration:underline;color:#1bc1b6"
                                             href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-b/"
                                             target="_blank"
-                                            data-saferedirecturl="https://www.google.com/url?q=https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-b/&amp;source=gmail&amp;ust=1676032798837000&amp;usg=AOvVaw3ZCWaf7VsM7dseO6yjwa-W"><img
-                                                style="border:0;display:block;height:auto;width:100%;max-width:157px"
+                                            data-saferedirecturl="https://www.google.com/url?q=https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-b/&amp;source=gmail&amp;ust=1676032798837000&amp;usg=AOvVaw3ZCWaf7VsM7dseO6yjwa-W">
+                                            <img style="border:0;display:block;height:auto;width:100%;max-width:157px"
                                                 alt="" width="157"
                                                 src="https://ci6.googleusercontent.com/proxy/X1OwWHaYlfGFX5HotHOs1XkL4eulaadUoBmUrywPErb3-0QN7_LYgdBQsUCUceB8Ikn2MvoZCgJypTK3A9whOJ9GjFk00m0VwapPEgxC_J4MZfEiWavSRXSlLlhwwRgRmYTfhTG9eDT3=s0-d-e1-ft#https://i6.createsend1.com/ei/y/D4/9D8/32F/193221/csfinal/android-9906db045101453c.png"
-                                                class="CToWUd" data-bit="iit"></a>
+                                                class="CToWUd" data-bit="iit">
+                                        </a>
                                     </div>
                                 </div>
                             </div>
