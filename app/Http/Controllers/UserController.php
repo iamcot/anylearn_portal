@@ -183,7 +183,7 @@ class UserController extends Controller
                                 ? Carbon::parse($row[1])->format('Y-01-01')
                                 : Carbon::createFromFormat('d/m/Y', $row[1])->format('Y-m-d');
                         }
-                        $exists = User::where('phone', $row[4])->first(); 
+                        $exists = User::where('phone', $row[4])->first();
                         if ($exists) {
                             if (!$exists->is_registered) {
                                 $data = [
@@ -218,7 +218,7 @@ class UserController extends Controller
                                 'source' => isset($row[8]) ? $row[8] : '',
                                 'is_registered' => 0,
                                 'role' => isset($row[9]) && in_array($row[9], UserConstants::$memberRoles)
-                                    ? $row[9] 
+                                    ? $row[9]
                                     : UserConstants::ROLE_MEMBER,
                                 'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
@@ -276,7 +276,7 @@ class UserController extends Controller
     }
 
     public function addMember(Request $request)
-    { 
+    {
         if ($request->input('action') == 'addMember') {
             $member = $request->except('action', 'note');
             $used   = User::where('phone', $member['phone'])->first();
@@ -308,7 +308,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('notify', 'Thao tác thành công!');
         }
-        
+
         $this->data['hasBack'] = route('user.members');
         $this->data['navText'] = __('Thêm thành viên');
 
@@ -905,6 +905,9 @@ class UserController extends Controller
     public function schedule(Request $request, $orderDetailId)
     {
         $user = Auth::user();
+        if (!$user) {
+            return redirect()->back()->with('notify', 'Người dùng không đúng');
+        }
         $orderDetail = DB::table('order_details')
         ->join('orders', 'orders.id', '=', 'order_details.order_id')
         ->where('order_details.id', $orderDetailId)
@@ -916,26 +919,27 @@ class UserController extends Controller
             return redirect()->back()->with('notify', 'Đơn hàng không đúng');
         }
         $item = Item::find($orderDetail->item_id);
-        $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
-        if ($schedule) {
-
-            $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
-
-            $daylist = [];
-            $weekdays = explode(',', $schedule->weekdays);
-            foreach ($period as $date) {
-                if (in_array($date->format('w') + 1, $weekdays)) {
-                    $daylist[] = $date->format('Y-m-d');
+        if (!$user) {
+            return redirect()->back()->with('notify', 'Không có dữ liệu về khóa học');
+        } else {
+            $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
+            if ($schedule) {
+                $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
+                $daylist = [];
+                $weekdays = explode(',', $schedule->weekdays);
+                foreach ($period as $date) {
+                    if (in_array($date->format('w') + 1, $weekdays)) {
+                        $daylist[] = $date->format('Y-m-d');
+                    }
                 }
+                $this->data['schedule'] = $schedule;
+                $this->data['daylist'] = $daylist;
+                $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
             }
-            $this->data['schedule'] = $schedule;
-            $this->data['daylist'] = $daylist;
-            $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
-        }
-
-        if ($item->subtype == 'digital') {
-            $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
-            $this->data['code'] = $code ? $code->code : '********';
+            if ($item->subtype == 'digital') {
+                $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
+                $this->data['code'] = $code ? $code->code : '********';
+            }
         }
         $this->data['item'] = $item;
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');

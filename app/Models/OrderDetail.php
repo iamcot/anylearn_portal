@@ -39,6 +39,7 @@ class OrderDetail extends Model
             ->join('items', 'items.id', '=', 'od.item_id')
             ->join('users', 'users.id', '=', 'orders.user_id') //this join is for main user
             ->join('users AS u2', 'u2.id', '=', 'od.user_id') //this join is for child user
+            ->leftjoin('schedules', 'schedules.item_id', '=', 'items.id') // temporary
             ->leftJoin('participations AS pa', function ($join) {
                 $join->on('pa.schedule_id', '=', 'od.id')
                     ->on('pa.participant_user_id', '=', 'u2.id');
@@ -182,8 +183,8 @@ class OrderDetail extends Model
                 DB::raw('CASE WHEN iua.value IS  NULL THEN 0 ELSE iua.value END AS user_rating')
             )
             ->orderBy('order_details.created_at', 'desc');
-            // dd($query->get());
-        $result = $query->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
+        // dd($query->get());
+        $result = $query->distinct()->where('orders.status', OrderConstants::STATUS_DELIVERED)->get();
         return $result;
     }
     public function searchall($userId, $title)

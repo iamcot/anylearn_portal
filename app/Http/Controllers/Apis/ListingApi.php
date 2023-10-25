@@ -6,55 +6,33 @@ use App\Constants\ConfigConstants;
 use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Configuration;
 use App\Models\Spm;
+use App\Services\CommonServices;
 use Illuminate\Support\Facades\DB;
 
 class ListingApi extends Controller
 {
     public function index(Request $request) 
     {
-        $data = [];
-        if ($request->all()) {
-            $items = DB::table('items')
-                ->join('users', 'users.id', '=', 'items.user_id')
-                ->where('items.status', ItemConstants::STATUS_ACTIVE)
-                ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
-                ->whereNull('items.item_id');
+        $data = new \stdClass();
+       
+        $configM = new Configuration();
+        $platform = $request->get('p', '');
+        $allowIos = $platform == 'ios' ? $configM->enableIOSTrans($request) : 1;
+        if ($request->get('page')) {
+            $partners = (new CommonServices)
+                ->getSearchResults($request, false, $allowIos)
+                ->paginate($request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION), ['*'], 'page', $request->get('page'));
 
-            if ($request->get('subtype')) {
-                $items->where('items.subtype', $request->get('subtype'));
-            }
-
-            if ($request->get('category')) {
-                $items->join('items_categories as ic', 'ic.item_id', '=', 'items.id');
-                $items->where('ic.category_id', $request->get('category'));
-            }
-
-            if ($request->get('price')) {
-                $items->where('items.price', '<=', $request->get('price'));
-            }
-
-            if ($request->get('province')) {
-                $items->join('user_locations as ul', 'ul.user_id', '=', 'items.user_id');
-                $items->where('ul.province_code', $request->get('province'));
-            }
-
-            if ($request->get('search')) {
-                $items->where('items.title', 'like', '%'. $request->get('search') . '%');
-            }
-
-            $partners = $items->select(
-                    'users.id',
-                    'users.name',
-                    DB::raw('group_concat(items.id) as itemIds')
-                )
-                ->groupBy('items.user_id')
-                ->get();
+            $data->numPage = ceil($partners->total() / $request->get('size', ConfigConstants::CONFIG_NUM_PAGINATION));
+            $data->currentPage = (int) $request->get('page');
             
-            foreach($partners as $value) {
+            foreach($partners->items() as $value) {
                 $partner = new \stdClass();
                 $partner->id = $value->id;
                 $partner->name = $value->name;
+                $partner->image = $value->image; 
 
                 $partner->items = DB::table('items')
                     ->leftjoin(
@@ -63,6 +41,7 @@ class ListingApi extends Controller
                         'items.id'
                     )
                     ->whereIn('items.id', explode(',', $value->itemIds))
+                    ->whereNotIn("items.subtype", !$allowIos ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE] : [])
                     ->select(
                         'items.id',
                         'items.title',
@@ -116,8 +95,8 @@ class ListingApi extends Controller
                 }
 
                 $partner->items = $partner->items->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)->get(); 
-                $data[] = $partner;
-            }   
+                $data->searchResults[] = $partner;
+            } 
         }
 
         $spm = new Spm();

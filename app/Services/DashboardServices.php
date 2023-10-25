@@ -55,6 +55,20 @@ class DashboardServices
         }
         return $query->count('orders.id');
     }
+    public function userCountpanertAPI($getAll = true,$users)
+    {
+        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('items.user_id', $users->id);
+        if ($this->dateF && !$getAll) {
+            $query = $query->where('orders.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT && !$getAll) {
+            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        return $query->count('orders.id');
+    }
     public function itemCount($getAll = true)
     {
         $items = DB::table('items');
@@ -100,7 +114,20 @@ class DashboardServices
         }
         return $query->sum('order_details.unit_price');
     }
-
+    public function gmvpartnerAPI($getAll = true,$users)
+    {
+        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('items.user_id', $users->id);
+        if ($this->dateF && !$getAll) {
+            $query = $query->where('orders.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT && !$getAll) {
+            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        return $query->sum('order_details.unit_price');
+    }
     public function userCreatedByWeek()
     {
         $last3m = date('Ym', strtotime('-3 month'));
@@ -228,6 +255,22 @@ class DashboardServices
             ->orderBy('reg_num', 'DESC')
             ->select('items.title', DB::raw('count(od.id) AS reg_num'))
             ->take($num)->get();
+        return $query;
+    }
+    public function topItempartnerAPI($num = 10,$user)
+    {
+        $query = DB::table('items')->where('items.user_id', $user->id)
+            ->leftJoin('order_details AS od', 'od.item_id', '=', 'items.id');
+        if ($this->dateF) {
+            $query = $query->where('od.created_at', '>=', $this->dateF);
+        }
+        if ($this->dateT) {
+            $query = $query->where('od.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+        }
+        $query = $query->groupBy('items.title')
+        ->orderBy('reg_num', 'DESC')
+        ->select('items.title', DB::raw('count(od.id) AS reg_num'))
+        ->take($num)->get();
         return $query;
     }
     public function saleActivities($saleId, $getAll = true)

@@ -1,4 +1,5 @@
 @inject('itemServ','App\Services\ItemServices')
+@inject('userServ','App\Services\UserServices')
 @extends('layout')
 
 @section('rightFixedTop')
@@ -34,7 +35,7 @@
             <thead>
                 <thead>
                     <th class="text-center">#</th>
-
+                    @if($userServ->isMod()) <th width="5%" class="text-center">Hot</th>@endif
                     @foreach(App\Models\I18nContent::$supports as $locale)
                     <th>@lang('Tiêu đề') [{{ $locale }}]</th>
                     @endforeach
@@ -46,7 +47,7 @@
                 @foreach($list as $article)
                 <tr>
                     <th class="text-center">{{ $article->id }}</th>
-
+                    @if($userServ->isMod()) <td class="text-center"><a href="{{ route('ajax.touch.ishot', ['table' => 'articles', 'id' =>  $article->id ]) }}">{!! $userServ->hotIcon($article->is_hot) !!}</a></td>@endif
                     @foreach(App\Models\I18nContent::$supports as $locale)
                     <td>{{ $article->title[$locale]}}</td>
                     @endforeach

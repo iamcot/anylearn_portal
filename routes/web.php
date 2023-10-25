@@ -15,11 +15,30 @@ use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// For existing pages - v3
+Route::middleware('version')->group(function () {
+    Route::get('/', 'PageController@home')->name('home');
+    Route::get('/search', 'PageController@search')->name('search');
+    Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+    Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+    Route::get('/articles', 'PageController@article');
+});
+
+// For new pages - v3
+Route::get('/subtype/{sutype}', 'ReactController@index')->name('subtype');
+Route::get('/partner/{id}', 'ReactController@index')->name('partner');
+Route::get('/listing', 'ReactController@index')->name('listing');
+Route::get('/map', 'ReactController@index')->name('map');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/auth/logout', 'Auth\LoginController@logout')->name('auth.logout');
+});
+
 Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
 
-Route::get('/', 'PageController@home')->name('home');
+// Route::get('/', 'PageController@home')->name('home');
 Route::get('/info', 'PageController@landing')->name('info');
 Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
@@ -33,7 +52,7 @@ Route::any('/bot', function() {
 });
 Route::get('/bot/chat', 'HelpcenterController@chatbot');
 
-Route::get('/search', 'PageController@search')->name('search');
+// Route::get('/search', 'PageController@search')->name('search');
 Route::get('/schools', 'PageController@schools')->name('schools');
 Route::get('/classes', 'PageController@classes')->name('allclasses');
 Route::get('/teachers', 'PageController@teachers')->name('teachers');
@@ -51,8 +70,8 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::any('/class/{itemId}/{url}/video/{lessonId}', 'PageController@videoPage')->name('page.video');
-Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
-Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+//Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+// Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Route::any('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
@@ -65,7 +84,7 @@ Route::get('/helpcenter', 'HelpcenterController@index')->name('helpcenter');
 Route::get('/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
 Route::get('/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
 
-Route::get('/partner/helpcenter', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
+Route::get('/help/partner', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
 // Route::get('/partner/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.parnter.topic');
 // Route::get('/partner/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.parnter.knowledge');
 

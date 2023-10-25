@@ -527,16 +527,17 @@ class UserApi extends Controller
             $lastContract = Contract::find($contractId);
         }
 
-        $configM = new Configuration();
-        if ($lastContract->type == UserConstants::ROLE_TEACHER) {
-            $key = ConfigConstants::CONTRACT_TEACHER;
-            $template = $configM->get($key);
-            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-        } else {
-            $key = ConfigConstants::CONTRACT_SCHOOL;
-            $template = $configM->get($key);
-            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-        }
+            $configM = new Configuration();
+            if ($lastContract->type == UserConstants::ROLE_TEACHER) {
+                $key = ConfigConstants::CONTRACT_TEACHER;
+                $template = $configM->get($key);
+                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+            } else {
+                $key = ConfigConstants::CONTRACT_SCHOOL;
+                $template = $configM->get($key);
+                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+            }
+
         return response()->json($lastContract);
     }
 
@@ -559,7 +560,20 @@ class UserApi extends Controller
             return response($result, 400);
         }
     }
-
+    public function saveContractV3(Request $request)
+    {
+        $user = $request->get('_user');
+        $inputs = $request->all();
+        $userServ = new UserServices();
+        $result = $userServ->saveContract($user, $inputs);
+        if ($result === true) {
+            return response()->json([
+                'result' => true,
+            ]);
+        } else {
+            return response($result, 400);
+        }
+    }
     public function signContract(Request $request, $contractId)
     {
         $user = $request->get('_user');
