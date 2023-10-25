@@ -150,8 +150,8 @@ class PageController extends Controller
         $this->data['user'] = $refUser;
         $this->data['role'] = $request->get('r');
         $this->data['newUser'] = Auth::user();
-        dd(url('/'), $request->get('cb'), $request->get('cb') != '/');
-        if ($request->get('cb') || $request->get('cb') != '/') {
+
+        if ($request->get('cb') || $request->get('cb') != url('/')) {
             session()->put('cb', $request->get('cb'));  
             if (Request::create($request->get('cb'))->is('class/*')) {
                 $this->data['role'] = 'member';
