@@ -25,6 +25,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -141,10 +142,6 @@ class PageController extends Controller
             return redirect('/');
         }
 
-        if ($request->get('cb')) {
-            session()->put('cb', $request->get('cb'));  
-        }
-
         if ($request->get('has-account')) {
             //$this->data['isReg'] = true;
             return redirect()->route('login');     
@@ -153,6 +150,14 @@ class PageController extends Controller
         $this->data['user'] = $refUser;
         $this->data['newUser'] = Auth::user();
         $this->data['role'] = $request->get('r');
+
+        if ($request->get('cb')) {
+            session()->put('cb', $request->get('cb'));  
+            if (dd(Route::getRoutes()->match($request->get('cb')))) {
+                
+                $this->data['role'] = 'member';
+            }
+        }
 
         if ($this->data['role'] == 'member') {
             return view('register.member', $this->data);
