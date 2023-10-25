@@ -45,7 +45,7 @@
                                             &nbsp;</div>
                                     </div>
 
-                                    <div style="margin-left: 20px; margin-right: 20px">
+                                    <!--div style="margin-left: 20px; margin-right: 20px">
                                         <div
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <h2 class="v1size-20"
@@ -60,7 +60,7 @@
                                                 href="https://play.google.com/store/apps/details?id=vn.anylearn"
                                                 target="_blank" rel="noreferrer">Tải app ngay</a>
                                         </div>
-                                    </div>
+                                    </div-->
 
                                     <div style="margin-left: 20px; margin-right: 20px">
                                         <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">
@@ -101,7 +101,7 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <h1
                                                 style="margin-top: 0; margin-bottom: 20px; font-style: normal; font-weight: normal; color: #fff; font-size: 18px; line-height: 26px; text-align: center">
-                                                <span style="color: #0d0d0d"><strong>Chúc mừng&nbsp; {{ $username }} Đăng ký khóa học thành công trên anyLEARN!</strong></span>
+                                                <span style="color: #0d0d0d"><strong>Chúc mừng&nbsp;{{ $username }} đăng ký khóa học thành công trên anyLEARN!</strong></span>
                                             </h1>
                                         </div>
                                     </div>
