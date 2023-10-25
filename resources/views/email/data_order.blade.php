@@ -1,8 +1,8 @@
 @if (!empty($orderData))
 <div style="margin-left: 20px;color: #000; font-size: 16px; line-height: 24px;">
-    <p>Thông tin khóa học: {{ $orderData->title}}</p>
-    <p>Học Phí: {{number_format($orderData->unit_price)}}đ</p>
-    <p>Học Viên: {{$orderData->childName}}</p>
+    <p>Tên khóa học: {{ $orderData->title}}</p>
+    <p>Học phí: {{number_format($orderData->unit_price)}}đ</p>
+    <p>Học viên: {{$orderData->childName}}</p>
     <p>
         @if($orderData->plan_location_name)
         Học tại {{ $orderData->plan_location_name }}; @foreach(explode(",", $orderData->plan_weekdays) as $day ) {{ $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }} {{ !$loop->last ? ", " : ". " }} @endforeach
