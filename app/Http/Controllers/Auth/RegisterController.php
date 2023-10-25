@@ -58,8 +58,10 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         Auth::login($user);
-        //return session()->has('cb') ? redirect()->to(session()->get('cb')) : redirect('/');  
-        
+        if (session()->has('cb')) {
+            return redirect()->to(session()->get('cb'));
+        }
+
         $data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
@@ -73,6 +75,7 @@ class RegisterController extends Controller
         } else if ($data['role'] == 'teacher') {
             return view('register.teacher', $data);
         }
+        
         return view('register.index', $data);
     }
 
