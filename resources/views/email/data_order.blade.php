@@ -8,7 +8,7 @@
     @if($orderData->plan_location_name)
         <p>Lịch học: 
         @foreach(explode(",", $orderData->plan_weekdays) as $day ) {{ 
-           $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }} {{ !$loop->last ? ", " : ". " }} 
+           $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }}{{ !$loop->last ? ", " : "" }} 
         @endforeach</p>
         <p>Nơi học: {{ $orderData->plan_location_name }}</p>
         <p>Ngày bắt đầu: {{ date("d/m/Y", strtotime($orderData->plan_date_start)) }}</p>
