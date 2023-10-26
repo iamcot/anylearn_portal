@@ -128,7 +128,15 @@
                                         </div>
                                     </div>
 
-
+                                    <div style="margin-left: 20px; margin-right: 20px">
+                                        <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
+                                            <p class="v1size-16" lang="x-size-16"
+                                                style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; color: #0d0d0d;">
+                                               Trân trọng cảm ơn!
+                                                Đội ngũ anyLEARN
+                                            </p>
+                                        </div>
+                                    </div>
 
                                     <div style="margin-left: 20px; margin-right: 20px">
                                         <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">&nbsp;</div>
