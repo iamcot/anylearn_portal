@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ItemConstants;
 use App\Constants\OrderConstants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,10 @@ class OrderDetail extends Model
                 $query->whereRaw('iua.item_id = items.id AND iua.user_id = users.id AND iua.type=?', [ItemUserAction::TYPE_RATING]);
             })
             ->leftJoin('item_schedule_plans AS isp', 'isp.id', '=', 'od.item_schedule_plan_id')
+            ->leftJoin('item_codes', function ($join) {
+                $join->on('items.id', '=', 'item_codes.item_id');
+                $join->on('users.id', '=', 'item_codes.user_id');
+            })
             ->where('orders.user_id', $userId)
             ->where('items.status', '>', 0)
             ->where('users.status', '>', 0)
@@ -55,6 +60,7 @@ class OrderDetail extends Model
                 'od.id',
                 'items.title',
                 'users.name',
+                'item_codes.code as item_code',
                 DB::raw('ifnull(items.subtype, "") as item_subtype'),
                 // 'items.date_start as date',
                 // 'items.time_start as time',
@@ -84,7 +90,10 @@ class OrderDetail extends Model
                 ->orWhere('items.status', '>=', 90);
         })->get();
         // $open = $query2->where('items.date_start', '>=', $today)->get();
-        $open = $query2->where('orders.status', OrderConstants::STATUS_DELIVERED)->whereNull('pa.id')->where('items.user_status', 1)->get();
+        $open = $query2->where('orders.status', OrderConstants::STATUS_DELIVERED)
+            ->whereNull('pa.id')
+            ->where('items.user_status', 1)
+            ->get();
 
         $fav = DB::table('item_user_actions AS iua')
             ->join('items', 'items.id', '=', 'iua.item_id')

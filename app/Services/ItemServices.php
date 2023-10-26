@@ -281,7 +281,9 @@ class ItemServices
                 ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $ct->title, $items);
+            if (count($items) > 0) {
+                $data[] = $commonS->setTemplate('/', 'Các lớp học '. $ct->title, $items);
+            }
         }
 
         return $data;
@@ -1287,12 +1289,12 @@ class ItemServices
         if (!$item) {
             throw new Exception("Khóa  học không tồn tại");
             // return response("Khóa  học không tồn tại", 404);
-        }
+        } 
         $itemId = $item->id;
-        $userT = Auth::user();
-        $userC = DB::table('users')->where('user_id', $userT->id)->where('is_child', 1)->orWhere('id', $userT->id)->get();
+        $userT = Auth::user() ?? $request->get('_user');
+        $userC = DB::table('users')->where('user_id',$userT->id)->where('is_child',1)->orWhere('id',$userT->id)->get();
         $who = $userC->pluck('id')->toArray();
-
+        
         $isConfirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $orderDetail->id)
             ->where('participant_user_id', $joinedUserId)
