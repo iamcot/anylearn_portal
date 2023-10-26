@@ -339,7 +339,7 @@
                                         </div>
                                     </div>
                                     <div style="Margin-left:20px;Margin-right:20px; text-align: center;">
-                                        <img src="url('cdn/img/Visa.png')" width="20%" class="img-fluid">
+                                        <img src="{{ url('cdn/img/Visa.png') }}" width="20%" class="img-fluid">
                                         <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
 
                                         <img src="/cdn/img/onepay.png" width="20%" class="img-fluid">
