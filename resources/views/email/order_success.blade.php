@@ -333,8 +333,9 @@
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="vertical-align:middle">
                                             <p class="size-11"
-                                                style="Margin-top:0;Margin-bottom:20px;font-size:11px;line-height:19px;text-align:center"
-                                                lang="x-size-11"><span style="color:#ffffff">Các hình thức thanh toán trên anyLEARN</span></p>
+                                                style="Margin-top:0;Margin-bottom:10px;font-size:12px;line-height:19px;text-align:center"
+                                                lang="x-size-11"><span style="color:#ffffff">Các hình thức thanh toán trên anyLEARN</span>
+                                            </p>
                                             
                                         </div>
                                     </div>
@@ -347,11 +348,11 @@
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="vertical-align:middle">
                                             <p class="size-11"
-                                                style="Margin-top:0;Margin-bottom:20px;font-size:11px;line-height:19px;text-align:center"
+                                                style="Margin-top:0;Margin-bottom:10px;font-size:12px;line-height:19px;text-align:center"
                                                 lang="x-size-11"><span style="color:#ffffff">Xem thêm về anyLEARN</span></p>
                                         </div>
                                     </div>
-                                    <div style="Margin-left:20px;Margin-right:20px">
+                                    <div style="Margin-left:20px;Margin-right:20px;margin-bottom:10px;">
                                         <div>
                                             <div style="padding-top:8px;text-align:center"><span
                                                     style="padding-right:4px"><a
