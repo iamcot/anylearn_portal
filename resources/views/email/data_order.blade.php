@@ -1,7 +1,7 @@
 @if (!empty($orderData))
 <div style="margin-left: 20px;color: #000; font-size: 16px; line-height: 24px;">
     <p>Khóa học: {{ $orderData->title }}</p>
-    <p>Đơn vị: {{ $partner }}</p>
+    <p>Đơn vị: {{ $partner->name }}</p>
     <p>Học phí: {{ number_format($orderData->unit_price) }}đ</p>
     <p>Học viên: {{ $orderData->childName }}</p>
 
