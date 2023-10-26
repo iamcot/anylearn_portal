@@ -809,7 +809,7 @@ class TransactionService
                 'className' => $dataOrder->title,
                 'orderData' => $dataOrder,
                 'extraFee' => $this->extraFee($orderItem->id),
-                'partnerName' => $author->name,
+                'partner' => $author->name,
             ]);
 
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [

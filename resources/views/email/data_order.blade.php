@@ -1,10 +1,10 @@
 @if (!empty($orderData))
 <div style="margin-left: 20px;color: #000; font-size: 16px; line-height: 24px;">
     <p>Khóa học: {{ $orderData->title }}</p>
-    <p>Đơn vị: {{ $partnerName }}
+    <p>Đơn vị: {{ $partner }}</p>
     <p>Học phí: {{ number_format($orderData->unit_price) }}đ</p>
     <p>Học viên: {{ $orderData->childName }}</p>
-    
+
     @if($orderData->plan_location_name)
         <p>Lịch học: 
         @foreach(explode(",", $orderData->plan_weekdays) as $day ) {{ 
