@@ -66,8 +66,7 @@
                                         <div class="layout__inner" style="border-collapse:collapse;display:table;width:80%;margin: 0 auto;">
 
                                             <div class="column"
-                                                style="text-align:left;color:#94a4b0;font-size:14px;line-height:21px;font-family:sans-serif;max-width:220px;min-width:220px;width:220px;width:calc(12300px - 2000%);Float:left">
-
+                                                style="text-align:left;color:#94a4b0;font-size:14px;line-height:21px;font-family:sans-serif;max-width:240px;min-width:220px;width:220px;width:calc(12300px - 2000%);Float:left">
                                                 <div style="font-size:12px;font-style:normal;font-weight:normal;line-height:19px"
                                                     align="center">
                                                     <a style="text-decoration:underline;color:#1bc1b6"
@@ -81,7 +80,7 @@
                                                 </div>
                                             </div>
                                             <div class="column"
-                                                style="text-align:left;color:#94a4b0;font-size:14px;line-height:21px;font-family:sans-serif;max-width:320px;min-width:220px;width:220px;width:calc(12300px - 2000%);Float:left">
+                                                style="text-align:left;color:#94a4b0;font-size:14px;line-height:21px;font-family:sans-serif;max-width:240px;min-width:220px;width:220px;width:calc(12300px - 2000%);Float:left">
 
                                                 <div style="font-size:12px;font-style:normal;font-weight:normal;line-height:19px"
                                                     align="center">
