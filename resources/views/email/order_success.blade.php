@@ -53,16 +53,15 @@
                                                 lang="x-size-20"><span style="color: #ffffff">anyLEARN - Ứng dụng kết nối giáo dục hàng đầu.</span></h2>
                                         </div>
                                     </div>
-                                    <div style="margin-left: 20px; margin-right: 20px">
+                                    <!--div style="margin-left: 20px; margin-right: 20px">
                                         <div class="v1btn v1btn--flat v1btn--small"
                                             style="margin-bottom: 20px; text-align: center">
                                             <a style="border-radius: 4px; display: inline-block; font-size: 11px; font-weight: bold; line-height: 19px; padding: 6px 12px; text-align: center; text-decoration: none !important; transition: opacity 0.1s ease-in; color: #1a7aba !important; background-color: #ffffff; font-family: sans-serif"
                                                 href="#"
                                                 target="_blank" rel="noreferrer">Tải app ngay</a>
                                         </div>
-                                    </div>
-
-                                    <div class="layout two-col stack"
+                                    </div-->
+                                    <div class="layout two-col stack margin-bottom: 16px;"
                                         style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word">
                                         <div class="layout__inner" style="border-collapse:collapse;display:table;width:100%">
 
