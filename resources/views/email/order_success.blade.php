@@ -72,7 +72,7 @@
                     </div>
                     <div style="background-color: #1bc1b6">
                         <div class="v1layout v1one-col v1stack"
-                            style="margin: 0 auto; max-width: 600px; min-width: 320px; width: 320px; width: calc(28000% - 167400px); overflow-wrap: break-word; word-wrap: break-word; word-break: break-word">
+                            style="margin: 0 auto; max-width: 800px; min-width: 320px; width: 320px; width: calc(28000% - 167400px); overflow-wrap: break-word; word-wrap: break-word; word-break: break-word">
                             <div class="v1layout__inner" style="border-collapse: collapse; display: table; width: 100%">
                                 <div class="v1column"
                                     style="text-align: left; color: #94a4b0; font-size: 14px; line-height: 21px; font-family: sans-serif">
@@ -112,9 +112,9 @@
                                         <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-16" lang="x-size-16"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; color: #0d0d0d;">
-                                                Hãy truy cập ứng dụng anyLEARN để theo dõi lịch học và xác nhận tham gia lớp học nhé!<br> 
+                                                Hãy truy cập ứng dụng anyLEARN để xác nhận tham gia khóa học và theo dõi lịch học nhé! 
                                                 Trường hợp bạn đăng ký khóa học online học qua các ứng dụng hay video, vui lòng theo dõi 
-                                                email để nhận mã code và hướng dẫn kích hoạt khoá học nhé!.
+                                                email để nhận mã code và hướng dẫn kích hoạt khoá học nhé!
                                             </p>
                                         </div>
                                     </div>
