@@ -342,7 +342,7 @@
                                         <img src="{{ url('cdn/img/Visa.png') }}" style="margin-right:10px;" width="50">
                                         <img src="{{ url('/cdn/img/mastercard.png') }}" style="margin-right:10px;" width="50">
                                         <img src="{{ url('/cdn/img/onepay.png') }}" style="margin-right:10px;" width="50">
-                                        <span style="display:iniline-block;padding-bottom:7px;"><img src="{{ url('/cdn/img/MoMoLogo.png') }}" width="35"></span>
+                                        <span><img src="{{ url('/cdn/img/MoMoLogo.png') }}" width="36" style="margin-bottom: 7px;"></span>
                                    </div>
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="vertical-align:middle">
