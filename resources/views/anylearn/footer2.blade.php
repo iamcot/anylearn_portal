@@ -21,8 +21,8 @@
                 </ul>
                 <h4 class=" text-decoration-none text-black" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div>
-                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="1000"></a>
-                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038"><img src="/cdn/img/appstore.png" class="img-fluid"width="1000" ></a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="70%"></a>
+                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038"><img src="/cdn/img/appstore.png" class="img-fluid"width="70%" ></a>
                 </div>
             </div>
             <div class="col-sm-3">
