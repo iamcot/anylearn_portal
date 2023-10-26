@@ -147,8 +147,8 @@
                                         <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-16" lang="x-size-16"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; color: #0d0d0d;">
-                                                Hãy truy cập ứng dụng anyLEARN để xác nhận tham gia khóa học và theo dõi lịch học nhé. 
-                                                Trường hợp bạn đăng ký khóa học online học qua các ứng dụng hay video, vui lòng theo dõi 
+                                                Hãy truy cập ứng dụng anyLEARN để xác nhận tham gia khóa học và theo dõi lịch học. 
+                                                Trường hợp bạn đăng ký khóa học online, học qua các ứng dụng hay video, vui lòng theo dõi 
                                                 email để nhận mã code và hướng dẫn kích hoạt khoá học nhé!
                                             </p>
                                         </div>
@@ -342,7 +342,7 @@
                                         <img src="{{ url('cdn/img/Visa.png') }}" style="margin-right:10px;" width="50">
                                         <img src="{{ url('/cdn/img/mastercard.png') }}" style="margin-right:10px;" width="50">
                                         <img src="{{ url('/cdn/img/onepay.png') }}" style="margin-right:10px;" width="50">
-                                        <img src="{{ url('/cdn/img/MoMoLogo.png') }}" style="margin-right:10px;" width="35">
+                                        <img src="{{ url('/cdn/img/MoMoLogo.png') }}" style="margin-right:10px;vertical-align:middle;" width="35">
                                    </div>
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="vertical-align:middle">

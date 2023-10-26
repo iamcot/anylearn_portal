@@ -6,12 +6,12 @@
     <p>Học viên: {{ $orderData->childName }}</p>
 
     @if($orderData->plan_location_name)
+        <p>Nơi học: {{ $orderData->plan_location_name }}</p>
         <p>Lịch học: 
         @foreach(explode(",", $orderData->plan_weekdays) as $day ) {{ 
            $day == 1 ? __('Chủ Nhật') : __("Thứ " . ($day)) }}{{ !$loop->last ? ", " : "" }} 
         @endforeach</p>
-        <p>Nơi học: {{ $orderData->plan_location_name }}</p>
-        <p>Ngày bắt đầu: {{ date("d/m/Y", strtotime($orderData->plan_date_start)) }}</p>
+        <p>Ngày bắt đầu: {{ date("d/m/Y", strtotime($orderData->plan_date_start)) }}</p>    
     @else
        <p>Ngày bắt đầu: {{ date('d/m/Y', strtotime($orderData->date_start)) }}</p>
     @endif
