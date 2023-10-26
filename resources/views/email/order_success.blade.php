@@ -339,10 +339,10 @@
                                         </div>
                                     </div>
                                     <div style="Margin-left:20px;Margin-right:20px; text-align: center;">
-                                        <img src="{{ url('cdn/img/Visa.png') }}" width="50">
-                                        <img src="{{ url('/cdn/img/mastercard.png') }}" width="50">
-                                        <img src="{{ url('/cdn/img/onepay.png') }}" width="50">
-                                        <img src="{{ url('/cdn/img/MoMoLogo.png') }}" width="50">
+                                        <img src="{{ url('cdn/img/Visa.png') }}" style="margin-right:10px;" width="50">
+                                        <img src="{{ url('/cdn/img/mastercard.png') }}" style="margin-right:10px;" width="50">
+                                        <img src="{{ url('/cdn/img/onepay.png') }}" style="margin-right:10px;" width="50">
+                                        <img src="{{ url('/cdn/img/MoMoLogo.png') }}" style="margin-right:10px;" width="35">
                                    </div>
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="vertical-align:middle">
