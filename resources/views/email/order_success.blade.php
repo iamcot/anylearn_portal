@@ -61,8 +61,8 @@
                                                 target="_blank" rel="noreferrer">Tải app ngay</a>
                                         </div>
                                     </div-->
-                                    <div class="layout two-col stack margin-bottom: 16px;"
-                                        style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word">
+                                    <div class="layout two-col stack"
+                                        style="Margin:0 auto;max-width:320px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word;margin-bottom: 16px;">
                                         <div class="layout__inner" style="border-collapse:collapse;display:table;width:100%">
 
                                             <div class="column"
