@@ -334,6 +334,21 @@
                                         <div style="vertical-align:middle">
                                             <p class="size-11"
                                                 style="Margin-top:0;Margin-bottom:20px;font-size:11px;line-height:19px;text-align:center"
+                                                lang="x-size-11"><span style="color:#ffffff">Các hình thức thanh toán trên anyLEARN</span></p>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class=" d-flex justify-content-between">
+                                        <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
+                                        <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
+
+                                        <img src="/cdn/img/onepay.png" width="20%" class="img-fluid">
+                                        <img src="/cdn/img/MoMoLogo.png" width="20%" class="img-fluid">
+                                   </div>
+                                    <div style="Margin-left:20px;Margin-right:20px">
+                                        <div style="vertical-align:middle">
+                                            <p class="size-11"
+                                                style="Margin-top:0;Margin-bottom:20px;font-size:11px;line-height:19px;text-align:center"
                                                 lang="x-size-11"><span style="color:#ffffff">Xem thêm về anyLEARN</span></p>
                                         </div>
                                     </div>
