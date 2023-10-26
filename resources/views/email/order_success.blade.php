@@ -132,7 +132,7 @@
                                         <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-16" lang="x-size-16"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; color: #0d0d0d;">
-                                               Trân trọng cảm ơn!
+                                               Trân trọng cảm ơn!<br>
                                                 Đội ngũ anyLEARN
                                             </p>
                                         </div>
@@ -164,7 +164,7 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-12"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 12px; line-height: 19px; text-align: center"
-                                                lang="x-size-12">Trong trường hợp bạn cần hỗ trợ, vui lòng liên hệ hotline: 0374900344 <br> hoặc
+                                                lang="x-size-12">Nếu bạn cần hỗ trợ, hãy liên hệ anyLEARN qua hotline: 0374900344 <br> hoặc
                                                     email: info@anylearn.vn
                                             </p>
                                         </div>
