@@ -110,19 +110,21 @@
                                         'extraFee' => $extraFee
                                         ])
                                     <div style="margin-left: 20px; margin-right: 20px">
-                                        <div
-                                            style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
+                                        <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-16"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; text-align: center"
-                                                lang="x-size-16"><span style="color: #0d0d0d">Hãy theo dõi lịch học trên
-                                                    ứng dụng anyLEARN và qua email để nhận thông tin về lịch khai giảng
-                                                    của lớp học nhé!</span></p>
+                                                lang="x-size-16">
+                                                <span style="color: #0d0d0d">
+                                                    Hãy truy cập ứng dụng anyLEARN để theo dõi lịch học và xác nhận tham gia lớp học nhé!<br> 
+                                                    Trường hợp bạn đăng ký khóa học online học qua các ứng dụng hay video, vui lòng theo dõi 
+                                                    email để nhận mã code và hướng dẫn kích hoạt khoá học nhé.
+                                                </span>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">
-                                            &nbsp;</div>
-                                    </div>
+                                    <!--div style="margin-left: 20px; margin-right: 20px">
+                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">&nbsp;</div>
+                                    </div-->
 
                                 </div>
 
