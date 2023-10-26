@@ -30,6 +30,7 @@ class OrderSuccess extends Mailable
      */
     public function build()
     {
+        dd($this->data);
         return $this->subject('[anyLEARN] Xác nhận đăng ký thành công khóa học')
         ->view('email.order_success', $this->data);
     }

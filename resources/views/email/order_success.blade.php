@@ -101,7 +101,7 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <h1
                                                 style="margin-top: 0; margin-bottom: 20px; font-style: normal; font-weight: normal; color: #fff; font-size: 18px; line-height: 26px; text-align: center">
-                                                <span style="color: #0d0d0d"><strong>Chúc mừng&nbsp;{{ $username }} đăng ký khóa học thành công trên anyLEARN!</strong></span>
+                                                <span style="color: #0d0d0d"><strong>Chúc mừng&nbsp;{{ $username }} đã đăng ký khóa học thành công trên anyLEARN!</strong></span>
                                             </h1>
                                         </div>
                                     </div>
