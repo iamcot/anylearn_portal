@@ -92,8 +92,7 @@
                                     style="text-align: left; color: #94a4b0; font-size: 14px; line-height: 21px; font-family: sans-serif">
 
                                     <div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 27px; font-size: 1px">
-                                            &nbsp;</div>
+                                        <div style="mso-line-height-rule: exactly; line-height: 27px; font-size: 1px">&nbsp;</div>
                                     </div>
 
                                     <div style="margin-left: 20px; margin-right: 20px">
@@ -112,16 +111,28 @@
                                         <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-16" lang="x-size-16"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; color: #0d0d0d;">
-                                                Hãy truy cập ứng dụng anyLEARN để xác nhận tham gia khóa học và theo dõi lịch học nhé! 
+                                                Hãy truy cập ứng dụng anyLEARN để xác nhận tham gia khóa học và theo dõi lịch học nhé. 
                                                 Trường hợp bạn đăng ký khóa học online học qua các ứng dụng hay video, vui lòng theo dõi 
                                                 email để nhận mã code và hướng dẫn kích hoạt khoá học nhé!
                                             </p>
                                         </div>
                                     </div>
-                                    <!--div style="margin-left: 20px; margin-right: 20px">
-                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">&nbsp;</div>
-                                    </div-->
 
+                                    <div style="margin-left: 20px; margin-right: 20px">
+                                        <div style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
+                                            <p class="v1size-16" lang="x-size-16"
+                                                style="margin-top: 0; margin-bottom: 20px; font-size: 16px; line-height: 24px; color: #0d0d0d;">
+                                                Chúc bạn học tập hiệu quả, đừng quên để lại đánh giá của bạn cho khóa học và giới thiệu 
+                                                bạn bè cùng học để tích lũy thêm ưu đãi từ anyLEARN.
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div style="margin-left: 20px; margin-right: 20px">
+                                        <div style="mso-line-height-rule: exactly; line-height: 1px; font-size: 1px">&nbsp;</div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -145,8 +156,9 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <p class="v1size-12"
                                                 style="margin-top: 0; margin-bottom: 20px; font-size: 12px; line-height: 19px; text-align: center"
-                                                lang="x-size-12">Trong trường hợp bạn cần hỗ trợ, vui lòng liên hệ 0374900344 <br>hoặc
-                                                    email: info@anylearn.vn</p>
+                                                lang="x-size-12">Trong trường hợp bạn cần hỗ trợ, vui lòng liên hệ hotline: 0374900344 <br> hoặc
+                                                    email: info@anylearn.vn
+                                            </p>
                                         </div>
                                     </div>
 
