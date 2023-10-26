@@ -19,7 +19,7 @@ orders
     <h1 class="mb-4">Lịch học của tôi</h1>
 
     <div>
-        <h2>Danh sách các buổi học</h2>
+        <h2>Danh sách các buổi học tiếp theo</h2>
         <table class="table table-striped text-secondary" id="myTable">
             <thead>
                 <tr>
