@@ -50,6 +50,7 @@ class TransactionController extends Controller
         $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ActivitybonusConstants::Activitybonus_Bonus])
             ->orderby('id', 'desc')
             ->with('user')
+            ->with('refuser')
             ->paginate(20);
         $this->data['navText'] = __('Quản lý Giao dịch');
         return view('transaction.list', $this->data);
