@@ -21,8 +21,8 @@
                 </ul>
                 <h4 class=" text-decoration-none text-black" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div>
-                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid" width="70%"></a>
-                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038"><img src="/cdn/img/appstore.png" class="img-fluid"width="70%" ></a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid mt-2" width="70%"></a>
+                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038"><img src="/cdn/img/appstore.png" class="img-fluid mt-1"width="70%" ></a>
                 </div>
             </div>
             <div class="col-sm-3">
@@ -38,10 +38,10 @@
             <div class="col-sm-3">
                 <h4 class="text-decoration-none text-black pb-2">THANH TOÁN</h4>
                 <div class=" d-flex justify-content-between">
-                        <img src="/cdn/img/Visa.png" width="20%" class="img-fluid mt-2">
+                        <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
                         <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
 
-                        <img src="/cdn/img/onepay.png" width="20%" class="img-fluid mt-1">
+                        <img src="/cdn/img/onepay.png" width="20%" class="img-fluid ">
                         <img src="/cdn/img/MoMoLogo.png" width="20%" class="img-fluid">
 
                 </div>
