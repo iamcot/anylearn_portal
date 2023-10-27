@@ -26,7 +26,6 @@
                 <tr>
                     <th class="text-center" width="5%" scope="col">#ID</th>
                     <th class="text-center">@lang('User (SDT)')</th>
-                    <th class="text-center">@lang('Người GT')</th>
                     <th class="text-center">@lang('Loại')</th>
                     <th class="text-center">@lang('Số tiền')</th>
 
@@ -46,7 +45,6 @@
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
                     <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
-                    <td class="text-center" scope="row">@if(!empty($row->refuser)) {{ $row->refuser->name }} ({{ $row->refuser->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
 
