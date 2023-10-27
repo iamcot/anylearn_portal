@@ -924,27 +924,15 @@ class UserController extends Controller
         } else {
             $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
             if ($schedule) {
-                $currentDate = Carbon::now();
-                $endDate = Carbon::parse($schedule->date_end);
-
-                // Đảm bảo $endDate không vượt qua thời điểm hiện tại
-                if ($endDate->greaterThan($currentDate)) {
-                    $endDate = $currentDate;
-                }
-
-                $startDate = $currentDate->copy()->subMonth();
-
-                $period = CarbonPeriod::create($startDate, $endDate);
+                $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
 
                 $daylist = [];
                 $weekdays = explode(',', $schedule->weekdays);
-
                 foreach ($period as $date) {
                     if (in_array($date->format('w') + 1, $weekdays)) {
                         $daylist[] = $date->format('Y-m-d');
                     }
                 }
-
                 $this->data['schedule'] = $schedule;
                 $this->data['daylist'] = $daylist;
                 $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
