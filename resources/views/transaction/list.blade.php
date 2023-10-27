@@ -28,6 +28,12 @@
                     <th class="text-center">@lang('User (SDT)')</th>
                     <th class="text-center">@lang('Loại')</th>
                     <th class="text-center">@lang('Số tiền')</th>
+
+                    <th class="text-center">@lang('Nội dung')</th>
+                    <th class="text-center">@lang('Đơn hàng')</th>
+                    <th class="text-center">@lang('Ref User')</th>
+                    <th class="text-center">@lang('Ref Amount')</th>
+
                     <th class="text-center">@lang('Ngân hàng')</th>
                     <th class="text-center">@lang('Cập nhật')</th>
                     <th width="15%" class="text-right" scope="col">@lang('Thao tác')</th>
@@ -41,6 +47,12 @@
                     <td class="text-center" scope="row">@if(!empty($row->user)) {{ $row->user->name }} ({{ $row->user->phone }}) @endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
+
+                    <td class="text-center" scope="row">{{ $row->content }}</td>
+                    <td class="text-center" scope="row">{{ $row->order_id }}</td>
+                    <td class="text-center" scope="row">{{ $row->ref_user_id }}</td>
+                    <td class="text-center" scope="row">{{ $row->ref_amount }}</td>
+
                     <td class="text-center" scope="row">
                         @foreach(json_decode($row->pay_info, true) ?? [] as $k => $v) 
                             {{ $k . ": " . $v . ' | ' }} 
