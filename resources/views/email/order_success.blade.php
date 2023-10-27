@@ -62,7 +62,7 @@
                                         </div>
                                     </div-->
                                     <div class="layout two-col stack"
-                                        style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word;margin-bottom: 16px;">
+                                        style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word;margin-bottom: 22px;">
                                         <div class="layout__inner" style="border-collapse:collapse;display:table;width:55%;margin: 0 auto;">
 
                                             <div class="column"
