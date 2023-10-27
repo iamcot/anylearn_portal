@@ -50,7 +50,7 @@
                                             style="mso-line-height-rule: exactly; mso-text-raise: 11px; vertical-align: middle">
                                             <h2 class="v1size-20"
                                                 style="margin-top: 0; margin-bottom: 16px; font-style: normal; font-weight: normal; color: #fff; font-size: 17px; line-height: 26px; text-align: center"
-                                                lang="x-size-20"><span style="color: #ffffff">anyLEARN - Ứng dụng kết nối giáo dục hàng đầu.</span></h2>
+                                                lang="x-size-20"><span style="color: #ffffff">anyLEARN - Giúp cha mẹ không còn nỗi lo tìm trường</span></h2>
                                         </div>
                                     </div>
                                     <!--div style="margin-left: 20px; margin-right: 20px">
