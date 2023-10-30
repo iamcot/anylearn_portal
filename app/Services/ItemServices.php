@@ -1363,6 +1363,7 @@ class ItemServices
             ->where('transactions.user_id', $orderUser->id)
             ->select('transactions.*')
             ->first();
+            // dd($directCommission);
         if ($directCommission) {
             $addmoney = Participation::where('item_id', '=', $itemId)
                 ->where('schedule_id', '=', $scheduleId)
@@ -1378,7 +1379,8 @@ class ItemServices
         // approve up tree transaction, just 1 level
         $refUser = User::find($orderUser->user_id);
         if ($refUser) {
-            $inDirectCommission = DB::table('transactions')
+            if ($directCommission) {
+                $inDirectCommission = DB::table('transactions')
                 ->join('orders', 'orders.id', '=', 'transactions.order_id')
                 ->where('orders.status', OrderConstants::STATUS_DELIVERED)
                 ->where('transactions.order_id', $directCommission->order_id)
@@ -1387,6 +1389,7 @@ class ItemServices
                 ->where('transactions.user_id', $refUser->id)
                 ->select('transactions.*')
                 ->first();
+            }
             if ($inDirectCommission) {
                 $transService->approveWalletcTransaction($inDirectCommission->id);
             }
