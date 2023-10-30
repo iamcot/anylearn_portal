@@ -22,7 +22,7 @@ courseconfirm
                     <td>{{ $row->id }}</td>
                     <td class="text-end">
                         @if ($row->participant_confirm_count == 0)
-                        <a href="{{ route('class.author.confirmjoin' , ['itemId' => $row->courseId ]) }}?join_user={{ $row->user_id }}&join=99" class="btn btn-success btn-sm">Xác nhận tham gia</a>
+                        <a href="{{ route('class.author.confirmjoin' , ['itemId' => $row->courseId ]) }}?join_user={{ $row->user_id }}&join=99&orderId={{ $row->order_id }}" class="btn btn-success btn-sm">Xác nhận tham gia</a>
                         @elseif ($row->confirm_count == 0)
                         <a class="badge bg-warning text-white">Đợi xác nhận</a>
                         @elseif ($row->participant_confirm_count == 1 & $row->confirm_count == 1)

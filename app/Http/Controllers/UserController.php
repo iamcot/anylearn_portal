@@ -183,7 +183,7 @@ class UserController extends Controller
                                 ? Carbon::parse($row[1])->format('Y-01-01')
                                 : Carbon::createFromFormat('d/m/Y', $row[1])->format('Y-m-d');
                         }
-                        $exists = User::where('phone', $row[4])->first(); 
+                        $exists = User::where('phone', $row[4])->first();
                         if ($exists) {
                             if (!$exists->is_registered) {
                                 $data = [
@@ -218,7 +218,7 @@ class UserController extends Controller
                                 'source' => isset($row[8]) ? $row[8] : '',
                                 'is_registered' => 0,
                                 'role' => isset($row[9]) && in_array($row[9], UserConstants::$memberRoles)
-                                    ? $row[9] 
+                                    ? $row[9]
                                     : UserConstants::ROLE_MEMBER,
                                 'password' => Hash::make($row[4]),
                                 'status' => UserConstants::STATUS_INACTIVE,
@@ -276,7 +276,7 @@ class UserController extends Controller
     }
 
     public function addMember(Request $request)
-    { 
+    {
         if ($request->input('action') == 'addMember') {
             $member = $request->except('action', 'note');
             $used   = User::where('phone', $member['phone'])->first();
@@ -308,7 +308,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('notify', 'Thao tác thành công!');
         }
-        
+
         $this->data['hasBack'] = route('user.members');
         $this->data['navText'] = __('Thêm thành viên');
 
@@ -518,14 +518,15 @@ class UserController extends Controller
                 'items.title',
                 'items.id as courseId',
                 'order_details.id',
+                'order_details.order_id',
                 'order_details.user_id',
                 'order_details.created_at',
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.order_id AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.order_id  AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count')
             )

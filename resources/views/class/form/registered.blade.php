@@ -28,7 +28,7 @@
                 </td>
                 <td>
                     @if($student->confirm_count == 0)
-                    <a href="{{ route('class.author.confirmjoin' , ['itemId' =>  $course['info']->id ]) }}?join_user={{ $student->id }}" class="btn btn-success btn-sm">Xác nhận tham gia</a>
+                    <a href="{{ route('class.author.confirmjoin' , ['itemId' =>  $course['info']->id ]) }}?join_user={{ $student->id }}&orderId={{ $student->order_id }}" class="btn btn-success btn-sm">Xác nhận tham gia</a>
                     @elseif ($student->participant_confirm_count == 0)
                     <a class="badge bg-warning text-white">Đợi học viên</a>
                     @elseif ($student->confirm_count == 1 & $student->participant_confirm_count == 1)
