@@ -429,13 +429,13 @@ class ClassController extends Controller
                 'users.name',
                 'users.id',
                 'order_details.created_at',
-                'order_details.order_id',
+                'order_details.id AS orderId',
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.order_id  AND participations.organizer_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count'),
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.order_id  AND participations.participant_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
                 DB::raw("(SELECT value FROM item_user_actions
@@ -620,7 +620,7 @@ class ClassController extends Controller
             // ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
             ->where('order_details.item_id', $itemId)
             ->where('order_details.user_id', $joinUserId)
-            ->where('order_details.order_id', $orderId)
+            ->where('order_details.id', $orderId)
             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             // ->whereNull('participations.id')
             ->select('order_details.id')

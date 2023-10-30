@@ -518,15 +518,14 @@ class UserController extends Controller
                 'items.title',
                 'items.id as courseId',
                 'order_details.id',
-                'order_details.order_id',
                 'order_details.user_id',
                 'order_details.created_at',
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.order_id AND participations.participant_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.order_id  AND participations.organizer_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count')
             )
