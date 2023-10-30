@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+
 
 class LoginController extends Controller
 {
@@ -116,6 +118,14 @@ class LoginController extends Controller
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());
         $userService = new UserServices();
+        if (empty($user->api_token)) {
+            $saveToken = User::find($user->id)->update(
+                ['api_token' => hash('sha256', Str::random(60))]
+            );
+            if (!$saveToken) {
+                return response('Không thể hoàn tất xác thực', 500);
+            }
+        }
         Cookie::queue(Cookie::forever('api_token', $user->api_token, null, null, false, false));
 
         if ($request->session()->get('cb')) {
