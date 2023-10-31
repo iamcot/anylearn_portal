@@ -85,8 +85,7 @@ orders
         const registrationDate = searchRegistrationDate.value.toLowerCase();
         const status = searchStatus.value;
         const userAccount = searchUserAccount.value.toLowerCase();
-
-        const courses = JSON.parse('<?php echo json_encode($data); ?>');
+        const courses = JSON.parse(`<?php echo json_encode($data); ?>`);
         // console.log(courseName, registrationDate, status, userAccount);
 
         // Lọc các khóa học phù hợp với các tiêu chí tìm kiếm
