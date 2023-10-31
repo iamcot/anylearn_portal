@@ -189,6 +189,7 @@ class TransactionController extends Controller
         }
         $transService = new TransactionService();
         $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ATM);
+
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
@@ -199,7 +200,7 @@ class TransactionController extends Controller
             ->join('items', 'items.id', '=', 'od.item_id')
             ->where('orders.user_id', Auth::id())
             ->whereIn('orders.status', [
-                    OrderConstants::STATUS_DELIVERED, 
+                    OrderConstants::STATUS_DELIVERED,
                     OrderConstants::STATUS_RETURN_BUYER_PENDING,
                     OrderConstants::STATUS_RETURN_SYSTEM,
                     OrderConstants::STATUS_REFUND,
@@ -222,7 +223,7 @@ class TransactionController extends Controller
 
         $transService = new TransactionService();
         $transService->sendReturnRequest($orderId);
-        
+
         return redirect()->back()->with('notify', 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!');
     }
 
@@ -233,7 +234,7 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $order = Order::find($orderId);
-        if ($order->status != OrderConstants::STATUS_DELIVERED 
+        if ($order->status != OrderConstants::STATUS_DELIVERED
             && $order->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
@@ -860,12 +861,12 @@ class TransactionController extends Controller
         if (!isset($result['orderId'])) {
             return redirect('/')->with('notify', 'Yêu cầu không hợp lệ');
         }
-        $orderId = $payment == 'momo' 
-            ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+        $orderId = $payment == 'momo'
+            ? Processor::getOrderIdFromPaymentToken($result['orderId'])
             : $result['orderId'];
 
         $order = Order::find($orderId);
-        $user = User::find($order->user_id); 
+        $user = User::find($order->user_id);
 
         if (!isset($result['status'])) {
             return redirect()->route('cart', ['api_token' => $user->api_token]);
@@ -932,7 +933,7 @@ class TransactionController extends Controller
             return;
         }
         try {
-            
+
             if ($payment == 'momo') {
                 Log::debug("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
                 $query = $request->all();
@@ -946,10 +947,10 @@ class TransactionController extends Controller
                 if (!isset($result['orderId'])) {
                    echo 'Yêu cầu không hợp lệ';
                 }
-                $orderId = $payment == 'momo' 
-                    ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+                $orderId = $payment == 'momo'
+                    ? Processor::getOrderIdFromPaymentToken($result['orderId'])
                     : $result['orderId'];
-        
+
                 $transService = new TransactionService();
                 $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
@@ -976,7 +977,7 @@ class TransactionController extends Controller
         }
 
         try {
-            $query = $request->getQueryString(); 
+            $query = $request->getQueryString();
             $url = $processor->processReturnData($query);
             if (!empty($url)) {
                 return redirect($url);

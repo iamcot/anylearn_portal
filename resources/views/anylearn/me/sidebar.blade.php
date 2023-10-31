@@ -14,11 +14,11 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
     <div class="sidebar-heading">
         @lang('Chức năng đối tác')
     </div>
-    <li class="nav-item {{ in_array($route, ['me.admitstudent']) ? 'active' : '' }}">
+    {{-- <li class="nav-item {{ in_array($route, ['me.admitstudent']) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('me.admitstudent') }}" data-spm="nav.class">
             <i class="fas fa-user-shield"></i>
             <span>@lang('Tiếp nhận học viên')</span></a>
-    </li>
+    </li> --}}
 
     <li class="nav-item {{ in_array($route, [
                 'helpcenter.parnter.index',
@@ -149,7 +149,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             </div>
         </div>
     </li>
-    
+
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

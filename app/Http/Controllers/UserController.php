@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
@@ -513,6 +514,7 @@ class UserController extends Controller
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
             ->whereIn('order_details.user_id', $userIds)
             ->select(
                 'items.title',
@@ -521,11 +523,11 @@ class UserController extends Controller
                 'order_details.user_id',
                 'order_details.created_at',
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count')
             )
@@ -924,27 +926,15 @@ class UserController extends Controller
         } else {
             $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
             if ($schedule) {
-                $currentDate = Carbon::now();
-                $endDate = Carbon::parse($schedule->date_end);
-
-                // Đảm bảo $endDate không vượt qua thời điểm hiện tại
-                if ($endDate->greaterThan($currentDate)) {
-                    $endDate = $currentDate;
-                }
-
-                $startDate = $currentDate->copy()->subMonth();
-
-                $period = CarbonPeriod::create($startDate, $endDate);
+                $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
 
                 $daylist = [];
                 $weekdays = explode(',', $schedule->weekdays);
-
                 foreach ($period as $date) {
                     if (in_array($date->format('w') + 1, $weekdays)) {
                         $daylist[] = $date->format('Y-m-d');
                     }
                 }
-
                 $this->data['schedule'] = $schedule;
                 $this->data['daylist'] = $daylist;
                 $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();

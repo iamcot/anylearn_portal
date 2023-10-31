@@ -19,9 +19,7 @@ class ActivitybonusServices
         if ($itemid != null) {
             $check = Transaction::where('user_id', $user->id)->where('pay_info', $key)->where('ref_id',$itemid)->first();
             if ($check == null || $allowDuplicate) {
-                $user->update([
-                    'wallet_c' => $user->wallet_c + $activitybonus->get($key)
-                ]);
+                
                 $result = Transaction::create([
                     'user_id' => $user->id,
                     'type' => ActivitybonusConstants::Activitybonus_Bonus,
@@ -33,6 +31,11 @@ class ActivitybonusServices
                     'order_id' => null,
                     'ref_id' => $itemid
                 ]);
+                if ($approve) {
+                    $user->update([
+                        'wallet_c' => $user->wallet_c + $activitybonus->get($key)
+                    ]);
+                }
                 return $result;
             } else {
                 return null;
@@ -40,9 +43,7 @@ class ActivitybonusServices
         } else {
             $check = Transaction::where('user_id', $user->id)->where('pay_info', $key)->first();
             if ($check == null || $allowDuplicate) {
-                $user->update([
-                    'wallet_c' => $user->wallet_c + $activitybonus->get($key)
-                ]);
+               
                 $result = Transaction::create([
                     'user_id' => $user->id,
                     'type' => ActivitybonusConstants::Activitybonus_Bonus,
@@ -54,6 +55,11 @@ class ActivitybonusServices
                     'order_id' => null,
                     'ref_id' => null
                 ]);
+                if ($approve) {
+                    $user->update([
+                        'wallet_c' => $user->wallet_c + $activitybonus->get($key)
+                    ]);
+                }
                 return $result;
             } else {
                 return null;
