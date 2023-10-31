@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants\ActivitybonusConstants;
 use App\Constants\ConfigConstants;
+use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
@@ -513,6 +514,7 @@ class UserController extends Controller
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
             ->whereIn('order_details.user_id', $userIds)
             ->select(
                 'items.title',
@@ -521,11 +523,11 @@ class UserController extends Controller
                 'order_details.user_id',
                 'order_details.created_at',
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count')
             )

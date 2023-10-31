@@ -144,7 +144,7 @@ class TransactionService
      */
     public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
     {
-        
+
         $childUser = $request->get('child', '');
         $input = $request->all();
         $item = Item::find($itemId);
@@ -180,7 +180,7 @@ class TransactionService
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
                     ->orderBy('id', 'desc')
-                    ->first(); 
+                    ->first();
                 if ($openOrder) {
                     $status = OrderConstants::STATUS_NEW;
                     $transStatus = ConfigConstants::TRANSACTION_STATUS_PENDING;
@@ -205,7 +205,7 @@ class TransactionService
 
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
-                ]); 
+                ]);
                 Transaction::create([
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_ORDER,
@@ -591,13 +591,13 @@ class TransactionService
     }
 
     public function sendReturnRequest($orderId) {
-        
+
         $order = Order::find($orderId);
         if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
             return false;
         }
 
-        $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);  
+        $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
         Mail::to(env('MAIL_FROM_ADDRESS'))->send(
             new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
         );
@@ -610,7 +610,7 @@ class TransactionService
             && $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
             return false;
         }
-           
+
         $user = User::find($openOrder->user_id);
         $zaloService = new ZaloServices(true);
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
@@ -620,11 +620,11 @@ class TransactionService
             $anypoint = Transaction::where('order_id', $od->id)
                 ->where('type', ConfigConstants::TRANSACTION_COMMISSION)
                 ->first();
-            
+
             if ($anypoint) {
                 if ($anypoint->status == ConfigConstants::TRANSACTION_STATUS_DONE)  {
                     $user->update([
-                        'wallet_c' => $user->wallet_c - $anypoint->amount 
+                        'wallet_c' => $user->wallet_c - $anypoint->amount
                     ]);
                 }
 
@@ -641,7 +641,7 @@ class TransactionService
         $allTrans = Transaction::where('order_id', $openOrder->id)
             ->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE])
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
-            ->get();    
+            ->get();
 
         foreach($allTrans as $tnx) {
             if ($tnx->type == ConfigConstants::TRANSACTION_ORDER) {
@@ -649,7 +649,7 @@ class TransactionService
                     'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
                 ]);
             }
-            
+
             // Hoàn anypoint bị đổi cho đơn hàng
             if ($tnx->type == ConfigConstants::TRANSACTION_EXCHANGE) {
                 $user->update([
@@ -668,7 +668,7 @@ class TransactionService
                 ]);
             }
         }
-        
+
         OrderDetail::where('order_id', $openOrder->id)->update([
             'status' => $trigger
         ]);
@@ -676,7 +676,7 @@ class TransactionService
         Order::find($openOrder->id)->update([
             'status' => $trigger,
         ]);
-  
+
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_RETURN, $openOrder->user_id, []);
         Log::debug("System return transaction & orders", ["orderId" => $openOrder->id]);
@@ -690,7 +690,7 @@ class TransactionService
         if ($openOrder->status != OrderConstants::STATUS_RETURN_SYSTEM) {
             return false;
         }
-       
+
         $openOrder->update([
             'status' => OrderConstants::STATUS_REFUND
         ]);
@@ -707,8 +707,8 @@ class TransactionService
             'amount' => $openOrder->amount,
             "id" => $openOrder->id,
         ]);
-  
-        $notifServ = new Notification();  
+
+        $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_REFUND, $openOrder->user_id, []);
         Log::debug("Refund orders", ["orderId" => $openOrder->id]);
 
@@ -793,6 +793,7 @@ class TransactionService
         $voucherEvent = new VoucherEventLog();
 
         foreach ($orderDetails as $orderItem) {
+            $transService = new TransactionService();
             $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
             $item = Item::find($orderItem->item_id);
             $author = User::find($item->user_id);
@@ -800,6 +801,15 @@ class TransactionService
                 $user->update([
                     'wallet_m' => DB::raw('wallet_m + ' . $item->price)
                 ]);
+            }
+            if ($item->subtype == "digital" || $item->subtype == "video") {
+                $transOrder = Transaction::where('order_id',$orderItem->id)->where('status',ConfigConstants::TRANSACTION_STATUS_PENDING)->get();
+                foreach ($transOrder as $value) {
+                    // dd($value->type);
+                    if ($value->type == ConfigConstants::TRANSACTION_COMMISSION) {
+                        $transService->approveWalletcTransaction($value->id);
+                    }
+                }
             }
             $userService->MailToPartnerRegisterNew($item, $user->id, $author);
             $dataOrder = $this->orderDetailToDisplay($orderItem->id);
@@ -842,6 +852,7 @@ class TransactionService
             if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL) {
                 $this->activateDigitalCourses($openOrder->user_id, $orderItem);
             }
+
         }
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
 
