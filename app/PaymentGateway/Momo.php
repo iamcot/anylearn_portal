@@ -120,7 +120,7 @@ class Momo implements PaymentInterface {
       */
     private function getPaymentPage($amount, $orderid, $extras = []) {
         try {
-            $result = $this->createPaymentRequest($amount, $orderid);
+            $result = $this->createPaymentRequest($amount, $orderid); dd($result);
             $signature = $result['signature'];
             $data = json_decode($result['result'],true);
             Log::debug($data);
