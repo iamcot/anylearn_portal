@@ -7,6 +7,8 @@ class Monkey
     use CURLTrait;
     use CodeGenerationTrait;
 
+    const FAIL = 'fail';
+
     private $orderData;
 
     private function validateOrderData($productID, $promotionID, $transactionID)
@@ -26,30 +28,27 @@ class Monkey
 
     private function createOrderRequest()  
     {
-        $cookie = 'website_beta_session=QB0yRNevMET7QlGPMyzOCjYnE0Kl1FhKN5xsEExo;'; 
         $domain = env('MONKEY_DOMAIN', 'https://monkey.edu.vn') . '/api/create-order-agent';
-
-        $apiKey = env('MONKEY_API_KEY', 'UNKNOWN');
+        $apiKey = env('MONKEY_API_KEY', 'UNKNOWN'); 
         $agentCode = env('MONKEY_AGENT_CODE', 'UNKNOWN');
 
-        $header = ["api-key: $apiKey", "agent-code: $agentCode", "cookie: $cookie"];
+        $header = ["api-key: $apiKey", "agent-code: $agentCode"];
         return $this->post($domain, json_encode($this->orderData), $header);
     }
 
-    private function processReturnData($response) 
+    private function processReturnData($returnData) 
     {
-        
-        return $response->message;
+        if (!isset($returnData['status']) || $returnData['status'] == self::FAIL) {
+            return new ServiceResponse(false, $returnData['message'] ?? 'INVALID_RESPONSE'); 
+        }
+        return new ServiceResponse(true, $returnData['message'], $returnData['data']);
     }
 
     public function processOrderRequest($productID, $promotionID, $transactionID) 
     {
-        $response   = new ServiceResponse(false, []); 
         $validation = $this->validateOrderData($productID, $promotionID, $transactionID);
-
         if (true !== $validation) {
-            $response->errorCode['message'] = $validation;
-            return $response;
+            return new ServiceResponse(false, $validation);
         }    
 
         $result = json_decode($this->createOrderRequest(), true);
