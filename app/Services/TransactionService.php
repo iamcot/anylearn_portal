@@ -88,21 +88,24 @@ class TransactionService
     {
         // update transaction
         $trans = Transaction::find($id);
-
-        $trans->update([
-            'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-        // update c wallet
-        User::find($trans->user_id)->update([
-            'wallet_c' => DB::raw('wallet_c + ' . $trans->amount),
-        ]);
-        // send notif
-        $notifServ = new Notification();
-        $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
-            'content' => $trans->content
-        ]);
-        return true;
+        if ($trans->status === ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            $trans->update([
+                'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+            // update c wallet
+            User::find($trans->user_id)->update([
+                'wallet_c' => DB::raw('wallet_c + ' . $trans->amount),
+            ]);
+            // send notif
+            $notifServ = new Notification();
+            $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
+                'content' => $trans->content
+            ]);
+            return true;
+        }  else {
+            return false;
+        }
     }
 
     public function approveWalletmTransaction($id)

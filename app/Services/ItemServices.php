@@ -1303,7 +1303,7 @@ class ItemServices
         // if ($isConfirmed > 0) {
 
 
-        $check =Participation::where('item_id', $itemId)
+        $check = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $scheduleId)
             ->where('participant_user_id', $joinedUserId)->first();
         if (!$check) {
