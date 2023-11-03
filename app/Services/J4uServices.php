@@ -176,7 +176,7 @@ class J4uServices
         }
 
         if (!$allowIOS) {
-            $items = $items->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL]);
+            $items = $items->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE]);
         }
             
         $items = $items->select(                

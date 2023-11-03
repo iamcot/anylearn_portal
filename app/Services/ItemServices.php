@@ -281,7 +281,9 @@ class ItemServices
                 ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $ct->title, $items);
+            if (count($items) > 0) {
+                $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $ct->title, $items);
+            }
         }
 
         return $data;
@@ -299,7 +301,7 @@ class ItemServices
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
-                    ->whereNotIn("subtype", !$allowIOS ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL] : [])
+                    ->whereNotIn("subtype", !$allowIOS ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE] : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
@@ -1293,40 +1295,57 @@ class ItemServices
         $userC = DB::table('users')->where('user_id', $userT->id)->where('is_child', 1)->orWhere('id', $userT->id)->get();
         $who = $userC->pluck('id')->toArray();
 
-        $isConfirmed = Participation::where('item_id', $itemId)
-            ->where('schedule_id',  $orderDetail->id)
-            ->where('participant_user_id', $joinedUserId)
-            ->count();
+        // $isConfirmed = Participation::where('item_id', $itemId)
+        //     ->where('schedule_id',  $orderDetail->id)
+        //     ->where('participant_user_id', $joinedUserId)
+        //     ->count();
 
-        if ($isConfirmed > 0) {
-            $Confirmed = Participation::where('item_id', $itemId)
-                ->where('schedule_id',  $orderDetail->id)
-                ->where('participant_user_id', $joinedUserId)->first();
-            if (in_array($Confirmed->participant_user_id, $who)) {
-                if ($Confirmed->participant_confirm > 0) {
-                    throw new Exception("Bạn đã xác nhận rồi");
-                } else {
-                    $Confirmed->update([
-                        "participant_confirm" => 1
-                    ]);
-                }
-            }
-            if (in_array($Confirmed->organizer_user_id, $who)) {
-                if ($Confirmed->organizer_confirm > 0) {
-                    throw new Exception("Bạn đã xác nhận rồi");
-                } else {
-                    $Confirmed->update([
-                        "organizer_confirm" => 1
-                    ]);
-                }
-            }
-        } else {
-            if ($checkJoin == null) {
-                throw new Exception("Bạn cần tiếp nhận học viên này trước");
-            } elseif ($checkJoin == 99) {
-                throw new Exception("Bạn cần phải được trường tiếp nhận, mã nhập học của bạn là: " . $scheduleId);
+        // if ($isConfirmed > 0) {
+
+
+        $check = Participation::where('item_id', $itemId)
+            ->where('schedule_id',  $scheduleId)
+            ->where('participant_user_id', $joinedUserId)->first();
+        if (!$check) {
+            // Tạo một bản ghi mới
+            $newConfirmed = new Participation();
+            $newConfirmed->item_id = $itemId;
+            $newConfirmed->schedule_id = $scheduleId;
+            $newConfirmed->participant_user_id = $joinedUserId;
+            $newConfirmed->organizer_user_id = $item->user_id;
+            $newConfirmed->organizer_confirm = 0;
+            $newConfirmed->participant_confirm = 0;
+
+            $newConfirmed->save();
+        }
+        $Confirmed = Participation::where('item_id', $itemId)
+            ->where('schedule_id',  $scheduleId)
+            ->where('participant_user_id', $joinedUserId)->first();
+        if (in_array($Confirmed->participant_user_id, $who)) {
+            if ($Confirmed->participant_confirm > 0) {
+                throw new Exception("Bạn đã xác nhận rồi");
+            } else {
+                $Confirmed->update([
+                    "participant_confirm" => 1
+                ]);
             }
         }
+        if (in_array($Confirmed->organizer_user_id, $who) || ($userT->role == 'admin' || $userT->role == 'mod')) {
+            if ($Confirmed->organizer_confirm > 0) {
+                throw new Exception("Bạn đã xác nhận rồi");
+            } else {
+                $Confirmed->update([
+                    "organizer_confirm" => 1
+                ]);
+            }
+        }
+        // } else {
+        //     if ($checkJoin == null) {
+        //         throw new Exception("Bạn cần tiếp nhận học viên này trước");
+        //     } elseif ($checkJoin == 99) {
+        //         throw new Exception("Bạn cần phải được trường tiếp nhận, mã nhập học của bạn là: ".$scheduleId);
+        //     }
+        // }
 
         $unpaiedOrders = OrderDetail::where('item_id', $itemId)
             ->where('user_id', $user->id)
@@ -1336,17 +1355,17 @@ class ItemServices
             throw new Exception("Học viên chưa thanh toán cho khoá học này");
             // return response("Bạn chưa thanh toán cho khoá học này", 400);
         }
-        $checkExists = Participation::where('schedule_id', $scheduleId)->first();
-        if ($checkExists == null) {
-            $rs = Participation::create([
-                'item_id' => $itemId,
-                'schedule_id' =>  $scheduleId,
-                'organizer_user_id' => $item->user_id,
-                'participant_user_id' => $joinedUserId,
-                'organizer_confirm' => 0,
-                'participant_confirm' => 0,
-            ]);
-        }
+        // $checkExists = Participation::where('schedule_id', $scheduleId)->first();
+        // if ($checkExists == null) {
+        //     $rs = Participation::create([
+        //         'item_id' => $itemId,
+        //         'schedule_id' =>  $scheduleId,
+        //         'organizer_user_id' => $item->user_id,
+        //         'participant_user_id' => $joinedUserId,
+        //         'organizer_confirm' => 0,
+        //         'participant_confirm' => 0,
+        //     ]);
+        // }
         $author = User::find($item->user_id);
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
@@ -1371,11 +1390,13 @@ class ItemServices
             ->where('transactions.user_id', $orderUser->id)
             ->select('transactions.*')
             ->first();
+            // dd($directCommission);
         if ($directCommission) {
             $addmoney = Participation::where('item_id', '=', $itemId)
                 ->where('schedule_id', '=', $scheduleId)
                 ->where('participant_user_id', '=', $joinedUserId)->first();
-            if ($addmoney->organizer_confirm == 1 & $addmoney->participant_confirm == 1) {
+
+            if ($addmoney->organizer_confirm == 1 || $addmoney->participant_confirm == 1) {
                 $transService->approveWalletcTransaction($directCommission->id);
             } else {
                 return;
@@ -1385,7 +1406,8 @@ class ItemServices
         // approve up tree transaction, just 1 level
         $refUser = User::find($orderUser->user_id);
         if ($refUser) {
-            $inDirectCommission = DB::table('transactions')
+            if ($directCommission) {
+                $inDirectCommission = DB::table('transactions')
                 ->join('orders', 'orders.id', '=', 'transactions.order_id')
                 ->where('orders.status', OrderConstants::STATUS_DELIVERED)
                 ->where('transactions.order_id', $directCommission->order_id)
@@ -1394,6 +1416,7 @@ class ItemServices
                 ->where('transactions.user_id', $refUser->id)
                 ->select('transactions.*')
                 ->first();
+            }
             if ($inDirectCommission) {
                 $transService->approveWalletcTransaction($inDirectCommission->id);
             }
