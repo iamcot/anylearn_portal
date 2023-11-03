@@ -17,10 +17,14 @@
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
-        @include('anylearn3.header')
+        @if(strpos(request()->path(), 'me') === false)
+            @include('anylearn3.header')
+        @endif
         <div id="root">
 
         </div>
-        @include('anylearn.footer2')
+        @if(strpos(request()->path(), 'me') === false)
+            @include('anylearn.footer2')
+        @endif
     </body>
 </html>
