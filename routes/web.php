@@ -25,7 +25,6 @@ Route::middleware('version')->group(function () {
 
     // me
     Route::get('/me', 'DashboardController@meDashboard')->name('me.dashboard');
-    Route::get('/me/dashboard', 'DashboardController@meDashboard')->name('me.dashboard');
     Route::any('/me/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
     Route::get('/me/profile', 'UserController@meProfile')->name('me.profile');
     Route::get('/me/class', 'ClassController@list')->name('me.class');
