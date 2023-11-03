@@ -26,7 +26,15 @@ Route::middleware('version')->group(function () {
     // me
     Route::get('/me', 'DashboardController@meDashboard')->name('me.dashboard');
     Route::any('/me/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
-    Route::get('/me/profile', 'UserController@meProfile')->name('me.profile');
+    Route::get('/me/profile', 'UserController@meProfile');
+    Route::get('/me/child', 'UserController@meProfile');
+    Route::get('/me/friend-list', 'UserController@meProfile');
+    Route::get('/me/confirm-course', 'UserController@meProfile');
+    Route::get('/me/calendar', 'UserController@meProfile');
+    Route::get('/me/pending-course', 'UserController@meProfile');
+    Route::get('/me/order-return', 'UserController@meProfile');
+    Route::get('/me/trans', 'UserController@meProfile');
+
     Route::get('/me/class', 'ClassController@list')->name('me.class');
     Route::any('/me/class/create', 'ClassController@create')->name('me.class.create');
     Route::any('/me/withdraw', 'UserController@withdraw')->name('me.withdraw');
@@ -142,7 +150,7 @@ Auth::routes();
 // Route::middleware(['auth'])->prefix('me')->group(function () {
 //     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
 //     Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
-//     Route::get('/profile', 'UserController@meProfile')->name('me.profile');
+//     Route::get('/profile', 'UserController@meProfile');
 //     Route::get('/class', 'ClassController@list')->name('me.class');
 //     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
 //     Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
