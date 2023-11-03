@@ -42,6 +42,7 @@ class ConfigConstants
     const CONFIG_COMMISSION_COMPANY = 'bonus_company';
     const CONFIG_COMMISSION_AUTHOR = 'bonus_author';
     const CONFIG_COMMISSION_SCHOOL = 'bonus_school';
+    const CONFIG_COMMISSION_REF_SELLER = 'ref_seller';
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 

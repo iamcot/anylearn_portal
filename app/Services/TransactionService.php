@@ -269,6 +269,7 @@ class TransactionService
                 ConfigConstants::CONFIG_FRIEND_TREE,
                 ConfigConstants::CONFIG_COMMISSION_FOUNDATION
             ]);
+
             if ($item->company_commission != null) {
                 $overrideConfigs = json_decode($item->company_commission, true);
                 foreach ($overrideConfigs as $key => $value) {
@@ -345,25 +346,55 @@ class TransactionService
                     break;
                 }
             }
-            //foundation
-            $foundation = 0;
-            if (!$item->is_test) {
-                $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+
+            // ref_seller commission
+            $refSeller = User::find($author->user_id);   
+            if ($refSeller && $refSeller->get_ref_seller == 1)  {
+                
+                $refSellerCommission =  isset($configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER])
+                    ? $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER]
+                    : $configs[ConfigConstants::CONFIG_COMMISSION];
+                
+                $refSellerCommission = $userService->calcCommission(
+                    $amount, 
+                    $commissionRate, 
+                    $refSellerCommission, 
+                    1,
+                ); 
+
+
                 Transaction::create([
-                    'user_id' => 0,
-                    'type' => ConfigConstants::TRANSACTION_FOUNDATION,
-                    'amount' => $foundation,
+                    'user_id' => $refSeller->id,
+                    'ref_user_id' => $author->id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $refSellerCommission,
+                    'ref_amount' => $amount,
                     'pay_method' => UserConstants::WALLET_M,
                     'pay_info' => '',
-                    'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
+                    'content' => 'Nhận hoa hồng giới thiệu người bán ' . $author->name,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
-                    'ref_user_id' => $user->id,
-                    'ref_amount' => $amount,
-                    'order_id' => $orderDetail->id
+                    'order_id' => $orderDetail->id,
                 ]);
             }
 
-
+             //foundation
+             $foundation = 0;
+             if (!$item->is_test) {
+                 $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+                 Transaction::create([
+                     'user_id' => 0,
+                     'type' => ConfigConstants::TRANSACTION_FOUNDATION,
+                     'amount' => $foundation,
+                     'pay_method' => UserConstants::WALLET_M,
+                     'pay_info' => '',
+                     'content' => 'Nhận quỹ từ ' . $user->name . ' mua khóa học: ' . $item->title . ($childUserDB != null ? ' [' . $childUserDB->name . ']' : ''),
+                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                     'ref_user_id' => $user->id,
+                     'ref_amount' => $amount,
+                     'order_id' => $orderDetail->id
+                 ]);
+             }
+            
             DB::commit();
             if ($status == OrderConstants::STATUS_DELIVERED) {
                 $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
