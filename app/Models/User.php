@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -129,9 +128,8 @@ class User extends Authenticatable
             'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
             'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
             'title' => isset($data['title']) ? $data['title'] : null,
-            ['api_token' => hash('sha256', Str::random(60))] // Tạm thời cho tạo api_token từ đầu để không bị lỗi lúc mới đăng kí tài khoản từ v2-> v3
-
         ];
+
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
         if (!empty($data['ref'])) {
             $refUser = $this->where('refcode', $data['ref'])->first();
@@ -172,12 +170,12 @@ class User extends Authenticatable
                         'day' => date('Y-m-d'),
                     ]);
                     $activityService = new ActivitybonusServices();
-                    $activityService->updateWalletC($newMember->user_id,
-                    ActivitybonusConstants::Activitybonus_Referral,
-                    'Cộng điểm giới thiệu thành viên mới ' . $newMember->name,
+                    $activityService->updateWalletC($newMember->user_id, 
+                    ActivitybonusConstants::Activitybonus_Referral, 
+                    'Cộng điểm giới thiệu thành viên mới ' . $newMember->name, 
                     null,
                     true);
-
+                    
                 }
 
                 // if (!empty($newMember->user_id)) {
@@ -186,7 +184,7 @@ class User extends Authenticatable
                 // }
             }
             $this->updateUpTree($newMember->user_id);
-
+           
             $newMember->commission_rate = (float)$newMember->commission_rate;
         } catch (\Exception $ex) {
             Log::error($ex);
@@ -285,7 +283,7 @@ class User extends Authenticatable
             }
         }
 
-        if (isset($input['sale_priority'])
+        if (isset($input['sale_priority']) 
             && in_array($input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
             $obj['sale_priority'] = $input['sale_priority'];
         }
@@ -446,12 +444,12 @@ class User extends Authenticatable
             });
             $members = $members
                 ->orderBy('lastsa.last_contact');
-        }
-
+        } 
+            
         $members = $members->orderby('users.is_hot', 'desc')
                 ->orderby('users.boost_score', 'desc')
                 ->orderby('users.id', 'desc');
-
+        
         $members = $members
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
             ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')
