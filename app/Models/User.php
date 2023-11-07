@@ -277,6 +277,12 @@ class User extends Authenticatable
             'commission_rate' => $input['commission_rate'],
         ];
 
+        if (isset($input['get_ref_seller'])) {
+            if ($input['get_ref_seller'] == 0 || $input['get_ref_seller'] == 1) {
+                $obj['get_ref_seller'] = $input['get_ref_seller'];
+            }
+        }
+
         if (isset($input['sale_priority']) 
             && in_array($input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
             $obj['sale_priority'] = $input['sale_priority'];

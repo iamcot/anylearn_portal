@@ -1258,9 +1258,10 @@ class ItemServices
 
         $item = Item::find($orderDetail->item_id);
         if (!$item) {
-            throw new Exception("Khóa  học không tồn tại");
+            throw new Exception("Khóa học không tồn tại");
             // return response("Khóa  học không tồn tại", 404);
         }
+
         $itemId = $item->id;
         $userT = Auth::user();
         $userC = DB::table('users')->where('user_id',$userT->id)->where('is_child',1)->orWhere('id',$userT->id)->get();
@@ -1309,6 +1310,7 @@ class ItemServices
             throw new Exception("Học viên chưa thanh toán cho khoá học này");
             // return response("Bạn chưa thanh toán cho khoá học này", 400);
         }
+
         $checkExists = Participation::where('schedule_id', $scheduleId)->first();
         if ($checkExists == null) {
             $rs = Participation::create([
@@ -1320,6 +1322,7 @@ class ItemServices
                 'participant_confirm' => 0,
             ]);
         }
+
         $author = User::find($item->user_id);
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
@@ -1332,8 +1335,9 @@ class ItemServices
         } else {
             $orderUser = $user;
         }
-        $transService = new TransactionService();
+
         // approve direct and indirect commission
+        $transService = new TransactionService();
         $directCommission = DB::table('transactions')
             ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
             ->join('orders', 'orders.id', '=', 'od.order_id')
@@ -1344,10 +1348,13 @@ class ItemServices
             ->where('transactions.user_id', $orderUser->id)
             ->select('transactions.*')
             ->first();
+
         if ($directCommission) {
             $addmoney = Participation::where('item_id','=',$itemId)
-            ->where('schedule_id','=', $scheduleId)
-            ->where('participant_user_id','=', $joinedUserId)->first();
+                ->where('schedule_id','=', $scheduleId)
+                ->where('participant_user_id','=', $joinedUserId)
+                ->first();
+
             if ($addmoney->organizer_confirm == 1 & $addmoney->participant_confirm == 1) {
                 $transService->approveWalletcTransaction($directCommission->id);
             } else {
@@ -1367,6 +1374,7 @@ class ItemServices
                 ->where('transactions.user_id', $refUser->id)
                 ->select('transactions.*')
                 ->first();
+
             if ($inDirectCommission) {
                 $transService->approveWalletcTransaction($inDirectCommission->id);
             }
@@ -1395,12 +1403,24 @@ class ItemServices
             ->where('transactions.type', ConfigConstants::TRANSACTION_PARTNER)
             ->select('transactions.*')
             ->first();
+
         // approve author transaction
         if ($trans) {
-
             if ($item->subtype == "extra" || $item->subtype == "offline") {
                 $transService->approveWalletmTransaction($trans->id);
             }
+
+            //approve ref_seller transaction
+            $refSeller = DB::table('transactions')
+                ->where('transactions.order_id', $trans->order_id)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_REF_SELLER)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->first();
+            
+            if ($refSeller) {
+                $transService->approveWalletmTransaction($refSeller->id);
+            }
+
             // approve foundation transaction
             DB::table('transactions')
                 ->where('transactions.order_id', $trans->order_id)
