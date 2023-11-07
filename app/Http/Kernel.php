@@ -75,6 +75,9 @@ class Kernel extends HttpKernel
         'webappauth' => WebAppAuth::class,
         'role' => \App\Http\Middleware\Role::class,
         'language' => \App\Http\Middleware\Localization::class,
+        'version' => \App\Http\Middleware\CheckTemplate::class,
+        'encrypt.cookie' => \App\Http\Middleware\EncryptCookies::class,
+
     ];
 
     /**

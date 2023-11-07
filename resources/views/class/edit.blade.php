@@ -32,8 +32,10 @@
             <div class="form-group row">
                 <label for="subtype" class="col-md-3 col-form-label text-md-right  font-weight-bold">{{ __('Loại khoá học') }}</label>
                 <div class="col-md-8">
-                    <select class="form-control" name="subtype" required @if(!empty($course) && $course['info']->subtype != "") disabled @endif>
-                        <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Chính khóa (Mầm non, K12, Đại học)')</option>
+                    <select class="form-control" name="subtype" required @if(!empty($course) && $course['info']->subtype != "") @endif>
+
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_OFFLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_OFFLINE ? 'selected' : '' }}>@lang('Lớp học Phổ thông (K12, Đại học)')</option>
+                    <option value="{{ \App\Constants\ItemConstants::SUBTYPE_PRESCHOOL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_PRESCHOOL ? 'selected' : '' }}>@lang('Lớp học Mầm non')</option>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_EXTRA }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_EXTRA ? 'selected' : '' }}>@lang('Lớp học Ngoại khóa (các môn kỹ năng tại trường/ trung tâm)')</option>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_ONLINE }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_ONLINE ? 'selected' : '' }}>@lang('Lớp học Online')</option>
                         <option value="{{ \App\Constants\ItemConstants::SUBTYPE_DIGITAL }}" {{ !empty($course) && $course['info']->subtype == \App\Constants\ItemConstants::SUBTYPE_DIGITAL ? 'selected' : '' }}>@lang('Học trên Ứng dụng')</option>
@@ -57,7 +59,7 @@
                 @if(!empty($course['info']) && $course['info']->subtype == 'video')
                 <a class="shadow nav-link {{ session('tab') == 'video' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="video-tab" data-toggle="pill" href="#v-pills-video" role="tab" aria-controls="v-pills-video" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-play"></i> <span class="mobile-no-text">@lang('Videos')</span></a>
                 @endif
-            
+
                 <a class="shadow nav-link {{ session('tab') == 'resource' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="resource-tab" data-toggle="pill" href="#v-pills-resource" role="tab" aria-controls="v-pills-resource" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-image"></i> <span class="mobile-no-text">@lang('Hình ảnh')</span></a>
                 @if($isSchool)
                 <a class="shadow nav-link {{ session('tab') == 'teachers' ? 'active' : '' }} {{ empty($courseId) ? 'disabled' : '' }}" id="teachers-tab" data-toggle="pill" href="#v-pills-teachers" role="tab" aria-controls="v-pills-teachers" aria-selected="false" aria-disabled="{{ empty($courseId) ? 'true' : 'false' }}"><i class="fa fa-chalkboard-teacher"></i> <span class="mobile-no-text">@lang('Giảng viên')</span></a>
@@ -80,14 +82,14 @@
                 <div class="tab-pane fade {{ session('tab', 'info') == 'code' ? 'show active' : '' }}" id="v-pills-code" role="tabpanel" aria-labelledby="v-pills-code-tab">
                     @include('class.form.code')
                 </div>
-              
+
                 <div class="tab-pane fade {{ session('tab') == 'schedule' ? 'show active' : '' }}" id="v-pills-schedule" role="tabpanel" aria-labelledby="v-pills-schedule-tab">
                     @include('class.form.schedule')
                 </div>
                 <div class="tab-pane fade {{ session('tab') == 'video' ? 'show active' : '' }}" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
                     @include('class.form.video')
                 </div>
-              
+
                 <div class="tab-pane fade {{ session('tab') == 'resource' ? 'show active' : '' }}" id="v-pills-resource" role="tabpanel" aria-labelledby="v-pills-resource-tab">
                     @include('class.form.resource')
                 </div>

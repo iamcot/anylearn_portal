@@ -82,7 +82,7 @@
                         <div class="row">
                             <p>@lang('Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!')</p>
                             <div class="col-md-6" style="padding: 30px;">
-                                <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
+                                <a href="itms-apps://apps.apple.com/vn/app/anylearn/id6453411038">
                                     <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
                                 </a>
                             </div>

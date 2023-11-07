@@ -15,11 +15,82 @@ use App\Http\Middleware\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// For existing pages - v3
+Route::middleware('version')->group(function () {
+    Route::get('/', 'PageController@home')->name('home');
+    Route::get('/search', 'PageController@search')->name('search');
+    Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+    Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+    Route::get('/articles', 'PageController@article');
+
+    // me
+    // Route::get('/me', 'DashboardController@meDashboard')->name('me.dashboard');
+    // Route::any('/me/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
+    // Route::get('/me/profile', 'UserController@meProfile');
+    // Route::get('/me/child', 'UserController@meProfile');
+    // Route::get('/me/friend-list', 'UserController@meProfile');
+    // Route::get('/me/confirm-course', 'UserController@meProfile');
+    // Route::get('/me/calendar', 'UserController@meProfile');
+    // Route::get('/me/pending-course', 'UserController@meProfile');
+    // Route::get('/me/order-return', 'UserController@meProfile');
+    // Route::get('/me/trans', 'UserController@meProfile');
+
+    // Route::get('/me/class', 'ClassController@list')->name('me.class');
+    // Route::any('/me/class/create', 'ClassController@create')->name('me.class.create');
+    // Route::any('/me/withdraw', 'UserController@withdraw')->name('me.withdraw');
+
+    // Route::middleware('access.item')->get('/me/class/{id}', 'ClassController@detail')->name('me.class.detail');
+    // Route::middleware('access.item')->any('/me/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
+    // Route::middleware('access.item')->any('/me/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
+
+    // Route::any('/me/edit', 'UserController@meEdit')->name('me.edit');
+
+    // Route::any('/me/orders', 'UserController@orders')->name('me.orders');
+    // Route::any('/me/courseconfirm', 'UserController@courseConfirm')->name('me.courseconfirm');
+
+    // Route::any('/me/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
+    // Route::any('/me/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
+    // Route::any('/me/ischild', 'UserController@meChild')->name('me.child');
+    // Route::any('/me/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    // Route::any('/me/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
+
+    // Route::get('/me/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
+    // Route::get('/me/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
+
+    // Route::any('/me/history', 'UserController@meHistory')->name('me.history');
+    // Route::any('/me/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
+    // Route::any('/me/introduce', 'UserController@meIntroduce')->name('me.introduce');
+    // Route::any('/me/friend', 'UserController@meFriend')->name('me.friend');
+    // Route::any('/me/work', 'UserController@meWork')->name('me.work');
+
+    // Route::any('/me/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
+    // Route::any('/me/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
+
+    // Route::any('/me/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
+    // Route::any('/me/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
+    // Route::any('/me/notification', 'UserController@notification')->name('me.notification');
+    // Route::any('/me/contract', 'UserController@contract')->name('me.contract');
+    // Route::any('/me/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
+    // Route::any('/me/certificate', 'UserController@certificate')->name('me.certificate');
+    // Route::any('/me/finance', 'UserController@finance')->name('me.finance');
+    // Route::any('/me/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
+});
+
+// For new pages - v3
+Route::get('/subtype/{sutype}', 'ReactController@index')->name('subtype');
+Route::get('/partner/{id}', 'ReactController@index')->name('partner');
+Route::get('/listing', 'ReactController@index')->name('listing');
+Route::get('/map', 'ReactController@index')->name('map');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/auth/logout', 'Auth\LoginController@logout')->name('auth.logout');
+});
+
 Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
     Route::get('/', 'PageController@landing' );
 });
 
-Route::get('/', 'PageController@home')->name('home');
+// Route::get('/', 'PageController@home')->name('home');
 Route::get('/info', 'PageController@landing')->name('info');
 Route::get('/partner', 'PageController@partner');
 Route::get('/landing', 'PageController@landing');
@@ -33,7 +104,7 @@ Route::any('/bot', function() {
 });
 Route::get('/bot/chat', 'HelpcenterController@chatbot');
 
-Route::get('/search', 'PageController@search')->name('search');
+// Route::get('/search', 'PageController@search')->name('search');
 Route::get('/schools', 'PageController@schools')->name('schools');
 Route::get('/classes', 'PageController@classes')->name('allclasses');
 Route::get('/teachers', 'PageController@teachers')->name('teachers');
@@ -51,8 +122,8 @@ Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookCallb
 Route::get('/login/apple/callback', 'Auth\LoginController@handleAppleCallback');
 
 Route::any('/class/{itemId}/{url}/video/{lessonId}', 'PageController@videoPage')->name('page.video');
-Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
-Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
+//Route::any('/class/{itemId}/{url}', 'PageController@pdp')->name('page.pdp');
+// Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
 Route::get('/location-tree/{level}/{parentCode}', 'ConfigController@locationTree')->name('location-tree');
 
 Route::any('/payment-notify/{payment}', 'TransactionController@notify')->name('checkout.notify');
@@ -65,7 +136,7 @@ Route::get('/helpcenter', 'HelpcenterController@index')->name('helpcenter');
 Route::get('/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.topic');
 Route::get('/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.knowledge');
 
-Route::get('/partner/helpcenter', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
+Route::get('/help/partner', 'HelpcenterController@indexpartner')->name('helpcenter.parnter.index');
 // Route::get('/partner/helpcenter/{topic}', 'HelpcenterController@topic')->name('helpcenter.parnter.topic');
 // Route::get('/partner/helpcenter/{id}/{url}.html', 'HelpcenterController@knowledge')->name('helpcenter.parnter.knowledge');
 
