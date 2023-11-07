@@ -73,7 +73,6 @@ class ConfigConstants
     const TRANSACTION_WITHDRAW = 'withdraw';
     const TRANSACTION_EXCHANGE = 'exchange';
     const TRANSACTION_COMMISSION = 'commission';
-    const TRANSACTION_REF_SELLER = 'ref_seller';
     const TRANSACTION_ORDER = 'order';
     const TRANSACTION_FOUNDATION = 'foundation';
     const TRANSACTION_DEPOSIT_REFUND = 'deposit_refund';

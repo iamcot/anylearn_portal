@@ -1288,7 +1288,7 @@ class ItemServices
         $item = Item::find($orderDetail->item_id);
         if (!$item) {
             throw new Exception("Khóa học không tồn tại");
-            // return response("Khóa  học không tồn tại", 404);
+            // return response("Khóa học không tồn tại", 404);
         }
 
         $itemId = $item->id;
@@ -1303,10 +1303,11 @@ class ItemServices
 
         // if ($isConfirmed > 0) {
 
-
         $check = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $scheduleId)
-            ->where('participant_user_id', $joinedUserId)->first();
+            ->where('participant_user_id', $joinedUserId)
+            ->first();
+
         if (!$check) {
             // Tạo một bản ghi mới
             $newConfirmed = new Participation();
@@ -1321,7 +1322,9 @@ class ItemServices
         }
         $Confirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $scheduleId)
-            ->where('participant_user_id', $joinedUserId)->first();
+            ->where('participant_user_id', $joinedUserId)
+            ->first();
+
         if (in_array($Confirmed->participant_user_id, $who)) {
             if ($Confirmed->participant_confirm > 0) {
                 throw new Exception("Bạn đã xác nhận rồi");
@@ -1331,6 +1334,7 @@ class ItemServices
                 ]);
             }
         }
+
         if (in_array($Confirmed->organizer_user_id, $who) || ($userT->role == 'admin' || $userT->role == 'mod')) {
             if ($Confirmed->organizer_confirm > 0) {
                 throw new Exception("Bạn đã xác nhận rồi");
@@ -1368,6 +1372,7 @@ class ItemServices
         //     ]);
         // }
         $author = User::find($item->user_id);
+
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
             'username' => $user->name,
@@ -1392,7 +1397,7 @@ class ItemServices
             ->where('transactions.user_id', $orderUser->id)
             ->select('transactions.*')
             ->first();
-            // dd($directCommission);
+
         if ($directCommission) {
             $addmoney = Participation::where('item_id', '=', $itemId)
                 ->where('schedule_id', '=', $scheduleId)
@@ -1419,19 +1424,11 @@ class ItemServices
                 ->select('transactions.*')
                 ->first();
             }
+
             if ($inDirectCommission) {
                 $transService->approveWalletcTransaction($inDirectCommission->id);
             }
         }
-
-        //TODO: khi get user social post can lay them record cua child id
-        SocialPost::create([
-            'type' => SocialPost::TYPE_CLASS_COMPLETE,
-            'user_id' => $user->id,
-            'ref_id' => $itemId,
-            'image' => $item->image,
-            'day' => date('Y-m-d'),
-        ]);
 
         $trans = DB::table('transactions')
             ->join('order_details AS od', function ($query) use ($user) {
@@ -1457,7 +1454,7 @@ class ItemServices
             //approve ref_seller transaction
             $refSeller = DB::table('transactions')
                 ->where('transactions.order_id', $trans->order_id)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_REF_SELLER)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
                 ->first();
             
@@ -1474,7 +1471,17 @@ class ItemServices
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE
                 ]);
         }
+
+        //TODO: khi get user social post can lay them record cua child id
+        SocialPost::create([
+            'type' => SocialPost::TYPE_CLASS_COMPLETE,
+            'user_id' => $user->id,
+            'ref_id' => $itemId,
+            'image' => $item->image,
+            'day' => date('Y-m-d'),
+        ]);
     }
+
     public function DigitalCourse(Request $request, $courseId)
     {
         $input = $request->all();
