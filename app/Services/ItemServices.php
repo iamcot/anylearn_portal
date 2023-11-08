@@ -1291,9 +1291,8 @@ class ItemServices
             // return response("Khóa  học không tồn tại", 404);
         }
         $itemId = $item->id;
-        $userT = Auth::user();
-        $userC = DB::table('users')->where('user_id', $userT->id)->where('is_child', 1)->orWhere('id', $userT->id)->get();
-        $who = $userC->pluck('id')->toArray();
+        // $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
+        // $who = $userC->pluck('id')->toArray();
 
         // $isConfirmed = Participation::where('item_id', $itemId)
         //     ->where('schedule_id',  $orderDetail->id)
@@ -1321,7 +1320,7 @@ class ItemServices
         $Confirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $scheduleId)
             ->where('participant_user_id', $joinedUserId)->first();
-        if (in_array($Confirmed->participant_user_id, $who)) {
+        if (in_array($Confirmed->participant_user_id, $joinedUserId)) {
             if ($Confirmed->participant_confirm > 0) {
                 throw new Exception("Bạn đã xác nhận rồi");
             } else {
@@ -1330,7 +1329,11 @@ class ItemServices
                 ]);
             }
         }
-        if (in_array($Confirmed->organizer_user_id, $who) || ($userT->role == 'admin' || $userT->role == 'mod')) {
+        $authUser = Auth::user();
+        if (
+            in_array($Confirmed->organizer_user_id, $joinedUserId) 
+            || ($authUser && ($authUser->role == 'admin' || $authUser->role == 'mod'))
+        ) {
             if ($Confirmed->organizer_confirm > 0) {
                 throw new Exception("Bạn đã xác nhận rồi");
             } else {
