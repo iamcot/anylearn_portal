@@ -907,26 +907,20 @@ class TransactionService
             ->get(); dd($transOrder);
 
         foreach ($transOrder as $trans) {
-            // Direct commissions
-            if (empty($trans->ref_user_id) && $trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
-                $this->approveWalletcTransaction($trans->id);
+             // Seller   
+             if ($trans->type == ConfigConstants::TRANSACTION_PARTNER ) {
+                $this->approveWalletmTransaction($trans->id);
                 continue;
             }
 
-            // Indirect commissions
-            if (!empty($trans->ref_user_id) && $trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
+            // Commissions
+            if ($trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
                 if ($trans->payment_method == UserConstants::WALLET_C) {
-                    $this->approveWalletcTransaction($trans->id);
+                   $this->approveWalletcTransaction($trans->id);
                 }
                 if ($trans->payment_method == UserConstants::WALLET_M) {
                     $this->approveWalletmTransaction($trans->id);
-                }
-                continue;
-            }
-
-            // Seller   
-            if ($trans->type == ConfigConstants::TRANSACTION_PARTNER ) {
-                $this->approveWalletmTransaction($trans->id);
+                } 
                 continue;
             }
 
