@@ -844,8 +844,10 @@ class TransactionService
             //     ]);
             // }
 
-            if ($item->subtype == "digital" || $item->subtype == "video") {
-                $this->updateTransactionsAfterPayment($orderItem->id);
+            if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
+               || $item->subtype == ItemConstants::SUBTYPE_VIDEO
+            ) {
+                $this->approveTransactionsAfterPayment($orderItem->id);
             }
 
             $notifServ = new Notification();
@@ -898,7 +900,7 @@ class TransactionService
         return true;
     }
 
-    public function updateTransactionsAfterPayment($orderItemID)
+    public function approveTransactionsAfterPayment($orderItemID)
     {
         $transOrder = Transaction::where('order_id', $orderItemID)
             ->where('status',ConfigConstants::TRANSACTION_STATUS_PENDING)
@@ -908,7 +910,7 @@ class TransactionService
             // Direct commissions
             if (empty($trans->ref_user_id) && $trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
                 $this->approveWalletcTransaction($trans->id);
-                break;
+                continue;
             }
 
             // Indirect commissions
@@ -919,13 +921,13 @@ class TransactionService
                 if ($trans->payment_method == UserConstants::WALLET_M) {
                     $this->approveWalletmTransaction($trans->id);
                 }
-                break;
+                continue;
             }
 
             // Seller   
             if ($trans->type == ConfigConstants::TRANSACTION_PARTNER ) {
                 $this->approveWalletmTransaction($trans->id);
-                break;
+                continue;
             }
 
             // Foundation
