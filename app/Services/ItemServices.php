@@ -1292,9 +1292,8 @@ class ItemServices
         }
 
         $itemId = $item->id;
-        $userT = Auth::user();
-        $userC = DB::table('users')->where('user_id', $userT->id)->where('is_child', 1)->orWhere('id', $userT->id)->get();
-        $who = $userC->pluck('id')->toArray();
+        // $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
+        // $who = $userC->pluck('id')->toArray();
 
         // $isConfirmed = Participation::where('item_id', $itemId)
         //     ->where('schedule_id',  $orderDetail->id)
@@ -1322,10 +1321,8 @@ class ItemServices
         }
         $Confirmed = Participation::where('item_id', $itemId)
             ->where('schedule_id',  $scheduleId)
-            ->where('participant_user_id', $joinedUserId)
-            ->first();
-
-        if (in_array($Confirmed->participant_user_id, $who)) {
+            ->where('participant_user_id', $joinedUserId)->first();
+        if ($Confirmed->participant_user_id == $joinedUserId) {
             if ($Confirmed->participant_confirm > 0) {
                 throw new Exception("Bạn đã xác nhận rồi");
             } else {
@@ -1334,16 +1331,19 @@ class ItemServices
                 ]);
             }
         }
-
-        if (in_array($Confirmed->organizer_user_id, $who) || ($userT->role == 'admin' || $userT->role == 'mod')) {
-            if ($Confirmed->organizer_confirm > 0) {
-                throw new Exception("Bạn đã xác nhận rồi");
-            } else {
-                $Confirmed->update([
-                    "organizer_confirm" => 1
-                ]);
-            }
+        // $authUser = Auth::user();
+        // if (
+        //     in_array($Confirmed->organizer_user_id, $joinedUserId) 
+        //     || ($authUser && ($authUser->role == 'admin' || $authUser->role == 'mod'))
+        // ) {
+        if ($Confirmed->organizer_confirm > 0) {
+            throw new Exception("Trường đã xác nhận rồi");
+        } else {
+            $Confirmed->update([
+                "organizer_confirm" => 1
+            ]);
         }
+        // }
         // } else {
         //     if ($checkJoin == null) {
         //         throw new Exception("Bạn cần tiếp nhận học viên này trước");
@@ -1415,14 +1415,14 @@ class ItemServices
         if ($refUser) {
             if ($directCommission) {
                 $inDirectCommission = DB::table('transactions')
-                ->join('orders', 'orders.id', '=', 'transactions.order_id')
-                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
-                ->where('transactions.order_id', $directCommission->order_id)
-                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->where('transactions.user_id', $refUser->id)
-                ->select('transactions.*')
-                ->first();
+                    ->join('orders', 'orders.id', '=', 'transactions.order_id')
+                    ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+                    ->where('transactions.order_id', $directCommission->order_id)
+                    ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                    ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                    ->where('transactions.user_id', $refUser->id)
+                    ->select('transactions.*')
+                    ->first();
             }
 
             if ($inDirectCommission) {

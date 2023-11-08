@@ -502,6 +502,7 @@ class UserController extends Controller
         $this->data['navText'] = __('Chỉnh sửa Thành viên');
         $this->data['hasBack'] = route('user.members');
         $this->data['type'] = 'member';
+        $this->data['priorityLevels'] = UserConstants::$salePriorityLevels;
         return view('user.member_edit', $this->data);
     }
     public function courseConfirm(Request $request)

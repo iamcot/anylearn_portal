@@ -61,8 +61,8 @@
                     <label for="sale_priority" class="col-md-2 col-form-label text-md-right">{{ __('Độ ưu tiên') }}</label>
                     <div class="col-md-8">
                         <select name="sale_priority" id="sale_priority" class="form-control">
-                            @foreach([0 => "NEW",1 => "URGENT",2 => "ASAP",3 => "NEED",99 => "DONE"] as $key => $prio)
-                                <option value="{{ $key }}" {{ ( !empty($user) && $user->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
+                            @foreach($priorityLevels as $key => $prio)
+                                <option value="{{ $key }}" {{ ( !empty($user) && $user->sale_priority == $key) ? "selected" : "" }}>{{ strtoupper($prio) }}</option>
                             @endforeach
                         </select>
                     </div>

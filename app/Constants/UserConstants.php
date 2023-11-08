@@ -20,6 +20,7 @@ class UserConstants
     const PRIORITY_URGENT = 1;
     const PRIORITY_ASAP = 2;
     const PRIORITY_NEED = 3;
+    const PRIORITY_SINGLE = 4;
     const PRIORITY_DONE = 99;
 
     const STATUS_ACTIVE = 1;
@@ -42,6 +43,7 @@ class UserConstants
         self::PRIORITY_URGENT => 'Urgent',
         self::PRIORITY_ASAP => 'Asap',
         self::PRIORITY_NEED => 'Need', 
+        self::PRIORITY_SINGLE => 'Single', 
         self::PRIORITY_DONE => 'Done',
     ];
 
@@ -50,6 +52,7 @@ class UserConstants
         self::PRIORITY_URGENT => 'Red',
         self::PRIORITY_ASAP => 'Orange', 
         self::PRIORITY_NEED => 'Yellow', 
+        self::PRIORITY_SINGLE => 'Grey', 
         self::PRIORITY_DONE => 'Green',
     ];
 
