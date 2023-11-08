@@ -404,7 +404,7 @@ class User extends Authenticatable
                 $members = $members->where('sa2.sale_id', 1);
             }
         }
-        if ($request->input('sale_priority')) {          
+        if ($request->input('sale_priority') != null) {          
             $members = $members->where('users.sale_priority', $request->input('sale_priority'));
         } 
         if ($request->input('dateo') && $request->input('datelo')) {
