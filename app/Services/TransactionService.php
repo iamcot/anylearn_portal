@@ -915,10 +915,10 @@ class TransactionService
 
             // Commissions
             if ($trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
-                if ($trans->payment_method == UserConstants::WALLET_C) {
+                if ($trans->pay_method == UserConstants::WALLET_C) {
                    $this->approveWalletcTransaction($trans->id);
                 }
-                if ($trans->payment_method == UserConstants::WALLET_M) {
+                if ($trans->pay_method == UserConstants::WALLET_M) {
                     $this->approveWalletmTransaction($trans->id);
                 } 
                 continue;
