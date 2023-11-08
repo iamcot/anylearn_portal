@@ -904,7 +904,7 @@ class TransactionService
     {
         $transOrder = Transaction::where('order_id', $orderItemID)
             ->where('status',ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->get();
+            ->get(); dd($transOrder);
 
         foreach ($transOrder as $trans) {
             // Direct commissions
