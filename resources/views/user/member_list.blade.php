@@ -83,7 +83,7 @@
                     <select name="sale_priority" id="sale_priority" class="form-control">
                         <option value="">---</option>
                         @foreach($priorityLevels as $key => $prio)
-                            <option value="{{ $key }}" {{ isset(Request::get('sale_priority')) && Request::get('sale_priority') == $key ? "selected" : "" }}>
+                            <option value="{{ $key }}" {{ null != Request::get('sale_priority') && Request::get('sale_priority') == $key ? "selected" : "" }}>
                                 {{ strtoupper($prio) }}
                             </option>
                         @endforeach
