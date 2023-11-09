@@ -377,7 +377,7 @@ class TransactionService
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
                     'amount' => $refSellerCommission,
                     'ref_amount' => $amount,
-                    'pay_method' => UserConstants::WALLET_M,
+                    'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
                     'content' => 'Nhận hoa hồng từ người bán đã giới thiệu:' . $author->name,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
@@ -902,34 +902,33 @@ class TransactionService
 
     public function approveTransactionsAfterPayment($orderItemID)
     {
+        if (OrderDetail::find($orderItemID)) {
+            return false;
+        }
+
         $transOrder = Transaction::where('order_id', $orderItemID)
-            ->where('status',ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
             ->get();
 
         foreach ($transOrder as $trans) {
-             // Seller   
-             if ($trans->type == ConfigConstants::TRANSACTION_PARTNER ) {
+            // Seller   
+            if ($trans->type == ConfigConstants::TRANSACTION_PARTNER ) {
                 $this->approveWalletmTransaction($trans->id);
                 continue;
             }
 
             // Commissions
             if ($trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
-                if ($trans->pay_method == UserConstants::WALLET_C) {
-                   $this->approveWalletcTransaction($trans->id);
-                }
-                if ($trans->pay_method == UserConstants::WALLET_M) {
-                    $this->approveWalletmTransaction($trans->id);
-                } 
-                continue;
+                $this->approveWalletcTransaction($trans->id);
+                continue;   
             }
 
             // Foundation
             if ($trans->type == ConfigConstants::TRANSACTION_FOUNDATION) {
                 $trans->update([
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
-            }
+            }  
         }
     }
 

@@ -1278,7 +1278,7 @@ class ItemServices
     {
         $orderDetail = OrderDetail::find($scheduleId);
         if (!$orderDetail) {
-            throw new Exception("Không có đơn hàng này!");
+            throw new Exception("Thông tin đơn hàng không chính xác!");
         }
 
         $item = Item::find($orderDetail->item_id);
