@@ -228,6 +228,7 @@ class MeApi extends Controller
         $data = DB::table('order_details')
             ->join('items', 'items.id', '=', 'order_details.item_id')
             ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->whereIn('order_details.user_id', $userIds)
             ->select(
@@ -245,6 +246,7 @@ class MeApi extends Controller
                     GROUP BY participations.item_id
                 ) AS confirm_count')
             )
+            ->orderByDesc('order_details.created_at')
             ->get();
         return response()->json(['data' => $data]);
     }
