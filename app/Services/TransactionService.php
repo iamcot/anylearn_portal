@@ -651,6 +651,8 @@ class TransactionService
         ) {
             return false;
         }
+        dd($openOrder);
+    
 
         $user = User::find($openOrder->user_id);
         $zaloService = new ZaloServices(true);
