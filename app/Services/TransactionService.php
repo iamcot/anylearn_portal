@@ -304,9 +304,17 @@ class TransactionService
             ]);
 
             $directCommission = $userService->calcCommission(
-                $amount, $commissionRate, 
+                $amount, 
+                $commissionRate, 
                 $configs[ConfigConstants::CONFIG_DISCOUNT], 
                 $configs[ConfigConstants::CONFIG_BONUS_RATE]
+            );
+            dd(
+                $amount, 
+                $commissionRate, 
+                $configs[ConfigConstants::CONFIG_DISCOUNT], 
+                $configs[ConfigConstants::CONFIG_BONUS_RATE],
+                $directCommission,
             );
 
             // User::find($user->id)->update([
