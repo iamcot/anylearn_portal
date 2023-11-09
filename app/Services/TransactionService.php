@@ -379,7 +379,7 @@ class TransactionService
                     'ref_amount' => $amount,
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
-                    'content' => 'Nhận hoa hồng từ người bán đã giới thiệu:' . $author->name,
+                    'content' => 'Nhận điểm từ ' . $author->name . ' bán khoá học: ' . $item->title,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'order_id' => $orderDetail->id,
                 ]);
