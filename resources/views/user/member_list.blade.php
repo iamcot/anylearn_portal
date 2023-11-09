@@ -77,7 +77,19 @@
                     <input value="{{ app('request')->input('adate') }}" type="date" class="form-control" name="adate" placeholder="Ngày liên hệ" />
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-2"></div>
+            <div class="col-xs-6 col-lg-2">
+                <div class="form-group">
+                    <label for="">Độ ưu tiên</label>
+                    <select name="sale_priority" id="sale_priority" class="form-control">
+                        <option value="">---</option>
+                        @foreach($priorityLevels as $key => $prio)
+                            <option value="{{ $key }}" {{ null != Request::get('sale_priority') && Request::get('sale_priority') == $key ? "selected" : "" }}>
+                                {{ strtoupper($prio) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="col-xs-6 col-lg-2">
                 <div class="form-group">
                     <label for="">Đơn hàng cuối từ</label>
