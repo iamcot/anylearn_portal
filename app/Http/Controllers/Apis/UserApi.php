@@ -170,7 +170,7 @@ class UserApi extends Controller
     public function logout(Request $request)
     {
         $user  = $this->isAuthedApi($request);
-        Auth::logout();
+        // Auth::logout();
         if (!($user instanceof User)) {
             return $user;
         }
