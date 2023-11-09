@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cookie;
 
 class UserApi extends Controller
 {
@@ -175,7 +176,8 @@ class UserApi extends Controller
         User::find($user->id)->update([
             'notif_token' => '',
         ]);
-        return response('OK', 200);
+        Auth::guard()->logout();
+        return response('OK', 200)->withCookie(Cookie::forget('api_token'));
     }
 
     public function edit(Request $request)
@@ -684,7 +686,7 @@ class UserApi extends Controller
             Log::error($e);
             return response('Không thể gửi OTP tới số điện thoại bạn vừa cung cấp. Xin hãy thử lại', 400);
         }
-        
+
         $result = $otpService->sendOTP($phone, $genOtp);
 
         if (!$result['result']) {
