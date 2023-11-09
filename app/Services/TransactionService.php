@@ -288,7 +288,7 @@ class TransactionService
             } else {
                 $commissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
             }
-            dd($item->commission_rate, $author->commission_rate);
+
             // pay author
             $authorCommission = floor($amount * $commissionRate / 1);
             Transaction::create([
@@ -308,13 +308,6 @@ class TransactionService
                 $commissionRate, 
                 $configs[ConfigConstants::CONFIG_DISCOUNT], 
                 $configs[ConfigConstants::CONFIG_BONUS_RATE]
-            );
-            dd(
-                $amount, 
-                $commissionRate, 
-                $configs[ConfigConstants::CONFIG_DISCOUNT], 
-                $configs[ConfigConstants::CONFIG_BONUS_RATE],
-                $directCommission,
             );
 
             // User::find($user->id)->update([
