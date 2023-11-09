@@ -1276,6 +1276,7 @@ class ItemServices
      */
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId) 
     {
+        dd(1);
         $orderDetail = OrderDetail::find($scheduleId);
         if (!$orderDetail) {
             throw new Exception("Không có đơn hàng này!");
