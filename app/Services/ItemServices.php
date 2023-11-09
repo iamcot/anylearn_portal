@@ -1274,7 +1274,7 @@ class ItemServices
     /**
      * NOTE use order detail ID to replace scheduleId
      */
-    public function comfirmJoinCourse1(Request $request, $joinedUserId, $scheduleId) 
+    public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId) 
     {
         $orderDetail = OrderDetail::find($scheduleId);
         if (!$orderDetail) {
