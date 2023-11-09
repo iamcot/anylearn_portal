@@ -45,6 +45,12 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="qtt" class="col-md-2 col-form-label text-md-right">{{ __('Số lượng') }}</label>
+                <div class="col-md-6">
+                    <input id="qtt" type="text" class="form-control @error('qtt') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($event) ? $event->qtt : '') }}" required>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label for="ref_user_id" class="col-md-2 col-form-label text-md-right">{{ __('ID Giới thiệu') }}</label>
                 <div class="col-md-6">
                     <input id="ref_user_id" 
@@ -63,13 +69,7 @@
                         name="commission_rate" 
                         class="form-control @error('commission_rate') is-invalid @enderror" 
                         value="{{ old('commission_rate', !empty($event) ? $event->commission_rate : '') }}">
-                    <div class="small">Tỷ lệ hoa hồng mặc định là {{ \App\Constants\ConfigConstants::CONFIG_COMMISSION }}.</div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="qtt" class="col-md-2 col-form-label text-md-right">{{ __('Số lượng') }}</label>
-                <div class="col-md-6">
-                    <input id="qtt" type="text" class="form-control @error('qtt') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($event) ? $event->qtt : '') }}" required>
+                    <div class="small">Tỷ lệ hoa hồng mặc định là {{ $defaultCommissionRate }}.</div>
                 </div>
             </div>
             <div class="form-group row">

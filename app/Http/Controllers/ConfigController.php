@@ -330,6 +330,8 @@ class ConfigController extends Controller
                 'email_template' => $input['email_template'],
                 'qtt' => $input['qtt'],
                 'status' => 1,
+                'ref_user_id' => $input['ref_user_id'],
+                'commission_rate' => $input['commission_rate'],
             ];
 
             if (empty($input['id'])) {
@@ -346,6 +348,12 @@ class ConfigController extends Controller
         }
         if (!empty($eventId)) {
             $this->data['event'] = VoucherEvent::find($eventId);
+        }
+
+        $this->data['defaultCommissionRate'] = 0;
+        $configCommission = Configuration::where('key', ConfigConstants::CONFIG_COMMISSION)->first();
+        if ($configCommission) {
+            $this->data['defaultCommissionRate'] = $configCommission->value;
         }
 
         $this->data['navText'] = __('Quản lý Sự kiện phát voucher');
