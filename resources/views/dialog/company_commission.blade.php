@@ -18,7 +18,7 @@
                     <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.')</div>
                 </div>
                 <div class="form-group">
-                    <label>{{ __('Hoa hồng giới thiệu người bán') }} (@lang('mặc định:') {{ $configs[\App\Constants\ConfigConstants::CONFIG_COMMISSION] }})</label>
+                    <label>{{ __('Hoa hồng gián tiếp bạn người bán') }} (@lang('mặc định:') {{ $configs[\App\Constants\ConfigConstants::CONFIG_COMMISSION] }})</label>
                     <input type="text" class="form-control" name="company[{{ \App\Constants\ConfigConstants::CONFIG_COMMISSION_REF_SELLER }}]" value="{{ $companyCommission[\App\Constants\ConfigConstants::CONFIG_COMMISSION_REF_SELLER] ?? '' }}">
                     <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong cấu hình hệ thống.')</div>
                 </div>
