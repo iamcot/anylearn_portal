@@ -368,7 +368,7 @@ class TransactionService
                     $amount, 
                     $commissionRate, 
                     $refSellerCommission, 
-                    1,
+                    $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 ); 
 
                 Transaction::create([
@@ -645,8 +645,10 @@ class TransactionService
     public function returnOrder($orderId, $trigger)
     {
         $openOrder = Order::find($orderId);
-        if ($openOrder->status != OrderConstants::STATUS_DELIVERED
-            && $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
+        if ($openOrder && 
+            $openOrder->status != OrderConstants::STATUS_DELIVERED && 
+            $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
+        ) {
             return false;
         }
 
