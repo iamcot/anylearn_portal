@@ -25,8 +25,8 @@
                     <th>ID khởi tạo</th>
                     <th>ID bộ voucher</th>
                     <th>Số lượng</th>
-                    <th>ID Giới thiệu</th>
-                    <th>H/H</th>
+                    <th>ID giới thiệu</th>
+                    <th>Tỷ lệ H/H</th>
                     <th>Tạo lúc</th>
                     <th>Thao tác</th>
                 </thead>
