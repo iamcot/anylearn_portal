@@ -170,14 +170,15 @@ class UserApi extends Controller
     public function logout(Request $request)
     {
         $user  = $this->isAuthedApi($request);
+        // Auth::logout();
         if (!($user instanceof User)) {
             return $user;
         }
         User::find($user->id)->update([
             'notif_token' => '',
         ]);
-        Auth::guard()->logout();
-        return response('OK', 200)->withCookie(Cookie::forget('api_token'));
+
+        return response('OK', 200);
     }
 
     public function edit(Request $request)
