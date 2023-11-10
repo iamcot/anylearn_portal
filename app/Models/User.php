@@ -128,8 +128,9 @@ class User extends Authenticatable
             'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
             'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
             'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
-            'title' => isset($data['title']) ? $data['title'] : null,
-            ['api_token' => hash('sha256', Str::random(60))] // Tạm thời cho tạo api_token từ đầu để không bị lỗi lúc mới đăng kí tài khoản từ v2-> v3
+            'title' => isset($data['title']) ? $data['title'] : null
+            // tạm ẩn vì chưa đưa v3 lên
+            // ['api_token' => hash('sha256', Str::random(60))] // Tạm thời cho tạo api_token từ đầu để không bị lỗi lúc mới đăng kí tài khoản từ v2-> v3
 
         ];
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
@@ -400,9 +401,9 @@ class User extends Authenticatable
                 $members = $members->where('sa2.sale_id', 1);
             }
         }
-        if ($request->input('sale_priority') != null) {          
+        if ($request->input('sale_priority') != null) {
             $members = $members->where('users.sale_priority', $request->input('sale_priority'));
-        } 
+        }
         if ($request->input('dateo') && $request->input('datelo')) {
             $members = $members->join('orders AS o', function($join) use ($request) {
                 $join->on('o.user_id', '=', 'users.id')
