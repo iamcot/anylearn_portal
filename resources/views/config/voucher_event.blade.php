@@ -25,6 +25,8 @@
                     <th>ID khởi tạo</th>
                     <th>ID bộ voucher</th>
                     <th>Số lượng</th>
+                    <th>ID Giới thiệu</th>
+                    <th>H/H</th>
                     <th>Tạo lúc</th>
                     <th>Thao tác</th>
                 </thead>
@@ -37,6 +39,8 @@
                     <td>{{ $event->trigger }}</td>
                     <td>{{ $event->targets }}</td>
                     <td>{{ $event->qtt }}</td>
+                    <td>{{ $event->ref_user_id }}</td>
+                    <td>{{ $event->commission_rate }}</td>
                     <td>{{ $event->updated_at }}</td>
                     <td>
                         <a class="btn btn-sm btn-info" href="{{ route('config.voucherevent.log', ['id' => $event->id]) }}">
