@@ -552,7 +552,6 @@ class UserApi extends Controller
         if (empty($contract)) {
             return response("Không có thông tin hợp đồng.", 400);
         }
-        dump($contract);
         $userServ = new UserServices();
         $result = $userServ->saveContract($user, $contract);
 
