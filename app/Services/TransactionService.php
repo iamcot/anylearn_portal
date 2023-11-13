@@ -251,6 +251,7 @@ class TransactionService
             $this->recalculateOrderAmount($openOrder->id);
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
+                dd($usingVoucher);
                 VoucherUsed::find($usingVoucher->id)->delete();
             }
 
@@ -259,7 +260,6 @@ class TransactionService
                 $voucherEvent = new VoucherEventLog();
                 $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
             }
-
 
             $author = User::find($item->user_id);
 
@@ -385,6 +385,28 @@ class TransactionService
                     'order_id' => $orderDetail->id,
                 ]);
             }
+
+            // voucher commission
+            // $voucherComm = VoucherUsed::
+            // $voucherEvent = VoucherEvent::where('targets', 'Like', '%'. $dbVoucher->group_voucher_id .'%')
+            // ->whereNotNull('ref_user_id')
+            // ->orderByDesc('id')
+            // ->first();
+
+            // if ($voucherEvent) {
+
+            //     $transactionServ = new TransactionService();
+            //     $voucherCommission = $transactionServ->cacl
+
+            //     Transaction::create([
+            //         'user_id' => $voucherEvent->ref_user_id,
+            //         'type' => ConfigConstants::TRANSACTION_COMMISSION,
+            //         'amount' => 
+            //         'ref_amount' =>
+            //         'content' => 'Nhận điểm từ voucher được sử dụng ['. $voucherEvent->title .']', 
+            //         'order_id' => $dbVoucher->order_id,
+            //     ]);
+            // }
 
             // foundation
             $foundation = 0;
