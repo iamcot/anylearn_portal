@@ -732,11 +732,21 @@ class TransactionController extends Controller
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }
 
+            // handle commission vouchers
+            $transService->addTransactionsForCommissionVouchers($dbVoucher->id, $orderId);
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
+
         } else if ($request->get('cart_action') == 'remove_voucher') {
             VoucherUsed::find($request->get('voucher_userd_id'))->delete();
+
             $transService = new TransactionService();
             $res = $transService->recalculateOrderAmount($orderId);
+
+            $transService->removeTransactionsForCommissionVouchers(
+                $request->get('voucher_userd_id'), 
+                $orderId,
+            );
+
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
     }

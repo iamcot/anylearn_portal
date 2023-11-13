@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use PSpell\Config;
 
 class TransactionService
 {
@@ -251,8 +252,8 @@ class TransactionService
             $this->recalculateOrderAmount($openOrder->id);
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
-                dd($usingVoucher);
                 VoucherUsed::find($usingVoucher->id)->delete();
+                $this->removeTransactionsForCommissionVouchers($usingVoucher->id, $openOrder->id);
             }
 
             // voucher event
@@ -307,7 +308,7 @@ class TransactionService
                 $amount, 
                 $commissionRate, 
                 $configs[ConfigConstants::CONFIG_DISCOUNT], 
-                $configs[ConfigConstants::CONFIG_BONUS_RATE]
+                $configs[ConfigConstants::CONFIG_BONUS_RATE],
             );
 
             // User::find($user->id)->update([
@@ -386,28 +387,6 @@ class TransactionService
                 ]);
             }
 
-            // voucher commission
-            // $voucherComm = VoucherUsed::
-            // $voucherEvent = VoucherEvent::where('targets', 'Like', '%'. $dbVoucher->group_voucher_id .'%')
-            // ->whereNotNull('ref_user_id')
-            // ->orderByDesc('id')
-            // ->first();
-
-            // if ($voucherEvent) {
-
-            //     $transactionServ = new TransactionService();
-            //     $voucherCommission = $transactionServ->cacl
-
-            //     Transaction::create([
-            //         'user_id' => $voucherEvent->ref_user_id,
-            //         'type' => ConfigConstants::TRANSACTION_COMMISSION,
-            //         'amount' => 
-            //         'ref_amount' =>
-            //         'content' => 'Nhận điểm từ voucher được sử dụng ['. $voucherEvent->title .']', 
-            //         'order_id' => $dbVoucher->order_id,
-            //     ]);
-            // }
-
             // foundation
             $foundation = 0;
             if (!$item->is_test) {
@@ -441,6 +420,108 @@ class TransactionService
         });
 
         return $result;
+    }
+
+    public function addTransactionsForCommissionVouchers($voucherID, $orderID) 
+    {
+        $currentOrder = Order::find($orderID);
+        $usingVoucher = VoucherUsed::where('voucher_id', $voucherID)
+            ->where('order_id', $orderID)
+            ->first();   
+
+        if (!$usingVoucher || !$currentOrder) {
+            return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
+        }
+
+        $voucherEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->group_voucher_id .'%')
+            ->whereNotNull('ref_user_id')
+            ->orderByDesc('id')
+            ->first();
+
+        if ($voucherEvent && User::find($voucherEvent->ref_user_id)) { 
+            $buyer  = User::find($currentOrder->user_id);        
+            $orders = OrderDetail::where('order_id', $currentOrder->id)->get();
+
+            $configM = new Configuration();
+            $configs = $configM->gets([
+                ConfigConstants::CONFIG_BONUS_RATE,
+                ConfigConstants::CONFIG_COMMISSION,
+            ]);  
+
+            foreach($orders as $orderItem) {
+                $item = Item::find($orderItem->item_id);
+                $partner = User::find($item->user_id);
+                
+                if ($item->company_commission != null) {
+                    $overrideConfigs = json_decode($item->company_commission, true);
+                    foreach ($overrideConfigs as $key => $value) {
+                        if ($value != null) {
+                            $configs[$key] = $value;
+                        }
+                    }
+                }   
+
+                if ($item->commission_rate == -1) {
+                    $partnerCommissionRate = 0;
+                } else {
+                    $partnerCommissionRate = $item->commission_rate > 0 
+                        ? $item->commission_rate 
+                        : $partner->commission_rate;
+                }
+
+                $voucherCommissionRate = $voucherEvent->commission_rate 
+                    ? $voucherEvent->commission_rate 
+                    : $configs[ConfigConstants::CONFIG_COMMISSION];  
+
+                $userServ = new UserServices();
+                $voucherCommission = $userServ->calcCommission(
+                    $currentOrder->amount,
+                    $partnerCommissionRate,
+                    $voucherCommissionRate,
+                    $configs[ConfigConstants::CONFIG_BONUS_RATE],
+                );
+
+                Transaction::create([
+                    'user_id' => $voucherEvent->ref_user_id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $voucherCommission,
+                    'ref_amount' => $orderItem->amount,
+                    'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $voucherEvent->title, 
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'order_id' => $orderItem->id,
+                ]);
+            }        
+        }    
+    }
+
+    public function removeTransactionsForCommissionVouchers($voucherID, $orderID) 
+    {
+        $usingVoucher = VoucherUsed::where('voucher_id', $voucherID)
+            ->where('order_id', $orderID)
+            ->first();   
+
+        if (!$usingVoucher) {
+            return 'Thông tin voucher không chính xác, không thể xóa!'; 
+        }
+
+        $voucherEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->group_voucher_id .'%')
+            ->whereNotNull('ref_user_id')
+            ->orderByDesc('id')
+            ->first();
+
+        if ($voucherEvent) { 
+            $transactions = DB::table('transactions')
+                ->join('order_details as od', 'od.id', '=', 'transactions.order_id')
+                ->join('orders', 'orders.id', '=', 'od.order_id')
+                ->where('transactions.type', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.user_id', $voucherEvent->ref_user_id)
+                ->where('orders.id', $orderID)
+                ->get();
+
+            foreach($transactions as $tran) { 
+                Transaction::find($tran->id)->delete();
+            }
+        }
     }
 
     public function findSaleIdFromBuyerOrItem($buyerId, $itemId)
