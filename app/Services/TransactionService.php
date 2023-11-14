@@ -486,6 +486,7 @@ class TransactionService
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
                     'amount' => $voucherCommission,
                     'ref_amount' => $orderItem->amount,
+                    'pay_method' => UserConstants::WALLET_C, 
                     'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $voucherEvent->title, 
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'order_id' => $orderItem->id,
@@ -500,6 +501,7 @@ class TransactionService
             ->where('order_id', $orderID)
             ->first();   
 
+        dd($usingVoucher, $voucherID, $orderID);
         if (!$usingVoucher) {
             return 'Thông tin voucher không chính xác, không thể xóa!'; 
         }
