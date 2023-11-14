@@ -967,6 +967,7 @@ class TransactionService
             if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
                || $item->subtype == ItemConstants::SUBTYPE_VIDEO
             ) {
+                dd(1);
                 $this->approveTransactionsAfterPayment($orderItem->id);
             }
 
