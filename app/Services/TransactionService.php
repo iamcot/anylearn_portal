@@ -252,8 +252,8 @@ class TransactionService
             $this->recalculateOrderAmount($openOrder->id);
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
-                VoucherUsed::find($usingVoucher->id)->delete();
                 $this->removeTransactionsForCommissionVouchers($usingVoucher->id, $openOrder->id);
+                VoucherUsed::find($usingVoucher->id)->delete();
             }
 
             // voucher event

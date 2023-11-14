@@ -574,14 +574,10 @@ class TransactionController extends Controller
                 $voucherUsed = DB::table('vouchers_used')
                     ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
                     ->select('vouchers_used.id', 'vouchers.voucher')
-                    ->where('order_id', $openOrder->id)
-                    ->first();
-                   
-
+                    ->where('order_id', $openOrder->id)->first();
                 if ($voucherUsed) {
                     $this->data['voucherUsed'] = $voucherUsed;
                 }
-                dd($voucherUsed, $openOrder->id);
             }
         } else {
             $this->data['order'] = null;
@@ -741,15 +737,14 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
 
         } else if ($request->get('cart_action') == 'remove_voucher') {
-            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
-
             $transService = new TransactionService();
-            $res = $transService->recalculateOrderAmount($orderId);
-
             $transService->removeTransactionsForCommissionVouchers(
                 $request->get('voucher_userd_id'), 
                 $orderId,
             );
+            
+            VoucherUsed::find($request->get('voucher_userd_id'))->delete();            
+            $res = $transService->recalculateOrderAmount($orderId);
 
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
