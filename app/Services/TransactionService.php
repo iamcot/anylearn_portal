@@ -435,7 +435,7 @@ class TransactionService
             return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
         }
 
-        $usingEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->group_voucher_id .'%')
+        $usingEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->voucher_group_id .'%')
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
@@ -508,7 +508,7 @@ class TransactionService
             return 'Thông tin voucher không chính xác, không thể xóa!'; 
         }
 
-        $usingEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->group_voucher_id .'%')
+        $usingEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->voucher_group_id .'%')
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
