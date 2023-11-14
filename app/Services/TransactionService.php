@@ -478,18 +478,10 @@ class TransactionService
 
                 $userServ = new UserServices();
                 $voucherCommission = $userServ->calcCommission(
-                    $orderItem->amount,
+                    $item->price,
                     $partnerCommissionRate,
                     $voucherCommissionRate,
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
-                );
-
-                dd(
-                    $voucherCommission, 
-                    $orderItem, 
-                    $partnerCommissionRate, 
-                    $voucherCommissionRate, 
-                    $configs[ConfigConstants::CONFIG_BONUS_RATE]
                 );
 
                 Transaction::create([       
@@ -498,7 +490,7 @@ class TransactionService
                     'pay_method' => UserConstants::WALLET_C,
                     'user_id' => $usingEvent->ref_user_id,
                     'amount' => $voucherCommission,
-                    'ref_amount' => $orderItem->amount,
+                    'ref_amount' => $item->amount,
                     'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $usingEvent->title, 
                     'order_id' => $orderItem->id,
                 ]);
