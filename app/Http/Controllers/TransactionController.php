@@ -740,12 +740,9 @@ class TransactionController extends Controller
             $transService = new TransactionService();
             $transService->removeTransactionsForCommissionVouchers(
                 $request->get('voucher_userd_id'), 
-                $orderId,
-            );
-            
+            );   
             VoucherUsed::find($request->get('voucher_userd_id'))->delete();            
             $res = $transService->recalculateOrderAmount($orderId);
-
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
     }
