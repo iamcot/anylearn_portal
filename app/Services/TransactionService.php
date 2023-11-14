@@ -1022,20 +1022,23 @@ class TransactionService
 
     public function approveTransactionsAfterPayment($orderItemID)
     {
-        if (!OrderDetail::find($orderItemID)) {
-            dd($orderItemID);
+        $transOrder = DB::table('transactions')
+            ->join('order_details as od', 'od.id', '=', 'transactions.order_id')
+            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('od.status', OrderConstants::STATUS_DELIVERED)
+            ->where('od.id', $orderItemID)
+            ->select('transactions.*')
+            ->get();
+
+        if (!$transOrder) {
             return false;
         }
-
-        $transOrder = Transaction::where('order_id', $orderItemID)
-            ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->get();
 
         dd($transOrder);
 
         foreach ($transOrder as $trans) {
             // Seller   
-            if ($trans->type == ConfigConstants::TRANSACTION_PARTNER ) {
+            if ($trans->type == ConfigConstants::TRANSACTION_PARTNER) {
                 $this->approveWalletmTransaction($trans->id);
                 continue;
             }
@@ -1053,6 +1056,8 @@ class TransactionService
                 ]);
             }  
         }
+
+        return true;
     }
 
     public function activateDigitalCourses($userId, $orderDetail)
