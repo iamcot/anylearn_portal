@@ -1022,7 +1022,7 @@ class TransactionService
 
     public function approveTransactionsAfterPayment($orderItemID)
     {
-        if (OrderDetail::find($orderItemID)) {
+        if (!OrderDetail::find($orderItemID)) {
             dd($orderItemID);
             return false;
         }
