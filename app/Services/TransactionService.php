@@ -1049,7 +1049,7 @@ class TransactionService
 
             // Foundation
             if ($trans->type == ConfigConstants::TRANSACTION_FOUNDATION) {
-                $trans->update([
+                Transaction::find($trans->id)->update([
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
             }  
