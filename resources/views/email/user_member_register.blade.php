@@ -633,10 +633,10 @@ div.preheader {
   
       <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
   
-      <div class="has-border" style="background-color: #ffffff;border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;">
+      <!--div class="has-border" style="background-color: #ffffff;border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;">
         <div class="layout two-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
           <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
-          <!--[if (mso)|(IE)]><table class="layout-has-border" width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <!--[if (mso)|(IE)]><table class="layout-has-border" width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]>
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -644,7 +644,7 @@ div.preheader {
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
-      <!--div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
         <h2 class="size-18" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-18"><span style="color:#1a7aba">Kh&#243;a h&#7885;c<strong> </strong><br>
 <strong>Super Summer Camp 2021</strong></span></h2>
       </div>
