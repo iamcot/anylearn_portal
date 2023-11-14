@@ -482,6 +482,14 @@ class TransactionService
                     $voucherCommissionRate,
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 );
+                
+                dd(
+                    $voucherCommission, 
+                    $orderItem->amount, 
+                    $partnerCommissionRate, 
+                    $voucherCommissionRate, 
+                    $configs[ConfigConstants::CONFIG_BONUS_RATE]
+                );
 
                 Transaction::create([       
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
