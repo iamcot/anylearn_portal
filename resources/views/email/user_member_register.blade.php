@@ -644,7 +644,7 @@ div.preheader {
     </div>
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
-      <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
+      <!--div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
         <h2 class="size-18" style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #fff;font-size: 17px;line-height: 26px;text-align: center;" lang="x-size-18"><span style="color:#1a7aba">Kh&#243;a h&#7885;c<strong> </strong><br>
 <strong>Super Summer Camp 2021</strong></span></h2>
       </div>
@@ -666,11 +666,11 @@ V&#7853;y ph&#7843;i h&#7885;c g&#236;, l&#224;m sao &#273;&#7875; con lu&#244;n
               <div style="Margin-left: 20px;Margin-right: 20px;">
       <div class="btn btn--flat btn--small" style="text-align:center;">
         <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #15a14f;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-i/">&#272;&#258;NG K&#221; H&#7884;C</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-i/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]--></div>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-i/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]></div>
     </div>
             
             </div>
-          <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]>
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
             
         <div style="font-size: 12px;font-style: normal;font-weight: normal;line-height: 19px;" align="center">
@@ -682,14 +682,14 @@ V&#7853;y ph&#7843;i h&#7885;c g&#236;, l&#224;m sao &#273;&#7875; con lu&#244;n
     </div>
             
             </div>
-          <!--[if (mso)|(IE)]></td><td class="layout__edges">&nbsp;</td></tr></table><![endif]-->
+          <!--[if (mso)|(IE)]></td><td class="layout__edges">&nbsp;</td></tr></table><![endif]>
           </div>
         </div>
       </div>
   
       <div class="layout two-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
         <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
-        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 300px" valign="top" class="w260"><![endif]-->
+        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 300px" valign="top" class="w260"><![endif]>
           <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
           
             <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -701,7 +701,7 @@ V&#7853;y ph&#7843;i h&#7885;c g&#236;, l&#224;m sao &#273;&#7875; con lu&#244;n
         </div>
       
           </div>
-        <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+        <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]>
           <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);Float: left;">
           
             <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -731,11 +731,11 @@ h&#7857;ng ng&#224;y.</span></p>
             <div style="Margin-left: 20px;Margin-right: 20px;">
       <div class="btn btn--flat btn--small" style="text-align:center;">
         <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #15a14f;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-h/">&#272;&#258;NG K&#221; H&#7884;C</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-h/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]--></div>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-h/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]></div>
     </div>
           
           </div>
-        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
+        <!--[if (mso)|(IE)]></td></tr></table><![endif]>
         </div>
       </div>
   
@@ -744,7 +744,7 @@ h&#7857;ng ng&#224;y.</span></p>
       <div style="background-color: #ffffff;" dir="rtl">
         <div class="layout two-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
           <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
-          <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]>
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);float: right;" dir="ltr">
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -760,7 +760,7 @@ h&#7857;ng ng&#224;y.</span></p>
     </div>
             
             </div>
-          <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]-->
+          <!--[if (mso)|(IE)]></td><td style="width: 300px" valign="top" class="w260"><![endif]>
             <div class="column" style="text-align: left;color: #94a4b0;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 320px;min-width: 300px; width: 320px;width: calc(12300px - 2000%);float: right;" dir="ltr">
             
               <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -786,17 +786,17 @@ Tr&#7841;i h&#232;<strong> STEAM &amp; Ti&#7871;ng anh&nbsp;</strong></span></h2
       </div>
     </div>
             
-              <div style="Margin-left: 20px;Margin-right: 20px;">
+    <div style="Margin-left: 20px;Margin-right: 20px;">
       <div class="btn btn--flat btn--small" style="text-align:center;">
         <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 11px;font-weight: bold;line-height: 19px;padding: 6px 12px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;background-color: #15a14f;font-family: sans-serif;" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-u/">&#272;&#258;NG K&#221; H&#7884;C</a><![endif]>
-      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-u/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]--></div>
+      <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://congtycophandautuvagiaoducanylearn.createsend1.com/t/y-l-otutra-l-u/" style="width:102px" arcsize="13%" fillcolor="#15A14F" stroke="f"><v:textbox style="mso-fit-shape-to-text:t" inset="0px,5px,0px,5px"><center style="font-size:11px;line-height:19px;color:#FFFFFF;font-family:sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:3px">&#272;&#258;NG K&#221; H&#7884;C</center></v:textbox></v:roundrect><![endif]></div>
     </div>
             
             </div>
-          <!--[if (mso)|(IE)]></td><td class="layout__edges">&nbsp;</td></tr></table><![endif]-->
+          <!--[if (mso)|(IE)]></td><td class="layout__edges">&nbsp;</td></tr></table><![endif]>
           </div>
         </div>
-      </div>
+      </div-->
   
       <div class="layout two-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
         <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
@@ -819,7 +819,7 @@ Tr&#7841;i h&#232;<strong> STEAM &amp; Ti&#7871;ng anh&nbsp;</strong></span></h2
         <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
         </div>
       </div>
-  
+
       <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
   
       <div class="layout one-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
