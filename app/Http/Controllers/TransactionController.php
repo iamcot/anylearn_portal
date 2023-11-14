@@ -575,6 +575,8 @@ class TransactionController extends Controller
                     ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
                     ->select('vouchers_used.id', 'vouchers.voucher')
                     ->where('order_id', $openOrder->id)->first();
+                    dd($voucherUsed);
+                    
                 if ($voucherUsed) {
                     $this->data['voucherUsed'] = $voucherUsed;
                 }

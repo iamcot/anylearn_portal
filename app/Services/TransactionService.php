@@ -475,7 +475,7 @@ class TransactionService
 
                 $userServ = new UserServices();
                 $voucherCommission = $userServ->calcCommission(
-                    $currentOrder->amount,
+                    $orderItem->amount,
                     $partnerCommissionRate,
                     $voucherCommissionRate,
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
@@ -485,7 +485,7 @@ class TransactionService
                     'user_id' => $voucherEvent->ref_user_id,
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
                     'amount' => $voucherCommission,
-                    'ref_amount' => $orderItem->amount,
+                    'ref_amount' => $currentOrder->amount,
                     'pay_method' => UserConstants::WALLET_C, 
                     'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $voucherEvent->title, 
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
