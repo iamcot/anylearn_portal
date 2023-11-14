@@ -631,9 +631,9 @@ div.preheader {
         </div>
       </div>
   
-      <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
+      <!--div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
   
-      <!--div class="has-border" style="background-color: #ffffff;border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;">
+      <div class="has-border" style="background-color: #ffffff;border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;">
         <div class="layout two-col stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
           <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
           <!--[if (mso)|(IE)]><table class="layout-has-border" width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-full-width" style="background-color: #ffffff;"><td class="layout__edges">&nbsp;</td><td style="width: 300px" valign="top" class="w260"><![endif]>
