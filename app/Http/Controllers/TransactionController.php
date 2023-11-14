@@ -574,12 +574,14 @@ class TransactionController extends Controller
                 $voucherUsed = DB::table('vouchers_used')
                     ->join('vouchers', 'vouchers.id', '=', 'vouchers_used.voucher_id')
                     ->select('vouchers_used.id', 'vouchers.voucher')
-                    ->where('order_id', $openOrder->id)->first();
-                    dd($voucherUsed);
-                    
+                    ->where('order_id', $openOrder->id)
+                    ->first();
+                   
+
                 if ($voucherUsed) {
                     $this->data['voucherUsed'] = $voucherUsed;
                 }
+                dd($voucherUsed, $openOrder->id);
             }
         } else {
             $this->data['order'] = null;
