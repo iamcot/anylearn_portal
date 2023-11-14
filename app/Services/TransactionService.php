@@ -1030,12 +1030,9 @@ class TransactionService
             ->select('transactions.*')
             ->get();
 
-            dd($transOrder);
         if (!$transOrder) {
-            return false;
+            return 'Thông tin đơn hàng không chính xác!';
         }
-
-        dd($transOrder);
 
         foreach ($transOrder as $trans) {
             // Seller   
