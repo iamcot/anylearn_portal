@@ -439,7 +439,7 @@ class TransactionService
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
-        dd($usingEvent);
+
         if ($usingEvent && User::find($usingEvent->ref_user_id)) { 
             $buyer  = User::find($currentOrder->user_id);        
             $orders = OrderDetail::where('order_id', $currentOrder->id)->get();
@@ -522,7 +522,7 @@ class TransactionService
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
                 ->where('transactions.pay_method', UserConstants::WALLET_C)
                 ->where('transactions.user_id', $usingEvent->ref_user_id)
-                ->select('transaction.*')
+                ->select('transactions.*')
                 ->get();
 
             foreach($transactions as $tran) { 
