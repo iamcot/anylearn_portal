@@ -445,7 +445,7 @@ class TransactionService
             $orders = OrderDetail::where('order_id', $currentOrder->id)->get();
 
             $configM = new Configuration();
-            $configs = $configM->gets([
+            $defaultConfigs = $configM->gets([
                 ConfigConstants::CONFIG_BONUS_RATE,
                 ConfigConstants::CONFIG_COMMISSION,
             ]);  
@@ -454,6 +454,7 @@ class TransactionService
                 $item = Item::find($orderItem->item_id);
                 $partner = User::find($item->user_id);
                 
+                $configs = $defaultConfigs;
                 if ($item->company_commission != null) {
                     $overrideConfigs = json_decode($item->company_commission, true);
                     foreach ($overrideConfigs as $key => $value) {
@@ -482,10 +483,10 @@ class TransactionService
                     $voucherCommissionRate,
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 );
-                
+
                 dd(
                     $voucherCommission, 
-                    $orderItem->amount, 
+                    $orderItem, 
                     $partnerCommissionRate, 
                     $voucherCommissionRate, 
                     $configs[ConfigConstants::CONFIG_BONUS_RATE]
