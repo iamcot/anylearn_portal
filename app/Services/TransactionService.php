@@ -430,7 +430,7 @@ class TransactionService
             ->where('vu.voucher_id', $voucherID)
             ->where('vu.order_id', $orderID)
             ->first();   
-        dd($usingVoucher, $voucherID, $orderID);
+
         if (!$usingVoucher || !$currentOrder) {
             return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
         }
@@ -439,7 +439,7 @@ class TransactionService
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
-
+        dd($usingEvent);
         if ($usingEvent && User::find($usingEvent->ref_user_id)) { 
             $buyer  = User::find($currentOrder->user_id);        
             $orders = OrderDetail::where('order_id', $currentOrder->id)->get();
