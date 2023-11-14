@@ -1023,13 +1023,14 @@ class TransactionService
     public function approveTransactionsAfterPayment($orderItemID)
     {
         if (OrderDetail::find($orderItemID)) {
+            dd($orderItemID);
             return false;
         }
 
         $transOrder = Transaction::where('order_id', $orderItemID)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
             ->get();
-            
+
         dd($transOrder);
 
         foreach ($transOrder as $trans) {
