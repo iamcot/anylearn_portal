@@ -430,7 +430,7 @@ class TransactionService
             ->where('vu.voucher_id', $voucherID)
             ->where('vu.order_id', $orderID)
             ->first();   
-
+        dd($usingVoucher, $voucherID, $orderID);
         if (!$usingVoucher || !$currentOrder) {
             return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
         }
