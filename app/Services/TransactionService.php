@@ -489,11 +489,13 @@ class TransactionService
                     'pay_method' => UserConstants::WALLET_C,
                     'user_id' => $usingEvent->ref_user_id,
                     'amount' => $voucherCommission,
-                    'ref_amount' => $currentOrder->amount,
+                    'ref_amount' => $orderItem->amount,
                     'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $usingEvent->title, 
                     'order_id' => $orderItem->id,
                 ]);
-            }        
+            } 
+            
+            return true;
         }    
     }
 
