@@ -790,7 +790,8 @@ class TransactionService
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' =>  UserConstants::WALLET_C,
-                    'content' => 'Thu hồi ' . $cr->amount . ' anypoints vì đơn hàng #'. $openOrder . ' được trả lại.',
+                    'content' => 'Chúng tôi thu hồi của bạn ' . $cr->amount . ' anypoints 
+                        vì đơn hàng #'. $openOrder->id . ' được trả lại.',
                     'user_id' => $cr->id,
                     'amount' => - $cr->amount, 
                     'order_id' => $od->id,
