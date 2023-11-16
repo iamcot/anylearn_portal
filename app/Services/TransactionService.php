@@ -772,7 +772,7 @@ class TransactionService
         $zaloService = new ZaloServices(true);
 
         $user = User::find($openOrder->user_id);
-        $orderDetails = OrderDetail::where('order_id', $openOrder)->get();
+        $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
 
         // Return: anypoints are added from commissions  
         foreach ($orderDetails as $od) {
