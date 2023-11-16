@@ -784,7 +784,6 @@ class TransactionService
                 ->where('transactions.order_id', $od->id)
                 ->select('users.*', 'transactions.amount') 
                 ->get();
-            dd($commissionReceivers);
             
             foreach ($commissionReceivers as $cr) {
                 $trans = Transaction::create([
