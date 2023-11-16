@@ -767,34 +767,48 @@ class TransactionService
         ) {
             return false;
         }
-        dd($openOrder);
-    
+
+        $transServ = new TransactionService();
+        $zaloService = new ZaloServices(true);
 
         $user = User::find($openOrder->user_id);
-        $zaloService = new ZaloServices(true);
-        $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
+        $orderDetails = OrderDetail::where('order_id', $openOrder)->get();
 
-        // Hoàn anypoint được cộng cho mỗi khoá học
+        // Return: anypoints are added from commissions  
         foreach ($orderDetails as $od) {
-            $anypoint = Transaction::where('order_id', $od->id)
-                ->where('type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->first();
-
-            if ($anypoint) {
-                if ($anypoint->status == ConfigConstants::TRANSACTION_STATUS_DONE)  {
-                    $user->update([
-                        'wallet_c' => $user->wallet_c - $anypoint->amount
-                    ]);
-                }
-
-                $zaloService->sendZNS(ZaloServices::ZNS_ORDER_RETURN, $user->phone, [
-                    "date" => $od->created_at,
-                    "price" => $od->price,
-                    "name" => $user->name,
-                    "class" => Item::find($od->item_id)->title,
-                    "id" => $od->id,
+            $commissionReceivers = DB::table('transactions')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_DONE)
+                ->where('transactions.pay_method', UserConstants::WALLET_C)
+                ->where('transactions.order_id', $od->id)
+                ->select('users.*', 'transactions.amount') 
+                ->get();
+            
+            foreach ($commissionReceivers as $cr) {
+                $trans = Transaction::create([
+                    'type' => ConfigConstants::TRANSACTION_EXCHANGE,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'pay_method' =>  UserConstants::WALLET_C,
+                    'content' => 'anyLEARN thu hồi của bạn ' . $cr->amount . ' anypoints 
+                        vì đơn hàng #'. $openOrder . ' được trả lại.',
+                    'user_id' => $cr->id,
+                    'amount' => - $cr->amount, 
+                    'order_id' => $od->id,
                 ]);
+
+                if ($trans) {                    
+                    $transServ->approveWalletcTransaction($trans->id);
+                } 
             }
+
+            $zaloService->sendZNS(ZaloServices::ZNS_ORDER_RETURN, $user->phone, [
+                "date" => $od->created_at,
+                "price" => $od->price,
+                "name" => $user->name,
+                "class" => Item::find($od->item_id)->title,
+                "id" => $od->id,
+            ]);
         }
 
         $allTrans = Transaction::where('order_id', $openOrder->id)
@@ -809,22 +823,22 @@ class TransactionService
                 ]);
             }
 
-            // Hoàn anypoint bị đổi cho đơn hàng
+            // Return: anypoints are used for the order
             if ($tnx->type == ConfigConstants::TRANSACTION_EXCHANGE) {
-                $user->update([
-                    'wallet_c' => $user->wallet_c + $tnx->amount
-                ]);
-
-                Transaction::create([
-                    'user_id' => $user->id,
-                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
-                    'amount' => $tnx->amount,
+                $trans = Transaction::create([
+                    'type' => ConfigConstants::TRANSACTION_EXCHANGE,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' => UserConstants::WALLET_C,
-                    'pay_info' => '',
-                    'content' => 'Hoàn điểm vì đơn hàng bị trả lại',
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'content' => 'anyLEARN hoàn trả cho bạn '. $tnx->amount .' anypoints 
+                        vì đơn hàng #' . $openOrder->id . ' được  trả lại',
+                    'user_id' => $user->id,
+                    'amount' => $tnx->amount,
                     'order_id' => $tnx->order_id
                 ]);
+
+                if ($trans) {
+                    $transServ->approveWalletcTransaction($trans->id);
+                }       
             }
         }
 
