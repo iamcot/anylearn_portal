@@ -955,7 +955,7 @@ class TransactionService
                 ->where('transactions.order_id', $od->id)
                 ->selectRaw('
                     count(*) as total, 
-                    sum(if(users.wallet_c >= transactions.amount, 1, 0) as matching)
+                    sum(if(users.wallet_c >= transactions.amount, 1, 0)) as matching
                 ')
                 ->first();
             
