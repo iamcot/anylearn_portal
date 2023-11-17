@@ -679,6 +679,11 @@ class PageController extends Controller
         if (!$request->session()->get('tab') && $request->get('tab')) {
             $request->session()->flash('tab', $request->get('tab'));
         }
+        $data['breadcrumb'] = [
+            [
+                'text' => 'Trung tâm hỗ trợ',
+            ]
+        ];
 
         return view(env('TEMPLATE', '') . 'helpcenter.partner.index', $data);
     }
