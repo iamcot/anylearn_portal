@@ -291,13 +291,13 @@ class TransactionService
             }
 
             // pay author
-            $authorCommission = floor($amount * $commissionRate / 1);
+            $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
             Transaction::create([
                 'user_id' => $author->id,
                 'type' => ConfigConstants::TRANSACTION_PARTNER,
                 'amount' => $authorCommission,
                 'ref_amount' => $amount,
-                'pay_method' => UserConstants::WALLET_M,
+                'pay_method' => UserConstants::WALLET_C,
                 'pay_info' => '',
                 'content' => 'Doanh thu từ bán khóa học: ' . $item->title,
                 'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
@@ -435,7 +435,7 @@ class TransactionService
             return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
         }
 
-        $usingEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->voucher_group_id .'%')
+        $usingEvent = VoucherEvent::whereRaw('FIND_IN_SET(?, targets) > 0', [$usingVoucher->voucher_group_id])
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
@@ -510,8 +510,8 @@ class TransactionService
         if (!$usingVoucher) {
             return 'Thông tin voucher không chính xác, không thể xóa!'; 
         }
-
-        $usingEvent = VoucherEvent::where('targets', 'Like', '%'. $usingVoucher->voucher_group_id .'%')
+        
+        $usingEvent = VoucherEvent::whereRaw('FIND_IN_SET(?, targets) > 0', [$usingVoucher->voucher_group_id])
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
@@ -790,7 +790,7 @@ class TransactionService
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' =>  UserConstants::WALLET_C,
-                    'content' => 'Chúng tôi thu hồi của bạn ' . $cr->amount . ' anypoints 
+                    'content' => 'Thu hồi ' . $cr->amount . ' anypoints 
                         vì đơn hàng #'. $openOrder->id . ' được trả lại.',
                     'user_id' => $cr->id,
                     'amount' => - $cr->amount, 
@@ -829,8 +829,8 @@ class TransactionService
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' => UserConstants::WALLET_C,
-                    'content' => 'Bạn đã được hoàn trả '. $tnx->amount .' anypoints 
-                        vì trả lại đơn hàng #' . $openOrder->id,
+                    'content' => 'Hoàn trả '. $tnx->amount .' anypoints 
+                        vì đơn hàng #' . $openOrder->id . ' được trả lại.',
                     'user_id' => $user->id,
                     'amount' => $tnx->amount,
                     'order_id' => $tnx->order_id
@@ -1083,7 +1083,7 @@ class TransactionService
         foreach ($transOrder as $trans) {
             // Seller   
             if ($trans->type == ConfigConstants::TRANSACTION_PARTNER) {
-                $this->approveWalletmTransaction($trans->id);
+                $this->approveWalletcTransaction($trans->id);
                 continue;
             }
 
