@@ -195,7 +195,7 @@ class UserController extends Controller
                                     'email' => $row[5],
                                     'source' => $row[8],
                                 ];
-                                if  (isset($row[9]) && in_array($row[9], UserConstants::$memberRoles)) {
+                                if (isset($row[9]) && in_array($row[9], UserConstants::$memberRoles)) {
                                     $data['role'] = $row[9];
                                 }
                             }
@@ -388,6 +388,14 @@ class UserController extends Controller
     {
         $trans = new Transaction();
         // $this->data['anyPoint']= $trans->pendingWalletC(auth()->user()->id);
+        $this->data['pointReiceived'] = Transaction::where('user_id', auth()->user()->id)
+            ->where('pay_method', UserConstants::WALLET_C)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
+            ->sum('amount');
+        $this->data['pointWait'] = Transaction::where('user_id', auth()->user()->id)
+            ->where('pay_method', UserConstants::WALLET_C)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->sum('amount');
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
@@ -912,12 +920,12 @@ class UserController extends Controller
             return redirect()->back()->with('notify', 'Người dùng không đúng');
         }
         $orderDetail = DB::table('order_details')
-        ->join('orders', 'orders.id', '=', 'order_details.order_id')
-        ->where('order_details.id', $orderDetailId)
-        ->where('orders.user_id', $user->id)
-        ->select(
-            'order_details.item_id',
-        )->first();
+            ->join('orders', 'orders.id', '=', 'order_details.order_id')
+            ->where('order_details.id', $orderDetailId)
+            ->where('orders.user_id', $user->id)
+            ->select(
+                'order_details.item_id',
+            )->first();
         if (!$orderDetail) {
             return redirect()->back()->with('notify', 'Đơn hàng không đúng');
         }
