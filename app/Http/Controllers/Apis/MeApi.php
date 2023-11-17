@@ -13,8 +13,10 @@ use App\Models\ItemExtra;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
+use App\Models\UserDocument;
 use App\Models\UserLocation;
 use App\Services\DashboardServices;
+use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
@@ -386,5 +388,27 @@ class MeApi extends Controller
         }
         $locations = UserLocation::where('user_id', $userLocationId);
         return response()->json($locations, 200);
+    }
+
+    function certificate(Request $request)
+    {
+        $user = $request->get('_user');
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $fileService = new FileServices();
+            $fileuploaded = $fileService->doUploadImage($request, 'file');
+            if ($fileuploaded === false) {
+                return response($fileuploaded, 400);
+            }
+            else{
+                $userDocM = new UserDocument();
+                $userDocM->addDocWeb($fileuploaded, $user);
+                return response()->json($fileuploaded, 200);
+            }
+        }
+    }
+    function list_certificate(Request $request){
+        $user = $request->get('_user');
+        $results = UserDocument::where('user_id', $user->id)->get();
+        return response()->json($results);
     }
 }
