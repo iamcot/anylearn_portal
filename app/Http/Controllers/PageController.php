@@ -680,7 +680,7 @@ class PageController extends Controller
             $request->session()->flash('tab', $request->get('tab'));
         }
 
-        return view(env('TEMPLATE', '') . 'helpcenter.parnter.index', $data);
+        return view(env('TEMPLATE', '') . 'helpcenter.partner.index', $data);
     }
 
     public function guide(Request $request)
