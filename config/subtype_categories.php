@@ -9,7 +9,7 @@ use App\Constants\ItemConstants;
             'name' => 'Tiếng Anh'
         ],
         [
-            'id'   => 1,
+            'id'   => 64,
             'name' => 'Ngoại ngữ'
         ],
         [
@@ -17,7 +17,7 @@ use App\Constants\ItemConstants;
             'name' => 'Toán tư duy'
         ],
         [
-            'id'   => 0,
+            'id'   => 63,
             'name' => 'Toán phổ thông'
         ],
         [
@@ -35,7 +35,7 @@ use App\Constants\ItemConstants;
     ],
     ItemConstants::SUBTYPE_EXTRA => [
         [
-            'id'   => 0,
+            'id'   => 62,
             'name' => 'Toán học'
         ],
         [
@@ -75,7 +75,7 @@ use App\Constants\ItemConstants;
     ],
     ItemConstants::SUBTYPE_ONLINE => [
         [
-            'id'   => 0,
+            'id'   => 62,
             'name' => 'Toán học'
         ],
         [
