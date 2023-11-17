@@ -66,10 +66,9 @@ class J4uServices
 
         $registereds = array_merge($items, $registereds);
             
+        $data->categoryIds = [];
+        $data->subtypes = [];
         if ($registereds) {
-            $data->categoryIds = [];
-            $data->subtypes = [];
-
             $data->minAge = $registereds[0]->minAge;
             $data->maxAge = $registereds[0]->maxAge;
 
@@ -161,11 +160,16 @@ class J4uServices
             ->whereNull('items.item_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
-            //->whereNotIn('items.id', $data->itemIds)
-            ->whereIn('ic.category_id', $data->categoryIds)
-            ->whereIn('items.subtype', $data->subtypes)
             ->where('items.price', '>=', $data->minPrice)
             ->where('items.price', '<=', $data->maxPrice);
+
+        if (!empty($data->categoryIds)) {
+            $items->whereIn('ic.category_id', $data->categoryIds);
+        }
+
+        if (!empty($data->subtypes)) {
+            $items->whereIn('items.subtype', $data->subtypes);
+        }
 
         if (isset($data->minAge)) {
             $items->where('items.ages_min', '>=', $data->minAge);
