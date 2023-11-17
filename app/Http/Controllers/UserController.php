@@ -391,11 +391,11 @@ class UserController extends Controller
         $this->data['pointReiceived'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
-            ->sum('amount');
+            ->sum(DB::raw("CASE WHEN type = 'exchange' THEN ref_amount ELSE amount END"));
         $this->data['pointWait'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->sum('amount');
+            ->sum(DB::raw("CASE WHEN type = 'exchange' THEN ref_amount ELSE amount END"));
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
