@@ -159,9 +159,7 @@ class J4uServices
             )
             ->whereNull('items.item_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
-            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
-            ->where('items.price', '>=', $data->minPrice)
-            ->where('items.price', '<=', $data->maxPrice);
+            ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE);
 
         if (!empty($data->categoryIds)) {
             $items->whereIn('ic.category_id', $data->categoryIds);
@@ -169,6 +167,14 @@ class J4uServices
 
         if (!empty($data->subtypes)) {
             $items->whereIn('items.subtype', $data->subtypes);
+        }
+
+        if (isset($data->minPrice)) {
+            $items->where('items.price', '>=', $data->minPrice);
+        }
+
+        if(isset($data->maxPrice)) {
+            $items->where('items.price', '<=', $data->maxPrice);
         }
 
         if (isset($data->minAge)) {
