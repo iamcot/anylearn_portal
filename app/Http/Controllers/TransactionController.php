@@ -239,6 +239,9 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
+        if (!$transService->checkWalletCBeforeReturnOrder($orderId)) {
+            return redirect()->back()->with('notify', 'Không đủ điều kiện hoàn trả đơn hàng này!'); 
+        }
         $transService->returnOrder($orderId, OrderConstants::STATUS_RETURN_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }

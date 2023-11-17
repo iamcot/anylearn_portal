@@ -758,13 +758,13 @@ class TransactionService
         );
     }
 
-    public function returnOrder($orderId, $trigger)
+    public function returnOrder($orderID, $trigger)
     {
-        $openOrder = Order::find($orderId);
-        if ($openOrder && 
-            $openOrder->status != OrderConstants::STATUS_DELIVERED && 
+        $openOrder = Order::find($orderID);
+        if (!$openOrder || ( 
+            $openOrder->status != OrderConstants::STATUS_DELIVERED &&
             $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
-        ) {
+        )) {
             return false;
         }
 
@@ -932,6 +932,38 @@ class TransactionService
 
         Log::debug("Seller cancel transaction & orders", ["orderId" => $openOrder->id]);
         $notifServ->createNotif(NotifConstants::COURSE_REGISTER_REJECT, $openOrder->user_id, []);
+        return true;
+    }
+
+    public function checkWalletCBeforeReturnOrder($orderID)
+    {
+        $openOrder = Order::find($orderID);
+        if (!$openOrder || ( 
+            $openOrder->status != OrderConstants::STATUS_DELIVERED &&
+            $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
+        )) {
+            return false;
+        }
+
+        $orderDetails = OrderDetail::where('order_id', $orderID)->get();
+        foreach ($orderDetails as $od) {
+            $conditions = DB::table('transactions')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_DONE)
+                ->where('transactions.pay_method', UserConstants::WALLET_C)
+                ->where('transactions.order_id', $od->id)
+                ->selectRaw('
+                    count(*) as total, 
+                    sum(if(users.wallet_c >= transactions.amount, 1, 0) as matching)
+                ')
+                ->first();
+            
+            if ($conditions->total != $conditions->matching) {
+                return false;
+            }
+        }
+
         return true;
     }
 
