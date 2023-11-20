@@ -450,7 +450,7 @@ class TransactionService
             $configM = new Configuration();
             $defaultConfigs = $configM->gets([
                 ConfigConstants::CONFIG_BONUS_RATE,
-                ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
+                ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER,
             ]);  
 
             foreach($orders as $orderItem) {
@@ -477,7 +477,7 @@ class TransactionService
 
                 $voucherCommissionRate = $usingEvent->commission_rate 
                     ? $usingEvent->commission_rate 
-                    : $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER];  
+                    : $configs[ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER];  
 
                 $userServ = new UserServices();
                 $voucherCommission = $userServ->calcCommission(
@@ -486,7 +486,7 @@ class TransactionService
                     $voucherCommissionRate,
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 );
-                dd($voucherCommissionRate, $voucherCommission);
+
                 Transaction::create([       
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
