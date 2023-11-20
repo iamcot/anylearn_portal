@@ -486,7 +486,7 @@ class TransactionService
                     $voucherCommissionRate,
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 );
-
+                dd($voucherCommissionRate, $voucherCommission);
                 Transaction::create([       
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
