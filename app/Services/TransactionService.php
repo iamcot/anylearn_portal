@@ -271,7 +271,8 @@ class TransactionService
                 ConfigConstants::CONFIG_DISCOUNT,
                 ConfigConstants::CONFIG_COMMISSION,
                 ConfigConstants::CONFIG_FRIEND_TREE,
-                ConfigConstants::CONFIG_COMMISSION_FOUNDATION
+                ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
+                ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
             ]);
 
             if ($item->company_commission != null) {
@@ -362,14 +363,10 @@ class TransactionService
             $refSeller = User::find($author->user_id);   
             if ($refSeller && $refSeller->get_ref_seller == 1)  {
                 
-                $refSellerCommission = isset($configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER])
-                    ? $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER]
-                    : $configs[ConfigConstants::CONFIG_COMMISSION];
-                
                 $refSellerCommission = $userService->calcCommission(
                     $amount, 
                     $commissionRate, 
-                    $refSellerCommission, 
+                    $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER],
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 ); 
 
@@ -778,7 +775,10 @@ class TransactionService
         foreach ($orderDetails as $od) {
             $commissionReceivers = DB::table('transactions')
                 ->join('users', 'users.id', '=', 'transactions.user_id')
-                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->whereIn('transactions.type', [
+                    ConfigConstants::TRANSACTION_COMMISSION, 
+                    ConfigConstants::TRANSACTION_PARTNER
+                ])
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_DONE)
                 ->where('transactions.pay_method', UserConstants::WALLET_C)
                 ->where('transactions.order_id', $od->id)
@@ -812,7 +812,10 @@ class TransactionService
         }
 
         $allTrans = Transaction::where('order_id', $openOrder->id)
-            ->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE])
+            ->whereIn('type', [
+                ConfigConstants::TRANSACTION_ORDER, 
+                ConfigConstants::TRANSACTION_EXCHANGE]
+                )
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
             ->get();
 
