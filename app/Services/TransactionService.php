@@ -368,7 +368,7 @@ class TransactionService
                     $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER],
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 ); 
-                dd($configs, $refSellerCommission);
+
                 Transaction::create([
                     'user_id' => $refSeller->id,
                     'ref_user_id' => $author->id,
