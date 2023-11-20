@@ -46,56 +46,56 @@ return [
         'value' => 930000
     ],
     ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER => [
-        'title' => 'Tỉ lệ commission của voucher cho nguời giới thiệu',
+        'title' => 'Tỷ lệ commission của voucher cho nguời giới thiệu',
         'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)',
         'type' => 'text',
         'value' => 0.1
     ],
     ConfigConstants::CONFIG_COMMISSION_REF_SELLER => [
-        'title' => 'Tỉ lệ commission của người giới thiệu người bán',
+        'title' => 'Tỷ lệ commission của người giới thiệu người bán',
         'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)',
         'type' => 'text',
         'value' => 0.1
     ],
     ConfigConstants::CONFIG_COMMISSION => [
-        'title' => 'Tỉ lệ commission gián tiếp',
+        'title' => 'Tỷ lệ commission gián tiếp',
         'hint' => 'Nhập số thập phân. vd: 0.05 (tương đương 5%)',
         'type' => 'text',
         'value' => 0.05
     ],
     ConfigConstants::CONFIG_DISCOUNT => [
-        'title' => 'Tỉ lệ commission trực tiếp mua hàng',
+        'title' => 'Tỷ lệ commission trực tiếp mua hàng',
         'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)',
         'type' => 'text',
         'value' => 0.1
     ],
     ConfigConstants::CONFIG_COMMISSION_FOUNDATION => [
-        'title' => 'Tỉ lệ foundation',
+        'title' => 'Tỷ lệ foundation',
         'hint' => 'Nhập số thập phân. vd: 0.05 (tương đương 5%)',
         'type' => 'text',
         'value' => 0.05
     ],
     ConfigConstants::CONFIG_COMMISSION_AUTHOR => [
-        'title' => 'Tỉ lệ mặc định của tác giả nhận được',
+        'title' => 'Tỷ lệ mặc định của tác giả nhận được',
         'hint' => 'Nhập số thập phân. vd: 0.2 (tương đương 20%)',
         'type' => 'text',
         'value' => 0.2
     ],
     ConfigConstants::CONFIG_COMMISSION_SCHOOL => [
-        'title' => 'Tỉ lệ mặc định của trường học nhận được',
+        'title' => 'Tỷ lệ mặc định của trường học nhận được',
         'hint' => 'Nhập số thập phân. vd: 0.2 (tương đương 20%)',
         'type' => 'text',
         'value' => 0.7
     ],
     ConfigConstants::CONFIG_COMMISSION_COMPANY => [
-        'title' => 'Tỉ lệ lợi nhuận công ty nhận được',
+        'title' => 'Tỷ lệ lợi nhuận công ty nhận được',
         'hint' => 'Nhập số thập phân. vd: 0.45 (tương đương 45%)',
         'type' => 'text',
         'value' => 0.45
     ],
     ConfigConstants::CONFIG_BONUS_RATE => [
-        'title' => 'Tỉ lệ chuyển tiền sử dụng về điểm thưởng',
-        'hint' => 'vd: tỉ lệ 1000  thì tiêu 1000 vnd được 1 điểm',
+        'title' => 'Tỷ lệ chuyển tiền sử dụng về điểm thưởng',
+        'hint' => 'vd: tỷ lệ 1000 thì tiêu 1000 vnd được 1 điểm',
         'type' => 'number',
         'value' => 1000
     ],
