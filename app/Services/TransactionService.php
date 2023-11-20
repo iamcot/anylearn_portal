@@ -361,14 +361,14 @@ class TransactionService
             // ref_seller
             $refSeller = User::find($author->user_id);   
             if ($refSeller && $refSeller->get_ref_seller == 1)  {
-                dd($configs);
+                
                 $refSellerCommission = $userService->calcCommission(
                     $amount, 
                     $commissionRate, 
                     $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER],
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 ); 
-
+                dd($configs, $refSellerCommission);
                 Transaction::create([
                     'user_id' => $refSeller->id,
                     'ref_user_id' => $author->id,
