@@ -45,6 +45,18 @@ return [
         'type' => 'number',
         'value' => 930000
     ],
+    ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER => [
+        'title' => 'Tỉ lệ commission của voucher cho nguời giới thiệu',
+        'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)',
+        'type' => 'text',
+        'value' => 0.1
+    ],
+    ConfigConstants::CONFIG_COMMISSION_REF_SELLER => [
+        'title' => 'Tỉ lệ commission của người giới thiệu người bán',
+        'hint' => 'Nhập số thập phân. vd: 0.1 (tương đương 10%)',
+        'type' => 'text',
+        'value' => 0.1
+    ],
     ConfigConstants::CONFIG_COMMISSION => [
         'title' => 'Tỉ lệ commission gián tiếp',
         'hint' => 'Nhập số thập phân. vd: 0.05 (tương đương 5%)',
