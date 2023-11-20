@@ -450,7 +450,7 @@ class TransactionService
             $configM = new Configuration();
             $defaultConfigs = $configM->gets([
                 ConfigConstants::CONFIG_BONUS_RATE,
-                ConfigConstants::CONFIG_COMMISSION,
+                ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
             ]);  
 
             foreach($orders as $orderItem) {
@@ -477,7 +477,7 @@ class TransactionService
 
                 $voucherCommissionRate = $usingEvent->commission_rate 
                     ? $usingEvent->commission_rate 
-                    : $configs[ConfigConstants::CONFIG_COMMISSION];  
+                    : $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER];  
 
                 $userServ = new UserServices();
                 $voucherCommission = $userServ->calcCommission(
