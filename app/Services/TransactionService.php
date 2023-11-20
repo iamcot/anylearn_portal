@@ -148,7 +148,6 @@ class TransactionService
      */
     public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
     {
-
         $childUser = $request->get('child', '');
         $input = $request->all();
         $item = Item::find($itemId);
@@ -273,7 +272,7 @@ class TransactionService
                 ConfigConstants::CONFIG_FRIEND_TREE,
                 ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
                 ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
-            ]);
+            ]); dd($configs);
 
             if ($item->company_commission != null) {
                 $overrideConfigs = json_decode($item->company_commission, true);
@@ -387,7 +386,12 @@ class TransactionService
             // foundation
             $foundation = 0;
             if (!$item->is_test) {
-                $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+                $foundation = $userService->calcCommission(
+                    $amount, 
+                    $commissionRate, 
+                    $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 
+                    1
+                );
                 Transaction::create([
                     'user_id' => 0,
                     'type' => ConfigConstants::TRANSACTION_FOUNDATION,
@@ -413,7 +417,9 @@ class TransactionService
                 ]);
             }
 
-            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? $openOrder->id : ConfigConstants::TRANSACTION_STATUS_PENDING;
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE 
+                ? $openOrder->id 
+                : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
 
         return $result;
