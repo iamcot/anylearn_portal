@@ -350,11 +350,9 @@ class ConfigController extends Controller
             $this->data['event'] = VoucherEvent::find($eventId);
         }
 
-        $this->data['defaultCommissionRate'] = 0;
-        $configCommission = Configuration::where('key', ConfigConstants::CONFIG_COMMISSION)->first();
-        if ($configCommission) {
-            $this->data['defaultCommissionRate'] = $configCommission->value;
-        }
+       
+        $configCommission = Configuration::where('key', ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER)->first();
+        $this->data['defaultCommissionRate'] = $configCommission ? $configCommission->value : 0;
 
         $this->data['navText'] = __('Quản lý Sự kiện phát voucher');
         $this->data['hasBack'] = true;
