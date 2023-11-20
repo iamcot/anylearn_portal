@@ -272,7 +272,7 @@ class TransactionService
                 ConfigConstants::CONFIG_FRIEND_TREE,
                 ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
                 ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
-            ]); dd($configs);
+            ]); 
 
             if ($item->company_commission != null) {
                 $overrideConfigs = json_decode($item->company_commission, true);
@@ -361,7 +361,7 @@ class TransactionService
             // ref_seller
             $refSeller = User::find($author->user_id);   
             if ($refSeller && $refSeller->get_ref_seller == 1)  {
-                
+                dd($configs);
                 $refSellerCommission = $userService->calcCommission(
                     $amount, 
                     $commissionRate, 
