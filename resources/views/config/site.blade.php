@@ -8,9 +8,9 @@
         <table class="table mb-0 table-hover">
             @foreach($configs as $key => $config)
                 <tr>
-                    <th width="30%" style="vertical-align: middle" class="border-left-{{ $loop->index % 2 == 0 ? 'primary' : 'warning' }} text-right" >{{ $config['title'] }}</th>
+                    <th width="35%" style="vertical-align: middle" class="border-left-{{ $loop->index % 2 == 0 ? 'primary' : 'warning' }} text-right" >{{ $config['title'] }}</th>
                     <td><input class="form-control text-center" type="{{ $config['type'] }}" name="config[{{ $key }}]" value="{{ $config['value'] }}"></td>
-                    <td width="40%" style="vertical-align: middle" class="text-left small">{{ $config['hint'] }}</td>
+                    <td width="35%" style="vertical-align: middle" class="text-left small">{{ $config['hint'] }}</td>
                 </tr>
             @endforeach
         </table>
