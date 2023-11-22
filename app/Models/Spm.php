@@ -23,6 +23,7 @@ class Spm extends Model
     public function addSpm(Request $request)
     {
         $spmKey = $request->get('spm');
+        dd($spmKey);
         $spms = explode(".", $spmKey);
         if (count($spms) < 4) {
             return false;
@@ -66,21 +67,21 @@ class Spm extends Model
     public function filterSpm(Request $request) {
 
         $spms = DB::table('spms');
-        
+
         if ($request->input('user_id')) {
-            $spms = $spms->where('id', $request->input('user_id'));   
+            $spms = $spms->where('id', $request->input('user_id'));
         }
 
         if ($request->input('event')) {
-            $spms = $spms->where('event', $request->input('event'));   
+            $spms = $spms->where('event', $request->input('event'));
         }
-        
+
         if ($request->input('date_from')) {
-            $spms = $spms->whereDate('created_at', '>=', $request->input('date_from'));   
+            $spms = $spms->whereDate('created_at', '>=', $request->input('date_from'));
         }
 
         if ($request->input('date_to')) {
-            $spms = $spms->where('created_at', '<=', $request->input('date_to'));   
+            $spms = $spms->where('created_at', '<=', $request->input('date_to'));
         }
 
         return $spms;

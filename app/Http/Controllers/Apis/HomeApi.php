@@ -63,7 +63,7 @@ class HomeApi extends Controller
 
         $spm = new Spm();
         $spm->addSpm($request);
-        dd($spm);
+
         return response()->json($data);
     }
 }
