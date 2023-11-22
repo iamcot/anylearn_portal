@@ -249,14 +249,15 @@ class ItemApi extends Controller
     {
         $itemService = new ItemServices();
         $user = $this->isAuthedApi($request);
+
+        $spm = new Spm();
+        $spm->addSpm($request);
         try {
             $data = $itemService->pdpData($request, $itemId, $user);
             return response()->json($data);
         } catch (Exception $e) {
             return response($e->getMessage(), $e->getCode());
         }
-        $spm = new Spm();
-        $spm->addSpm($request);
     }
 
     public function share(Request $request, $itemId)
