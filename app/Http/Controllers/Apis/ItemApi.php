@@ -11,6 +11,7 @@ use App\Models\Item;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
+use App\Models\Spm;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
@@ -256,6 +257,8 @@ class ItemApi extends Controller
         } catch (Exception $e) {
             return response($e->getMessage(), $e->getCode());
         }
+        $spm = new Spm();
+        $spm->addSpm($request);
     }
 
     public function share(Request $request, $itemId)

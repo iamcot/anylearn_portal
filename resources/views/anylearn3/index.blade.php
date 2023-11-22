@@ -15,7 +15,7 @@
         <link href="/cdn/anylearn/style_landing2.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
         <link href="/cdn/anylearn/style.css?v{{ env('CDN_VERSION', '1.0.0') }}" rel="stylesheet">
     </head>
-    <body>
+    <body id="page-top" data-spm="@yield('spmb')">
         <noscript>You need to enable JavaScript to run this app.</noscript>
         @if(strpos(request()->path(), 'me') === false)
             @include('anylearn3.header')

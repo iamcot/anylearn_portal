@@ -7,7 +7,7 @@ return [
     'class' => 'Quản lý lớp học',
     'config.guide' => 'Tài liệu - Hướng dẫn',
     'fin.expenditures' => 'Quản lý Chi tiêu',
-    'helpercenter' => 'Trung tâm hổ trợ',
+    'helpcenter' => 'Trung tâm hổ trợ',
     'order.all' => 'Quản lý đơn hàng',
     // 'order.open' => 'Đơn hàng đang mở',
     'transaction' => 'Quản lý giao dịch',

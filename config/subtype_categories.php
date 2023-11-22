@@ -5,63 +5,63 @@ use App\Constants\ItemConstants;
  return [
     ItemConstants::SUBTYPE_DIGITAL  => [
         [
-            'id'   => 7,
+            'id'   => 1,
             'name' => 'Tiếng Anh'
         ],
         [
-            'id'   => 18,
+            'id'   => 64,
             'name' => 'Ngoại ngữ'
         ],
         [
-            'id'   => 4,
+            'id'   => 9,
             'name' => 'Toán tư duy'
         ],
         [
-            'id'   => 3,
+            'id'   => 63,
             'name' => 'Toán phổ thông'
         ],
         [
-            'id'   => 19,
+            'id'   => 13,
             'name' => 'Lập trình'
         ],
         [
-            'id'   => 19,
+            'id'   => 37,
             'name' => 'Nhạc cụ'
         ],
         [
-            'id'   => 19,
+            'id'   => 16,
             'name' => 'Mỹ thuật'
         ],
     ],
     ItemConstants::SUBTYPE_EXTRA => [
         [
-            'id'   => 1,
+            'id'   => 62,
             'name' => 'Toán học'
         ],
         [
-            'id'   => 9,
+            'id'   => 7,
             'name' => 'Ngôn ngữ'
         ],
         [
-            'id'   => 13,
+            'id'   => 14,
             'name' => 'Công nghệ'
         ],
         [
-            'id'   => 15,
+            'id'   => 49,
             'name' => 'Nghệ thuật'
         ],
         [
-            'id'   => 16,
+            'id'   => 48,
             'name' => 'Thể thao'
         ],
         [
-            'id'   => 16,
+            'id'   => 38,
             'name' => 'Kỹ năng'
         ],
     ],
     ItemConstants::SUBTYPE_OFFLINE => [
         [
-            'id'   => 28,
+            'id'   => 24,
             'name' => 'Trường đơn ngữ quốc tế'
         ],
         [
@@ -75,33 +75,33 @@ use App\Constants\ItemConstants;
     ],
     ItemConstants::SUBTYPE_ONLINE => [
         [
-            'id'   => 12,
+            'id'   => 62,
             'name' => 'Toán học'
         ],
         [
-            'id'   => 10,
+            'id'   => 31,
             'name' => 'Vật lý'
         ],
         [
-            'id'   => 11,
+            'id'   => 1,
             'name' => 'Tiếng Anh'
         ],
         [
-            'id'   => 14,
+            'id'   => 15,
             'name' => 'Thuyết trình'
         ],
         [
-            'id'   => 20,
+            'id'   => 16,
             'name' => 'Mỹ thuật'
         ],
         [
-            'id'   => 20,
+            'id'   => 38,
             'name' => 'Kỹ năng'
         ],
     ],
     ItemConstants::SUBTYPE_VIDEO => [
         [
-            'id'   => 21,
+            'id'   => 20,
             'name' => 'Rèn tư duy'
         ],
         [
@@ -123,15 +123,15 @@ use App\Constants\ItemConstants;
     ],
     ItemConstants::SUBTYPE_PRESCHOOL => [
         [
-            'id'   => 21,
+            'id'   => 59,
             'name' => 'Mầm non tư thục'
         ],
         [
-            'id'   => 22,
+            'id'   => 60,
             'name' => 'Mầm non song ngữ'
         ],
         [
-            'id'   => 8,
+            'id'   => 61,
             'name' => 'Mầm non quốc tế'
         ]
     ]

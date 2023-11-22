@@ -239,6 +239,9 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
+        if (!$transService->checkWalletCBeforeReturnOrder($orderId)) {
+            return redirect()->back()->with('notify', 'Đơn hàng này không đủ điều kiện để thực hiện hoàn trả!'); 
+        }
         $transService->returnOrder($orderId, OrderConstants::STATUS_RETURN_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
@@ -732,10 +735,16 @@ class TransactionController extends Controller
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }
 
+            // handle commission vouchers
+            $transService->addTransactionsForCommissionVouchers($dbVoucher->id, $orderId);
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
+
         } else if ($request->get('cart_action') == 'remove_voucher') {
-            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $transService = new TransactionService();
+            $transService->removeTransactionsForCommissionVouchers(
+                $request->get('voucher_userd_id'), 
+            );   
+            VoucherUsed::find($request->get('voucher_userd_id'))->delete();            
             $res = $transService->recalculateOrderAmount($orderId);
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
