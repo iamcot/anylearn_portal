@@ -1,20 +1,31 @@
 <?php namespace App\DigitalSupport;
 
+use Exception;
+
 class OrderCreationProcessor 
 {
-    static $processor = null;
+    private static $processor = null;
     
-    public static function getProcessor($partner)
+    public static function getInstance($partnerID)
     {
         if (null != self::$processor ) {
             return self::$processor;
         }
-        
-        if (class_exists($partner)) {
-           self::$processor = new $partner; 
+
+        $digitalPartnerAPIs = config('digital_partner_apis');
+        if (!array_key_exists($partnerID, $digitalPartnerAPIs) ||
+            !class_exists($digitalPartnerAPIs[$partnerID])
+        ) { 
+            throw new Exception('The partner does not support API');
         }
 
-        return self::$processor;    
+        $instance = new $digitalPartnerAPIs[$partnerID];
+        if (!$instance instanceof DigitalPartnerInterface) {
+            throw new Exception('The partner must implement DigitalPartnerInterface');
+        }
+
+        self::$processor = $instance;
+        return self::$processor;   
     }
     
 }

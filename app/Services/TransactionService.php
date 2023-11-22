@@ -8,6 +8,8 @@ use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
+use App\DataObjects\ServiceResponse;
+use App\DigitalSupport\OrderCreationProcessor;
 use App\ItemCode;
 use App\ItemCodeNotifTemplate;
 use App\Mail\ReturnRequest;
@@ -27,6 +29,7 @@ use App\Models\VoucherEvent;
 use App\Models\VoucherEventLog;
 use App\Models\VoucherGroup;
 use App\Models\VoucherUsed;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification as NotificationsNotification;
 use Illuminate\Support\Facades\Auth;
@@ -828,7 +831,6 @@ class TransactionService
                 'orderid' => $openOrder->id,
             ]);
 
-
             //ZALO to buyer
             $zaloService = new ZaloServices(true);
             $zaloService->sendZNS(ZaloServices::ZNS_ORDER_CONFIRMED, $user->phone, [
@@ -861,17 +863,35 @@ class TransactionService
 
     public function activateDigitalCourses($userId, $orderDetail)
     {
-        $itemCode = ItemCode::where('item_id', $orderDetail->item_id)->whereNull('user_id')->first();
-        if ($itemCode) {
-            $itemCode->update([
-                'user_id' => $userId,
-                'order_detail_id' => $orderDetail->id,
-            ]);
-            $notifServ = new Notification();
-            $notifServ->notifActivation($itemCode);
-        }
+        // $activationInfo = [];
+        // $item = Item::find($orderDetail->item_id);
+       
+        // if ($item && $item->activation_method) {
+        //     $processor = OrderCreationProcessor::getInstance($item->user_id);
+        //     $response  = $processor->createOrderAgent('12', 'uy', 'xn');
 
-        return false;
+        //     if (!$response instanceof ServiceResponse || false === $response->status) {
+        //         throw new Exception($response->message ?? 'Error: Digital Support'); 
+        //     } 
+
+        //     $activationInfo = $response->data;
+        // }
+
+        // $itemCode = ItemCode::where('item_id', $orderDetail->item_id)
+        //     ->whereNull('user_id')
+        //     ->first();
+
+        // if ($itemCode) {
+        //     $itemCode->update([
+        //         'user_id' => $userId,
+        //         'order_detail_id' => $orderDetail->id,
+        //     ]);
+        //     $activationInfo['code'] = 'Itemcode'
+        //     $notifServ = new Notification();
+        //     $notifServ->notifActivation($itemCode);
+        // }
+
+        // return false;
     }
 
     public function orderDetailsToDisplay($orderId)

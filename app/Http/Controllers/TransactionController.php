@@ -9,6 +9,8 @@ use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\DataObjects\ServiceResponse;
+use App\DigitalSupport\Monkey;
+use App\DigitalSupport\OrderCreationProcessor;
 use App\Models\Configuration;
 use App\Models\Item;
 use App\Models\Notification;
@@ -542,6 +544,10 @@ class TransactionController extends Controller
 
     public function cart(Request $request)
     {
+        //=======================================//
+        $transServ = new TransactionService();
+        $transServ->activateDigitalCourses(1, OrderDetail::find(2704));
+        //=======================================//
         if ($request->get('_user')) {
             $user = $request->get('_user');
             $this->data['api_token'] = $user->api_token;
