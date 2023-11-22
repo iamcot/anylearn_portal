@@ -23,11 +23,12 @@ class Spm extends Model
     public function addSpm(Request $request)
     {
         $spmKey = $request->get('spm');
-        dd($spmKey);
+
         $spms = explode(".", $spmKey);
         if (count($spms) < 4) {
             return false;
         }
+        dd($spms);
         try {
             $data = [
                 'spm_key' => $spmKey,
