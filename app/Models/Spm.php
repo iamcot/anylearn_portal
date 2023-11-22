@@ -28,7 +28,6 @@ class Spm extends Model
         if (count($spms) < 4) {
             return false;
         }
-        dd($spms);
         try {
             $data = [
                 'spm_key' => $spmKey,
