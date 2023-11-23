@@ -45,7 +45,6 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('encrypt.cookie');
-
     }
 
     public function showLoginForm(Request $request)
@@ -127,19 +126,19 @@ class LoginController extends Controller
             }
         }
         Cookie::queue(Cookie::forever('api_token', $user->api_token, null, null, false, false));
-
-        if ($request->session()->get('cb')) {
-            return redirect()->to($request->session()->get('cb'));
-        } else if ($userService->isMod()) {
-            return redirect($this->redirectTo);
+        if ($userService->isMod()) {
+            return redirect('/admin');
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');
+        } else if ($request->session()->get('cb')) {
+            return redirect()->to($request->session()->get('cb'));
         } else {
             return redirect('/');
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::guard()->logout();
         return redirect('/')->withCookie(Cookie::forget('api_token'));
     }
