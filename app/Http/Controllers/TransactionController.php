@@ -961,7 +961,7 @@ class TransactionController extends Controller
                     : $result['orderId'];
 
                 $transService = new TransactionService();
-                $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
+                $rs = $transService->approveRegistrationAfterWebPayment($orderId, $payment);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
             }
             $data = $processor->prepareNotifyResponse($query, $result);
