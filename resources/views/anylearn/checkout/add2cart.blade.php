@@ -154,7 +154,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <input class="form-check-input" type="checkbox" name="activity_trial" id="checkbox1"
-                                        @if (isset($activity) && $activity == 'activity_trial') checked @endif>
+                                        @if (isset($activiy) && $activiy == 'activity_trial') checked @endif>
                                     <label class="form-check-label" for="checkbox1">
                                         @lang('Học Thử')
                                     </label>
@@ -173,7 +173,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <input class="form-check-input" type="checkbox" name="activiy_visit" id="checkbox2"\
-                                    @if (isset($activity) && $activity == 'activiy_visit') checked @endif>
+                                    @if (isset($activiy) && $activiy == 'activiy_visit') checked @endif>
                                     <label class="form-check-label" for="checkbox2">
                                         @lang('Thăm Quan Trường')
                                     </label>
@@ -193,8 +193,8 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <input class="form-check-input" type="checkbox" name="activiy_test" id="checkbox3"
-                                    @if (isset($activity) && $activity == 'activiy_test') checked @endif>
-                                    @dd($activity)
+                                    @if (isset($activiy) && $activiy == 'activiy_test') checked @endif>
+                                    @dd($activiy)
                                     <label class="form-check-label" for="checkbox3">
                                         @lang('Đăng Kí Thi Đầu Vào')
                                     </label>
