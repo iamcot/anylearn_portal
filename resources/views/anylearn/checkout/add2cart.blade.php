@@ -153,8 +153,8 @@
                         <div class="form-check form-inline">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input class="form-check-input" type="checkbox" name="activity_trial" id="checkbox1"
-                                        @if (isset($activiy) && $activiy == 'activity_trial') checked @endif>
+                                    <input class="form-check-input" type="checkbox" name="activiy_trial" id="checkbox1"
+                                        @if (isset($activiy) && $activiy == 'activiy_trial') checked @endif>
                                     <label class="form-check-label" for="checkbox1">
                                         @lang('Học Thử')
                                     </label>
