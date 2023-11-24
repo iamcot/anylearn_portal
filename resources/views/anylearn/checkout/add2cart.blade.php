@@ -142,7 +142,8 @@
 
         @endif
         @if ($item->subtype == 'extra' || $item->subtype == 'offline')
-            @if ($item->activiy_test || $item->activiy_trial || $item->activiy_visit)
+            @if ($activiy)
+            @dd($activiy)
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
                         <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fas fa-people-carry"></i>
@@ -150,7 +151,6 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        @if ($item->activiy_trial)
                             <div class="form-check form-inline">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -169,10 +169,6 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                        @if ($item->activiy_visit)
-                        @dd($item)
-
                             <div class="form-check form-inline">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -193,8 +189,6 @@
                                 </div>
 
                             </div>
-                        @endif
-                        @if ($item->activiy_test)
                             <div class="form-check form-inline">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -214,7 +208,6 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
                     </div>
                 </div>
             @endif
