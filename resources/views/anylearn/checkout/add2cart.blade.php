@@ -151,7 +151,6 @@
                     </div>
                     <div class="card-body">
                         @if ($item->activiy_trial)
-                        @dd($item->activiy_trial)
                             <div class="form-check form-inline">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -172,6 +171,8 @@
                             </div>
                         @endif
                         @if ($item->activiy_visit)
+                        @dd($item->activiy_visit)
+
                             <div class="form-check form-inline">
                                 <div class="row">
                                     <div class="col-md-4">
