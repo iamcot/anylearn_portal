@@ -54,8 +54,7 @@
             </div>
         </div>
         @if (!in_array($item->subtype, ['digital', 'video']))
-            @if ($item->activiy_trial || $item->activiy_trial || $item->activiy_trial)
-            @else
+
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
                         <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i>
@@ -114,7 +113,6 @@
                         @endif
                     </div>
                 </div>
-            @endif
 
         @endif
         @if (!empty($extras) && count($extras) > 0)

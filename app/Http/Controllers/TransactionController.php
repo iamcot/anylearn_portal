@@ -383,7 +383,6 @@ class TransactionController extends Controller
         if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test') {
             $this->data['activiy'] = $request->get('action');
         }
-        dd($request->get('action'));
         $class = $itemService->pdpData($request, $request->get('class'), $user);
         if (!$class) {
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
