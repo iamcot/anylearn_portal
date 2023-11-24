@@ -8,5 +8,8 @@
 use App\DigitalSupport\DigitalMonkey;
 
 return [
-    222 => DigitalMonkey::class,
+    'monkey' => [
+        'partnerID' => 222,
+        'processor' => DigitalMonkey::class,
+    ], 
 ];
