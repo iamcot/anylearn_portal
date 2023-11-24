@@ -142,8 +142,7 @@
 
         @endif
         @if ($item->subtype == 'extra' || $item->subtype == 'offline')
-            @if ($activiy)
-            @dd($activiy)
+
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
                         <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fas fa-people-carry"></i>
@@ -151,67 +150,66 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                            <div class="form-check form-inline">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input class="form-check-input" type="checkbox" name="activiy_trial" id="checkbox1">
-                                        <label class="form-check-label" for="checkbox1">
-                                            @lang('Học Thử')
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="date" class="form-control ml-2" id="trial_date" name="trial_date"
-                                            placeholder="Ngày">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control ml-2" id="trial_note"
-                                            name="trial_note" placeholder="Ghi chú">
-                                    </div>
+                        <div class="form-check form-inline">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input class="form-check-input" type="checkbox" name="activity_trial" id="checkbox1"
+                                        @if (!isset($activity) && $activity == 'activity_trial') checked @endif>
+                                    <label class="form-check-label" for="checkbox1">
+                                        @lang('Học Thử')
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control ml-2" id="trial_date" name="trial_date"
+                                        placeholder="Ngày">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control ml-2" id="trial_note" name="trial_note"
+                                        placeholder="Ghi chú">
                                 </div>
                             </div>
-                            <div class="form-check form-inline">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input class="form-check-input" type="checkbox" name="activiy_visit"
-                                            id="checkbox2">
-                                        <label class="form-check-label" for="checkbox2">
-                                            @lang('Thăm Quan Trường')
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="date" class="form-control ml-2" id="visit_date"
-                                            name="visit_date" placeholder="Ngày">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control ml-2" id="visit_note"
-                                            name="visit_note" placeholder="Ghi chú">
-                                    </div>
+                        </div>
+                        <div class="form-check form-inline">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input class="form-check-input" type="checkbox" name="activiy_visit" id="checkbox2"\
+                                    @if (!isset($activity) && $activity == 'activiy_visit') checked @endif>
+                                    <label class="form-check-label" for="checkbox2">
+                                        @lang('Thăm Quan Trường')
+                                    </label>
                                 </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control ml-2" id="visit_date" name="visit_date"
+                                        placeholder="Ngày">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control ml-2" id="visit_note" name="visit_note"
+                                        placeholder="Ghi chú">
+                                </div>
+                            </div>
 
-                            </div>
-                            <div class="form-check form-inline">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <input class="form-check-input" type="checkbox" name="activiy_test"
-                                            id="checkbox3">
-                                        <label class="form-check-label" for="checkbox3">
-                                            @lang('Đăng Kí Thi Đầu Vào')
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="date" class="form-control ml-2" id="test_date" name="test_date"
-                                            placeholder="Ngày">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control ml-2" id="test_note" name="test_note"
-                                            placeholder="Ghi chú">
-                                    </div>
+                        </div>
+                        <div class="form-check form-inline">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input class="form-check-input" type="checkbox" name="activiy_test" id="checkbox3"
+                                    @if (!isset($activity) && $activity == 'activiy_test') checked @endif>
+                                    <label class="form-check-label" for="checkbox3">
+                                        @lang('Đăng Kí Thi Đầu Vào')
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="date" class="form-control ml-2" id="test_date" name="test_date"
+                                        placeholder="Ngày">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control ml-2" id="test_note" name="test_note"
+                                        placeholder="Ghi chú">
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
-            @endif
-
         @endif
         <div class="text-center mb-5 mt-5">
             @if (!isset($activiy))
