@@ -194,7 +194,6 @@
                                 <div class="col-md-4">
                                     <input class="form-check-input" type="checkbox" name="activiy_test" id="checkbox3"
                                     @if (isset($activiy) && $activiy == 'activiy_test') checked @endif>
-                                    @dd($activiy)
                                     <label class="form-check-label" for="checkbox3">
                                         @lang('Đăng Kí Thi Đầu Vào')
                                     </label>
