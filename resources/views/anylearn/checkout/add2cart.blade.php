@@ -54,7 +54,8 @@
             </div>
         </div>
         @if (!in_array($item->subtype, ['digital', 'video']))
-
+            @if ($checkActiviy)
+            @else
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
                         <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fa fa-calendar"></i>
@@ -94,7 +95,9 @@
                                                                 @endforeach
                                                                 Bắt đầu từ
                                                                 {{ date('d/m/Y', strtotime($plan['date_start'])) }}
-                                                                , Giờ học: {{ $plan['time_start'] }} @if(!empty($plan['time_end'])) - {{$plan['time_end'] }} @endif
+                                                                , Giờ học: {{ $plan['time_start'] }} @if (!empty($plan['time_end']))
+                                                                    - {{ $plan['time_end'] }}
+                                                                @endif
                                                             </label>
                                                         </li>
                                                     @endforeach
@@ -106,14 +109,14 @@
                             </div>
                         @else
                             <p class="p-3">Lịch học bắt đầu từ ngày {{ date('d/m/Y', strtotime($item->date_start)) }}
-                            @if($item->time_start)<br>Giờ học {{ $item->time_start }}.@endif
-
+                                @if ($item->time_start)
+                                    <br>Giờ học {{ $item->time_start }}.
+                                @endif
                             </p>
-
                         @endif
                     </div>
                 </div>
-
+            @endif
         @endif
         @if (!empty($extras) && count($extras) > 0)
             @if ($checkActiviy)
