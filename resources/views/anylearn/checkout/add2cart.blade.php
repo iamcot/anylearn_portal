@@ -171,7 +171,7 @@
                             </div>
                         @endif
                         @if ($item->activiy_visit)
-                        @dd($item->activiy_visit)
+                        @dd($item)
 
                             <div class="form-check form-inline">
                                 <div class="row">
