@@ -15,6 +15,6 @@ class CheckTemplate
      */
     public function handle($request, Closure $next)
     {
-        return env('TEMPLATE_VERSION', 3) == 3 ? response(view('anylearn3.index')) : $next($request);
+        return env('TEMPLATE_VERSION', 2) == 2 ? response(view('anylearn3.index')) : $next($request);
     }
 }
