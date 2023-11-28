@@ -546,7 +546,9 @@ class TransactionController extends Controller
     {
         //=======================================//
         $transServ = new TransactionService();
-        $transServ->activateDigitalCourses(1, OrderDetail::find(2704));
+        $orderItem =  OrderDetail::find(2704);
+        $digitalItem = Item::find($orderItem->item_id);
+        $transServ->supportDigitalItems($digitalItem, $orderItem->id, 1);
         //=======================================//
         if ($request->get('_user')) {
             $user = $request->get('_user');

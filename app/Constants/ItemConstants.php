@@ -15,6 +15,9 @@ class ItemConstants
     const SUBTYPE_VIDEO = 'video';
     const SUBTYPE_PRESCHOOL = 'preschool';
 
+    const ACTIVATION_SUPPORT_MANUAL = 'manual';
+    const ACTIVATION_SUPPORT_API = 'api';
+
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 

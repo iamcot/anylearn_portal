@@ -2,30 +2,40 @@
 
 use Exception;
 
-class OrderCreationProcessor 
+class OrderCreationProcessor
 {
-    private static $processor = null;
+    private static $instance = null;
+
+    private static function createProcessor($partnerID) 
+    {
+        $digitalPartners = config('activation_apis'); 
+        foreach ($digitalPartners as $dp) {
+            if ($partnerID == $dp['partnerID'] && class_exists($dp['processor'])) {
+                $processor = new $dp['processor'];
+                if ($processor instanceof DigitalPartnerInterface) {
+                    return $processor;
+                }
+                throw new Exception('The processor must implement DigitalPartnerInterface');   
+            }
+        }
+        return null;
+    }
     
     public static function getInstance($partnerID)
     {
-        if (null != self::$processor ) {
-            return self::$processor;
+        if (null !== self::$instance) {
+            return self::$instance;
         }
-
-        $digitalPartnerAPIs = config('digital_partner_apis');
-        if (!array_key_exists($partnerID, $digitalPartnerAPIs) ||
-            !class_exists($digitalPartnerAPIs[$partnerID])
-        ) { 
-            throw new Exception('The partner does not support API');
+        self::$instance = self::createProcessor($partnerID);
+        if (null === self::$instance) { 
+            throw new Exception('There are no processors for partnerID: ' . $partnerID);
         }
-
-        $instance = new $digitalPartnerAPIs[$partnerID];
-        if (!$instance instanceof DigitalPartnerInterface) {
-            throw new Exception('The partner must implement DigitalPartnerInterface');
-        }
-
-        self::$processor = $instance;
-        return self::$processor;   
+        return self::$instance;  
     }
-    
+
+    public static function createOrderFromAgent($orderData, $partnerID = 0) 
+    {
+        return self::getInstance($partnerID)->createOrderFromAgent($orderData); 
+    }
+
 }

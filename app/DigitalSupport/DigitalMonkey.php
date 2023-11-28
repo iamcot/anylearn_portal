@@ -31,7 +31,6 @@ class DigitalMonkey implements DigitalPartnerInterface
                 'order_id' => 'order1',
             ],
         ];
-        $returnData['data']['code'] = CodeGenerationHelper::getCode($returnData['data']['order_id']);
         return new ServiceResponse(true, $returnData['message'], $returnData['data']);
     }
 
@@ -48,7 +47,7 @@ class DigitalMonkey implements DigitalPartnerInterface
         ];
     }
 
-    public function createOrderAgent($productID, $promotionID, $transactionID) 
+    public function createOrderFromAgent($productID, $promotionID, $transactionID) 
     {
         $orderData = $this->validateOrderData($productID, $promotionID, $transactionID);
         if (false === $orderData) {

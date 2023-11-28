@@ -8,5 +8,5 @@ interface DigitalPartnerInterface
 
     public function validateOrderData($productID, $promotionID, $transactionID);
 
-    public function createOrderAgent($productID, $promotionID, $transactionID);
+    public function createOrderFromAgent($productID, $promotionID, $transactionID);
 }

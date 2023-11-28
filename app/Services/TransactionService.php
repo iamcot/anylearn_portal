@@ -851,8 +851,8 @@ class TransactionService
                 'day' => date('Y-m-d'),
             ]);
 
-            if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL) {
-                $this->activateDigitalCourses($openOrder->user_id, $orderItem);
+            if (ItemConstants::SUBTYPE_DIGITAL == $item->subtype) {
+                $this->supportDigitalItems($item, $openOrder->user_id, $orderItem);
             }
 
         }
@@ -861,37 +861,64 @@ class TransactionService
         return true;
     }
 
-    public function activateDigitalCourses($userId, $orderDetail)
+    public function supportDigitalItems($digitalItem, $orderItemID, $userID)
     {
-        // $activationInfo = [];
-        // $item = Item::find($orderDetail->item_id);
-       
-        // if ($item && $item->activation_method) {
-        //     $processor = OrderCreationProcessor::getInstance($item->user_id);
-        //     $response  = $processor->createOrderAgent('12', 'uy', 'xn');
+        $activationInfo = [];
+        if (ItemConstants::ACTIVATION_SUPPORT_API == $digitalItem->activation_support) {
+            $activationInfo = $this->supportDigitalItemsUsingAPI(
+                $digitalItem, 
+                $orderItemID,
+                $userID, 
+            );    
+        } else {
+            $itemcode = ItemCode::where('item_id', $digitalItem->id)
+                ->whereNull('user_id')
+                ->first();
 
-        //     if (!$response instanceof ServiceResponse || false === $response->status) {
-        //         throw new Exception($response->message ?? 'Error: Digital Support'); 
-        //     } 
+            if ($itemcode) {
+                $activationInfo['code'] = $itemcode->code;
+                $itemcode->update([
+                    'user_id' => $userID,
+                    'order_detail_id' => $orderItemID,
+                ]);
+            }
+        }
+        
+        if (!empty($activationInfo)) {
+            $notifServ = new Notification();
+            $notifServ->notifActivation($activationInfo);
+        }
+        
+        return false;
+    }
 
-        //     $activationInfo = $response->data;
-        // }
+    public function supportDigitalItemsUsingAPI($digitalItem, $orderItemID, $userID)
+    {
+        $orderData = [
+            'product_id' => 'com.earlystart.ltr.6month',
+            'promotion_id' => 'promotionACL',
+            'transaction_id' => $orderItemID,
+        ];
+        $response = OrderCreationProcessor::createOrderFromAgent($orderData, $digitalItem->user_id);
+        if (!$response instanceof ServiceResponse || false === $response->status) {
+            throw new Exception($response->message ?? 'Error: support digital items using api!');
+            //return false;
+        } 
+        dd($response);
+        $activationInfo = $response->data;
+        $generationKey  = $activationInfo['order_id'];
+        do {
+            $activationInfo['code'] = OrderCreationProcessor::getActivationCode($generationKey);
+        } while (ItemCode::where('code', $activationInfo['code'])->count() > 0);
 
-        // $itemCode = ItemCode::where('item_id', $orderDetail->item_id)
-        //     ->whereNull('user_id')
-        //     ->first();
-
-        // if ($itemCode) {
-        //     $itemCode->update([
-        //         'user_id' => $userId,
-        //         'order_detail_id' => $orderDetail->id,
-        //     ]);
-        //     $activationInfo['code'] = 'Itemcode'
-        //     $notifServ = new Notification();
-        //     $notifServ->notifActivation($itemCode);
-        // }
-
-        // return false;
+        ItemCode::create([
+            'code' => $activationInfo,
+            'item_id' => $digitalItem->id,
+            'user_id' => $userID,
+            'order_detail_id' => $orderItemID,
+        ]);
+        
+        return  $activationInfo;
     }
 
     public function orderDetailsToDisplay($orderId)
