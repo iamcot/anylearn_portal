@@ -657,7 +657,7 @@ class UserServices
             ->where('items.subtype', $subtype)
             ->where('items.status', 1)
             ->where('items.user_status', 1)
-            ->where('users.status', UserConstants::STATUS_INACTIVE)
+            ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->select(
                 'users.id',
                 'users.name',
