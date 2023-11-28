@@ -583,7 +583,12 @@ class UserServices
             'time' => $time,
             'partner' => $partner->name
         ];
-        Mail::to($user->email)->send(new ActivityMail($data));
+        try {
+            Mail::to($user->email)->send(new ActivityMail($data));
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");
+        }
         return;
     }
     public function MailToPartnerRegisterNew($item, $userId, $author)
