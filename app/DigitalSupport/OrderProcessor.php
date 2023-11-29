@@ -1,8 +1,9 @@
 <?php namespace App\DigitalSupport;
 
+use App\DataObjects\ServiceResponse;
 use Exception;
 
-class OrderCreationProcessor
+class OrderingProcessor
 {
     private static $instance = null;
 
@@ -12,7 +13,7 @@ class OrderCreationProcessor
         foreach ($digitalPartners as $dp) {
             if ($partnerID == $dp['partnerID'] && class_exists($dp['processor'])) {
                 $processor = new $dp['processor'];
-                if ($processor instanceof DigitalPartnerInterface) {
+                if ($processor instanceof OrderingPartnerInterface) {
                     return $processor;
                 }
                 throw new Exception('The processor must implement DigitalPartnerInterface');   
@@ -23,19 +24,25 @@ class OrderCreationProcessor
     
     public static function getInstance($partnerID)
     {
-        if (null !== self::$instance) {
-            return self::$instance;
-        }
-        self::$instance = self::createProcessor($partnerID);
-        if (null === self::$instance) { 
-            throw new Exception('There are no processors for partnerID: ' . $partnerID);
+        if (null === self::$instance) {
+            self::$instance = self::createProcessor($partnerID);
+            if (null === self::$instance) { 
+                throw new Exception('There are no processors for partnerID: ' . $partnerID);
+            }
         }
         return self::$instance;  
     }
 
     public static function createOrderFromAgent($orderData, $partnerID = 0) 
     {
-        return self::getInstance($partnerID)->createOrderFromAgent($orderData); 
+        try {
+            return self::getInstance($partnerID)->orderItemFromPartnerAPI($orderData); 
+        } catch (Exception $error) {
+            return new ServiceResponse(
+                false, 
+                'PROCESSING_FAILED', 
+                ['message' => $error->getMessage()]
+            );
+        }
     }
-
 }

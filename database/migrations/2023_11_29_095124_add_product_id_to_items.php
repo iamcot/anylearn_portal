@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddActivationSupportToItems extends Migration
+class AddProductIdToItems extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddActivationSupportToItems extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->string('activation_support')->nullable();
+            $table->string('product_id')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddActivationSupportToItems extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('activation_support');
+            $table->dropColumn('product_id');
         });
     }
 }
