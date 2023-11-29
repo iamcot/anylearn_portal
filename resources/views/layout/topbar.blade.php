@@ -60,8 +60,8 @@
         </div>
     </div>
 </div>
-    @if(auth()->user()->role == 'fin' && $transServ->hasPendingWithDraw())
+    {{-- @if(auth()->user()->role == 'fin' && $transServ->hasPendingWithDraw())
     <section>
             <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Hệ thống vừa nhận được yêu cầu rút tiền mới vui lòng kiểm tra để thanh toán cho đối tác')</p>
         </section>
-    @endif
+    @endif --}}

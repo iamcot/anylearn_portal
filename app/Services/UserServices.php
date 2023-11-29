@@ -632,7 +632,12 @@ class UserServices
             Log::error($e);
         }
     }
-
+    public function notifications()
+    {
+        $user = Auth::user();
+        $notifications = Notification::where('user_id', $user->id)->where('type', '!=', SmsServices::SMS)->orderby('id', 'desc')->paginate(10);
+        return $notifications;
+    }
     public function getPartner($id)
     {
         return DB::table('users')

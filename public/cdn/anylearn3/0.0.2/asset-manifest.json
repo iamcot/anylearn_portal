@@ -14,12 +14,12 @@
     "static/media/logo-full.png": "/cdn/anylearn3/0.0.2/static/media/logo-full.8fed31cee985957e87c7.png",
     "static/media/App_Store_(iOS)-Badge-Alternative-Logo.wine.svg": "/cdn/anylearn3/0.0.2/static/media/App_Store_(iOS)-Badge-Alternative-Logo.wine.525865049ad4a38fecce3373c8b54181.svg",
     "index.html": "/cdn/anylearn3/0.0.2/index.html",
-    "main.css.map": "/cdn/anylearn3/0.0.2/static/css/main.59443ab4.css.map",
-    "main.js.map": "/cdn/anylearn3/0.0.2/static/js/main.6ea5d691.js.map",
+    "main.css.map": "/cdn/anylearn3/0.0.2/static/css/main.f66d9725.css.map",
+    "main.js.map": "/cdn/anylearn3/0.0.2/static/js/main.58f63c10.js.map",
     "787.9fdd7567.chunk.js.map": "/cdn/anylearn3/0.0.2/static/js/787.9fdd7567.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.59443ab4.css",
-    "static/js/main.6ea5d691.js"
+    "static/css/main.f66d9725.css",
+    "static/js/main.58f63c10.js"
   ]
 }
