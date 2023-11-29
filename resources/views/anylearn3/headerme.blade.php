@@ -27,7 +27,7 @@
                             </i>
                         </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="top:40px;right:0px">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="top:40px;right:0px;width: 360px;">
                             <div class="pl-3 ml-1">
                                 <label class="fw-bold" style="font-size: 1.5rem">Thông báo</label>
                             </div>
