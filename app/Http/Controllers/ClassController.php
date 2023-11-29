@@ -200,7 +200,8 @@ class ClassController extends Controller
         $this->data['configs'] = $configM->gets([
             ConfigConstants::CONFIG_DISCOUNT,
             ConfigConstants::CONFIG_COMMISSION,
-            ConfigConstants::CONFIG_COMMISSION_FOUNDATION
+            ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
+            ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
         ]);
         $category = Category::all();
         $this->data['categories'] = $category;

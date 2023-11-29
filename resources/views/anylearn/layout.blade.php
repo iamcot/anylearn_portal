@@ -54,7 +54,7 @@
         </section>
         @endif
         @endif
-        <section @if(!empty($isApp) && $isApp) class="mt-5"  @endif>
+        <section @if(!empty($isApp) && $isApp) class="mt-5" @endif>
             @include('anylearn.widget.notify', ['notify' => session('notify', '')])
             <div class="container">
                 @yield('body')
@@ -69,6 +69,8 @@
     <script src="/cdn/anylearn/owl.carousel.min.js"></script>
     <script async src="/cdn/js/anylog.js"></script>
     @yield('jscript')
+    <div class="zalo-chat-widget" data-oaid="3721021934871748468" data-welcome-message="Bạn đang muốn tìm kiếm khóa học nào thế ?" data-autopopup="3" data-width="300" data-height="500"></div>
+    <script src="https://sp.zalo.me/plugins/sdk.js"></script>
 </body>
 <style>
     .omi-w-intro-img-container {

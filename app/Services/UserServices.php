@@ -583,7 +583,12 @@ class UserServices
             'time' => $time,
             'partner' => $partner->name
         ];
-        Mail::to($user->email)->send(new ActivityMail($data));
+        try {
+            Mail::to($user->email)->send(new ActivityMail($data));
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");
+        }
         return;
     }
     public function MailToPartnerRegisterNew($item, $userId, $author)
@@ -627,7 +632,12 @@ class UserServices
             Log::error($e);
         }
     }
-
+    public function notifications()
+    {
+        $user = Auth::user();
+        $notifications = Notification::where('user_id', $user->id)->where('type', '!=', SmsServices::SMS)->orderby('id', 'desc')->paginate(10);
+        return $notifications;
+    }
     public function getPartner($id)
     {
         return DB::table('users')
@@ -652,7 +662,7 @@ class UserServices
             ->where('items.subtype', $subtype)
             ->where('items.status', 1)
             ->where('items.user_status', 1)
-            ->where('users.status', UserConstants::STATUS_INACTIVE)
+            ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->select(
                 'users.id',
                 'users.name',

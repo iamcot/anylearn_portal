@@ -4,7 +4,6 @@
 @php ( $role = Auth::user()->role )
 <ul class="navbar-nav bg-gradient-{{ env('MAIN_COLOR', 'primary') }} sidebar sidebar-dark accordion d-print-none" id="accordionSidebar">
     <!-- Sidebar - Brand -->
-    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'mod' || auth()->user()->role =='sale_manager')
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-book-open"></i>
@@ -12,15 +11,6 @@
         </div>
         <div class="sidebar-brand-text mx-3">{{ env('APP_NAME') }}</div>
     </a>
-    @else
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-book-open"></i>
-            <!-- <i class="fas fa-gem"></i> -->
-        </div>
-        <div class="sidebar-brand-text mx-3">{{ env('APP_NAME') }}</div>
-    </a>
-    @endif
 
     @if($userService->haveAccess($role, 'class'))
     <hr class="sidebar-divider d-none d-md-block">
@@ -68,6 +58,8 @@
             <i class="fas fa-fw fa-users-cog"></i>
             <span>@lang('Quản lý thành viên')</span></a>
     </li>
+    @endif
+    @if($userService->haveAccess($role, 'location'))
     <li class="nav-item {{ in_array($route, ['location', 'location.create', 'location.edit']) ? 'active' : '' }}">
         <a href="{{ route('location') }}" class="nav-link">
             <i class="fas fa-fw fa-info-circle"></i>

@@ -173,12 +173,13 @@ class User extends Authenticatable
                         'day' => date('Y-m-d'),
                     ]);
                     $activityService = new ActivitybonusServices();
-                    $activityService->updateWalletC($newMember->user_id, 
-                    ActivitybonusConstants::Activitybonus_Referral, 
-                    'Cộng điểm giới thiệu thành viên mới ' . $newMember->name, 
-                    null,
-                    true);
-                    
+                    $activityService->updateWalletC(
+                        $newMember->user_id,
+                        ActivitybonusConstants::Activitybonus_Referral,
+                        'Cộng điểm giới thiệu thành viên mới ' . $newMember->name,
+                        null,
+                        true
+                    );
                 }
 
                 // if (!empty($newMember->user_id)) {
@@ -187,7 +188,7 @@ class User extends Authenticatable
                 // }
             }
             $this->updateUpTree($newMember->user_id);
-           
+
             $newMember->commission_rate = (float)$newMember->commission_rate;
         } catch (\Exception $ex) {
             Log::error($ex);
@@ -209,7 +210,7 @@ class User extends Authenticatable
             'name' => $input['name'],
             'email' => $input['email'],
             'phone' => $input['phone'],
-            'contact_phone' => isset($input['contact_phone'])?$input['contact_phone']:null,
+            'contact_phone' => isset($input['contact_phone']) ? $input['contact_phone'] : null,
             'omicall_id' => $input['omicall_id'],
             'omicall_pwd' => $input['omicall_pwd'],
             'refcode' => $input['phone'],
@@ -286,8 +287,10 @@ class User extends Authenticatable
             }
         }
 
-        if (isset($input['sale_priority']) 
-            && in_array($input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
+        if (
+            isset($input['sale_priority'])
+            && in_array($input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))
+        ) {
             $obj['sale_priority'] = $input['sale_priority'];
         }
 
@@ -321,18 +324,18 @@ class User extends Authenticatable
         $editUser = $this->find($input['id']);
         $activityService = new ActivitybonusServices();
 
-            if ($editUser->image == null && isset($input['image']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
-            }
-            if ($editUser->banner == null && isset($input['banner']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
-            }
-            if ($editUser->email == null && isset($input['email']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
-            }
-            if ($editUser->address == null && isset($input['address']) != null) {
-                $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
-            }
+        if ($editUser->image == null && isset($input['image']) != null) {
+            $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Avatar, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh đại diện', null);
+        }
+        if ($editUser->banner == null && isset($input['banner']) != null) {
+            $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Banner, 'Bạn được cộng điểm vì lần đầu cập nhật ảnh bìa', null);
+        }
+        if ($editUser->email == null && isset($input['email']) != null) {
+            $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Email, 'Bạn được cộng điểm vì lần đầu cập nhật email', null);
+        }
+        if ($editUser->address == null && isset($input['address']) != null) {
+            $activityService->updateWalletC($editUser->id, ActivitybonusConstants::Activitybonus_Update_Address, 'Bạn được cộng điểm vì lần đầu cập nhật địa chỉ', null);
+        }
 
         $rs = $editUser->update($obj);
         if ($rs) {
@@ -399,9 +402,9 @@ class User extends Authenticatable
             $members = $members->whereDate('users.created_at', '<=', $request->input('datet'));
         }
         if ($request->input('adate')) {
-            $members = $members->join('sale_activities AS sa2', function($join) use ($request) {
+            $members = $members->join('sale_activities AS sa2', function ($join) use ($request) {
                 $join->on('sa2.member_id', '=', 'users.id')
-                ->whereDate('sa2.created_at', '=', $request->input('adate'));
+                    ->whereDate('sa2.created_at', '=', $request->input('adate'));
             });
             if ($request->input('sale_id') == 1) {
                 $members = $members->where('sa2.sale_id', 1);
@@ -411,23 +414,22 @@ class User extends Authenticatable
             $members = $members->where('users.sale_priority', $request->input('sale_priority'));
         }
         if ($request->input('dateo') && $request->input('datelo')) {
-            $members = $members->join('orders AS o', function($join) use ($request) {
+            $members = $members->join('orders AS o', function ($join) use ($request) {
                 $join->on('o.user_id', '=', 'users.id')
-                ->whereDate('o.created_at', '>=', $request->input('dateo'))
-                ->whereDate('o.created_at', '<=', $request->input('datelo'));
+                    ->whereDate('o.created_at', '>=', $request->input('dateo'))
+                    ->whereDate('o.created_at', '<=', $request->input('datelo'));
             });
         } elseif ($request->input('dateo')) {
-            $members = $members->join('orders AS o', function($join) use ($request) {
+            $members = $members->join('orders AS o', function ($join) use ($request) {
                 $join->on('o.user_id', '=', 'users.id')
-                ->whereDate('o.created_at', '>=', $request->input('dateo'));
+                    ->whereDate('o.created_at', '>=', $request->input('dateo'));
             });
-        } elseif($request->input('datelo')){
-            $members = $members->join('orders AS lo', function($join) use ($request) {
+        } elseif ($request->input('datelo')) {
+            $members = $members->join('orders AS lo', function ($join) use ($request) {
                 $join->on('lo.user_id', '=', 'users.id')
-                ->whereDate('lo.created_at', '<=', $request->input('datelo'));
+                    ->whereDate('lo.created_at', '<=', $request->input('datelo'));
             });
         }
-        $copy = clone $members;
         $requester = Auth::user();
         if ($requester->role == UserConstants::ROLE_SALE) {
             $members = $members->where(function ($query) use ($requester) {
@@ -450,12 +452,13 @@ class User extends Authenticatable
             });
             $members = $members
                 ->orderBy('lastsa.last_contact');
-        } 
-            
+        }
+
         $members = $members->orderby('users.is_hot', 'desc')
-                ->orderby('users.boost_score', 'desc')
-                ->orderby('users.id', 'desc');
-        
+            ->orderby('users.boost_score', 'desc')
+            ->orderby('users.id', 'desc');
+        $copy = clone $members;
+
         $members = $members
             ->leftjoin('users AS u2', 'u2.id', '=', 'users.user_id')
             ->leftJoin(DB::raw("(SELECT max(sa.created_at) last_contact, sa.member_id FROM sale_activities AS sa group by sa.member_id) AS lastsa"), 'lastsa.member_id', '=', 'users.id')

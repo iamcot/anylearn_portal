@@ -5,6 +5,7 @@ use App\Constants\UserConstants;
 return [
     'article' => 'Viết bài học và hỏi ',
     'class' => 'Quản lý lớp học',
+    'location' => 'Quản lý địa chỉ',
     'config.guide' => 'Tài liệu - Hướng dẫn',
     'fin.expenditures' => 'Quản lý Chi tiêu',
     'helpcenter' => 'Trung tâm hổ trợ',

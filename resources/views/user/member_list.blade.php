@@ -132,7 +132,9 @@
 <div class="card shadow">
     <div class="card-header">
         Tổng tìm kiếm: <strong class="text-danger">{{ $members->total() }}</strong>, 
+        @if(!$isSale)
         Tổng anyPoint: <strong class="text-danger">{{ $members->sumC }}</strong>
+        @endif
     </div>
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover table-bordered">

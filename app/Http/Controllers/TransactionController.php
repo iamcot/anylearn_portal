@@ -240,7 +240,7 @@ class TransactionController extends Controller
         }
         $transService = new TransactionService();
         if (!$transService->checkWalletCBeforeReturnOrder($orderId)) {
-            return redirect()->back()->with('notify', 'Đơn hàng này không đủ điều kiện để thực hiện hoàn trả!'); 
+            return redirect()->back()->with('notify', 'Đơn hàng này không đủ điều kiện để thực hiện hoàn trả!');
         }
         $transService->returnOrder($orderId, OrderConstants::STATUS_RETURN_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
@@ -383,7 +383,6 @@ class TransactionController extends Controller
         if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test') {
             $this->data['activiy'] = $request->get('action');
         }
-
         $class = $itemService->pdpData($request, $request->get('class'), $user);
         if (!$class) {
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
@@ -742,9 +741,9 @@ class TransactionController extends Controller
         } else if ($request->get('cart_action') == 'remove_voucher') {
             $transService = new TransactionService();
             $transService->removeTransactionsForCommissionVouchers(
-                $request->get('voucher_userd_id'), 
-            );   
-            VoucherUsed::find($request->get('voucher_userd_id'))->delete();            
+                $request->get('voucher_userd_id'),
+            );
+            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $res = $transService->recalculateOrderAmount($orderId);
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
@@ -961,7 +960,7 @@ class TransactionController extends Controller
                     : $result['orderId'];
 
                 $transService = new TransactionService();
-                $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
+                $rs = $transService->approveRegistrationAfterWebPayment($orderId, $payment);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
             }
             $data = $processor->prepareNotifyResponse($query, $result);
