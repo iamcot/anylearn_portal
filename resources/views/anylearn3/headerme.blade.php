@@ -35,10 +35,12 @@
                             @foreach ($userServ->notifications() as $notif)
                                 <li>
                                     <a class="dropdown-item" href="#">
-                                        <tr style="max-width: 500px;">
+                                        <tr>
                                             <td>
+                                                <div style="width: 200px;">
                                                 <p class="fw-semibold">{{ $notif->title }}</p>
                                                 <p>{{ $notif->content }}</p>
+                                                </div>
                                             </td>
                                             <td>{{ $userServ->timeAgo($notif->created_at) }}</td>
 
