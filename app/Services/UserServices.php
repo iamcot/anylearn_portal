@@ -635,7 +635,7 @@ class UserServices
     public function notifications()
     {
         $user = Auth::user();
-        $notifications = Notification::where('user_id', $user->id)->where('type', '!=', SmsServices::SMS)->orderby('id', 'desc')->paginate(10);
+        $notifications = Notification::where('user_id', $user->id)->where('type', '!=', SmsServices::SMS)->orderby('id', 'desc')->paginate(5);
         return $notifications;
     }
     public function getPartner($id)
