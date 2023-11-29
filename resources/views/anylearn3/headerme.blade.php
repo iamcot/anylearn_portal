@@ -27,23 +27,27 @@
                             </i>
                         </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="top:40px;right:0px">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="top:40px;right:0px;width: 360px;">
                             <div class="pl-3 ml-1">
                                 <label class="fw-bold" style="font-size: 1.5rem">Thông báo</label>
                             </div>
                             <hr />
                             @foreach ($userServ->notifications() as $notif)
                                 <li>
-                                    <a class="dropdown-item" href="#">
-                                        <tr>
-                                            <td>
-                                                <p class="fw-semibold">{{ $notif->title }}</p>
-                                                <p>{{ $notif->content }}</p>
-                                            </td>
-                                            <td>{{ $userServ->timeAgo($notif->created_at) }}</td>
-
-                                        </tr>
+                                    <a class="dropdown" href="#">
+                                        <div>
+                                            <div>
+                                                <p class="fw-semibold px-3 text-success">
+                                                    {{ $notif->title }}</p>
+                                                <p class="px-3 text-secondary text-sm">{{ $notif->content }}</p>
+                                            </div>
+                                            <div class="ms-auto">
+                                                <span
+                                                    class="text-xs px-3">{{ $userServ->timeAgo($notif->created_at) }}</span>
+                                            </div>
+                                        </div>
                                     </a>
+
                                 </li>
                             @endforeach
                             {{-- <div class="">
@@ -86,31 +90,29 @@
                         {{-- <i class="fas fa-sign-out-alt fa-fw mr-2  text-danger"></i> --}}
                     </a>
                 </li>
-                <div class="modal fade mr-5" id="logoutModal" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">@lang('Có chắc bạn buồn đăng xuất?')</h5>
-                                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">@lang('Nhấn "Đăng xuất" để tắt phiên làm việc hiện tại.')</div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" type="button"
-                                    data-bs-dismiss="modal">@lang('Bỏ qua')</button>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    {{ csrf_field() }}
-                                    <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}"
-                                        type="submit">@lang('Đăng xuất')</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </ul>
         </div>
     </nav>
-
 </header>
+<div class="modal fade mr-5" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">@lang('Có chắc bạn buồn đăng xuất?')</h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">@lang('Nhấn "Đăng xuất" để tắt phiên làm việc hiện tại.')</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">@lang('Bỏ qua')</button>
+                <form action="{{ route('logout') }}" method="POST">
+                    {{ csrf_field() }}
+                    <button class="btn btn-{{ env('MAIN_COLOR', 'primary') }}" type="submit">@lang('Đăng xuất')</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
