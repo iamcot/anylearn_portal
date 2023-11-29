@@ -37,8 +37,9 @@
                                     <a class="dropdown-item" href="#">
                                         <div class="d-flex">
                                             <div style="width: 200px;">
-                                                <p class="fw-semibold">{{ $notif->title }}</p>
-                                                <p>{{ $notif->content }}</p>
+                                                <p class="fw-semibold" style="word-wrap: break-word;">
+                                                    {{ $notif->title }}</p>
+                                                <p style="word-wrap: break-word;">{{ $notif->content }}</p>
                                             </div>
                                             <div class="ms-auto">
                                                 <span
