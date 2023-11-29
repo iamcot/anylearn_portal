@@ -34,16 +34,16 @@
                             <hr />
                             @foreach ($userServ->notifications() as $notif)
                                 <li>
-                                    <a class="dropdown-item" href="#">
-                                        <div class="d-flex">
-                                            <div style="width: 200px;">
-                                                <p class="fw-semibold" style="word-wrap: break-word;">
+                                    <a class="dropdown" href="#">
+                                        <div>
+                                            <div>
+                                                <p class="fw-semibold px-3 text-success">
                                                     {{ $notif->title }}</p>
-                                                <p style="word-wrap: break-word;">{{ $notif->content }}</p>
+                                                <p class="px-3 text-secondary text-sm">{{ $notif->content }}</p>
                                             </div>
                                             <div class="ms-auto">
                                                 <span
-                                                    class="text-sm">{{ $userServ->timeAgo($notif->created_at) }}</span>
+                                                    class="text-xs px-3">{{ $userServ->timeAgo($notif->created_at) }}</span>
                                             </div>
                                         </div>
                                     </a>
