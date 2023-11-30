@@ -122,7 +122,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::any('/user/contractsave', 'Apis\UserApi@saveContract');
     Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
 
-    Route::post('/user/certificate', 'Apis\MeApi@certificate');
+    Route::any('/user/certificate', 'Apis\MeApi@certificate');
     Route::any('/user/listcertificate', 'Apis\MeApi@list_certificate');
 
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
