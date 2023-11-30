@@ -393,19 +393,26 @@ class MeApi extends Controller
     function certificate(Request $request)
     {
         $user = $request->get('_user');
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            $fileService = new FileServices();
-            $fileuploaded = $fileService->doUploadImage($request, 'file');
-            if ($fileuploaded === false) {
-                return response($fileuploaded, 400);
+        try {
+            if ($request->hasFile('file') && $request->file('file')->isValid()) {
+                $fileService = new FileServices();
+                $fileuploaded = $fileService->doUploadImage($request, 'file');
+                if ($fileuploaded === false) {
+                    return response($fileuploaded, 400);
+                } else {
+                    if (isset($user)) {
+                        $userDocM = new UserDocument();
+                        $userDocM->addDocWeb($fileuploaded, $user);
+                        return response()->json($fileuploaded, 200);
+                    } else {
+                        return response()->json(['error' => 'User không được định nghĩa'], 400);
+                    }
+                }
             }
-            else{
-                $userDocM = new UserDocument();
-                $userDocM->addDocWeb($fileuploaded, $user);
-                return response()->json($fileuploaded, 200);
-            }
+            return response()->json(['message' => 'Không có file được tải lên.'], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
-        return response(400);
 
     }
     function list_certificate(Request $request){
@@ -413,4 +420,18 @@ class MeApi extends Controller
         $results = UserDocument::where('user_id', $user->id)->get();
         return response()->json($results);
     }
+}
+function cancelPending(Request $request, $orderId)
+{
+    $user = $request->get('_user');
+    $order = Order::find($orderId);
+    if ($order->user_id != $user->id) {
+        return response()->json(['error' => 'Bạn không có quyền cho thao tác này'], 400);
+    }
+    if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+        return response()->json(['error' => 'Trạng thái đơn hàng không đúng'], 400);
+    }
+    $transService = new TransactionService();
+    $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
+    return response()->json(['message' => 'Trạng thái đơn hàng không đúng'], 200);
 }
