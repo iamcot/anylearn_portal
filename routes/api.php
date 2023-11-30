@@ -89,7 +89,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/getextrafee/{id}', 'Apis\MeApi@getExtrafee');
     Route::get('/v3/extrafee/{id}', 'Apis\MeApi@addExtrafee');
 
-    Route::get('/v3/cancel-pending/{id}', 'Apis\MeApi@cancelPending');
+    Route::get('/v3/cancel-pending/{orderId}', 'Apis\MeApi@cancelPending');
 
 
     Route::get('/v3/locations', 'Apis\MeApi@locations');
