@@ -393,19 +393,27 @@ class MeApi extends Controller
     function certificate(Request $request)
     {
         $user = $request->get('_user');
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            $fileService = new FileServices();
-            $fileuploaded = $fileService->doUploadImage($request, 'file');
-            if ($fileuploaded === false) {
-                return response($fileuploaded, 400);
+        try {
+            if ($request->hasFile('file') && $request->file('file')->isValid()) {
+                $fileService = new FileServices();
+                $fileuploaded = $fileService->doUploadImage($request, 'file');
+                if ($fileuploaded === false) {
+                    return response($fileuploaded, 400);
+                } else {
+                    if (isset($user)) {
+                        $userDocM = new UserDocument();
+                        $userDocM->addDocWeb($fileuploaded, $user);
+                        return response()->json($fileuploaded, 200);
+                    } else {
+                        return response()->json(['error' => 'User không được định nghĩa'], 400);
+                    }
+                }
             }
-            else{
-                $userDocM = new UserDocument();
-                $userDocM->addDocWeb($fileuploaded, $user);
-                return response()->json($fileuploaded, 200);
-            }
+
+            return response()->json(['message' => 'Không có file được tải lên.'], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
-        return response(400);
 
     }
     function list_certificate(Request $request){
