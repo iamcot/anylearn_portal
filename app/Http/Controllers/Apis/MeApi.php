@@ -405,6 +405,8 @@ class MeApi extends Controller
                 return response()->json($fileuploaded, 200);
             }
         }
+        return response(400);
+
     }
     function list_certificate(Request $request){
         $user = $request->get('_user');
