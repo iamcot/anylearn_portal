@@ -1274,7 +1274,7 @@ class ItemServices
     /**
      * NOTE use order detail ID to replace scheduleId
      */
-    public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId) 
+    public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
         $orderDetail = OrderDetail::find($scheduleId);
         if (!$orderDetail) {
@@ -1306,10 +1306,10 @@ class ItemServices
             $join->organizer_user_id = $item->user_id;
             $join->organizer_confirm = 0;
             $join->participant_confirm = 0;
-    
+
             $join->save();
         }
-            
+
         if ($join->participant_user_id == $joinedUserId) {
             if ($join->participant_confirm > 0) {
                 throw new Exception("Bạn đã xác nhận rồi");
@@ -1328,12 +1328,12 @@ class ItemServices
             ]);
         }
 
-        $user = User::find($joinedUserId); 
+        $user = User::find($joinedUserId);
         $unpaiedOrders = OrderDetail::where('item_id', $item->id)
             ->where('user_id', $user->id)
             ->where('status', OrderConstants::STATUS_NEW)
             ->count();
-            
+
         if ($unpaiedOrders > 0) {
             throw new Exception("Học viên chưa thanh toán cho khoá học này");
         }
@@ -1348,7 +1348,7 @@ class ItemServices
             $transService = new TransactionService();
             $transService->approveTransactionsAfterPayment($scheduleId);
         }
-        
+
         SocialPost::create([
             'type' => SocialPost::TYPE_CLASS_COMPLETE,
             'user_id' => $user->id,
@@ -1408,7 +1408,7 @@ class ItemServices
     //         ->where('schedule_id',  $scheduleId)
     //         ->where('participant_user_id', $joinedUserId)
     //         ->first();
-            
+
     //     if ($Confirmed->participant_user_id == $joinedUserId) {
     //         if ($Confirmed->participant_confirm > 0) {
     //             throw new Exception("Bạn đã xác nhận rồi");
@@ -1420,7 +1420,7 @@ class ItemServices
     //     }
     //     // $authUser = Auth::user();
     //     // if (
-    //     //     in_array($Confirmed->organizer_user_id, $joinedUserId) 
+    //     //     in_array($Confirmed->organizer_user_id, $joinedUserId)
     //     //     || ($authUser && ($authUser->role == 'admin' || $authUser->role == 'mod'))
     //     // ) {
     //     if ($Confirmed->organizer_confirm > 0) {
@@ -1545,7 +1545,7 @@ class ItemServices
     //             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
     //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
     //             ->first();
-            
+
     //         if ($refSeller) {
     //             $transService->approveWalletmTransaction($refSeller->id);
     //         }
@@ -1600,5 +1600,10 @@ class ItemServices
         }
 
         return response()->json($digitalCourse);
+    }
+    public function getItemCategory($courseId)
+    {
+        $courseCategory =  ItemCategory::where('item_id', $courseId)->get();
+        return response()->json($courseCategory);
     }
 }

@@ -123,9 +123,8 @@ class ItemApi extends Controller
 
         $item->digital = $digital->original;
 
-        $itemCats = ItemCategory::where('item_id', $item->id)->get();
-        dd($itemCats);
-        $item->itemCats = $itemCats->original;
+        $itemCats = $itemService->getItemCategory($id);
+        $item->itemCats = $itemCats;
 
         return response()->json($item);
     }
