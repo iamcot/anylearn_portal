@@ -228,30 +228,30 @@ class MeApi extends Controller
         $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
         $userIds = $userC->pluck('id')->toArray();
         $data = DB::table('order_details')
-        ->select(
-            'items.title',
-            'items.id as courseId',
-            'order_details.id',
-            'order_details.user_id',
-            'order_details.created_at',
-            DB::raw('(SELECT COUNT(*) FROM participations
+            ->select(
+                'items.title',
+                'items.id as courseId',
+                'order_details.id',
+                'order_details.user_id',
+                'order_details.created_at',
+                DB::raw('(SELECT COUNT(*) FROM participations
             WHERE participations.item_id = order_details.item_id
             AND participations.schedule_id = order_details.id
             AND participations.participant_confirm > 0
             GROUP BY participations.item_id) AS participant_confirm_count'),
-            DB::raw('(SELECT COUNT(*) FROM participations
+                DB::raw('(SELECT COUNT(*) FROM participations
             WHERE participations.item_id = order_details.item_id
             AND participations.schedule_id = order_details.id
             AND participations.organizer_confirm > 0
             GROUP BY participations.item_id) AS confirm_count')
-        )
-        ->join('items', 'items.id', '=', 'order_details.item_id')
-        ->join('users', 'users.id', '=', 'order_details.user_id')
-        ->where('order_details.status', 'delivered')
-        ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
-        ->whereIn('order_details.user_id', $userIds)
-        ->orderByDesc('order_details.created_at')
-        ->get();
+            )
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', 'delivered')
+            ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
+            ->whereIn('order_details.user_id', $userIds)
+            ->orderByDesc('order_details.created_at')
+            ->get();
 
         return response()->json(['data' => $data]);
     }
@@ -318,6 +318,7 @@ class MeApi extends Controller
                 'users.name',
                 'users.id',
                 'order_details.created_at',
+                'order_details.id as orderId',
                 DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
@@ -373,9 +374,10 @@ class MeApi extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
-    function getExtrafee(Request $request, $courseId){
+    function getExtrafee(Request $request, $courseId)
+    {
         $user = $request->get('_user');
-        $rs = ItemExtra::where('item_id',$courseId)->get();
+        $rs = ItemExtra::where('item_id', $courseId)->get();
         return response()->json($rs, 200);
     }
     function location(Request $request)
@@ -413,9 +415,9 @@ class MeApi extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
-
     }
-    function list_certificate(Request $request){
+    function list_certificate(Request $request)
+    {
         $user = $request->get('_user');
         $results = UserDocument::where('user_id', $user->id)->get();
         return response()->json($results);
@@ -435,4 +437,3 @@ class MeApi extends Controller
         return response()->json(['message' => 'Trạng thái đơn hàng không đúng'], 200);
     }
 }
-
