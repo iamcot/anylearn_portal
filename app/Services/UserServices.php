@@ -281,6 +281,7 @@ class UserServices
         for ($i = 1; $i <= $maxLevel; $i++) {
             $db = DB::table('users')
                 ->whereIn('user_id', $userIds)
+                ->whereNotIn('is_child', 1)
                 ->get();
             $userIds = [];
             if (count($db) > 0) {
