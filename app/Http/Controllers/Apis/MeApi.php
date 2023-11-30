@@ -234,18 +234,10 @@ class MeApi extends Controller
                 'order_details.id',
                 'order_details.user_id',
                 'order_details.created_at',
-                DB::raw('(SELECT COUNT(*) FROM participations
-            WHERE participations.item_id = order_details.item_id
-            AND participations.schedule_id = order_details.id
-            AND participations.participant_confirm > 0
-            GROUP BY participations.item_id) AS participant_confirm_count'),
-                DB::raw('(SELECT COUNT(*) FROM participations
-            WHERE participations.item_id = order_details.item_id
-            AND participations.schedule_id = order_details.id
-            AND participations.organizer_confirm > 0
-            GROUP BY participations.item_id) AS confirm_count')
-            )
+                'participations.participant_confirm',
+                'participations.organizer_confirm')
             ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->join('participations', 'participations.schedule_id','=', 'order_details.id')
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->where('order_details.status', 'delivered')
             ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
