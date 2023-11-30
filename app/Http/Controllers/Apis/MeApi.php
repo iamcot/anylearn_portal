@@ -409,7 +409,6 @@ class MeApi extends Controller
                     }
                 }
             }
-
             return response()->json(['message' => 'Không có file được tải lên.'], 400);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
@@ -421,4 +420,18 @@ class MeApi extends Controller
         $results = UserDocument::where('user_id', $user->id)->get();
         return response()->json($results);
     }
+}
+function cancelPending(Request $request, $orderId)
+{
+    $user = $request->get('_user');
+    $order = Order::find($orderId);
+    if ($order->user_id != $user->id) {
+        return response()->json(['error' => 'Bạn không có quyền cho thao tác này'], 400);
+    }
+    if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+        return response()->json(['error' => 'Trạng thái đơn hàng không đúng'], 400);
+    }
+    $transService = new TransactionService();
+    $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
+    return response()->json(['message' => 'Trạng thái đơn hàng không đúng'], 200);
 }
