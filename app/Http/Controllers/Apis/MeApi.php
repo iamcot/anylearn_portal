@@ -302,7 +302,7 @@ class MeApi extends Controller
     {
         $user = $request->get('_user');
         $students = DB::table('order_details')
-            // ->leftJoin('participations', 'participations.')
+            ->leftJoin('participations', 'participations.schedule_id','=' ,'order_details.id')
             ->join('users', 'users.id', '=', 'order_details.user_id')
             ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->where('order_details.item_id', $courseId)
@@ -311,20 +311,8 @@ class MeApi extends Controller
                 'users.id',
                 'order_details.created_at',
                 'order_details.id as orderId',
-                DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
-            GROUP BY participations.item_id
-            ) AS confirm_count'),
-                DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
-            GROUP BY participations.item_id
-            ) AS participant_confirm_count'),
-                DB::raw("(SELECT value FROM item_user_actions
-            WHERE item_user_actions.user_id = users.id AND item_user_actions.item_id = order_details.item_id
-            and item_user_actions.type = 'cert'
-            ORDER BY id DESC
-            LIMIT 1
-            ) AS cert")
+                'participations.organizer_confirm',
+                'participations.participant_confirm',
             )
             ->get();
 
