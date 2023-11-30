@@ -8,6 +8,7 @@ use App\Constants\ItemConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemCategory;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
@@ -99,8 +100,10 @@ class ItemApi extends Controller
             }
         }
         $updateItem->update($input);
-        return response()->json(['result' => $updateItem === false ? false : true]);
+
+        return response()->json(['result' => true]);
     }
+
     public function edit(Request $request, $id)
     {
         $user = $request->get('_user');
@@ -119,6 +122,9 @@ class ItemApi extends Controller
         // Thêm trường 'digital' vào dữ liệu đối tượng $item
 
         $item->digital = $digital->original;
+
+        $itemCats = ItemCategory::where('item_id', $item->id)->get();
+        $item->itemCats = $itemCats->original;
 
         return response()->json($item);
     }
