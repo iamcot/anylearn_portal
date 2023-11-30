@@ -8,6 +8,7 @@ use App\Constants\ItemConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemCategory;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
@@ -121,6 +122,9 @@ class ItemApi extends Controller
         // Thêm trường 'digital' vào dữ liệu đối tượng $item
 
         $item->digital = $digital->original;
+
+        $itemCats = $itemService->getItemCategory($id);
+        $item->itemCats = $itemCats->original;
 
         return response()->json($item);
     }
