@@ -27,7 +27,8 @@
                             </i>
                         </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="top:40px;right:0px;width: 360px;">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
+                            style="top:40px;right:0px;width: 360px;">
                             <div class="pl-3 ml-1">
                                 <label class="fw-bold" style="font-size: 1.5rem">Thông báo</label>
                             </div>
@@ -72,6 +73,7 @@
                                 <img class="img-fluid border rounded-circle float-end" style="height:28px;width:28px;"
                                     src={{ Auth::user()->image }} alt="">
                             </span>
+                            &nbsp
                             <span class="ms-2 text-black small">{{ Auth::user()->name }}</span>
 
                         </a>
