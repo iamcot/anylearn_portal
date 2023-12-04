@@ -74,7 +74,7 @@
                                     src={{ Auth::user()->image }} alt="">
                             </span>
 
-                            <span class="ms-2 text-black small">{{ Auth::user()->name }} &nbsp</span>
+                            <span class="ms-2 text-black small mx-2">{{ Auth::user()->name }}</span>
 
                         </a>
                         <ul class="dropdown-menu dropdown-menu" aria-labelledby="dropdownMenuButton2">
