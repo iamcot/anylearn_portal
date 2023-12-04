@@ -73,8 +73,8 @@
                                 <img class="img-fluid border rounded-circle float-end" style="height:28px;width:28px;"
                                     src={{ Auth::user()->image }} alt="">
                             </span>
-                            &nbsp
-                            <span class="ms-2 text-black small">{{ Auth::user()->name }}</span>
+
+                            <span class="ms-2 text-black small">{{ Auth::user()->name }} &nbsp</span>
 
                         </a>
                         <ul class="dropdown-menu dropdown-menu" aria-labelledby="dropdownMenuButton2">
