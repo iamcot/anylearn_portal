@@ -113,7 +113,9 @@ class TransactionController extends Controller
         }
 
         if ($request->input('status')) {
-            $orders = $orders->where('orders.status', $request->input('status'));
+            if ($request->input('status') != 'all') {
+                $orders = $orders->where('orders.status', $request->input('status'));
+            }
         } else {
             $orders = $orders->where('orders.status', '!=', 'new');
         }
