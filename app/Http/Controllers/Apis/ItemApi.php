@@ -354,11 +354,12 @@ class ItemApi extends Controller
 
         if (isset($input['weekdays']) && is_array($input['weekdays'])) {
             $ds = [];
-            foreach ($input['weekdays'] as $day => $v) {
-                $ds[] = $day;
+            foreach ($input['weekdays'] as $day => $value) {
+                $ds[] = $value;
             }
             $input['weekdays'] = implode(",", $ds);
         }
+
         if (!isset($input['id'])) {
             $result = ItemSchedulePlan::create($input);
         } else {
