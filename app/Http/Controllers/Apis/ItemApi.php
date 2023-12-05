@@ -344,10 +344,10 @@ class ItemApi extends Controller
     {
         $input = $request->get('input');
         $result = null;
-        if (isset($input['plan'])) {
+        if (!$input['id']) {
             $result = ItemSchedulePlan::create($input);
         } else {
-           $result = ItemSchedulePlan::find($input['plan'])->update($input);
+           $result = ItemSchedulePlan::find($input['id'])->update($input);
         }
         return response()->json($result);
     }
