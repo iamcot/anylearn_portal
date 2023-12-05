@@ -353,7 +353,11 @@ class ItemApi extends Controller
         }
 
         if (isset($input['weekdays']) && is_array($input['weekdays'])) {
-            return response()->json(['error' => 'Invalid input format weekdays'], 400);
+            $ds = [];
+            foreach ($input['weekdays'] as $day => $v) {
+                $ds[] = $day;
+            }
+            $input['weekdays'] = implode(",", $ds);
         }
         if (!isset($input['id'])) {
             $result = ItemSchedulePlan::create($input);
