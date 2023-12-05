@@ -349,7 +349,7 @@ class ItemApi extends Controller
             return response()->json(['error' => 'Invalid input data'], 400);
         }
 
-        if (!$input['id']) {
+        if (!isset($input['id'])) {
             $result = ItemSchedulePlan::create($input);
         } else {
             $result = ItemSchedulePlan::find($input['id'])->update($input);
