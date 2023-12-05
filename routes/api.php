@@ -144,7 +144,7 @@ Route::middleware(['api.user'])->group(function () {
 
 
     Route::get('/item/schadule/{id}', 'Apis\ItemApi@schadule');
-    Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchadule');
+    Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchedule');
     Route::get('/location', 'Apis\ItemApi@userLocation');
 
 
