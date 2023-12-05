@@ -343,8 +343,8 @@ class ItemApi extends Controller
     public function updateSchadule(Request $request)
     {
         $input = $request->get('input');
-        $result = false;
-        if (empty($input['plan'])) {
+        $result = null;
+        if (isset($input['plan'])) {
             $result = ItemSchedulePlan::create($input);
         } else {
            $result = ItemSchedulePlan::find($input['plan'])->update($input);
