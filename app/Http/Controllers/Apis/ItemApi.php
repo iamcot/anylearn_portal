@@ -342,7 +342,7 @@ class ItemApi extends Controller
     }
     public function updateSchedule(Request $request)
     {
-        $input = $request->get('input');
+        $input = $request->all();
         $result = null;
 
         if (!$input) {
