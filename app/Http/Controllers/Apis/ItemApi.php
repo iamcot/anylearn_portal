@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
 use App\Models\ItemCategory;
+use App\Models\ItemSchedulePlan;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
@@ -340,9 +341,13 @@ class ItemApi extends Controller
     }
     public function updateSchadule(Request $request)
     {
-        $itemService = new ItemServices();
         $input = $request->get('input');
-        $data = $itemService->updateClassSchedule($request, $input);
-        return response()->json($data);
+        $result = false;
+        if (empty($input['plan'])) {
+            $result = ItemSchedulePlan::create($input);
+        } else {
+           $result = ItemSchedulePlan::find($input['plan'])->update($input);
+        }
+        return response()->json($result);
     }
 }
