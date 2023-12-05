@@ -41,11 +41,12 @@ class DigitalMonkey implements OrderingPartnerInterface
         $returnData = json_decode($this->submitOrderRequest($orderData), true);
         // Testing
         $returnData = [
-            'message' => 'success',
+            'status' => 'success',
+            'message' => 'success message',
             'data' => [
-                'account' => 'acctest',
-                'password' => 'acc123',
-                'order_id' => 'order1',
+                'account' => 'username_test',
+                'password' => 'password_123',
+                'order_id' => 'order_' . random_int(10, 200),
             ],
         ];
         return $this->processReturnData($returnData);

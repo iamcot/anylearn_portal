@@ -200,12 +200,19 @@ return [
         'copy' => true,
     ],
 
-    NotifConstants::DIGITAL_COURSE_ACTIVATION =>  [
-        'title' => 'Thông tin kích hoạt khóa học',
-        'template' => 'Mã kích hoạt khóa học {class} của bạn là: {code} (chạm để copy)',
+    NotifConstants::COURSE_ACTIVATION_API =>  [
+        'title' => 'Kích hoạt khóa học',
+        'template' => 'Bạn vừa đăng ký thành công khóa học {course}, vui lòng kiểm tra email để kích hoạt khóa học!',
+        'route' => '',
+        'email' => 'App\Mail\CourseActivation',
+    ],
+
+    NotifConstants::COURSE_ACTIVATION_MANUAL =>  [
+        'title' => 'Kích hoạt khóa học',
+        'template' => 'Mã kích hoạt khóa học {course} của bạn là: {code} (chạm để copy)',
         'route' => '',
         'copy' => true,
-        'email' => 'App\Mail\DigitalCourseActivation',
+        'email' => 'App\Mail\CourseActivation',
     ],
 
     NotifConstants::COURSE_REGISTER_APPROVE =>  [

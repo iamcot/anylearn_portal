@@ -8,7 +8,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
-use App\ItemCodeNotifTemplate;
+use App\Models\ItemCodeNotifTemplate;
 use App\Models\Article;
 use App\Models\ClassTeacher;
 use App\Models\Configuration;

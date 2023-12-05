@@ -3,7 +3,7 @@
 use App\DataObjects\ServiceResponse;
 use Exception;
 
-class OrderingProcessor
+class OrderProcessor
 {
     private static $instance = null;
 
@@ -27,22 +27,18 @@ class OrderingProcessor
         if (null === self::$instance) {
             self::$instance = self::createProcessor($partnerID);
             if (null === self::$instance) { 
-                throw new Exception('There are no processors for partnerID: ' . $partnerID);
+                throw new Exception("There are no processors for partnerID [$partnerID]");
             }
         }
         return self::$instance;  
     }
 
-    public static function createOrderFromAgent($orderData, $partnerID = 0) 
+    public static function orderItemFromPartnerAPI($orderData, $partnerID) 
     {
         try {
             return self::getInstance($partnerID)->orderItemFromPartnerAPI($orderData); 
-        } catch (Exception $error) {
-            return new ServiceResponse(
-                false, 
-                'PROCESSING_FAILED', 
-                ['message' => $error->getMessage()]
-            );
+        } catch (Exception $e) {
+            return new ServiceResponse(false, 'PROCESSING_FAILED');
         }
     }
 }

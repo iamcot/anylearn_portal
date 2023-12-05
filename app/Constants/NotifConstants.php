@@ -32,7 +32,8 @@ class NotifConstants
 
 
     const COURSE_CERT_SENT = 'course_cert_sent';
-    const DIGITAL_COURSE_ACTIVATION = 'digital_course_activation';
+    const COURSE_ACTIVATION_API = 'course_activation_api';
+    const COURSE_ACTIVATION_MANUAL = 'course_activation_manual';
 
     /** Transaction */
     const TRANS_DEPOSIT_SENT = 'trans_deposit_sent';

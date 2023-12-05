@@ -544,12 +544,6 @@ class TransactionController extends Controller
 
     public function cart(Request $request)
     {
-        //=======================================//
-        $transServ = new TransactionService();
-        $orderItem =  OrderDetail::find(2704);
-        $digitalItem = Item::find($orderItem->item_id);
-        $transServ->supportDigitalItems($digitalItem, $orderItem->id, 1);
-        //=======================================//
         if ($request->get('_user')) {
             $user = $request->get('_user');
             $this->data['api_token'] = $user->api_token;

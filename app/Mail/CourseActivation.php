@@ -2,12 +2,13 @@
 
 namespace App\Mail;
 
+use App\Constants\ItemConstants;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class DigitalCourseActivation extends Mailable
+class CourseActivation extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,7 +32,6 @@ class DigitalCourseActivation extends Mailable
     public function build()
     {
         return $this->subject('[anyLEARN] Thông tin kích hoạt khóa học')
-            ->view('email.digital_order_success', $this->data)
-            ->with('content', $this->data['content']);
+            ->view('email.activation_info', $this->data);
     }
 }

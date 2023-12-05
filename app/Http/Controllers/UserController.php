@@ -8,7 +8,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
-use App\ItemCode;
+use App\Models\ItemCode;
 use App\Models\Configuration;
 use App\Models\Contract;
 use App\Models\Notification;

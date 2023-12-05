@@ -18,7 +18,7 @@ class Item extends Model
         'seo_desc', 'image', 'location_type', 'location', 'series_id', 'user_status', 'boost_score', 'item_category_id',
         'is_test', 'tags', 'nolimit_time', 'company_commission', 'item_id', 'user_location_id',
         'sale_id', 'is_paymentfee', 'ages_min', 'ages_max', 'seats','mailcontent',
-        'allow_re_register', 'cycle_type', 'cycle_amount', 'activiy_trial', 'activiy_test', 'activiy_visit',
+        'allow_re_register', 'cycle_type', 'cycle_amount', 'activiy_trial', 'activiy_test', 'activiy_visit', 'activation_support', 'product_id',
     ];
 
     protected $hidden = [
