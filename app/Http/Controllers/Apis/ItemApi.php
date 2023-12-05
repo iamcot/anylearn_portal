@@ -15,6 +15,7 @@ use App\Models\Notification;
 use App\Models\Schedule;
 use App\Models\Spm;
 use App\Models\User;
+use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -349,5 +350,10 @@ class ItemApi extends Controller
            $result = ItemSchedulePlan::find($input['plan'])->update($input);
         }
         return response()->json($result);
+    }
+    function userLocation(Request $request) {
+        $user = $request->get('_user');
+        $userLocations = UserLocation::where('user_id', $user->id)->orderby('is_head', 'desc')->get();
+        return response()->json($userLocations);
     }
 }
