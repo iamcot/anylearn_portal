@@ -340,17 +340,24 @@ class ItemApi extends Controller
 
         return response()->json($data);
     }
-    public function updateSchadule(Request $request)
+    public function updateSchedule(Request $request)
     {
         $input = $request->get('input');
         $result = null;
+
+        if (!$input) {
+            return response()->json(['error' => 'Invalid input data'], 400);
+        }
+
         if (!$input['id']) {
             $result = ItemSchedulePlan::create($input);
         } else {
-           $result = ItemSchedulePlan::find($input['id'])->update($input);
+            $result = ItemSchedulePlan::find($input['id'])->update($input);
         }
+
         return response()->json($result);
     }
+
     function userLocation(Request $request) {
         $user = $request->get('_user');
         $userLocations = UserLocation::where('user_id', $user->id)->orderby('is_head', 'desc')->get();
