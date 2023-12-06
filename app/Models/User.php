@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -127,10 +128,9 @@ class User extends Authenticatable
             'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
             'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
             'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
-            'title' => isset($data['title']) ? $data['title'] : null
-            // tạm ẩn vì chưa đưa v3 lên
-            // ['api_token' => hash('sha256', Str::random(60))] // Tạm thời cho tạo api_token từ đầu để không bị lỗi lúc mới đăng kí tài khoản từ v2-> v3
+            'title' => isset($data['title']) ? $data['title'] : null,
 
+            ['api_token' => hash('sha256', Str::random(60))]
         ];
 
         $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
