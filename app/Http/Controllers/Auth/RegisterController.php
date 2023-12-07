@@ -59,9 +59,9 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         Auth::login($user);
-        
+        $cookie = Cookie::forever('api_token', '1111111', null, null, false, false);
         if (session()->has('cb')) {
-            return redirect()->to(session()->get('cb'))->withCookie(Cookie::forever('api_token', '11111123n', null, null, false, false));
+            return redirect()->to(session()->get('cb'))->withCookie($cookie);
         }
 
         $data['user'] = $refUser;
@@ -78,7 +78,8 @@ class RegisterController extends Controller
             return view('register.teacher', $data);
         }
 
-        return view('register.index', $data);
+        return redirect()->back()->withCookie($cookie);
+        //return view('register.index', $data);
     }
 
     /**
