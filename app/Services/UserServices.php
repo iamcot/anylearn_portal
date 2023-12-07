@@ -534,6 +534,7 @@ class UserServices
         $data['registered'] = DB::table('orders')
             ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
             ->where('orders.user_id', $userId)
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->count('od.id');
 
         $data['complete'] = Participation::where('participant_user_id', $userId)
