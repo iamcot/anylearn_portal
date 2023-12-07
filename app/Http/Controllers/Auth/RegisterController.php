@@ -59,9 +59,9 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         Auth::login($user);
-        Cookie::forever('api_token', $user->api_token, null, null, false, false);
+        
         if (session()->has('cb')) {
-            return redirect()->to(session()->get('cb'));
+            return redirect()->to(session()->get('cb'))->withCookie(Cookie::forever('api_token', $user->api_token, null, null, false, false));
         }
 
         $data['user'] = $refUser;
