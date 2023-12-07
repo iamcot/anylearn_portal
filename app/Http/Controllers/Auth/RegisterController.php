@@ -77,7 +77,7 @@ class RegisterController extends Controller
         } else if ($data['role'] == 'teacher') {
             return view('register.teacher', $data);
         }
-
+        dd(1);
         return redirect()->back()->withCookie($cookie);
         //return view('register.index', $data);
     }
