@@ -159,7 +159,12 @@ class User extends Authenticatable
         } else {
             $newMember = $this->create($obj);
         }
-        Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
+        if ($newMember->api_token === null) {
+            $newMember->update(['api_token' => hash('sha256', Str::random(60))]);
+            Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
+        } else{
+            Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
+        }
         try {
             if ($newMember) {
                 $notifM = new Notification();
