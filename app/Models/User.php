@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Cookie;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -193,6 +193,9 @@ class User extends Authenticatable
         } catch (\Exception $ex) {
             Log::error($ex);
         }
+        Cookie::queue(
+            Cookie::forever('api_token', $newMember->api_token, null, null, false, false)
+        );
         return $newMember;
     }
 
