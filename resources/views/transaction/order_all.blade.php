@@ -39,9 +39,10 @@
                 <div class="form-group">
                     <label for="">@lang('Trạng thái')</label>
                     <select class="form-control" name="status" id="">
-                        <option value="">@lang('---TẤT CẢ---')</option>
+                        <option value="all">@lang('---TẤT CẢ---')</option>
                         <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_PAY_PENDING ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_PAY_PENDING }}">@lang('Chờ thanh toán')</option>
                         <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_DELIVERED ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_DELIVERED }}">@lang('Đã thanh toán')</option>
+                        <option {{ app('request')->input('status') == App\Constants\OrderConstants::STATUS_NEW ? 'selected' : '' }} value="{{ App\Constants\OrderConstants::STATUS_NEW }}">@lang('Add 2 cart')</option>
                     </select>
                 </div>
             </div>
