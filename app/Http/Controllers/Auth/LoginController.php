@@ -107,7 +107,7 @@ class LoginController extends Controller
     }
 
     protected function authenticated(Request $request, $user)
-    {
+    {   dd(1);
         if ($user->status == UserConstants::STATUS_INACTIVE) {
             $name = $user->name;
             $this->guard()->logout();
