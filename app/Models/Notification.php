@@ -6,7 +6,7 @@ use App\Constants\ItemConstants;
 use App\Constants\NotifConstants;
 use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
-use App\ItemCodeNotifTemplate;
+use App\Models\ItemCodeNotifTemplate;
 use App\Mail\OrderSuccess;
 use App\Services\ItemServices;
 use App\Services\SmsServices;
@@ -58,12 +58,6 @@ class Notification extends Model
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
-                    if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
-                        $data['content'] =  $this->buildContent(
-                            !empty($notifTemplate) ? $emailTemplate : $config['template'],
-                            $data
-                        );
-                    }
                     Mail::to($user->email)->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
@@ -100,18 +94,21 @@ class Notification extends Model
         }
     }
 
-    public function notifActivation($itemCode)
+    public function notifActivation($itemID, $userID, $activationInfo)
     {
-        $notifTemplate = ItemCodeNotifTemplate::where('item_id', $itemCode->item_id)->first();
-        $item = Item::find($itemCode->item_id);
-        $this->createNotif(
-            NotifConstants::DIGITAL_COURSE_ACTIVATION,
-            $itemCode->user_id,
-            [
-                'class' =>  $item->title,
-                'code'    => $itemCode->code,
-            ],
-            $itemCode->code,
+        $notifTemplate = ItemCodeNotifTemplate::where('item_id', $itemID)->first();
+        if (ItemConstants::ACTIVATION_SUPPORT_API == $activationInfo['method']) {
+            return $this->createNotif(
+                NotifConstants::COURSE_ACTIVATION_API,
+                $userID,
+                $activationInfo,
+            );
+        }
+        return $this->createNotif(
+            NotifConstants::COURSE_ACTIVATION_MANUAL,
+            $userID,
+            $activationInfo,
+            $activationInfo['code'],
             '',
             $notifTemplate ? $notifTemplate->notif_template : '',
             $notifTemplate ? $notifTemplate->email_template : '',

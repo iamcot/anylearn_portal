@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Constants\ConfigConstants;
 use App\Models\Configuration;
 use App\Models\Notification;
+use App\models\ZNSContent;
 use Illuminate\Support\Facades\Log;
 use Zalo\Zalo;
 
@@ -121,6 +122,15 @@ class ZaloServices
             $response = $this->_post(self::ZNS_ENDPOINT, $body);
             Log::debug("ZNS send $phone ==>");
             Log::debug($body);
+            if (!empty($body)) {
+                $content = json_decode($body, true);
+                ZNSContent::create([
+                    'phone' => $phone,
+                    'template_data' => json_encode($data),
+                    'template_id' => $content['template_id'],
+                    'tracking_id' => $content['tracking_id'],
+                ]);
+            }
             $result = json_decode($response, true);
             Log::debug("ZNS response <==");
             Log::debug($result);
@@ -306,5 +316,5 @@ class ZaloServices
 
         curl_close($ch);
         return $result;
-    }
+    }       
 }

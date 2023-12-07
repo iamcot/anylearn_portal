@@ -9,9 +9,8 @@ use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Constants\UserDocConstants;
 use App\DataObjects\ServiceResponse;
-use App\DigitalSupport\OrderCreationProcessor;
-use App\ItemCode;
-use App\ItemCodeNotifTemplate;
+use App\DigitalSupport\OrderProcessor;
+use App\Models\ItemCode;
 use App\Mail\ReturnRequest;
 use App\Models\Configuration;
 use App\Models\Contract;
@@ -852,73 +851,61 @@ class TransactionService
             ]);
 
             if (ItemConstants::SUBTYPE_DIGITAL == $item->subtype) {
-                $this->supportDigitalItems($item, $openOrder->user_id, $orderItem);
+                $this->supportDigitalItems($item, $user, $orderItem->id, $notifServ);
             }
-
         }
-        Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
 
+        Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
         return true;
     }
 
-    public function supportDigitalItems($digitalItem, $orderItemID, $userID)
-    {
-        $activationInfo = [];
-        if (ItemConstants::ACTIVATION_SUPPORT_API == $digitalItem->activation_support) {
-            $activationInfo = $this->supportDigitalItemsUsingAPI(
-                $digitalItem, 
-                $orderItemID,
-                $userID, 
-            );    
-        } else {
-            $itemcode = ItemCode::where('item_id', $digitalItem->id)
-                ->whereNull('user_id')
-                ->first();
-
-            if ($itemcode) {
-                $activationInfo['code'] = $itemcode->code;
-                $itemcode->update([
-                    'user_id' => $userID,
+    public function supportDigitalItems($item, $user, $orderItemID, $notifServ)
+    {   
+        try {
+            $activationInfo = [];
+            if (ItemConstants::ACTIVATION_SUPPORT_API == $item->activation_support) {
+               $activationInfo = $this->getActivationInfoByAPI($item, $orderItemID);
+                ItemCode::create([
+                    'code' => json_encode($activationInfo),
+                    'item_id' => $item->id,
+                    'user_id' => $user->id,
                     'order_detail_id' => $orderItemID,
-                ]);
+                ]); 
+            } else {
+                $itemCode = ItemCode::where('item_id', $item->id)->whereNull('user_id')->first();
+                if (empty($itemCode)) {
+                    throw new Exception("Activation code is not available for this course [$item->id]");
+                }
+                $itemCode->update(['user_id' => $user->id, 'order_detail_id' => $orderItemID,]);
+                $activationInfo['code'] = $itemCode->code; 
             }
+            $activationInfo['course'] = $item->title;
+            $activationInfo['method'] = $item->activation_support;
+            $activationInfo['user'] = $user->name;
+            $activationInfo['path'] = route('page.pdp', ['itemId' => $item->id, 'url' => $item->seo_url]);    
+        } catch (Exception $error) {
+            Log::error('Unexpected error in supportDigitalItems', ['exception' => $error]);
+            return false;
         }
-        
-        if (!empty($activationInfo)) {
-            $notifServ = new Notification();
-            $notifServ->notifActivation($activationInfo);
-        }
-        
-        return false;
+        // dd($activationInfo);
+        $notifServ->notifActivation($item->id, $user->id, $activationInfo);   
+        return true;
     }
 
-    public function supportDigitalItemsUsingAPI($digitalItem, $orderItemID, $userID)
+    public function getActivationInfoByAPI($item, $orderItemID) 
     {
+        if (!$item || empty($item->product_id)) {
+            throw new Exception('Invaild data to get activation info!');
+        }
         $orderData = [
-            'product_id' => 'com.earlystart.ltr.6month',
-            'promotion_id' => 'promotionACL',
+            'product_id' => $item->product_id,
             'transaction_id' => $orderItemID,
         ];
-        $response = OrderCreationProcessor::createOrderFromAgent($orderData, $digitalItem->user_id);
+        $response = OrderProcessor::orderItemFromPartnerAPI($orderData, $item->user_id);
         if (!$response instanceof ServiceResponse || false === $response->status) {
-            throw new Exception($response->message ?? 'Error: support digital items using api!');
-            //return false;
+            throw new Exception($response->errorCode);
         } 
-        dd($response);
-        $activationInfo = $response->data;
-        $generationKey  = $activationInfo['order_id'];
-        do {
-            $activationInfo['code'] = OrderCreationProcessor::getActivationCode($generationKey);
-        } while (ItemCode::where('code', $activationInfo['code'])->count() > 0);
-
-        ItemCode::create([
-            'code' => $activationInfo,
-            'item_id' => $digitalItem->id,
-            'user_id' => $userID,
-            'order_detail_id' => $orderItemID,
-        ]);
-        
-        return  $activationInfo;
+        return $response->data;
     }
 
     public function orderDetailsToDisplay($orderId)
