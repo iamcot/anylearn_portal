@@ -160,7 +160,6 @@ class PageController extends Controller
         }
 
         if ($this->data['role'] == 'member') {
-            dd(session()->get('cb'));
             return view('register.member', $this->data);
         } else if ($this->data['role'] == 'school') {
             return view('register.school', $this->data);
