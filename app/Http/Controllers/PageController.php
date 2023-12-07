@@ -133,7 +133,7 @@ class PageController extends Controller
     }
 
     public function ref(Request $request, $code = "")
-    {  
+    {
         if (empty($code) || Auth::id()) {
             return redirect('/');
         }
@@ -145,7 +145,7 @@ class PageController extends Controller
 
         if ($request->get('has-account')) {
             //$this->data['isReg'] = true;
-            return redirect()->route('login');     
+            return redirect()->route('login');
         }
 
         $this->data['user'] = $refUser;
@@ -153,13 +153,14 @@ class PageController extends Controller
         $this->data['newUser'] = Auth::user();
 
         if ($request->get('cb') && trim($request->get('cb'), '/') != url('/')) {
-            session()->put('cb', $request->get('cb'));  
+            session()->put('cb', $request->get('cb'));
             if (Request::create($request->get('cb'))->is('class/*')) {
                 $this->data['role'] = 'member';
             }
         }
 
         if ($this->data['role'] == 'member') {
+            dd(session()->get('cb'));
             return view('register.member', $this->data);
         } else if ($this->data['role'] == 'school') {
             return view('register.school', $this->data);
@@ -254,7 +255,7 @@ class PageController extends Controller
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
-        } 
+        }
     }
     public function article(Request $request, $id)
     {
