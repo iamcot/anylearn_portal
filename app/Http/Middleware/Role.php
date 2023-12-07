@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Auth;
-use Illuminate\Support\Facades\Cookie;
+use Http\Message\Cookie;
 
 class Role
 {
@@ -32,9 +32,6 @@ class Role
         // if (auth()->user()->role =="admin" || auth()->user()->role =="mod" || auth()->user()->role =="content" ||auth()->user()->role =="sale" ||auth()->user()->role =="fin") {
         //     return $next($request);
         // }
-        Cookie::queue(
-            Cookie::forever('api_token', $user->api_token, null, null, false, false)
-        );
         return redirect('me')->withCookie(cookie('api_token', $user->api_token));
     }
 }

@@ -128,13 +128,13 @@ class LoginController extends Controller
         }
         Cookie::queue(Cookie::forever('api_token', $user->api_token, null, null, false, false));
         if ($userService->isMod()) {
-            return redirect('/admin');
+            return redirect('/admin')->withCookie(cookie('api_token', $user->api_token));
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
-            return redirect('/me');
+            return redirect('/me')->withCookie(cookie('api_token', $user->api_token));
         } else if ($request->session()->get('cb')) {
-            return redirect()->to($request->session()->get('cb'));
+            return redirect()->to($request->session()->get('cb'))->withCookie(cookie('api_token', $user->api_token));
         } else {
-            return redirect('/');
+            return redirect('/')->withCookie(cookie('api_token', $user->api_token));
         }
     }
 
