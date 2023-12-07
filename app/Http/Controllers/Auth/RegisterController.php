@@ -61,7 +61,9 @@ class RegisterController extends Controller
         Auth::login($user);
         $cookie = Cookie::forever('api_token', rand(123, 99999), null, null, false, false);
         if (session()->has('cb')) {
-            return redirect()->to(session()->get('cb'))->withCookie($cookie);
+            $url = session()->get('cb'); 
+            session()->forget('cb');
+            return redirect()->to($url)->withCookie($cookie);
         }
 
         $data['user'] = $refUser;
