@@ -72,16 +72,17 @@ class RegisterController extends Controller
         $data['sale_id'] = $request->get('s');
 
         $data['role'] = $request->get('r');
-        if ($data['role'] == 'member') { dd(2);
-            return view('register.member', $data);
+        $response = response()->withCookie($cookie);
+
+        if ($data['role'] == 'member') {
+            return $response->view('register.member', $data);
         } else if ($data['role'] == 'school') {
             return view('register.school', $data);
         } else if ($data['role'] == 'teacher') {
             return view('register.teacher', $data);
         }
-        dd(1);
-        return redirect()->back()->withCookie($cookie);
-        //return view('register.index', $data);
+    
+        return view('register.index', $data);
     }
 
     /**
