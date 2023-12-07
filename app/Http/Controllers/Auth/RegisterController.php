@@ -72,7 +72,7 @@ class RegisterController extends Controller
         $data['sale_id'] = $request->get('s');
 
         $data['role'] = $request->get('r');
-        if ($data['role'] == 'member') {
+        if ($data['role'] == 'member') { dd(2);
             return view('register.member', $data);
         } else if ($data['role'] == 'school') {
             return view('register.school', $data);
