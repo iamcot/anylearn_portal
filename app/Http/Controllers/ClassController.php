@@ -91,16 +91,42 @@ class ClassController extends Controller
         return view('class.codes', $this->data);
     }
 
-    public function reSendItemCode(Request $request, $idItemCode)
+    public function reSendItemCode(Request $request, $id)
     {
-        $itemCode = ItemCode::find($idItemCode);
-        if (!empty($itemCode)) {
-            $notifServ = new Notification();
-            $notifServ->notifActivation($itemCode);
-            return redirect()->back()->with('notify', 'Thao tác thành công.');
+        $itemCode = DB::table('item_codes as ic')
+            ->select(
+                'ic.*',
+                'items.title',
+                'items.activation_support',
+                'items.seo_url',
+                'users.name',
+            )
+            ->join('items', 'items.id', '=', 'ic.item_id')
+            ->join('users', 'users.id', '=', 'ic.user_id')
+            ->where('ic.id', $id)
+            ->first();
+
+        if (empty($itemCode)) {
+            return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại!!');
         }
 
-        return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại!!');
+        $activationInfo = $itemCode->activation_support == ItemConstants::ACTIVATION_SUPPORT_API
+            ? json_decode($itemCode->code, true) 
+            : ['code' => $itemCode->code];
+
+        $activationInfo['course'] = $itemCode->title;
+        $activationInfo['method'] = $itemCode->activation_support;
+        $activationInfo['user'] = $itemCode->name;
+        $activationInfo['path'] = route('page.pdp', [
+            'itemId' => $itemCode->item_id, 
+            'url' => $itemCode->seo_url, 
+        ]);
+        
+        // dd($activationInfo);
+        $notifServ = new Notification();
+        $notifServ->notifActivation($itemCode->item_id, $itemCode->user_id, $activationInfo);
+        return redirect()->back()->with('notify', 'Thao tác thành công.');
+        
     }
 
     public function refreshItemCode(Request $request, $idItemCode)
