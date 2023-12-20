@@ -2,7 +2,6 @@
     <div class="container">
         <h1 class="text-black">
             @lang('Đối tác của anyLEARN')
-            <a href="/ref/anylearn?r=school" id="partner" class="btn border rounded rounded-pill border-primary text-primary fs-6 fw-bold ps-4 pe-4 float-end">@lang('ĐĂNG KÝ ĐỐI TÁC')</a>
         </h1>
         <div class="text-center">
             <ul class="school-logo">
@@ -12,6 +11,11 @@
                 </li>
                 @endforeach
             </ul>
+        </div>
+        <div class="text-center">
+        <a href="/ref/anylearn?r=school" 
+            id="partner" 
+            class="btn border rounded rounded-pill border-primary text-primary fs-6 fw-bold ps-4 pe-4 float-end">@lang('ĐĂNG KÝ ĐỐI TÁC')</a>
         </div>
     </div>
 </section>

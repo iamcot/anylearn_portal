@@ -1,7 +1,7 @@
 <section class="mt-5 mb-5">
     <div class="container">
         <h1 class="text-black">
-            @lang('Đội ngũ sáng lập')
+            @lang('Đội ngũ anyLEARN')
         </h1>
         <div class="text-center">
             <div class="row mt-4">
@@ -13,7 +13,7 @@
                         </div>
                         <div class="card-footer border-0 text-center">
                             <div class="fs-5 fw-bold">Mr. Trương Công Thắng</div>
-                            <span class="fs-6">CTO anyLEARN</span>
+                            <span class="fs-6">Co-Founder & CTO</span>
                         </div>
                     </div>
                 </div>
@@ -76,8 +76,8 @@
                             <img class="bg-img" src="/cdn/anylearn/img/msNgoc.jpg" width="288"  alt="">
                         </div>
                         <div class="card-footer border-0 text-center">
-                            <div class="fs-5 fw-bold">Ms. Dương Ngọc</div>
-                            <span class="fs-6">Head of Financial Accounting Team</span>
+                            <div class="fs-5 fw-bold">Ms. Nguyễn Thị Vui</div>
+                            <span class="fs-6">Human Resources Development Manager</span>
                         </div>
                     </div>
                 </div>
