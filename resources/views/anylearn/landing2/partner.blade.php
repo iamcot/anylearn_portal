@@ -18,12 +18,3 @@
         </div>
     </div>
 </section>
-<section>
-    <script>
-        if (screen.width < 900) {
-            document.getElementById("partner").classList.remove("float-end");
-        } else{
-            document.getElementById("partner").classList.add("float-end");
-        }
-    </script>
-</section>
