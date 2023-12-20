@@ -12,10 +12,11 @@
                 @endforeach
             </ul>
         </div>
-        <div class="text-center">
-        <a href="/ref/anylearn?r=school" 
-            id="partner" 
-            class="btn border rounded rounded-pill border-primary text-primary fs-6 fw-bold ps-4 pe-4 float-end">@lang('ĐĂNG KÝ ĐỐI TÁC')</a>
+        <div class="col-md-12 text-center">
+            <a href="/ref/anylearn?r=school" id="partner" 
+                class="btn border rounded rounded-pill border-primary text-primary fs-6 fw-bold ps-4 pe-4 float-end">
+                @lang('ĐĂNG KÝ ĐỐI TÁC')
+            </a>
         </div>
     </div>
 </section>
