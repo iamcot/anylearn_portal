@@ -42,7 +42,7 @@ class SendMail extends Command
      */
     public function handle()
     {
-        throw new Exception();
+        // throw new Exception();
         $user = User::find(1);
         print("Start Send Email To User $user->name");
         Mail::to("info.anylearn@gmail.com")->send(new UserRegistered(['userid' => 1]));
