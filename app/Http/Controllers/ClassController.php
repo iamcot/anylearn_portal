@@ -486,7 +486,7 @@ class ClassController extends Controller
                     $this->data['config_api'] = $dp['partnerID'] == $courseDb['info']->user_id ? true : false;
                     break;
                 }
-            }dd($this->data['config_api']);
+            }
             $this->data['notifTemplates'] = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
         } 
        
