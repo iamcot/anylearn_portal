@@ -5,9 +5,10 @@ use App\Constants\UserConstants;
 return [
     'article' => 'Viết bài học và hỏi ',
     'class' => 'Quản lý lớp học',
+    'location' => 'Quản lý địa chỉ',
     'config.guide' => 'Tài liệu - Hướng dẫn',
     'fin.expenditures' => 'Quản lý Chi tiêu',
-    'helpercenter' => 'Trung tâm hổ trợ',
+    'helpcenter' => 'Trung tâm hổ trợ',
     'order.all' => 'Quản lý đơn hàng',
     // 'order.open' => 'Đơn hàng đang mở',
     'transaction' => 'Quản lý giao dịch',

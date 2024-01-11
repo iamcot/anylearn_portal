@@ -8,9 +8,11 @@ use App\Constants\ItemConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemCategory;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
+use App\Models\Spm;
 use App\Models\User;
 use App\Services\FileServices;
 use App\Services\ItemServices;
@@ -98,8 +100,10 @@ class ItemApi extends Controller
             }
         }
         $updateItem->update($input);
-        return response()->json(['result' => $updateItem === false ? false : true]);
+
+        return response()->json(['result' => true]);
     }
+
     public function edit(Request $request, $id)
     {
         $user = $request->get('_user');
@@ -118,6 +122,9 @@ class ItemApi extends Controller
         // Thêm trường 'digital' vào dữ liệu đối tượng $item
 
         $item->digital = $digital->original;
+
+        $itemCats = $itemService->getItemCategory($id);
+        $item->itemCats = $itemCats->original;
 
         return response()->json($item);
     }
@@ -248,6 +255,9 @@ class ItemApi extends Controller
     {
         $itemService = new ItemServices();
         $user = $this->isAuthedApi($request);
+
+        $spm = new Spm();
+        $spm->addSpm($request);
         try {
             $data = $itemService->pdpData($request, $itemId, $user);
             return response()->json($data);
@@ -302,9 +312,9 @@ class ItemApi extends Controller
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }
-        if($user->role !== "school" || $user->role !== 'teacher'){
-            return response('Bạn phải là chuyên gia mới có quyền thực hiện thao tác này', 403);
-        }
+        // if($user->role !== "school" || $user->role !== 'teacher'){
+        //     return response('Bạn phải là chuyên gia mới có quyền thực hiện thao tác này', 403);
+        // }
         $rating = $request->get('rating', 5);
         $comment = $request->get('comment', '');
         $itemUserActionM = new ItemUserAction();

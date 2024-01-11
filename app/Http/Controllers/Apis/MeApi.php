@@ -13,8 +13,10 @@ use App\Models\ItemExtra;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\User;
+use App\Models\UserDocument;
 use App\Models\UserLocation;
 use App\Services\DashboardServices;
+use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\TransactionService;
 use App\Services\UserServices;
@@ -226,26 +228,23 @@ class MeApi extends Controller
         $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
         $userIds = $userC->pluck('id')->toArray();
         $data = DB::table('order_details')
-            ->join('items', 'items.id', '=', 'order_details.item_id')
-            ->join('users', 'users.id', '=', 'order_details.user_id')
-            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-            ->whereIn('order_details.user_id', $userIds)
             ->select(
                 'items.title',
                 'items.id as courseId',
                 'order_details.id',
                 'order_details.user_id',
                 'order_details.created_at',
-                DB::raw('(SELECT count(*) FROM participations
-                    WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id AND participations.participant_confirm > 0
-                    GROUP BY participations.item_id
-                ) AS participant_confirm_count'),
-                DB::raw('(SELECT count(*) FROM participations
-                    WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id AND participations.organizer_confirm > 0
-                    GROUP BY participations.item_id
-                ) AS confirm_count')
-            )
+                'participations.participant_confirm',
+                'participations.organizer_confirm')
+            ->join('items', 'items.id', '=', 'order_details.item_id')
+            ->join('participations', 'participations.schedule_id','=', 'order_details.id')
+            ->join('users', 'users.id', '=', 'order_details.user_id')
+            ->where('order_details.status', 'delivered')
+            ->whereNotIn('items.subtype', [ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_VIDEO])
+            ->whereIn('order_details.user_id', $userIds)
+            ->orderByDesc('order_details.created_at')
             ->get();
+
         return response()->json(['data' => $data]);
     }
     public function list(Request $request)
@@ -311,6 +310,7 @@ class MeApi extends Controller
                 'users.name',
                 'users.id',
                 'order_details.created_at',
+                'order_details.id as orderId',
                 DB::raw('(SELECT count(*) FROM participations
             WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
@@ -366,9 +366,10 @@ class MeApi extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
-    function getExtrafee(Request $request, $courseId){
+    function getExtrafee(Request $request, $courseId)
+    {
         $user = $request->get('_user');
-        $rs = ItemExtra::where('item_id',$courseId)->get();
+        $rs = ItemExtra::where('item_id', $courseId)->get();
         return response()->json($rs, 200);
     }
     function location(Request $request)
@@ -381,5 +382,50 @@ class MeApi extends Controller
         }
         $locations = UserLocation::where('user_id', $userLocationId);
         return response()->json($locations, 200);
+    }
+
+    function certificate(Request $request)
+    {
+        $user = $request->get('_user');
+        try {
+            if ($request->hasFile('file') && $request->file('file')->isValid()) {
+                $fileService = new FileServices();
+                $fileuploaded = $fileService->doUploadImage($request, 'file');
+                if ($fileuploaded === false) {
+                    return response($fileuploaded, 400);
+                } else {
+                    if (isset($user)) {
+                        $userDocM = new UserDocument();
+                        $userDocM->addDocWeb($fileuploaded, $user);
+                        return response()->json($fileuploaded, 200);
+                    } else {
+                        return response()->json(['error' => 'User không được định nghĩa'], 400);
+                    }
+                }
+            }
+            return response()->json(['message' => 'Không có file được tải lên.'], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
+    }
+    function list_certificate(Request $request)
+    {
+        $user = $request->get('_user');
+        $results = UserDocument::where('user_id', $user->id)->get();
+        return response()->json($results);
+    }
+    function cancelPending(Request $request, $orderId)
+    {
+        $user = $request->get('_user');
+        $order = Order::find($orderId);
+        if ($order->user_id != $user->id) {
+            return response()->json(['error' => 'Bạn không có quyền cho thao tác này'], 400);
+        }
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            return response()->json(['error' => 'Trạng thái đơn hàng không đúng'], 400);
+        }
+        $transService = new TransactionService();
+        $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
+        return response()->json(['message' => 'Trạng thái đơn hàng không đúng'], 200);
     }
 }

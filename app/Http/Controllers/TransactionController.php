@@ -115,7 +115,9 @@ class TransactionController extends Controller
         }
 
         if ($request->input('status')) {
-            $orders = $orders->where('orders.status', $request->input('status'));
+            if ($request->input('status') != 'all') {
+                $orders = $orders->where('orders.status', $request->input('status'));
+            }
         } else {
             $orders = $orders->where('orders.status', '!=', 'new');
         }
@@ -241,6 +243,9 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
+        if (!$transService->checkWalletCBeforeReturnOrder($orderId)) {
+            return redirect()->back()->with('notify', 'Đơn hàng này không đủ điều kiện để thực hiện hoàn trả!');
+        }
         $transService->returnOrder($orderId, OrderConstants::STATUS_RETURN_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
@@ -382,7 +387,6 @@ class TransactionController extends Controller
         if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test') {
             $this->data['activiy'] = $request->get('action');
         }
-
         $class = $itemService->pdpData($request, $request->get('class'), $user);
         if (!$class) {
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
@@ -734,10 +738,16 @@ class TransactionController extends Controller
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }
 
+            // handle commission vouchers
+            $transService->addTransactionsForCommissionVouchers($dbVoucher->id, $orderId);
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
+
         } else if ($request->get('cart_action') == 'remove_voucher') {
-            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $transService = new TransactionService();
+            $transService->removeTransactionsForCommissionVouchers(
+                $request->get('voucher_userd_id'),
+            );
+            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $res = $transService->recalculateOrderAmount($orderId);
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
@@ -954,7 +964,7 @@ class TransactionController extends Controller
                     : $result['orderId'];
 
                 $transService = new TransactionService();
-                $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
+                $rs = $transService->approveRegistrationAfterWebPayment($orderId, $payment);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
             }
             $data = $processor->prepareNotifyResponse($query, $result);

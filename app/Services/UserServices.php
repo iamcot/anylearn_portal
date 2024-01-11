@@ -281,6 +281,7 @@ class UserServices
         for ($i = 1; $i <= $maxLevel; $i++) {
             $db = DB::table('users')
                 ->whereIn('user_id', $userIds)
+                ->whereNotIn('is_child', 1)
                 ->get();
             $userIds = [];
             if (count($db) > 0) {
@@ -533,6 +534,7 @@ class UserServices
         $data['registered'] = DB::table('orders')
             ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
             ->where('orders.user_id', $userId)
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->count('od.id');
 
         $data['complete'] = Participation::where('participant_user_id', $userId)
@@ -583,7 +585,12 @@ class UserServices
             'time' => $time,
             'partner' => $partner->name
         ];
-        Mail::to($user->email)->send(new ActivityMail($data));
+        try {
+            Mail::to($user->email)->send(new ActivityMail($data));
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");
+        }
         return;
     }
     public function MailToPartnerRegisterNew($item, $userId, $author)
@@ -627,7 +634,12 @@ class UserServices
             Log::error($e);
         }
     }
-
+    public function notifications()
+    {
+        $user = Auth::user();
+        $notifications = Notification::where('user_id', $user->id)->where('type', '!=', SmsServices::SMS)->orderby('id', 'desc')->paginate(5);
+        return $notifications;
+    }
     public function getPartner($id)
     {
         return DB::table('users')
@@ -652,6 +664,7 @@ class UserServices
             ->where('items.subtype', $subtype)
             ->where('items.status', 1)
             ->where('items.user_status', 1)
+            ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->select(
                 'users.id',
                 'users.name',

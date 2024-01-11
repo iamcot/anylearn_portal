@@ -1,6 +1,6 @@
 @inject('dashServ','App\Services\DashboardServices')
 @php
-$dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @request('dateT'));
+$dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-90 days')), @request('dateT'));
 @endphp
 
 @extends('layout')

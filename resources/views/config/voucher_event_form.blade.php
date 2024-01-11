@@ -44,11 +44,32 @@
                     <p class="small">Nếu event dùng notif và email template riêng, nên chỉ dùng 1 bộ voucher.</p>
                 </div>
             </div>
-
             <div class="form-group row">
                 <label for="qtt" class="col-md-2 col-form-label text-md-right">{{ __('Số lượng') }}</label>
                 <div class="col-md-6">
                     <input id="qtt" type="text" class="form-control @error('qtt') is-invalid @enderror" name="qtt" value="{{ old('qtt', !empty($event) ? $event->qtt : '') }}" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="ref_user_id" class="col-md-2 col-form-label text-md-right">{{ __('ID Giới thiệu') }}</label>
+                <div class="col-md-6">
+                    <input id="ref_user_id" 
+                        type="text" 
+                        name="ref_user_id" 
+                        class="form-control @error('ref_user_id') is-invalid @enderror" 
+                        value="{{ old('ref_user_id', !empty($event) ? $event->ref_user_id : '') }}">
+                    <div class="small">ID Người dùng được tính hoa hồng nếu voucher được sử dụng.</div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="commission_rate" class="col-md-2 col-form-label text-md-right">{{ __('Tỷ lệ hoa hồng') }}</label>
+                <div class="col-md-6">
+                    <input id="commission_rate" 
+                        type="text" 
+                        name="commission_rate" 
+                        class="form-control @error('commission_rate') is-invalid @enderror" 
+                        value="{{ old('commission_rate', !empty($event) ? $event->commission_rate : '') }}">
+                    <div class="small">Tỷ lệ hoa hồng mặc định là {{ $defaultCommissionRate }}.</div>
                 </div>
             </div>
             <div class="form-group row">
