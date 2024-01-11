@@ -483,7 +483,7 @@ class ClassController extends Controller
         if ($courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL) {
             if ($courseDb['info']->activation_support == ItemConstants::ACTIVATION_SUPPORT_API) {
                 foreach(config('activation_apis') as $dp) {
-                    $this->data['config_api'] = $dp['partnerID'] == $courseId ? true : false;
+                    $this->data['config_api'] = $dp['partnerID'] == $courseDb['info']->user_id ? true : false;
                     break;
                 }
             }dd($this->data['config_api']);
