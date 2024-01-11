@@ -27,7 +27,7 @@
             <div class="col-md-8">
                 <input id="product-id" onchange="hp();" class="form-control @error('product_id') is-invalid @enderror" name="product_id" rows="3" 
                     value="{{ !empty($course) && $course['info']->product_id ? $course['info']->product_id : '' }}">{{ old('product_id') }}         
-                @if (!empty($config_api))  
+                @if (empty($config_api))  
                 <p class="mt-1 small text-warning">@lang('Liên hệ với anyLEARN để thực hiện cấu hình cho hình thức này!')</p>
                 @else 
                 <p class="mt-1 small">@lang('Nhập mã sản phẩm trên hệ thống của bạn.')</p>
