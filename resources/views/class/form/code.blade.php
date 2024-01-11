@@ -8,11 +8,16 @@
             <label for="" class="col-md-3 col-form-label text-md-right">{{ __('Chọn hình thức hỗ trợ') }}</label>
             <div class="col-md-8">
                 <div class="pt-2 form-check form-check-inline">
-                    <input class="mt-1 form-check-input" type="radio" name="activation_support" id="manual-support" value="manual" checked>
+                    <input class="mt-1 form-check-input" type="radio" name="activation_support" id="manual-support" 
+                        value="{{ \App\Constants\ItemConstants::ACTIVATION_SUPPORT_MANUAL }}" 
+                        {{ empty($course) || $course['info']->activation_support == \App\Constants\ItemConstants::ACTIVATION_SUPPORT_MANUAL ? 'checked' : '' }}>
                     <label class="form-check-label" for="inlineRadio1">Nhập thủ công</label>
                 </div>
                 <div class="pt-2 form-check form-check-inline">
-                    <input class="mt-1 form-check-input" type="radio" name="activation_support" id="api-support" value="api">
+                    <input class="mt-1 form-check-input" type="radio" name="activation_support" id="api-support" 
+                        value="{{ \App\Constants\ItemConstants::ACTIVATION_SUPPORT_API }}"
+                        {{ !empty($course) && $course['info']->activation_support == \App\Constants\ItemConstants::ACTIVATION_SUPPORT_API ? 'checked' : '' }} >
+
                     <label class="form-check-label" for="inlineRadio2">Lấy tự động</label>
                 </div>
             </div>
@@ -20,8 +25,14 @@
         <div class="form-group row" id="api-form">
             <label for="code" class="col-md-3 col-form-label text-md-right ">{{ __('Mã sản phẩm') }}</label>
             <div class="col-md-8">
-                <input id="product-id" onchange="hp();" class="form-control @error('product_id') is-invalid @enderror" name="product_id" rows="3">{{ old('product_id') }}
+                <input id="product-id" onchange="hp();" class="form-control @error('product_id') is-invalid @enderror" name="product_id" rows="3" 
+                    value="{{ !empty($course) && $course['info']->product_id ? $course['info']->product_id : '' }}">{{ old('product_id') }}         
+                @if (!empty($config_api))  
+                <p class="mt-1 small text-warning">@lang('Liên hệ với anyLEARN để thực hiện cấu hình cho hình thức này!')</p>
+                @else 
                 <p class="mt-1 small">@lang('Nhập mã sản phẩm trên hệ thống của bạn.')</p>
+                @endif
+
             </div>
         </div>
         <div class="form-group row" id="manual-form">
@@ -79,31 +90,21 @@
 @section('jscript')
 @parent
 <script>
-    $('#api-form').hide();
-    $('#manual-support').click(function() {
-        $('#manual-form').show();
-        $('#api-form').hide();
-    });
-    $('#api-support').click(function() {
-        $('#manual-form').hide();
-        $('#api-form').show();
+    $(document).ready(function() {
+        handleRadioClick();
+        $('#manual-support, #api-support').click(function() {
+            handleRadioClick();
+        });
     });
 
-
-    function hp() {
-        var hp = document.getElementById("price").value;
-        var hpg = document.getElementById("org_price").value;
-        if ((hpg != "" || hpg > 0) && hpg < hp) {
-            document.getElementById("org_price").value = hp;
+    function handleRadioClick() {
+        if ($('#manual-support').is(':checked')) {
+            $('#manual-form').show();
+            $('#api-form').hide();
+        } else {
+            $('#manual-form').hide();
+            $('#api-form').show();
         }
-    }
-
-    function update(id, title, price) {
-        console.log(id, title, price);
-        document.getElementById('idextrafee').value = id;
-        document.getElementById('titleextrafee').value = title;
-        document.getElementById('priceextrafee').value = price;
-        // window.scrollTo(0, document.body.scrollHeight);
     }
 </script>
 @endsection

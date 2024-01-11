@@ -256,7 +256,7 @@ class ClassController extends Controller
     }
 
     public function edit(Request $request, $courseId)
-    {
+    {  
         $input = $request->all();
 
         if ($request->get('action') == 'mailsave') {
@@ -265,7 +265,6 @@ class ClassController extends Controller
             ]);
             return redirect()->back()->with(['notify' => "Cập nhật thành công", 'tab' => $input['tab']]);
         }
-
 
         if ($request->get('action') == 'dlesson') {
             $lid = $request->get('lid');
@@ -481,10 +480,15 @@ class ClassController extends Controller
         $this->data['courseId'] = $courseId;
         $this->data['extra'] = ModelsItemExtra::where('item_id', $courseId)->get();
 
-        $this->data['notifTemplates'] = $courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL
-            ? ItemCodeNotifTemplate::where('item_id', $courseId)->first()
-            : null;
-
+        if ($courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL) {
+            if ($courseDb['info']->activation_support == ItemConstants::ACTIVATION_SUPPORT_API) {
+                foreach(config('activation_apis') as $dp) {
+                    $this->data['config_api'] = $dp['partnerID'] == $courseId ? true : false;
+                }
+            }
+            $this->data['notifTemplates'] = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+        } 
+       
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])
