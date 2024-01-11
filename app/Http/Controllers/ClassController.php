@@ -484,8 +484,9 @@ class ClassController extends Controller
             if ($courseDb['info']->activation_support == ItemConstants::ACTIVATION_SUPPORT_API) {
                 foreach(config('activation_apis') as $dp) {
                     $this->data['config_api'] = $dp['partnerID'] == $courseId ? true : false;
+                    break;
                 }
-            }
+            }dd($this->data['config_api']);
             $this->data['notifTemplates'] = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
         } 
        
