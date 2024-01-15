@@ -159,7 +159,7 @@
                             <div class="offset-md-2">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="toc" required>
-                                    <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="guide?p=guide_toc" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
+                                    <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="#" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
                                 </div>
                             </div>
                         </div>
