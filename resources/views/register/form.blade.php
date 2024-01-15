@@ -247,8 +247,9 @@
                         <div class="form-group row">
                             <div class="text-center">
                                 <div class="form-check form-check-inline">
+                                    {{ dd(route('guide', ['p' => 'guide_toc'])) }}
                                     <input class="form-check-input" type="checkbox" id="toc" required checked>
-                                    <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="{{ route('guide', ['p' => 'guide_toc']) }}" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
+                                    <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="#" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
                                 </div>
                             </div>
                         </div>
