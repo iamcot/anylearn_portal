@@ -486,11 +486,13 @@ class TransactionController extends Controller
         if (!$transaction) {
             return redirect()->back()->with('notify', 'Giao dịch không tồn tại');
         }
+        if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
+        }
         $transService = new TransactionService();
+        $notifServ = new Notification();
+
         if ($status == ConfigConstants::TRANSACTION_STATUS_DONE) {
-            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
-                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
-            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
@@ -500,26 +502,19 @@ class TransactionController extends Controller
                     'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
                 ]);
                 $transService->approveRegistrationAfterDeposit($transaction->user_id);
+                $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
+            } else {
+                $userup = User::find($transaction->user_id);
+                $userup->update([
+                    'wallet_c' => $userup->wallet_c + $transaction->amount
+                ]);
+                $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $transaction->user_id, []);
             }
-
-            $notifServ = new Notification();
-            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
+           
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
-            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
-                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
-            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
-            if ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
-                $trans = Transaction::find($id);
-                $userup = User::find($trans->user_id);
-                $userup->update([
-                    'wallet_c' => $userup->wallet_c + ($trans->amount * 1 / 1000)
-                ]);
-            }
-            $notifServ = new Notification();
-            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
         }
         return redirect()->back()->with('notify', 'Cập nhật thành công');
     }
