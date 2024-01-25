@@ -51,7 +51,7 @@ class TransactionService
             <a class="btn btn-sm btn-danger" href="' . route('transaction.status.touch', ['id' => $id, 'status' => ConfigConstants::TRANSACTION_STATUS_REJECT]) . '"><i class="fas fa-lock"></i> Từ chối</a>
             ';
         } else {
-            return $this->statusText($oldStatus);
+            return '<span class="text-'. $this->statusColor($oldStatus) .'">' . $this->statusText($oldStatus) . '</span>';
         }
     }
     public function extraFee($orderdetailid)
@@ -129,7 +129,7 @@ class TransactionService
         return true;
     }
 
-    private function statusText($status)
+    public function statusText($status)
     {
         switch ($status) {
             case ConfigConstants::TRANSACTION_STATUS_PENDING:
@@ -138,6 +138,20 @@ class TransactionService
                 return 'ĐÃ DUYỆT';
             case ConfigConstants::TRANSACTION_STATUS_REJECT:
                 return 'ĐÃ TỪ CHỐI';
+            default:
+                return '';
+        }
+    }
+
+    public function statusColor($status)
+    {
+        switch ($status) {
+            case ConfigConstants::TRANSACTION_STATUS_PENDING:
+                return 'grey';
+            case ConfigConstants::TRANSACTION_STATUS_DONE:
+                return 'success';
+            case ConfigConstants::TRANSACTION_STATUS_REJECT:
+                return 'danger';
             default:
                 return '';
         }

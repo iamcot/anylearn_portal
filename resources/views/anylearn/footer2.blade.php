@@ -64,7 +64,7 @@
         <p class="m-0">CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ GIÁO DỤC anyLEARN</p>
         <p class="m-0">Giấy CNĐKDN: 0316363793 cấp lần đầu ngày 02/07/2020</p>
         <p class="m-0">Cấp bởi: Phòng đăng ký kinh doanh - Sở Kế hoạch Đầu tư thành phố Hồ Chí Minh.</p>
-        <p class="m-0">Địa chỉ: 161/4 Nguyễn Văn Thủ, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</p>
+        <p class="m-0">Địa chỉ: 352/28A Nguyễn Tất Thành, Phường 13, Quận 4, Thành phố Hồ Chí Minh</p>
         </div>
     </div>
 </footer>
