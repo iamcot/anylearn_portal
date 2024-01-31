@@ -1597,7 +1597,7 @@ class ItemServices
         try {
             $items = $this->queryRegisteredItems($userID);
             $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $month);
-            dd($item->get());
+            dd($items->get());
             $firstOfMonth = Carbon::parse($month); 
             $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
 
@@ -1708,7 +1708,7 @@ class ItemServices
         $items->whereDate('sp.date_start', '<=', $date);
         $items->where(function ($query) {
             $query->orWhere('pa.organizer_confirm', 1);
-            $query->orWhere('pa.participant_confirm', 1);
+            $query->orWhere('pa.participant_confirm', 1); 
         });
         $items->addSelect(
             'sp.weekdays',
