@@ -1600,7 +1600,7 @@ class ItemServices
 
             $firstOfMonth = Carbon::parse($month); 
             $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
-
+            dd($month, $firstOfMonth, $lastOfMonth);
             $plans = [];
             foreach ($items->get() as $val) {
                 $current = clone $firstOfMonth;
