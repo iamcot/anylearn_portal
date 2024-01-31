@@ -1592,36 +1592,32 @@ class ItemServices
         }
     }
 
-    public function getSchoolDays($userID, $month) 
+    public function getSchoolDays($userID, $date) 
     {
-        try {
-            $items = $this->queryRegisteredItems($userID);
-            $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $month);
+        $date = Carbon::parse($date);
+        $firstOfMonth = (clone $date)->firstOfMonth();;
+        $lastOfMonth = (clone $date)->lastOfMonth();
 
-            $firstOfMonth = Carbon::parse($month); 
-            $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
+        $items = $this->queryRegisteredItems($userID);
+        $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $firstOfMonth);
 
-            $plans = [];
-            foreach ($items->get() as $val) {
-                $current = Carbon::parse($val->date_start);
-                $current = $current < $firstOfMonth ? $firstOfMonth : $current;
+        $plans = [];
+        foreach ($items->get() as $val) {
+            $current = Carbon::parse($val->date_start);
+            $current = $current < $firstOfMonth ? $firstOfMonth : $current;
 
-                $dateEnd = Carbon::parse($val->date_end);
-                $dateEnd = $dateEnd > $lastOfMonth ? $lastOfMonth : $dateEnd; 
-    
-                while ($current <= $dateEnd) {
-                    if (in_array($current->dayOfWeek + 1, explode(',', $val->weekdays))) {
-                        $plans[] = (clone $current)->format('Y-m-d');
-                    } 
-                    $current->addDay();
-                }           
+            $dateEnd = Carbon::parse($val->date_end);
+            $dateEnd = $dateEnd > $lastOfMonth ? $lastOfMonth : $dateEnd;
+
+            while ($current <= $dateEnd) {
+                if (in_array($current->dayOfWeek + 1, explode(',', $val->weekdays))) {
+                    $plans[] = (clone $current)->format('Y-m-d');
+                }
+                $current->addDay();
             }
-  
-            return array_unique($plans); 
+        }
 
-        } catch (Exception $ex) {
-            Log::error($ex->getMessage());
-        } 
+        return array_unique($plans); 
     }
 
     public function getRegisteredItemInfo($userID, $orderItemID)

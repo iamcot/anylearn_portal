@@ -29,8 +29,8 @@ class StudyApi extends Controller
     public function show(Request $request, $orderItemID) 
     {
         $user = $request->get('_user');        
-        $data['info'] = (new ItemServices)->getRegisteredItemInfo($user->id, $orderItemID);
-        if (!$data['info']) {
+        $data['item_info'] = (new ItemServices)->getRegisteredItemInfo($user->id, $orderItemID);
+        if (!$data['item_info']) {
             return response()->json(['error' => 'Item not found'], 404);
         }
     
@@ -42,7 +42,7 @@ class StudyApi extends Controller
     {
         $user = $request->get('_user');
         $itemServ = new ItemServices();
-        $data['school_days'] = $itemServ->getSchoolDays($user->id, $request->get('month'));
+        $data['school_days'] = $itemServ->getSchoolDays($user->id, $request->get('date'));
         $data['schedule_plans'] = $itemServ->getSchedulePlans($user->id, $request->get('date'));
 
         return response()->json($data);
