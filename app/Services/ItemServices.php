@@ -1600,10 +1600,12 @@ class ItemServices
 
             $firstOfMonth = Carbon::parse($month); 
             $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
-            dd($month, $firstOfMonth, $lastOfMonth);
+
             $plans = [];
             foreach ($items->get() as $val) {
-                $current = clone $firstOfMonth;
+                $current = Carbon::parse($val->date_start);
+                $current = $current < $firstOfMonth ? $firstOfMonth : $current;
+
                 $dateEnd = Carbon::parse($val->date_end);
                 $dateEnd = $dateEnd > $lastOfMonth ? $lastOfMonth : $dateEnd; 
 
@@ -1614,7 +1616,7 @@ class ItemServices
                     $current->addDay();
                 }           
             }
-
+            dd($plans);
             return array_unique($plans); 
 
         } catch (Exception $ex) {
