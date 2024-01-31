@@ -1542,12 +1542,16 @@ class ItemServices
 
     public function applyUpcomingFilter($items) 
     {
-        $items->where(function ($query) {    
-            $query->orwhere(function ($q) {
+        $items->where(function ($query) {   
+            $query->orWhere(function ($q) {
+                $q->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
+                $q->whereNotNull('od.item_schedule_plan_id');
+            });
+            $query->orWhere(function ($q) {
                 $q->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
                 $q->whereDate('sp.date_end', '>', Carbon::now()->format('Y-m-d'));
-            });
-            $query->orwhere(function ($q) {
+            });    
+            $query->orWhere(function ($q) {
                 $q->whereIn('items.subtype', ItemConstants::UNCONFIRMABLE_SUBTYPES);
                 $q->whereDate('orders.created_at', '>', Carbon::now()->subDays(7)->format('Y-m-d'));
             });
@@ -1557,11 +1561,11 @@ class ItemServices
     public function applyCompletedFilter($items) 
     {
         $items->where(function ($query) {    
-            $query->orwhere(function ($q) {
+            $query->orWhere(function ($q) {
                 $q->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
                 $q->whereDate('sp.date_end', '<', Carbon::now()->format('Y-m-d'));
             });
-            $query->orwhere(function ($q) {
+            $query->orWhere(function ($q) {
                 $q->whereIn('items.subtype', ItemConstants::UNCONFIRMABLE_SUBTYPES);
                 $q->whereDate('orders.created_at', '<=', Carbon::now()->subDays(7)->format('Y-m-d'));
             });
