@@ -1597,7 +1597,7 @@ class ItemServices
         try {
             $items = $this->queryRegisteredItems($userID);
             $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $month);
-            dd($items->get());
+
             $firstOfMonth = Carbon::parse($month); 
             $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
 
@@ -1608,7 +1608,7 @@ class ItemServices
 
                 $dateEnd = Carbon::parse($val->date_end);
                 $dateEnd = $dateEnd > $lastOfMonth ? $lastOfMonth : $dateEnd; 
-                dd($current, $dateEnd);
+    
                 while ($current <= $dateEnd) {
                     if (in_array($current->dayOfWeek + 1, explode(',', $val->weekdays))) {
                         $plans[] = (clone $current)->format('Y-m-d');
@@ -1616,7 +1616,7 @@ class ItemServices
                     $current->addDay();
                 }           
             }
-            dd($plans);
+  
             return array_unique($plans); 
 
         } catch (Exception $ex) {
