@@ -1705,7 +1705,6 @@ class ItemServices
         $items->leftJoin('user_locations AS ul', 'ul.id', '=', 'sp.user_location_id');
         $items->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
         $items->whereDate('sp.date_end', '>=', $date);
-        $items->whereDate('sp.date_start', '<=', $date);
         $items->where(function ($query) {
             $query->orWhere('pa.organizer_confirm', 1);
             $query->orWhere('pa.participant_confirm', 1); 
