@@ -1542,6 +1542,7 @@ class ItemServices
 
     public function applyUpcomingFilter($items) 
     {
+        dd($items);
         $items->where(function ($query) {   
             $query->orWhere(function ($q) {
                 $q->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
