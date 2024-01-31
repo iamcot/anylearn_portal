@@ -1597,7 +1597,7 @@ class ItemServices
         try {
             $items = $this->queryRegisteredItems($userID);
             $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $month);
-
+            dd($item->get());
             $firstOfMonth = Carbon::parse($month); 
             $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
 
