@@ -73,19 +73,33 @@ history
 </div>
 </div> --}}
 <h1 class="">Giao dịch của tôi</h1>
-
+<div class="row">
+    @include('dashboard.count_box_partner', [
+    'title' => 'anyPOINT ĐÃ NHẬN',
+    'data' => number_format($pointReiceived, 0, ',', '.'),
+    'icon' => 'fa-dollar-sign',
+    'color' => 'success',
+    ])
+    @include('dashboard.count_box_partner', [
+    'title' => 'anyPOINT CHỜ NHẬN',
+    'data' => number_format($pointWait, 0, ',', '.'),
+    'icon' => 'fa-dollar-sign',
+    'color' => 'primary',
+    ])
+</div>
 <div class="card shadow">
     <div class="card-body">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="true">Lịch sử giao dịch</button>
+                <button class="nav-link active" id="points-tab" data-bs-toggle="tab" data-bs-target="#points" type="button" role="tab" aria-controls="points" aria-selected="false">Lịch sử điểm thưởng</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="points-tab" data-bs-toggle="tab" data-bs-target="#points" type="button" role="tab" aria-controls="points" aria-selected="false">Lịch sử điểm thưởng</button>
+                <button class="nav-link " id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="true">Lịch sử giao dịch</button>
             </li>
+
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
 
                 <table class="table table-striped table-hover">
                     <thead>
@@ -110,7 +124,7 @@ history
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="points" role="tabpanel" aria-labelledby="points-tab">
+            <div class="tab-pane fade show active" id="points" role="tabpanel" aria-labelledby="points-tab">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr class="text-secondary">

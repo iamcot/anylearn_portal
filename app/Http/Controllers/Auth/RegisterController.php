@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class RegisterController extends Controller
 {
@@ -58,22 +59,28 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         Auth::login($user);
-        return session()->has('cb') ? redirect()->to(session()->get('cb')) : redirect('/');  
-        
-        /*$data['user'] = $refUser;
+        // $cookie = Cookie::forever('api_token', $user->api_token, null, null, false, false);
+        if (session()->has('cb')) {
+            $url = session()->get('cb');
+            session()->forget('cb');
+            return redirect()->to($url)->cookie('api_token',$user->api_token);
+        }
+
+        $data['user'] = $refUser;
         $data['newUser'] = $user;
         $data['isReg'] = true;
         $data['sale_id'] = $request->get('s');
 
         $data['role'] = $request->get('r');
         if ($data['role'] == 'member') {
-            return view('register.member', $data);
+            return response()->view('register.member', $data)->cookie('api_token', $user->api_token);
         } else if ($data['role'] == 'school') {
-            return view('register.school', $data);
+            return view('register.school', $data)->cookie('api_token', $user->api_token);
         } else if ($data['role'] == 'teacher') {
-            return view('register.teacher', $data);
+            return view('register.teacher', $data)->cookie('api_token', $user->api_token);
         }
-        return view('register.index', $data);*/
+
+        return view('register.index', $data)->cookie('api_token', $user->api_token);
     }
 
     /**

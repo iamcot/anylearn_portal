@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use PSpell\Config;
 
 class TransactionService
 {
@@ -50,7 +51,7 @@ class TransactionService
             <a class="btn btn-sm btn-danger" href="' . route('transaction.status.touch', ['id' => $id, 'status' => ConfigConstants::TRANSACTION_STATUS_REJECT]) . '"><i class="fas fa-lock"></i> Từ chối</a>
             ';
         } else {
-            return $this->statusText($oldStatus);
+            return '<span class="text-'. $this->statusColor($oldStatus) .'">' . $this->statusText($oldStatus) . '</span>';
         }
     }
     public function extraFee($orderdetailid)
@@ -88,21 +89,24 @@ class TransactionService
     {
         // update transaction
         $trans = Transaction::find($id);
-
-        $trans->update([
-            'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-        // update c wallet
-        User::find($trans->user_id)->update([
-            'wallet_c' => DB::raw('wallet_c + ' . $trans->amount),
-        ]);
-        // send notif
-        $notifServ = new Notification();
-        $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
-            'content' => $trans->content
-        ]);
-        return true;
+        if ($trans->status === ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            $trans->update([
+                'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+            // update c wallet
+            User::find($trans->user_id)->update([
+                'wallet_c' => DB::raw('wallet_c + ' . $trans->amount),
+            ]);
+            // send notif
+            $notifServ = new Notification();
+            $notifServ->createNotif(NotifConstants::TRANSACTIONN_UPDATE, $trans->user_id, [
+                'content' => $trans->content
+            ]);
+            return true;
+        }  else {
+            return false;
+        }
     }
 
     public function approveWalletmTransaction($id)
@@ -125,7 +129,7 @@ class TransactionService
         return true;
     }
 
-    private function statusText($status)
+    public function statusText($status)
     {
         switch ($status) {
             case ConfigConstants::TRANSACTION_STATUS_PENDING:
@@ -139,12 +143,25 @@ class TransactionService
         }
     }
 
+    public function statusColor($status)
+    {
+        switch ($status) {
+            case ConfigConstants::TRANSACTION_STATUS_PENDING:
+                return 'grey';
+            case ConfigConstants::TRANSACTION_STATUS_DONE:
+                return 'success';
+            case ConfigConstants::TRANSACTION_STATUS_REJECT:
+                return 'danger';
+            default:
+                return '';
+        }
+    }
+
     /**
      * Changed from Aug 13: If order not paid, new item will be added to open order
      */
     public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
     {
-        
         $childUser = $request->get('child', '');
         $input = $request->all();
         $item = Item::find($itemId);
@@ -165,8 +182,8 @@ class TransactionService
         if ($alreadyRegister > 0 && $item->allow_re_register == 0) {
             return 'Bạn đã đăng ký khóa học này hoặc khóa học đang chờ thanh toán.';
         }
-        $voucher = $request->get('voucher', '');
 
+        $voucher = $request->get('voucher', '');
         $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $input, $allowNoMoney) {
             $notifServ = new Notification();
             $openOrder = null;
@@ -180,7 +197,7 @@ class TransactionService
                 $openOrder = Order::where('user_id', $user->id)
                     ->where('status', OrderConstants::STATUS_NEW)
                     ->orderBy('id', 'desc')
-                    ->first(); 
+                    ->first();
                 if ($openOrder) {
                     $status = OrderConstants::STATUS_NEW;
                     $transStatus = ConfigConstants::TRANSACTION_STATUS_PENDING;
@@ -205,7 +222,7 @@ class TransactionService
 
                 User::find($user->id)->update([
                     'wallet_m' => DB::raw('wallet_m - ' . $amount),
-                ]); 
+                ]);
                 Transaction::create([
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_ORDER,
@@ -248,6 +265,7 @@ class TransactionService
             $this->recalculateOrderAmount($openOrder->id);
             $usingVoucher = VoucherUsed::where('order_id', $openOrder->id)->first();
             if ($usingVoucher) {
+                $this->removeTransactionsForCommissionVouchers($usingVoucher->id);
                 VoucherUsed::find($usingVoucher->id)->delete();
             }
 
@@ -256,7 +274,6 @@ class TransactionService
                 $voucherEvent = new VoucherEventLog();
                 $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $item->id);
             }
-
 
             $author = User::find($item->user_id);
 
@@ -267,8 +284,10 @@ class TransactionService
                 ConfigConstants::CONFIG_DISCOUNT,
                 ConfigConstants::CONFIG_COMMISSION,
                 ConfigConstants::CONFIG_FRIEND_TREE,
-                ConfigConstants::CONFIG_COMMISSION_FOUNDATION
-            ]);
+                ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
+                ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
+            ]); 
+
             if ($item->company_commission != null) {
                 $overrideConfigs = json_decode($item->company_commission, true);
                 foreach ($overrideConfigs as $key => $value) {
@@ -285,7 +304,26 @@ class TransactionService
                 $commissionRate = $item->commission_rate > 0 ? $item->commission_rate : $author->commission_rate;
             }
 
-            $directCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_DISCOUNT], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+            // pay author
+            $authorCommission = floor($amount * $commissionRate / $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+            Transaction::create([
+                'user_id' => $author->id,
+                'type' => ConfigConstants::TRANSACTION_PARTNER,
+                'amount' => $authorCommission,
+                'ref_amount' => $amount,
+                'pay_method' => UserConstants::WALLET_C,
+                'pay_info' => '',
+                'content' => 'Doanh thu từ bán khóa học: ' . $item->title,
+                'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                'order_id' => $orderDetail->id, //TODO user order detail instead order id to know item
+            ]);
+
+            $directCommission = $userService->calcCommission(
+                $amount, 
+                $commissionRate, 
+                $configs[ConfigConstants::CONFIG_DISCOUNT], 
+                $configs[ConfigConstants::CONFIG_BONUS_RATE],
+            );
 
             // User::find($user->id)->update([
             //     'wallet_c' => DB::raw('wallet_c + ' . $directCommission),
@@ -303,30 +341,18 @@ class TransactionService
                 'order_id' => $orderDetail->id
             ]);
 
-            //pay author
-            $authorCommission = floor($amount * $commissionRate / 1);
-
-            Transaction::create([
-                'user_id' => $author->id,
-                'type' => ConfigConstants::TRANSACTION_PARTNER,
-                'amount' => $authorCommission,
-                'ref_amount' => $amount,
-                'pay_method' => UserConstants::WALLET_M,
-                'pay_info' => '',
-                'content' => 'Doanh thu từ bán khóa học: ' . $item->title,
-                'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
-                'order_id' => $orderDetail->id, //TODO user order detail instead order id to know item
-            ]);
-
             //save commission indirect + transaction log in PENDING status
-
-            $indirectCommission = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION], $configs[ConfigConstants::CONFIG_BONUS_RATE]);
+            $indirectCommission = $userService->calcCommission(
+                $amount, 
+                $commissionRate, 
+                $configs[ConfigConstants::CONFIG_COMMISSION], 
+                $configs[ConfigConstants::CONFIG_BONUS_RATE]
+            );
 
             $currentUserId = $user->user_id;
             for ($i = 1; $i < $configs[ConfigConstants::CONFIG_FRIEND_TREE]; $i++) {
                 $refUser = User::find($currentUserId);
                 if ($refUser) {
-
                     Transaction::create([
                         'user_id' => $refUser->id,
                         'type' => ConfigConstants::TRANSACTION_COMMISSION,
@@ -345,10 +371,41 @@ class TransactionService
                     break;
                 }
             }
-            //foundation
+
+            // ref_seller
+            $refSeller = User::find($author->user_id);   
+            if ($refSeller && $refSeller->get_ref_seller == 1)  {
+                
+                $refSellerCommission = $userService->calcCommission(
+                    $amount, 
+                    $commissionRate, 
+                    $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER],
+                    $configs[ConfigConstants::CONFIG_BONUS_RATE],
+                ); 
+
+                Transaction::create([
+                    'user_id' => $refSeller->id,
+                    'ref_user_id' => $author->id,
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'amount' => $refSellerCommission,
+                    'ref_amount' => $amount,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'pay_info' => '',
+                    'content' => 'Nhận điểm từ ' . $author->name . ' bán khoá học: ' . $item->title,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'order_id' => $orderDetail->id,
+                ]);
+            }
+
+            // foundation
             $foundation = 0;
             if (!$item->is_test) {
-                $foundation = $userService->calcCommission($amount, $commissionRate, $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 1);
+                $foundation = $userService->calcCommission(
+                    $amount, 
+                    $commissionRate, 
+                    $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 
+                    1
+                );
                 Transaction::create([
                     'user_id' => 0,
                     'type' => ConfigConstants::TRANSACTION_FOUNDATION,
@@ -362,8 +419,7 @@ class TransactionService
                     'order_id' => $orderDetail->id
                 ]);
             }
-
-
+            
             DB::commit();
             if ($status == OrderConstants::STATUS_DELIVERED) {
                 $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
@@ -375,10 +431,126 @@ class TransactionService
                 ]);
             }
 
-            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE ? $openOrder->id : ConfigConstants::TRANSACTION_STATUS_PENDING;
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE 
+                ? $openOrder->id 
+                : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
 
         return $result;
+    }
+
+    public function addTransactionsForCommissionVouchers($voucherID, $orderID) 
+    {
+        $currentOrder = Order::find($orderID);
+        $usingVoucher = DB::table('vouchers')
+            ->join('vouchers_used as vu', 'vu.voucher_id', '=', 'vouchers.id') 
+            ->where('vu.voucher_id', $voucherID)
+            ->where('vu.order_id', $orderID)
+            ->first();   
+
+        if (!$usingVoucher || !$currentOrder) {
+            return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
+        }
+
+        $usingEvent = VoucherEvent::whereRaw('FIND_IN_SET(?, targets) > 0', [$usingVoucher->voucher_group_id])
+            ->whereNotNull('ref_user_id')
+            ->orderByDesc('id')
+            ->first();
+
+        if ($usingEvent && User::find($usingEvent->ref_user_id)) { 
+            $buyer  = User::find($currentOrder->user_id);        
+            $orders = OrderDetail::where('order_id', $currentOrder->id)->get();
+
+            $configM = new Configuration();
+            $defaultConfigs = $configM->gets([
+                ConfigConstants::CONFIG_BONUS_RATE,
+                ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER,
+            ]);  
+
+            foreach($orders as $orderItem) {
+                $item = Item::find($orderItem->item_id);
+                $partner = User::find($item->user_id);
+                
+                $configs = $defaultConfigs;
+                if ($item->company_commission != null) {
+                    $overrideConfigs = json_decode($item->company_commission, true);
+                    foreach ($overrideConfigs as $key => $value) {
+                        if ($value != null) {
+                            $configs[$key] = $value;
+                        }
+                    }
+                }   
+
+                if ($item->commission_rate == -1) {
+                    $partnerCommissionRate = 0;
+                } else {
+                    $partnerCommissionRate = $item->commission_rate > 0 
+                        ? $item->commission_rate 
+                        : $partner->commission_rate;
+                }
+
+                $voucherCommissionRate = $usingEvent->commission_rate 
+                    ? $usingEvent->commission_rate 
+                    : $configs[ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER];  
+
+                $userServ = new UserServices();
+                $voucherCommission = $userServ->calcCommission(
+                    $item->price,
+                    $partnerCommissionRate,
+                    $voucherCommissionRate,
+                    $configs[ConfigConstants::CONFIG_BONUS_RATE],
+                );
+
+                Transaction::create([       
+                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'pay_method' => UserConstants::WALLET_C,
+                    'user_id' => $usingEvent->ref_user_id,
+                    'amount' => $voucherCommission,
+                    'ref_amount' => $item->price,
+                    'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $usingEvent->title, 
+                    'order_id' => $orderItem->id,
+                ]);
+            } 
+            
+            return true;
+        }    
+    }
+
+    public function removeTransactionsForCommissionVouchers($usedVoucherID) 
+    { 
+        $usingVoucher = DB::table('vouchers')
+            ->join('vouchers_used as vu', 'vu.voucher_id', '=', 'vouchers.id') 
+            ->where('vu.id', $usedVoucherID)
+            ->first();   
+
+        if (!$usingVoucher) {
+            return 'Thông tin voucher không chính xác, không thể xóa!'; 
+        }
+        
+        $usingEvent = VoucherEvent::whereRaw('FIND_IN_SET(?, targets) > 0', [$usingVoucher->voucher_group_id])
+            ->whereNotNull('ref_user_id')
+            ->orderByDesc('id')
+            ->first();
+
+        if ($usingEvent) { 
+            $transactions = DB::table('transactions')
+                ->join('order_details as od', 'od.id', '=', 'transactions.order_id')
+                ->join('orders', 'orders.id', '=', 'od.order_id')
+                ->where('orders.id', $usingVoucher->order_id)
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+                ->where('transactions.pay_method', UserConstants::WALLET_C)
+                ->where('transactions.user_id', $usingEvent->ref_user_id)
+                ->select('transactions.*')
+                ->get();
+
+            foreach($transactions as $tran) { 
+                Transaction::find($tran->id)->delete();
+            }
+        }
+
+        return true;
     }
 
     public function findSaleIdFromBuyerOrItem($buyerId, $itemId)
@@ -591,57 +763,81 @@ class TransactionService
     }
 
     public function sendReturnRequest($orderId) {
-        
+
         $order = Order::find($orderId);
         if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
             return false;
         }
 
-        $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);  
+        $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
         Mail::to(env('MAIL_FROM_ADDRESS'))->send(
             new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
         );
     }
 
-    public function returnOrder($orderId, $trigger)
+    public function returnOrder($orderID, $trigger)
     {
-        $openOrder = Order::find($orderId);
-        if ($openOrder->status != OrderConstants::STATUS_DELIVERED
-            && $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
+        $openOrder = Order::find($orderID);
+        if (!$openOrder || ( 
+            $openOrder->status != OrderConstants::STATUS_DELIVERED &&
+            $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
+        )) {
             return false;
         }
-           
-        $user = User::find($openOrder->user_id);
+
+        $transServ = new TransactionService();
         $zaloService = new ZaloServices(true);
+
+        $user = User::find($openOrder->user_id);
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
 
-        // Hoàn anypoint được cộng cho mỗi khoá học
+        // Return: anypoints are added from commissions  
         foreach ($orderDetails as $od) {
-            $anypoint = Transaction::where('order_id', $od->id)
-                ->where('type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->first();
+            $commissionReceivers = DB::table('transactions')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->whereIn('transactions.type', [
+                    ConfigConstants::TRANSACTION_COMMISSION, 
+                    ConfigConstants::TRANSACTION_PARTNER
+                ])
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_DONE)
+                ->where('transactions.pay_method', UserConstants::WALLET_C)
+                ->where('transactions.order_id', $od->id)
+                ->select('users.*', 'transactions.amount') 
+                ->get();
             
-            if ($anypoint) {
-                if ($anypoint->status == ConfigConstants::TRANSACTION_STATUS_DONE)  {
-                    $user->update([
-                        'wallet_c' => $user->wallet_c - $anypoint->amount 
-                    ]);
-                }
-
-                $zaloService->sendZNS(ZaloServices::ZNS_ORDER_RETURN, $user->phone, [
-                    "date" => $od->created_at,
-                    "price" => $od->price,
-                    "name" => $user->name,
-                    "class" => Item::find($od->item_id)->title,
-                    "id" => $od->id,
+            foreach ($commissionReceivers as $cr) {
+                $trans = Transaction::create([
+                    'type' => ConfigConstants::TRANSACTION_EXCHANGE,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
+                    'pay_method' =>  UserConstants::WALLET_C,
+                    'content' => 'Thu hồi ' . $cr->amount . ' anypoints vì đơn hàng #'. 
+                        $openOrder->id . ' được trả lại.',
+                    'user_id' => $cr->id,
+                    'amount' => - $cr->amount, 
+                    'order_id' => $od->id,
                 ]);
+
+                if ($trans) {                    
+                    $transServ->approveWalletcTransaction($trans->id);
+                } 
             }
+
+            $zaloService->sendZNS(ZaloServices::ZNS_ORDER_RETURN, $user->phone, [
+                "date" => $od->created_at,
+                "price" => $od->price,
+                "name" => $user->name,
+                "class" => Item::find($od->item_id)->title,
+                "id" => $od->id,
+            ]);
         }
 
         $allTrans = Transaction::where('order_id', $openOrder->id)
-            ->whereIn('type', [ConfigConstants::TRANSACTION_ORDER, ConfigConstants::TRANSACTION_EXCHANGE])
+            ->whereIn('type', [
+                ConfigConstants::TRANSACTION_ORDER, 
+                ConfigConstants::TRANSACTION_EXCHANGE]
+                )
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
-            ->get();    
+            ->get();
 
         foreach($allTrans as $tnx) {
             if ($tnx->type == ConfigConstants::TRANSACTION_ORDER) {
@@ -649,26 +845,26 @@ class TransactionService
                     'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
                 ]);
             }
-            
-            // Hoàn anypoint bị đổi cho đơn hàng
-            if ($tnx->type == ConfigConstants::TRANSACTION_EXCHANGE) {
-                $user->update([
-                    'wallet_c' => $user->wallet_c + $tnx->amount
-                ]);
 
-                Transaction::create([
-                    'user_id' => $user->id,
-                    'type' => ConfigConstants::TRANSACTION_COMMISSION,
-                    'amount' => $tnx->amount,
+            // Return: anypoints are used for the order
+            if ($tnx->type == ConfigConstants::TRANSACTION_EXCHANGE) {
+                $trans = Transaction::create([
+                    'type' => ConfigConstants::TRANSACTION_EXCHANGE,
+                    'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' => UserConstants::WALLET_C,
-                    'pay_info' => '',
-                    'content' => 'Hoàn điểm vì đơn hàng bị trả lại',
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'content' => 'Hoàn trả '. $tnx->amount .' anypoints vì đơn hàng #' . 
+                        $openOrder->id . ' được trả lại.',
+                    'user_id' => $user->id,
+                    'amount' => $tnx->amount,
                     'order_id' => $tnx->order_id
                 ]);
+
+                if ($trans) {
+                    $transServ->approveWalletcTransaction($trans->id);
+                }       
             }
         }
-        
+
         OrderDetail::where('order_id', $openOrder->id)->update([
             'status' => $trigger
         ]);
@@ -676,7 +872,7 @@ class TransactionService
         Order::find($openOrder->id)->update([
             'status' => $trigger,
         ]);
-  
+
         $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_RETURN, $openOrder->user_id, []);
         Log::debug("System return transaction & orders", ["orderId" => $openOrder->id]);
@@ -690,7 +886,7 @@ class TransactionService
         if ($openOrder->status != OrderConstants::STATUS_RETURN_SYSTEM) {
             return false;
         }
-       
+
         $openOrder->update([
             'status' => OrderConstants::STATUS_REFUND
         ]);
@@ -707,8 +903,8 @@ class TransactionService
             'amount' => $openOrder->amount,
             "id" => $openOrder->id,
         ]);
-  
-        $notifServ = new Notification();  
+
+        $notifServ = new Notification();
         $notifServ->createNotif(NotifConstants::COURSE_REFUND, $openOrder->user_id, []);
         Log::debug("Refund orders", ["orderId" => $openOrder->id]);
 
@@ -762,6 +958,38 @@ class TransactionService
         return true;
     }
 
+    public function checkWalletCBeforeReturnOrder($orderID)
+    {
+        $openOrder = Order::find($orderID);
+        if (!$openOrder || ( 
+            $openOrder->status != OrderConstants::STATUS_DELIVERED &&
+            $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
+        )) {
+            return false;
+        }
+
+        $orderDetails = OrderDetail::where('order_id', $orderID)->get();
+        foreach ($orderDetails as $od) {
+            $conditions = DB::table('transactions')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_DONE)
+                ->where('transactions.pay_method', UserConstants::WALLET_C)
+                ->where('transactions.order_id', $od->id)
+                ->selectRaw('
+                    count(*) as total, 
+                    sum(if(users.wallet_c >= transactions.amount, 1, 0)) as matching
+                ')
+                ->first();
+            
+            if ($conditions->total != $conditions->matching) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function approveRegistrationAfterWebPayment($orderId, $payment = OrderConstants::PAYMENT_ONEPAY)
     {
         $userService = new UserServices();
@@ -769,10 +997,10 @@ class TransactionService
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
             return false;
         }
-        $user = User::find($openOrder->user_id);
 
+        $user = User::find($openOrder->user_id);
         Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
-        $notifServ = new Notification();
+
         OrderDetail::where('order_id', $openOrder->id)->update([
             'status' => OrderConstants::STATUS_DELIVERED,
             'created_at' => date('Y-m-d H:i:s'),
@@ -789,26 +1017,39 @@ class TransactionService
                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
+
         $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
         $voucherEvent = new VoucherEventLog();
 
         foreach ($orderDetails as $orderItem) {
             $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
+
             $item = Item::find($orderItem->item_id);
             $author = User::find($item->user_id);
-            if ($item->subtype == "online" || $item->subtype == "video") {
-                $user->update([
-                    'wallet_m' => DB::raw('wallet_m + ' . $item->price)
-                ]);
+
+            // if ($item->subtype == "online" || $item->subtype == "video") {
+            //     $user->update([
+            //         'wallet_m' => DB::raw('wallet_m + ' . $item->price)
+            //     ]);
+            // }
+
+            if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
+               || $item->subtype == ItemConstants::SUBTYPE_VIDEO
+            ) {
+                $this->approveTransactionsAfterPayment($orderItem->id);
             }
-            $userService->MailToPartnerRegisterNew($item, $user->id, $author);
+
+            $notifServ = new Notification();
             $dataOrder = $this->orderDetailToDisplay($orderItem->id);
+
+            $userService->MailToPartnerRegisterNew($item, $user->id, $author);
 
             $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
                 'username' => $user->name,
                 'className' => $dataOrder->title,
                 'orderData' => $dataOrder,
                 'extraFee' => $this->extraFee($orderItem->id),
+                'partner' => $author,
             ]);
 
             $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
@@ -816,7 +1057,6 @@ class TransactionService
                 'course' => $item->title,
                 'orderid' => $openOrder->id,
             ]);
-
 
             //ZALO to buyer
             $zaloService = new ZaloServices(true);
@@ -828,6 +1068,7 @@ class TransactionService
                 'name' => $user->name,
                 'class' => $dataOrder->title,
             ]);
+
             //@TODO Zalo to partner
 
             SocialPost::create([
@@ -842,7 +1083,46 @@ class TransactionService
                 $this->activateDigitalCourses($openOrder->user_id, $orderItem);
             }
         }
+
         Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
+
+        return true;
+    }
+
+    public function approveTransactionsAfterPayment($orderItemID)
+    {
+        $transOrder = DB::table('transactions')
+            ->join('order_details as od', 'od.id', '=', 'transactions.order_id')
+            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+            ->where('od.status', OrderConstants::STATUS_DELIVERED)
+            ->where('od.id', $orderItemID)
+            ->select('transactions.*')
+            ->get();
+
+        if (!$transOrder) {
+            return 'Thông tin đơn hàng không chính xác!';
+        }
+
+        foreach ($transOrder as $trans) {
+            // Seller   
+            if ($trans->type == ConfigConstants::TRANSACTION_PARTNER) {
+                $this->approveWalletcTransaction($trans->id);
+                continue;
+            }
+
+            // Commissions
+            if ($trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
+                $this->approveWalletcTransaction($trans->id);
+                continue;   
+            }
+
+            // Foundation
+            if ($trans->type == ConfigConstants::TRANSACTION_FOUNDATION) {
+                Transaction::find($trans->id)->update([
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                ]);
+            }  
+        }
 
         return true;
     }

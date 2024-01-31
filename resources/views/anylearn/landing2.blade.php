@@ -60,7 +60,27 @@
                 }
             }
         });
+     
+        counting('#num-partners', 500);
+        counting('#num-courses', 2500);
+        counting('#num-professors', 200);
+        counting('#num-students', 15000);
 
+        function counting(elementID, maxNumber) {
+            const jumpingNumber = $(elementID);
+            const increment = maxNumber / (6 * 1000 / 20);
+
+            let currentNumber = 0;
+            const intervalID = setInterval(function () {
+                currentNumber += increment;
+                jumpingNumber.text(Math.floor(currentNumber));
+
+                if (currentNumber >= maxNumber) {
+                    clearInterval(intervalID);
+                    jumpingNumber.text(maxNumber + '+');
+                }
+            }, 20);
+        }
     });
     </script>
 </body>

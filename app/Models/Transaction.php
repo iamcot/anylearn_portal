@@ -110,6 +110,7 @@ class Transaction extends Model
         foreach($db as $k => $v) {
             $data[$k] = $v;
             $data[$k]->pay_info = "";//$v->pay_info ?? "";
+            $data[$k]->order_id = $data[$k]->order_id ?? 0;
         }
         return $data;
     }

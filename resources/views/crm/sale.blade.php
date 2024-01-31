@@ -1,5 +1,7 @@
 @inject('userServ', 'App\Services\UserServices')
 @inject('itemServ', 'App\Services\ItemServices')
+@inject('transServ', 'App\Services\TransactionService')
+
 @extends('layout')
 
 @section('body')
@@ -33,7 +35,7 @@
                                             border: 1px solid {{ $memberProfile->sale_priority == 0 ? '#ccc' : $priorityColors[$memberProfile->sale_priority]}}; 
                                             border-radius: 5px; 
                                             background: {{ $priorityColors[$memberProfile->sale_priority] }}">
-                                            @foreach([0 => "NEW",1 => "URGENT",2 => "ASAP",3 => "NEED",99 => "DONE"] as $key => $prio)
+                                            @foreach($priorityLevels as $key => $prio)
                                                 <option value="{{ $key }}" {{ ( !empty($user) && $memberProfile->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
                                             @endforeach
                                         </select>    
@@ -258,12 +260,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($points as $key => $value)
+                        @foreach ($points as $value)
                             <tr>
-                                <td class="text-center">{{ $key + 1 }}</td>
+                                <td class="text-center">{{ $value->id }}</td>
                                 <td>{{ $value->content }}</td>
                                 <td>{{ $value->amount }}</td>
-                                <td class="text-{{ $value->status == 0 ? 'grey' : 'success' }}">{{ $value->status == 0 ? 'Chưa Nhận' : 'Đã Nhận' }}</td>
+                                <td class="text-{{ $transServ->statusColor( $value->status ) }}">{{ $transServ->statusText( $value->status )  }}</td>
                                 <td>{{ date('H:i d/m/Y', strtotime($value->created_at)) }}</td>
                             </tr>
                         @endforeach

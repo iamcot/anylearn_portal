@@ -40,6 +40,7 @@ Route::get('/item/{itemId}/reviews', 'Apis\ItemApi@reviews');
 
 Route::get('/article', 'Apis\ArticleApi@index');
 Route::get('/article/cat/{type}', 'Apis\ArticleApi@loadByType');
+
 Route::get('/article/{id}', 'Apis\ArticleApi@loadArticle');
 
 Route::get('/quote', 'Apis\ArticleApi@quote');
@@ -65,15 +66,39 @@ Route::middleware(['language'])->group(function () {
 Route::get('/social/profile/{userId}', 'Apis\SocialController@profile');
 Route::get('/social/post/{postId}', 'Apis\SocialController@post');
 
+
 Route::get('/v3/map', 'Apis\MapApi@index');
 Route::get('/v3/home', 'Apis\HomeApi@index');
 Route::get('/v3/listing', 'Apis\ListingApi@index');
 Route::get('/v3/search', 'Apis\SearchFilterApi@index');
 Route::get('/v3/partner/{id}', 'Apis\PartnerApi@index');
 Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
+Route::get('/v3/articles', 'Apis\ArticleApi@articles');
 
 Route::middleware(['api.user'])->group(function () {
+    Route::get('/v3/meAPI', 'Apis\MeApi@index');
+    Route::get('/v3/meWork', 'Apis\MeApi@meWork');
+    Route::get('/v3/courseconfirm', 'Apis\MeApi@courseConfirm');
+    Route::get('/v3/admitstudent/{id}', 'Apis\MeApi@admitStudentAPI');
+    Route::get('/v3/getchild', 'Apis\MeApi@getChildAccountsAPI');
+    Route::get('/v3/child/{id}', 'Apis\MeApi@childAccountAPI');
+    Route::get('/v3/child', 'Apis\MeApi@childAccountAPI');
+    Route::get('/v3/class', 'Apis\MeApi@list');
+    Route::get('/v3/categories', 'Apis\MeApi@getCategories');
+    Route::get('/v3/students/{id}', 'Apis\MeApi@getStudents');
+    Route::get('/v3/getextrafee/{id}', 'Apis\MeApi@getExtrafee');
+    Route::get('/v3/extrafee/{id}', 'Apis\MeApi@addExtrafee');
 
+    Route::get('/v3/cancel-pending/{orderId}', 'Apis\MeApi@cancelPending');
+
+
+    Route::get('/v3/locations', 'Apis\MeApi@locations');
+
+    Route::get('/v3/order-return', 'Apis\MeApi@deliveredOrders');
+
+    Route::get('/v3/order-return/send-request/{orderId}', 'Apis\MeApi@sendReturnRequest');
+
+    Route::get('/v3/auth/cart', 'Apis\CartApi@index');
     Route::get('/v3/auth/home', 'Apis\HomeApi@index');
     Route::get('/v3/auth/search', 'Apis\SearchFilterApi@index');
     Route::get('/v3/auth/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
@@ -99,9 +124,14 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/notification', 'Apis\UserApi@notification');
     Route::get('/user/notification/{id}', 'Apis\UserApi@notifRead');
     Route::get('/user/all-friends', 'Apis\UserApi@allFriends');
-    Route::get('/user/contract/{contractId?}', 'Apis\UserApi@getContract');
     Route::any('/user/contract', 'Apis\UserApi@saveContract');
+    Route::get('/user/contract/{contractId?}', 'Apis\UserApi@getContract');
+    Route::any('/user/contractsave', 'Apis\UserApi@saveContract');
     Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
+
+    Route::any('/user/certificate', 'Apis\MeApi@certificate');
+    Route::any('/user/listcertificate', 'Apis\MeApi@list_certificate');
+
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
     Route::get('/user/delete', 'Apis\UserApi@deleteAccount');
     Route::get('/user/pending-orders', 'Apis\UserApi@pendingOrders');
@@ -113,6 +143,15 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/transaction/register/{itemId}', 'Apis\TransactionApi@placeOrderOneItem');
 
     Route::post('/item/create', 'Apis\ItemApi@create');
+    Route::post('/item/update', 'Apis\ItemApi@update');
+    Route::post('/item/updateitem', 'Apis\ItemApi@updateItem');
+
+
+    Route::get('/item/schadule/{id}', 'Apis\ItemApi@schadule');
+    Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchedule');
+    Route::get('/location', 'Apis\ItemApi@userLocation');
+
+
     Route::get('/item/{id}/edit', 'Apis\ItemApi@edit');
     Route::post('/item/{id}/edit', 'Apis\ItemApi@save');
     Route::get('/item/list', 'Apis\ItemApi@list');
@@ -126,6 +165,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/item/{itemId}/touch-fav', 'Apis\ItemApi@touchFav');
     Route::post('/item/{itemId}/save-rating', 'Apis\ItemApi@saveRating');
 
+
     Route::post('/ask/create/{type}', 'Apis\AskApi@create');
     Route::post('/ask/{askId}/edit', 'Apis\AskApi@edit');
     Route::get('/ask/{askId}/select', 'Apis\AskApi@selectAnswer');
@@ -135,7 +175,6 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/children', 'Apis\UserApi@listChildren');
     Route::post('/user/children', 'Apis\UserApi@saveChildren');
     Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
-
 });
 
 

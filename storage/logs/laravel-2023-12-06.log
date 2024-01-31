@@ -1,0 +1,4 @@
+[2023-12-06 16:33:06] local.ERROR: syntax error, unexpected '=>' (T_DOUBLE_ARROW), expecting ']' {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 4): syntax error, unexpected '=>' (T_DOUBLE_ARROW), expecting ']' at C:\\xampp\\htdocs\\portal\\app\\Models\\User.php:132)
+[stacktrace]
+#0 {main}
+"} 

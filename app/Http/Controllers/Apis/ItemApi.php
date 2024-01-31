@@ -8,10 +8,14 @@ use App\Constants\ItemConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
+use App\Models\ItemCategory;
+use App\Models\ItemSchedulePlan;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
+use App\Models\Spm;
 use App\Models\User;
+use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -36,6 +40,72 @@ class ItemApi extends Controller
         }
         return response()->json(['result' => $newItem === false ? false : true]);
     }
+    public function update(Request $request)
+    {
+        $user = $request->get('_user');
+        $input = $request->all();
+        if (empty($request->get('type'))) {
+            return response('Chưa có loại khóa học', 400);
+        }
+        $itemService = new ItemServices();
+        $updateItem = $itemService->updateItem($request, $input, $user);
+        if ($updateItem instanceof Validator) {
+            return response($updateItem->errors()->first(), 400);
+        }
+        return response()->json(['result' => $updateItem === false ? false : true]);
+    }
+    public function updateItem(Request $request)
+    {
+        $user = $request->get('_user');
+        $input = $request->all();
+        if (empty($request->get('type'))) {
+            return response('Chưa có loại khóa học', 400);
+        }
+        $updateItem = Item::find($input['id']);
+        if (!empty($input['nolimit_time']) && $input['nolimit_time'] == 'on') {
+            $input['nolimit_time'] = 1;
+        } else {
+            $input['nolimit_time'] = 0;
+        }
+        if (!empty($input['allow_re_register']) && $input['allow_re_register'] == 'on') {
+            $input['allow_re_register'] = 1;
+        } else {
+            $input['allow_re_register'] = 0;
+        }
+        if (!empty($input['activiy_trial']) && $input['activiy_trial'] == 'on') {
+            $input['activiy_trial'] = 1;
+        } else {
+            $input['activiy_trial'] = 0;
+        }
+        if (!empty($input['activiy_test']) && $input['activiy_test'] == 'on') {
+            $input['activiy_test'] = 1;
+        } else {
+            $input['activiy_test'] = 0;
+        }
+        if (!empty($input['activiy_visit']) && $input['activiy_visit'] == 'on') {
+            $input['activiy_visit'] = 1;
+        } else {
+            $input['activiy_visit'] = 0;
+        }
+
+        if (!empty($input['is_paymentfee']) && $input['is_paymentfee'] == 'on') {
+            $input['is_paymentfee'] = 1;
+        } else {
+            $input['is_paymentfee'] = 0;
+        }
+
+        if (!empty($input['ages_range'])) {
+            $agesRange = explode("-", $input['ages_range']);
+            if (count($agesRange) == 2) {
+                $input['ages_min'] = $agesRange[0];
+                $input['ages_max'] = $agesRange[1];
+            }
+        }
+        $updateItem->update($input);
+
+        return response()->json(['result' => true]);
+    }
+
     public function edit(Request $request, $id)
     {
         $user = $request->get('_user');
@@ -43,11 +113,24 @@ class ItemApi extends Controller
         $item = Item::where('id', $id)
             ->where('user_id', $user->id)
             ->first()->makeVisible(['content']);
+
         if (!$item) {
-            return response("Không có dữ liệu", 404);
+            return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
+
+        $itemService = new ItemServices();
+        $digital = $itemService->getDigitalCourse($id);
+
+        // Thêm trường 'digital' vào dữ liệu đối tượng $item
+
+        $item->digital = $digital->original;
+
+        $itemCats = $itemService->getItemCategory($id);
+        $item->itemCats = $itemCats->original;
+
         return response()->json($item);
     }
+
 
     public function save(Request $request, $id)
     {
@@ -62,16 +145,18 @@ class ItemApi extends Controller
 
         $itemService = new ItemServices();
         $newItem = $itemService->updateItem($request, $request->all(), $user);
+        $digital = $itemService->DigitalCourse($request,$id);
         if ($newItem instanceof Validator) {
             return response($newItem->errors()->first(), 400);
         }
-        return response()->json(['result' => $newItem === false ? false : true]);
+        return response()->json(['result' => $newItem, 'digital' => $digital]);
+        // return response()->json(['result' => $newItem === false ? false : true]);
     }
 
     public function list(Request $request)
     {
         $user = $request->get('_user');
-        
+
         $open = Item::where('user_id', $user->id)
             ->where('user_status', '<=', ItemConstants::USERSTATUS_ACTIVE)
             ->orderby('user_status', 'desc')
@@ -138,7 +223,7 @@ class ItemApi extends Controller
             return response('Trang không tồn tại', 404);
         }
         $pageSize = $request->get('pageSize', 9999);
-        // DB::enableQueryLog(); 
+        // DB::enableQueryLog();
         $configM = new Configuration();
         $isEnableIosTrans = $configM->enableIOSTrans($request);
 
@@ -172,6 +257,9 @@ class ItemApi extends Controller
     {
         $itemService = new ItemServices();
         $user = $this->isAuthedApi($request);
+
+        $spm = new Spm();
+        $spm->addSpm($request);
         try {
             $data = $itemService->pdpData($request, $itemId, $user);
             return response()->json($data);
@@ -226,6 +314,9 @@ class ItemApi extends Controller
         if (!$item) {
             return response('Trang không tồn tại', 404);
         }
+        // if($user->role !== "school" || $user->role !== 'teacher'){
+        //     return response('Bạn phải là chuyên gia mới có quyền thực hiện thao tác này', 403);
+        // }
         $rating = $request->get('rating', 5);
         $comment = $request->get('comment', '');
         $itemUserActionM = new ItemUserAction();
@@ -242,5 +333,45 @@ class ItemApi extends Controller
             ->select('iua.*', 'users.name AS user_name', 'users.id AS user_id', 'users.image AS user_image')
             ->get();
         return response()->json($data);
+    }
+    public function schadule($id) {
+        $itemService = new ItemServices();
+        $data = $itemService->getClassSchedulePlan($id);
+
+        return response()->json($data);
+    }
+    public function updateSchedule(Request $request)
+    {
+        $input = $request->all();
+        $result = null;
+
+        if (!$input) {
+            return response()->json(['error' => 'Invalid input data'], 400);
+        }
+        if (!is_array($input)) {
+            return response()->json(['error' => 'Invalid input format'], 400);
+        }
+
+        if (isset($input['weekdays']) && is_array($input['weekdays'])) {
+            $ds = [];
+            foreach ($input['weekdays'] as $day => $value) {
+                $ds[] = $value;
+            }
+            $input['weekdays'] = implode(",", $ds);
+        }
+
+        if (!isset($input['id'])) {
+            $result = ItemSchedulePlan::create($input);
+        } else {
+            $result = ItemSchedulePlan::find($input['id'])->update($input);
+        }
+
+        return response()->json($result);
+    }
+
+    function userLocation(Request $request) {
+        $user = $request->get('_user');
+        $userLocations = UserLocation::where('user_id', $user->id)->orderby('is_head', 'desc')->get();
+        return response()->json($userLocations);
     }
 }

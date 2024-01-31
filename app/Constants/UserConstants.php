@@ -17,9 +17,10 @@ class UserConstants
     const ROLE_FIN_PARTNER = 'fin_partner';
  
     const PRIORITY_NEW = 0;
-    const PRIORITY_URGENT = 1;
+    const PRIORITY_URGEN = 1;
     const PRIORITY_ASAP = 2;
     const PRIORITY_NEED = 3;
+    const PRIORITY_SINGLE = 4;
     const PRIORITY_DONE = 99;
 
     const STATUS_ACTIVE = 1;
@@ -39,17 +40,19 @@ class UserConstants
     
     public static $salePriorityLevels = [
         self::PRIORITY_NEW => 'New',
-        self::PRIORITY_URGENT => 'Urgent',
+        self::PRIORITY_URGEN => 'Urgen',
         self::PRIORITY_ASAP => 'Asap',
         self::PRIORITY_NEED => 'Need', 
+        self::PRIORITY_SINGLE => 'Single', 
         self::PRIORITY_DONE => 'Done',
     ];
 
     public static $salePriorityColors = [
         self::PRIORITY_NEW => '#fff',
-        self::PRIORITY_URGENT => 'Red',
+        self::PRIORITY_URGEN => 'Red',
         self::PRIORITY_ASAP => 'Orange', 
         self::PRIORITY_NEED => 'Yellow', 
+        self::PRIORITY_SINGLE => 'Grey', 
         self::PRIORITY_DONE => 'Green',
     ];
 

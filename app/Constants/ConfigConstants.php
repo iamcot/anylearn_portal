@@ -42,6 +42,8 @@ class ConfigConstants
     const CONFIG_COMMISSION_COMPANY = 'bonus_company';
     const CONFIG_COMMISSION_AUTHOR = 'bonus_author';
     const CONFIG_COMMISSION_SCHOOL = 'bonus_school';
+    const CONFIG_COMMISSION_REF_SELLER = 'bonus_ref_seller';
+    const CONFIG_COMMISSION_REF_VOUCHER = 'bonus_ref_voucher';
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 
@@ -56,7 +58,12 @@ class ConfigConstants
     const CONFIG_HOME_SPECIALS_CLASSES = 'home_special_classes';
     const CONFIG_APP_BANNERS = 'home_app_banners';
 
-    const CONFIG_NUM_ITEM_DISPLAY = 6;
+    const CONFIG_NUM_ITEM_DISPLAY = 12;
+    const CONFIG_NUM_PARTNER_DISPLAY = 12;
+    const CONFIG_NUM_CATEGORY_DISPLAY = 6;
+    const CONFIG_NUM_LAST_SEARCH_DISPLAY = 8;
+    const CONFIG_NUM_VOUCHER_DISPLAY = 3;
+    const CONFIG_NUM_PAGINATION= 12;
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';

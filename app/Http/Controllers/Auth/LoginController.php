@@ -9,7 +9,10 @@ use App\Models\User;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+
 
 class LoginController extends Controller
 {
@@ -41,12 +44,13 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('encrypt.cookie');
     }
 
     public function showLoginForm(Request $request)
     {
         $urlNext = $request->get('cb') ? $request->get('cb') : url()->previous();
-        $request->session()->put('cb', $urlNext);
+        $request->session()->flash('cb', $urlNext);
 
         return view('auth.login');
     }
@@ -103,7 +107,7 @@ class LoginController extends Controller
     }
 
     protected function authenticated(Request $request, $user)
-    {
+    {   
         if ($user->status == UserConstants::STATUS_INACTIVE) {
             $name = $user->name;
             $this->guard()->logout();
@@ -111,16 +115,32 @@ class LoginController extends Controller
             return redirect()->intended('/inactive')->with('name', $name);
         }
         //$userM = new User();
-        //return redirect($userM->redirectToUpdateDocs());        
+        //return redirect($userM->redirectToUpdateDocs());
+
         $userService = new UserServices();
-        if ($request->session()->get('cb')) {
-            return redirect()->to($request->session()->get('cb'));
-        } else if ($userService->isMod()) {
-            return redirect($this->redirectTo);
+        if (empty($user->api_token)) {
+            $saveToken = User::find($user->id)->update(
+                ['api_token' => hash('sha256', Str::random(60))]
+            );
+            if (!$saveToken) {
+                return response('Không thể hoàn tất xác thực', 500);
+            }
+        }
+        Cookie::queue(Cookie::forever('api_token', $user->api_token, null, null, false, false));
+        if ($userService->isMod()) {
+            return redirect('/admin');
         } else if ($user->role == UserConstants::ROLE_SCHOOL || $user->role == UserConstants::ROLE_TEACHER) {
             return redirect('/me');
+        } else if ($request->session()->get('cb')) {
+            return redirect()->to($request->session()->get('cb'));
         } else {
             return redirect('/');
         }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard()->logout();
+        return redirect('/')->withCookie(Cookie::forget('api_token'));
     }
 }

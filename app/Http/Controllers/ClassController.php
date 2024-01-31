@@ -60,18 +60,18 @@ class ClassController extends Controller
         $itemCodes = DB::table('item_codes')
             ->join('items', 'items.id', '=', 'item_codes.item_id')
             ->leftjoin('users', 'users.id', '=', 'item_codes.user_id');
-        
+
         if ($request->get('action') == 'search') {
             if ($request->get('codeName')) {
-                $itemCodes->where('item_codes.code', 'like', '%'. $request->get('codeName') . '%');
+                $itemCodes->where('item_codes.code', 'like', '%' . $request->get('codeName') . '%');
             }
 
             if ($request->get('itemName')) {
-                $itemCodes->where('items.title', 'like', '%'. $request->get('itemName') . '%');
+                $itemCodes->where('items.title', 'like', '%' . $request->get('itemName') . '%');
             }
 
             if ($request->get('userName')) {
-                $itemCodes->where('users.name', 'like', '%'. $request->get('userName') . '%');
+                $itemCodes->where('users.name', 'like', '%' . $request->get('userName') . '%');
             }
 
             if ($request->get('codeStatus') != null) {
@@ -79,7 +79,7 @@ class ClassController extends Controller
                     $itemCodes->whereNotNull('item_codes.user_id');
                 } else {
                     $itemCodes->whereNull('item_codes.user_id');
-                }    
+                }
             }
         }
 
@@ -87,11 +87,11 @@ class ClassController extends Controller
         $this->data['itemCodes'] = $itemCodes->orderBy('items.id', 'desc')
             ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone')
             ->paginate(20);
-        
+
         return view('class.codes', $this->data);
     }
 
-    public function reSendItemCode(Request $request, $idItemCode) 
+    public function reSendItemCode(Request $request, $idItemCode)
     {
         $itemCode = ItemCode::find($idItemCode);
         if (!empty($itemCode)) {
@@ -103,7 +103,7 @@ class ClassController extends Controller
         return redirect()->back()->with('notify', 'Có lỗi xảy ra, vui lòng thử lại!!');
     }
 
-    public function refreshItemCode(Request $request, $idItemCode) 
+    public function refreshItemCode(Request $request, $idItemCode)
     {
         $itemCode = ItemCode::find($idItemCode);
         if ($itemCode) {
@@ -128,7 +128,7 @@ class ClassController extends Controller
 
                 return redirect()->back()->with('notify', 'Vui lòng kiểm tra lại thông tin đơn hàng!!');
             }
-            
+
             $this->data['hasBack'] = route('codes');
             $this->data['itemCode'] = $itemCode;
 
@@ -177,7 +177,7 @@ class ClassController extends Controller
         $courseService = new ItemServices();
         if ($request->input('action') == 'create') {
             $input = $request->all();
-            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS); 
+            $rs = $courseService->createItem($request, ItemConstants::TYPE_CLASS);
             if ($rs === false || $rs instanceof Validator) {
                 return redirect()->back()->withErrors($rs)->withInput()->with('notify', __('Tạo lớp học thất bại! Vui lòng kiểm tra lại dữ liệu'));
             } else {
@@ -195,12 +195,13 @@ class ClassController extends Controller
                     return redirect()->route('me.class.edit', ['id' => $rs])->with(['tab' => $tab, 'notify' => __('Tạo lớp học thành công, vui lòng tiếp tục bổ sung thông tin liên quan.')]);
                 }
             }
-        } 
+        }
         $configM = new Configuration();
         $this->data['configs'] = $configM->gets([
             ConfigConstants::CONFIG_DISCOUNT,
             ConfigConstants::CONFIG_COMMISSION,
-            ConfigConstants::CONFIG_COMMISSION_FOUNDATION
+            ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
+            ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
         ]);
         $category = Category::all();
         $this->data['categories'] = $category;
@@ -216,7 +217,7 @@ class ClassController extends Controller
                 ->select('id', 'name')
                 ->get();
             return view('class.edit', $this->data);
-        } else { 
+        } else {
             $this->data['hasBack'] = route('me.class');
             return view(env('TEMPLATE', '') . 'me.class_edit', $this->data);
         }
@@ -327,16 +328,16 @@ class ClassController extends Controller
                 if ($isDigitalCourse) {
                     if (isset($input['code'])) {
                         $courseService->createItemCodes($courseId, $input['code']);
-                    } 
+                    }
 
                     if (isset($input['email']) || isset($input['notif'])) {
                         $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
                         $notifTemplate->update([
                             'email_template' => $input['email'],
-                            'notif_template' => $input['notif'], 
+                            'notif_template' => $input['notif'],
                         ]);
-                    }  
-                }                
+                    }
+                }
             } catch (Exception $e) {
                 Log::error($e);
                 return redirect()->back()->with(['tab' => $input['tab'], 'notify' => 'Có lỗi xảy ra khi cập nhật, vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.']);
@@ -372,7 +373,8 @@ class ClassController extends Controller
         $this->data['configs'] = $configM->gets([
             ConfigConstants::CONFIG_DISCOUNT,
             ConfigConstants::CONFIG_COMMISSION,
-            ConfigConstants::CONFIG_COMMISSION_FOUNDATION
+            ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
+            ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
         ]);
 
         $this->data['companyCommission'] = json_decode($courseDb['info']->company_commission, true);
@@ -429,12 +431,13 @@ class ClassController extends Controller
                 'users.name',
                 'users.id',
                 'order_details.created_at',
+                'order_details.id AS orderId',
                 DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.organizer_confirm > 0
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.organizer_confirm > 0
             GROUP BY participations.item_id
             ) AS confirm_count'),
-            DB::raw('(SELECT count(*) FROM participations
-            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.participant_confirm > 0
+                DB::raw('(SELECT count(*) FROM participations
+            WHERE participations.participant_user_id = users.id AND participations.item_id = order_details.item_id AND participations.schedule_id = order_details.id  AND participations.participant_confirm > 0
             GROUP BY participations.item_id
             ) AS participant_confirm_count'),
                 DB::raw("(SELECT value FROM item_user_actions
@@ -453,8 +456,8 @@ class ClassController extends Controller
         $this->data['hasBack'] = route('class');
         $this->data['courseId'] = $courseId;
         $this->data['extra'] = ModelsItemExtra::where('item_id', $courseId)->get();
-        
-        $this->data['notifTemplates'] = $courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL 
+
+        $this->data['notifTemplates'] = $courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL
             ? ItemCodeNotifTemplate::where('item_id', $courseId)->first()
             : null;
 
@@ -484,7 +487,7 @@ class ClassController extends Controller
     public function delSchedule($id)
     {
         //$rs = Schedule::where('item_id', $id)->delete();
-        $rs = ItemSchedulePlan::find($id)->delete(); 
+        $rs = ItemSchedulePlan::find($id)->delete();
         return redirect(strtok(url()->previous(), '?'))->with([
             'tab' => 'schedule',
             'notify' => ($rs > 0)
@@ -614,14 +617,16 @@ class ClassController extends Controller
     {
 
         $joinUserId = $request->get('join_user');
+        $orderId = $request->get('orderId');
         $firstSchedule = DB::table('order_details')
-        // ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
-        ->where('order_details.item_id', $itemId)
-        ->where('order_details.user_id', $joinUserId)
-        ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
-        // ->whereNull('participations.id')
-        ->select('order_details.id')
-        ->first();
+            // ->join('participations', 'participations.schedule_id', '=', 'order_details.id')
+            ->where('order_details.item_id', $itemId)
+            ->where('order_details.user_id', $joinUserId)
+            ->where('order_details.id', $orderId)
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            // ->whereNull('participations.id')
+            ->select('order_details.id')
+            ->first();
         $itemServ = new ItemServices();
         try {
             $itemServ->comfirmJoinCourse($request, $joinUserId, $firstSchedule->id);

@@ -113,7 +113,9 @@ class TransactionController extends Controller
         }
 
         if ($request->input('status')) {
-            $orders = $orders->where('orders.status', $request->input('status'));
+            if ($request->input('status') != 'all') {
+                $orders = $orders->where('orders.status', $request->input('status'));
+            }
         } else {
             $orders = $orders->where('orders.status', '!=', 'new');
         }
@@ -189,6 +191,7 @@ class TransactionController extends Controller
         }
         $transService = new TransactionService();
         $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ATM);
+
         return redirect()->back()->with('notify', 'Đã xác nhận thành công.');
     }
 
@@ -199,7 +202,7 @@ class TransactionController extends Controller
             ->join('items', 'items.id', '=', 'od.item_id')
             ->where('orders.user_id', Auth::id())
             ->whereIn('orders.status', [
-                    OrderConstants::STATUS_DELIVERED, 
+                    OrderConstants::STATUS_DELIVERED,
                     OrderConstants::STATUS_RETURN_BUYER_PENDING,
                     OrderConstants::STATUS_RETURN_SYSTEM,
                     OrderConstants::STATUS_REFUND,
@@ -222,7 +225,7 @@ class TransactionController extends Controller
 
         $transService = new TransactionService();
         $transService->sendReturnRequest($orderId);
-        
+
         return redirect()->back()->with('notify', 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!');
     }
 
@@ -233,11 +236,14 @@ class TransactionController extends Controller
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $order = Order::find($orderId);
-        if ($order->status != OrderConstants::STATUS_DELIVERED 
+        if ($order->status != OrderConstants::STATUS_DELIVERED
             && $order->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
+        if (!$transService->checkWalletCBeforeReturnOrder($orderId)) {
+            return redirect()->back()->with('notify', 'Đơn hàng này không đủ điều kiện để thực hiện hoàn trả!');
+        }
         $transService->returnOrder($orderId, OrderConstants::STATUS_RETURN_SYSTEM);
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
@@ -379,7 +385,6 @@ class TransactionController extends Controller
         if ($request->get('action') == 'activiy_trial' | $request->get('action') == 'activiy_visit' | $request->get('action') == 'activiy_test') {
             $this->data['activiy'] = $request->get('action');
         }
-
         $class = $itemService->pdpData($request, $request->get('class'), $user);
         if (!$class) {
             return redirect()->back()->with('notify', _('Khóa học không tồn tại'));
@@ -481,11 +486,13 @@ class TransactionController extends Controller
         if (!$transaction) {
             return redirect()->back()->with('notify', 'Giao dịch không tồn tại');
         }
+        if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
+        }
         $transService = new TransactionService();
+        $notifServ = new Notification();
+
         if ($status == ConfigConstants::TRANSACTION_STATUS_DONE) {
-            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
-                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
-            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
@@ -495,26 +502,19 @@ class TransactionController extends Controller
                     'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
                 ]);
                 $transService->approveRegistrationAfterDeposit($transaction->user_id);
+                $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
+            } else {
+                $userup = User::find($transaction->user_id);
+                $userup->update([
+                    'wallet_c' => $userup->wallet_c + $transaction->amount
+                ]);
+                $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $transaction->user_id, []);
             }
-
-            $notifServ = new Notification();
-            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
+           
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
-            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
-                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
-            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
-            if ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
-                $trans = Transaction::find($id);
-                $userup = User::find($trans->user_id);
-                $userup->update([
-                    'wallet_c' => $userup->wallet_c + ($trans->amount * 1 / 1000)
-                ]);
-            }
-            $notifServ = new Notification();
-            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
         }
         return redirect()->back()->with('notify', 'Cập nhật thành công');
     }
@@ -731,10 +731,16 @@ class TransactionController extends Controller
                 return redirect()->back()->with('notify', 'Mã khuyến mãi không hợp lệ.');
             }
 
+            // handle commission vouchers
+            $transService->addTransactionsForCommissionVouchers($dbVoucher->id, $orderId);
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
+
         } else if ($request->get('cart_action') == 'remove_voucher') {
-            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $transService = new TransactionService();
+            $transService->removeTransactionsForCommissionVouchers(
+                $request->get('voucher_userd_id'),
+            );
+            VoucherUsed::find($request->get('voucher_userd_id'))->delete();
             $res = $transService->recalculateOrderAmount($orderId);
             return redirect()->back()->with('notify', 'Đã huỷ voucher.');
         }
@@ -860,12 +866,12 @@ class TransactionController extends Controller
         if (!isset($result['orderId'])) {
             return redirect('/')->with('notify', 'Yêu cầu không hợp lệ');
         }
-        $orderId = $payment == 'momo' 
-            ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+        $orderId = $payment == 'momo'
+            ? Processor::getOrderIdFromPaymentToken($result['orderId'])
             : $result['orderId'];
 
         $order = Order::find($orderId);
-        $user = User::find($order->user_id); 
+        $user = User::find($order->user_id);
 
         if (!isset($result['status'])) {
             return redirect()->route('cart', ['api_token' => $user->api_token]);
@@ -932,7 +938,7 @@ class TransactionController extends Controller
             return;
         }
         try {
-            
+
             if ($payment == 'momo') {
                 Log::debug("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
                 $query = $request->all();
@@ -946,12 +952,12 @@ class TransactionController extends Controller
                 if (!isset($result['orderId'])) {
                    echo 'Yêu cầu không hợp lệ';
                 }
-                $orderId = $payment == 'momo' 
-                    ? Processor::getOrderIdFromPaymentToken($result['orderId']) 
+                $orderId = $payment == 'momo'
+                    ? Processor::getOrderIdFromPaymentToken($result['orderId'])
                     : $result['orderId'];
-        
+
                 $transService = new TransactionService();
-                $rs = $transService->approveRegistrationAfterWebPayment($orderId, OrderConstants::PAYMENT_ONEPAY);
+                $rs = $transService->approveRegistrationAfterWebPayment($orderId, $payment);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
             }
             $data = $processor->prepareNotifyResponse($query, $result);
@@ -976,7 +982,7 @@ class TransactionController extends Controller
         }
 
         try {
-            $query = $request->getQueryString(); 
+            $query = $request->getQueryString();
             $url = $processor->processReturnData($query);
             if (!empty($url)) {
                 return redirect($url);

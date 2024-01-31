@@ -113,17 +113,20 @@ class ItemServices
         return false;
     }
 
-    public function getItemsByPartner($id, $isHot = 0) {
+    public function getItemsByPartner($id, $isHot = 0)
+    {
         return DB::table('items')
             ->join('users', 'users.id', '=', 'items.user_id')
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', ItemConstants::USERSTATUS_ACTIVE)
             ->whereNull('items.item_id')
             ->where('items.is_hot', $isHot)
+            ->where('items.user_id', $id)
             ->select(
                 'items.id',
                 'items.title',
                 'items.image',
+                'items.price',
                 'items.short_content',
                 'items.boost_score',
                 'items.created_at'
@@ -155,6 +158,7 @@ class ItemServices
         return DB::table('orders')
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'od.item_id')
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
             ->where('orders.user_id', $id)
             ->orderByDesc('od.created_at')
             ->first();
@@ -173,17 +177,17 @@ class ItemServices
             ->first();
     }
 
-    public function getItemsByPartners($partners, $subtype) 
+    public function getItemsByPartners($partners, $subtype)
     {
         $data = [];
         $commonS = new CommonServices();
 
-        foreach($partners as $pt) {
+        foreach ($partners as $pt) {
             $items = DB::table('items')
                 ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
                 ->join('categories', 'categories.id', '=', 'ic.category_id')
                 ->leftjoin(
-                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'),
                     'rv.item_id',
                     'items.id'
                 )
@@ -207,10 +211,12 @@ class ItemServices
                 ->take(ConfigConstants::CONFIG_NUM_ITEM_DISPLAY)
                 ->get();
 
-            $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $pt->name, $items);
+            if (count($items) > 0) {
+                $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $pt->name, $items);
+            }
         }
 
-        return $data;   
+        return $data;
     }
 
     public function getCategoriesBySubtype($subtype)
@@ -221,23 +227,37 @@ class ItemServices
             ->where('items.subtype', $subtype)
             ->select(
                 'categories.id',
+                'categories.title',
+                DB::raw('count(items.id) as num')
+            )
+            ->groupBy('categories.id')
+            ->orderByDesc('num')
+            ->take(ConfigConstants::CONFIG_NUM_CATEGORY_DISPLAY)
+            ->get();
+
+        /*return DB::table('items')
+            ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
+            ->join('categories', 'categories.id', '=', 'ic.category_id')
+            ->where('items.subtype', $subtype)
+            ->select(
+                'categories.id',
                 'categories.title'
             )
             ->distinct('categories.id')
-            ->get();
+            ->get();*/
     }
 
-    public function getItemsByCategories($categories, $subtype) 
+    public function getItemsByCategories($categories, $subtype)
     {
         $data = [];
         $commonS = new CommonServices();
 
-        foreach($categories as $ct) {
+        foreach ($categories as $ct) {
             $items = DB::table('items')
                 ->join('items_categories as ic', 'ic.item_id', '=', 'items.id')
                 ->join('categories', 'categories.id', '=', 'ic.category_id')
                 ->leftjoin(
-                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'), 
+                    DB::raw('(select item_id, avg(value) as rating from item_user_actions where type = "rating" group by(item_id)) as rv'),
                     'rv.item_id',
                     'items.id'
                 )
@@ -262,19 +282,15 @@ class ItemServices
                 ->get();
 
             if (count($items) > 0) {
-                $data[] = $commonS->setTemplate('/', 'Các lớp học của '. $ct->title, $items);
+                $data[] = $commonS->setTemplate('/', 'Các lớp học của ' . $ct->title, $items);
             }
         }
 
         return $data;
     }
 
-    public function getConfigItemsByCategories(Request $request)
+    public function getConfigItemsByCategories(Request $request, $allowIOS = 1)
     {
-        // Config on admin page
-        $configM = new Configuration();
-        $isEnableIosTrans = $configM->enableIOSTrans($request);
-
         $homeClasses = [];
         $homeClassesDb = Configuration::where('key', ConfigConstants::CONFIG_HOME_SPECIALS_CLASSES)->first();
 
@@ -285,7 +301,7 @@ class ItemServices
                     continue;
                 }
                 $items = Item::whereIn('id', explode(",", $block['classes']))
-                    ->whereNotIn("user_id", $isEnableIosTrans == 0 ? explode(',', env('APP_REVIEW_DIGITAL_SELLERS', '')) : [])
+                    ->whereNotIn("subtype", !$allowIOS ? [ItemConstants::SUBTYPE_VIDEO, ItemConstants::SUBTYPE_DIGITAL, ItemConstants::SUBTYPE_ONLINE] : [])
                     ->where('status', 1)
                     ->where('user_status', 1)
                     ->get();
@@ -305,8 +321,8 @@ class ItemServices
         if (!$item) {
             throw new Exception("Trang không tồn tại", 404);
         }
-        
-        // Auto shift date   
+
+        // Auto shift date
         $today = Carbon::now();
         if ($today->format('Y-m-d') > $item->date_start) {
             if ($item->subtype == 'extra' || $item->subtype == 'offline') {
@@ -316,13 +332,13 @@ class ItemServices
                 $item->date_start = $today->addDay(15);
                 $item->date_end   = null;
             }
-              
+
             $item->save();
         }
 
         $item = $item->makeVisible(['content']);
         $locale = App::getLocale() ?? I18nContent::DEFAULT;
-    
+
         if ($locale != I18nContent::DEFAULT) {
             $i18 = new I18nContent();
             $item18nData = $i18->i18nItem($item->id, $locale);
@@ -378,7 +394,7 @@ class ItemServices
             }
         }
         $plans = $this->getClassSchedulePlan($itemId);
-        $numSchedule = 0;//array_sum(array_map("count", $plans));
+        $numSchedule = 0; //array_sum(array_map("count", $plans));
 
         $itemUserActionM = new ItemUserAction();
         $item->num_favorite = $itemUserActionM->numFav($itemId);
@@ -446,6 +462,16 @@ class ItemServices
                 'list' => $hotItems
             ],
         ];
+    }
+
+    public function countCartItems($user)
+    {
+        return DB::table('orders')
+            ->join('order_details as od', 'od.order_id', '=', 'orders.id')
+            ->where('orders.user_id', $user->id)
+            ->where('orders.status', OrderConstants::STATUS_NEW)
+            ->groupby('orders.user_id')
+            ->count();
     }
 
     public function getClassSchedulePlan($itemId)
@@ -669,7 +695,7 @@ class ItemServices
     public function buildContentToPDP($content, $locale = I18nContent::DEFAULT)
     {
         try {
-            $contentObj = json_decode(json_encode(json_decode($content, true)) , true);
+            $contentObj = json_decode(json_encode(json_decode($content, true)), true);
             if (is_array($contentObj)) {
                 $buildContent = "";
                 foreach (self::$CONTENT_FIELDS as $type => $name) {
@@ -745,7 +771,9 @@ class ItemServices
         $orgInputs = $input;
 
         foreach (I18nContent::$itemCols as $col => $type) {
-            $input[$col] = $input[$col][I18nContent::DEFAULT];
+            if (is_array($input[$col])) {
+                $input[$col] = $input[$col][I18nContent::DEFAULT];
+            }
         }
 
         $validator = $this->validate($input);
@@ -854,7 +882,7 @@ class ItemServices
                 ItemCodeNotifTemplate::create([
                     'item_id' => $newCourse->id,
                     'email_template' => $input['email'],
-                    'notif_template' => $input ['notif'],
+                    'notif_template' => $input['notif'],
                 ]);
             }
             return $newCourse->id;
@@ -862,7 +890,8 @@ class ItemServices
         return false;
     }
 
-    public function createItemCodes($itemId, $codes) {
+    public function createItemCodes($itemId, $codes)
+    {
         $codes = str_replace(' ', '', $codes);
         $codes = explode("\n", str_replace(["\r\n", "\r"], "\n", $codes));
 
@@ -870,7 +899,7 @@ class ItemServices
         $datetime = Carbon::now();
         foreach ($codes as $code) {
             $data[] = array(
-                'item_id' => $itemId, 
+                'item_id' => $itemId,
                 'code' => $code,
                 'created_at' => $datetime,
                 'updated_at' => $datetime,
@@ -1047,7 +1076,7 @@ class ItemServices
         return false;
     }
 
-    private function updateClassSchedule(Request $request, $input)
+    public function updateClassSchedule(Request $request, $input)
     {
         $itemId = $input['id'];
 
@@ -1247,168 +1276,319 @@ class ItemServices
      */
     public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
     {
-        $checkJoin = $request->input('join');
-        $user = User::find($joinedUserId);
-
         $orderDetail = OrderDetail::find($scheduleId);
         if (!$orderDetail) {
-            throw new Exception("Không có lịch cho buổi học này");
-            // return response("Không có lịch cho buổi học này", 404);
+            throw new Exception("Thông tin đơn hàng không chính xác!");
         }
 
         $item = Item::find($orderDetail->item_id);
-        if (!$item) {
-            throw new Exception("Khóa  học không tồn tại");
-            // return response("Khóa  học không tồn tại", 404);
+        $itemSubytpes = [
+            ItemConstants::SUBTYPE_EXTRA,
+            ItemConstants::SUBTYPE_ONLINE,
+            ItemConstants::SUBTYPE_OFFLINE,
+            ItemConstants::SUBTYPE_PRESCHOOL,
+        ];
+
+        if (!$item || !in_array($item->subtype, $itemSubytpes)) {
+            throw new Exception("Thông tin khóa học không chính xác!");
         }
-        $itemId = $item->id;
-        $userT = Auth::user();
-        $userC = DB::table('users')->where('user_id',$userT->id)->where('is_child',1)->orWhere('id',$userT->id)->get();
-        $who = $userC->pluck('id')->toArray();
 
-        $isConfirmed = Participation::where('item_id', $itemId)
-            ->where('schedule_id',  $orderDetail->id)
-            ->where('participant_user_id', $joinedUserId)
-            ->count();
+        $join = Participation::where('item_id', $item->id)
+            ->where('schedule_id',  $scheduleId)
+            ->first();
 
-        if ($isConfirmed > 0) {
-            $Confirmed = Participation::where('item_id', $itemId)
-                ->where('schedule_id',  $orderDetail->id)
-                ->where('participant_user_id', $joinedUserId)->first();
-            if (in_array($Confirmed->participant_user_id,$who)) {
-                if ($Confirmed->participant_confirm > 0) {
-                    throw new Exception("Bạn đã xác nhận rồi");
-                } else {
-                    $Confirmed->update([
-                        "participant_confirm" => 1
-                    ]);
-                }
+        if (!$join) {
+            // Tạo một bản ghi mới
+            $join = new Participation();
+            $join->item_id = $item->id;
+            $join->schedule_id = $scheduleId;
+            $join->participant_user_id = $joinedUserId;
+            $join->organizer_user_id = $item->user_id;
+            $join->organizer_confirm = 0;
+            $join->participant_confirm = 0;
+
+            $join->save();
+        }
+
+        if ($join->participant_user_id == $joinedUserId) {
+            if ($join->participant_confirm > 0) {
+                throw new Exception("Bạn đã xác nhận rồi");
+            } else {
+                $join->update([
+                    "participant_confirm" => 1
+                ]);
             }
-            if (in_array($Confirmed->organizer_user_id,$who)) {
-                if ($Confirmed->organizer_confirm > 0) {
-                    throw new Exception("Bạn đã xác nhận rồi");
-                } else {
-                    $Confirmed->update([
-                        "organizer_confirm" => 1
-                    ]);
-                }
-            }
+        }
+
+        if ($join->organizer_confirm > 0) {
+            throw new Exception("Trường đã xác nhận rồi");
         } else {
-            if ($checkJoin == null) {
-                throw new Exception("Bạn cần tiếp nhận học viên này trước");
-            } elseif ($checkJoin == 99) {
-                throw new Exception("Bạn cần phải được trường tiếp nhận, mã nhập học của bạn là: ".$scheduleId);
-            }
+            $join->update([
+                "organizer_confirm" => 1
+            ]);
         }
 
-        $unpaiedOrders = OrderDetail::where('item_id', $itemId)
+        $user = User::find($joinedUserId);
+        $unpaiedOrders = OrderDetail::where('item_id', $item->id)
             ->where('user_id', $user->id)
             ->where('status', OrderConstants::STATUS_NEW)
             ->count();
+
         if ($unpaiedOrders > 0) {
             throw new Exception("Học viên chưa thanh toán cho khoá học này");
-            // return response("Bạn chưa thanh toán cho khoá học này", 400);
         }
-        $checkExists = Participation::where('schedule_id', $scheduleId)->first();
-        if ($checkExists == null) {
-            $rs = Participation::create([
-                'item_id' => $itemId,
-                'schedule_id' =>  $scheduleId,
-                'organizer_user_id' => $item->user_id,
-                'participant_user_id' => $joinedUserId,
-                'organizer_confirm' => 0,
-                'participant_confirm' => 0,
-            ]);
-        }
-        $author = User::find($item->user_id);
+
         $notifServ = new Notification();
-        $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
+        $notifServ->createNotif(NotifConstants::COURSE_JOINED, $item->user_id, [
             'username' => $user->name,
             'course' => $item->title,
         ]);
 
-        if ($user->is_child) {
-            $orderUser = User::find($user->user_id);
-        } else {
-            $orderUser = $user;
-        }
-        $transService = new TransactionService();
-        // approve direct and indirect commission
-        $directCommission = DB::table('transactions')
-            ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
-            ->join('orders', 'orders.id', '=', 'od.order_id')
-            ->where('orders.user_id', $orderUser->id)
-            ->where('od.item_id', $item->id)
-            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-            ->where('transactions.user_id', $orderUser->id)
-            ->select('transactions.*')
-            ->first();
-        if ($directCommission) {
-            $addmoney = Participation::where('item_id','=',$itemId)
-            ->where('schedule_id','=', $scheduleId)
-            ->where('participant_user_id','=', $joinedUserId)->first();
-            if ($addmoney->organizer_confirm == 1 & $addmoney->participant_confirm == 1) {
-                $transService->approveWalletcTransaction($directCommission->id);
-            } else {
-                return;
-            }
+        if ($join->participant_confirm  == 1 || $join->organizer_confirm == 1) {
+            $transService = new TransactionService();
+            $transService->approveTransactionsAfterPayment($scheduleId);
         }
 
-        // approve up tree transaction, just 1 level
-        $refUser = User::find($orderUser->user_id);
-        if ($refUser) {
-            $inDirectCommission = DB::table('transactions')
-                ->join('orders', 'orders.id', '=', 'transactions.order_id')
-                ->where('orders.status', OrderConstants::STATUS_DELIVERED)
-                ->where('transactions.order_id', $directCommission->order_id)
-                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
-                ->where('transactions.user_id', $refUser->id)
-                ->select('transactions.*')
-                ->first();
-            if ($inDirectCommission) {
-                $transService->approveWalletcTransaction($inDirectCommission->id);
-            }
-        }
-
-        //TODO: khi get user social post can lay them record cua child id
         SocialPost::create([
             'type' => SocialPost::TYPE_CLASS_COMPLETE,
             'user_id' => $user->id,
-            'ref_id' => $itemId,
+            'ref_id' => $item->id,
             'image' => $item->image,
             'day' => date('Y-m-d'),
         ]);
+    }
 
-        $trans = DB::table('transactions')
-            ->join('order_details AS od', function ($query) use ($user) {
-                $query->on('od.id', '=', 'transactions.order_id')
-                    ->where('od.user_id', '=', $user->id);
-            })
-            ->join('orders', 'orders.id', '=', 'od.order_id')
-            ->where('orders.status', OrderConstants::STATUS_DELIVERED)
-            ->where('orders.user_id', $orderUser->id)
-            ->where('od.item_id', $item->id)
-            ->where('transactions.user_id', $author->id)
-            ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->where('transactions.type', ConfigConstants::TRANSACTION_PARTNER)
-            ->select('transactions.*')
+    // public function comfirmJoinCourse(Request $request, $joinedUserId, $scheduleId)
+    // {
+    //     // $checkJoin = $request->input('join');
+    //     $user = User::find($joinedUserId);
+
+    //     $orderDetail = OrderDetail::find($scheduleId);
+    //     if (!$orderDetail) {
+    //         throw new Exception("Không có lịch cho buổi học này");
+    //         // return response("Không có lịch cho buổi học này", 404);
+    //     }
+
+    //     $item = Item::find($orderDetail->item_id);
+    //     if (!$item) {
+    //         throw new Exception("Khóa học không tồn tại");
+    //         // return response("Khóa học không tồn tại", 404);
+    //     }
+
+    //     $itemId = $item->id;
+    //     // $userC = DB::table('users')->where('user_id', $user->id)->where('is_child', 1)->orWhere('id', $user->id)->get();
+    //     // $who = $userC->pluck('id')->toArray();
+
+    //     // $isConfirmed = Participation::where('item_id', $itemId)
+    //     //     ->where('schedule_id',  $orderDetail->id)
+    //     //     ->where('participant_user_id', $joinedUserId)
+    //     //     ->count();
+
+    //     // if ($isConfirmed > 0) {
+
+    //     $check = Participation::where('item_id', $itemId)
+    //         ->where('schedule_id',  $scheduleId)
+    //         ->where('participant_user_id', $joinedUserId)
+    //         ->first();
+
+    //     if (!$check) {
+    //         // Tạo một bản ghi mới
+    //         $newConfirmed = new Participation();
+    //         $newConfirmed->item_id = $itemId;
+    //         $newConfirmed->schedule_id = $scheduleId;
+    //         $newConfirmed->participant_user_id = $joinedUserId;
+    //         $newConfirmed->organizer_user_id = $item->user_id;
+    //         $newConfirmed->organizer_confirm = 0;
+    //         $newConfirmed->participant_confirm = 0;
+
+    //         $newConfirmed->save();
+    //     }
+
+    //     $Confirmed = Participation::where('item_id', $itemId)
+    //         ->where('schedule_id',  $scheduleId)
+    //         ->where('participant_user_id', $joinedUserId)
+    //         ->first();
+
+    //     if ($Confirmed->participant_user_id == $joinedUserId) {
+    //         if ($Confirmed->participant_confirm > 0) {
+    //             throw new Exception("Bạn đã xác nhận rồi");
+    //         } else {
+    //             $Confirmed->update([
+    //                 "participant_confirm" => 1
+    //             ]);
+    //         }
+    //     }
+    //     // $authUser = Auth::user();
+    //     // if (
+    //     //     in_array($Confirmed->organizer_user_id, $joinedUserId)
+    //     //     || ($authUser && ($authUser->role == 'admin' || $authUser->role == 'mod'))
+    //     // ) {
+    //     if ($Confirmed->organizer_confirm > 0) {
+    //         throw new Exception("Trường đã xác nhận rồi");
+    //     } else {
+    //         $Confirmed->update([
+    //             "organizer_confirm" => 1
+    //         ]);
+    //     }
+    //     // }
+    //     // } else {
+    //     //     if ($checkJoin == null) {
+    //     //         throw new Exception("Bạn cần tiếp nhận học viên này trước");
+    //     //     } elseif ($checkJoin == 99) {
+    //     //         throw new Exception("Bạn cần phải được trường tiếp nhận, mã nhập học của bạn là: ".$scheduleId);
+    //     //     }
+    //     // }
+
+    //     $unpaiedOrders = OrderDetail::where('item_id', $itemId)
+    //         ->where('user_id', $user->id)
+    //         ->where('status', OrderConstants::STATUS_NEW)
+    //         ->count();
+
+    //     if ($unpaiedOrders > 0) {
+    //         throw new Exception("Học viên chưa thanh toán cho khoá học này");
+    //         // return response("Bạn chưa thanh toán cho khoá học này", 400);
+    //     }
+    //     // $checkExists = Participation::where('schedule_id', $scheduleId)->first();
+    //     // if ($checkExists == null) {
+    //     //     $rs = Participation::create([
+    //     //         'item_id' => $itemId,
+    //     //         'schedule_id' =>  $scheduleId,
+    //     //         'organizer_user_id' => $item->user_id,
+    //     //         'participant_user_id' => $joinedUserId,
+    //     //         'organizer_confirm' => 0,
+    //     //         'participant_confirm' => 0,
+    //     //     ]);
+    //     // }
+    //     $author = User::find($item->user_id);
+
+    //     $notifServ = new Notification();
+    //     $notifServ->createNotif(NotifConstants::COURSE_JOINED, $author->id, [
+    //         'username' => $user->name,
+    //         'course' => $item->title,
+    //     ]);
+
+    //     if ($user->is_child) {
+    //         $orderUser = User::find($user->user_id);
+    //     } else {
+    //         $orderUser = $user;
+    //     }
+
+    //     // approve direct and indirect commission
+    //     $transService = new TransactionService();
+    //     $directCommission = DB::table('transactions')
+    //         ->join('order_details AS od', 'od.id', '=', 'transactions.order_id')
+    //         ->join('orders', 'orders.id', '=', 'od.order_id')
+    //         ->where('orders.user_id', $orderUser->id)
+    //         ->where('od.item_id', $item->id)
+    //         ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+    //         ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+    //         ->where('transactions.user_id', $orderUser->id)
+    //         ->select('transactions.*')
+    //         ->first();
+
+    //     if ($directCommission) {
+    //         $addmoney = Participation::where('item_id', '=', $itemId)
+    //             ->where('schedule_id', '=', $scheduleId)
+    //             ->where('participant_user_id', '=', $joinedUserId)->first();
+
+    //         if ($addmoney->organizer_confirm == 1 || $addmoney->participant_confirm == 1) {
+    //             $transService->approveWalletcTransaction($directCommission->id);
+    //         } else {
+    //             return;
+    //         }
+    //     }
+
+    //     // approve up tree transaction, just 1 level
+    //     $refUser = User::find($orderUser->user_id);
+    //     if ($refUser) {
+    //         if ($directCommission) {
+    //             $inDirectCommission = DB::table('transactions')
+    //                 ->join('orders', 'orders.id', '=', 'transactions.order_id')
+    //                 ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+    //                 ->where('transactions.order_id', $directCommission->order_id)
+    //                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+    //                 ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+    //                 ->where('transactions.user_id', $refUser->id)
+    //                 ->select('transactions.*')
+    //                 ->first();
+    //         }
+
+    //         if ($inDirectCommission) {
+    //             $transService->approveWalletcTransaction($inDirectCommission->id);
+    //         }
+    //     }
+
+    //     $trans = DB::table('transactions')
+    //         ->join('order_details AS od', function ($query) use ($user) {
+    //             $query->on('od.id', '=', 'transactions.order_id')
+    //                 ->where('od.user_id', '=', $user->id);
+    //         })
+    //         ->join('orders', 'orders.id', '=', 'od.order_id')
+    //         ->where('orders.status', OrderConstants::STATUS_DELIVERED)
+    //         ->where('orders.user_id', $orderUser->id)
+    //         ->where('od.item_id', $item->id)
+    //         ->where('transactions.user_id', $author->id)
+    //         ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+    //         ->where('transactions.type', ConfigConstants::TRANSACTION_PARTNER)
+    //         ->select('transactions.*')
+    //         ->first();
+
+    //     // approve author transaction
+    //     if ($trans) {
+    //         if ($item->subtype == "extra" || $item->subtype == "offline") {
+    //             $transService->approveWalletmTransaction($trans->id);
+    //         }
+
+    //         //approve ref_seller transaction
+    //         $refSeller = DB::table('transactions')
+    //             ->where('transactions.order_id', $trans->order_id)
+    //             ->where('transactions.type', ConfigConstants::TRANSACTION_COMMISSION)
+    //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+    //             ->first();
+
+    //         if ($refSeller) {
+    //             $transService->approveWalletmTransaction($refSeller->id);
+    //         }
+
+    //         // approve foundation transaction
+    //         DB::table('transactions')
+    //             ->where('transactions.order_id', $trans->order_id)
+    //             ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
+    //             ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
+    //             ->update([
+    //                 'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+    //             ]);
+    //     }
+
+    //     //TODO: khi get user social post can lay them record cua child id
+    //     SocialPost::create([
+    //         'type' => SocialPost::TYPE_CLASS_COMPLETE,
+    //         'user_id' => $user->id,
+    //         'ref_id' => $itemId,
+    //         'image' => $item->image,
+    //         'day' => date('Y-m-d'),
+    //     ]);
+    // }
+
+    public function DigitalCourse(Request $request, $courseId)
+    {
+        $input = $request->all();
+        $courseService = new ItemServices();
+        $isDigitalCourse = Item::where('id', $courseId)
+            ->where('subtype', ItemConstants::SUBTYPE_DIGITAL)
             ->first();
-        // approve author transaction
-        if ($trans) {
-
-            if ($item->subtype == "extra" || $item->subtype == "offline") {
-                $transService->approveWalletmTransaction($trans->id);
+        if ($isDigitalCourse) {
+            if (isset($input['code'])) {
+                $courseService->createItemCodes($courseId, $input['code']);
             }
-            // approve foundation transaction
-            DB::table('transactions')
-                ->where('transactions.order_id', $trans->order_id)
-                ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-                ->where('transactions.type', ConfigConstants::TRANSACTION_FOUNDATION)
-                ->update([
-                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE
+
+            if (isset($input['email']) || isset($input['notif'])) {
+                $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
+                $notifTemplate->update([
+                    'email_template' => $input['email'],
+                    'notif_template' => $input['notif'],
                 ]);
+            }
         }
     }
 

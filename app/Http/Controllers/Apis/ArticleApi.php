@@ -4,13 +4,43 @@ namespace App\Http\Controllers\Apis;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Article;
 use App\Models\Ask;
+use App\Models\Article;
+use App\Models\Tag;
+use App\Services\ArticleServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ArticleApi extends Controller
 {
+    public function articles(Request $request) {
+        $articles = new \StdClass();
+        $articleServices = new ArticleServices();
+
+        $art = $articleServices
+            ->getArticlesByType($request->get('type') ? $request->get('type'): Article::TYPE_READ)
+            ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
+        if ($request->get('tags') !=null) {
+            $art = $articleServices
+            ->getArticlesByTags($request->get('tags') ? $request->get('tags') : null)
+            ->paginate($request->get('size', 12), ['*'], 'page', $request->get('page'));
+        }
+        $articles->data = $art->items();
+        $articles->numPage = ceil($art->total() / $request->get('size', 12));
+        $articles->currentPage = (int) $request->get('page', 1);
+        $tags = Tag::where('type', 'article')
+            ->where('status', 1)
+            ->distinct('tag')
+            ->pluck('tag');
+        $hotEvent = $articleServices->getHotArticlesByType(Article::TYPE_EVENT);
+        return response()->json([
+            'hotArticles' => $articleServices->getHotArticlesByType(),
+            'articles' => $articles,
+            'hotEvent' => $hotEvent,
+            'tags' => $tags,
+        ]);
+    }
+
     public function index()
     {
         $videos = Article::where('status', 1)
@@ -49,7 +79,6 @@ class ArticleApi extends Controller
 
         return response()->json($data);
     }
-
     public function loadArticle($id)
     {
         $data = Article::find($id);

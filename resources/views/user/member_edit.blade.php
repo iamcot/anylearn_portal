@@ -61,8 +61,8 @@
                     <label for="sale_priority" class="col-md-2 col-form-label text-md-right">{{ __('Độ ưu tiên') }}</label>
                     <div class="col-md-8">
                         <select name="sale_priority" id="sale_priority" class="form-control">
-                            @foreach([0 => "NEW",1 => "URGENT",2 => "ASAP",3 => "NEED",99 => "DONE"] as $key => $prio)
-                                <option value="{{ $key }}" {{ ( !empty($user) && $user->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
+                            @foreach($priorityLevels as $key => $prio)
+                                <option value="{{ $key }}" {{ ( !empty($user) && $user->sale_priority == $key) ? "selected" : "" }}>{{ strtoupper($prio) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -73,7 +73,21 @@
                         <input id="user_id" type="text" class="form-control @error('user_id') is-invalid @enderror" name="user_id" value="{{ old('user_id', !empty($user) ? $user->user_id : '') }}">
                         <small>Có thể tham khảo ID ngoài danh sách thành viên.</small>
                     </div>
-                </div>              
+                </div>  
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-md-right">{{ __('G/T người bán:') }}</label>
+                    <div class="col-md-8 py-2">
+                        <div class="form-check-inline">
+                            <input class="form-check-input" type="radio" name="get_ref_seller" value="1" {{ !empty($user) && $user->get_ref_seller == 1 ? 'checked' : '' }}>
+                            <label class="form-check-label">Cho phép</label>
+                        </div>
+                        <div class="form-check-inline">
+                            <input class="form-check-input" type="radio" name="get_ref_seller" value="0" {{ !empty($user) && $user->get_ref_seller == 0 ? 'checked' : '' }}>
+                            <label class="form-check-label">Không</label>
+                        </div><br>
+                        <small class='text-warning'>Cho phép user nhận hoa hồng từ việc giới thiệu người bán.</small>
+                    </div>
+                </div>           
                 @if($userServ->haveAccess(Auth::user()->role, 'user.sale'))
                 <div class="form-group row">
                     <label for="sale_id" class="col-md-2 col-form-label text-md-right">{{ __('ID Sale chăm sóc') }}</label>

@@ -34,7 +34,7 @@
         </div>
         <div class="mt-5 pt-5">
             <h1 class="text-black">@lang('anyLEARN có gì?')</h1>
-            <div class="d-flex d-none d-lg-flex">
+            <div class="font-weight-bold d-flex d-none d-lg-flex">
                 <div class="info-have rounded" id="info-have-1">
                     <div>@lang('Hệ thống trường quốc tế')</div>
                 </div>

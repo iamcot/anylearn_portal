@@ -24,6 +24,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\Cors::class,
     ];
 
     /**
@@ -75,6 +76,9 @@ class Kernel extends HttpKernel
         'webappauth' => WebAppAuth::class,
         'role' => \App\Http\Middleware\Role::class,
         'language' => \App\Http\Middleware\Localization::class,
+        'version' => \App\Http\Middleware\CheckTemplate::class,
+        'encrypt.cookie' => \App\Http\Middleware\EncryptCookies::class,
+
     ];
 
     /**

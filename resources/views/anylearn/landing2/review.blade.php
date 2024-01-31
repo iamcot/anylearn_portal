@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="carousel-item" data-bs-interval="3000">
+            <!--div class="carousel-item" data-bs-interval="3000">
                 <div class="row">
                     <div class="col-sm-6">
                         <div style="position: relative;" class="d-none d-lg-block review-avatar-wrapper bg-success rounded p-2 text-white text-end">
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div-->
         </div>
     </div>
 </section>

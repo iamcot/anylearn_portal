@@ -17,6 +17,7 @@ use App\Services\UserServices;
 use App\Models\I18nContent;
 use App\Models\ItemVideoChapter;
 use App\Models\ItemVideoLesson;
+use App\Models\KnowledgeTopic;
 use App\Services\CategoryServices;
 use App\Services\VideoServices;
 use Exception;
@@ -25,6 +26,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -131,7 +133,7 @@ class PageController extends Controller
     }
 
     public function ref(Request $request, $code = "")
-    {  
+    {
         if (empty($code) || Auth::id()) {
             return redirect('/');
         }
@@ -141,18 +143,21 @@ class PageController extends Controller
             return redirect('/');
         }
 
-        if ($request->get('cb')) {
-            session()->put('cb', $request->get('cb'));  
-        }
-
         if ($request->get('has-account')) {
             //$this->data['isReg'] = true;
-            return redirect()->back();     
+            return redirect()->route('login');
         }
 
         $this->data['user'] = $refUser;
-        $this->data['newUser'] = Auth::user();
         $this->data['role'] = $request->get('r');
+        $this->data['newUser'] = Auth::user();
+
+        if ($request->get('cb') && trim($request->get('cb'), '/') != url('/')) {
+            session()->put('cb', $request->get('cb'));
+            if (Request::create($request->get('cb'))->is('class/*')) {
+                $this->data['role'] = 'member';
+            }
+        }
 
         if ($this->data['role'] == 'member') {
             return view('register.member', $this->data);
@@ -249,7 +254,7 @@ class PageController extends Controller
             return view(env('TEMPLATE', '') . 'pdp.index', $data, $this->data);
         } catch (Exception $e) {
             return redirect()->to('/')->with('notify', 'Có lỗi khi tải trang');
-        } 
+        }
     }
     public function article(Request $request, $id)
     {
@@ -675,8 +680,26 @@ class PageController extends Controller
         if (!$request->session()->get('tab') && $request->get('tab')) {
             $request->session()->flash('tab', $request->get('tab'));
         }
+        $data['topKnowledge'] = DB::table('knowledges')
+            ->join('knowledge_categories', 'knowledge_categories.id', '=', 'knowledges.knowledge_category_id')
+            ->join('knowledge_topic_category_links', 'knowledge_topic_category_links.knowledge_category_id', '=', 'knowledge_categories.id')
+            ->join('knowledge_topics', 'knowledge_topics.id', '=', 'knowledge_topic_category_links.knowledge_topic_id')
+            ->where('knowledges.status', '>', 0)
+            ->where('knowledge_categories.status', '>', 0)
+            ->where('knowledge_topics.status', '>', 0)
+            ->where('knowledges.type', 'seller')
+            ->orderBy('knowledges.is_top_question', 'desc')
+            ->orderby('knowledges.view', 'desc')
+            ->select('knowledges.*')
+            ->take(10)->get();
+        $data['topics'] = KnowledgeTopic::where('status', '>', 0)->where('type', 'seller')->get();
+        $data['breadcrumb'] = [
+            [
+                'text' => 'Trung tâm hỗ trợ',
+            ]
+        ];
 
-        return view(env('TEMPLATE', '') . 'helpcenter.parnter.index', $data);
+        return view(env('TEMPLATE', '') . 'helpcenter.partner.index', $data);
     }
 
     public function guide(Request $request)

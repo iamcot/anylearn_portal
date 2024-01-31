@@ -248,7 +248,7 @@
                             <div class="text-center">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="toc" required checked>
-                                    <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="#" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
+                                    <label class="form-check-label" for="toc">@lang('Tôi đã đọc và đồng ý với <a href="/guide?p=guide_toc" id="toc-action" data-url=":url">Điều khoản sử dụng</a>', ['url' => route('ajax.toc')])</label>
                                 </div>
                             </div>
                         </div>
@@ -273,7 +273,7 @@
                     <div class="row p1 text-center" style="margin-top:100px;">
                         <h5 class="text-light text-center">@lang('Bạn vừa hoàn thành đăng ký tài khoản trên anyLEARN, hãy tải ứng dụng về máy và bắt đầu trải nghiệm!')</h5>
                         <div class="col-md-6" style="padding: 30px;">
-                            <a href="itms-apps://apps.apple.com/vn/app/anylearn/id1518155412">
+                            <a href="itms-apps://apps.apple.com/vn/app/anylearn/id6453411038">
                                 <img src="/cdn/onepage/images/ios.png" style="width:100%" alt="">
                             </a>
                         </div>

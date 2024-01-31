@@ -444,27 +444,27 @@ footer .head_text {
 }
 
 #info-have-1 {
-    background: url("./img/landing2_info_have_1.png") no-repeat;
+    background: url("./img/landing3_info_have_1.jpg") no-repeat;
     background-size: cover;
 }
 
 #info-have-2 {
-    background: url("./img/landing2_info_have_2.png") no-repeat;
+    background: url("./img/landing3_info_have_2.jpg") no-repeat;
     background-size: cover;
 }
 
 #info-have-3 {
-    background: url("./img/landing2_info_have_3.png") no-repeat;
+    background: url("./img/landing3_info_have_3.jpg") no-repeat;
     background-size: cover;
 }
 
 #info-have-4 {
-    background: url("./img/landing2_info_have_4.png") no-repeat;
+    background: url("./img/landing3_info_have_4.jpg") no-repeat;
     background-size: cover;
 }
 
 #info-have-5 {
-    background: url("./img/landing2_info_have_5.png") no-repeat;
+    background: url("./img/landing3_info_have_5.jpg") no-repeat;
     background-size: cover;
 }
 
@@ -743,7 +743,13 @@ footer .social-links a:hover {
 }
 
 footer .app-links {
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+        /* Sử dụng flexbox để đặt các thành phần trên cùng một hàng */
+        justify-content: space-between;
+        /* Các thành phần sẽ căn giữa và cách nhau một khoảng cách */
+        align-items: center;
+        /* Căn giữa theo chiều dọc */
 }
 
 footer .app-links p {
