@@ -78,6 +78,10 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/auth/search', 'Apis\SearchFilterApi@index');
     Route::get('/v3/auth/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 
+    Route::get('/v3/auth/study', 'Apis\StudyApi@index');
+    Route::get('/v3/auth/study/calendar', 'Apis\StudyApi@calendar');
+    Route::get('/v3/auth/study/{orderItemID}', 'Apis\StudyApi@show');
+
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');
 

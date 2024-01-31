@@ -1411,4 +1411,161 @@ class ItemServices
                 ]);
         }
     }
+
+    public function getSchoolDays($userID, $month) 
+    {
+        try {
+            $items = $this->queryRegisteredItems($userID);
+            $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $month);
+
+            $firstOfMonth = Carbon::parse($month); 
+            $lastOfMonth = (clone $firstOfMonth)->lastOfMonth();
+
+            $plans = [];
+            foreach ($items->get() as $val) {
+                $current = clone $firstOfMonth;
+                $dateEnd = Carbon::parse($val->date_end);
+                $dateEnd = $dateEnd > $lastOfMonth ? $lastOfMonth : $dateEnd; 
+
+                while ($current <= $dateEnd) {
+                    if (in_array($current->dayOfWeek + 1, explode(',', $val->weekdays))) {
+                        $plans[] = (clone $current)->format('Y-m-d');
+                    } 
+                    $current->addDay();
+                }           
+            }
+
+            return array_unique($plans); 
+
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+        } 
+    }
+
+    public function getRegisteredItemInfo($userID, $orderItemID)
+    {
+        $items = $this->queryRegisteredItems($userID);
+        $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING);
+        $items->leftJoin('item_user_actions AS ua', function($join) {
+            $join->on('ua.user_id', '=', 'orders.user_id');
+            $join->on('ua.item_id', '=', 'od.item_id');
+        });
+        $items->leftJoin('item_codes AS ic', 'ic.order_detail_id', '=', 'od.id');
+        $items->where('od.id', $orderItemID);
+        $items->addSelect(
+            'ic.code AS activation',
+            'ua.value AS is_fav'
+        );
+
+        return $items->first();
+    }
+
+    public function getRegisteredItems($userID, $status)
+    {
+        $items = $this->queryRegisteredItems($userID);  
+        $this->applyStatusFilter($items, $status);
+        return $items->get();
+    }
+
+    public function getSchedulePlans($userID, $date = null) 
+    {
+        $items = $this->queryRegisteredItems($userID);
+        $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $date);
+        return $items->whereRaw(
+                'FIND_IN_SET(?, sp.weekdays)', 
+                [1 + Carbon::parse($date)->dayOfWeek]
+            )
+            ->get();
+    }
+
+    public function queryRegisteredItems($userID)
+    {
+        return DB::table('orders')
+            ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
+            ->join('items', 'items.id', '=', 'od.item_id')
+            ->leftJoin('participations AS pa', 'pa.schedule_id', '=', 'od.id')
+            ->leftJoin('item_schedule_plans AS sp', 'sp.id', '=', 'od.item_schedule_plan_id')
+            ->where('orders.status', OrderConstants::STATUS_DELIVERED) 
+            ->where('orders.user_id', $userID)
+            ->select( 
+                'items.id',
+                'items.title',
+                'items.image',
+                'items.subtype',
+                'pa.organizer_confirm',
+                'pa.participant_confirm',
+                'sp.date_start',
+                'sp.date_end',
+                'od.id AS order_item_id',
+                'orders.created_at AS purchased_at', 
+                DB::raw('
+                    (SELECT ROUND(AVG(value), 1) FROM item_user_actions 
+                    WHERE item_id = od.item_id AND type = "rating"
+                    ) AS rating'
+                ),
+            );
+    }
+
+    public function applyStatusFilter($items, $status = 'ALL', $date = null) 
+    {
+        if (ItemConstants::STATUS_STUDYING == $status) {
+            $date = isset($date) ? Carbon::parse($date) : Carbon::now();
+            $this->applyStudyingFilter($items, $date->format('Y-m-d'));
+        } elseif (ItemConstants::STATUS_UPCOMING == $status) {
+            $this->applyUpcomingFilter($items);
+        } elseif (ItemConstants::STATUS_COMPLETED == $status) {
+            $this->applyCompletedFilter($items);
+        }
+    }
+
+    public function applyStudyingFilter($items, $date) 
+    {
+        $items->leftJoin('user_locations AS ul', 'ul.id', '=', 'sp.user_location_id');
+        $items->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
+        $items->whereDate('sp.date_end', '>=', $date);
+        $items->whereDate('sp.date_start', '<=', $date);
+        $items->where(function ($query) {
+            $query->orWhere('pa.organizer_confirm', 1);
+            $query->orWhere('pa.participant_confirm', 1);
+        });
+        $items->addSelect(
+            'sp.weekdays',
+            'sp.date_start',
+            'sp.date_end',
+            'sp.time_start',
+            'sp.time_end',
+            'sp.title AS plan',
+            'sp.info AS plan_info',
+            DB::raw('CONCAT(ul.address, " ,", ul.ward_path) AS location'),
+        );
+    }
+
+    public function applyUpcomingFilter($items) 
+    {
+        $items->where(function ($query) {    
+            $query->orwhere(function ($q) {
+                $q->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
+                $q->whereDate('sp.date_end', '>', Carbon::now()->format('Y-m-d'));
+            });
+            $query->orwhere(function ($q) {
+                $q->whereIn('items.subtype', ItemConstants::UNCONFIRMABLE_SUBTYPES);
+                $q->whereDate('orders.created_at', '>', Carbon::now()->subDays(7)->format('Y-m-d'));
+            });
+        });
+    }
+
+    public function applyCompletedFilter($items) 
+    {
+        $items->where(function ($query) {    
+            $query->orwhere(function ($q) {
+                $q->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
+                $q->whereDate('sp.date_end', '<', Carbon::now()->format('Y-m-d'));
+            });
+            $query->orwhere(function ($q) {
+                $q->whereIn('items.subtype', ItemConstants::UNCONFIRMABLE_SUBTYPES);
+                $q->whereDate('orders.created_at', '<=', Carbon::now()->subDays(7)->format('Y-m-d'));
+            });
+        });
+    }
+
 }
