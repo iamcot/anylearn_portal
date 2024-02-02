@@ -1698,6 +1698,8 @@ class ItemServices
 
     public function applyStudyingFilter($items, $date) 
     {
+        $items->join('users AS u1', 'u1.id', '=', 'items.user_id');
+        $items->join('users AS u2', 'u2.id', '=', 'od.user_id');
         $items->leftJoin('user_locations AS ul', 'ul.id', '=', 'sp.user_location_id');
         $items->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
         $items->whereDate('sp.date_end', '>=', $date);
@@ -1706,6 +1708,8 @@ class ItemServices
             $query->orWhere('pa.participant_confirm', 1); 
         });
         $items->addSelect(
+            'u1.name AS author',
+            'u2.name AS student',
             'sp.weekdays',
             'sp.date_start',
             'sp.date_end',
