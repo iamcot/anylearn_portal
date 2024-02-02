@@ -1631,8 +1631,8 @@ class ItemServices
         $items->leftJoin('item_codes AS ic', 'ic.order_detail_id', '=', 'od.id');
         $items->where('od.id', $orderItemID);
         $items->addSelect(
-            'ic.code AS activation',
-            'ua.value AS is_fav'
+            'ic.code AS activation_info',
+            'ua.value AS favorited'
         );
 
         return $items->first();
