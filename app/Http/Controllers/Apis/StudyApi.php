@@ -18,8 +18,8 @@ class StudyApi extends Controller
         $data['user_accounts'] = $userServ->accountC($user->id);
     
         $itemServ = new ItemServices();
-        $data['today_items'] = $itemServ->getSchedulePlans($user->id)->count();
-        $data['schedule_plans'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_STUDYING);
+        $data['num_items'] = $itemServ->getSchedulePlans($user->id)->count();
+        $data['ongoing_items'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_STUDYING);
         $data['upcoming_items'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_UPCOMING);
         $data['completed_items'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_COMPLETED);
 
