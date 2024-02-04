@@ -37,12 +37,10 @@ class StudyApi extends Controller
     
     public function show(Request $request, $orderItemID) 
     {
-        $data['item_info'] = (new ItemServices)
-            ->getRegisteredItemInfo($request->get('_user'), $orderItemID);
-        if (!$data['item_info']) {
+        $data = (new ItemServices)->getRegisteredItemInfo($request->get('_user'), $orderItemID);
+        if (!$data) {
             return response()->json(['error' => 'Item not found'], 404);
         }
-    
         return response()->json($data);
     }
     
