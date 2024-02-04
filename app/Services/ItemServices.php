@@ -1623,7 +1623,6 @@ class ItemServices
     public function getRegisteredItemInfo($userID, $orderItemID)
     {
         $items = $this->queryRegisteredItems($userID);
-        $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING);
         $items->leftJoin('item_user_actions AS ua', function($join) {
             $join->on('ua.user_id', '=', 'orders.user_id');
             $join->on('ua.item_id', '=', 'od.item_id');
