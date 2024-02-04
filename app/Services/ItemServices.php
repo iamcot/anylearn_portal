@@ -1638,16 +1638,16 @@ class ItemServices
         return $items->first();
     }
 
-    public function getRegisteredItems($userID, $status)
+    public function getRegisteredItems($user, $status) 
     {
-        $items = $this->queryRegisteredItems($userID);  
+        $items = $this->queryRegisteredItems($user);
         $this->applyStatusFilter($items, $status);
         return $items->get();
     }
 
-    public function getSchedulePlans($userID, $date = null) 
+    public function getSchedulePlans($user, $date = null) 
     {
-        $items = $this->queryRegisteredItems($userID);
+        $items = $this->queryRegisteredItems($user);
         $this->applyStatusFilter($items, ItemConstants::STATUS_STUDYING, $date);
         return $items->whereRaw(
                 'FIND_IN_SET(?, sp.weekdays)', 
@@ -1656,15 +1656,15 @@ class ItemServices
             ->get();
     }
 
-    public function queryRegisteredItems($userID)
-    {
-        return DB::table('orders')
+    public function queryRegisteredItems($user)
+    {        
+        $items = DB::table('orders')
             ->join('order_details AS od', 'od.order_id', '=', 'orders.id')
             ->join('items', 'items.id', '=', 'od.item_id')
             ->leftJoin('participations AS pa', 'pa.schedule_id', '=', 'od.id')
             ->leftJoin('item_schedule_plans AS sp', 'sp.id', '=', 'od.item_schedule_plan_id')
             ->where('orders.status', OrderConstants::STATUS_DELIVERED) 
-            ->where('orders.user_id', $userID)
+            ->where('orders.user_id', $user->is_child ? $user->user_id : $user->id)
             ->select( 
                 'items.id',
                 'items.title',
@@ -1682,6 +1682,12 @@ class ItemServices
                     ) AS rating'
                 ),
             );
+        
+        if ($user->is_child) {
+            $items->where('od.user_id', $user->id);
+        } 
+
+        return $items;
     }
 
     public function applyStatusFilter($items, $status = 'ALL', $date = null) 
@@ -1697,9 +1703,9 @@ class ItemServices
     }
 
     public function applyStudyingFilter($items, $date) 
-    {
-        $items->join('users AS u1', 'u1.id', '=', 'items.user_id');
-        $items->join('users AS u2', 'u2.id', '=', 'od.user_id');
+    {          
+        $items->join('users AS u1', 'u1.id', '=', 'items.user_id'); 
+        $items->join('users AS u2', 'u2.id', '=', 'orders.user_id');
         $items->leftJoin('user_locations AS ul', 'ul.id', '=', 'sp.user_location_id');
         $items->whereIn('items.subtype', ItemConstants::CONFIRMABLE_SUBTYPES);
         $items->whereDate('sp.date_end', '>=', $date);

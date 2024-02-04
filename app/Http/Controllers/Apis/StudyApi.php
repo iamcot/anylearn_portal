@@ -7,29 +7,38 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\ItemServices;
 use App\Services\UserServices;
+use Exception;
 
 class StudyApi extends Controller
 {
-    public function index(Request $request) {
-        $user = $request->get('_user');
-        $userServ = new UserServices();
+    public function index(Request $request) 
+    {
+        try {
+            $userServ = new UserServices();   
+            $data['user_info'] = $request->get('_user');
+            $data['user_accounts'] = $userServ->accountC($data['user_info']->id);
+            
+            if ($request->get('child')) {
+                $data['user_info'] = $data['user_accounts']->find($request->get('child')) ?? $data['user_info'];
+            }
         
-        $data['user_info'] = $user;
-        $data['user_accounts'] = $userServ->accountC($user->id);
-    
-        $itemServ = new ItemServices();
-        $data['num_items'] = $itemServ->getSchedulePlans($user->id)->count();
-        $data['ongoing_items'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_STUDYING);
-        $data['upcoming_items'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_UPCOMING);
-        $data['completed_items'] = $itemServ->getRegisteredItems($user->id, ItemConstants::STATUS_COMPLETED);
+            $itemServ = new ItemServices();
+            $data['num_items'] = $itemServ->getSchedulePlans($data['user_info'])->count();
+            $data['ongoing_items'] = $itemServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_STUDYING);
+            $data['upcoming_items'] = $itemServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_UPCOMING);
+            $data['completed_items'] = $itemServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_COMPLETED);
 
-        return response()->json($data);
+            return response()->json($data);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
+        }
     }
     
     public function show(Request $request, $orderItemID) 
     {
-        $user = $request->get('_user');        
-        $data['item_info'] = (new ItemServices)->getRegisteredItemInfo($user->id, $orderItemID);
+        $data['item_info'] = (new ItemServices)
+            ->getRegisteredItemInfo($request->get('_user'), $orderItemID);
         if (!$data['item_info']) {
             return response()->json(['error' => 'Item not found'], 404);
         }
@@ -40,10 +49,11 @@ class StudyApi extends Controller
 
     public function calendar(Request $request)
     {
-        $user = $request->get('_user');
         $itemServ = new ItemServices();
-        $data['school_days'] = $itemServ->getSchoolDays($user->id, $request->get('date'));
-        $data['schedule_plans'] = $itemServ->getSchedulePlans($user->id, $request->get('date'));
+        $userInfo = $request->get('_user');
+        
+        $data['school_days'] = $itemServ->getSchoolDays($userInfo, $request->get('date'));
+        $data['schedule_plans'] = $itemServ->getSchedulePlans($userInfo, $request->get('date'));
 
         return response()->json($data);
     }
