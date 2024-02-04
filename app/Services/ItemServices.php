@@ -1632,7 +1632,12 @@ class ItemServices
         $items->where('od.id', $orderItemID);
         $items->addSelect(
             'ic.code AS activation_info',
-            'ua.value AS favorited'
+            'ua.value AS favorited',
+            DB::raw('
+                (SELECT COUNT(*) FROM item_user_actions 
+                WHERE item_id = od.item_id AND type = "rating"
+                ) AS reviews'
+            ),
         );
 
         return $items->first();
