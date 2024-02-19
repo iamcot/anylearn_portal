@@ -171,7 +171,7 @@ class TransactionController extends Controller
                 'vouchers.voucher',
                 'vouchers.value AS voucher_value',
                 'transactions.amount AS anypoint',
-                DB::raw("(SELECT GROUP_CONCAT(CONCAT(items.title, '(', item_schedule_plans.title, ')') SEPARATOR ',' ) as classes FROM order_details AS os 
+                DB::raw("(SELECT GROUP_CONCAT(CONCAT(items.title, '(', COALESCE(item_schedule_plans.title, ''), ')') SEPARATOR ',' ) as classes FROM order_details AS os 
                 JOIN items ON items.id = os.item_id 
                 LEFT JOIN item_schedule_plans ON os.item_schedule_plan_id = item_schedule_plans.id
                 WHERE os.order_id = orders.id
