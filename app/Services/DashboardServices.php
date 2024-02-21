@@ -181,7 +181,8 @@ class DashboardServices
     public function revenuechartDataset()
     {
         $query = DB::table('order_details')
-            ->whereNotNull('created_at');
+            ->whereNotNull('created_at')
+            ->where('status', '=', OrderConstants::STATUS_DELIVERED);
         if ($this->dateF) {
             $query = $query->where('created_at', '>=', $this->dateF);
         } else {

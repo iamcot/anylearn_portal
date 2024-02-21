@@ -80,6 +80,14 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                 <canvas id="myAreaChart"></canvas>
             </div>
         </div>
+        <div class="card border-bottom-success shadow mt-3">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-success">@lang('Doanh thu thuần')</h6>
+            </div>
+            <div class="card-body p-0" style="min-height: 300px;">
+                <canvas id="gmvChart"></canvas>
+            </div>
+        </div>
     </div>
     <div class="col-md-3">
         <div class="card border-bottom-success shadow">
@@ -128,8 +136,14 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
 <script>
     var chartData = JSON.parse("{{ json_encode($dashServ->userCreatedByDay()) }}".replace(/&quot;/g, '"'));
+    var gmvChartData = JSON.parse("{{ json_encode($dashServ->revenuechartDataset()) }}".replace(/&quot;/g, '"'));
     var ctx = document.getElementById("myAreaChart");
-    var myLineChart = new Chart(ctx, {
+    var ctxGmvChart = document.getElementById("gmvChart");
+    var myLineChart = drawChart(ctx, chartData);
+    var gmvChart = drawChart(ctxGmvChart, gmvChartData);
+
+    function drawChart(ctx, chartData) {
+        return new Chart(ctx, {
         type: 'line',
         data: {
             labels: chartData['labels'],
@@ -215,6 +229,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
             }
         }
     });
+    }
 </script>
 @endsection
 @endif
