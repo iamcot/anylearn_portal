@@ -223,7 +223,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                 callbacks: {
                     label: function(tooltipItem, chart) {
                         var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                        return datasetLabel + ': ' + return Intl.NumberFormat('vi-VN', mFormat).format(tooltipItem.yLabel);;
+                        return datasetLabel + ': ' +  Intl.NumberFormat('vi-VN', mFormat).format(tooltipItem.yLabel);
                     }
                 }
             }
