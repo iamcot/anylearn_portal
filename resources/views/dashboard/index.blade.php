@@ -82,7 +82,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
         </div>
         <div class="card border-bottom-success shadow mt-3">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-success">@lang('Doanh thu thuần')</h6>
+                <h6 class="m-0 font-weight-bold text-success">@lang('Doanh thu gộp (GMV)')</h6>
             </div>
             <div class="card-body p-0" style="min-height: 300px;">
                 <canvas id="gmvChart"></canvas>
@@ -140,7 +140,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     var ctx = document.getElementById("myAreaChart");
     var ctxGmvChart = document.getElementById("gmvChart");
     var myLineChart = drawChart(ctx, chartData, 'Người dùng mới', {});
-    var gmvChart = drawChart(ctxGmvChart, gmvChartData, "Doanh thu thuần", { style: 'currency', currency: 'VND' });
+    var gmvChart = drawChart(ctxGmvChart, gmvChartData, "Doanh thu gộp", { style: 'currency', currency: 'VND' });
 
     function drawChart(ctx, chartData, mlabel, mFormat) {
         return new Chart(ctx, {
