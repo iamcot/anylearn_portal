@@ -139,16 +139,16 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
     var gmvChartData = JSON.parse("{{ json_encode($dashServ->revenuechartDataset()) }}".replace(/&quot;/g, '"'));
     var ctx = document.getElementById("myAreaChart");
     var ctxGmvChart = document.getElementById("gmvChart");
-    var myLineChart = drawChart(ctx, chartData);
-    var gmvChart = drawChart(ctxGmvChart, gmvChartData);
+    var myLineChart = drawChart(ctx, chartData, 'Người dùng mới');
+    var gmvChart = drawChart(ctxGmvChart, gmvChartData, "Doanh thu thuần");
 
-    function drawChart(ctx, chartData) {
+    function drawChart(ctx, chartData, mlabel) {
         return new Chart(ctx, {
         type: 'line',
         data: {
             labels: chartData['labels'],
             datasets: [{
-                label: "Người dùng mới",
+                label: mlabel,
                 lineTension: 0.3,
                 backgroundColor: "rgba(78, 115, 223, 0.05)",
                 borderColor: "rgba(78, 115, 223, 1)",
@@ -191,7 +191,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                         maxTicksLimit: 5,
                         padding: 10,
                         callback: function(value, index, values) {
-                            return value;
+                            return Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
                         }
                     },
                     gridLines: {
