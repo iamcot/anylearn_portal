@@ -5,54 +5,60 @@ namespace App\Http\Controllers\Apis;
 use App\Constants\ItemConstants;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\ItemServices;
+use App\Services\StudyServices;
 use App\Services\UserServices;
-use Exception;
 
 class StudyApi extends Controller
 {
+    private $studyServ;
+    private $userServ;
+
+    public function __construct(StudyServices $studyServ, UserServices $userServ) 
+    {
+        $this->studyServ = $studyServ;
+        $this->userServ = $userServ;
+    }
+
     public function index(Request $request) 
     {
-        try {
-            $userServ = new UserServices();   
+        try {    
             $data['user_info'] = $request->get('_user');
-            $data['user_accounts'] = $userServ->accountC($data['user_info']->id);
+            $data['user_accounts'] = $this->userServ->accountC($data['user_info']->id);
             
             if ($request->get('child')) {
                 $data['user_info'] = $data['user_accounts']->find($request->get('child')) ?? $data['user_info'];
             }
         
-            $itemServ = new ItemServices();
-            $data['num_items'] = $itemServ->getSchedulePlans($data['user_info'])->count();
-            $data['ongoing_items'] = $itemServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_STUDYING);
-            $data['upcoming_items'] = $itemServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_UPCOMING);
-            $data['completed_items'] = $itemServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_COMPLETED);
+            $data['num_items'] = $this->studyServ->getSchedulePlansForDay($data['user_info'])->count();
+            $data['ongoing_items'] = $this->studyServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_ONGOING);
+            $data['upcoming_items'] = $this->studyServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_UPCOMING);
+            $data['completed_items'] = $this->studyServ->getRegisteredItems($data['user_info'], ItemConstants::STATUS_COMPLETED);
 
             return response()->json($data);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         }
     }
     
     public function show(Request $request, $orderItemID) 
     {
-        $data = (new ItemServices)->getRegisteredItemInfo($request->get('_user'), $orderItemID);
+        $userInfo = $request->get('_user');
+        $data = $this->studyServ->getRegisteredItemInfo($userInfo, $orderItemID);
         if (!$data) {
             return response()->json(['error' => 'Item not found'], 404);
         }
         return response()->json($data);
     }
     
-
-    public function calendar(Request $request)
+    public function lookup(Request $request)
     {
-        $itemServ = new ItemServices();
-        $userInfo = $request->get('_user');
-        
-        $data['school_days'] = $itemServ->getSchoolDays($userInfo, $request->get('date'));
-        $data['schedule_plans'] = $itemServ->getSchedulePlans($userInfo, $request->get('date'));
+        $lookupDate = $request->get('date');
 
+        $data['lookup_date'] = $lookupDate; 
+        $data['schedule_plans'] = $this->studyServ
+            ->getSchedulePlansForMonth($request->get('_user'), $lookupDate);
+            
         return response()->json($data);
     }
 }

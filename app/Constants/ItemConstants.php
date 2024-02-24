@@ -21,8 +21,8 @@ class ItemConstants
     const STATUS_CONFIRMED = 1;
     const STATUS_UNCONFIRMED = 0;
     
+    const STATUS_ONGOING = 'ongoing';
     const STATUS_UPCOMING = 'upcoming';
-    const STATUS_STUDYING = 'studying';
     const STATUS_COMPLETED = 'completed';
 
     const USERSTATUS_INACTIVE = 0;
