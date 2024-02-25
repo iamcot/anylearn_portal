@@ -54,11 +54,13 @@ class StudyApi extends Controller
     public function lookup(Request $request)
     {
         $lookupDate = $request->get('date');
-
-        $data['lookup_date'] = $lookupDate; 
-        $data['schedule_plans'] = $this->studyServ
+        $schedulePlans = $this->studyServ
             ->getSchedulePlansForMonth($request->get('_user'), $lookupDate);
-            
+
+        $data['lookup_date'] = $lookupDate;
+        $data['schedule_plans'] = $schedulePlans;
+        $data['current_plans'] = isset($schedulePlans[$lookupDate]) ? $schedulePlans[$lookupDate] : []; 
+        
         return response()->json($data);
     }
 }
