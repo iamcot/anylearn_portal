@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\StudyServices;
 use App\Services\UserServices;
+use Carbon\Carbon;
 
 class StudyApi extends Controller
 {
@@ -53,7 +54,7 @@ class StudyApi extends Controller
     
     public function lookup(Request $request)
     {
-        $lookupDate = $request->get('date');
+        $lookupDate = $request->get('date', Carbon::now()->format('Y-m-d'));
         $schedulePlans = $this->studyServ
             ->getSchedulePlansForMonth($request->get('_user'), $lookupDate);
 
