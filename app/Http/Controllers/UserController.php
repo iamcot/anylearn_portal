@@ -933,7 +933,7 @@ class UserController extends Controller
         if (!$user) {
             return redirect()->back()->with('notify', 'Không có dữ liệu về khóa học');
         } else { 
-            $schedule = ItemSchedulePlan::where('item_id', $item->id)->first(); dd($schedule);
+            $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
             if ($schedule) {
                 $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
 
@@ -949,7 +949,6 @@ class UserController extends Controller
                 $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
             }
             if ($item->subtype == 'digital') {
-                dd(1);
                 $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
                 $this->data['code'] = $code ? $code->code : '********';
             }
