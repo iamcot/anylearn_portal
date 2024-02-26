@@ -338,12 +338,12 @@ class ClassController extends Controller
                                 'email_template' => $input['email'],
                                 'notif_template' => $input['notif'],
                             ]);
+                        } else {
+                            $notifTemplate->update([
+                                'email_template' => $input['email'],
+                                'notif_template' => $input['notif'],
+                           ]);
                         }
-
-                        $notifTemplate->update([
-                            'email_template' => $input['email'],
-                            'notif_template' => $input['notif'],
-                        ]);
                     }
                 }
             } catch (Exception $e) {
