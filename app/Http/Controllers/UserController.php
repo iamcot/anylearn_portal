@@ -932,7 +932,7 @@ class UserController extends Controller
         $item = Item::find($orderDetail->item_id);
         if (!$user) {
             return redirect()->back()->with('notify', 'Không có dữ liệu về khóa học');
-        } else {
+        } else { dd(1);
             $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
             if ($schedule) {
                 $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
