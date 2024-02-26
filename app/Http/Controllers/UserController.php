@@ -949,6 +949,7 @@ class UserController extends Controller
                 $this->data['location'] = UserLocation::where('id', $schedule->user_location_id)->first();
             }
             if ($item->subtype == 'digital') {
+                dd(1);
                 $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
                 $this->data['code'] = $code ? $code->code : '********';
             }
