@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\StudyServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as HTTPConstants;
 
 class StudyApi extends Controller
 {
@@ -39,16 +39,19 @@ class StudyApi extends Controller
             return response()->json($data);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return response()->json(
+                ['error' => 'Internal Server Error'], 
+                HTTPConstants::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
     
     public function show(Request $request, $orderItemID) 
     {
-        $userInfo = $request->get('_user');
-        $data = $this->studyServ->getRegisteredItemInfo($userInfo, $orderItemID);
+        $user = $request->get('_user');
+        $data = $this->studyServ->getRegisteredItemInfo($user, $orderItemID);
         if (!$data) {
-            return response()->json(['error' => 'Item not found'], 404);
+            return response()->json(['error' => 'Item not found!'], HTTPConstants::HTTP_NOT_FOUND);
         }
         return response()->json($data);
     }
@@ -71,8 +74,11 @@ class StudyApi extends Controller
 
             return response()->json($data);
 
-        } catch(ValidationException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+        } catch (ValidationException $e) {
+            return response()->json(
+                ['error' => 'Invalid Arguments'], 
+                HTTPConstants::HTTP_UNPROCESSABLE_ENTITY
+            );
         } 
     }
 }
