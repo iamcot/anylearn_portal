@@ -54,7 +54,7 @@
                             alt=""></a>
                 </div>
 
-                <h4 class="mt-3 text-decoration-none text-black" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
+                <h4 class="mt-3 text-decoration-none text-black pb-2" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div class="d-flex justify-content-around align-items-center">
                     <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US" >
                         <img src="/cdn/img/ggplay.png" class="img-fluid" width="100%" style="display:block; min-width:120px; max-height:35px;"></a>
