@@ -16,6 +16,7 @@ class ConfigConstants
     const GUIDE_TOC_SCHOOL = 'guide_toc_school';
     const GUIDE_PRIVACY = 'guide_privacy';
     const GUIDE_CHECKOUT = 'guide_checkout';
+    const GUIDE_TOC_POLICY = 'guide_toc_policy';
 
     const SUPPORT_SCHOOL = 'support_school';
     const SUPPORT_TEACHER = 'support_teacher';
@@ -91,9 +92,9 @@ class ConfigConstants
     const TRANSACTION_STATUS_DONE = 1;
     const TRANSACTION_STATUS_REJECT = 99;
 
-
     public static $guideTitle = [
         self::GUIDE_TOC => 'TOC - Điều khoản',
+        self::GUIDE_TOC_POLICY => 'TOC - Chính sách',
         self::GUIDE_MEMBER => 'HDSD cho Thành viên',
         self::GUIDE_TEACHER => 'HDSD cho Giảng viên',
         self::GUIDE_SCHOOL => 'HDSD cho Trung tâm',

@@ -15,9 +15,9 @@
             <div class="col-sm-3">
                 <h4 class="text-decoration-none text-black pb-2">ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
                 <ul class="list-unstyled">
-                    <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều Khoản Sử Dụng</a>
-                    </li>
+                    <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều Khoản Sử Dụng</a></li>
                     <li><a href="/privacy" class="text-secondary text-decoration-none">Chính Sách Bảo Mật</a></li>
+                    <li><a href="/guide?p=guide_toc_policy" class="text-secondary text-decoration-none">Chính Sách</a></li>
                 </ul>
                 <h4 class=" text-decoration-none text-black" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div>
