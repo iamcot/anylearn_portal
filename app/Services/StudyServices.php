@@ -9,22 +9,21 @@ use Illuminate\Support\Facades\DB;
 
 class StudyServices 
 {
-    public function getSchedulePlansForMonth($userID, $date = null) 
+    public function getSchedulePlans($userID, $dateFrom , $dateTo) 
     {
-        $date = isset($date) ? Carbon::parse($date) : Carbon::now();
-        $firstOfMonth = (clone $date)->firstOfMonth(); 
-        $lastOfMonth = (clone $date)->lastOfMonth();
+        $dateFrom = Carbon::parse($dateFrom);
+        $dateTo = Carbon::parse($dateTo);
 
         $items = $this->queryRegisteredItems($userID);
-        $this->applyStatusFilter($items, ItemConstants::STATUS_ONGOING, $firstOfMonth);
+        $this->applyStatusFilter($items, ItemConstants::STATUS_ONGOING, $dateFrom);
 
         $plans = [];
         foreach ($items->get() as $key => $val) {
             $current = Carbon::parse($val->date_start); 
-            $current = $current < $firstOfMonth ? clone $firstOfMonth : $current; 
+            $current = $current < $dateFrom ? clone $dateFrom : $current; 
 
             $dateEnd = Carbon::parse($val->date_end);
-            $dateEnd = $dateEnd > $lastOfMonth ? $lastOfMonth : $dateEnd;
+            $dateEnd = $dateEnd > $dateTo ? $dateTo : $dateEnd;
 
             while ($current <= $dateEnd) {              
                 if (in_array($current->dayOfWeek + 1, explode(',', $val->weekdays))) {
@@ -52,6 +51,8 @@ class StudyServices
     public function getRegisteredItemInfo($userID, $orderItemID)
     {
         $items = $this->queryRegisteredItems($userID);
+        $items->join('users AS u1', 'u1.id', '=', 'items.user_id'); 
+        $items->join('users AS u2', 'u2.id', '=', 'od.user_id');
         $items->leftJoin('item_user_actions AS ua', function($join) {
             $join->on('ua.user_id', '=', 'orders.user_id');
             $join->on('ua.item_id', '=', 'od.item_id');
@@ -59,6 +60,8 @@ class StudyServices
         $items->leftJoin('item_codes AS ic', 'ic.order_detail_id', '=', 'od.id');
         $items->where('od.id', $orderItemID);
         $items->addSelect(
+            'u1.name AS author',
+            'u2.name AS student',
             'ic.code AS activation_info',
             'ua.value AS favorited',
             DB::raw('
@@ -82,7 +85,7 @@ class StudyServices
     {
         if (ItemConstants::STATUS_ONGOING == $status) {
             $date = isset($date) ? Carbon::parse($date) : Carbon::now();
-            $this->applyStudyingFilter($items, $date->format('Y-m-d'));
+            $this->applyOngoingFilter($items, $date->format('Y-m-d'));
         } elseif (ItemConstants::STATUS_UPCOMING == $status) {
             $this->applyUpcomingFilter($items);
         } elseif (ItemConstants::STATUS_COMPLETED == $status) {
@@ -90,7 +93,7 @@ class StudyServices
         }
     }
 
-    private function applyStudyingFilter($items, $date) 
+    private function applyOngoingFilter($items, $date) 
     {         
         $items->join('users AS u1', 'u1.id', '=', 'items.user_id'); 
         $items->join('users AS u2', 'u2.id', '=', 'od.user_id');

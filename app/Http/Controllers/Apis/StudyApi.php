@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\StudyServices;
 use App\Services\UserServices;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class StudyApi extends Controller
 {
@@ -54,14 +55,24 @@ class StudyApi extends Controller
     
     public function lookup(Request $request)
     {
-        $lookupDate = $request->get('date', Carbon::now()->format('Y-m-d'));
-        $schedulePlans = $this->studyServ
-            ->getSchedulePlansForMonth($request->get('_user'), $lookupDate);
+        try {
+            $user = $request->get('_user');
+            $data = $request->validate([
+                'lookup_date' => 'required|date|date_format:Y-m-d',
+                'date_from' => 'required|date|date_format:Y-m-d',
+                'date_to' => 'required|date|date_format:Y-m-d',
+            ]);
 
-        $data['lookup_date'] = $lookupDate;
-        $data['schedule_plans'] = $schedulePlans;
-        $data['current_plans'] = isset($schedulePlans[$lookupDate]) ? $schedulePlans[$lookupDate] : []; 
-        
-        return response()->json($data);
+            $plans = $this->studyServ->getSchedulePlans($user, $data['date_from'], $data['date_to']);
+            $data['current_plans'] = array_key_exists($data['lookup_date'], $plans) 
+               ? $plans[$request->get('lookup_date')] 
+               : [];
+            $data['schedule_plans'] = $plans;
+
+            return response()->json($data);
+
+        } catch(ValidationException $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        } 
     }
 }
