@@ -44,7 +44,7 @@
                         <img src="/cdn/img/MoMoLogo.png" width="20%" class="img-fluid">
                 </div>
 
-                <h4 class="mt-2 text-decoration-none text-black pb-2">THEO DÕI CHÚNG TÔI</h4>
+                <h4 class="mt-2 text-decoration-none text-black pb-3">THEO DÕI CHÚNG TÔI</h4>
                 <div class="social-links">
                     <a target="_blank" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><img
                             src="/cdn/img/youtube.png" alt=""></a>
@@ -54,12 +54,12 @@
                             alt=""></a>
                 </div>
 
-                <h4 class="mt-3 text-decoration-none text-black pb-2" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
+                <h4 class="mt-3 text-decoration-none text-black pb-3" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
                 <div class="d-flex justify-content-around align-items-center">
                     <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US" >
-                        <img src="/cdn/img/ggplay.png" class="img-fluid" width="100%" style="display:block; min-width:120px; max-height:35px;"></a>
+                        <img src="/cdn/img/ggplay.png" class="img-fluid" width="100%" style="display:block; min-width:115px; max-height:35px;"></a>
                     <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038">
-                        <img src="/cdn/img/appstore.png" class="img-fluid" width="100%" style="display:block; min-width:120px; max-height:35px;"></a>
+                        <img src="/cdn/img/appstore.png" class="img-fluid" width="100%" style="display:block; min-width:115px; max-height:35px;"></a>
                 </div>
             </div>
         </div>
