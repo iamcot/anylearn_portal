@@ -10,12 +10,14 @@ class Cors
     {
         $response = $next($request);
 
-        $response
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, X-Token-Auth, Authorization')
-            ->header('Access-Control-Allow-Credentials', 'true')
-            ->header('Access-Control-Max-Age', '86400');
+        if ($response instanceof \Illuminate\Http\Response) {
+            $response
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+                ->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, X-Token-Auth, Authorization')
+                ->header('Access-Control-Allow-Credentials', 'true')
+                ->header('Access-Control-Max-Age', '86400');
+        }
 
         return $response;
     }
