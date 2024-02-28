@@ -461,10 +461,13 @@ class User extends Authenticatable
             $members = $members
                 ->orderBy('lastsa.last_contact');
         }
-
+        if ($request->input('sort') == "wallet_c") {
+            $members = $members->orderby('users.wallet_c', 'desc');
+        }
         $members = $members->orderby('users.is_hot', 'desc')
             ->orderby('users.boost_score', 'desc')
             ->orderby('users.id', 'desc');
+       
         $copy = clone $members;
 
         $members = $members

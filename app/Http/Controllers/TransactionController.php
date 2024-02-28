@@ -417,12 +417,11 @@ class TransactionController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        $transaction = DB::table('transactions')->whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+        $transaction = DB::table('transactions')
             ->orderby('transactions.id', 'desc')
             ->join('users', 'transactions.user_id', '=', 'users.id')
-            ->join('orders', 'transactions.order_id', '=', 'orders.id')
-            ->where('orders.status', 'delivered')
-            ->select(['transactions.id', 'users.name', 'users.phone', 'users.email', 'transactions.amount', 'transactions.content', 'transactions.created_at', 'transactions.type', 'transactions.updated_at']);
+            ->leftjoin('order_details', 'transactions.order_id', '=', 'order_details.id')
+            ->select(['transactions.*', 'users.name', 'users.phone', 'users.email', 'order_details.item_id']);
         // dd($transaction->get());
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
@@ -459,7 +458,7 @@ class TransactionController extends Controller
             $headers = [
                 // "Content-Encoding" => "UTF-8",
                 "Content-type" => "text/csv",
-                "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
+                "Content-Disposition" => "attachment; filename=anylearn_tnx_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
                 "Expires" => "0"
