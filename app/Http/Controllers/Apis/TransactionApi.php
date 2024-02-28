@@ -84,7 +84,7 @@ class TransactionApi extends Controller
         $rs = Transaction::create([
             'user_id' => $user->id,
             'type' => ConfigConstants::TRANSACTION_EXCHANGE,
-            'amount' => $walletM,
+            'amount' => -$point,
             'pay_method' => 'wallet_c',
             'ref_amount' => -$point,
             'content' => "Đổi $point điểm sang tài khoản.",
