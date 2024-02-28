@@ -64,6 +64,10 @@ class StudyServices
             'u2.name AS student',
             'ic.code AS activation_info',
             'ua.value AS favorited',
+            'sp.time_start',
+            'sp.time_end',
+            'sp.title AS plan',
+            'sp.info AS plan_info',
             DB::raw('
                 (SELECT COUNT(*) FROM item_user_actions 
                 WHERE item_id = od.item_id AND type = "rating"
@@ -108,8 +112,6 @@ class StudyServices
             'u1.name AS author',
             'u2.name AS student',
             'sp.weekdays',
-            'sp.date_start',
-            'sp.date_end',
             'sp.time_start',
             'sp.time_end',
             'sp.title AS plan',
