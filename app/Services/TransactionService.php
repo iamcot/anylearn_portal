@@ -1186,7 +1186,9 @@ class TransactionService
                 'isp.title AS plan_title',
                 'isp.weekdays AS plan_weekdays',
                 'isp.date_start AS plan_date_start',
-                'ul.title AS plan_location_name'
+                'isp.info AS plan_info',
+                'ul.title AS plan_location_name',
+                
             )
             ->first();
     }

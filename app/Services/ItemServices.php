@@ -879,11 +879,13 @@ class ItemServices
                 if (isset($input['code'])) {
                     $this->createItemCodes($newCourse->id, $input['code']);
                 }
-                ItemCodeNotifTemplate::create([
-                    'item_id' => $newCourse->id,
-                    'email_template' => $input['email'],
-                    'notif_template' => $input['notif'],
-                ]);
+                if (isset($input['email']) || isset($input['notif'])) {
+                    ItemCodeNotifTemplate::create([
+                        'item_id' => $newCourse->id,
+                        'email_template' => $input['email'],
+                        'notif_template' => $input['notif'],
+                    ]);
+                }
             }
             return $newCourse->id;
         }

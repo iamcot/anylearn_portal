@@ -63,7 +63,7 @@
                     <div class="form-group ">
                         <label for="opening_info" class="form-label text-md-right">{{ __('Thông tin bổ sung (lịch học, dặn dò...)') }}</label>
                         <div class="">
-                            <input id="opening_info" type="text" class="form-control @error('opening_info') is-invalid @enderror" name="opening[info]" value="{{ old('opening_info', !empty($opening) ? $opening->info : '') }}">
+                            <textarea id="opening_info" type="text" class="form-control editor @error('opening_info') is-invalid @enderror" name="opening[info]" value="{{ old('opening_info', !empty($opening) ? $opening->info : '') }}">{{ old('opening_info', !empty($opening) ? $opening->info : '')}}</textarea>
                         </div>
                     </div>
                     <div class="form-group">

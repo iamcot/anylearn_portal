@@ -332,10 +332,18 @@ class ClassController extends Controller
 
                     if (isset($input['email']) || isset($input['notif'])) {
                         $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-                        $notifTemplate->update([
-                            'email_template' => $input['email'],
-                            'notif_template' => $input['notif'],
-                        ]);
+                        if (empty($notifTemplate)) {
+                            ItemCodeNotifTemplate::create([
+                                'item_id' => $courseId,
+                                'email_template' => $input['email'],
+                                'notif_template' => $input['notif'],
+                            ]);
+                        } else {
+                            $notifTemplate->update([
+                                'email_template' => $input['email'],
+                                'notif_template' => $input['notif'],
+                           ]);
+                        }
                     }
                 }
             } catch (Exception $e) {

@@ -6,7 +6,7 @@
     <div class="card-body">
 
         <div class="form-group row">
-            <label for="code" class="col-md-3 col-form-label text-md-right ">{{ __('Mã kích hoạt') }}</label>
+            <label for="code" class="col-md-3 col-form-label text-md-right ">{{ __('Danh sách mã') }}</label>
             <div class="col-md-8">
                 <textarea id="code" onchange="hp();" class="form-control @error('code') is-invalid @enderror" name="code" rows="3">{{ old('code') }}</textarea>
                 <p class="mt-1 small">@lang('Một dòng tương ứng với một mã bạn cần nhập.')</p>
@@ -14,19 +14,19 @@
         </div>
 
         <div class="form-group row">
-            <label for="email" class="col-md-3 col-form-label text-md-right ">{{ __('Mẫu thông báo email') }}</label>
+            <label for="notif" class="col-md-3 col-form-label text-md-right ">{{ __('Mẫu thông báo') }}</label>
             <div class="col-md-8">
-                <textarea id="email" onchange="hp();" class="form-control @error('email') is-invalid @enderror" name="email" rows="2">{{ old('email', !empty($notifTemplates) ? $notifTemplates->email_template : '') }}</textarea>
+                <textarea id="notif" onchange="hp();" class="form-control @error('notif') is-invalid @enderror" name="notif" rows="3">{{ old('notif', !empty($notifTemplates) ? $notifTemplates->notif_template : '') }}</textarea>
                 <p class="mt-1 small">@lang('Nhập {code} để thay thế cho phần mã gửi tới khách hàng của bạn.')</p>
-            </div>
+            </div>  
         </div>
 
         <div class="form-group row">
-            <label for="notif" class="col-md-3 col-form-label text-md-right ">{{ __('Mẫu thông báo điện thoại') }}</label>
+            <label for="email" class="col-md-3 col-form-label text-md-right ">{{ __('Mẫu thư điện tử') }}</label>
             <div class="col-md-8">
-                <textarea id="notif" onchange="hp();" class="form-control @error('notif') is-invalid @enderror" name="notif" rows="2">{{ old('notif', !empty($notifTemplates) ? $notifTemplates->notif_template : '') }}</textarea>
+                <textarea id="email" onchange="hp();" class="form-control editor @error('email') is-invalid @enderror" name="email" rows="2">{{ old('email', !empty($notifTemplates) ? $notifTemplates->email_template : '') }}</textarea>
                 <p class="mt-1 small">@lang('Nhập {code} để thay thế cho phần mã gửi tới khách hàng của bạn.')</p>
-            </div>  
+            </div>
         </div>
     </div>
 </div>

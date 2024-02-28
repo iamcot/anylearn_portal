@@ -15,15 +15,14 @@
             <div class="col-sm-3">
                 <h4 class="text-decoration-none text-black pb-2">ĐIỀU KHOẢN & CHÍNH SÁCH</h4>
                 <ul class="list-unstyled">
-                    <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều Khoản Sử Dụng</a>
-                    </li>
-                    <li><a href="/privacy" class="text-secondary text-decoration-none">Chính Sách Bảo Mật</a></li>
+                    <li><a href="/guide?p=guide_toc" class="text-secondary text-decoration-none">Điều khoản sử dụng</a></li>
+                    <li><a href="/guide?p=guide_del_account" class="text-secondary text-decoration-none">Điều khoản xóa tài khoản</a></li>
+                    <li><a href="/privacy" class="text-secondary text-decoration-none">Chính sách bảo mật thông tin</a></li>
+                    <li><a href="/guide?p=guide_payment_term" class="text-secondary text-decoration-none">Chính sách bảo mật thanh toán</a></li>
+                    <li><a href="/guide?p=guide_toc_teacher" class="text-secondary text-decoration-none">Chính sách dành cho học viên - giảng viên</a></li>
+                    <li><a href="/guide?p=guide_return" class="text-secondary text-decoration-none">Chính sách hủy - đổi - trả sản phẩm</a></li>
+                    <li><a href="/guide?p=guide_dispute_resolution" class="text-secondary text-decoration-none">Quy trình giải quyết tranh chấp</a></li>
                 </ul>
-                <h4 class=" text-decoration-none text-black" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
-                <div>
-                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US"><img src="/cdn/img/ggplay.png" class="img-fluid mt-2" width="70%"></a>
-                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038"><img src="/cdn/img/appstore.png" class="img-fluid mt-1"width="70%" ></a>
-                </div>
             </div>
             <div class="col-sm-3">
                 <h4 class="text-decoration-none text-black pb-2">TIN TỨC</h4>
@@ -43,11 +42,9 @@
 
                         <img src="/cdn/img/onepay.png" width="20%" class="img-fluid ">
                         <img src="/cdn/img/MoMoLogo.png" width="20%" class="img-fluid">
-
                 </div>
 
-
-                <h4 class="mt-2 text-decoration-none text-black pb-2">THEO DÕI CHÚNG TÔI</h4>
+                <h4 class="mt-2 text-decoration-none text-black pb-3">THEO DÕI CHÚNG TÔI</h4>
                 <div class="social-links">
                     <a target="_blank" href="https://www.youtube.com/channel/UCam71id1lM8tZuMfjy2DDRw"><img
                             src="/cdn/img/youtube.png" alt=""></a>
@@ -55,6 +52,14 @@
                             src="/cdn/img/facebook.png" alt=""></a>
                     <a target="_blank" href="https://zalo.me/0374900344"><img src="/cdn/img/zalo.png"
                             alt=""></a>
+                </div>
+
+                <h4 class="mt-3 text-decoration-none text-black pb-3" id="download-app">TẢI ỨNG DỤNG anyLEARN</h4>
+                <div class="d-flex justify-content-around align-items-center">
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=vn.anylearn&hl=vi&gl=US" >
+                        <img src="/cdn/img/ggplay.png" class="img-fluid" width="100%" style="display:block; min-width:115px; max-height:35px;"></a>
+                    <a target="_blank" href="https://apps.apple.com/vn/app/anylearn/id6453411038">
+                        <img src="/cdn/img/appstore.png" class="img-fluid" width="100%" style="display:block; min-width:115px; max-height:35px;"></a>
                 </div>
             </div>
         </div>
