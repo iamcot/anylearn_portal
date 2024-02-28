@@ -64,6 +64,7 @@ class StudyServices
             'u2.name AS student',
             'ic.code AS activation_info',
             'ua.value AS favorited',
+            'sp.weekdays',
             'sp.time_start',
             'sp.time_end',
             'sp.title AS plan',
