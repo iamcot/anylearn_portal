@@ -499,7 +499,7 @@ class User extends Authenticatable
             );
         if (!$file) {
             $members = $members->paginate(UserConstants::PP);
-            $members->sumC = $copy->sum('users.wallet_c');
+            $members->sumC = $copy->where('users.status', 1)->sum('users.wallet_c');
         } else {
             $members = $members->get();
             if ($members) {
