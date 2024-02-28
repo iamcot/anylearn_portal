@@ -419,7 +419,7 @@ class TransactionController extends Controller
 
         $transaction = DB::table('transactions')
             ->orderby('transactions.id', 'desc')
-            ->join('users', 'transactions.user_id', '=', 'users.id')
+            ->leftjoin('users', 'transactions.user_id', '=', 'users.id')
             ->leftjoin('order_details', 'transactions.order_id', '=', 'order_details.id')
             ->select(['transactions.*', 'users.name', 'users.phone', 'users.email', 'order_details.item_id']);
         // dd($transaction->get());
@@ -669,7 +669,7 @@ class TransactionController extends Controller
                 Transaction::create([
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
-                    'amount' => $point,
+                    'amount' => (-1 * $point),
                     'ref_amount' => (-1 * $point),
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
@@ -694,7 +694,7 @@ class TransactionController extends Controller
         } else if ($request->get('cart_action') == 'remove_point') {
             $tnx = Transaction::find($request->get('point_used_id'));
             User::find($user->id)->update([
-                'wallet_c' => ($user->wallet_c + $tnx->amount)
+                'wallet_c' => ($user->wallet_c + abs($tnx->amount))
             ]);
             $tnx->delete();
             $transService = new TransactionService();
