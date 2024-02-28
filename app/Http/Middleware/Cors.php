@@ -10,7 +10,7 @@ class Cors
     {
         $response = $next($request);
 
-        if ($response instanceof \Illuminate\Http\Response) {
+        if (!($response instanceof \Symfony\Component\HttpFoundation\StreamedResponse)) {
             $response
                 ->header('Access-Control-Allow-Origin', '*')
                 ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
