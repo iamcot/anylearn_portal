@@ -395,7 +395,7 @@ class UserController extends Controller
         $this->data['pointWait'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->sum("amount END");
+            ->sum("amount");
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
