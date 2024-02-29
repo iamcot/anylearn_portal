@@ -54,12 +54,14 @@ class StudyServices
         $items->join('users AS u1', 'u1.id', '=', 'items.user_id'); 
         $items->join('users AS u2', 'u2.id', '=', 'od.user_id');
         $items->leftJoin('item_user_actions AS ua', function($join) {
-            $join->on('ua.user_id', '=', 'orders.user_id');
-            $join->on('ua.item_id', '=', 'od.item_id');
+            $join->on('ua.user_id', '=', 'orders.user_id')
+               ->where('ua.item_id', '=', 'od.item_id')
+               ->where('ua.type', '=', 'fav');
         });
         $items->leftJoin('item_codes AS ic', 'ic.order_detail_id', '=', 'od.id');
         $items->where('od.id', $orderItemID);
         $items->addSelect(
+            'u1.id AS author_id',
             'u1.name AS author',
             'u2.name AS student',
             'ic.code AS activation_info',
