@@ -391,11 +391,11 @@ class UserController extends Controller
         $this->data['pointReiceived'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
-            ->sum(DB::raw("CASE WHEN type = 'exchange' THEN ref_amount ELSE amount END"));
+            ->sum("amount");
         $this->data['pointWait'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->sum(DB::raw("CASE WHEN type = 'exchange' THEN ref_amount ELSE amount END"));
+            ->sum("amount END");
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
@@ -932,7 +932,7 @@ class UserController extends Controller
         $item = Item::find($orderDetail->item_id);
         if (!$user) {
             return redirect()->back()->with('notify', 'Không có dữ liệu về khóa học');
-        } else {
+        } else { 
             $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
             if ($schedule) {
                 $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);

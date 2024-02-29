@@ -60,7 +60,7 @@ class Notification extends Model
                 try {
                     if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
                         $data['content'] =  $this->buildContent(
-                            !empty($notifTemplate) ? $emailTemplate : $config['template'],
+                            !empty($emailTemplate) ? $emailTemplate : $config['template'],
                             $data
                         );
                     }

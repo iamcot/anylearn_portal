@@ -171,7 +171,16 @@ class TransactionController extends Controller
                 'vouchers.voucher',
                 'vouchers.value AS voucher_value',
                 'transactions.amount AS anypoint',
-                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+                DB::raw("(SELECT GROUP_CONCAT(
+                    CASE WHEN item_schedule_plans.title IS NOT NULL THEN 
+                        CONCAT(items.title, '(Lịch học: ', COALESCE(item_schedule_plans.title, ''), ')')
+                    ELSE
+                        items.title
+                    END SEPARATOR ';' ) as classes FROM order_details AS os 
+                JOIN items ON items.id = os.item_id 
+                LEFT JOIN item_schedule_plans ON os.item_schedule_plan_id = item_schedule_plans.id
+                WHERE os.order_id = orders.id
+                ) as classes")
             )->orderby('orders.id', 'desc')
             ->paginate();
         $this->data['navText'] = __('Đơn hàng đã đặt');
@@ -408,12 +417,11 @@ class TransactionController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        $transaction = DB::table('transactions')->whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+        $transaction = DB::table('transactions')
             ->orderby('transactions.id', 'desc')
-            ->join('users', 'transactions.user_id', '=', 'users.id')
-            ->join('orders', 'transactions.order_id', '=', 'orders.id')
-            ->where('orders.status', 'delivered')
-            ->select(['transactions.id', 'users.name', 'users.phone', 'users.email', 'transactions.amount', 'transactions.content', 'transactions.created_at', 'transactions.type', 'transactions.updated_at']);
+            ->leftjoin('users', 'transactions.user_id', '=', 'users.id')
+            ->leftjoin('order_details', 'transactions.order_id', '=', 'order_details.id')
+            ->select(['transactions.*', 'users.name', 'users.phone', 'users.email', 'order_details.item_id']);
         // dd($transaction->get());
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
@@ -450,7 +458,7 @@ class TransactionController extends Controller
             $headers = [
                 // "Content-Encoding" => "UTF-8",
                 "Content-type" => "text/csv",
-                "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
+                "Content-Disposition" => "attachment; filename=anylearn_tnx_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
                 "Expires" => "0"
@@ -661,7 +669,7 @@ class TransactionController extends Controller
                 Transaction::create([
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
-                    'amount' => $point,
+                    'amount' => (-1 * $point),
                     'ref_amount' => (-1 * $point),
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
@@ -686,7 +694,7 @@ class TransactionController extends Controller
         } else if ($request->get('cart_action') == 'remove_point') {
             $tnx = Transaction::find($request->get('point_used_id'));
             User::find($user->id)->update([
-                'wallet_c' => ($user->wallet_c + $tnx->amount)
+                'wallet_c' => ($user->wallet_c + abs($tnx->amount))
             ]);
             $tnx->delete();
             $transService = new TransactionService();

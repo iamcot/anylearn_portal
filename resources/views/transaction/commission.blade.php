@@ -77,7 +77,10 @@
                     <th class="text-center">User (SDT)</th>
                     <th class="text-center">Loại</th>
                     <th class="text-center">Số tiền</th>
+                    <th class="text-center">Số tiền tham chiếu</th>
                     <th class="text-center">Nội dung</th>
+                    <th class="text-center">Trạng thái</th>
+
                     <th class="text-center">Cập nhật</th>
                 </tr>
             </thead>
@@ -86,10 +89,12 @@
                 @foreach($transaction as $row)
                 <tr>
                     <th class="text-center" scope="row">{{ $row->id }}</th>
-                    <td class="text-center" scope="row">@if(!empty($row->name)) {{ $row->name }} ({{ $row->phone }}) @endif</td>
+                    <td class="text-center" scope="row">@if(!empty($row->name)) <a href="/admin/user/members/{{ $row->user_id }}" target="_blank">{{ $row->name }} ({{ $row->phone }}) </a>@endif</td>
                     <td class="text-center" scope="row">{{ $row->type }}</td>
                     <td class="text-center" scope="row">{{ number_format($row->amount) }}</td>
-                    <td class="text-center" scope="row">{{ $row->content }}</td>
+                    <td class="text-center" scope="row">{{ number_format($row->ref_amount) }}</td>
+                    <td class="text-center" scope="row">{{ $row->content }} @if($row->item_id) <a href="/admin/class/{{ $row->item_id }}/edit" target="_blank">Xem lớp học</a> @endif</td>
+                    <td class="text-center text-{{ $transServ->statusColor( $row->status ) }}" scope="row">{{ $transServ->statusText( $row->status )  }}</td>
                     <td class="text-center">{{ date('H:i d/m/y', strtotime($row->updated_at)) }}</td>
                 </tr>
                 @endforeach

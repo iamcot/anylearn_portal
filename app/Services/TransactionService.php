@@ -617,7 +617,7 @@ class TransactionService
                 return false;
             }
             User::find($userId)->update([
-                'wallet_c' => DB::raw('wallet_c + ' . $tnx->amount),
+                'wallet_c' => DB::raw('wallet_c + ' . abs($tnx->amount)),
             ]);
             Transaction::find($tnx->id)->delete();
         } catch (\Exception $ex) {
@@ -855,7 +855,7 @@ class TransactionService
                     'content' => 'Hoàn trả '. $tnx->amount .' anypoints vì đơn hàng #' . 
                         $openOrder->id . ' được trả lại.',
                     'user_id' => $user->id,
-                    'amount' => $tnx->amount,
+                    'amount' => abs($tnx->amount),
                     'order_id' => $tnx->order_id
                 ]);
 
@@ -1186,7 +1186,9 @@ class TransactionService
                 'isp.title AS plan_title',
                 'isp.weekdays AS plan_weekdays',
                 'isp.date_start AS plan_date_start',
-                'ul.title AS plan_location_name'
+                'isp.info AS plan_info',
+                'ul.title AS plan_location_name',
+                
             )
             ->first();
     }
