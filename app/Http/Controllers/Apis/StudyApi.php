@@ -54,7 +54,7 @@ class StudyApi extends Controller
             return response()->json(['error' => 'Item not found!'], HTTPConstants::HTTP_NOT_FOUND);
         };
         $activationInfo = json_decode($data->activation_info, true);
-        $data->activationInfo = $activationInfo !== null || json_last_error() === JSON_ERROR_NONE 
+        $data->activation_info = $activationInfo !== null || json_last_error() === JSON_ERROR_NONE 
             ? $activationInfo
             : ['code' => $data->activation_info];
         return response()->json($data);
