@@ -52,8 +52,11 @@ class StudyApi extends Controller
         $data = $this->studyServ->getRegisteredItemInfo($user, $orderItemID);
         if (!$data) {
             return response()->json(['error' => 'Item not found!'], HTTPConstants::HTTP_NOT_FOUND);
-        }
-        $data['activation_info'] = json_decode($data['activation_info'], true) ?? ['code' => $data['activation_info']];
+        };
+        $activationInfo = json_decode($data['activation_info'], true);
+        $data->activationInfo = $activationInfo !== null || json_last_error() === JSON_ERROR_NONE 
+            ? $activationInfo
+            : ['code' => $data['activation_info']];
         return response()->json($data);
     }
     
