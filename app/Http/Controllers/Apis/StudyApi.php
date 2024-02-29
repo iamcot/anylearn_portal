@@ -56,7 +56,7 @@ class StudyApi extends Controller
         $activationInfo = json_decode($data['activation_info'], true);
         $data->activationInfo = $activationInfo !== null || json_last_error() === JSON_ERROR_NONE 
             ? $activationInfo
-            : ['code' => $data['activation_info']];
+            : ['code' => $data->activation_info];
         return response()->json($data);
     }
     
