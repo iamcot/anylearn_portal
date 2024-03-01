@@ -40,7 +40,7 @@ class StudyServices
     {
         $items = $this->queryRegisteredItems($user);
         $this->applyStatusFilter($items, ItemConstants::STATUS_ONGOING, $date);
-
+        dd($items->get());
         return $items->whereRaw(
             'FIND_IN_SET(?, sp.weekdays)', 
             [1 + Carbon::parse($date)->dayOfWeek]
