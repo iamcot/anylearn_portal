@@ -172,6 +172,7 @@ class StudyServices
                 'sp.date_start',
                 'sp.date_end',
                 'od.id AS order_item_id',
+                'od.user_id',
                 'orders.created_at AS purchased_at', 
                 DB::raw('
                     (SELECT ROUND(AVG(value), 1) FROM item_user_actions 
