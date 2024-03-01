@@ -42,6 +42,7 @@ class StudyServices
         $date = isset($date) ? Carbon::parse($date) : Carbon::now();
         $items = $this->queryRegisteredItems($user);
         $this->applyStatusFilter($items, ItemConstants::STATUS_ONGOING, $date);
+        dd($date->dayOfWeek, $items->get());
         return $items->whereRaw('FIND_IN_SET(?, sp.weekdays)', [1 + $date->dayOfWeek])->get();
     }
 
