@@ -17,6 +17,7 @@ class ConfigConstants
     const GUIDE_PRIVACY = 'guide_privacy';
     const GUIDE_CHECKOUT = 'guide_checkout';
 
+    const GUIDE_TOC_PARTNER = 'guide_toc_partner';
     const GUIDE_DEL_ACCOUNT = 'guide_del_account';
     const GUIDE_RETURN_TERM = 'guide_return_term';
     const GUIDE_DISPUTE_RESOLUTION  = 'guide_dispute_resolution';
@@ -104,6 +105,7 @@ class ConfigConstants
         self::GUIDE_DEL_ACCOUNT => 'TOC - Xóa tài khoản',
         self::GUIDE_TOC_SCHOOL => 'Chính sách cho Trung tâm',
         self::GUIDE_TOC_TEACHER => 'Chính sách cho Giảng viên',
+        self::GUIDE_TOC_PARTNER => 'Chính sách cho Đối tác',
         self::GUIDE_PRIVACY => 'Chính sách bảo mật',
         self::GUIDE_PAYMENT_TERM => 'Chính sách thanh toán',
         self::GUIDE_RETURN_TERM => 'Chính sách đổi - trả',

@@ -534,6 +534,8 @@ class PageController extends Controller
     {
         $itemService = new ItemServices();
         $classes = DB::table('items')
+            ->join('users', 'users.id', '=', 'items.user_id')
+            ->where('users.status', UserConstants::STATUS_ACTIVE)
             ->where('items.type', ItemConstants::TYPE_CLASS)
             ->where('items.status', ItemConstants::STATUS_ACTIVE)
             ->where('items.user_status', '>', ItemConstants::STATUS_INACTIVE)
@@ -544,6 +546,7 @@ class PageController extends Controller
             ->select('items.*')
             ->orderBy('items.is_hot', 'desc')
             ->orderBy('items.id', 'desc');
+
         if ($id) {
             $author = User::find($id);
             if (empty($author)) {
@@ -581,7 +584,8 @@ class PageController extends Controller
         }
         $data['hasSearch'] = false;
         $listSearch = clone ($classes);
-        if ($request->get('a') == 'search') {
+        
+        if ($request->get('a') == 'search') { 
             $data['hasSearch'] = true;
             $searchTitle = $request->get('s');
             $searchType = $request->get('t');
@@ -589,13 +593,13 @@ class PageController extends Controller
             $searchPrice = $request->get('price');
 
             if ($searchTitle) {
-                $listSearch  = $listSearch->where('title', 'LIKE', "%$searchTitle%");
+                $listSearch  = $listSearch->where('items.title', 'LIKE', "%$searchTitle%");
             }
             if ($searchPrice) {
-                $listSearch  = $listSearch->where('price', '<=', $searchPrice);
+                $listSearch  = $listSearch->where('items.price', '<=', $searchPrice);
             }
             if ($searchType) {
-                $listSearch  = $listSearch->where('subtype', $searchType);
+                $listSearch  = $listSearch->where('items.subtype', $searchType);
             }
             if ($searchCategory) {
                 $listSearch  = $listSearch->join('items_categories AS ic', function ($query) use ($searchCategory) {
