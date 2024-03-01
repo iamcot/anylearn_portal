@@ -67,14 +67,14 @@ class StudyApi extends Controller
         try {
             $user = $request->get('_user');
             $data = $request->validate([
-                'lookup_date' => 'required|date|date_format:Y-m-d',
-                'date_from' => 'required|date|date_format:Y-m-d',
-                'date_to' => 'required|date|date_format:Y-m-d',
+                'date' => 'required|date|date_format:Y-m-d',
+                'from' => 'required|date|date_format:Y-m-d',
+                'to' => 'required|date|date_format:Y-m-d',
             ]);
 
-            $plans = $this->studyServ->getSchedulePlans($user, $data['date_from'], $data['date_to']);
-            $data['current_plans'] = array_key_exists($data['lookup_date'], $plans) 
-               ? $plans[$request->get('lookup_date')] 
+            $plans = $this->studyServ->getSchedulePlans($user, $data['from'], $data['to']);
+            $data['current_plans'] = array_key_exists($data['date'], $plans) 
+               ? $plans[$request->get('date')] 
                : [];
             $data['schedule_plans'] = $plans;
 
