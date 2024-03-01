@@ -39,14 +39,10 @@ class StudyServices
 
     public function getSchedulePlansForDay($user, $date = null) 
     {
-        $date = $date ?? Carbon::now();
+        $date = isset($date) ? Carbon::parse($date) : Carbon::now();
         $items = $this->queryRegisteredItems($user);
         $this->applyStatusFilter($items, ItemConstants::STATUS_ONGOING, $date);
-        return $items->whereRaw(
-            'FIND_IN_SET(?, sp.weekdays)', 
-            [1 + Carbon::parse($date)->dayOfWeek]
-        )
-        ->get();
+        return $items->whereRaw('FIND_IN_SET(?, sp.weekdays)', [1 + $date->dayOfWeek])->get();
     }
 
     public function getRegisteredItemInfo($userID, $orderItemID)
