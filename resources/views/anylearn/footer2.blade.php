@@ -19,8 +19,8 @@
                     <li><a href="/guide?p=guide_del_account" class="text-secondary text-decoration-none">Điều khoản xóa tài khoản</a></li>
                     <li><a href="/privacy" class="text-secondary text-decoration-none">Chính sách bảo mật thông tin</a></li>
                     <li><a href="/guide?p=guide_payment_term" class="text-secondary text-decoration-none">Chính sách bảo mật thanh toán</a></li>
-                    <li><a href="/guide?p=guide_toc_teacher" class="text-secondary text-decoration-none">Chính sách dành cho học viên - giảng viên</a></li>
-                    <li><a href="/guide?p=guide_return" class="text-secondary text-decoration-none">Chính sách hủy - đổi - trả sản phẩm</a></li>
+                    <li><a href="/guide?p=guide_toc_partner" class="text-secondary text-decoration-none">Chính sách dành cho học viên - giảng viên</a></li>
+                    <li><a href="/guide?p=guide_return_term" class="text-secondary text-decoration-none">Chính sách đổi - trả và hoàn tiền </a></li>
                     <li><a href="/guide?p=guide_dispute_resolution" class="text-secondary text-decoration-none">Quy trình giải quyết tranh chấp</a></li>
                 </ul>
             </div>
