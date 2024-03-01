@@ -181,7 +181,9 @@ class StudyServices
                     WHERE item_id = od.item_id AND type = "rating"
                     ) AS rating'
                 ),
-            );
+            )
+            ->orderByDesc('od.created_at');
+        
         
         if ($user->is_child) {
             $items->where('od.user_id', $user->id);
