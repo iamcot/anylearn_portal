@@ -235,7 +235,7 @@ class ClassController extends Controller
             ->join('items as i', 'i.id', '=', 'ia.item_id')
             ->join('users as u', 'u.id', '=', 'ia.user_id')
             ->join('users as iu', 'iu.id', '=', 'i.user_id')
-            ->select('ia.*', 'i.title', 'u.name buyer', 'iu.name partner', 'u.phone buyer_phone')
+            ->select('ia.*', 'i.title', 'u.name as buyer_name', 'iu.name as partner', 'u.phone as buyer_phone')
             ->orderby('ia.id', 'desc')
             ->get();
 
