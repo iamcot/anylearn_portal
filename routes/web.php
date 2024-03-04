@@ -293,7 +293,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
 
     Route::any('/class', 'ClassController@list')->name('class');
     Route::any('/class/create', 'ClassController@create')->name('class.create');
-    Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
+    // Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
     Route::get('/class/activities', 'ClassController@activities')->name('class.activities');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
     Route::middleware('access.item')->any('/class/{id}/del', 'ClassController@del')->name('class.del');
