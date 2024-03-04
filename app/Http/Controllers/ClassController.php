@@ -237,7 +237,7 @@ class ClassController extends Controller
             ->join('users as iu', 'iu.id', '=', 'i.user_id')
             ->select('ia.*', 'i.title', 'u.name as buyer_name', 'iu.name as partner', 'u.phone as buyer_phone')
             ->orderby('ia.id', 'desc')
-            ->get();
+            ->paginate(20);
 
         $this->data['data'] = $data;
         return view('class.activities', $this->data);
