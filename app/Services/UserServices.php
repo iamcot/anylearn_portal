@@ -586,7 +586,14 @@ class UserServices
             'partner' => $partner->name
         ];
         try {
-            Mail::to($user->email)->send(new ActivityMail($data));
+            Mail::to("info@anylearn.vn")->send(new ActivityMail($data)); // mail to admin
+
+            if (!empty($user->email)) {
+                Mail::to($user->email)->send(new ActivityMail($data)); // mail to user
+            }
+            if (!empty($partner->email)) {
+            Mail::to($partner->email)->send(new ActivityMail($data)); // mail to partner
+            }
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");

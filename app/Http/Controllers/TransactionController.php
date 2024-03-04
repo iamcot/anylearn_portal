@@ -329,21 +329,21 @@ class TransactionController extends Controller
             if ($request->get("activiy_trial") == "on") {
                 $input['date'] = $input['trial_date'];
                 $input['note'] = $input['trial_note'];
-                $itemService->activity("trial", $input, $input['class']);
+                $itemService->activity($user, "trial", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_trial", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_visit") == "on") {
 
                 $input['date'] = $input['visit_date'];
                 $input['note'] = $input['visit_note'];
-                $itemService->activity("visit", $input, $input['class']);
+                $itemService->activity($user, "visit", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_visit", $request->get('class'), $input['visit_date']);
             }
             if ($request->get("activiy_test") == "on") {
 
                 $input['date'] = $input['test_date'];
                 $input['note'] = $input['test_note'];
-                $itemService->activity("test", $input, $input['class']);
+                $itemService->activity($user, "test", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_test", $request->get('class'), $input['test_date']);
             }
             if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
@@ -366,19 +366,19 @@ class TransactionController extends Controller
             if ($request->get("activiy_trial") == "on") {
                 $input['date'] = $input['trial_date'];
                 $input['note'] = $input['trial_note'];
-                $itemService->activity("trial", $input, $input['class']);
+                $itemService->activity($user, "trial", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_trial", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_visit") == "on") {
                 $input['date'] = $input['visit_date'];
                 $input['note'] = $input['visit_note'];
-                $itemService->activity("visit", $input, $input['class']);
+                $itemService->activity($user, "visit", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_visit", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_test") == "on") {
                 $input['date'] = $input['test_date'];
                 $input['note'] = $input['test_note'];
-                $itemService->activity("test", $input, $input['class']);
+                $itemService->activity($user, "test", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_test", $request->get('class'), $input['trial_date']);
             }
             $item = Item::find($request->get('class'));
