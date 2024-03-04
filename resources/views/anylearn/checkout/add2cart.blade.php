@@ -213,8 +213,10 @@
         @endif
         <div class="text-center mb-5 mt-5">
             @if (!isset($activiy))
+                @if ($item->subtype == 'extra' || $item->subtype == 'offline')
                 <button name="action" value="saveActivity"
                     class="btn btn-warning border-0 font-weight-bold mb-3">@lang('CHỈ ĐĂNG KÝ TRẢI NGHIỆM')</button>
+                    @endif
                 <button name="action" value="saveCart"
                     class="btn btn-success border-0 font-weight-bold">@lang('ĐĂNG KÝ HỌC')</button>
             @else
