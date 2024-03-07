@@ -87,7 +87,7 @@ class UserServices
     {
         return User::selectRaw('sale_priority AS priority, count(*) AS number')
           ->whereIn('users.role', UserConstants::$memberRoles)
-          ->where('is_test', 0)
+        //   ->where('is_test', 0)
           ->groupBy(DB::raw('sale_priority WITH ROLLUP'))
           ->get();
     }
