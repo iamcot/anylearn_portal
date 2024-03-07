@@ -36,7 +36,7 @@
                                             border-radius: 5px; 
                                             background: {{ $priorityColors[$memberProfile->sale_priority] }}">
                                             @foreach($priorityUsers as $key => $prio)
-                                                <option value="{{ $key }}" {{ ( !empty($user) && $memberProfile->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
+                                                <option value="{{ $key }}" {{ (!empty($user) && !empty($priorityLevels[$key]) && $memberProfile->sale_priority == $key) ? "selected" : "" }}>{{ $prio }}</option>
                                             @endforeach
                                         </select>    
                                     </div>
