@@ -11,7 +11,7 @@
                             <img src="{{ $school['image'] }}" alt="">
                         </li>
                     @else
-                        <li class="col-xs-4 col-sm-3 col-md-2 col-lg-1 p-3" style="max-width: 90.5; max-height:100px">
+                        <li class="col-xs-4 col-sm-3 col-md-2 col-lg-1 {{ $school['class'] ?? 'p-3' }}" style="max-width: 90px; max-height:95px">
                             <img src="{{ $school['image'] }}" alt="" width="100%">
                         </li>
                     @endif

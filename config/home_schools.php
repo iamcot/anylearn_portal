@@ -71,6 +71,7 @@
     ], 
     [
         'image' => '/cdn/onepage/images/schools/W-24.jpg',
+        'class' => 'p-1',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-25.png',
@@ -107,15 +108,19 @@
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-37.jpeg',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-39.png',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-40.jpg',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-41.png',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-42.png',
@@ -143,9 +148,11 @@
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-50.png',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-51.jpg',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-52.jpg',
@@ -173,6 +180,7 @@
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-60.png',
+        'class' => '',
     ],   
     [
         'image' => '/cdn/onepage/images/schools/W-61.png',
@@ -182,6 +190,7 @@
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-63.png',
+        'class' => '',
     ],
     [
         'image' => '/cdn/onepage/images/schools/W-64.png',
