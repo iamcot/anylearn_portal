@@ -83,6 +83,27 @@ class UserServices
         ],
     ];
 
+    public function countUsersByPriority()
+    {
+        return User::selectRaw('sale_priority AS priority, count(*) AS number')
+          ->where('is_child', 0)
+          ->groupBy(DB::raw('sale_priority WITH ROLLUP'))
+          ->get();
+    }
+
+    public function getUsersByPriority() 
+    {
+        $priorityUsers = UserConstants::$salePriorityLevels;
+        foreach($this->countUsersByPriority() as $value) {
+            if (isset($value['priority'])) {
+                $priorityUsers[$value['priority']] = $priorityUsers[$value['priority']] . ' (' . $value['number'] . ')'; 
+            } else {
+                $priorityUsers['total'] = 'Total: ' . $value['number'] . ' users'; 
+            }    
+        }
+        return $priorityUsers;
+    }
+
     public function userRoles()
     {
         return array_keys($this->roles);

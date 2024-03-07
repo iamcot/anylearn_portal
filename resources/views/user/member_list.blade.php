@@ -82,9 +82,9 @@
                     <label for="">Độ ưu tiên</label>
                     <select name="sale_priority" id="sale_priority" class="form-control">
                         <option value="">---</option>
-                        @foreach($priorityLevels as $key => $prio)
+                        @foreach($priorityUsers as $key => $prio)
                             <option value="{{ $key }}" {{ null != Request::get('sale_priority') && Request::get('sale_priority') == $key ? "selected" : "" }}>
-                                {{ strtoupper($prio) }}
+                                {{ $prio }}
                             </option>
                         @endforeach
                     </select>
