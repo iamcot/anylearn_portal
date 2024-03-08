@@ -605,9 +605,8 @@ class ItemServices
             }
         }
     }
-    public function activity($type, $input, $itemId)
+    public function activity($user, $type, $input, $itemId)
     {
-        $user = Auth::user();
         ItemActivity::create([
             "item_id" => $itemId,
             "type" => $type,

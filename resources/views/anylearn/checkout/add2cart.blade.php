@@ -146,7 +146,7 @@
                 <div class="card mb-3 border-left-primary shadow">
                     <div class="card-header">
                         <h5 class="modal-title m-0 font-weight-bold text-secondary"><i class="fas fa-people-carry"></i>
-                            @lang('Các hoạt động')
+                            @lang('Các hoạt động trải nghiệm')
                         </h5>
                     </div>
                     <div class="card-body">
@@ -213,11 +213,15 @@
         @endif
         <div class="text-center mb-5 mt-5">
             @if (!isset($activiy))
+                @if ($item->subtype == 'extra' || $item->subtype == 'offline')
+                <button name="action" value="saveActivity"
+                    class="btn btn-warning w-50 border-0 font-weight-bold mb-3">@lang('CHỈ ĐĂNG KÝ TRẢI NGHIỆM')</button>
+                    @endif
                 <button name="action" value="saveCart"
-                    class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ')</button>
+                    class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ HỌC')</button>
             @else
                 <button name="action" value="saveActivity"
-                    class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ')</button>
+                    class="btn btn-success w-50 border-0 font-weight-bold">@lang('ĐĂNG KÝ TRẢI NGHIỆM')</button>
             @endif
 
         </div>

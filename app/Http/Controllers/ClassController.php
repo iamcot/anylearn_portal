@@ -230,6 +230,19 @@ class ClassController extends Controller
         return redirect()->back();
     }
 
+    public function activities(Request $request) {
+        $data = DB::table('item_activities as ia')
+            ->join('items as i', 'i.id', '=', 'ia.item_id')
+            ->join('users as u', 'u.id', '=', 'ia.user_id')
+            ->join('users as iu', 'iu.id', '=', 'i.user_id')
+            ->select('ia.*', 'i.title', 'u.name as buyer_name', 'iu.name as partner', 'u.phone as buyer_phone')
+            ->orderby('ia.id', 'desc')
+            ->paginate(20);
+
+        $this->data['data'] = $data;
+        return view('class.activities', $this->data);
+    }
+
     public function edit(Request $request, $courseId)
     {
         $input = $request->all();

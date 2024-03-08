@@ -57,6 +57,7 @@ class CrmController extends Controller
 
         $this->data['sale'] = $user;
         $this->data['memberProfile'] = $saleUser;
+        $this->data['priorityUsers'] = $userService->getUsersByPriority();
         $this->data['priorityLevels'] = UserConstants::$salePriorityLevels;
         $this->data['priorityColors'] = UserConstants::$salePriorityColors;
         $this->data['navText'] = $saleUser->name;
@@ -78,9 +79,9 @@ class CrmController extends Controller
     }
 
     public function changeSalePriority(Request $request, $userId) 
-    {
+    { 
         $user = User::find($userId);
-        if ($user && in_array($request->input['sale_priority'], array_keys(UserConstants::$salePriorityLevels))) {
+        if ($user && !empty(UserConstants::$salePriorityLevels[$request->input('priority')])) {
             $user->update(['sale_priority' => $request->input('priority')]);
             return redirect()->back()->with('notify', 'Thao tác thành công.');
         }

@@ -83,6 +83,28 @@ class UserServices
         ],
     ];
 
+    public function countUsersByPriority()
+    {
+        return User::selectRaw('sale_priority AS priority, count(*) AS number')
+          ->whereIn('users.role', UserConstants::$memberRoles)
+        //   ->where('is_test', 0)
+          ->groupBy(DB::raw('sale_priority WITH ROLLUP'))
+          ->get();
+    }
+
+    public function getUsersByPriority() 
+    {
+        $priorityUsers = UserConstants::$salePriorityLevels;
+        foreach($this->countUsersByPriority() as $value) {
+            if (isset($value['priority'])) {
+                $priorityUsers[$value['priority']] = $priorityUsers[$value['priority']] . ' (' . $value['number'] . ')'; 
+            } else {
+                $priorityUsers['total'] = 'Total: ' . $value['number'] . ' users'; 
+            }    
+        }
+        return $priorityUsers;
+    }
+
     public function userRoles()
     {
         return array_keys($this->roles);
@@ -586,7 +608,14 @@ class UserServices
             'partner' => $partner->name
         ];
         try {
-            Mail::to($user->email)->send(new ActivityMail($data));
+            Mail::to("info@anylearn.vn")->send(new ActivityMail($data)); // mail to admin
+
+            if (!empty($user->email)) {
+                Mail::to($user->email)->send(new ActivityMail($data)); // mail to user
+            }
+            if (!empty($partner->email)) {
+            Mail::to($partner->email)->send(new ActivityMail($data)); // mail to partner
+            }
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");

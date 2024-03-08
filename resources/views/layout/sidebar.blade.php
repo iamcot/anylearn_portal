@@ -34,6 +34,11 @@
                 <i class="fas fa-fw fa-bolt"></i>
                     <span>@lang('Thông tin kích hoạt')</span></a>
                 </a>
+
+                <a class="collapse-item {{ in_array($route, ['class.activities']) ? 'active' : '' }}" href="{{ route('class.activities') }}">
+                <i class="fas fa-fw fa-bolt"></i>
+                    <span>@lang('Đăng ký hoạt động trải nghiệm')</span></a>
+                </a>
             </div>
         </div>
     </li>

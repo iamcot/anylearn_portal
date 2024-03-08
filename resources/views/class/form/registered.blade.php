@@ -35,6 +35,9 @@
                     <a class="badge bg-success text-white">Đã xác nhận</a>
                     @endif
                     <a href="{{ route('class.author.cert' , ['itemId' =>  $course['info']->id, 'userId' => $student->id]) }}" class="btn btn-warning btn-sm text-white">Cấp chứng chỉ</a>
+                    @if($userServ->isMod())
+                    <a href="{{ route('crm.sale' , ['userId' => $student->id]) }}" class="btn btn-info btn-sm text-white">Sale</a>
+                    @endif
                 </td>
             </tr>
             @endforeach

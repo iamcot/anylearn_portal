@@ -135,7 +135,7 @@
                     <a class="nav-link" href="/classes">anyCOURSE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ref/anylearn">@lang('TẢI APP')</a>
+                    <a class="nav-link" href="#download-app">@lang('TẢI APP')</a>
                 </li>
                 @if (@auth()->check())
                     <li class="nav-item dropdown no-arrow d-flex">
