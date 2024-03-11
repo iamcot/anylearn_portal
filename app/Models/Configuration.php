@@ -92,6 +92,11 @@ class Configuration extends Model
     public function enableIOSTrans(Request $request)
     {
         $appVer = $request->get('v');
+        $platform = $request->get('p', '');
+        if ($platform != 'ios') {
+            return 1;
+        }
+
         $configVer = env('APP_VERSION_REVIEW', 'NOT_DEFINED');
         return $appVer != $configVer ? 1 : 0;
     }
