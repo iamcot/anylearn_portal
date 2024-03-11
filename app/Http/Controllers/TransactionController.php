@@ -791,7 +791,7 @@ class TransactionController extends Controller
             if (!$existsBank) {
                 return redirect()->back()->with('notify', 'Phương thức thanh toán không tồn tại');
             }
-            $payment = 'onepaylocal';
+            $payment = 'onepayfee';
             $saveCard = false;
             $tokenNum = $existsBank->token_num;
             $tokenExp = $existsBank->token_exp;
