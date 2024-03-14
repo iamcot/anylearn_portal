@@ -64,7 +64,9 @@ class Notification extends Model
                             $data
                         );
                     }
-                    Mail::to($user->email)->send(new $config['email']($data));
+                    Mail::to($user->email)
+                    ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+                    ->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
                 }

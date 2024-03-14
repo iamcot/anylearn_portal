@@ -99,7 +99,9 @@ class VoucherEventLog extends Model
 
                             //@TODO just temporary
                             if (!empty($user->email)) {
-                                Mail::to($user->email)->send(new VoucherEventEmail([
+                                Mail::to($user->email)
+                                ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+                                ->send(new VoucherEventEmail([
                                     'template' => $existsEvent->email_template,
                                     'data' => [
                                         'voucher' => $voucher->voucher,

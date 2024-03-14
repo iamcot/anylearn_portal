@@ -770,7 +770,9 @@ class TransactionService
         }
 
         $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
-        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
+        Mail::to(env('MAIL_FROM_ADDRESS'))
+        ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+        ->send(
             new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
         );
     }

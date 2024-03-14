@@ -608,14 +608,18 @@ class UserServices
             'partner' => $partner->name
         ];
         try {
-            Mail::to("info@anylearn.vn")->send(new ActivityMail($data)); // mail to admin
+            Mail::to("info.anylearn@gmail.com")
+            ->send(new ActivityMail($data)); // mail to admin
 
             if (!empty($user->email)) {
-                Mail::to($user->email)->send(new ActivityMail($data)); // mail to user
+                Mail::to($user->email)
+                ->send(new ActivityMail($data)); // mail to user
             }
-            if (!empty($partner->email)) {
-            Mail::to($partner->email)->send(new ActivityMail($data)); // mail to partner
-            }
+            // if (!empty($partner->email)) {
+            // Mail::to($partner->email)
+            // ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+            // ->send(new ActivityMail($data)); // mail to partner
+            // }
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");
@@ -658,7 +662,9 @@ class UserServices
             ];
         }
         try {
-            Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
+            Mail::to($author->email)
+            ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+            ->send(new MailToPartnerRegisterNew($data));
         } catch(\Exception $e) {
             Log::error($e);
         }
