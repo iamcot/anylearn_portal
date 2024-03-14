@@ -565,7 +565,7 @@ class PageController extends Controller
                 }
             }
             $data['author'] = $author;
-            $classes = $classes->where('user_id', $id);
+            $classes = $classes->where('items.user_id', $id);
             $data['breadcrumb'] = [
                 [
                     'url' => $data['author']->role == 'school' ? '/schools' : '/teachers',
