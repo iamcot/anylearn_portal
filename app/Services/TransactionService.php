@@ -1044,7 +1044,11 @@ class TransactionService
             $notifServ = new Notification();
             $dataOrder = $this->orderDetailToDisplay($orderItem->id);
 
-            $userService->MailToPartnerRegisterNew($item, $user->id, $author);
+            $tnxPartner = Transaction::where('order_id', $orderItem->id)
+            ->where('type', ConfigConstants::TRANSACTION_PARTNER)
+            ->where('pay_method', UserConstants::WALLET_C)
+            ->first();
+            $userService->MailToPartnerRegisterNew($item, $user->id, $author, $tnxPartner);
 
             $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
                 'username' => $user->name,
