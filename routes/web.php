@@ -233,6 +233,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/config/guide/{type}/{id}', 'ConfigController@guidepdf')->name('config.guidepdf');
     Route::any('/config/homepopup', 'ConfigController@homePopup')->name('config.homepopup');
     Route::any('/config/homeclasses', 'ConfigController@homeClasses')->name('config.homeclasses');
+    Route::any('/config/email', 'ConfigController@email')->name('config.email');
     Route::post('/config/guide/{type}', 'ConfigController@guideUpdate');
 
     Route::any('/config/voucher', 'ConfigController@voucher')->name('config.voucher');

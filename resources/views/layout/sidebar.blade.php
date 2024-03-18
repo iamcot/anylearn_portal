@@ -239,6 +239,10 @@
                     <i class="fas fa-fw fa-images"></i>
                     <span>@lang('Banners')</span>
                 </a>
+                <a class="collapse-item {{ $route == 'config.email' ? 'active' : '' }}" href="{{ route('config.email') }}">
+                    <i class="fas fa-fw fa-envelope"></i>
+                    <span>@lang('Mẫu email')</span>
+                </a>
                 <a class="collapse-item" target="_blank" href="{{ route('zalo.oa') }}">
                     <i class="fas fa-fw fa-cogs"></i>
                     <span>@lang('Zalo OA')</span>

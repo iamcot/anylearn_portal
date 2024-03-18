@@ -21,7 +21,7 @@ class ConfigConstants
     const GUIDE_DEL_ACCOUNT = 'guide_del_account';
     const GUIDE_RETURN_TERM = 'guide_return_term';
     const GUIDE_DISPUTE_RESOLUTION  = 'guide_dispute_resolution';
-    
+
     const SUPPORT_SCHOOL = 'support_school';
     const SUPPORT_TEACHER = 'support_teacher';
     const SUPPORT_MEMBER = 'support_member';
@@ -52,7 +52,7 @@ class ConfigConstants
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 
-    const ZALO_CODE= 'zalo_code';
+    const ZALO_CODE = 'zalo_code';
     const ZALO_REFRESH = 'zalo_refresh';
     const ZALO_TOKEN = 'zalo_token';
     const ZALO_TOKEN_EXP = 'zalo_token_exp';
@@ -67,12 +67,12 @@ class ConfigConstants
     const CONFIG_NUM_CATEGORY_DISPLAY = 6;
     const CONFIG_NUM_LAST_SEARCH_DISPLAY = 8;
     const CONFIG_NUM_VOUCHER_DISPLAY = 3;
-    const CONFIG_NUM_PAGINATION= 12;
+    const CONFIG_NUM_PAGINATION = 12;
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';
     const TYPE_ZALO = 'zalo';
-
+    const TYPE_EMAIL = 'email';
 
     const TRANSACTION_DEPOSIT = 'deposit';
     const TRANSACTION_WITHDRAW = 'withdraw';
@@ -85,8 +85,8 @@ class ConfigConstants
     const TRANSACTION_PARTNER = 'partner';
 
     const TRANSACTION_FIN_SALARY =  'fin_salary';
-    const TRANSACTION_FIN_OFFICE ='fin_office';
-    const TRANSACTION_FIN_SALE ='fin_sale';
+    const TRANSACTION_FIN_OFFICE = 'fin_office';
+    const TRANSACTION_FIN_SALE = 'fin_sale';
     const TRANSACTION_FIN_MARKETING =  'fin_marketing';
     const TRANSACTION_FIN_ASSETS =  'fin_assets';
     const TRANSACTION_FIN_OTHERS =  'fin_others';
@@ -116,5 +116,15 @@ class ConfigConstants
         self::SUPPORT_SCHOOL => 'Hỗ trợ trường học',
         self::SUPPORT_TEACHER => 'Hỗ trợ chuyên gia',
         self::FAQ => 'FAQ',
+    ];
+
+    const MAIL_TEMPLATE_REGISTER = 'mail_template_register';
+    const MAIL_TEMPLATE_PARTNER_REGISTER = 'mail_template_partner_register';
+
+
+    public static $mailConfigs = [
+        self::MAIL_TEMPLATE_REGISTER,
+        self::MAIL_TEMPLATE_PARTNER_REGISTER,
+
     ];
 }

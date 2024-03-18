@@ -80,9 +80,28 @@ class Configuration extends Model
             $data[$key] = $fileConfig[$key]['value'];
         }
         $dbConfig = $this->whereIn('key', $keys)->get();
+
         if ($dbConfig) {
             foreach ($dbConfig as $config) {
                 $data[$config->key] = $config->value;
+            }
+        }
+
+        return $data;
+    }
+
+    public function getAnotherConfigs(array $keys, $default = null)
+    {
+        $data = [];
+        $fileConfig = $default ?? [];
+        foreach ($keys as $key) {
+            $data[$key] = $fileConfig[$key];
+        }
+        $dbConfig = $this->whereIn('key', $keys)->get();
+
+        if ($dbConfig) {
+            foreach ($dbConfig as $config) {
+                $data[$config->key]['value'] = $config->value;
             }
         }
 
