@@ -109,7 +109,7 @@
     </li>
     @endif
     @if($userService->haveAccess($role, 'useractions'))
-    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'transaction.commission']) ?  'active' : '' }}">
+    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction.commission']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thao tác người dùng')</span>
