@@ -147,7 +147,7 @@ class TransactionService
     {
         switch ($status) {
             case ConfigConstants::TRANSACTION_STATUS_PENDING:
-                return 'grey';
+                return 'warning';
             case ConfigConstants::TRANSACTION_STATUS_DONE:
                 return 'success';
             case ConfigConstants::TRANSACTION_STATUS_REJECT:
