@@ -1050,7 +1050,7 @@ class UserController extends Controller
                     'type' => ConfigConstants::TRANSACTION_WITHDRAW,
                     'amount' => $input['withdraw'],
                     'ref_amount' => $input['withdraw'],
-                    'pay_method' => UserConstants::WALLET_M,
+                    'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
                     'content' => 'Rút ' . $input['withdraw'] . ' cho đơn đối tác #' . ($user->id) . ' ' . $user->name,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
@@ -1061,16 +1061,18 @@ class UserController extends Controller
                 return redirect()->back()->with('notify', 'Mật khẩu không chính xác');
             }
         }
-        $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method', 'wallet_m')->where('type', '!=', ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
-        $totalAmount = DB::table('transactions')
-            ->where('type', 'withdraw')
+        $history = DB::table('transactions')
+        ->where('user_id', $user->id)
+        ->where('type', ConfigConstants::TRANSACTION_WITHDRAW)
+        ->orderByDesc('created_at')->paginate(20);
+        $pending = DB::table('transactions')
+        ->where('type', ConfigConstants::TRANSACTION_WITHDRAW)
             ->where('user_id', $user->id)
-            ->where('status', 0)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
             ->sum('amount');
-        // dd($totalAmount);
         $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
         $this->data['history'] = $history;
-        $this->data['totalAmount'] = ($user->wallet_m - abs($totalAmount) > 0) ? $user->wallet_m - abs($totalAmount) : 0;
+        $this->data['totalAmount'] = ($user->wallet_c - $pending  ) > 0 ? $user->wallet_c - $pending : 0;
         $this->data['user'] = $user;
         $this->data['contract'] = $contract;
         return view(env('TEMPLATE', '') . 'me.withdraw', $this->data);

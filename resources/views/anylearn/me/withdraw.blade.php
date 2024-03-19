@@ -1,4 +1,7 @@
+@inject('transServ','App\Services\TransactionService')
+
 @extends('anylearn.me.layout')
+
 @section('spmb')
     withdraw
 @endsection
@@ -23,8 +26,8 @@
                             <div>Thành viên từ:
                                 {{ $user->is_registered == 0 ? 'Chưa đăng ký' : date('d/m/Y', strtotime($user->created_at)) }}
                             </div>
-                            <div>Số Tiền Hiện Có: <strong
-                                    class="text-danger">{{ number_format($user->wallet_m, 0, ',', '.') }}</strong>
+                            <div>Số anyPoint Hiện Có: <strong
+                                    class="text-danger">{{ number_format($user->wallet_c, 0, ',', '.') }} (Tương đương {{ number_format($user->wallet_c * 1000, 0, ',', '.') }} VND)</strong>
                             </div>
                         </div>
                     </div>
@@ -36,6 +39,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Ngày</th>
                                 <th width=40%>Nội Dung</th>
                                 <th>Số Tiền</th>
@@ -45,14 +49,13 @@
                         <tbody>
                             @foreach ($history as $row)
                             <tr>
+                                <td>{{ $row->id }}</td>
                                 <td>{{ date("H:i d/m/y", strtotime($row->created_at)) }}</td>
                                 <td>{{ $row->content }}</td>
                                 <td>{{ number_format($row->amount) }}</td>
-                                @if ($row->status == 1)
-                                <td><span class="badge badge-success">Đã duyệt</span></td>
-                                @else
-                                <td><span class="badge badge-warning">Đợt duyệt</span></td>
-                                @endif
+                                <td>
+                                <span class="badge badge-{{ $transServ->statusColor($row->status) }}">{{ $transServ->statusText($row->status) }}</span>
+                                </td>
 
                             </tr>
                             @endforeach
@@ -70,7 +73,7 @@
                         <form autocomplete="off" >
                             @csrf
                             <div class="form-group">
-                                <label for="inputCurrentBalance">Số tiền hiện có:</label>
+                                <label for="inputCurrentBalance">Số điểm được rút</label>
                                 <input type="text" class="form-control" min="0" max="{{ $totalAmount }}"
                                     value="{{ isset($totalAmount) ? $totalAmount : null}}" readonly>
                             </div>

@@ -47,10 +47,17 @@ class TransactionController extends Controller
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ActivitybonusConstants::Activitybonus_Bonus])
-            ->orderby('id', 'desc')
-            ->with('user')
-            ->paginate(20);
+        $this->data['transaction'] = Transaction::orderby('id', 'desc')
+            ->with('user');
+        if ($request->get('t')) {
+            if ($request->get('t') == 'type') {
+                $this->data['transaction'] = $this->data['transaction']->where('type', $request->get('s'));
+            }
+            if ($request->get('t') == 'status') {
+                $this->data['transaction'] = $this->data['transaction']->where('status', $request->get('s'));
+            }
+        }
+            $this->data['transaction'] = $this->data['transaction']->paginate(20);
         $this->data['navText'] = __('Quản lý Giao dịch');
         return view('transaction.list', $this->data);
     }

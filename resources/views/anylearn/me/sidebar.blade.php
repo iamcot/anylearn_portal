@@ -42,7 +42,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.work']) ? 'active' : '' }}" href="{{ route('me.work') }}">
                     <i class="far fa-fw fa-sun"></i>
-                    <span>Hoạt động</span>
+                    <span>Hoạt động trải nghiệm</span>
                 </a>
             </div>
         </div>
