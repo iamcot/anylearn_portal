@@ -21,6 +21,12 @@
         </div>
         <div class="col-xs-6 col-lg-2">
             <div class="form-group">
+                <label for="">SPM C</label>
+                <input value="" type="text" class="form-control" name="spmc">
+            </div>
+        </div>
+        <div class="col-xs-6 col-lg-2">
+            <div class="form-group">
                 <label for="">Từ ngày</label>
                 <input value="" type="date" class="form-control" name="date_from">
             </div>

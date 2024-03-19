@@ -71,9 +71,12 @@ class Spm extends Model
         if ($request->input('user_id')) {
             $spms = $spms->where('id', $request->input('user_id'));
         }
-
+        
         if ($request->input('event')) {
             $spms = $spms->where('event', $request->input('event'));
+        }
+        if ($request->input('spmc')) {
+            $spms = $spms->where('spmc', $request->input('spmc'));
         }
 
         if ($request->input('date_from')) {
