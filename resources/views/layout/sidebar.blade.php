@@ -114,7 +114,7 @@
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thao tác người dùng')</span>
         </a>
-        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction',  'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract',  'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}" href="{{ route('user.noprofile') }}">
                     <i class="fas fa-fw fa-fire"></i>
