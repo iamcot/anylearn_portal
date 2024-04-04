@@ -57,7 +57,7 @@
                     <td>{{ $code->item_id }}#{{ $code->class }}</td>
                     <td>{{ $code->code }}</td>
                     <td>{{ $code->user_id  ? ($code->name . "(" . $code->phone . ")") : "" }}</td>
-                    <td>{{ $code->order_detail_id }}</td>
+                    <td><a target="_blank" href="{{ route('order.all') }}?id_f={{ $code->order_id }}"></a>{{ $code->order_id }}</td>
                     <td>{{ $code->updated_at }}</td>
                     <td>
                         @if(isset($code->user_id))

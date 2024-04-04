@@ -175,6 +175,8 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/children', 'Apis\UserApi@listChildren');
     Route::post('/user/children', 'Apis\UserApi@saveChildren');
     Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
+
+    Route::post('/open/class/list', 'OpenApiController@classList');
 });
 
 
