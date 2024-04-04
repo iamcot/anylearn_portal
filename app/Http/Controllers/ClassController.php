@@ -230,7 +230,8 @@ class ClassController extends Controller
         return redirect()->back();
     }
 
-    public function activities(Request $request) {
+    public function activities(Request $request)
+    {
         $data = DB::table('item_activities as ia')
             ->join('items as i', 'i.id', '=', 'ia.item_id')
             ->join('users as u', 'u.id', '=', 'ia.user_id')
@@ -355,7 +356,7 @@ class ClassController extends Controller
                             $notifTemplate->update([
                                 'email_template' => $input['email'],
                                 'notif_template' => $input['notif'],
-                           ]);
+                            ]);
                         }
                     }
                 }
@@ -469,6 +470,17 @@ class ClassController extends Controller
             ) AS cert")
             )
             ->get();
+
+        if ($courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL) {
+            $itemCodes = DB::table('item_codes')
+                ->join('items', 'items.id', '=', 'item_codes.item_id')
+                ->leftjoin('users', 'users.id', '=', 'item_codes.user_id')
+                ->where('items.id', $courseId)
+                ->orderBy('items.id', 'desc')
+                ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone')
+                ->paginate(20);
+            $this->data['itemCodes'] = $itemCodes;
+        }
         $videoServices = new VideoServices();
         $this->data['videos'] = $videoServices->getAllChapterAndLessons($courseId);
         // $this->data['lesson'] = DB::table('item_video_lessons')->get();
