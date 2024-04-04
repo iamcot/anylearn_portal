@@ -475,7 +475,7 @@ class ClassController extends Controller
             $itemCodes = DB::table('item_codes')
                 ->join('items', 'items.id', '=', 'item_codes.item_id')
                 ->leftjoin('users', 'users.id', '=', 'item_codes.user_id')
-                ->join('order_details', 'order_details.id', '=', 'item_codes.order_detail_id')
+                ->leftjoin('order_details', 'order_details.id', '=', 'item_codes.order_detail_id')
                 ->where('items.id', $courseId)
                 ->orderBy('items.id', 'desc')
                 ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone', 'order_details.order_id')
