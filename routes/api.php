@@ -75,6 +75,10 @@ Route::get('/v3/partner/{id}', 'Apis\PartnerApi@index');
 Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 Route::get('/v3/articles', 'Apis\ArticleApi@articles');
 
+Route::any('/open/class/list', 'Apis\OpenApi@classList');
+Route::post('/open/order/purchased', 'Apis\OpenApi@orderPurchased');
+
+
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/meAPI', 'Apis\MeApi@index');
     Route::get('/v3/meWork', 'Apis\MeApi@meWork');
@@ -176,7 +180,6 @@ Route::middleware(['api.user'])->group(function () {
     Route::post('/user/children', 'Apis\UserApi@saveChildren');
     Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
 
-    Route::post('/open/class/list', 'OpenApiController@classList');
 });
 
 

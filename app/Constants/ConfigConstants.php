@@ -52,6 +52,8 @@ class ConfigConstants
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 
+    const CONFIG_OPENAPI_PRODUCTS = 'openapi_products';
+
     const ZALO_CODE = 'zalo_code';
     const ZALO_REFRESH = 'zalo_refresh';
     const ZALO_TOKEN = 'zalo_token';

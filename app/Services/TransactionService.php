@@ -160,7 +160,7 @@ class TransactionService
     /**
      * Changed from Aug 13: If order not paid, new item will be added to open order
      */
-    public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
+    public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false, $autoApprove = false, $autoApproveChannel = 'VNPAY')
     {
         $childUser = $request->get('child', '');
         $input = $request->all();
@@ -184,7 +184,7 @@ class TransactionService
         }
 
         $voucher = $request->get('voucher', '');
-        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $input, $allowNoMoney) {
+        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $input, $allowNoMoney, $autoApprove, $autoApproveChannel) {
             $notifServ = new Notification();
             $openOrder = null;
             $status = OrderConstants::STATUS_DELIVERED;
@@ -431,7 +431,11 @@ class TransactionService
                 ]);
             }
 
-            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE 
+            if ($autoApprove) {
+                $this->approveRegistrationAfterWebPayment($openOrder->id, $autoApproveChannel);
+            }
+
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE || $autoApprove 
                 ? $openOrder->id 
                 : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
