@@ -37,6 +37,7 @@
             <button class="btn btn-success border-0 rounded" name="tab" value="code"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
 </div>
 
+@if(!empty($itemCodes))
 <div class="card shadow mt-3">
     <div class="card-body p-0 table-responsive">
         <table class="table table-bordered table-striped">
@@ -50,7 +51,6 @@
                 <th width="16%">Thao tác</th>
             </thead>
             <tbody>
-                @if(!empty($itemCodes))
                 @foreach ($itemCodes as $code)
                 <tr>
                     <th class="text-center">{{ $code->partner_id }}</th>
@@ -68,7 +68,6 @@
                     </td>
                 </tr>
                 @endforeach
-                @endif
             </tbody>
         </table>
     </div>
@@ -76,6 +75,11 @@
         {{ $itemCodes->appends(request()->query())->links() }}
     </div>
 </div>
+
+@else 
+<p class="p-3">Khoá học chưa tạo code nào.</p>
+@endif
+
 
 @section('jscript')
 @parent
