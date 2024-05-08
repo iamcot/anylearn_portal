@@ -3,23 +3,6 @@
 @section('spmb')
 user_edit
 @endsection
-<style>
-    .bg-holder {
-        position: absolute;
-        width: 100%;
-        min-height: 100%;
-        top: 0;
-        left: 0;
-        background-size: cover;
-        background-position: 50%;
-        overflow: hidden;
-        will-change: transform, opacity, filter;
-        backface-visibility: hidden;
-        background-repeat: no-repeat;
-        z-index: 0;
-        background-image: url("{{ $user->banner }}");
-    }
-</style>
 @section('body')
 <form method="POST" enctype="multipart/form-data">
     @csrf
@@ -27,66 +10,43 @@ user_edit
     <div class="card">
         <div class="bg-light card-body">
             <div class="mb-2">
-                <label class="form-label" for="firstName">{{ __('Họ và tên*') }}</label>
+                <label class="form-label" for="firstName">{{ __('Tên Doanh nghiệp*') }}</label>
                 <input placeholder="Họ và tên*" name="name" type="text" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', !empty($user) ? $user->name : '') }}" required>
             </div>
             <div class="mb-2">
-                <label class="form-label" for="dob">{{ __('Ngày sinh') }}</label>
-                <input placeholder="Ngày sinh" name="dob" type="date" id="dob" class="form-control @error('dob') is-invalid @enderror" value="{{ old('dob', !empty($user) ? $user->dob : '') }}" required>
+                <label class="form-label" for="title">{{ __('Người đại diện') }}</label>
+                <input placeholder="Người đại diện" name="title" type="text" id="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title', !empty($user) ? $user->title : '') }}">
+            </div>
+            <div class="mb-2">
+                <label class="form-label" for="phone">{{ __('Số điện thoại đăng ký') }} (Để thay đổi SĐT đăng ký, vui lòng liên hệ hotline anyLEARN)</label>
+                <input placeholder="Phone" class="form-control" name="phone" value="{{ $user->phone }}" required readonly>
             </div>
             <div class="mb-2">
                 <label class="form-label" for="email">{{ __('Email') }}</label>
                 <input placeholder="Email" name="email" type="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', !empty($user) ? $user->email : '') }}">
             </div>
             <div class="mb-2">
-                <label class="form-label" for="phone">{{ __('Số điện thoại') }}</label>
-                <input placeholder="Phone" name="phone" type="text" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', !empty($user) ? $user->phone : '') }}" required>
-            </div>
-            <div class="mb-2">
-                <label class="form-label" for="cmnd/cccd">{{ __('CMND/CCCD') }}</label>
-                <input placeholder="CMND/CCCD" name="cert_id" type="text" id="cert_id" class="form-control @error('cert_id') is-invalid @enderror" value="{{ old('cert_id', !empty($user) ? $user->cert_id : '') }}">
-            </div>
-            <div class="mb-2">
                 <label class="form-label" for="refcode">{{ __('Mã giới thiệu') }}</label>
                 <input placeholder="Mã giới thiệu" name="refcode" type="text" id="refcode" class="form-control @error('refcode') is-invalid @enderror" value="{{ old('refcode', !empty($user) ? $user->refcode : '') }}" required>
             </div>
+            <hr>
             <div class="mb-2">
-                <label for="name" class="form-label">{{ __('Giới tính') }}</label>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" value="male" name="sex" id="male" <?php if (empty($user->sex) || $user->sex == 'male') {
-                                                                                                                echo "checked='checked'";
-                                                                                                            } ?>>
-                            <label class="form-check-label" for="male">
-                                {{ __('Nam') }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" value="female" name="sex" id="female" <?php if (!empty($user->sex) && $user->sex == 'female') {
-                                                                                                                    echo "checked='checked'";
-                                                                                                                } ?>>
-                            <label class="form-check-label" for="female">
-                                {{ __('Nữ') }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" value="other" name="sex" id="other" <?php if (!empty($user->sex) && $user->sex == 'other') {
-                                                                                                                    echo "checked='checked'";
-                                                                                                                } ?>>
-                            <label class="form-check-label" for="other">
-                                {{ __('Khác') }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
+                <label class="form-label" for="business_certificate">{{ __('Số CNĐKDN') }}</label>
+                <input placeholder="{{ __('Số CNĐKDN') }}" name="business_certificate" type="text" id="business_certificate" class="form-control @error('business_certificate') is-invalid @enderror" value="{{ old('business_certificate', !empty($user) ? $user->business_certificate : '') }}" required>
             </div>
-
+            <div class="mb-2">
+                <label class="form-label" for="first_issued_date">{{ __('Ngày cấp lần đầu') }}</label>
+                <input placeholder="{{ __('Ngày cấp lần đầu') }}" name="first_issued_date" type="date" id="first_issued_date" class="form-control @error('first_issued_date') is-invalid @enderror" value="{{ old('first_issued_date', !empty($user) ? $user->first_issued_date : '') }}" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label" for="issued_by">{{ __('Cấp bởi') }}</label>
+                <input placeholder="{{ __('Cấp bởi') }}" name="issued_by" type="text" id="issued_by" class="form-control @error('issued_by') is-invalid @enderror" value="{{ old('issued_by', !empty($user) ? $user->issued_by : '') }}" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label" for="headquarters_address">{{ __('Địa Chỉ Trụ sở') }}</label>
+                <input placeholder="{{ __('Địa Chỉ') }}" name="headquarters_address" type="text" id="headquarters_address" class="form-control @error('headquarters_address') is-invalid @enderror" value="{{ old('headquarters_address', !empty($user) ? $user->headquarters_address : '') }}" required>
+            </div>
+            <hr>
             <div class="mb-2">
                 <label class="form-label" for="image">{{ __('Ảnh Đại Diện') }}</label>
                 <input name="image" type="file" id="image" class="form-control @error('image') is-invalid @enderror" value="{{ old('image', !empty($user) ? $user->image : '') }}">
@@ -103,12 +63,9 @@ user_edit
                 <img src="{{ $user->banner }}" alt="" style="height: 50px;">
                 @endif
             </div>
-            <div class="mb-2">
-                <label class="form-label" for="address">{{ __('Địa Chỉ') }}</label>
-                <input placeholder="{{ __('Địa Chỉ') }}" name="address" type="text" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address', !empty($user) ? $user->address : '') }}">
-            </div>
 
-            <div class="mb-2">
+
+            <div class="mb-3">
                 <ul class="nav nav-tabs" id="i18ntab" role="tablist">
                     @foreach (App\Models\I18nContent::$supports as $locale)
                     <li class="nav-item" role="presentation">

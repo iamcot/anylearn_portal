@@ -101,7 +101,7 @@ history
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
 
-                <table class="table table-striped table-hover">
+                <table class="table table-striped text-secondary">
                     <thead>
                         <tr class="text-secondary">
                             <th scope="col">Nội dung</th>

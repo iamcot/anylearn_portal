@@ -346,6 +346,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['user'] = $user;
+        if ($user->role == UserConstants::ROLE_SCHOOL) {
+            return view(env('TEMPLATE', '') . 'me.profile_school', $this->data);
+        }
         return view(env('TEMPLATE', '') . 'me.profile', $this->data);
     }
     public function meEdit(Request $request)
@@ -368,6 +371,13 @@ class UserController extends Controller
         $this->data['friends'] = $friends;
         $this->data['user'] = $editUser;
         $this->data['type'] = 'member';
+        $this->data['hasBack'] = true;
+        if ($editUser->role == UserConstants::ROLE_SCHOOL) {
+            $this->data['navText'] = __('Cập nhật thông tin Doanh nghiệp');
+            return view(env('TEMPLATE', '') . 'me.user_edit_school', $this->data);
+        
+        }
+        $this->data['navText'] = __('Cập nhật thông tin');
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
     public function meTransHistory()

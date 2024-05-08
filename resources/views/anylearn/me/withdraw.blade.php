@@ -36,7 +36,7 @@
             <div class="card shadow mt-3">
                 <div class="card-header"><strong>Lịch Sử Giao Dịch</strong></div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table table-striped text-secondary">
                         <thead>
                             <tr>
                                 <th>#</th>

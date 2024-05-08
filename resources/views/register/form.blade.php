@@ -182,7 +182,7 @@
                                 </div>
                                 <div class="form-group row">
                                     <label for="business_certificate"
-                                        class="col-md-4 col-form-label text-md-end">{{ __('Số giấy CNĐKDN') }} *</label>
+                                        class="col-md-4 col-form-label text-md-end">{{ __('Số CNĐKDN') }} *</label>
                                     <div class="col-md-8">
                                         <input id="business_certificate" type="text"
                                             class="form-control @error('business_certificate') is-invalid @enderror"

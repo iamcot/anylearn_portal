@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -130,10 +131,10 @@ class User extends Authenticatable
                 'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
                 'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
                 'title' => isset($data['title']) ? $data['title'] : null,
-    
+
                 ['api_token' => hash('sha256', Str::random(60))]
             ];
-    
+
             $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
             if (!empty($data['ref'])) {
                 $refUser = $this->where('refcode', $data['ref'])->first();
@@ -150,7 +151,7 @@ class User extends Authenticatable
                     ? $configs[ConfigConstants::CONFIG_COMMISSION_AUTHOR]
                     : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
             }
-    
+
             $exists = User::where('phone', $obj['phone'])->where('is_registered', 0)->first();
             if ($exists) {
                 unset($obj['sale_id']);
@@ -163,14 +164,14 @@ class User extends Authenticatable
             if ($newMember->api_token === null) {
                 $newMember->update(['api_token' => hash('sha256', Str::random(60))]);
                 Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
-            } else{
+            } else {
                 Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
-            } 
-        } catch(\Exception $ex) {
+            }
+        } catch (\Exception $ex) {
             $newMember = false;
             Log::error($ex);
         }
-        
+
         try {
             if ($newMember) {
                 $notifM = new Notification();
@@ -197,17 +198,16 @@ class User extends Authenticatable
                 $voucherEvent->useEvent(VoucherEvent::TYPE_REGISTER, $newMember->id, $newMember->user_id ?? 0);
 
                 $this->updateUpTree($newMember->user_id);
-                
+
                 $newMember->commission_rate = (float)$newMember->commission_rate;
                 Cookie::queue(
                     Cookie::forever('api_token', $newMember->api_token, null, null, false, false)
                 );
             }
-
         } catch (\Exception $ex) {
             Log::error($ex);
         }
-        
+
         return $newMember;
     }
 
@@ -294,6 +294,11 @@ class User extends Authenticatable
             'user_id' => $input['user_id'],
             'boost_score' => $input['boost_score'],
             'commission_rate' => $input['commission_rate'],
+
+            'business_certificate' => isset($input['business_certificate']) ? $input['business_certificate'] : null,
+            'first_issued_date' => isset($input['first_issued_date']) ? $input['first_issued_date'] : null,
+            'issued_by' => isset($input['issued_by']) ? $input['issued_by'] : null,
+            'headquarters_address' => isset($input['headquarters_address']) ? $input['headquarters_address'] : null,
         ];
 
         if (isset($input['get_ref_seller'])) {
@@ -474,7 +479,7 @@ class User extends Authenticatable
         $members = $members->orderby('users.is_hot', 'desc')
             ->orderby('users.boost_score', 'desc')
             ->orderby('users.id', 'desc');
-       
+
         $copy = clone $members;
 
         $members = $members

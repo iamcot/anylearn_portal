@@ -30,6 +30,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Exists;
 use Vanthao03596\HCVN\Models\Province;
 
@@ -56,6 +57,7 @@ class PageController extends Controller
 
     public function home()
     {
+        // echo Hash::make('1');
         $lastConfig = Configuration::where('key', ConfigConstants::CONFIG_HOME_POPUP_WEB)->first();
         if (!empty($lastConfig)) {
             $homePopup = json_decode($lastConfig->value, true);

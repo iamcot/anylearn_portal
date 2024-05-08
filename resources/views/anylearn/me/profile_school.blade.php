@@ -54,37 +54,28 @@
     <div class="col-lg-8">
         <div class="mb-3 card ">
             <div class="bg-light card-header">
-                <h5 class="mb-0">Thông tin</h5>
+                <h5 class="mb-0">Thông tin Doanh nghiệp</h5>
             </div>
             <div class="text-justify text-1000 card-body">
                 <div class="">
-                    <label class="form-label" for="lastName">Họ và tên:</label> {{ $user->name }}
-
+                    <label class="form-label" for="title">Người đại diện:</label> {{ $user->title }}
                 </div>
                 <div class="">
-                    <label class="form-label" for="lastName">Ngày sinh:</label> {{ $user->dob }}
-
+                    <label class="form-label" for="phone">Số điện thoại đăng ký:</label> {{ $user->phone }}
                 </div>
                 <div class="">
-                    <label class="form-label" for="lastName">Giới tính:</label> {{ $user->sex }}
-
+                    <label class="form-label" for="business_certificate">Số CNĐKDN:</label> {{ $user->business_certificate }}
                 </div>
                 <div class="">
-                    <label class="form-label" for="lastName">CMND/CCCD:</label> {{ $user->cert_id }}
-
+                    <label class="form-label" for="first_issued_date">Ngày cấp lần đầu:</label> {{ $user->first_issued_date }}
                 </div>
                 <div class="">
-                    <label class="form-label" for="lastName">Mã giới thiệu:</label> {{ $user->refcode }}
-
+                    <label class="form-label" for="issued_by">Cấp bởi:</label> {{ $user->issued_by }}
                 </div>
                 <div class="">
-                    <label class="form-label" for="lastName">Số điện thoại:</label> {{ $user->phone }}
-
+                    <label class="form-label" for="headquarters_address">Địa Chỉ Trụ Sở:</label> {{ $user->headquarters_address }}
                 </div>
-                <div class="">
-                    <label class="form-label" for="lastName">Địa Chỉ:</label> {{ $user->address }}
 
-                </div>
                 @if($user->full_content)
                 <div class="collapse" id="collapseExample">
                     <p>{!! $user->full_content !!}</p>
@@ -98,5 +89,6 @@
             </div>
             @endif
         </div>
-
-        @endsection
+    </div>
+</div>
+@endsection

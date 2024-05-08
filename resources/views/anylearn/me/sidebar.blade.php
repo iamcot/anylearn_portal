@@ -87,7 +87,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
     <hr class="sidebar-divider d-none d-md-block text-secondary">
     @endif
     <div class="sidebar-heading">
-        @lang('Thông tin cơ bản')
+        @lang('Chức năng người dùng')
     </div>
     <li class="nav-item {{ in_array($route, ['me.profile', 'me.edit', 'me.child', 'me.friend', 'me.resetpassword']) ? 'active' : '' }}">
         <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#general-collapse" aria-expanded="false">
