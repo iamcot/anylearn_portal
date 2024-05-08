@@ -111,60 +111,66 @@ class User extends Authenticatable
     }
     public function createNewMember($data)
     {
-        $obj = [
-            'name' => $data['name'],
-            'email' => isset($data['email']) ? $data['email'] : null,
-            'phone' => $data['phone'],
-            'dob' => isset($data['dob']) ? $data['dob'] : null,
-            'address' => isset($data['address']) ? $data['address'] : null,
-            'role' => $data['role'],
-            'country' => isset($data['country']) ? $data['country'] : null,
-            'password' => Hash::make($data['password']),
-            'status' => UserConstants::STATUS_ACTIVE,
-            'update_doc' => UserConstants::STATUS_ACTIVE,
-            'refcode' => $data['phone'],
-            'sale_id' => isset($data['sale_id']) ? $data['sale_id'] : null,
-            'business_certificate' => isset($data['business_certificate']) ? $data['business_certificate'] : null,
-            'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
-            'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
-            'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
-            'title' => isset($data['title']) ? $data['title'] : null,
-
-            ['api_token' => hash('sha256', Str::random(60))]
-        ];
-
-        $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
-        if (!empty($data['ref'])) {
-            $refUser = $this->where('refcode', $data['ref'])->first();
-            $obj['user_id'] = $refUser->id;
+        try {
+            $obj = [
+                'name' => $data['name'],
+                'email' => isset($data['email']) ? $data['email'] : null,
+                'phone' => $data['phone'],
+                'dob' => isset($data['dob']) ? $data['dob'] : null,
+                'address' => isset($data['address']) ? $data['address'] : null,
+                'role' => $data['role'],
+                'country' => isset($data['country']) ? $data['country'] : null,
+                'password' => Hash::make($data['password']),
+                'status' => UserConstants::STATUS_ACTIVE,
+                'update_doc' => UserConstants::STATUS_ACTIVE,
+                'refcode' => $data['phone'],
+                'sale_id' => isset($data['sale_id']) ? $data['sale_id'] : null,
+                'business_certificate' => isset($data['business_certificate']) ? $data['business_certificate'] : null,
+                'first_issued_date' => isset($data['first_issued_date']) ? $data['first_issued_date'] : null,
+                'issued_by' => isset($data['issued_by']) ? $data['issued_by'] : null,
+                'headquarters_address' => isset($data['headquarters_address']) ? $data['headquarters_address'] : null,
+                'title' => isset($data['title']) ? $data['title'] : null,
+    
+                ['api_token' => hash('sha256', Str::random(60))]
+            ];
+    
+            $obj['first_name'] = in_array($data['role'], [UserConstants::ROLE_TEACHER, UserConstants::ROLE_MEMBER]) ? $this->firstnameFromName($data['name']) : $data['name'];
+            if (!empty($data['ref'])) {
+                $refUser = $this->where('refcode', $data['ref'])->first();
+                $obj['user_id'] = $refUser->id;
+            }
+            if ($data['role'] == UserConstants::ROLE_SCHOOL || $data['role'] == UserConstants::ROLE_TEACHER) {
+                $obj['update_doc'] = UserConstants::STATUS_INACTIVE;
+                $configM = new Configuration();
+                $configs = $configM->gets([
+                    ConfigConstants::CONFIG_COMMISSION_AUTHOR,
+                    ConfigConstants::CONFIG_COMMISSION_SCHOOL
+                ]);
+                $obj['commission_rate'] = $data['role'] == UserConstants::ROLE_TEACHER
+                    ? $configs[ConfigConstants::CONFIG_COMMISSION_AUTHOR]
+                    : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
+            }
+    
+            $exists = User::where('phone', $obj['phone'])->where('is_registered', 0)->first();
+            if ($exists) {
+                unset($obj['sale_id']);
+                $obj['is_registered'] = 1;
+                User::find($exists->id)->update($obj);
+                $newMember = User::find($exists->id);
+            } else {
+                $newMember = $this->create($obj);
+            }
+            if ($newMember->api_token === null) {
+                $newMember->update(['api_token' => hash('sha256', Str::random(60))]);
+                Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
+            } else{
+                Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
+            } 
+        } catch(\Exception $ex) {
+            $newMember = false;
+            Log::error($ex);
         }
-        if ($data['role'] == UserConstants::ROLE_SCHOOL || $data['role'] == UserConstants::ROLE_TEACHER) {
-            $obj['update_doc'] = UserConstants::STATUS_INACTIVE;
-            $configM = new Configuration();
-            $configs = $configM->gets([
-                ConfigConstants::CONFIG_COMMISSION_AUTHOR,
-                ConfigConstants::CONFIG_COMMISSION_SCHOOL
-            ]);
-            $obj['commission_rate'] = $data['role'] == UserConstants::ROLE_TEACHER
-                ? $configs[ConfigConstants::CONFIG_COMMISSION_AUTHOR]
-                : $configs[ConfigConstants::CONFIG_COMMISSION_SCHOOL];
-        }
-
-        $exists = User::where('phone', $obj['phone'])->where('is_registered', 0)->first();
-        if ($exists) {
-            unset($obj['sale_id']);
-            $obj['is_registered'] = 1;
-            User::find($exists->id)->update($obj);
-            $newMember = User::find($exists->id);
-        } else {
-            $newMember = $this->create($obj);
-        }
-        if ($newMember->api_token === null) {
-            $newMember->update(['api_token' => hash('sha256', Str::random(60))]);
-            Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
-        } else{
-            Cookie::queue(Cookie::forever('api_token', $newMember->api_token, null, null, false, false));
-        }
+        
         try {
             if ($newMember) {
                 $notifM = new Notification();
@@ -187,20 +193,21 @@ class User extends Authenticatable
                     );
                 }
 
-                // if (!empty($newMember->user_id)) {
                 $voucherEvent = new VoucherEventLog();
                 $voucherEvent->useEvent(VoucherEvent::TYPE_REGISTER, $newMember->id, $newMember->user_id ?? 0);
-                // }
-            }
-            $this->updateUpTree($newMember->user_id);
 
-            $newMember->commission_rate = (float)$newMember->commission_rate;
+                $this->updateUpTree($newMember->user_id);
+                
+                $newMember->commission_rate = (float)$newMember->commission_rate;
+                Cookie::queue(
+                    Cookie::forever('api_token', $newMember->api_token, null, null, false, false)
+                );
+            }
+
         } catch (\Exception $ex) {
             Log::error($ex);
         }
-        Cookie::queue(
-            Cookie::forever('api_token', $newMember->api_token, null, null, false, false)
-        );
+        
         return $newMember;
     }
 

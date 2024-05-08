@@ -118,7 +118,7 @@
                                     <div class="col-md-8">
                                         <input id="phone" type="text"
                                             class="form-control @error('phone') is-invalid @enderror" name="phone"
-                                            value="{{ old('phone') }}" required autocomplete="phone" autofocus>
+                                            value="{{ old('phone') }}" required autocomplete="phone">
                                         @error('phone')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -132,7 +132,7 @@
                                     <div class="col-md-8">
                                         <input id="email" type="text"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
-                                            value="{{ old('email') }}" autocomplete="email" autofocus>
+                                            value="{{ old('email') }}" autocomplete="email">
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -172,7 +172,7 @@
                                     <div class="col-md-8">
                                         <input id="title" type="text"
                                             class="form-control @error('title') is-invalid @enderror" name="title"
-                                            value="{{ old('title') }}" autocomplete="off" autofocus required>
+                                            value="{{ old('title') }}" autocomplete="off" required>
                                         @error('title')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -187,7 +187,7 @@
                                         <input id="business_certificate" type="text"
                                             class="form-control @error('business_certificate') is-invalid @enderror"
                                             name="business_certificate" value="{{ old('business_certificate') }}"
-                                            autocomplete="off" autofocus required>
+                                            autocomplete="off" required>
                                         @error('business_certificate')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -202,7 +202,7 @@
                                         <input id="first_issued_date" type="date"
                                             class="form-control datepicker @error('first_issued_date') is-invalid @enderror"
                                             name="first_issued_date" value="{{ old('first_issued_date') }}"
-                                            autocomplete="off" autofocus required>
+                                            autocomplete="off" required>
                                         @error('first_issued_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -217,7 +217,7 @@
                                     <div class="col-md-8">
                                         <input id="issued_by" type="text"
                                             class="form-control @error('issued_by') is-invalid @enderror"
-                                            name="issued_by" value="{{ old('issued_by') }}" autocomplete="off" autofocus
+                                            name="issued_by" value="{{ old('issued_by') }}" autocomplete="off"
                                             required>
                                         @error('issued_by')
                                             <span class="invalid-feedback" role="alert">
@@ -233,7 +233,7 @@
                                         <input id="headquarters_address" type="text"
                                             class="form-control @error('headquarters_address') is-invalid @enderror"
                                             name="headquarters_address" value="{{ old('headquarters_address') }}"
-                                            autocomplete="off" autofocus required>
+                                            autocomplete="off" required>
                                         @error('headquarters_address')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

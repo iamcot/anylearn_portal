@@ -58,12 +58,14 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
 
-        Auth::login($user);
-        // $cookie = Cookie::forever('api_token', $user->api_token, null, null, false, false);
-        if (session()->has('cb')) {
-            $url = session()->get('cb');
-            session()->forget('cb');
-            return redirect()->to($url)->cookie('api_token',$user->api_token);
+        if ($user) {
+            Auth::login($user);
+
+            if (session()->has('cb')) {
+                $url = session()->get('cb');
+                session()->forget('cb');
+                return redirect()->to($url)->withCookie(cookie('api_token',$user->api_token));
+            }
         }
 
         $data['user'] = $refUser;
@@ -73,14 +75,14 @@ class RegisterController extends Controller
 
         $data['role'] = $request->get('r');
         if ($data['role'] == 'member') {
-            return response()->view('register.member', $data)->cookie('api_token', $user->api_token);
+            return response()->view('register.member', $data)->withCookie(cookie('api_token', $user->api_token));
         } else if ($data['role'] == 'school') {
-            return view('register.school', $data)->cookie('api_token', $user->api_token);
+            return view('register.school', $data)->withCookie(cookie('api_token', $user->api_token));
         } else if ($data['role'] == 'teacher') {
-            return view('register.teacher', $data)->cookie('api_token', $user->api_token);
+            return view('register.teacher', $data)->withCookie(cookie('api_token', $user->api_token));
         }
 
-        return view('register.index', $data)->cookie('api_token', $user->api_token);
+        return view('register.index', $data)->withCookie(cookie('api_token', $user->api_token));
     }
 
     /**
