@@ -1039,8 +1039,9 @@ class TransactionService
             //     ]);
             // }
 
-            if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
-               || $item->subtype == ItemConstants::SUBTYPE_VIDEO
+            if (($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
+               || $item->subtype == ItemConstants::SUBTYPE_VIDEO)
+               && env('CONFIG_TRANSACTION_APPROVE_MANUAL', 0) == 0
             ) {
                 $this->approveTransactionsAfterPayment($orderItem->id);
             }
