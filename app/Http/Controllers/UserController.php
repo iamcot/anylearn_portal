@@ -923,6 +923,7 @@ class UserController extends Controller
         $orderDetailM = new OrderDetail();
         $data = $orderDetailM->usersOrders($user->id);
         $this->data['data'] = $data;
+        $this->data['navText'] = 'Khoá học đã đăng ký';
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
@@ -968,6 +969,8 @@ class UserController extends Controller
         }
         $this->data['item'] = $item;
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
+        $this->data['hasBack'] = true;
+        $this->data['navText'] = 'Thông tin khoá học';
 
         return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);
     }

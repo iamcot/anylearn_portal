@@ -61,17 +61,23 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
     <div class="sidebar-heading">
         @lang('Chức năng người dùng')
     </div>
+    <li class="nav-item {{ in_array($route, ['me.profile']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.profile') }}">
+            <i class="fas fa-user-edit"></i>
+            <span>@lang('Thông tin người dùng')</span></a>
+    </li>
+    <li class="nav-item {{ in_array($route, ['me.orders', 'me.orders.schedule']) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('me.orders') }}">
+            <i class="fas fa-calendar"></i>
+            <span>@lang('Khoá học đã đăng ký')</span></a>
+    </li>
     <li class="nav-item {{ in_array($route, ['me.profile', 'me.edit', 'me.child', 'me.friend', 'me.resetpassword']) ? 'active' : '' }}">
         <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#general-collapse" aria-expanded="false">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Tính năng cơ bản')</span>
         </a>
-        <div class="collapse {{ in_array($route, ['me.profile', 'me.edit', 'me.child', 'me.friend']) ? 'show' : '' }}" id="general-collapse" style="">
+        <div class="collapse {{ in_array($route, ['me.profile', 'me.edit', 'me.child', 'me.friend', 'me.resetpassword']) ? 'show' : '' }}" id="general-collapse" style="">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
-                <a class="collapse-item {{ in_array($route, ['me.profile']) ? 'active' : '' }}" href="{{ route('me.profile') }}">
-                    <i class="fas fa-fw fa-user-edit"></i>
-                    <span>@lang('Thông tin')</span></a>
-                </a>
                 <a class="collapse-item {{ in_array($route, ['me.child']) ? 'active' : '' }}" href="{{ route('me.child') }}">
                     <i class="fas fa-fw fa-child"></i>
                     <span>@lang('Tài khoản con')</span></a>
@@ -91,20 +97,16 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             </div>
         </div>
     </li>
-    <li class="nav-item {{ in_array($route, ['me.orders', 'me.pendingorders', 'me.history']) ? 'active' : '' }}">
+    <li class="nav-item {{ in_array($route, [ 'me.courseconfirm', 'me.pendingorders', 'me.history', 'me.order.return']) ? 'active' : '' }}">
         <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#couser-collapse" aria-expanded="false">
             <i class="fas fa-fw fa-book"></i>
-            <span>@lang('Theo dõi Học tập')</span>
+            <span>@lang('Đơn hàng / Giao dịch')</span>
         </a>
-        <div class="collapse {{ in_array($route, ['me.orders','me.courseconfirm', 'me.pendingorders', 'me.history', 'me.order.return']) ? 'show' : '' }}" id="couser-collapse" style="">
+        <div class="collapse {{ in_array($route, ['me.courseconfirm', 'me.pendingorders', 'me.history', 'me.order.return']) ? 'show' : '' }}" id="couser-collapse" style="">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ in_array($route, ['me.courseconfirm']) ? 'active' : '' }}" href="{{ route('me.courseconfirm') }}">
                     <i class="fas fa-fw fa-calendar"></i>
                     <span>@lang('Xác nhận khóa học')</span></a>
-                </a>
-                <a class="collapse-item {{ in_array($route, ['me.orders']) ? 'active' : '' }}" href="{{ route('me.orders') }}">
-                    <i class="fas fa-fw fa-calendar"></i>
-                    <span>@lang('Khoá học tham gia')</span></a>
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.pendingorders']) ? 'active' : '' }}" href="{{ route('me.pendingorders') }}">
                     <i class="fas fa-fw fa-shopping-cart"></i>
@@ -116,7 +118,7 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
                 </a>
                 <a class="collapse-item {{ in_array($route, ['me.history']) ? 'active' : '' }}" href="{{ route('me.history') }}">
                     <i class="fas fa-fw fa-wallet"></i>
-                    <span>@lang('Giao dịch của tôi')</span></a>
+                    <span>@lang('Lịch sử Giao dịch')</span></a>
                 </a>
             </div>
         </div>

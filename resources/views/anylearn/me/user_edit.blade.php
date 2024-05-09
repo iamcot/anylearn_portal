@@ -54,7 +54,7 @@ user_edit
                 <label for="name" class="form-label">{{ __('Giới tính') }}</label>
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" value="male" name="sex" id="male" <?php if (empty($user->sex) || $user->sex == 'male') {
                                                                                                                 echo "checked='checked'";
@@ -64,7 +64,7 @@ user_edit
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" value="female" name="sex" id="female" <?php if (!empty($user->sex) && $user->sex == 'female') {
                                                                                                                     echo "checked='checked'";
@@ -74,7 +74,7 @@ user_edit
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" value="other" name="sex" id="other" <?php if (!empty($user->sex) && $user->sex == 'other') {
                                                                                                                     echo "checked='checked'";
