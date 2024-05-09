@@ -12,7 +12,7 @@ orders
         @if (!empty($code))
         <p>Mã kích hoạt của bạn là: <strong>{{ $code }}</strong></p>
         @else
-        <p>Tạm thời chưa có mã kịch hoạt, bạn vui lòng liên hệ với hotline anyLEARN để được hỗ trợ</p>
+        <p>Tạm thời chưa có mã kích hoạt, bạn vui lòng liên hệ với hotline anyLEARN để được hỗ trợ</p>
         @endif
         @elseif($item->subtype == 'video')
         <p>Xem khóa học video tại <a href="{{ $itemServ->classUrl($item->id) }}" target="_blank">Trang khóa học</a></p>
