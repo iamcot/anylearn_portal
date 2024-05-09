@@ -11,7 +11,8 @@ orders
         @if($item->subtype == 'digital')
         @if (!empty($code))
         <p>Mã kích hoạt của bạn là: <strong>{{ $code }}</strong></p>
-        <p>Vui lòng kiểm tra email hoặc thông tin khoá học để biết cách sử dụng mã kích hoạt. Hoặc liên hệ hotline anyLEARN nếu cần hỗ trợ </p>
+        <p>Vui lòng kiểm tra email hoặc <a href="{{ $itemServ->classUrl($item->id) }}" target="_blank">Trang khóa học</a> để biết cách sử dụng mã kích hoạt. </p>
+        <p>hoặc liên hệ hotline anyLEARN để được hỗ trợ </p>
         @else
         <p>Tạm thời chưa có mã kích hoạt</p>
         <p>Học viên vui lòng kiểm tra email</p>
