@@ -964,7 +964,7 @@ class UserController extends Controller
             }
             if ($item->subtype == 'digital') {
                 $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
-                $this->data['code'] = $code ? $code->code : '********';
+                $this->data['code'] = $code ? $code->code : "";
             }
         }
         $this->data['item'] = $item;
