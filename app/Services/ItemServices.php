@@ -619,9 +619,9 @@ class ItemServices
     public function statusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
         } else {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
         }
     }
 
