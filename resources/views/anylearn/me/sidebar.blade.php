@@ -71,12 +71,12 @@ $route = app('router')->getRoutes()->match(app('request'))->getName()
             <i class="fas fa-calendar"></i>
             <span>@lang('Khoá học đã đăng ký')</span></a>
     </li>
-    <li class="nav-item {{ in_array($route, ['me.profile', 'me.edit', 'me.child', 'me.friend', 'me.resetpassword']) ? 'active' : '' }}">
+    <li class="nav-item {{ in_array($route, ['me.child', 'me.friend', 'me.resetpassword']) ? 'active' : '' }}">
         <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#general-collapse" aria-expanded="false">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Tính năng cơ bản')</span>
         </a>
-        <div class="collapse {{ in_array($route, ['me.profile', 'me.edit', 'me.child', 'me.friend', 'me.resetpassword']) ? 'show' : '' }}" id="general-collapse" style="">
+        <div class="collapse {{ in_array($route, ['me.child', 'me.friend', 'me.resetpassword']) ? 'show' : '' }}" id="general-collapse" style="">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ in_array($route, ['me.child']) ? 'active' : '' }}" href="{{ route('me.child') }}">
                     <i class="fas fa-fw fa-child"></i>
