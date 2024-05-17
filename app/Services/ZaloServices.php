@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Constants\ConfigConstants;
 use App\Models\Configuration;
 use App\Models\Notification;
-use App\models\ZNSContent;
+use App\Models\ZNSContent;
 use Illuminate\Support\Facades\Log;
 use Zalo\Zalo;
 
