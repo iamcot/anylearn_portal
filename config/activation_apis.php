@@ -9,7 +9,7 @@ use App\DigitalSupport\DigitalMonkey;
 
 return [
     'monkey' => [
-        'partnerID' => 418, 
+        'partnerID' => env('MONKEY_USER_ID', 418), 
         'processor' => DigitalMonkey::class,
     ], 
 ];

@@ -516,12 +516,12 @@ class ClassController extends Controller
         $this->data['extra'] = ModelsItemExtra::where('item_id', $courseId)->get();
 
         if ($courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL) {
-            if ($courseDb['info']->activation_support == ItemConstants::ACTIVATION_SUPPORT_API) {
-                foreach (config('activation_apis') as $dp) {
-                    $this->data['config_api'] = $dp['partnerID'] == $courseDb['info']->user_id ? true : false;
-                    break;
-                }
+
+            foreach (config('activation_apis') as $dp) {
+                $this->data['config_api'] = $dp['partnerID'] == $courseDb['info']->user_id ? true : false;
+                break;
             }
+
             $this->data['notifTemplates'] = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
         }
 
