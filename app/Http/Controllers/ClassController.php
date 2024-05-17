@@ -369,12 +369,14 @@ class ClassController extends Controller
                     }
                     if (key_exists('email', $input) && key_exists('email', $input)) {
                         $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-                        if (empty($notifTemplate) && (!empty($input['email'])  || !empty($input['notif']))) {
-                            ItemCodeNotifTemplate::create([
-                                'item_id' => $courseId,
-                                'email_template' => $input['email'],
-                                'notif_template' => $input['notif'],
-                            ]);
+                        if (empty($notifTemplate)) {
+                            if (!empty($input['email'])  || !empty($input['notif'])) {
+                                ItemCodeNotifTemplate::create([
+                                    'item_id' => $courseId,
+                                    'email_template' => $input['email'],
+                                    'notif_template' => $input['notif'],
+                                ]);
+                            }
                         } else {
                             $beUpdate = [
                                 'email_template' => $input['email'] != "" ?  $input['email'] : null,
