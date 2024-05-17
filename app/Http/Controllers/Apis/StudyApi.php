@@ -54,7 +54,8 @@ class StudyApi extends Controller
         };
         if (!empty($data->activation_info)) {
             $activationInfo = json_decode($data->activation_info, true);
-            $data->activation_info = ($activationInfo != null || json_last_error() === JSON_ERROR_NONE) && (isset($activationInfo['account'] ) && isset($activationInfo['password']) ) 
+            $data->activation_info = ($activationInfo != null || json_last_error() === JSON_ERROR_NONE) 
+                && (isset($activationInfo['account']) && isset($activationInfo['password']))
                 ? ['code' => 'Tài khoản: ' . $activationInfo['account'] . '\n' . 'Mật khẩu: ' . $activationInfo['password']]
                 : ['code' => $data->activation_info];
         }
