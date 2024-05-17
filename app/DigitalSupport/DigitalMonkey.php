@@ -8,8 +8,8 @@ use App\PaymentGateway\CurlHelper;
 class DigitalMonkey implements OrderingPartnerInterface
 {
     const AGENT_PATH = 'https://monkey.edu.vn/api/create-order-agent';
-    const AGENT_CODE = 'MONKEY_AGENT_CODE';
-    const API_KEY = 'MONKEY_API_KEY';
+    const AGENT_CODE = 'ANYLEARN';
+    const API_KEY = 'OhcKZpp1dteB7dfgIeJRK1opWWAyuI';
 
     const STATUS_FAIL = 'fail';
 
