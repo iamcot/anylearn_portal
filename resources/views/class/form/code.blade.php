@@ -82,10 +82,54 @@
 </div>
 
 <div class="text-center mb-3 mt-3">
-    <a href="javascript:changeTab('content-tab')" class="btn btn-primary border-0 rounded"><< Sửa giới thiệu</a>
-    <button class="btn btn-success border-0 rounded" name="tab" value="code"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
-    <a href="javascript:changeTab('schedule-tab')" class="btn btn-primary border-0 rounded">Sửa lịch học >></a>       
+    <a href="javascript:changeTab('content-tab')" class="btn btn-primary border-0 rounded">
+        << Sửa giới thiệu</a>
+            <button class="btn btn-success border-0 rounded" name="tab" value="code"><i class="fas fa-save"></i> @lang('Lưu thay đổi')</button>
 </div>
+
+@if(!empty($itemCodes))
+<div class="card shadow mt-3">
+    <div class="card-body p-0 table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th class="text-center">Partner Id</th>
+                <th>ID#Khóa học</th>
+                <th>Mã kích hoạt</th>
+                <th>Người dùng</th>
+                <th>Đơn hàng</th>
+                <th>Cập nhật</th>
+                <th width="16%">Thao tác</th>
+            </thead>
+            <tbody>
+                @foreach ($itemCodes as $code)
+                <tr>
+                    <th class="text-center">{{ $code->partner_id }}</th>
+                    <td>{{ $code->item_id }}#{{ $code->class }}</td>
+                    <td>{{ $code->code }}</td>
+                    <td>{{ $code->user_id  ? ($code->name . "(" . $code->phone . ")") : "" }}</td>
+                    <td>@if($code->order_id ) <a target="_blank" href="{{ route('order.all') }}?id_f={{ $code->order_id }}">{{ $code->order_id }}</a> @endif</td>
+                    <td>{{ $code->updated_at }}</td>
+                    <td>
+                        @if(isset($code->user_id))
+                        <a class="btn btn-sm btn-primary mt-1" href="{{ route('codes.resend', ['id' => $code->id]) }}"><i class="fa fa-paper-plane"></i> Gửi lại</a>
+                        @else
+                        <a class="btn btn-sm btn-success mt-1" href="{{ route('codes.refresh', ['id' => $code->id]) }}"><i class="	fa fa-bolt"></i> Sử dụng</a>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        {{ $itemCodes->appends(request()->query())->links() }}
+    </div>
+</div>
+
+@else 
+<p class="p-3">Khoá học chưa tạo code nào.</p>
+@endif
+
 
 @section('jscript')
 @parent

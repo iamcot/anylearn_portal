@@ -121,7 +121,7 @@
                 <label for="commission_rate" class="col-md-3 col-form-label text-md-right ">{{ __('Hoa hồng người bán') }}</label>
                 <div class="col-md-8">
                     <input id="commission_rate" type="text" class="form-control @error('commission_rate') is-invalid @enderror" name="commission_rate" value="{{ old('commission_rate', !empty($course) ? $course['info']->commission_rate : '') }}">
-                    <div class="small">@lang('Số thập phân, để trống nếu không thay đổi so với tỉ lệ trong hợp đồng.')</div>
+                    <div class="small">@lang('Số thập phân; Để trống nếu không thay đổi so với tỉ lệ trong hợp đồng; Set là -1 nếu khoá này để không chia hoa hồng người bán.')</div>
                 </div>
             </div>
             <div class="form-group row">

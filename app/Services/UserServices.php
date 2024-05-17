@@ -83,6 +83,28 @@ class UserServices
         ],
     ];
 
+    public function countUsersByPriority()
+    {
+        return User::selectRaw('sale_priority AS priority, count(*) AS number')
+            ->whereIn('users.role', UserConstants::$memberRoles)
+            //   ->where('is_test', 0)
+            ->groupBy(DB::raw('sale_priority WITH ROLLUP'))
+            ->get();
+    }
+
+    public function getUsersByPriority()
+    {
+        $priorityUsers = UserConstants::$salePriorityLevels;
+        foreach ($this->countUsersByPriority() as $value) {
+            if (isset($value['priority'])) {
+                $priorityUsers[$value['priority']] = $priorityUsers[$value['priority']] . ' (' . $value['number'] . ')';
+            } else {
+                $priorityUsers['total'] = 'Total: ' . $value['number'] . ' users';
+            }
+        }
+        return $priorityUsers;
+    }
+
     public function userRoles()
     {
         return array_keys($this->roles);
@@ -586,51 +608,41 @@ class UserServices
             'partner' => $partner->name
         ];
         try {
-            Mail::to($user->email)->send(new ActivityMail($data));
+            Mail::to("info.anylearn@gmail.com")
+                ->send(new ActivityMail($data)); // mail to admin
+
+            if (!empty($user->email)) {
+                Mail::to($user->email)
+                    ->send(new ActivityMail($data)); // mail to user
+            }
+            // if (!empty($partner->email)) {
+            // Mail::to($partner->email)
+            // ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+            // ->send(new ActivityMail($data)); // mail to partner
+            // }
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with("Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!");
         }
         return;
     }
-    public function MailToPartnerRegisterNew($item, $userId, $author)
+    public function MailToPartnerRegisterNew($item, $userId, $author, $tnxPartner)
     {
         $user = User::find($userId);
-        $now = Carbon::now();
-        $commission = DB::table('contracts as c')
-            ->where('c.user_id', '=', $author->id)
-            ->where('c.status', '=', 99)
-            ->select('c.commission')
-            ->first();
+        $data = [
+            'name' => $user->name,
+            'title' => $item->title,
+            'time' => date("H:i d/m/Y"),
+            'partner' => $author->name,
+            'price' => number_format($item->price, 0, ",", "."),
+            'partnerMoney' => number_format(($tnxPartner->amount * 1000), 0, ",", "."),
+        ];
 
-        if ($commission) {
-            $concession = $item->price * (1 - $commission->commission);
-            $orgprice = $item->price - $concession;
-            $data = [
-                'name' => $user->name,
-                'title' => $item->title,
-                'time' => $now,
-                'partner' => $author->name,
-                'commision' => 1 - $commission->commission,
-                'price' => $item->price,
-                'concession' => $concession,
-                'orgprice' => $orgprice
-            ];
-        } else {
-            $data = [
-                'name' => $user->name,
-                'title' => $item->title,
-                'time' => $now,
-                'partner' => $author->name,
-                'commision' => "Đang cập nhật",
-                'price' => $item->price,
-                'concession' => "Đang cập nhật",
-                'orgprice' => "Đang cập nhật"
-            ];
-        }
         try {
-            Mail::to($author->email)->send(new MailToPartnerRegisterNew($data));
-        } catch(\Exception $e) {
+            Mail::to($author->email)
+                ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+                ->send(new MailToPartnerRegisterNew($data));
+        } catch (\Exception $e) {
             Log::error($e);
         }
     }
@@ -695,8 +707,9 @@ class UserServices
             ->join('order_details as od', 'od.order_id', '=', 'orders.id')
             ->join('participations as pa', 'pa.schedule_id', '=', 'od.id')
             ->join('items', 'items.id', '=', 'od.item_id')
-            ->leftjoin('item_user_actions as iua',
-                function($join) {
+            ->leftjoin(
+                'item_user_actions as iua',
+                function ($join) {
                     $join->on('od.item_id', '=', 'iua.item_id');
                     $join->on('orders.user_id', '=', 'iua.user_id');
                 },

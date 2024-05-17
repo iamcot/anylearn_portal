@@ -605,9 +605,8 @@ class ItemServices
             }
         }
     }
-    public function activity($type, $input, $itemId)
+    public function activity($user, $type, $input, $itemId)
     {
-        $user = Auth::user();
         ItemActivity::create([
             "item_id" => $itemId,
             "type" => $type,
@@ -620,9 +619,9 @@ class ItemServices
     public function statusOperation($itemId, $status)
     {
         if ($status == ItemConstants::STATUS_ACTIVE) {
-            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i> Đóng</a>';
+            return '<a class="btn btn-sm btn-danger border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-lock"></i></a>';
         } else {
-            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i> Mở</a>';
+            return '<a class="btn btn-sm btn-success border-0" href="' . route('item.status.touch', ['itemId' => $itemId]) . '"><i class="fas fa-unlock"></i></a>';
         }
     }
 
@@ -879,11 +878,13 @@ class ItemServices
                 if (isset($input['code'])) {
                     $this->createItemCodes($newCourse->id, $input['code']);
                 }
-                ItemCodeNotifTemplate::create([
-                    'item_id' => $newCourse->id,
-                    'email_template' => $input['email'],
-                    'notif_template' => $input['notif'],
-                ]);
+                if (isset($input['email']) || isset($input['notif'])) {
+                    ItemCodeNotifTemplate::create([
+                        'item_id' => $newCourse->id,
+                        'email_template' => $input['email'],
+                        'notif_template' => $input['notif'],
+                    ]);
+                }
             }
             return $newCourse->id;
         }
@@ -1590,20 +1591,5 @@ class ItemServices
                 ]);
             }
         }
-    }
-    public function getDigitalCourse($courseId)
-    {
-        $digitalCourse = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-
-        if (!$digitalCourse) {
-            return response()->json(['message' => 'Không tìm thấy khóa học số hóa'], 404);
-        }
-
-        return response()->json($digitalCourse);
-    }
-    public function getItemCategory($courseId)
-    {
-        $courseCategory =  ItemCategory::where('item_id', $courseId)->get();
-        return response()->json($courseCategory);
     }
 }

@@ -58,7 +58,15 @@ class Notification extends Model
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
-                    Mail::to($user->email)->send(new $config['email']($data));
+                    if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
+                        $data['content'] =  $this->buildContent(
+                            !empty($emailTemplate) ? $emailTemplate : $config['template'],
+                            $data
+                        );
+                    }
+                    Mail::to($user->email)
+                    ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+                    ->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
                 }
@@ -176,7 +184,9 @@ class Notification extends Model
 
     public function notifCourseCreated($item)
     {
-        $receivers = User::whereIn('role', [UserConstants::ROLE_SALE, UserConstants::ROLE_SALE_CONTENT])->get();
+        $receivers = User::whereIn('role', [UserConstants::ROLE_SALE, UserConstants::ROLE_SALE_CONTENT])
+        ->where('status', 1)
+        ->get();
         $itemServ = new ItemServices();
         foreach ($receivers as $user) {
             $this->createNotif(NotifConstants::COURSE_CREATED, $user->id, [

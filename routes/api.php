@@ -75,6 +75,10 @@ Route::get('/v3/partner/{id}', 'Apis\PartnerApi@index');
 Route::get('/v3/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 Route::get('/v3/articles', 'Apis\ArticleApi@articles');
 
+Route::any('/open/class/list', 'Apis\OpenApi@classList');
+Route::post('/open/order/purchased', 'Apis\OpenApi@orderPurchased');
+
+
 Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/meAPI', 'Apis\MeApi@index');
     Route::get('/v3/meWork', 'Apis\MeApi@meWork');
@@ -103,6 +107,10 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/v3/auth/search', 'Apis\SearchFilterApi@index');
     Route::get('/v3/auth/main-subtypes/{subtype}', 'Apis\MainSubtypesApi@index');
 
+    Route::get('/v3/auth/study', 'Apis\StudyApi@index');
+    Route::get('/v3/auth/study/lookup', 'Apis\StudyApi@lookup');
+    Route::get('/v3/auth/study/{orderItemID}', 'Apis\StudyApi@show');
+
     Route::get('/social/profile', 'Apis\SocialController@profile');
     Route::any('/social/{postId}/action', 'Apis\SocialController@action');
 
@@ -125,7 +133,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::any('/user/contractsave', 'Apis\UserApi@saveContract');
     Route::any('/user/contract/sign/{contractId}', 'Apis\UserApi@signContract');
 
-    Route::post('/user/certificate', 'Apis\MeApi@certificate');
+    Route::any('/user/certificate', 'Apis\MeApi@certificate');
     Route::any('/user/listcertificate', 'Apis\MeApi@list_certificate');
 
     Route::post('/user/changepass', 'Apis\UserApi@changePass');
@@ -144,7 +152,9 @@ Route::middleware(['api.user'])->group(function () {
 
 
     Route::get('/item/schadule/{id}', 'Apis\ItemApi@schadule');
-    Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchadule');
+    Route::post('/item/update-schadule', 'Apis\ItemApi@updateSchedule');
+    Route::get('/location', 'Apis\ItemApi@userLocation');
+
 
     Route::get('/item/{id}/edit', 'Apis\ItemApi@edit');
     Route::post('/item/{id}/edit', 'Apis\ItemApi@save');
@@ -169,6 +179,7 @@ Route::middleware(['api.user'])->group(function () {
     Route::get('/user/children', 'Apis\UserApi@listChildren');
     Route::post('/user/children', 'Apis\UserApi@saveChildren');
     Route::post('/user/childrenv2', 'Apis\UserApi@saveChildrenV2');
+
 });
 
 

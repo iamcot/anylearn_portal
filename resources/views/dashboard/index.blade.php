@@ -80,6 +80,14 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                 <canvas id="myAreaChart"></canvas>
             </div>
         </div>
+        <div class="card border-bottom-success shadow mt-3">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-success">@lang('Doanh thu gộp (GMV)')</h6>
+            </div>
+            <div class="card-body p-0" style="min-height: 300px;">
+                <canvas id="gmvChart"></canvas>
+            </div>
+        </div>
     </div>
     <div class="col-md-3">
         <div class="card border-bottom-success shadow">
@@ -128,13 +136,19 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
 <script src="/cdn/vendor/chart.js/Chart.min.js"></script>
 <script>
     var chartData = JSON.parse("{{ json_encode($dashServ->userCreatedByDay()) }}".replace(/&quot;/g, '"'));
+    var gmvChartData = JSON.parse("{{ json_encode($dashServ->revenuechartDataset()) }}".replace(/&quot;/g, '"'));
     var ctx = document.getElementById("myAreaChart");
-    var myLineChart = new Chart(ctx, {
+    var ctxGmvChart = document.getElementById("gmvChart");
+    var myLineChart = drawChart(ctx, chartData, 'Người dùng mới', {});
+    var gmvChart = drawChart(ctxGmvChart, gmvChartData, "Doanh thu gộp", { style: 'currency', currency: 'VND' });
+
+    function drawChart(ctx, chartData, mlabel, mFormat) {
+        return new Chart(ctx, {
         type: 'line',
         data: {
             labels: chartData['labels'],
             datasets: [{
-                label: "Người dùng mới",
+                label: mlabel,
                 lineTension: 0.3,
                 backgroundColor: "rgba(78, 115, 223, 0.05)",
                 borderColor: "rgba(78, 115, 223, 1)",
@@ -177,7 +191,7 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                         maxTicksLimit: 5,
                         padding: 10,
                         callback: function(value, index, values) {
-                            return value;
+                            return Intl.NumberFormat('vi-VN', mFormat).format(value);
                         }
                     },
                     gridLines: {
@@ -209,12 +223,13 @@ $dashServ->init(@request('dateF') ?? date('Y-m-d', strtotime('-30 days')), @requ
                 callbacks: {
                     label: function(tooltipItem, chart) {
                         var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                        return datasetLabel + ': ' + tooltipItem.yLabel;
+                        return datasetLabel + ': ' +  Intl.NumberFormat('vi-VN', mFormat).format(tooltipItem.yLabel);
                     }
                 }
             }
         }
     });
+    }
 </script>
 @endsection
 @endif

@@ -210,19 +210,14 @@ cart
                         <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng')</strong></label>
                     </li>
 
-                    @if ($hasPaymemtFee)
-                    <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepayfee"> <label for="radio_onepayfee"><strong>@lang('Thu hộ học phí trực tuyến bằng thẻ')</strong></label></li>
-
-                    @else
                     @if (empty($saveBanks))
-                    <li class="p-2"><input required type="radio" name="payment" value="onepaylocal" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
+                    <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
                     @else
-                    @foreach ($saveBanks as $bank)
-                    <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src="{{ $bank['logo'] }}" style="height: 20px;">
-                            <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
-                    @endforeach
-                    <li class="p-2"><input required type="radio" name="payment" value="onepaylocal" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ <span style="color:#267aff;">MỚI</span>')</strong></label></li>
-                    @endif
+                        @foreach ($saveBanks as $bank)
+                        <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src="{{ $bank['logo'] }}" style="height: 20px;">
+                                <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
+                        @endforeach
+                        <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ <span style="color:#267aff;">MỚI</span>')</strong></label></li>
                     @endif
                     @if ($order->amount >= 3000000)
                     <li class="p-2"><input required type="radio" name="payment" value="onepaytg" id="radio_onepaytg">

@@ -17,6 +17,11 @@ class ConfigConstants
     const GUIDE_PRIVACY = 'guide_privacy';
     const GUIDE_CHECKOUT = 'guide_checkout';
 
+    const GUIDE_TOC_PARTNER = 'guide_toc_partner';
+    const GUIDE_DEL_ACCOUNT = 'guide_del_account';
+    const GUIDE_RETURN_TERM = 'guide_return_term';
+    const GUIDE_DISPUTE_RESOLUTION  = 'guide_dispute_resolution';
+
     const SUPPORT_SCHOOL = 'support_school';
     const SUPPORT_TEACHER = 'support_teacher';
     const SUPPORT_MEMBER = 'support_member';
@@ -47,11 +52,12 @@ class ConfigConstants
     const CONFIG_TEACHER_BANNER = 'teacher_banner';
     const CONFIG_SCHOOL_BANNER = 'school_banner';
 
-    const ZALO_CODE= 'zalo_code';
+    const CONFIG_OPENAPI_PRODUCTS = 'openapi_products';
+
+    const ZALO_CODE = 'zalo_code';
     const ZALO_REFRESH = 'zalo_refresh';
     const ZALO_TOKEN = 'zalo_token';
     const ZALO_TOKEN_EXP = 'zalo_token_exp';
-
 
     const CONFIG_HOME_POPUP = 'home_popup';
     const CONFIG_HOME_POPUP_WEB = 'home_popup_web';
@@ -63,12 +69,12 @@ class ConfigConstants
     const CONFIG_NUM_CATEGORY_DISPLAY = 6;
     const CONFIG_NUM_LAST_SEARCH_DISPLAY = 8;
     const CONFIG_NUM_VOUCHER_DISPLAY = 3;
-    const CONFIG_NUM_PAGINATION= 12;
+    const CONFIG_NUM_PAGINATION = 12;
 
     const TYPE_GUIDE = 'guide';
     const TYPE_CONFIG = 'config';
     const TYPE_ZALO = 'zalo';
-
+    const TYPE_EMAIL = 'email';
 
     const TRANSACTION_DEPOSIT = 'deposit';
     const TRANSACTION_WITHDRAW = 'withdraw';
@@ -81,8 +87,8 @@ class ConfigConstants
     const TRANSACTION_PARTNER = 'partner';
 
     const TRANSACTION_FIN_SALARY =  'fin_salary';
-    const TRANSACTION_FIN_OFFICE ='fin_office';
-    const TRANSACTION_FIN_SALE ='fin_sale';
+    const TRANSACTION_FIN_OFFICE = 'fin_office';
+    const TRANSACTION_FIN_SALE = 'fin_sale';
     const TRANSACTION_FIN_MARKETING =  'fin_marketing';
     const TRANSACTION_FIN_ASSETS =  'fin_assets';
     const TRANSACTION_FIN_OTHERS =  'fin_others';
@@ -91,23 +97,36 @@ class ConfigConstants
     const TRANSACTION_STATUS_DONE = 1;
     const TRANSACTION_STATUS_REJECT = 99;
 
-
     public static $guideTitle = [
-        self::GUIDE_TOC => 'TOC - Điều khoản',
-        self::GUIDE_MEMBER => 'HDSD cho Thành viên',
-        self::GUIDE_TEACHER => 'HDSD cho Giảng viên',
-        self::GUIDE_SCHOOL => 'HDSD cho Trung tâm',
-        self::GUIDE_CHECKOUT => 'HDSD Thanh Toán',
         self::GUIDE_ABOUT => 'Giới thiệu',
-        self::GUIDE_TOC_SCHOOL => 'Chính sách cho trung tâm',
-        self::GUIDE_TOC_TEACHER => 'Chính sách cho giảng viên',
+        self::GUIDE_MEMBER => 'HDSD - Thành viên',
+        self::GUIDE_TEACHER => 'HDSD - Giảng viên',
+        self::GUIDE_SCHOOL => 'HDSD - Trung tâm',
+        self::GUIDE_CHECKOUT => 'HDSD - Thanh Toán',
+        self::GUIDE_TOC => 'TOC - Điều khoản',
+        self::GUIDE_DEL_ACCOUNT => 'TOC - Xóa tài khoản',
+        self::GUIDE_TOC_SCHOOL => 'Chính sách cho Trung tâm',
+        self::GUIDE_TOC_TEACHER => 'Chính sách cho Giảng viên',
+        self::GUIDE_TOC_PARTNER => 'Chính sách cho Đối tác',
         self::GUIDE_PRIVACY => 'Chính sách bảo mật',
         self::GUIDE_PAYMENT_TERM => 'Chính sách thanh toán',
+        self::GUIDE_RETURN_TERM => 'Chính sách đổi - trả',
+        self::GUIDE_DISPUTE_RESOLUTION => 'Giải quyết tranh chấp',
         self::CONTRACT_TEACHER => 'Mẫu HĐ Giảng Viên',
         self::CONTRACT_SCHOOL => 'Mẫu HĐ Trường Học',
         self::SUPPORT_MEMBER => 'Hỗ trợ thành viên',
         self::SUPPORT_SCHOOL => 'Hỗ trợ trường học',
         self::SUPPORT_TEACHER => 'Hỗ trợ chuyên gia',
         self::FAQ => 'FAQ',
+    ];
+
+    const MAIL_TEMPLATE_REGISTER = 'mail_template_register';
+    const MAIL_TEMPLATE_PARTNER_REGISTER = 'mail_template_partner_register';
+
+
+    public static $mailConfigs = [
+        self::MAIL_TEMPLATE_REGISTER,
+        self::MAIL_TEMPLATE_PARTNER_REGISTER,
+
     ];
 }

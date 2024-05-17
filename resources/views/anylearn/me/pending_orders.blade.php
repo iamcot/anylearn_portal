@@ -6,7 +6,7 @@ pending_orders
 @section('body')
 {{-- <div class="card shadow">
     <div class="card-body p-0 table-responsive">
-        <table class="table table-hover">
+        <table class="table table-striped text-secondary">
             <thead class="table-secondary text-secondary">
                 <tr>
                     <th class="text-center border-0" width="5%" scope="col">#ID</th>

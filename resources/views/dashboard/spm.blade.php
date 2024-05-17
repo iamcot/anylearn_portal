@@ -5,7 +5,7 @@
         <div class="col-xs-6 col-lg-2">
             <div class="form-group">
                 <label for="">ID</label>
-                <input value="" type="text" class="form-control" name="user_id" placeholder="ID người dùng">
+                <input value="{{ request()->get('user_id') }}" type="text" class="form-control" name="user_id" placeholder="ID người dùng">
             </div> 
         </div>
         <div class="col-xs-6 col-lg-2">
@@ -21,14 +21,20 @@
         </div>
         <div class="col-xs-6 col-lg-2">
             <div class="form-group">
+                <label for="">SPM C</label>
+                <input value="{{ request()->get('spmc') }}" type="text" class="form-control" name="spmc">
+            </div>
+        </div>
+        <div class="col-xs-6 col-lg-2">
+            <div class="form-group">
                 <label for="">Từ ngày</label>
-                <input value="" type="date" class="form-control" name="date_from">
+                <input value="{{ request()->get('date_from') }}" type="date" class="form-control" name="date_from">
             </div>
         </div>
         <div class="col-xs-6 col-lg-2">
             <div class="form-group"> 
                 <label for="">Đến ngày</label>
-                <input value="" type="date" class="form-control" name="date_to">
+                <input value="{{ request()->get('date_to') }}" type="date" class="form-control" name="date_to">
             </div>
         </div>
         <div class="col-xs-6 col-lg-2 d-flex flex-column justify-content-end mb-3">   

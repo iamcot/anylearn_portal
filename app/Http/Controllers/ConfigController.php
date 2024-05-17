@@ -62,7 +62,25 @@ class ConfigController extends Controller
         $zaloServ = new ZaloServices();
         echo 'UPDATE_NEW_CODE_SUCCESS';
     }
-    
+
+    public function email(Request $request)
+    {
+        $configM = new Configuration();
+        if ($request->input('save')) {
+            $configs = $request->input('config');
+            foreach ($configs as $key => $config) {
+                $configM->createOrUpdate($key, $config, ConfigConstants::TYPE_EMAIL, true);
+            }
+            return redirect()->back()->with('notify',  true);
+        }
+        $this->data['emailConfigs'] = $configM->getAnotherConfigs(
+            ConfigConstants::$mailConfigs,
+            config('email_template')
+        );
+        $this->data['navText'] = __('Chỉnh sửa email template');
+        return view('config.email', $this->data);
+    }
+
     public function site(Request $request)
     {
         $configM = new Configuration();
@@ -421,7 +439,7 @@ class ConfigController extends Controller
 
                 try {
                     $newGroup = VoucherGroup::create($data);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     return redirect()->back()->with('notify', $e->getMessage());
                 }
                 if ($newGroup) {

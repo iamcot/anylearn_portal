@@ -49,8 +49,8 @@
             @include('anylearn.navbar')
         </header>
         @if((strpos(Route::currentRouteName(), 'checkout') !== false || Route::currentRouteName() != 'cart') && @auth()->check() && $transServ->hasPendingOrders(Auth::user()->id))
-        <section>
-            <p class="m-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Bạn có đơn hàng đang chờ thanh toán.') <a href="{{ route('me.pendingorders') }}" class="text-danger strong">@lang('Thanh toán ngay!')</a></p>
+        <section class="container">
+            <p class="mt-2 mb-2 p-2 bg-warning text-danger"><i class="fas fa-exclamation-triangle"></i>@lang('Chào ' . @auth()->user()->name . '. Bạn có đơn hàng đang chờ thanh toán.') <a href="{{ route('me.pendingorders') }}" class="text-danger strong">@lang('Thanh toán ngay!')</a></p>
         </section>
         @endif
         @endif

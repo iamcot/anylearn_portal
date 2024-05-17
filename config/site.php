@@ -117,4 +117,10 @@ return [
         'type' => 'text',
         'value' => ''
     ],
+    ConfigConstants::CONFIG_OPENAPI_PRODUCTS => [
+        'title' => 'Sản phẩm cho API (VNPay)',
+        'hint' => 'Để trống sẽ lấy hot class. Nhập IDs khoá học, cách nhau bằng dấy phẩy',
+        'type' => 'text',
+        'value' => ''
+    ],
 ];

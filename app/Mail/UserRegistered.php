@@ -2,7 +2,9 @@
 
 namespace App\Mail;
 
+use App\Constants\ConfigConstants;
 use App\Constants\UserConstants;
+use App\Models\Configuration;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -34,13 +36,43 @@ class UserRegistered extends Mailable
     {
         $userId = $this->data['userid'];
         $user = User::find($userId);
-        $eventEmail = "";
-        if (date("Ymd") <= '20211231') {
-            $eventEmail = 'user_register_20211031';
-        }
+        $configM = new Configuration();
         if ($user->role == UserConstants::ROLE_MEMBER) {
-            return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')->view('email.' . ($eventEmail != "" ? $eventEmail : 'user_member_register'))->with($this->data);
+            $templateEmail = $configM->get(ConfigConstants::MAIL_TEMPLATE_REGISTER);
+            if (!empty($templateEmail)) {
+                return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')
+                    ->view('email.raw', ['content' => $this->buildContent($templateEmail, ['username' => $user->name])]);
+            } else {
+                return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')
+                    ->view('email.user_member_register')
+                    ->with($this->data);
+            }
+        } else {
+            $templateEmail = $configM->get(ConfigConstants::MAIL_TEMPLATE_PARTNER_REGISTER);
+            if (!empty($templateEmail)) {
+                return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')
+                    ->view('email.raw', ['content' => $this->buildContent($templateEmail, ['username' => $user->name])]);
+            } else {
+                return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')
+                    ->view('email.user_register')
+                    ->with($this->data);
+            }
         }
-        return $this->subject('Chào mừng đến với anyLEARN - Học không giới hạn!')->view('email.' . ($eventEmail != "" ? $eventEmail : 'user_register'))->with($this->data);
+    }
+
+    public function buildContent($template, $data)
+    {
+        $keys = [];
+        foreach ($data as $key => $value) {
+            if (!is_object($value)) {
+                $keys[] = '{' . $key . '}';
+            }
+        }
+
+        return str_replace(
+            $keys,
+            array_values($data),
+            $template
+        );
     }
 }

@@ -6,63 +6,67 @@
 orders
 @endsection
 @section('body')
-<h1 class="mb-4">Khóa học của tôi</h1>
-
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <input type="text" id="search-course-name" class="form-control" placeholder="Nhập tên khóa học...">
-        </div>
-        <div class="col-md-3">
-            <input type="date" id="search-registration-date" class="form-control" placeholder="Ngày đăng kí...">
-        </div>
-        <div class="col-md-3">
-            <select class="form-select" aria-label="Trạng thái" id="search-status">
-                <option value="all" selected>Chọn trạng thái</option>
-                <option value="1">Đang mở</option>
-                <option value="99">Đã xong</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <select class="form-select" aria-label="Tài khoản học" id="search-user-account">
-                <option value="all" selected>Chọn tài khoản</option>
-                @foreach ($userServ->accountC(auth()->user()->id) as $row)
-                <option value="{{ $row->name }}">{{ $row->name }}</option>
+<div class="row mb-3">
+    <div class="col-md-3">
+        <input type="text" id="search-course-name" class="form-control" placeholder="Nhập tên khóa học...">
+    </div>
+    <div class="col-md-3">
+        <input type="date" id="search-registration-date" class="form-control" placeholder="Ngày đăng kí...">
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" aria-label="Trạng thái" id="search-status">
+            <option value="all" selected>Chọn trạng thái</option>
+            <option value="1">Đang mở</option>
+            <option value="99">Đã xong</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" aria-label="Tài khoản học" id="search-user-account">
+            <option value="all" selected>Chọn tài khoản</option>
+            @foreach ($userServ->accountC(auth()->user()->id) as $row)
+            <option value="{{ $row->name }}">{{ $row->name }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+<div class="card shadow">
+    <div class="card-body p-0">
+        <table class="table table-striped text-black table-hover" id="myTable">
+            <thead>
+                <tr class=" text-secondary ">
+                    <th>Tên khóa học</th>
+                    <th>Ngày đăng kí</th>
+                    <th>Trạng thái</th>
+                    <th>Tài khoản học</th>
+                    <th>Thao tác</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($data as $row)
+                <tr>
+                    <td width="40%">{{ $row->title }}</td>
+                    <td>{{ date("H:i d/m/Y", strtotime($row->created_at)) }}</td>
+                    @if ($row->user_status == 1)
+                    <td>Đang mở</td>
+                    @else
+                    <td>Đã xong</td>
+                    @endif
+                    <td>{{ $row->child_name }}</td>
+                    <td><a class="btn btn-sm btn-success" href="{{ route('me.orders.schedule', ['id' => $row->id]) }}">
+                            @if($row->item_subtype == 'digital')
+                                Lấy mã code
+                            @else
+                                Xem kế hoạch học tập
+                            @endif
+                        </a></td>
+                    <td></td>
+                </tr>
                 @endforeach
-            </select>
-        </div>
+            </tbody>
+        </table>
     </div>
-    <div class="card shadow">
-        <div class="card-body p-0">
-            <table class="table table-striped text-secondary" id="myTable">
-                <thead>
-                    <tr>
-                        <th>Tên khóa học</th>
-                        <th>Ngày đăng kí</th>
-                        <th>Trạng thái</th>
-                        <th>Tài khoản học</th>
-                        <th>Lịch học/Mã code</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($data as $row)
-                    <tr>
-                        <td width="40%">{{ $row->title }}</td>
-                        <td>{{ date("H:i d/m/Y", strtotime($row->created_at)) }}</td>
-                        @if ($row->user_status == 1)
-                        <td>Đang mở</td>
-                        @else
-                        <td>Đã xong</td>
-                        @endif
-                        <td>{{ $row->child_name }}</td>
-                        <td><a target="_blank"  class="btn btn-sm btn-success" href="{{ route('me.orders.schedule', ['id' => $row->id]) }}">Xem</a></td>
-                        <td></td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+</div>
 @endsection
 @section('jscript')
 @parent

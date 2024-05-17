@@ -45,7 +45,9 @@ class SendMail extends Command
         // throw new Exception();
         $user = User::find(1);
         print("Start Send Email To User $user->name");
-        Mail::to("info.anylearn@gmail.com")->send(new UserRegistered(['userid' => 1]));
+        Mail::to("info.anylearn@gmail.com")
+        ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+        ->send(new UserRegistered(['userid' => 1]));
         print("\nEmail Sent!!!");
     }
 }

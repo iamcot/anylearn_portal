@@ -79,7 +79,8 @@
                         <th>@lang('Đăng ký')</th>
                         @if (!$isSale)
                             <th>@lang('Lần sửa cuối')</th>
-                            <th>@lang('Trạng thái đối tác')</th>
+                            <th>@lang('Status đối tác')</th>
+                            <th>@lang('Status AL')</th>
                             <th>@lang('Thao tác')</th>
                         @endif
                         <th>@lang('Số lượng cần bán')</th>
@@ -141,14 +142,16 @@
                                         {!! $itemServ->userStatusOperation($course->id, $course->user_status) !!}
                                     @endif
                                 </td>
+                                <td class="text-center ">
+                                    {!! $itemServ->statusText($course->status) !!}
+                                    @if ($userServ->isMod(\Auth::user()->role) && !$isSale)
+                                        {!! $itemServ->statusOperation($course->id, $course->status) !!}
+                                    @endif
+                                </td>
                                 <td>
                                     <a
                                         href="javascript:navigator.clipboard.writeText('{{ $itemServ->classUrl($course->id) }}').then(function() { alert('Copy')})"><i
                                             class="fa fa-link"></i></a>
-                                    @if ($userServ->isMod(\Auth::user()->role) && !$isSale)
-                                        {!! $itemServ->statusOperation($course->id, $course->status) !!}
-                                        <!-- {!! $itemServ->typeOperation($course) !!} -->
-                                    @endif
                                     <a class="ratingFormClick" href="#" data-class-id="{{ $course->id }}"><i
                                             class="fa fa-star"></i>({{ $course->sum_rating }})</a>
                                 </td>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\OrderConstants;
 use App\Constants\UserConstants;
 use App\Models\Contract;
 use App\Models\Feedback;
@@ -135,21 +136,25 @@ class DashboardController extends Controller
 
     public function meDashboard(Request $request)
     {
+        $user = Auth::user();
         $query = DB::table('order_details')
-            ->whereNotNull('created_at');
+            ->join('items', 'order_details.item_id', '=', 'items.id')
+            ->where('items.user_id', $user->id)
+            ->where('order_details.status', OrderConstants::STATUS_DELIVERED)
+            ->whereNotNull('order_details.created_at');
         $input = $request->all();
         if ($request->input('filter')) {
             if ($input['dateF']) {
-                $query = $query->where('created_at', '>=', $input['dateF']);
+                $query = $query->where('order_details.created_at', '>=', $input['dateF']);
             }
             if ($input['dateT']) {
-                $query = $query->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime($input['dateT'])));
+                $query = $query->where('order_details.created_at', '<=', date('Y-m-d 23:59:59', strtotime($input['dateT'])));
             }
         } else {
-            $query = $query->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')));
+            $query = $query->where('order_details.created_at', '>=', date('Y-m-d', strtotime('-30 days')));
         }
-        $results = $query->selectRaw('DATE(created_at) AS day, sum(order_details.unit_price) AS num')
-            ->groupBy(DB::raw('DATE(created_at)'))
+        $results = $query->selectRaw('DATE(order_details.created_at) AS day, sum(order_details.unit_price) AS num')
+            ->groupBy(DB::raw('DATE(order_details.created_at)'))
             ->get();
         $chartDataset = [
             'labels' => [],

@@ -28,8 +28,6 @@ class HomeApi extends Controller
             }
         }
         $data['ios_transaction'] = $configM->enableIOSTrans($request);
-        $platform = $request->get('p', '');
-        $allowIos = $platform == 'ios' ? $data['ios_transaction'] : 0;
 
         $bannerConfig = [];
         $newBanners = Configuration::where('key', ConfigConstants::CONFIG_APP_BANNERS)->first();
@@ -46,9 +44,9 @@ class HomeApi extends Controller
 
         $commonS = new CommonServices();
         $data['asks'] = $commonS->getLatestQuestion();
-        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations($allowIos));
+        $data['recommendations'] = $commonS->setTemplate('/', 'anyLEARN đề Xuất', $commonS->getRecommendations($data['ios_transaction']));
 
-        $data['classes'] = (new ItemServices)->getConfigItemsByCategories($request, $allowIos);
+        $data['classes'] = (new ItemServices)->getConfigItemsByCategories($request, $data['ios_transaction']);
         $data['vouchers'] = (new VoucherServices)->getVoucherEvents();
 
         $user = $request->get('_user');
@@ -57,8 +55,8 @@ class HomeApi extends Controller
 
         if ($user) {
             $data['pointBox'] = (new UserServices)->getPointBox($user);
-            $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user, '', $allowIos));
-            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user, '', $allowIos));
+            $data['j4u'] = $commonS->setTemplate('/', 'Có thể bạn sẽ thích', (new J4uServices)->get($user, '', $data['ios_transaction']));
+            $data['repurchases'] = $commonS->setTemplate('/', 'Đăng ký lại', $commonS->getRepurchases($user, '', $data['ios_transaction']));
         }
 
         $spm = new Spm();

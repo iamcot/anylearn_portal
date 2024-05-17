@@ -34,6 +34,11 @@
                 <i class="fas fa-fw fa-bolt"></i>
                     <span>@lang('Thông tin kích hoạt')</span></a>
                 </a>
+
+                <a class="collapse-item {{ in_array($route, ['class.activities']) ? 'active' : '' }}" href="{{ route('class.activities') }}">
+                <i class="fas fa-fw fa-bolt"></i>
+                    <span>@lang('Đăng ký hoạt động trải nghiệm')</span></a>
+                </a>
             </div>
         </div>
     </li>
@@ -104,12 +109,12 @@
     </li>
     @endif
     @if($userService->haveAccess($role, 'useractions'))
-    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'transaction.commission']) ?  'active' : '' }}">
+    <li class="nav-item {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction.commission']) ?  'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUserAction" aria-expanded="{{ in_array($route, ['user.noprofile', 'user.contract', 'transaction', 'order.open', 'transaction.commission']) ? true : false }}" aria-controls="collapsePages">
             <i class="fas fa-fw fa-book"></i>
             <span>@lang('Thao tác người dùng')</span>
         </a>
-        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract', 'transaction',  'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseUserAction" class="collapse {{ in_array($route, ['user.noprofile', 'user.contract',  'transaction.commission']) ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-gray-300 py-2 collapse-inner rounded">
                 <a class="collapse-item {{ strpos($route, 'user.noprofile') !== false ? 'active' : '' }}" href="{{ route('user.noprofile') }}">
                     <i class="fas fa-fw fa-fire"></i>
@@ -233,6 +238,10 @@
                 <a class="collapse-item {{ $route == 'config.banner' ? 'active' : '' }}" href="{{ route('config.banner') }}">
                     <i class="fas fa-fw fa-images"></i>
                     <span>@lang('Banners')</span>
+                </a>
+                <a class="collapse-item {{ $route == 'config.email' ? 'active' : '' }}" href="{{ route('config.email') }}">
+                    <i class="fas fa-fw fa-envelope"></i>
+                    <span>@lang('Mẫu email')</span>
                 </a>
                 <a class="collapse-item" target="_blank" href="{{ route('zalo.oa') }}">
                     <i class="fas fa-fw fa-cogs"></i>

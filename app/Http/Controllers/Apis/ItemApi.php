@@ -9,11 +9,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Item;
 use App\Models\ItemCategory;
+use App\Models\ItemSchedulePlan;
 use App\Models\ItemUserAction;
 use App\Models\Notification;
 use App\Models\Schedule;
 use App\Models\Spm;
 use App\Models\User;
+use App\Models\UserLocation;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\UserServices;
@@ -338,11 +340,38 @@ class ItemApi extends Controller
 
         return response()->json($data);
     }
-    public function updateSchadule(Request $request)
+    public function updateSchedule(Request $request)
     {
-        $itemService = new ItemServices();
-        $input = $request->get('input');
-        $data = $itemService->updateClassSchedule($request, $input);
-        return response()->json($data);
+        $input = $request->all();
+        $result = null;
+
+        if (!$input) {
+            return response()->json(['error' => 'Invalid input data'], 400);
+        }
+        if (!is_array($input)) {
+            return response()->json(['error' => 'Invalid input format'], 400);
+        }
+
+        if (isset($input['weekdays']) && is_array($input['weekdays'])) {
+            $ds = [];
+            foreach ($input['weekdays'] as $day => $value) {
+                $ds[] = $value;
+            }
+            $input['weekdays'] = implode(",", $ds);
+        }
+
+        if (!isset($input['id'])) {
+            $result = ItemSchedulePlan::create($input);
+        } else {
+            $result = ItemSchedulePlan::find($input['id'])->update($input);
+        }
+
+        return response()->json($result);
+    }
+
+    function userLocation(Request $request) {
+        $user = $request->get('_user');
+        $userLocations = UserLocation::where('user_id', $user->id)->orderby('is_head', 'desc')->get();
+        return response()->json($userLocations);
     }
 }

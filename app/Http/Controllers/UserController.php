@@ -271,8 +271,11 @@ class UserController extends Controller
 
         $this->data['members'] = $members;
         $this->data['navText'] = __('Quản lý Thành viên');
+        
+        $this->data['priorityUsers'] = $userService->getUsersByPriority();
         $this->data['priorityLevels'] = UserConstants::$salePriorityLevels;
         $this->data['priorityColors'] = UserConstants::$salePriorityColors;
+
         return view('user.member_list', $this->data);
     }
 
@@ -343,6 +346,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $this->data['user'] = $user;
+        if ($user->role == UserConstants::ROLE_SCHOOL) {
+            return view(env('TEMPLATE', '') . 'me.profile_school', $this->data);
+        }
         return view(env('TEMPLATE', '') . 'me.profile', $this->data);
     }
     public function meEdit(Request $request)
@@ -365,6 +371,13 @@ class UserController extends Controller
         $this->data['friends'] = $friends;
         $this->data['user'] = $editUser;
         $this->data['type'] = 'member';
+        $this->data['hasBack'] = true;
+        if ($editUser->role == UserConstants::ROLE_SCHOOL) {
+            $this->data['navText'] = __('Cập nhật thông tin Doanh nghiệp');
+            return view(env('TEMPLATE', '') . 'me.user_edit_school', $this->data);
+        
+        }
+        $this->data['navText'] = __('Cập nhật thông tin');
         return view(env('TEMPLATE', '') . 'me.user_edit', $this->data);
     }
     public function meTransHistory()
@@ -391,11 +404,11 @@ class UserController extends Controller
         $this->data['pointReiceived'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
-            ->sum(DB::raw("CASE WHEN type = 'exchange' THEN ref_amount ELSE amount END"));
+            ->sum("amount");
         $this->data['pointWait'] = Transaction::where('user_id', auth()->user()->id)
             ->where('pay_method', UserConstants::WALLET_C)
             ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
-            ->sum(DB::raw("CASE WHEN type = 'exchange' THEN ref_amount ELSE amount END"));
+            ->sum("amount");
         $this->data['WALLETM'] = $trans->history(auth()->user()->id, 'wallet_m');
         $this->data['WALLETC'] = $trans->history(auth()->user()->id, 'wallet_c');
         return  view(env('TEMPLATE', '') . 'me.history', $this->data);
@@ -910,6 +923,7 @@ class UserController extends Controller
         $orderDetailM = new OrderDetail();
         $data = $orderDetailM->usersOrders($user->id);
         $this->data['data'] = $data;
+        $this->data['navText'] = 'Khoá học đã đăng ký';
         return view(env('TEMPLATE', '') . 'me.user_orders', $this->data);
     }
 
@@ -932,7 +946,7 @@ class UserController extends Controller
         $item = Item::find($orderDetail->item_id);
         if (!$user) {
             return redirect()->back()->with('notify', 'Không có dữ liệu về khóa học');
-        } else {
+        } else { 
             $schedule = ItemSchedulePlan::where('item_id', $item->id)->first();
             if ($schedule) {
                 $period = CarbonPeriod::create($schedule->date_start, $schedule->date_end);
@@ -950,11 +964,13 @@ class UserController extends Controller
             }
             if ($item->subtype == 'digital') {
                 $code = ItemCode::where('item_id', $item->id)->where('order_detail_id', $orderDetailId)->first();
-                $this->data['code'] = $code ? $code->code : '********';
+                $this->data['code'] = $code ? $code->code : "";
             }
         }
         $this->data['item'] = $item;
         $this->data['currentDate'] = Carbon::now()->format('Y-m-d');
+        $this->data['hasBack'] = true;
+        $this->data['navText'] = 'Thông tin khoá học';
 
         return view(env('TEMPLATE', '') . 'me.user_orders_schedule', $this->data);
     }
@@ -1047,7 +1063,7 @@ class UserController extends Controller
                     'type' => ConfigConstants::TRANSACTION_WITHDRAW,
                     'amount' => $input['withdraw'],
                     'ref_amount' => $input['withdraw'],
-                    'pay_method' => UserConstants::WALLET_M,
+                    'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
                     'content' => 'Rút ' . $input['withdraw'] . ' cho đơn đối tác #' . ($user->id) . ' ' . $user->name,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
@@ -1058,16 +1074,18 @@ class UserController extends Controller
                 return redirect()->back()->with('notify', 'Mật khẩu không chính xác');
             }
         }
-        $history = DB::table('transactions')->where('user_id', $user->id)->where('pay_method', 'wallet_m')->where('type', '!=', ConfigConstants::TRANSACTION_DEPOSIT)->orderByDesc('created_at')->get();
-        $totalAmount = DB::table('transactions')
-            ->where('type', 'withdraw')
+        $history = DB::table('transactions')
+        ->where('user_id', $user->id)
+        ->where('type', ConfigConstants::TRANSACTION_WITHDRAW)
+        ->orderByDesc('created_at')->paginate(20);
+        $pending = DB::table('transactions')
+        ->where('type', ConfigConstants::TRANSACTION_WITHDRAW)
             ->where('user_id', $user->id)
-            ->where('status', 0)
+            ->where('status', ConfigConstants::TRANSACTION_STATUS_PENDING)
             ->sum('amount');
-        // dd($totalAmount);
         $contract = Contract::where('user_id', $user->id)->where('status', 99)->first();
         $this->data['history'] = $history;
-        $this->data['totalAmount'] = ($user->wallet_m - abs($totalAmount) > 0) ? $user->wallet_m - abs($totalAmount) : 0;
+        $this->data['totalAmount'] = ($user->wallet_c - $pending  ) > 0 ? $user->wallet_c - $pending : 0;
         $this->data['user'] = $user;
         $this->data['contract'] = $contract;
         return view(env('TEMPLATE', '') . 'me.withdraw', $this->data);

@@ -80,6 +80,7 @@ class Configuration extends Model
             $data[$key] = $fileConfig[$key]['value'];
         }
         $dbConfig = $this->whereIn('key', $keys)->get();
+
         if ($dbConfig) {
             foreach ($dbConfig as $config) {
                 $data[$config->key] = $config->value;
@@ -89,9 +90,32 @@ class Configuration extends Model
         return $data;
     }
 
+    public function getAnotherConfigs(array $keys, $default = null)
+    {
+        $data = [];
+        $fileConfig = $default ?? [];
+        foreach ($keys as $key) {
+            $data[$key] = $fileConfig[$key];
+        }
+        $dbConfig = $this->whereIn('key', $keys)->get();
+
+        if ($dbConfig) {
+            foreach ($dbConfig as $config) {
+                $data[$config->key]['value'] = $config->value;
+            }
+        }
+
+        return $data;
+    }
+
     public function enableIOSTrans(Request $request)
     {
         $appVer = $request->get('v');
+        $platform = $request->get('p', '');
+        if ($platform != 'ios') {
+            return 1;
+        }
+
         $configVer = env('APP_VERSION_REVIEW', 'NOT_DEFINED');
         return $appVer != $configVer ? 1 : 0;
     }

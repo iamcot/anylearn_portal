@@ -64,6 +64,45 @@ class Spm extends Model
         return true;
     }
 
+    public function addSpmApi(Request $request, $api, $message = "")
+    {
+        $spmKey = 'api.' . $api . '.0.0';
+        try {
+            $data = [
+                'spm_key' => $spmKey,
+                'event' => $request->get('event', 'pageview'),
+                'day' => date('Y-m-d'),
+                'session_id' => $request->get('sid',  session()->getId()),
+                'user_id' => $request->get('usid'),
+                'spma' => 'api',
+                'spmb' => $api,
+                'spmc' => 0,
+                'spmd' => 0,
+                'spm_pre' => $request->get('spm_pre'),
+                'p_url' => $request->get('p_url'),
+                'p_ref' => $request->get('p_ref'),
+                'p_title' => $request->get('p_title'),
+                'p_meta_desc' => $request->get('p_meta_desc'),
+                'p_meta_canonical' => $request->get('p_meta_canon'),
+                'p_lang' => $request->get('p_lang', App::getLocale()),
+                'os' => $request->get('os'),
+                'country' => $request->get('country'),
+                'screen' => $request->get('screen'),
+                'logfrom' => $request->get('logfrom'),
+                'ip' => $request->ip(),
+                'browser' => $request->header('User-Agent'),
+                'extra' => $message,
+            ];
+            // get country from IP
+            Spm::create($data);
+        } catch (\Exception $ex) {
+            Log::error($ex);
+            return false;
+        }
+
+        return true;
+    }
+
     public function filterSpm(Request $request) {
 
         $spms = DB::table('spms');
@@ -71,9 +110,12 @@ class Spm extends Model
         if ($request->input('user_id')) {
             $spms = $spms->where('id', $request->input('user_id'));
         }
-
+        
         if ($request->input('event')) {
             $spms = $spms->where('event', $request->input('event'));
+        }
+        if ($request->input('spmc')) {
+            $spms = $spms->where('spmc', $request->input('spmc'));
         }
 
         if ($request->input('date_from')) {

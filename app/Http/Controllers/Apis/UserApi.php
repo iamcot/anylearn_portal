@@ -530,16 +530,16 @@ class UserApi extends Controller
             $lastContract = Contract::find($contractId);
         }
 
-            $configM = new Configuration();
-            if ($lastContract->type == UserConstants::ROLE_TEACHER) {
-                $key = ConfigConstants::CONTRACT_TEACHER;
-                $template = $configM->get($key);
-                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-            } else {
-                $key = ConfigConstants::CONTRACT_SCHOOL;
-                $template = $configM->get($key);
-                $lastContract->template = Contract::makeContent($template, $user, $lastContract);
-            }
+        $configM = new Configuration();
+        if ($lastContract->type == UserConstants::ROLE_TEACHER) {
+            $key = ConfigConstants::CONTRACT_TEACHER;
+            $template = $configM->get($key);
+            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+        } else {
+            $key = ConfigConstants::CONTRACT_SCHOOL;
+            $template = $configM->get($key);
+            $lastContract->template = Contract::makeContent($template, $user, $lastContract);
+        }
 
         return response()->json($lastContract);
     }

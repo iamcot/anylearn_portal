@@ -50,7 +50,11 @@
                 @include('anylearn.widget.notify', ['notify' => session('notify', '')])
                     <div class="d-flex">
                         <div class="">
-                        @include('anylearn.me.sidebar')
+                            @if (Auth::user()->role == 'school')
+                                @include('anylearn.me.sidebar_school')
+                            @else
+                                @include('anylearn.me.sidebar')
+                            @endif
                         </div>
                         <div class="text-secondary is-content">
                             @if($navText ?? '')

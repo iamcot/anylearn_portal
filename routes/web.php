@@ -80,63 +80,63 @@ Route::middleware('version')->group(function () {
     Route::get('/article/{id}/{url}', 'PageController@article')->name('page.article');
     Route::get('/articles', 'PageController@article');
 
-    Route::middleware(['auth'])->prefix('me')->group(function () {
-        Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
-        Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
-        Route::get('/profile', 'UserController@meProfile')->name('me.profile');
-        // Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
-        // Route::get('/profile', 'UserController@meProfile')->name('me.profile');
-        // Route::get('/class', 'ClassController@list')->name('me.class');
-        // Route::any('/class/create', 'ClassController@create')->name('me.class.create');
-        // Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
-        Route::get('/child', 'UserController@meProfile');
-        Route::get('/friend-list', 'UserController@meProfile');
-        Route::get('/confirm-course', 'UserController@meProfile');
-        Route::get('/calendar', 'UserController@meProfile');
-        Route::get('/pending-course', 'UserController@meProfile');
-        Route::get('/order-return', 'UserController@meProfile');
-        Route::get('/trans', 'UserController@meProfile');
+    // Route::middleware(['auth'])->prefix('me')->group(function () {
+    //     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
+    //     Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
+    //     Route::get('/profile', 'UserController@meProfile')->name('me.profile');
+    //     // Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
+    //     // Route::get('/profile', 'UserController@meProfile')->name('me.profile');
+    //     // Route::get('/class', 'ClassController@list')->name('me.class');
+    //     // Route::any('/class/create', 'ClassController@create')->name('me.class.create');
+    //     // Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
+    //     Route::get('/child', 'UserController@meProfile');
+    //     Route::get('/friend-list', 'UserController@meProfile');
+    //     Route::get('/confirm-course', 'UserController@meProfile');
+    //     Route::get('/calendar', 'UserController@meProfile');
+    //     Route::get('/pending-course', 'UserController@meProfile');
+    //     Route::get('/order-return', 'UserController@meProfile');
+    //     Route::get('/trans', 'UserController@meProfile');
 
-        Route::get('/class', 'ClassController@list')->name('me.class');
-        Route::any('/class/create', 'ClassController@create')->name('me.class.create');
-        Route::any('/withdraw', 'UserController@withdraw')->name('me.withdraw');
+    //     Route::get('/class', 'ClassController@list')->name('me.class');
+    //     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
+    //     Route::any('/withdraw', 'UserController@withdraw')->name('me.withdraw');
 
-        Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
-        Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
-        Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
+    //     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
+    //     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
+    //     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
 
-        Route::any('/edit', 'UserController@meEdit')->name('me.edit');
+    //     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
 
-        Route::any('/orders', 'UserController@orders')->name('me.orders');
-        Route::any('/courseconfirm', 'UserController@courseConfirm')->name('me.courseconfirm');
+    //     Route::any('/orders', 'UserController@orders')->name('me.orders');
+    //     Route::any('/courseconfirm', 'UserController@courseConfirm')->name('me.courseconfirm');
 
-        Route::any('/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
-        Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
-        Route::any('/ischild', 'UserController@meChild')->name('me.child');
-        Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
-        Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
+    //     Route::any('/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
+    //     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
+    //     Route::any('/ischild', 'UserController@meChild')->name('me.child');
+    //     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    //     Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
 
-        Route::get('/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
-        Route::get('/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
+    //     Route::get('/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
+    //     Route::get('/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
 
-        Route::any('/history', 'UserController@meHistory')->name('me.history');
-        Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
-        Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
-        Route::any('/friend', 'UserController@meFriend')->name('me.friend');
-        Route::any('/work', 'UserController@meWork')->name('me.work');
+    //     Route::any('/history', 'UserController@meHistory')->name('me.history');
+    //     Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
+    //     Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
+    //     Route::any('/friend', 'UserController@meFriend')->name('me.friend');
+    //     Route::any('/work', 'UserController@meWork')->name('me.work');
 
-        Route::any('/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
-        Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
+    //     Route::any('/class/{itemId}/author-confirm-join', 'ClassController@versionmd')->name('class.author.confirmjoin');
+    //     Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
 
-        Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
-        Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
-        Route::any('/notification', 'UserController@notification')->name('me.notification');
-        Route::any('/contract', 'UserController@contract')->name('me.contract');
-        Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
-        Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
-        Route::any('/finance', 'UserController@finance')->name('me.finance');
-        Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
-    });
+    //     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
+    //     Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
+    //     Route::any('/notification', 'UserController@notification')->name('me.notification');
+    //     Route::any('/contract', 'UserController@contract')->name('me.contract');
+    //     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
+    //     Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
+    //     Route::any('/finance', 'UserController@finance')->name('me.finance');
+    //     Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
+    // });
 });
 
 // For new pages - v3
@@ -155,48 +155,48 @@ Route::group( [ 'domain' => 'info.anylearn.vn' ], function () {
 
 Auth::routes();
 Route::middleware(['auth'])->prefix('me')->group(function () {
-//     Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
-//     Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
-        // Route::get('/profile', 'UserController@meProfile')->name('me.profile');
-//     Route::get('/class', 'ClassController@list')->name('me.class');
-//     Route::any('/class/create', 'ClassController@create')->name('me.class.create');
-//     Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
+    Route::get('/', 'DashboardController@meDashboard')->name('me.dashboard');
+    Route::any('/admitstudent', 'UserController@admitstudent')->name('me.admitstudent');
+        Route::get('/profile', 'UserController@meProfile')->name('me.profile');
+    Route::get('/class', 'ClassController@list')->name('me.class');
+    Route::any('/class/create', 'ClassController@create')->name('me.class.create');
+    Route::any('/withdraw','UserController@withdraw')->name('me.withdraw');
 
-//     Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
-//     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
-//     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
+    Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('me.class.detail');
+    Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('me.class.edit');
+    Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('me.class.del.schedule');
 
-//     Route::any('/edit', 'UserController@meEdit')->name('me.edit');
+    Route::any('/edit', 'UserController@meEdit')->name('me.edit');
 
-//     Route::any('/orders', 'UserController@orders')->name('me.orders');
-//     Route::any('/courseconfirm', 'UserController@courseConfirm')->name('me.courseconfirm');
+    Route::any('/orders', 'UserController@orders')->name('me.orders');
+    Route::any('/courseconfirm', 'UserController@courseConfirm')->name('me.courseconfirm');
 
-//     Route::any('/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
-//     Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
-//     Route::any('/ischild', 'UserController@meChild')->name('me.child');
-//     Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
-//     Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
+    Route::any('/orders/{id}/schedule', 'UserController@schedule')->name('me.orders.schedule');
+    Route::any('/resetpassword', 'UserController@mePassword')->name('me.resetpassword');
+    Route::any('/ischild', 'UserController@meChild')->name('me.child');
+    Route::any('/editchild', 'UserController@meChildEdit')->name('me.editchild');
+    Route::any('/childhistory/{id}', 'UserController@meChildHistory')->name('me.childhistory');
 
-//     Route::get('/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
-//     Route::get('/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
+    Route::get('/order-return', 'TransactionController@deliveredOrders')->name('me.order.return');
+    Route::get('/order-return/send-request/{orderId}', 'TransactionController@sendReturnRequest')->name('me.order.return.send-request');
 
-//     Route::any('/history', 'UserController@meHistory')->name('me.history');
-//     Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
-//     Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
-//     Route::any('/friend', 'UserController@meFriend')->name('me.friend');
-//     Route::any('/work', 'UserController@meWork')->name('me.work');
+    Route::any('/history', 'UserController@meHistory')->name('me.history');
+    Route::any('/transactionhistory', 'UserController@meTransHistory')->name('me.transactionhistory');
+    Route::any('/introduce', 'UserController@meIntroduce')->name('me.introduce');
+    Route::any('/friend', 'UserController@meFriend')->name('me.friend');
+    Route::any('/work', 'UserController@meWork')->name('me.work');
 
-//     Route::any('/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
-//     Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
+    Route::any('/class/{itemId}/author-confirm-join', 'ClassController@authorConfirmJoinCourse')->name('class.author.confirmjoin');
+    Route::any('/class/{itemId}/cert/{userId}', 'ClassController@authorCert')->name('class.author.cert');
 
-//     Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
-//     Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
-//     Route::any('/notification', 'UserController@notification')->name('me.notification');
-//     Route::any('/contract', 'UserController@contract')->name('me.contract');
-//     Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
-//     Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
-//     Route::any('/finance', 'UserController@finance')->name('me.finance');
-//     Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
+    Route::any('/pending-orders', 'UserController@pendingOrders')->name('me.pendingorders');
+    Route::any('/cancel-pending/{id}', 'UserController@cancelPending')->name('me.cancelpending');
+    Route::any('/notification', 'UserController@notification')->name('me.notification');
+    Route::any('/contract', 'UserController@contract')->name('me.contract');
+    Route::any('/contract/{id}/sign', 'UserController@contractSign')->name('me.contract.sign');
+    Route::any('/certificate', 'UserController@certificate')->name('me.certificate');
+    Route::any('/finance', 'UserController@finance')->name('me.finance');
+    Route::any('/remove-certificate/{fileId}', 'UserController@removeCert')->name('me.remove-cert');
 
 });
 
@@ -233,6 +233,7 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
     Route::get('/config/guide/{type}/{id}', 'ConfigController@guidepdf')->name('config.guidepdf');
     Route::any('/config/homepopup', 'ConfigController@homePopup')->name('config.homepopup');
     Route::any('/config/homeclasses', 'ConfigController@homeClasses')->name('config.homeclasses');
+    Route::any('/config/email', 'ConfigController@email')->name('config.email');
     Route::post('/config/guide/{type}', 'ConfigController@guideUpdate');
 
     Route::any('/config/voucher', 'ConfigController@voucher')->name('config.voucher');
@@ -293,7 +294,8 @@ Route::middleware(['auth','role'])->prefix('admin')->group(function () {
 
     Route::any('/class', 'ClassController@list')->name('class');
     Route::any('/class/create', 'ClassController@create')->name('class.create');
-    Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
+    // Route::middleware('access.item')->get('/class/{id}', 'ClassController@detail')->name('class.detail');
+    Route::get('/class/activities', 'ClassController@activities')->name('class.activities');
     Route::middleware('access.item')->any('/class/{id}/edit', 'ClassController@edit')->name('class.edit');
     Route::middleware('access.item')->any('/class/{id}/del', 'ClassController@del')->name('class.del');
     Route::middleware('access.item')->any('/class/{id}/del-schedule', 'ClassController@delSchedule')->name('class.del.schedule');

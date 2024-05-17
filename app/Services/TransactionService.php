@@ -53,7 +53,7 @@ class TransactionService
             <a class="btn btn-sm btn-danger" href="' . route('transaction.status.touch', ['id' => $id, 'status' => ConfigConstants::TRANSACTION_STATUS_REJECT]) . '"><i class="fas fa-lock"></i> Từ chối</a>
             ';
         } else {
-            return $this->statusText($oldStatus);
+            return '<span class="text-'. $this->statusColor($oldStatus) .'">' . $this->statusText($oldStatus) . '</span>';
         }
     }
     public function extraFee($orderdetailid)
@@ -131,7 +131,7 @@ class TransactionService
         return true;
     }
 
-    private function statusText($status)
+    public function statusText($status)
     {
         switch ($status) {
             case ConfigConstants::TRANSACTION_STATUS_PENDING:
@@ -145,10 +145,24 @@ class TransactionService
         }
     }
 
+    public function statusColor($status)
+    {
+        switch ($status) {
+            case ConfigConstants::TRANSACTION_STATUS_PENDING:
+                return 'warning';
+            case ConfigConstants::TRANSACTION_STATUS_DONE:
+                return 'success';
+            case ConfigConstants::TRANSACTION_STATUS_REJECT:
+                return 'danger';
+            default:
+                return '';
+        }
+    }
+
     /**
      * Changed from Aug 13: If order not paid, new item will be added to open order
      */
-    public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false)
+    public function placeOrderOneItem(Request $request, $user, $itemId, $allowNoMoney = false, $autoApprove = false, $autoApproveChannel = 'VNPAY')
     {
         $childUser = $request->get('child', '');
         $input = $request->all();
@@ -172,7 +186,7 @@ class TransactionService
         }
 
         $voucher = $request->get('voucher', '');
-        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $input, $allowNoMoney) {
+        $result = DB::transaction(function () use ($user, $item, $voucher, $childUser, $input, $allowNoMoney, $autoApprove, $autoApproveChannel) {
             $notifServ = new Notification();
             $openOrder = null;
             $status = OrderConstants::STATUS_DELIVERED;
@@ -419,7 +433,11 @@ class TransactionService
                 ]);
             }
 
-            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE 
+            if ($autoApprove) {
+                $this->approveRegistrationAfterWebPayment($openOrder->id, $autoApproveChannel);
+            }
+
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE || $autoApprove 
                 ? $openOrder->id 
                 : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
@@ -605,7 +623,7 @@ class TransactionService
                 return false;
             }
             User::find($userId)->update([
-                'wallet_c' => DB::raw('wallet_c + ' . $tnx->amount),
+                'wallet_c' => DB::raw('wallet_c + ' . abs($tnx->amount)),
             ]);
             Transaction::find($tnx->id)->delete();
         } catch (\Exception $ex) {
@@ -758,7 +776,9 @@ class TransactionService
         }
 
         $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
-        Mail::to(env('MAIL_FROM_ADDRESS'))->send(
+        Mail::to(env('MAIL_FROM_ADDRESS'))
+        ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+        ->send(
             new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
         );
     }
@@ -843,7 +863,7 @@ class TransactionService
                     'content' => 'Hoàn trả '. $tnx->amount .' anypoints vì đơn hàng #' . 
                         $openOrder->id . ' được trả lại.',
                     'user_id' => $user->id,
-                    'amount' => $tnx->amount,
+                    'amount' => abs($tnx->amount),
                     'order_id' => $tnx->order_id
                 ]);
 
@@ -1021,8 +1041,9 @@ class TransactionService
             //     ]);
             // }
 
-            if ($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
-               || $item->subtype == ItemConstants::SUBTYPE_VIDEO
+            if (($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
+               || $item->subtype == ItemConstants::SUBTYPE_VIDEO)
+               && env('CONFIG_TRANSACTION_APPROVE_MANUAL', 0) == 0
             ) {
                 $this->approveTransactionsAfterPayment($orderItem->id);
             }
@@ -1030,7 +1051,11 @@ class TransactionService
             $notifServ = new Notification();
             $dataOrder = $this->orderDetailToDisplay($orderItem->id);
 
-            $userService->MailToPartnerRegisterNew($item, $user->id, $author);
+            $tnxPartner = Transaction::where('order_id', $orderItem->id)
+            ->where('type', ConfigConstants::TRANSACTION_PARTNER)
+            ->where('pay_method', UserConstants::WALLET_C)
+            ->first();
+            $userService->MailToPartnerRegisterNew($item, $user->id, $author, $tnxPartner);
 
             $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
                 'username' => $user->name,
@@ -1208,7 +1233,9 @@ class TransactionService
                 'isp.title AS plan_title',
                 'isp.weekdays AS plan_weekdays',
                 'isp.date_start AS plan_date_start',
-                'ul.title AS plan_location_name'
+                'isp.info AS plan_info',
+                'ul.title AS plan_location_name',
+                
             )
             ->first();
     }

@@ -256,6 +256,20 @@ class ClassController extends Controller
         return redirect()->back();
     }
 
+    public function activities(Request $request)
+    {
+        $data = DB::table('item_activities as ia')
+            ->join('items as i', 'i.id', '=', 'ia.item_id')
+            ->join('users as u', 'u.id', '=', 'ia.user_id')
+            ->join('users as iu', 'iu.id', '=', 'i.user_id')
+            ->select('ia.*', 'i.title', 'u.name as buyer_name', 'iu.name as partner', 'u.phone as buyer_phone')
+            ->orderby('ia.id', 'desc')
+            ->paginate(20);
+
+        $this->data['data'] = $data;
+        return view('class.activities', $this->data);
+    }
+
     public function edit(Request $request, $courseId)
     {  
         $input = $request->all();
@@ -357,10 +371,18 @@ class ClassController extends Controller
 
                     if (isset($input['email']) || isset($input['notif'])) {
                         $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-                        $notifTemplate->update([
-                            'email_template' => $input['email'],
-                            'notif_template' => $input['notif'],
-                        ]);
+                        if (empty($notifTemplate)) {
+                            ItemCodeNotifTemplate::create([
+                                'item_id' => $courseId,
+                                'email_template' => $input['email'],
+                                'notif_template' => $input['notif'],
+                            ]);
+                        } else {
+                            $notifTemplate->update([
+                                'email_template' => $input['email'],
+                                'notif_template' => $input['notif'],
+                            ]);
+                        }
                     }
                 }
             } catch (Exception $e) {
@@ -473,6 +495,18 @@ class ClassController extends Controller
             ) AS cert")
             )
             ->get();
+
+        if ($courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL) {
+            $itemCodes = DB::table('item_codes')
+                ->join('items', 'items.id', '=', 'item_codes.item_id')
+                ->leftjoin('users', 'users.id', '=', 'item_codes.user_id')
+                ->leftjoin('order_details', 'order_details.id', '=', 'item_codes.order_detail_id')
+                ->where('items.id', $courseId)
+                ->orderBy('items.id', 'desc')
+                ->select('item_codes.*', 'items.title AS class', 'items.user_id AS partner_id', 'users.name', 'users.phone', 'order_details.order_id')
+                ->paginate(20);
+            $this->data['itemCodes'] = $itemCodes;
+        }
         $videoServices = new VideoServices();
         $this->data['videos'] = $videoServices->getAllChapterAndLessons($courseId);
         // $this->data['lesson'] = DB::table('item_video_lessons')->get();

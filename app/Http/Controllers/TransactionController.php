@@ -49,10 +49,17 @@ class TransactionController extends Controller
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
-        $this->data['transaction'] = Transaction::whereIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW, ActivitybonusConstants::Activitybonus_Bonus])
-            ->orderby('id', 'desc')
-            ->with('user')
-            ->paginate(20);
+        $this->data['transaction'] = Transaction::orderby('id', 'desc')
+            ->with('user');
+        if ($request->get('t')) {
+            if ($request->get('t') == 'type') {
+                $this->data['transaction'] = $this->data['transaction']->where('type', $request->get('s'));
+            }
+            if ($request->get('t') == 'status') {
+                $this->data['transaction'] = $this->data['transaction']->where('status', $request->get('s'));
+            }
+        }
+            $this->data['transaction'] = $this->data['transaction']->paginate(20);
         $this->data['navText'] = __('Quản lý Giao dịch');
         return view('transaction.list', $this->data);
     }
@@ -173,7 +180,16 @@ class TransactionController extends Controller
                 'vouchers.voucher',
                 'vouchers.value AS voucher_value',
                 'transactions.amount AS anypoint',
-                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+                DB::raw("(SELECT GROUP_CONCAT(
+                    CASE WHEN item_schedule_plans.title IS NOT NULL THEN 
+                        CONCAT(items.title, '(Lịch học: ', COALESCE(item_schedule_plans.title, ''), ')')
+                    ELSE
+                        items.title
+                    END SEPARATOR ';' ) as classes FROM order_details AS os 
+                JOIN items ON items.id = os.item_id 
+                LEFT JOIN item_schedule_plans ON os.item_schedule_plan_id = item_schedule_plans.id
+                WHERE os.order_id = orders.id
+                ) as classes")
             )->orderby('orders.id', 'desc')
             ->paginate();
         $this->data['navText'] = __('Đơn hàng đã đặt');
@@ -322,21 +338,21 @@ class TransactionController extends Controller
             if ($request->get("activiy_trial") == "on") {
                 $input['date'] = $input['trial_date'];
                 $input['note'] = $input['trial_note'];
-                $itemService->activity("trial", $input, $input['class']);
+                $itemService->activity($user, "trial", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_trial", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_visit") == "on") {
 
                 $input['date'] = $input['visit_date'];
                 $input['note'] = $input['visit_note'];
-                $itemService->activity("visit", $input, $input['class']);
+                $itemService->activity($user, "visit", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_visit", $request->get('class'), $input['visit_date']);
             }
             if ($request->get("activiy_test") == "on") {
 
                 $input['date'] = $input['test_date'];
                 $input['note'] = $input['test_note'];
-                $itemService->activity("test", $input, $input['class']);
+                $itemService->activity($user, "test", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_test", $request->get('class'), $input['test_date']);
             }
             if ($result === ConfigConstants::TRANSACTION_STATUS_PENDING) {
@@ -359,19 +375,19 @@ class TransactionController extends Controller
             if ($request->get("activiy_trial") == "on") {
                 $input['date'] = $input['trial_date'];
                 $input['note'] = $input['trial_note'];
-                $itemService->activity("trial", $input, $input['class']);
+                $itemService->activity($user, "trial", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_trial", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_visit") == "on") {
                 $input['date'] = $input['visit_date'];
                 $input['note'] = $input['visit_note'];
-                $itemService->activity("visit", $input, $input['class']);
+                $itemService->activity($user, "visit", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_visit", $request->get('class'), $input['trial_date']);
             }
             if ($request->get("activiy_test") == "on") {
                 $input['date'] = $input['test_date'];
                 $input['note'] = $input['test_note'];
-                $itemService->activity("test", $input, $input['class']);
+                $itemService->activity($user, "test", $input, $input['class']);
                 $userService->mailActivity($user, "activiy_test", $request->get('class'), $input['trial_date']);
             }
             $item = Item::find($request->get('class'));
@@ -410,12 +426,11 @@ class TransactionController extends Controller
         $userService = new UserServices();
         $user = Auth::user();
 
-        $transaction = DB::table('transactions')->whereNotIn('type', [ConfigConstants::TRANSACTION_DEPOSIT, ConfigConstants::TRANSACTION_WITHDRAW])
+        $transaction = DB::table('transactions')
             ->orderby('transactions.id', 'desc')
-            ->join('users', 'transactions.user_id', '=', 'users.id')
-            ->join('orders', 'transactions.order_id', '=', 'orders.id')
-            ->where('orders.status', 'delivered')
-            ->select(['transactions.id', 'users.name', 'users.phone', 'users.email', 'transactions.amount', 'transactions.content', 'transactions.created_at', 'transactions.type', 'transactions.updated_at']);
+            ->leftjoin('users', 'transactions.user_id', '=', 'users.id')
+            ->leftjoin('order_details', 'transactions.order_id', '=', 'order_details.id')
+            ->select(['transactions.*', 'users.name', 'users.phone', 'users.email', 'order_details.item_id']);
         // dd($transaction->get());
         if ($request->input('action') == 'clear') {
             return redirect()->route('transaction.commission');
@@ -452,7 +467,7 @@ class TransactionController extends Controller
             $headers = [
                 // "Content-Encoding" => "UTF-8",
                 "Content-type" => "text/csv",
-                "Content-Disposition" => "attachment; filename=anylearn_order_" . now() . ".csv",
+                "Content-Disposition" => "attachment; filename=anylearn_tnx_" . now() . ".csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
                 "Expires" => "0"
@@ -488,11 +503,13 @@ class TransactionController extends Controller
         if (!$transaction) {
             return redirect()->back()->with('notify', 'Giao dịch không tồn tại');
         }
+        if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
+            return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
+        }
         $transService = new TransactionService();
+        $notifServ = new Notification();
+
         if ($status == ConfigConstants::TRANSACTION_STATUS_DONE) {
-            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
-                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
-            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
@@ -502,26 +519,19 @@ class TransactionController extends Controller
                     'wallet_m' => DB::raw('wallet_m + ' . $transaction->amount),
                 ]);
                 $transService->approveRegistrationAfterDeposit($transaction->user_id);
+                $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
+            } else {
+                $userup = User::find($transaction->user_id);
+                $userup->update([
+                    'wallet_c' => $userup->wallet_c + $transaction->amount
+                ]);
+                $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $transaction->user_id, []);
             }
-
-            $notifServ = new Notification();
-            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_APPROVED, $transaction->user_id, []);
+           
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
-            if ($transaction->status != ConfigConstants::TRANSACTION_STATUS_PENDING) {
-                return redirect()->back()->with('notify', 'Thao tác không hợp lệ');
-            }
             Transaction::find($id)->update([
                 'status' => $status
             ]);
-            if ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
-                $trans = Transaction::find($id);
-                $userup = User::find($trans->user_id);
-                $userup->update([
-                    'wallet_c' => $userup->wallet_c + ($trans->amount * 1 / 1000)
-                ]);
-            }
-            $notifServ = new Notification();
-            $notifServ->createNotif(NotifConstants::TRANS_DEPOSIT_REJECTED, $transaction->user_id, []);
         }
         return redirect()->back()->with('notify', 'Cập nhật thành công');
     }
@@ -668,7 +678,7 @@ class TransactionController extends Controller
                 Transaction::create([
                     'user_id' => $user->id,
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
-                    'amount' => $point,
+                    'amount' => (-1 * $point),
                     'ref_amount' => (-1 * $point),
                     'pay_method' => UserConstants::WALLET_C,
                     'pay_info' => '',
@@ -693,7 +703,7 @@ class TransactionController extends Controller
         } else if ($request->get('cart_action') == 'remove_point') {
             $tnx = Transaction::find($request->get('point_used_id'));
             User::find($user->id)->update([
-                'wallet_c' => ($user->wallet_c + $tnx->amount)
+                'wallet_c' => ($user->wallet_c + abs($tnx->amount))
             ]);
             $tnx->delete();
             $transService = new TransactionService();
@@ -790,7 +800,7 @@ class TransactionController extends Controller
             if (!$existsBank) {
                 return redirect()->back()->with('notify', 'Phương thức thanh toán không tồn tại');
             }
-            $payment = 'onepaylocal';
+            $payment = 'onepayfee';
             $saveCard = false;
             $tokenNum = $existsBank->token_num;
             $tokenExp = $existsBank->token_exp;

@@ -82,9 +82,9 @@
                     <label for="">Độ ưu tiên</label>
                     <select name="sale_priority" id="sale_priority" class="form-control">
                         <option value="">---</option>
-                        @foreach($priorityLevels as $key => $prio)
+                        @foreach($priorityUsers as $key => $prio)
                             <option value="{{ $key }}" {{ null != Request::get('sale_priority') && Request::get('sale_priority') == $key ? "selected" : "" }}>
-                                {{ strtoupper($prio) }}
+                                {{ $prio }}
                             </option>
                         @endforeach
                     </select>
@@ -152,7 +152,7 @@
                     <th width="5%" scope="col">SDT</th>
                     <th width="5%" scope="col">Email</th>
                     <!-- <th width="10%" scope="col">Address</th> -->
-                    <th>Ví C</th>
+                    <th><a href="{{ request()->fullUrlWithQuery(['sort' => 'wallet_c'])  }}">Ví C  <i class="fas fa-sort"></i></a></th>
                     <th width="10%" scope="col">Người G/T</th>
                     <th width="5%" scope="col">H/H</th>
                     <th class="text-center" width="5%" scope="col">C/T</th>

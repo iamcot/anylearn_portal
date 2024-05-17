@@ -76,7 +76,7 @@
 
     </div>
     <div class="card-footer">
-        <div>{{ $transaction->links() }}</div>
+        <div>{{ $transaction->appends(request()->query())->links() }}</div>
     </div>
 </div>
 @endsection

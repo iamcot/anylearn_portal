@@ -43,31 +43,29 @@ class DashboardServices
     }
     public function userCountpanert($getAll = true)
     {
-        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
-            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+        $query = DB::table('order_details')->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->join('items', 'order_details.item_id', '=', 'items.id')
             ->where('items.user_id', auth()->user()->id);
         if ($this->dateF && !$getAll) {
-            $query = $query->where('orders.created_at', '>=', $this->dateF);
+            $query = $query->where('order_details.created_at', '>=', $this->dateF);
         }
         if ($this->dateT && !$getAll) {
-            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+            $query = $query->where('order_details.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
         }
-        return $query->count('orders.id');
+        return $query->count('order_details.id');
     }
     public function userCountpanertAPI($getAll = true,$users)
     {
-        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
-            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+        $query = DB::table('order_details')->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->join('items', 'order_details.item_id', '=', 'items.id')
             ->where('items.user_id', $users->id);
         if ($this->dateF && !$getAll) {
-            $query = $query->where('orders.created_at', '>=', $this->dateF);
+            $query = $query->where('order_details.created_at', '>=', $this->dateF);
         }
         if ($this->dateT && !$getAll) {
-            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+            $query = $query->where('order_details.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
         }
-        return $query->count('orders.id');
+        return $query->count('order_details.id');
     }
     public function itemCount($getAll = true)
     {
@@ -102,15 +100,14 @@ class DashboardServices
     }
     public function gmvpartner($getAll = true)
     {
-        $query = DB::table('orders')->where('orders.status', OrderConstants::STATUS_DELIVERED)
-            ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+        $query = DB::table('order_details')->where('order_details.status', OrderConstants::STATUS_DELIVERED)
             ->join('items', 'order_details.item_id', '=', 'items.id')
             ->where('items.user_id', auth()->user()->id);
         if ($this->dateF && !$getAll) {
-            $query = $query->where('orders.created_at', '>=', $this->dateF);
+            $query = $query->where('order_details.created_at', '>=', $this->dateF);
         }
         if ($this->dateT && !$getAll) {
-            $query = $query->where('orders.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
+            $query = $query->where('order_details.created_at', '<=', date('Y-m-d 23:59:59', strtotime($this->dateT)));
         }
         return $query->sum('order_details.unit_price');
     }
@@ -181,7 +178,8 @@ class DashboardServices
     public function revenuechartDataset()
     {
         $query = DB::table('order_details')
-            ->whereNotNull('created_at');
+            ->whereNotNull('created_at')
+            ->where('status', '=', OrderConstants::STATUS_DELIVERED);
         if ($this->dateF) {
             $query = $query->where('created_at', '>=', $this->dateF);
         } else {

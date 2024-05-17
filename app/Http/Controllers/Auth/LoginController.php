@@ -116,6 +116,7 @@ class LoginController extends Controller
         }
         //$userM = new User();
         //return redirect($userM->redirectToUpdateDocs());
+
         $userService = new UserServices();
         if (empty($user->api_token)) {
             $saveToken = User::find($user->id)->update(

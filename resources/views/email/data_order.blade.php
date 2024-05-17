@@ -16,6 +16,10 @@
        <p>Ngày bắt đầu: {{ date('d/m/Y', strtotime($orderData->date_start)) }}</p>
     @endif
 
+    @if(!empty($orderData->plan_info))
+        {!! $orderData->plan_info !!}
+    @endif
+
     @if(!empty($extraFee) && count($extraFee) > 0)
     <p>Phụ phí:
     <ul>
