@@ -1146,6 +1146,8 @@ class TransactionService
             $activationInfo = [];
             if (ItemConstants::ACTIVATION_SUPPORT_API == $item->activation_support) {
                $activationInfo = $this->getActivationInfoByAPI($item, $orderItemID);
+               Log::debug("GOT activationInfo");
+               Log::debug($activationInfo);
                 ItemCode::create([
                     'code' => json_encode($activationInfo),
                     'item_id' => $item->id,

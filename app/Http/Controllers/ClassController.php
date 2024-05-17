@@ -111,22 +111,21 @@ class ClassController extends Controller
         }
 
         $activationInfo = $itemCode->activation_support == ItemConstants::ACTIVATION_SUPPORT_API
-            ? json_decode($itemCode->code, true) 
+            ? json_decode($itemCode->code, true)
             : ['code' => $itemCode->code];
 
         $activationInfo['course'] = $itemCode->title;
         $activationInfo['method'] = $itemCode->activation_support;
         $activationInfo['user'] = $itemCode->name;
         $activationInfo['path'] = route('page.pdp', [
-            'itemId' => $itemCode->item_id, 
-            'url' => $itemCode->seo_url, 
+            'itemId' => $itemCode->item_id,
+            'url' => $itemCode->seo_url,
         ]);
-        
+
         // dd($activationInfo);
         $notifServ = new Notification();
         $notifServ->notifActivation($itemCode->item_id, $itemCode->user_id, $activationInfo);
         return redirect()->back()->with('notify', 'Thao tác thành công.');
-        
     }
 
     public function refreshItemCode(Request $request, $idItemCode)
@@ -271,7 +270,7 @@ class ClassController extends Controller
     }
 
     public function edit(Request $request, $courseId)
-    {  
+    {
         $input = $request->all();
 
         if ($request->get('action') == 'mailsave') {
@@ -365,23 +364,23 @@ class ClassController extends Controller
                     ->first();
 
                 if ($isDigitalCourse) {
-                    if (isset($input['code'])) {
+                    if (!empty($input['code'])) {
                         $courseService->createItemCodes($courseId, $input['code']);
                     }
-
-                    if (isset($input['email']) || isset($input['notif'])) {
+                    if (key_exists('email', $input) && key_exists('email', $input)) {
                         $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-                        if (empty($notifTemplate)) {
+                        if (empty($notifTemplate) && (!empty($input['email'])  || !empty($input['notif']))) {
                             ItemCodeNotifTemplate::create([
                                 'item_id' => $courseId,
                                 'email_template' => $input['email'],
                                 'notif_template' => $input['notif'],
                             ]);
                         } else {
-                            $notifTemplate->update([
-                                'email_template' => $input['email'],
-                                'notif_template' => $input['notif'],
-                            ]);
+                            $beUpdate = [
+                                'email_template' => $input['email'] != "" ?  $input['email'] : null,
+                                'notif_template' => $input['notif'] != "" ? $input['notif'] : null,
+                            ];
+                            $notifTemplate->update($beUpdate);
                         }
                     }
                 }
@@ -518,14 +517,14 @@ class ClassController extends Controller
 
         if ($courseDb['info']->subtype == ItemConstants::SUBTYPE_DIGITAL) {
             if ($courseDb['info']->activation_support == ItemConstants::ACTIVATION_SUPPORT_API) {
-                foreach(config('activation_apis') as $dp) {
+                foreach (config('activation_apis') as $dp) {
                     $this->data['config_api'] = $dp['partnerID'] == $courseDb['info']->user_id ? true : false;
                     break;
                 }
             }
             $this->data['notifTemplates'] = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
-        } 
-       
+        }
+
         $userService = new UserServices();
         if ($userService->isMod()) {
             $this->data['partners'] = User::whereIn('role', [UserConstants::ROLE_SCHOOL, UserConstants::ROLE_TEACHER])

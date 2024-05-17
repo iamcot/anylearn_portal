@@ -1,4 +1,6 @@
-<?php namespace App\DigitalSupport;
+<?php
+
+namespace App\DigitalSupport;
 
 use App\DataObjects\ServiceResponse;
 use App\PaymentGateway\CurlHelper;
@@ -7,7 +9,7 @@ class DigitalMonkey implements OrderingPartnerInterface
 {
     const AGENT_PATH = 'https://monkey.edu.vn/api/create-order-agent';
     const AGENT_CODE = 'MONKEY_AGENT_CODE';
-    const API_KEY = 'MONKEY_API_KEY'; 
+    const API_KEY = 'MONKEY_API_KEY';
 
     const STATUS_FAIL = 'fail';
 
@@ -25,11 +27,11 @@ class DigitalMonkey implements OrderingPartnerInterface
         return CurlHelper::post(self::AGENT_PATH, json_encode($orderData), $header);
     }
 
-    public function processReturnData($returnData) 
+    public function processReturnData($returnData)
     {
         if (!isset($returnData['status']) || $returnData['status'] == self::STATUS_FAIL) {
-            return new ServiceResponse(false, $returnData['message'] ?? 'INVALID_RESPONSE'); 
-        }   
+            return new ServiceResponse(false, $returnData['message'] ?? 'INVALID_RESPONSE');
+        }
         return new ServiceResponse(true, $returnData['message'], $returnData['data']);
     }
 
@@ -38,17 +40,21 @@ class DigitalMonkey implements OrderingPartnerInterface
         if (false === $this->validateOrderData($orderData)) {
             return new ServiceResponse(false, 'INVALID_ORDER_DATA');
         }
-        $returnData = json_decode($this->submitOrderRequest($orderData), true);
-        // Testing
-        $returnData = [
-            'status' => 'success',
-            'message' => 'success message',
-            'data' => [
-                'account' => 'username_test',
-                'password' => 'password_123',
-                'order_id' => 'order_' . random_int(10, 200),
-            ],
-        ];
+        if (env('MONKEY_API_TEST', 1)) {
+            // Testing
+            $returnData = [
+                'status' => 'success',
+                'message' => 'success message',
+                'data' => [
+                    'account' => 'username_test',
+                    'password' => 'password_123',
+                    'order_id' => 'order_' . random_int(10, 200),
+                ],
+            ];
+        } else {
+            $returnData = json_decode($this->submitOrderRequest($orderData), true);
+        }
+
         return $this->processReturnData($returnData);
     }
 }

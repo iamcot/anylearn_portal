@@ -1,3 +1,6 @@
+@if(!empty($mail_content))
+{!! $mail_content !!}
+@else 
 <p>Chào {{ $data['user'] }},</p>
 
 <p>Chúng tôi rất vui mừng thông báo rằng bạn đã đăng ký thành công cho khoá học 
@@ -22,7 +25,7 @@
 <p>Chúc bạn có một hành trình học tốt!</p>
 
 <p>Thân,<br>anyLEARN</p>
-
+@endif
 
 
 

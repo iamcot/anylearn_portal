@@ -58,15 +58,15 @@ class Notification extends Model
         if (isset($config['email'])) {
             if (!empty($user->email)) {
                 try {
-                    if ($type == NotifConstants::DIGITAL_COURSE_ACTIVATION) {
-                        $data['content'] =  $this->buildContent(
-                            !empty($emailTemplate) ? $emailTemplate : $config['template'],
+                    if ($type == NotifConstants::COURSE_ACTIVATION_API || $type == NotifConstants::COURSE_ACTIVATION_MANUAL) {
+                        $data['mail_content'] =  $this->buildContent(
+                            !empty($emailTemplate) ? $emailTemplate : "",
                             $data
                         );
                     }
                     Mail::to($user->email)
-                    ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
-                    ->send(new $config['email']($data));
+                        ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+                        ->send(new $config['email']($data));
                 } catch (\Exception $ex) {
                     Log::error($ex);
                 }
@@ -110,6 +110,10 @@ class Notification extends Model
                 NotifConstants::COURSE_ACTIVATION_API,
                 $userID,
                 $activationInfo,
+                "",
+                "",
+                $notifTemplate ? $notifTemplate->notif_template : '',
+                $notifTemplate ? $notifTemplate->email_template : '',
             );
         }
         return $this->createNotif(
@@ -185,8 +189,8 @@ class Notification extends Model
     public function notifCourseCreated($item)
     {
         $receivers = User::whereIn('role', [UserConstants::ROLE_SALE, UserConstants::ROLE_SALE_CONTENT])
-        ->where('status', 1)
-        ->get();
+            ->where('status', 1)
+            ->get();
         $itemServ = new ItemServices();
         foreach ($receivers as $user) {
             $this->createNotif(NotifConstants::COURSE_CREATED, $user->id, [

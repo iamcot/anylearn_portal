@@ -1586,8 +1586,8 @@ class ItemServices
             if (isset($input['email']) || isset($input['notif'])) {
                 $notifTemplate = ItemCodeNotifTemplate::where('item_id', $courseId)->first();
                 $notifTemplate->update([
-                    'email_template' => $input['email'],
-                    'notif_template' => $input['notif'],
+                    'email_template' => $input['email'] != "" ? $input['email'] : null,
+                    'notif_template' => $input['notif'] != "" ? $input['notif'] : null,
                 ]);
             }
         }

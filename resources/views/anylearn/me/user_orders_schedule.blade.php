@@ -10,14 +10,23 @@ orders
     <div class="card-body">
         @if($item->subtype == 'digital')
         @if (!empty($code))
+        @if( $item->activation_support == 'api')
+        <p>Thông tin kích hoạt của bạn là:</p>
+        @php $account = json_decode($code, true) @endphp
+        <ul style="list-style-type: none;">
+            <li>Tài khoản: {{ isset($account['account']) ? $account['account'] : "" }}</li>
+            <li>Mật khẩu: {{ isset($account['password']) ? $account['password'] : "" }}</li>
+        </ul>
+        @else
         <p>Mã kích hoạt của bạn là: <strong>{{ $code }}</strong></p>
+        @endif
         <p>Vui lòng kiểm tra email hoặc <a href="{{ $itemServ->classUrl($item->id) }}" target="_blank">Trang khóa học</a> để biết cách sử dụng mã kích hoạt. </p>
         <p>hoặc liên hệ hotline anyLEARN để được hỗ trợ </p>
         @else
         <p>Tạm thời chưa có mã kích hoạt</p>
         <p>Học viên vui lòng kiểm tra email</p>
         <p>hoặc Bạn vui lòng liên hệ với hotline anyLEARN để được hỗ trợ</p>
-        
+
         @endif
         @elseif($item->subtype == 'video')
         <p>Xem khóa học video tại <a href="{{ $itemServ->classUrl($item->id) }}" target="_blank">Trang khóa học</a></p>
@@ -53,12 +62,12 @@ orders
             </table>
         </div>
         @else
-            <p>Khoá học: <strong>{{ $item->title }}</strong></p>
-            @if ($item->date_start) 
-                <p>Ngày bắt đầu dự kiến: <strong>{{ $item->date_start }} </strong> @if ($item->time_start) <br> Giờ bắt đầu: <strong>{{ $item->time_start }} </strong> @endif</p>
-            @else
-                <p>Khóa học chưa có lịch học cụ thể nào. Vui lòng kiểm tra với anyLEARN qua hotline hoặc trực tiếp với đối tác.</p>
-            @endif
+        <p>Khoá học: <strong>{{ $item->title }}</strong></p>
+        @if ($item->date_start)
+        <p>Ngày bắt đầu dự kiến: <strong>{{ $item->date_start }} </strong> @if ($item->time_start) <br> Giờ bắt đầu: <strong>{{ $item->time_start }} </strong> @endif</p>
+        @else
+        <p>Khóa học chưa có lịch học cụ thể nào. Vui lòng kiểm tra với anyLEARN qua hotline hoặc trực tiếp với đối tác.</p>
+        @endif
         @endif
     </div>
 </div>
