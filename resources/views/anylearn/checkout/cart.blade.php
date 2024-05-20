@@ -206,28 +206,39 @@ cart
             <div class="card-body">
                 @if ($order->amount > 0)
                 <ul class="list-unstyled">
+                    @if(in_array('atm', explode(env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
                     <li class="p-2"><input required type="radio" name="payment" value="atm" id="radio_atm">
                         <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng')</strong></label>
                     </li>
+                    @endif
 
-                    @if (empty($saveBanks))
-                    <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
-                    @else
-                        @foreach ($saveBanks as $bank)
-                        <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src="{{ $bank['logo'] }}" style="height: 20px;">
-                                <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
-                        @endforeach
-                        <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ <span style="color:#267aff;">MỚI</span>')</strong></label></li>
+                    @if(in_array('onepayfee', explode(env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                        @if (empty($saveBanks))
+                        <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
+                        @else
+                            @foreach ($saveBanks as $bank)
+                            <li class="p-2"><input required type="radio" name="payment" value="{{ $bank['id'] }}" id="radio_savedBank_{{ $bank['id'] }}"> <label for="radio_savedBank_{{ $bank['id'] }}"><img src="{{ $bank['logo'] }}" style="height: 20px;">
+                                    <strong>{{ substr($bank['tokenNum'], 0, 6) }}***</strong></label></li>
+                            @endforeach
+                            <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ <span style="color:#267aff;">MỚI</span>')</strong></label></li>
+                        @endif
                     @endif
-                    @if ($order->amount >= 3000000)
-                    <li class="p-2"><input required type="radio" name="payment" value="onepaytg" id="radio_onepaytg">
-                        <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng')</strong></label>
-                    </li>
+                    @if(in_array('vnpay', explode(env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                    <li class="p-2"><input required type="radio" name="payment" value="vnpay" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
+                    @endif 
+                    @if(in_array('onepaytg', explode(env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                        @if ($order->amount >= 3000000)
+                        <li class="p-2"><input required type="radio" name="payment" value="onepaytg" id="radio_onepaytg">
+                            <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng')</strong></label>
+                        </li>
+                        @endif
                     @endif
-                    @if ($momoStatus && $order->amount >= 1000 && $order->amount <= 50000000)
-                    <li class="p-2"><input required type="radio" name="payment" value="momo" id="radio_momo">
-                        <label for="radio_momo"><strong>@lang('Thanh toán bằng ví MoMo')</strong></label>
-                    </li>
+                    @if(in_array('momo', explode(env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                        @if ($momoStatus && $order->amount >= 1000 && $order->amount <= 50000000)
+                        <li class="p-2"><input required type="radio" name="payment" value="momo" id="radio_momo">
+                            <label for="radio_momo"><strong>@lang('Thanh toán bằng ví MoMo')</strong></label>
+                        </li>
+                        @endif
                     @endif
                 </ul>
                 <p class="fw-bold" style="display: none;" id="save_card_block"><input type="checkbox" name="save_card" id="save_card"> <label for="save_card">@lang('Lưu thông tin thẻ cho lần thanh toán sau.')</label></p>
