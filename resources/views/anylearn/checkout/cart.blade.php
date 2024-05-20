@@ -226,7 +226,7 @@ cart
                     @if(in_array('vnpay', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
                     <li class="p-2"><input required type="radio" name="payment" value="vnpay" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
                     @endif 
-                    @if(in_array('onepaytg', explode(env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                    @if(in_array('onepaytg', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
                         @if ($order->amount >= 3000000)
                         <li class="p-2"><input required type="radio" name="payment" value="onepaytg" id="radio_onepaytg">
                             <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng')</strong></label>
