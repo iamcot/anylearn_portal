@@ -75,10 +75,12 @@ class Vnpay implements PaymentInterface
         return $this->buildUrl($data);
     }
 
-    public function prepareNotifyResponse($response, $feedbackResult)
+    public function prepareNotifyResponse($response, $feedbackResult, $orderStatus)
     {
-        $responseCode = $feedbackResult['status'] ? 1 : 0;
-        $data = "responsecode=$responseCode&desc=confirm-success";
+        $data = [
+            'RspCode' => $orderStatus,
+            'Message' => $this->getOrderProcessStatus($orderStatus)
+        ];
         return $data;
     }
 
@@ -281,6 +283,23 @@ class Vnpay implements PaymentInterface
                 break;
             default:
                 $result = "Giao dịch chưa hoàn tất";
+                break;
+        }
+        return $result;
+    }
+
+    private function getOrderProcessStatus($responseCode)
+    {
+
+        switch ($responseCode) {
+            case "00":
+                $result = "Xác nhận thành công.";
+                break;
+            case "01":
+                $result = "Đơn hàng đã xác nhận.";
+                break;
+            default:
+                $result = "Lỗi không xác định";
                 break;
         }
         return $result;

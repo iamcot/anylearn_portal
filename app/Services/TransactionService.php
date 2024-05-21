@@ -53,7 +53,7 @@ class TransactionService
             <a class="btn btn-sm btn-danger" href="' . route('transaction.status.touch', ['id' => $id, 'status' => ConfigConstants::TRANSACTION_STATUS_REJECT]) . '"><i class="fas fa-lock"></i> Từ chối</a>
             ';
         } else {
-            return '<span class="text-'. $this->statusColor($oldStatus) .'">' . $this->statusText($oldStatus) . '</span>';
+            return '<span class="text-' . $this->statusColor($oldStatus) . '">' . $this->statusText($oldStatus) . '</span>';
         }
     }
     public function extraFee($orderdetailid)
@@ -106,7 +106,7 @@ class TransactionService
                 'content' => $trans->content
             ]);
             return true;
-        }  else {
+        } else {
             return false;
         }
     }
@@ -288,7 +288,7 @@ class TransactionService
                 ConfigConstants::CONFIG_FRIEND_TREE,
                 ConfigConstants::CONFIG_COMMISSION_FOUNDATION,
                 ConfigConstants::CONFIG_COMMISSION_REF_SELLER,
-            ]); 
+            ]);
 
             if ($item->company_commission != null) {
                 $overrideConfigs = json_decode($item->company_commission, true);
@@ -321,9 +321,9 @@ class TransactionService
             ]);
 
             $directCommission = $userService->calcCommission(
-                $amount, 
-                $commissionRate, 
-                $configs[ConfigConstants::CONFIG_DISCOUNT], 
+                $amount,
+                $commissionRate,
+                $configs[ConfigConstants::CONFIG_DISCOUNT],
                 $configs[ConfigConstants::CONFIG_BONUS_RATE],
             );
 
@@ -345,9 +345,9 @@ class TransactionService
 
             //save commission indirect + transaction log in PENDING status
             $indirectCommission = $userService->calcCommission(
-                $amount, 
-                $commissionRate, 
-                $configs[ConfigConstants::CONFIG_COMMISSION], 
+                $amount,
+                $commissionRate,
+                $configs[ConfigConstants::CONFIG_COMMISSION],
                 $configs[ConfigConstants::CONFIG_BONUS_RATE]
             );
 
@@ -375,15 +375,15 @@ class TransactionService
             }
 
             // ref_seller
-            $refSeller = User::find($author->user_id);   
-            if ($refSeller && $refSeller->get_ref_seller == 1)  {
-                
+            $refSeller = User::find($author->user_id);
+            if ($refSeller && $refSeller->get_ref_seller == 1) {
+
                 $refSellerCommission = $userService->calcCommission(
-                    $amount, 
-                    $commissionRate, 
+                    $amount,
+                    $commissionRate,
                     $configs[ConfigConstants::CONFIG_COMMISSION_REF_SELLER],
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
-                ); 
+                );
 
                 Transaction::create([
                     'user_id' => $refSeller->id,
@@ -403,9 +403,9 @@ class TransactionService
             $foundation = 0;
             if (!$item->is_test) {
                 $foundation = $userService->calcCommission(
-                    $amount, 
-                    $commissionRate, 
-                    $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION], 
+                    $amount,
+                    $commissionRate,
+                    $configs[ConfigConstants::CONFIG_COMMISSION_FOUNDATION],
                     1
                 );
                 Transaction::create([
@@ -421,7 +421,7 @@ class TransactionService
                     'order_id' => $orderDetail->id
                 ]);
             }
-            
+
             DB::commit();
             if ($status == OrderConstants::STATUS_DELIVERED) {
                 $notifServ->createNotif(NotifConstants::COURSE_REGISTERED, $user->id, [
@@ -437,25 +437,25 @@ class TransactionService
                 $this->approveRegistrationAfterWebPayment($openOrder->id, $autoApproveChannel);
             }
 
-            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE || $autoApprove 
-                ? $openOrder->id 
+            return $transStatus == ConfigConstants::TRANSACTION_STATUS_DONE || $autoApprove
+                ? $openOrder->id
                 : ConfigConstants::TRANSACTION_STATUS_PENDING;
         });
 
         return $result;
     }
 
-    public function addTransactionsForCommissionVouchers($voucherID, $orderID) 
+    public function addTransactionsForCommissionVouchers($voucherID, $orderID)
     {
         $currentOrder = Order::find($orderID);
         $usingVoucher = DB::table('vouchers')
-            ->join('vouchers_used as vu', 'vu.voucher_id', '=', 'vouchers.id') 
+            ->join('vouchers_used as vu', 'vu.voucher_id', '=', 'vouchers.id')
             ->where('vu.voucher_id', $voucherID)
             ->where('vu.order_id', $orderID)
-            ->first();   
+            ->first();
 
         if (!$usingVoucher || !$currentOrder) {
-            return 'Thông tin đơn hàng hoặc voucher không chính xác!'; 
+            return 'Thông tin đơn hàng hoặc voucher không chính xác!';
         }
 
         $usingEvent = VoucherEvent::whereRaw('FIND_IN_SET(?, targets) > 0', [$usingVoucher->voucher_group_id])
@@ -463,20 +463,20 @@ class TransactionService
             ->orderByDesc('id')
             ->first();
 
-        if ($usingEvent && User::find($usingEvent->ref_user_id)) { 
-            $buyer  = User::find($currentOrder->user_id);        
+        if ($usingEvent && User::find($usingEvent->ref_user_id)) {
+            $buyer  = User::find($currentOrder->user_id);
             $orders = OrderDetail::where('order_id', $currentOrder->id)->get();
 
             $configM = new Configuration();
             $defaultConfigs = $configM->gets([
                 ConfigConstants::CONFIG_BONUS_RATE,
                 ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER,
-            ]);  
+            ]);
 
-            foreach($orders as $orderItem) {
+            foreach ($orders as $orderItem) {
                 $item = Item::find($orderItem->item_id);
                 $partner = User::find($item->user_id);
-                
+
                 $configs = $defaultConfigs;
                 if ($item->company_commission != null) {
                     $overrideConfigs = json_decode($item->company_commission, true);
@@ -485,19 +485,19 @@ class TransactionService
                             $configs[$key] = $value;
                         }
                     }
-                }   
+                }
 
                 if ($item->commission_rate == -1) {
                     $partnerCommissionRate = 0;
                 } else {
-                    $partnerCommissionRate = $item->commission_rate > 0 
-                        ? $item->commission_rate 
+                    $partnerCommissionRate = $item->commission_rate > 0
+                        ? $item->commission_rate
                         : $partner->commission_rate;
                 }
 
-                $voucherCommissionRate = $usingEvent->commission_rate 
-                    ? $usingEvent->commission_rate 
-                    : $configs[ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER];  
+                $voucherCommissionRate = $usingEvent->commission_rate
+                    ? $usingEvent->commission_rate
+                    : $configs[ConfigConstants::CONFIG_COMMISSION_REF_VOUCHER];
 
                 $userServ = new UserServices();
                 $voucherCommission = $userServ->calcCommission(
@@ -507,39 +507,39 @@ class TransactionService
                     $configs[ConfigConstants::CONFIG_BONUS_RATE],
                 );
 
-                Transaction::create([       
+                Transaction::create([
                     'type' => ConfigConstants::TRANSACTION_COMMISSION,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' => UserConstants::WALLET_C,
                     'user_id' => $usingEvent->ref_user_id,
                     'amount' => $voucherCommission,
                     'ref_amount' => $item->price,
-                    'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: '. $usingEvent->title, 
+                    'content' => 'Nhận điểm từ ' . $buyer->name . ' sử dụng voucher từ sự kiện: ' . $usingEvent->title,
                     'order_id' => $orderItem->id,
                 ]);
-            } 
-            
+            }
+
             return true;
-        }    
+        }
     }
 
-    public function removeTransactionsForCommissionVouchers($usedVoucherID) 
-    { 
+    public function removeTransactionsForCommissionVouchers($usedVoucherID)
+    {
         $usingVoucher = DB::table('vouchers')
-            ->join('vouchers_used as vu', 'vu.voucher_id', '=', 'vouchers.id') 
+            ->join('vouchers_used as vu', 'vu.voucher_id', '=', 'vouchers.id')
             ->where('vu.id', $usedVoucherID)
-            ->first();   
+            ->first();
 
         if (!$usingVoucher) {
-            return 'Thông tin voucher không chính xác, không thể xóa!'; 
+            return 'Thông tin voucher không chính xác, không thể xóa!';
         }
-        
+
         $usingEvent = VoucherEvent::whereRaw('FIND_IN_SET(?, targets) > 0', [$usingVoucher->voucher_group_id])
             ->whereNotNull('ref_user_id')
             ->orderByDesc('id')
             ->first();
 
-        if ($usingEvent) { 
+        if ($usingEvent) {
             $transactions = DB::table('transactions')
                 ->join('order_details as od', 'od.id', '=', 'transactions.order_id')
                 ->join('orders', 'orders.id', '=', 'od.order_id')
@@ -551,7 +551,7 @@ class TransactionService
                 ->select('transactions.*')
                 ->get();
 
-            foreach($transactions as $tran) { 
+            foreach ($transactions as $tran) {
                 Transaction::find($tran->id)->delete();
             }
         }
@@ -768,7 +768,8 @@ class TransactionService
         }
     }
 
-    public function sendReturnRequest($orderId) {
+    public function sendReturnRequest($orderId)
+    {
 
         $order = Order::find($orderId);
         if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
@@ -777,16 +778,16 @@ class TransactionService
 
         $order->update(['status' => OrderConstants::STATUS_RETURN_BUYER_PENDING]);
         Mail::to(env('MAIL_FROM_ADDRESS'))
-        ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
-        ->send(
-            new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
-        );
+            ->bcc(env('MAIL_ADMIN_BCC', 'info.anylearn@gmail.com'))
+            ->send(
+                new ReturnRequest(['orderId' => $orderId, 'name' => Auth::user()->name])
+            );
     }
 
     public function returnOrder($orderID, $trigger)
     {
         $openOrder = Order::find($orderID);
-        if (!$openOrder || ( 
+        if (!$openOrder || (
             $openOrder->status != OrderConstants::STATUS_DELIVERED &&
             $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
         )) {
@@ -804,30 +805,30 @@ class TransactionService
             $commissionReceivers = DB::table('transactions')
                 ->join('users', 'users.id', '=', 'transactions.user_id')
                 ->whereIn('transactions.type', [
-                    ConfigConstants::TRANSACTION_COMMISSION, 
+                    ConfigConstants::TRANSACTION_COMMISSION,
                     ConfigConstants::TRANSACTION_PARTNER
                 ])
                 ->where('transactions.status', ConfigConstants::TRANSACTION_STATUS_DONE)
                 ->where('transactions.pay_method', UserConstants::WALLET_C)
                 ->where('transactions.order_id', $od->id)
-                ->select('users.*', 'transactions.amount') 
+                ->select('users.*', 'transactions.amount')
                 ->get();
-            
+
             foreach ($commissionReceivers as $cr) {
                 $trans = Transaction::create([
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' =>  UserConstants::WALLET_C,
-                    'content' => 'Thu hồi ' . $cr->amount . ' anypoints vì đơn hàng #'. 
+                    'content' => 'Thu hồi ' . $cr->amount . ' anypoints vì đơn hàng #' .
                         $openOrder->id . ' được trả lại.',
                     'user_id' => $cr->id,
-                    'amount' => - $cr->amount, 
+                    'amount' => -$cr->amount,
                     'order_id' => $od->id,
                 ]);
 
-                if ($trans) {                    
+                if ($trans) {
                     $transServ->approveWalletcTransaction($trans->id);
-                } 
+                }
             }
 
             $zaloService->sendZNS(ZaloServices::ZNS_ORDER_RETURN, $user->phone, [
@@ -840,14 +841,17 @@ class TransactionService
         }
 
         $allTrans = Transaction::where('order_id', $openOrder->id)
-            ->whereIn('type', [
-                ConfigConstants::TRANSACTION_ORDER, 
-                ConfigConstants::TRANSACTION_EXCHANGE]
-                )
+            ->whereIn(
+                'type',
+                [
+                    ConfigConstants::TRANSACTION_ORDER,
+                    ConfigConstants::TRANSACTION_EXCHANGE
+                ]
+            )
             ->where('status', ConfigConstants::TRANSACTION_STATUS_DONE)
             ->get();
 
-        foreach($allTrans as $tnx) {
+        foreach ($allTrans as $tnx) {
             if ($tnx->type == ConfigConstants::TRANSACTION_ORDER) {
                 Transaction::find($tnx->id)->update([
                     'status' => ConfigConstants::TRANSACTION_STATUS_REJECT,
@@ -860,7 +864,7 @@ class TransactionService
                     'type' => ConfigConstants::TRANSACTION_EXCHANGE,
                     'status' => ConfigConstants::TRANSACTION_STATUS_PENDING,
                     'pay_method' => UserConstants::WALLET_C,
-                    'content' => 'Hoàn trả '. $tnx->amount .' anypoints vì đơn hàng #' . 
+                    'content' => 'Hoàn trả ' . $tnx->amount . ' anypoints vì đơn hàng #' .
                         $openOrder->id . ' được trả lại.',
                     'user_id' => $user->id,
                     'amount' => abs($tnx->amount),
@@ -869,7 +873,7 @@ class TransactionService
 
                 if ($trans) {
                     $transServ->approveWalletcTransaction($trans->id);
-                }       
+                }
             }
         }
 
@@ -969,7 +973,7 @@ class TransactionService
     public function checkWalletCBeforeReturnOrder($orderID)
     {
         $openOrder = Order::find($orderID);
-        if (!$openOrder || ( 
+        if (!$openOrder || (
             $openOrder->status != OrderConstants::STATUS_DELIVERED &&
             $openOrder->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
         )) {
@@ -989,7 +993,7 @@ class TransactionService
                     sum(if(users.wallet_c >= transactions.amount, 1, 0)) as matching
                 ')
                 ->first();
-            
+
             if ($conditions->total != $conditions->matching) {
                 return false;
             }
@@ -1003,103 +1007,102 @@ class TransactionService
         $userService = new UserServices();
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
-            return false;
+            return "01";
         }
 
-        $user = User::find($openOrder->user_id);
-        Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
+        try {
+            $user = User::find($openOrder->user_id);
+            Log::debug("ApproveRegistrationAfterWebPayment ", ["orderid" => $orderId, "payment" => $payment]);
 
-        OrderDetail::where('order_id', $openOrder->id)->update([
-            'status' => OrderConstants::STATUS_DELIVERED,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-        Order::find($openOrder->id)->update([
-            'status' => OrderConstants::STATUS_DELIVERED,
-            'payment' => $payment,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-
-        Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
-            ->where('order_id', $openOrder->id)
-            ->update([
-                'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+            OrderDetail::where('order_id', $openOrder->id)->update([
+                'status' => OrderConstants::STATUS_DELIVERED,
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+            Order::find($openOrder->id)->update([
+                'status' => OrderConstants::STATUS_DELIVERED,
+                'payment' => $payment,
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
-        $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
-        $voucherEvent = new VoucherEventLog();
+            Transaction::where('type', ConfigConstants::TRANSACTION_ORDER)
+                ->where('order_id', $openOrder->id)
+                ->update([
+                    'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
 
-        foreach ($orderDetails as $orderItem) {
-            $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
+            $orderDetails = OrderDetail::where('order_id', $openOrder->id)->get();
+            $voucherEvent = new VoucherEventLog();
 
-            $item = Item::find($orderItem->item_id);
-            $author = User::find($item->user_id);
+            foreach ($orderDetails as $orderItem) {
+                $voucherEvent->useEvent(VoucherEvent::TYPE_CLASS, $user->id, $orderItem->item_id);
 
-            // if ($item->subtype == "online" || $item->subtype == "video") {
-            //     $user->update([
-            //         'wallet_m' => DB::raw('wallet_m + ' . $item->price)
-            //     ]);
-            // }
+                $item = Item::find($orderItem->item_id);
+                $author = User::find($item->user_id);
 
-            if (($item->subtype == ItemConstants::SUBTYPE_DIGITAL 
-               || $item->subtype == ItemConstants::SUBTYPE_VIDEO)
-               && env('CONFIG_TRANSACTION_APPROVE_MANUAL', 0) == 0
-            ) {
-                $this->approveTransactionsAfterPayment($orderItem->id);
+                if (($item->subtype == ItemConstants::SUBTYPE_DIGITAL
+                        || $item->subtype == ItemConstants::SUBTYPE_VIDEO)
+                    && env('CONFIG_TRANSACTION_APPROVE_MANUAL', 0) == 0
+                ) {
+                    $this->approveTransactionsAfterPayment($orderItem->id);
+                }
+
+                $notifServ = new Notification();
+                $dataOrder = $this->orderDetailToDisplay($orderItem->id);
+
+                $tnxPartner = Transaction::where('order_id', $orderItem->id)
+                    ->where('type', ConfigConstants::TRANSACTION_PARTNER)
+                    ->where('pay_method', UserConstants::WALLET_C)
+                    ->first();
+                $userService->MailToPartnerRegisterNew($item, $user->id, $author, $tnxPartner);
+
+                $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
+                    'username' => $user->name,
+                    'className' => $dataOrder->title,
+                    'orderData' => $dataOrder,
+                    'extraFee' => $this->extraFee($orderItem->id),
+                    'partner' => $author,
+                ]);
+
+                $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
+                    'username' => $author->name,
+                    'course' => $item->title,
+                    'orderid' => $openOrder->id,
+                ]);
+
+
+                //ZALO to buyer
+                $zaloService = new ZaloServices(true);
+                $zaloService->sendZNS(ZaloServices::ZNS_ORDER_CONFIRMED, $user->phone, [
+                    'id' => $dataOrder->id,
+                    'created_at' => $dataOrder->created_at,
+                    'student' => $dataOrder->childName,
+                    'price' => $dataOrder->unit_price,
+                    'name' => $user->name,
+                    'class' => $dataOrder->title,
+                ]);
+
+                //@TODO Zalo to partner
+
+                SocialPost::create([
+                    'type' => SocialPost::TYPE_CLASS_REGISTER,
+                    'user_id' => $user->id,
+                    'ref_id' => $orderItem->item_id,
+                    'image' => $item->image,
+                    'day' => date('Y-m-d'),
+                ]);
+
+                if (ItemConstants::SUBTYPE_DIGITAL == $item->subtype) {
+                    $this->supportDigitalItems($item, $user, $orderItem->id, $notifServ);
+                }
             }
-
-            $notifServ = new Notification();
-            $dataOrder = $this->orderDetailToDisplay($orderItem->id);
-
-            $tnxPartner = Transaction::where('order_id', $orderItem->id)
-            ->where('type', ConfigConstants::TRANSACTION_PARTNER)
-            ->where('pay_method', UserConstants::WALLET_C)
-            ->first();
-            $userService->MailToPartnerRegisterNew($item, $user->id, $author, $tnxPartner);
-
-            $notifServ->createNotif(NotifConstants::COURSE_REGISTER_APPROVE, $openOrder->user_id, [
-                'username' => $user->name,
-                'className' => $dataOrder->title,
-                'orderData' => $dataOrder,
-                'extraFee' => $this->extraFee($orderItem->id),
-                'partner' => $author,
-            ]);
-
-            $notifServ->createNotif(NotifConstants::COURSE_HAS_REGISTERED, $author->id, [
-                'username' => $author->name,
-                'course' => $item->title,
-                'orderid' => $openOrder->id,
-            ]);
-
-
-            //ZALO to buyer
-            $zaloService = new ZaloServices(true);
-            $zaloService->sendZNS(ZaloServices::ZNS_ORDER_CONFIRMED, $user->phone, [
-                'id' => $dataOrder->id,
-                'created_at' => $dataOrder->created_at,
-                'student' => $dataOrder->childName,
-                'price' => $dataOrder->unit_price,
-                'name' => $user->name,
-                'class' => $dataOrder->title,
-            ]);
-
-            //@TODO Zalo to partner
-
-            SocialPost::create([
-                'type' => SocialPost::TYPE_CLASS_REGISTER,
-                'user_id' => $user->id,
-                'ref_id' => $orderItem->item_id,
-                'image' => $item->image,
-                'day' => date('Y-m-d'),
-            ]);
-
-            if (ItemConstants::SUBTYPE_DIGITAL == $item->subtype) {
-                $this->supportDigitalItems($item, $user, $orderItem->id, $notifServ);
-            }
+            Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return "99";
         }
-        Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
-    
-        return true;
+
+        return "00";
     }
 
     public function approveTransactionsAfterPayment($orderItemID)
@@ -1126,7 +1129,7 @@ class TransactionService
             // Commissions
             if ($trans->type == ConfigConstants::TRANSACTION_COMMISSION) {
                 $this->approveWalletcTransaction($trans->id);
-                continue;   
+                continue;
             }
 
             // Foundation
@@ -1134,48 +1137,48 @@ class TransactionService
                 Transaction::find($trans->id)->update([
                     'status' => ConfigConstants::TRANSACTION_STATUS_DONE,
                 ]);
-            }  
+            }
         }
 
         return true;
     }
 
     public function supportDigitalItems($item, $user, $orderItemID, $notifServ)
-    {   
+    {
         try {
             $activationInfo = [];
             if (ItemConstants::ACTIVATION_SUPPORT_API == $item->activation_support) {
-               $activationInfo = $this->getActivationInfoByAPI($item, $orderItemID);
-               Log::debug("GOT activationInfo");
-               Log::debug($activationInfo);
+                $activationInfo = $this->getActivationInfoByAPI($item, $orderItemID);
+                Log::debug("GOT activationInfo");
+                Log::debug($activationInfo);
                 ItemCode::create([
                     'code' => json_encode($activationInfo),
                     'item_id' => $item->id,
                     'user_id' => $user->id,
                     'order_detail_id' => $orderItemID,
-                ]); 
+                ]);
             } else {
                 $itemCode = ItemCode::where('item_id', $item->id)->whereNull('user_id')->first();
                 if (empty($itemCode)) {
                     throw new Exception("Activation code is not available for this course [$item->id]");
                 }
                 $itemCode->update(['user_id' => $user->id, 'order_detail_id' => $orderItemID,]);
-                $activationInfo['code'] = $itemCode->code; 
+                $activationInfo['code'] = $itemCode->code;
             }
             $activationInfo['course'] = $item->title;
             $activationInfo['method'] = $item->activation_support;
             $activationInfo['user'] = $user->name;
-            $activationInfo['path'] = route('page.pdp', ['itemId' => $item->id, 'url' => $item->seo_url]);    
+            $activationInfo['path'] = route('page.pdp', ['itemId' => $item->id, 'url' => $item->seo_url]);
         } catch (Exception $error) {
             Log::error('Unexpected error in supportDigitalItems', ['exception' => $error]);
             return false;
         }
         // dd($activationInfo);
-        $notifServ->notifActivation($item->id, $user->id, $activationInfo);   
+        $notifServ->notifActivation($item->id, $user->id, $activationInfo);
         return true;
     }
 
-    public function getActivationInfoByAPI($item, $orderItemID) 
+    public function getActivationInfoByAPI($item, $orderItemID)
     {
         if (!$item || empty($item->product_id)) {
             throw new Exception('Invaild data to get activation info!');
@@ -1187,7 +1190,7 @@ class TransactionService
         $response = OrderProcessor::orderItemFromPartnerAPI($orderData, $item->user_id);
         if (!$response instanceof ServiceResponse || false === $response->status) {
             throw new Exception($response->errorCode);
-        } 
+        }
         return $response->data;
     }
 
@@ -1237,7 +1240,7 @@ class TransactionService
                 'isp.date_start AS plan_date_start',
                 'isp.info AS plan_info',
                 'ul.title AS plan_location_name',
-                
+
             )
             ->first();
     }

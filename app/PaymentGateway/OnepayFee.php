@@ -74,7 +74,7 @@ class OnepayFee implements PaymentInterface
         return $this->buildUrl($data);
     }
 
-    public function prepareNotifyResponse($response, $feedbackResult)
+    public function prepareNotifyResponse($response, $feedbackResult, $orderStatus)
     {
         $responseCode = $feedbackResult['status'] ? 1 : 0;
         $data = "responsecode=$responseCode&desc=confirm-success";

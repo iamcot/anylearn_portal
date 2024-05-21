@@ -10,6 +10,6 @@ interface PaymentInterface {
 
     public function processFeedbackData($response);
 
-    public function prepareNotifyResponse($data, $feedbackResult);
+    public function prepareNotifyResponse($data, $feedbackResult, $orderStatus);
 
 }
