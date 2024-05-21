@@ -1,18 +1,25 @@
-<?php namespace App\PaymentGateway;
+<?php
 
-class Processor {
+namespace App\PaymentGateway;
+
+class Processor
+{
     static $processor = null;
 
-    public static function getProcessor($payment) {
+    public static function getProcessor($payment)
+    {
         if (null != self::$processor) {
             return self::$processor;
         }
-        switch($payment) {
+        switch ($payment) {
             case Momo::NAME:
                 self::$processor = new Momo();
                 break;
             case OnepayLocal::NAME:
                 self::$processor =  new OnepayLocal();
+                break;
+            case Vnpay::NAME:
+                self::$processor =  new Vnpay();
                 break;
             case OnepayTg::NAME:
                 self::$processor =  new OnepayTg();
@@ -22,17 +29,18 @@ class Processor {
                 break;
             default:
                 break;
-        } 
+        }
         return self::$processor;
     }
 
-    static public function generatePaymentToken($orderId, $lenght = 20) {
+    static public function generatePaymentToken($orderId, $lenght = 20)
+    {
         $randomString = str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
         return $orderId ? $orderId . 'Al' . substr($randomString, 0, $lenght) : $orderId;
     }
 
-    static public function getOrderIdFromPaymentToken($paymentToken) {
+    static public function getOrderIdFromPaymentToken($paymentToken)
+    {
         return stristr($paymentToken, 'Al', true);
     }
-    
 }

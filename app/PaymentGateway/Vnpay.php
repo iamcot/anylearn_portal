@@ -137,29 +137,30 @@ class Vnpay implements PaymentInterface
 
     public function checkHash($input)
     {
-        if (
-            strlen(env('PAYMENT_VNPAY_SECRET')) > 0
-            && $input["vnp_TransactionStatus"] != "07" // nghi ngo gian lan
-            && $input["vnp_TransactionStatus"] != "No Value Returned"
-        ) {
-            $hash = isset($input['vnp_SecureHash']) ? $input['vnp_SecureHash'] : '';
-            ksort($input);
-            $stringHashData = "";
+        // if (
+        //     strlen(env('PAYMENT_VNPAY_SECRET')) > 0
+        //     && $input["vnp_TransactionStatus"] != "07" // nghi ngo gian lan
+        //     && $input["vnp_TransactionStatus"] != "No Value Returned"
+        // ) {
+        $hash = isset($input['vnp_SecureHash']) ? $input['vnp_SecureHash'] : '';
+        ksort($input);
+        $stringHashData = "";
 
-            foreach ($input as $key => $value) {
-                if ($key != "vnp_SecureHash" && (strlen($value) > 0) && ((substr($key, 0, 4) == "vpc_") || (substr($key, 0, 5) == "user_"))) {
-                    $stringHashData .= $key . "=" . $value . "&";
-                }
-            }
-            $stringHashData = rtrim($stringHashData, "&");
-            $stringHashData = urldecode($stringHashData);
-            Log::debug($stringHashData);
-            $checkedHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_VNPAY_SECRET'))));
-            if (hash_equals($hash, $checkedHash)) {
-                return true;
+        foreach ($input as $key => $value) {
+            if ($key != "vnp_SecureHash" && (strlen($value) > 0) && ((substr($key, 0, 4) == "vpc_") || (substr($key, 0, 5) == "user_"))) {
+                $stringHashData .= $key . "=" . $value . "&";
             }
         }
-        return false;
+        $stringHashData = rtrim($stringHashData, "&");
+        $stringHashData = urldecode($stringHashData);
+        Log::debug($stringHashData);
+        $checkedHash = hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_VNPAY_SECRET')));
+        // $checkedHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_VNPAY_SECRET'))));
+        if (hash_equals($hash, $checkedHash)) {
+            return true;
+        }
+        // }
+        // return false;
     }
 
     /**
@@ -226,7 +227,8 @@ class Vnpay implements PaymentInterface
         $query = implode("&", $flatdata);
         $hashRaw = implode("&", $hashRawData);
 
-        $signature =  strtoupper(hash_hmac('sha256', $hashRaw, pack('H*', env('PAYMENT_VNPAY_SECRET'))));
+        // $signature =  strtoupper(hash_hmac('sha256', $hashRaw, pack('H*', env('PAYMENT_VNPAY_SECRET'))));
+        $signature =  hash_hmac('sha256', $hashRaw, pack('H*', env('PAYMENT_VNPAY_SECRET')));
 
         $query = $this->getServer() . '?' . $query . '&vnp_SecureHash=' . $signature;
         return [

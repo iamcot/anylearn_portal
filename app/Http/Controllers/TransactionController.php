@@ -795,7 +795,7 @@ class TransactionController extends Controller
             $qrservice = new QRServices();
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
-        if (!in_array($payment, ['onepaylocal', 'onepaytg', 'onepayfee', 'momo'])) {
+        if (!in_array($payment, explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepayfee,onepaytg,momo')))) {
             $existsBank = UserBank::where('id', $payment)->where('user_id', $user->id)->first();
             if (!$existsBank) {
                 return redirect()->back()->with('notify', 'Phương thức thanh toán không tồn tại');
