@@ -53,6 +53,7 @@ class Vnpay implements PaymentInterface
             $response = new ServiceResponse(false, 'NOT_VALID_INPUT');
         }
         $response = $this->getPaymentPage();
+
         if (!$response instanceof ServiceResponse) {
             $response = new ServiceResponse(false, 'NOT_VALID_RESPONSE');
             return $response;
@@ -106,11 +107,11 @@ class Vnpay implements PaymentInterface
             'payment' => self::NAME,
         ]);
 
-        // if (isset($response['vpc_TokenNum'])) {
-        //     $data['newTokenNum'] = $response['vpc_TokenNum'];
-        //     $data['newTokenExp'] = isset($response['vpc_TokenExp']) ? $response['vpc_TokenExp'] : '';
-        //     $data['newCardType'] = isset($response['vpc_Card']) ? $response['vpc_Card'] : '';
-        //     $data['newCardUid'] = isset($response['vpc_CardUid']) ? $response['vpc_CardUid'] : '';
+        // if (isset($response['vnp_TokenNum'])) {
+        //     $data['newTokenNum'] = $response['vnp_TokenNum'];
+        //     $data['newTokenExp'] = isset($response['vnp_TokenExp']) ? $response['vnp_TokenExp'] : '';
+        //     $data['newCardType'] = isset($response['vnp_Card']) ? $response['vnp_Card'] : '';
+        //     $data['newCardUid'] = isset($response['vnp_CardUid']) ? $response['vnp_CardUid'] : '';
         // }
 
         if (!$this->checkHash($response)) {
@@ -137,30 +138,21 @@ class Vnpay implements PaymentInterface
 
     public function checkHash($input)
     {
-        // if (
-        //     strlen(env('PAYMENT_VNPAY_SECRET')) > 0
-        //     && $input["vnp_TransactionStatus"] != "07" // nghi ngo gian lan
-        //     && $input["vnp_TransactionStatus"] != "No Value Returned"
-        // ) {
         $hash = isset($input['vnp_SecureHash']) ? $input['vnp_SecureHash'] : '';
+        Log::debug("RETURN HASH: " . $hash);
         ksort($input);
         $stringHashData = "";
 
         foreach ($input as $key => $value) {
-            if ($key != "vnp_SecureHash" && (strlen($value) > 0) && ((substr($key, 0, 4) == "vpc_") || (substr($key, 0, 5) == "user_"))) {
-                $stringHashData .= $key . "=" . $value . "&";
+            if ($key != "vnp_SecureHash" && (strlen($value) > 0) && ((substr($key, 0, 4) == "vnp_") || (substr($key, 0, 5) == "user_"))) {
+                $stringHashData .= urlencode($key) . "=" . urlencode($value) . "&";
             }
         }
         $stringHashData = rtrim($stringHashData, "&");
-        $stringHashData = urldecode($stringHashData);
-        Log::debug($stringHashData);
-        $checkedHash = hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_VNPAY_SECRET')));
-        // $checkedHash = strtoupper(hash_hmac('SHA256', $stringHashData, pack('H*', env('PAYMENT_VNPAY_SECRET'))));
+        $checkedHash = hash_hmac('sha512', $stringHashData, env('PAYMENT_VNPAY_SECRET'));
         if (hash_equals($hash, $checkedHash)) {
             return true;
         }
-        // }
-        // return false;
     }
 
     /**
@@ -176,7 +168,7 @@ class Vnpay implements PaymentInterface
             $url = $result['result'];
             return new ServiceResponse(true, 0, $url);
         } catch (\Exception $e) {
-            return new ServiceResponse(false, 'EXCEPTION', $e);
+            return new ServiceResponse(false, 'EXCEPTION', $e->getMessage());
         }
         return new ServiceResponse(false, "NOT_VALID_RESPONSE");
     }
@@ -196,23 +188,23 @@ class Vnpay implements PaymentInterface
             'vnp_TmnCode' => env('PAYMENT_VNPAY_ACCESSCODE'),
             'vnp_Amount' => strval($this->amount),
             // 'vnp_BankCode' => '',
-            'vnp_CreateDate' => date('yyyyMMddHHmmss'),
+            'vnp_CreateDate' => date('YmdHis'),
             'vnp_CurrCode' => 'VND',
             'vnp_IpAddr' => $this->ip,
             'vnp_Locale' => 'vn',
             'vnp_OrderInfo' => strval($this->orderId),
-            'vnp_OrderType' => '',
+            'vnp_OrderType' => 'other',
             'vnp_ReturnUrl' => $returnUrl,
-            'vnp_ExpireDate' => date('yyyyMMddHHmmss', strtotime("+30 minutes")),
+            'vnp_ExpireDate' => date('YmdHis', strtotime('+30 minutes')),
             'vnp_TxnRef' => $this->orderId . time() . '',
         ];
         // if ($this->existsToken) {
-        //     $data['vpc_TokenNum'] = $this->existsToken;
-        //     $data['vpc_TokenExp'] = $this->existsTokenExp;
-        //     $data['vpc_Customer_Id'] = $this->userId;
+        //     $data['vnp_TokenNum'] = $this->existsToken;
+        //     $data['vnp_TokenExp'] = $this->existsTokenExp;
+        //     $data['vnp_Customer_Id'] = $this->userId;
         // } else if ($this->saveToken) {
-        //     $data['vpc_CreateToken'] = 'true';
-        //     $data['vpc_Customer_Id'] = $this->userId;
+        //     $data['vnp_CreateToken'] = 'true';
+        //     $data['vnp_Customer_Id'] = $this->userId;
         // }
 
         $flatdata = [];
@@ -227,8 +219,8 @@ class Vnpay implements PaymentInterface
         $query = implode("&", $flatdata);
         $hashRaw = implode("&", $hashRawData);
 
-        // $signature =  strtoupper(hash_hmac('sha256', $hashRaw, pack('H*', env('PAYMENT_VNPAY_SECRET'))));
-        $signature =  hash_hmac('sha256', $hashRaw, pack('H*', env('PAYMENT_VNPAY_SECRET')));
+        // $signature =  strtoupper(hash_hmac('sha256', $hashRaw, pack('H*',  str_replace(' ', '', sprintf('%u', CRC32(env('PAYMENT_VNPAY_SECRET')))) )));
+        $signature =  hash_hmac('sha512', $query, env('PAYMENT_VNPAY_SECRET'));
 
         $query = $this->getServer() . '?' . $query . '&vnp_SecureHash=' . $signature;
         return [

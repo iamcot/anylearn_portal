@@ -795,6 +795,7 @@ class TransactionController extends Controller
             $qrservice = new QRServices();
             return redirect()->route('checkout.paymenthelp', ['order_id' => $orderId]);
         }
+        //if use saved card
         if (!in_array($payment, explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepayfee,onepaytg,momo')))) {
             $existsBank = UserBank::where('id', $payment)->where('user_id', $user->id)->first();
             if (!$existsBank) {
@@ -831,12 +832,12 @@ class TransactionController extends Controller
         if (true !== $validate) {
             return redirect()->back()->with('notify', 'Phương thức thanh toán không hợp lệ');
         }
-
         try {
             $response = $processor->processPayment();
         } catch (\Exception $e) {
             $response = new ServiceResponse(false, 'EXCEPTION', $e);
         }
+
         if ($response->status) {
             Log::info('Payment Redirect', ['url' => $response->data]);
             return redirect()->to($response->data);
