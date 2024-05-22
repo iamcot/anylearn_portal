@@ -903,31 +903,33 @@ class TransactionController extends Controller
         }
 
         if ($result['status'] == 1) {
-            //$orderId = $result['orderId'];
-            $transService = new TransactionService();
-            $transService->approveRegistrationAfterWebPayment($orderId, $payment);
+            if ($payment != Vnpay::NAME) { //VNPAY chỉ xác nhận qua notify url.
+                $transService = new TransactionService();
+                $transService->approveRegistrationAfterWebPayment($orderId, $payment);
 
-            if (!empty($result['newTokenNum'])) {
-                $newToken = $result['newTokenNum'];
-                $newTokenExp = !empty($result['newTokenExp']) ? $result['newTokenExp'] : '';
-                $newCardType = !empty($result['newCardType']) ? $result['newCardType'] : '';
-                $newCardUid = !empty($result['newCardUid']) ? $result['newCardUid'] : '';
-                $exists = UserBank::where('card_uid', $newCardUid)->where('user_id', $user->id)->count();
-                if ($exists == 0) {
-                    UserBank::create([
-                        'user_id' => $user->id,
-                        'token_num' => $newToken,
-                        'token_exp' => $newTokenExp,
-                        'card_type' => $newCardType,
-                        'card_uid' => $newCardUid,
-                    ]);
-                } else {
-                    UserBank::where('card_uid', $newCardUid)->where('user_id', $user->id)->update([
-                        'token_num' => $newToken,
-                        'token_exp' => $newTokenExp,
-                    ]);
+                if (!empty($result['newTokenNum'])) {
+                    $newToken = $result['newTokenNum'];
+                    $newTokenExp = !empty($result['newTokenExp']) ? $result['newTokenExp'] : '';
+                    $newCardType = !empty($result['newCardType']) ? $result['newCardType'] : '';
+                    $newCardUid = !empty($result['newCardUid']) ? $result['newCardUid'] : '';
+                    $exists = UserBank::where('card_uid', $newCardUid)->where('user_id', $user->id)->count();
+                    if ($exists == 0) {
+                        UserBank::create([
+                            'user_id' => $user->id,
+                            'token_num' => $newToken,
+                            'token_exp' => $newTokenExp,
+                            'card_type' => $newCardType,
+                            'card_uid' => $newCardUid,
+                        ]);
+                    } else {
+                        UserBank::where('card_uid', $newCardUid)->where('user_id', $user->id)->update([
+                            'token_num' => $newToken,
+                            'token_exp' => $newTokenExp,
+                        ]);
+                    }
                 }
             }
+
             return redirect()->route('checkout.finish', ['order_id' => $orderId]);
         } else {
             $order->update([
@@ -969,11 +971,13 @@ class TransactionController extends Controller
         }
         try {
             if ($payment == Vnpay::NAME) {
-                $whiteLists = explode(",", env('VNPAY_IP_WHITELIST', 
-                '113.160.92.202,113.52.45.78,116.97.245.130,42.118.107.252,113.20.97.250,203.171.19.146,103.220.87.4,103.220.86.4'));
+                $whiteLists = explode(",", env(
+                    'VNPAY_IP_WHITELIST',
+                    '113.160.92.202,113.52.45.78,116.97.245.130,42.118.107.252,113.20.97.250,203.171.19.146,103.220.87.4,103.220.86.4'
+                ));
                 if (!empty($whiteLists) && !in_array($request->ip(), $whiteLists)) {
-                    Log::debug("IP ". $request->ip() ." NOT IN WHITELIST");
-                    return response("IP ". $request->ip() ." NOT IN WHITELIST", 403);
+                    Log::debug("IP " . $request->ip() . " NOT IN WHITELIST");
+                    return response("IP " . $request->ip() . " NOT IN WHITELIST", 403);
                 }
             }
             Log::debug("[NOTIFY $payment IP]: " . $request->ip());
