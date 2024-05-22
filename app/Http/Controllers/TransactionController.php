@@ -990,15 +990,11 @@ class TransactionController extends Controller
                 : $result['orderId'];
 
             if ($result['status'] == 1) {
-
                 $transService = new TransactionService();
                 $rs = $transService->approveRegistrationAfterWebPayment($orderId, $payment);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
-            } else {
-                Order::find($orderId)->update([
-                    'status' => OrderConstants::STATUS_CANCEL_SYSTEM
-                ]);
             }
+
             $data = $processor->prepareNotifyResponse($query, $result);
 
             if (is_array($data)) {
