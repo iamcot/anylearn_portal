@@ -36,12 +36,14 @@
             </div>
             <div class="col-sm-3">
                 <h4 class="text-decoration-none text-black pb-2">THANH TOÁN</h4>
-                <div class=" d-flex justify-content-between">
+                <div class=" justify-content-between">
                         <img src="/cdn/img/Visa.png" width="20%" class="img-fluid">
                         <img src="/cdn/img/mastercard.png" width="20%" class="img-fluid">
-
+                </div>
+                <div class=" justify-content-between">
                         <img src="/cdn/img/onepay.png" width="20%" class="img-fluid ">
                         <img src="/cdn/img/MoMoLogo.png" width="20%" class="img-fluid">
+                        <img src="/cdn/img/vnpay.png" width="20%" class="img-fluid">
                 </div>
 
                 <h4 class="mt-2 text-decoration-none text-black pb-3">THEO DÕI CHÚNG TÔI</h4>

@@ -26,6 +26,7 @@ use App\Models\VoucherGroup;
 use App\Models\VoucherUsed;
 use App\PaymentGateway\OnepayLocal;
 use App\PaymentGateway\Processor;
+use App\PaymentGateway\Vnpay;
 use App\Services\FileServices;
 use App\Services\ItemServices;
 use App\Services\QRServices;
@@ -967,6 +968,14 @@ class TransactionController extends Controller
             return;
         }
         try {
+            if ($payment == Vnpay::NAME) {
+                $whiteLists = explode(",", env('VNPAY_IP_WHITELIST', 
+                '113.160.92.202,113.52.45.78,116.97.245.130,42.118.107.252,113.20.97.250,203.171.19.146,103.220.87.4,103.220.86.4'));
+                if (!empty($whiteLists) && !in_array($request->ip(), $whiteLists)) {
+                    Log::debug("IP ". $request->ip() ." NOT IN WHITELIST");
+                    return response("IP ". $request->ip() ." NOT IN WHITELIST", 403);
+                }
+            }
             Log::debug("[NOTIFY $payment IP]: " . $request->ip());
             if ($payment == 'momo') {
                 Log::debug("[NOTIFY MOMO DATA]:", ['data' => $request->all()]);
