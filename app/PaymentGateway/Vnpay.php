@@ -120,15 +120,15 @@ class Vnpay implements PaymentInterface
             return $data;
         }
 
-        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
-            $data['message'] = 'Order already confirmed';
-            $data['errorCode'] = '02';
-            return $data;
-        }
-        
         if ($data['amount'] != "" && $order->amount != $data['amount']) {
             $data['message'] = 'Invalid amount';
             $data['errorCode'] = '04';
+            return $data;
+        }
+
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            $data['message'] = 'Order already confirmed';
+            $data['errorCode'] = '02';
             return $data;
         }
 
@@ -286,6 +286,8 @@ class Vnpay implements PaymentInterface
             case "09":
                 $result = "Giao dịch hoàn bị từ chối";
                 break;
+            default:
+                $result = "Unknown Error";
         }
         return $result;
     }
