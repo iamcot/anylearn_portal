@@ -988,7 +988,7 @@ class TransactionController extends Controller
                 Log::debug("[NOTIFY $payment DATA]:", ['data' => $request->fullUrl()]);
                 $query = $request->getQueryString();
             }
-            $result = $processor->processFeedbackData($query);
+            $result = $processor->processFeedbackData($query, "notify");
             $orderId = $payment == 'momo'
                 ? Processor::getOrderIdFromPaymentToken($result['orderId'])
                 : $result['orderId'];

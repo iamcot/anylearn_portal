@@ -54,12 +54,12 @@ class Momo implements PaymentInterface {
      */
     public function processReturnData($response) {
         parse_str($response, $arrResponse);
-        $data = $this->processFeedbackData($arrResponse);
+        $data = $this->processFeedbackData($arrResponse, "return");
 
         return $this->buildUrl($data);
     }
 
-    public function processFeedbackData($response) {
+    public function processFeedbackData($response, $from) {
         $data = [
             'status' => 0,
             'message' => '',

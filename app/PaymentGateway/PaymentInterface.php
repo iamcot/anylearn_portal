@@ -8,7 +8,7 @@ interface PaymentInterface {
     
     public function processReturnData($response);
 
-    public function processFeedbackData($response);
+    public function processFeedbackData($response, $from);
 
     public function prepareNotifyResponse($data, $feedbackResult);
 

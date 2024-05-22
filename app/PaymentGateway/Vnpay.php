@@ -72,7 +72,7 @@ class Vnpay implements PaymentInterface
     public function processReturnData($str)
     {
 
-        $data = $this->processFeedbackData($str);
+        $data = $this->processFeedbackData($str, "return");
 
         return $this->buildUrl($data);
     }
@@ -86,7 +86,7 @@ class Vnpay implements PaymentInterface
         return $data;
     }
 
-    public function processFeedbackData($str)
+    public function processFeedbackData($str, $from)
     {
         $response = [];
         foreach (explode('&', $str) as $couple) {
@@ -126,11 +126,14 @@ class Vnpay implements PaymentInterface
             return $data;
         }
 
-        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
-            $data['message'] = 'Order already confirmed';
-            $data['errorCode'] = '02';
-            return $data;
+        if ($from == "notify") {
+            if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+                $data['message'] = 'Order already confirmed';
+                $data['errorCode'] = '02';
+                return $data;
+            }
         }
+
 
         // if (isset($response['vnp_TokenNum'])) {
         //     $data['newTokenNum'] = $response['vnp_TokenNum'];

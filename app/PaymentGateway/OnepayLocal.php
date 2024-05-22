@@ -69,7 +69,7 @@ class OnepayLocal implements PaymentInterface
     public function processReturnData($str)
     {
        
-        $data = $this->processFeedbackData($str);
+        $data = $this->processFeedbackData($str, "return");
 
         return $this->buildUrl($data);
     }
@@ -81,7 +81,7 @@ class OnepayLocal implements PaymentInterface
         return $data;
     }
 
-    public function processFeedbackData($str)
+    public function processFeedbackData($str, $from)
     {
         $response = [];
         foreach (explode('&', $str) as $couple) {
