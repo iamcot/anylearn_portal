@@ -914,7 +914,11 @@ class UserController extends Controller
         }
         $transService = new TransactionService();
         $transService->rejectRegistration($orderId, OrderConstants::STATUS_CANCEL_SYSTEM);
-        return redirect()->back()->with('notify', 'Thao tác thành công');
+        if ($request->get('cb')) {
+            return redirect()->to($request->get('cb'))->with('notify', 'Thao tác thành công');
+        } else {
+            return redirect()->back()->with('notify', 'Thao tác thành công');
+        }
     }
 
     public function orders(Request $request)

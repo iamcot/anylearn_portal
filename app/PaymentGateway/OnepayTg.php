@@ -74,7 +74,7 @@ class OnepayTg implements PaymentInterface
         return $this->buildUrl($data);
     }
 
-    public function prepareNotifyResponse($response, $feedbackResult, $orderStatus)
+    public function prepareNotifyResponse($response, $feedbackResult)
     {
         $responseCode = $feedbackResult['status'] ? 1 : 0;
         $data = "responsecode=$responseCode&desc=confirm-success";

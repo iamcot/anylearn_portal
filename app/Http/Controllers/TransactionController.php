@@ -59,7 +59,7 @@ class TransactionController extends Controller
                 $this->data['transaction'] = $this->data['transaction']->where('status', $request->get('s'));
             }
         }
-            $this->data['transaction'] = $this->data['transaction']->paginate(20);
+        $this->data['transaction'] = $this->data['transaction']->paginate(20);
         $this->data['navText'] = __('Quản lý Giao dịch');
         return view('transaction.list', $this->data);
     }
@@ -220,22 +220,22 @@ class TransactionController extends Controller
             ->join('items', 'items.id', '=', 'od.item_id')
             ->where('orders.user_id', Auth::id())
             ->whereIn('orders.status', [
-                    OrderConstants::STATUS_DELIVERED,
-                    OrderConstants::STATUS_RETURN_BUYER_PENDING,
-                    OrderConstants::STATUS_RETURN_SYSTEM,
-                    OrderConstants::STATUS_REFUND,
-                ])
+                OrderConstants::STATUS_DELIVERED,
+                OrderConstants::STATUS_RETURN_BUYER_PENDING,
+                OrderConstants::STATUS_RETURN_SYSTEM,
+                OrderConstants::STATUS_REFUND,
+            ])
             ->selectRaw("orders.*, group_concat(items.title SEPARATOR ', ') as classes")
             ->groupBy('od.order_id')
             ->orderBy('orders.id', 'desc')
             ->paginate(20);
 
-            $this->data['orders'] =  $orders;
-            return view(env('TEMPLATE', '') . 'me.order_return', $this->data);
-
+        $this->data['orders'] =  $orders;
+        return view(env('TEMPLATE', '') . 'me.order_return', $this->data);
     }
 
-    public function sendReturnRequest($orderId) {
+    public function sendReturnRequest($orderId)
+    {
         $order = Order::find($orderId);
         if (!$order && $order->status != OrderConstants::STATUS_DELIVERED) {
             return redirect()->back()->with('notify', 'Có lỗi xảy ra vui lòng thử lại!!');
@@ -247,15 +247,18 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Yêu cầu hoàn trả đơn hàng của bạn đã được gửi đi!');
     }
 
-    public function returnOrder($orderId, $trigger) {
+    public function returnOrder($orderId, $trigger)
+    {
         $userService = new UserServices();
         $user = Auth::user();
         if (!$userService->isMod($user->role)) {
             return redirect()->back()->with('notify', __('Bạn không có quyền cho thao tác này'));
         }
         $order = Order::find($orderId);
-        if ($order->status != OrderConstants::STATUS_DELIVERED
-            && $order->status != OrderConstants::STATUS_RETURN_BUYER_PENDING) {
+        if (
+            $order->status != OrderConstants::STATUS_DELIVERED
+            && $order->status != OrderConstants::STATUS_RETURN_BUYER_PENDING
+        ) {
             return redirect()->back()->with('notify', 'Status đơn hàng không đúng');
         }
         $transService = new TransactionService();
@@ -266,7 +269,8 @@ class TransactionController extends Controller
         return redirect()->back()->with('notify', 'Thao tác thành công');
     }
 
-    public function refundOrder($orderId) {
+    public function refundOrder($orderId)
+    {
         $userService = new UserServices();
         $user = Auth::user();
         if (!$userService->isMod($user->role)) {
@@ -527,7 +531,6 @@ class TransactionController extends Controller
                 ]);
                 $notifServ->createNotif(NotifConstants::TRANS_COMMISSION_RECEIVED, $transaction->user_id, []);
             }
-           
         } elseif ($status == ConfigConstants::TRANSACTION_STATUS_REJECT) {
             Transaction::find($id)->update([
                 'status' => $status
@@ -636,13 +639,13 @@ class TransactionController extends Controller
         }
 
         $this->data['pending'] = DB::table('orders')
-        ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
-        ->where('orders.user_id', $user->id)
-        ->select(
-            'orders.*',
-            DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
-        )
-        ->take(5)->get();
+            ->where('orders.status', OrderConstants::STATUS_PAY_PENDING)
+            ->where('orders.user_id', $user->id)
+            ->select(
+                'orders.*',
+                DB::raw("(SELECT GROUP_CONCAT(items.title SEPARATOR ',' ) as classes FROM order_details AS os JOIN items ON items.id = os.item_id WHERE os.order_id = orders.id) as classes")
+            )
+            ->take(5)->get();
 
         $this->data['momoStatus'] = env('PAYMENT_MOMO_PARTNER', '') != '' ? 1 :  0;
 
@@ -751,7 +754,6 @@ class TransactionController extends Controller
             // handle commission vouchers
             $transService->addTransactionsForCommissionVouchers($dbVoucher->id, $orderId);
             return redirect()->back()->with('notify', 'Áp dụng voucher thành công.');
-
         } else if ($request->get('cart_action') == 'remove_voucher') {
             $transService = new TransactionService();
             $transService->removeTransactionsForCommissionVouchers(
@@ -840,6 +842,10 @@ class TransactionController extends Controller
 
         if ($response->status) {
             Log::info('Payment Redirect', ['url' => $response->data]);
+            $openOrder->update([
+                'payment' => $payment,
+                'status' => OrderConstants::STATUS_PAY_PENDING
+            ]);
             return redirect()->to($response->data);
         } else {
             Log::error('Make payment error,', ['data' => $response]);
@@ -922,6 +928,10 @@ class TransactionController extends Controller
                 }
             }
             return redirect()->route('checkout.finish', ['order_id' => $orderId]);
+        } else {
+            $order->update([
+                'status' => OrderConstants::STATUS_NEW
+            ]);
         }
 
         $this->detectUserAgent($request);
@@ -946,6 +956,7 @@ class TransactionController extends Controller
         $this->data['banks'] = config('bank');
         $this->data['orderAmount'] = $order->amount;
         $this->data['orderId'] = $order->id;
+        $this->data['order'] = $order;
         return view(env('TEMPLATE', '') . 'checkout.paymenthelp', $this->data);
     }
 
@@ -964,21 +975,23 @@ class TransactionController extends Controller
                 Log::debug("[NOTIFY $payment RESULT]:", ['data' => $request->fullUrl()]);
                 $query = $request->getQueryString();
             }
-            Log::debug($query);
             $result = $processor->processFeedbackData($query);
+            $orderId = $payment == 'momo'
+                ? Processor::getOrderIdFromPaymentToken($result['orderId'])
+                : $result['orderId'];
+
             if ($result['status'] == 1) {
-                if (!isset($result['orderId'])) {
-                   echo 'Yêu cầu không hợp lệ';
-                }
-                $orderId = $payment == 'momo'
-                    ? Processor::getOrderIdFromPaymentToken($result['orderId'])
-                    : $result['orderId'];
 
                 $transService = new TransactionService();
                 $rs = $transService->approveRegistrationAfterWebPayment($orderId, $payment);
                 Log::info("[NOTIFY PAYMENT RESULT]:", ['order' => $orderId, 'result' => $rs]);
+            } else {
+                Order::find($orderId)->update([
+                    'status' => OrderConstants::STATUS_CANCEL_SYSTEM
+                ]);
             }
-            $data = $processor->prepareNotifyResponse($query, $result, $rs);
+            $data = $processor->prepareNotifyResponse($query, $result);
+
             if (is_array($data)) {
                 return response()->json($data);
             } else {

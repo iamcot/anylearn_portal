@@ -1007,7 +1007,7 @@ class TransactionService
         $userService = new UserServices();
         $openOrder = Order::find($orderId);
         if ($openOrder->status != OrderConstants::STATUS_NEW && $openOrder->status != OrderConstants::STATUS_PAY_PENDING) {
-            return "01";
+            return "NOT_VALID_ORDER_STATUS";
         }
 
         try {
@@ -1099,10 +1099,10 @@ class TransactionService
             Log::debug("Update all transaction & orders", ["orderId" => $openOrder->id]);
         } catch (\Exception $e) {
             Log::error($e);
-            return "99";
+            return $e->getMessage();
         }
 
-        return "00";
+        return true;
     }
 
     public function approveTransactionsAfterPayment($orderItemID)

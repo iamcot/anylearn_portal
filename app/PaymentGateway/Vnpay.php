@@ -2,7 +2,9 @@
 
 namespace App\PaymentGateway;
 
+use App\Constants\OrderConstants;
 use App\DataObjects\ServiceResponse;
+use App\Models\Order;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -75,11 +77,11 @@ class Vnpay implements PaymentInterface
         return $this->buildUrl($data);
     }
 
-    public function prepareNotifyResponse($response, $feedbackResult, $orderStatus)
+    public function prepareNotifyResponse($response, $feedbackResult)
     {
         $data = [
-            'RspCode' => $orderStatus,
-            'Message' => $this->getOrderProcessStatus($orderStatus)
+            'RspCode' => $feedbackResult['errorCode'],
+            'Message' => $feedbackResult['message']
         ];
         return $data;
     }
@@ -94,20 +96,41 @@ class Vnpay implements PaymentInterface
         $data = [
             'status' => 0,
             'message' => '',
+            'errorCode' => '',
         ];
-
-        if (empty($response)) {
-            $data['message'] = 'NO_RESPONE';
-            return $data;
-        }
 
         $data = array_merge($data, [
             'orderId' => isset($response['vnp_OrderInfo']) ? $response['vnp_OrderInfo'] : '',
-            'amount' => isset($response['vnp_Amount']) ? $response['vnp_Amount'] : '',
+            'amount' => isset($response['vnp_Amount']) ? $response['vnp_Amount'] / 100 : '',
             'transId' => isset($response['vnp_TxnRef']) ? $response['vnp_TxnRef'] : '',
             'payType' => 'web',
             'payment' => self::NAME,
         ]);
+
+        if (!$this->checkHash($response)) {
+            $data['message'] = 'Invalid Checksum';
+            $data['errorCode'] = '97';
+            return $data;
+        }
+
+        $order = Order::find($data['transId']);
+        if (!$order) {
+            $data['message'] = 'Order Not Found';
+            $data['errorCode'] = '01';
+            return $data;
+        }
+
+        if ($order->status != OrderConstants::STATUS_PAY_PENDING) {
+            $data['message'] = 'Order already confirmed';
+            $data['errorCode'] = '02';
+            return $data;
+        }
+        
+        if ($data['amount'] != "" && $order->amount != $data['amount']) {
+            $data['message'] = 'Invalid amount';
+            $data['errorCode'] = '04';
+            return $data;
+        }
 
         // if (isset($response['vnp_TokenNum'])) {
         //     $data['newTokenNum'] = $response['vnp_TokenNum'];
@@ -116,14 +139,12 @@ class Vnpay implements PaymentInterface
         //     $data['newCardUid'] = isset($response['vnp_CardUid']) ? $response['vnp_CardUid'] : '';
         // }
 
-        if (!$this->checkHash($response)) {
-            $data['message'] = 'INVALID_HASH';
-            return $data;
-        }
-
         if (isset($response['vnp_TransactionStatus']) && $response['vnp_TransactionStatus'] == self::SUCCESS_CODE) {
             $data['status'] = 1;
+            $data['errorCode'] = '00';
+            $data['message'] = 'Confirm Success';
         } else {
+            $data['errorCode'] = '00'; //to ack getting response 
             $data['message'] = $this->getTransactionStatus($response['vnp_TransactionStatus']);
         }
         return $data;
@@ -198,7 +219,8 @@ class Vnpay implements PaymentInterface
             'vnp_OrderType' => 'other',
             'vnp_ReturnUrl' => $returnUrl,
             'vnp_ExpireDate' => date('YmdHis', strtotime('+30 minutes')),
-            'vnp_TxnRef' => $this->orderId . time() . '',
+            // 'vnp_TxnRef' => $this->orderId . time() . '',
+            'vnp_TxnRef' => $this->orderId,
         ];
         // if ($this->existsToken) {
         //     $data['vnp_TokenNum'] = $this->existsToken;
@@ -293,13 +315,22 @@ class Vnpay implements PaymentInterface
 
         switch ($responseCode) {
             case "00":
-                $result = "Xác nhận thành công.";
+                $result = "Confirm Success.";
                 break;
             case "01":
-                $result = "Đơn hàng đã xác nhận.";
+                $result = "Order Not Found.";
+                break;
+            case "02":
+                $result = "Invalid amount.";
+                break;
+            case "04":
+                $result = "Order already confirmed.";
+                break;
+            case "97":
+                $result = "Invalid Checksum.";
                 break;
             default:
-                $result = "Lỗi không xác định";
+                $result = "Unknown Error";
                 break;
         }
         return $result;

@@ -89,7 +89,7 @@ class Momo implements PaymentInterface {
         return $data;
     }
 
-    public function prepareNotifyResponse($response, $feedbackResult, $orderStatus) {
+    public function prepareNotifyResponse($response, $feedbackResult) {
         $data = [
             'status' => self::SUCCESS_CODE,
             'message' => 'Order confirmed',
