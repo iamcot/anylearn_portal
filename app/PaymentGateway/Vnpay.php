@@ -162,7 +162,7 @@ class Vnpay implements PaymentInterface
     public function checkHash($input)
     {
         $hash = isset($input['vnp_SecureHash']) ? $input['vnp_SecureHash'] : '';
-        Log::debug("RETURN HASH: " . $hash);
+        // Log::debug("RETURN HASH: " . $hash);
         ksort($input);
         $stringHashData = "";
 

@@ -967,12 +967,12 @@ class TransactionController extends Controller
             return;
         }
         try {
-
+            Log::debug("[NOTIFY $payment IP]: " . $request->ip());
             if ($payment == 'momo') {
-                Log::debug("[NOTIFY MOMO RESULT]:", ['data' => $request->all()]);
+                Log::debug("[NOTIFY MOMO DATA]:", ['data' => $request->all()]);
                 $query = $request->all();
             } else {
-                Log::debug("[NOTIFY $payment RESULT]:", ['data' => $request->fullUrl()]);
+                Log::debug("[NOTIFY $payment DATA]:", ['data' => $request->fullUrl()]);
                 $query = $request->getQueryString();
             }
             $result = $processor->processFeedbackData($query);
