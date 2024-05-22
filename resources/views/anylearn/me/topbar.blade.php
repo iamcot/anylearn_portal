@@ -8,7 +8,7 @@
             <img src="/cdn/img/logo-full.png" alt="" width="120" height="30" class="d-none d-sm-block">
         </a>
         @else
-        <a class="navbar-brand ml-5" href="{{ route('me.profile') }}">
+        <a class="navbar-brand ml-5" href="/">
             <img src="/cdn/img/logo.png" alt="" width="30" height="30" class="d-block d-sm-none">
             <img src="/cdn/img/logo-full.png" alt="" width="120" height="30" class="d-none d-sm-block">
         </a>
