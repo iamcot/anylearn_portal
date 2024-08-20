@@ -206,13 +206,19 @@ cart
             <div class="card-body">
                 @if ($order->amount > 0)
                 <ul class="list-unstyled">
-                    @if(in_array('atm', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                    @if(in_array('atm', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
                     <li class="p-2"><input required type="radio" name="payment" value="atm" id="radio_atm">
                         <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng')</strong></label>
                     </li>
                     @endif
 
-                    @if(in_array('onepayfee', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                    @if(in_array('cod', explode(",", env('PAYMENT_METHOD', 'cod,atm,onepayfee,vnpay,onepaytg,momo'))))
+                    <li class="p-2"><input required type="radio" name="payment" value="cod" id="radio_cod">
+                        <label for="radio_cod"><strong>@lang('Thanh toán tại trường')</strong></label>
+                    </li>
+                    @endif
+
+                    @if(in_array('onepayfee', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
                         @if (empty($saveBanks))
                         <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ')</strong></label></li>
                         @else
@@ -223,19 +229,19 @@ cart
                             <li class="p-2"><input required type="radio" name="payment" value="onepayfee" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ <span style="color:#267aff;">MỚI</span>')</strong></label></li>
                         @endif
                     @endif
-                    @if(in_array('vnpay', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
-                    <li class="p-2"><input required type="radio" name="payment" value="vnpay" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Thanh toán trực tuyến bằng thẻ qua VNPAY')</strong></label>
+                    @if(in_array('vnpay', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
+                    <li class="p-2"><input required type="radio" name="payment" value="vnpay" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Quét mã QR qua VNPay (giảm 1%) (trên 100 triệu)')</strong></label>
                     <a class="small" target="_blank" href="https://anylearn.vn/helpcenter/19/huong-dan-thanh-toan-vnpay-tren-anylearn.html">Xem hướng dẫn thanh toán</a>
                     </li>
                     @endif 
-                    @if(in_array('onepaytg', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                    @if(in_array('onepaytg', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
                         @if ($order->amount >= 3000000)
                         <li class="p-2"><input required type="radio" name="payment" value="onepaytg" id="radio_onepaytg">
-                            <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng')</strong></label>
+                            <label for="radio_onepaytg"><strong>@lang('Trả góp qua thẻ tín dụng (trên 3 triệu) (kỳ hạn 3 tháng) (0% lãi suất)')</strong></label>
                         </li>
                         @endif
                     @endif
-                    @if(in_array('momo', explode(",", env('PAYMENT_METHOD', 'atm,vnpay,onepaytg,momo'))))
+                    @if(in_array('momo', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
                         @if ($momoStatus && $order->amount >= 1000 && $order->amount <= 50000000)
                         <li class="p-2"><input required type="radio" name="payment" value="momo" id="radio_momo">
                             <label for="radio_momo"><strong>@lang('Thanh toán bằng ví MoMo')</strong></label>
