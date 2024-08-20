@@ -224,7 +224,7 @@ cart
                         @endif
                     @endif
                     @if(in_array('vnpay', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
-                    <li class="p-2"><input required type="radio" name="payment" value="vnpay" id="radio_onepaylocal"> <label for="radio_onepaylocal"><strong>@lang('Quét mã QR qua VNPay (giảm 1%) (trên 100 triệu)')</strong></label>
+                    <li class="p-2"><input required type="radio" name="payment" value="vnpay" id="radio_vnpay"> <label for="radio_vnpay"><strong>@lang('Quét mã QR qua VNPay (giảm 1%) (trên 100 triệu)')</strong></label>
                     <a class="small" target="_blank" href="https://anylearn.vn/helpcenter/19/huong-dan-thanh-toan-vnpay-tren-anylearn.html">Xem hướng dẫn thanh toán</a>
                     </li>
                     @endif 
