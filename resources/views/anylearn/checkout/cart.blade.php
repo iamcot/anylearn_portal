@@ -208,13 +208,7 @@ cart
                 <ul class="list-unstyled">
                     @if(in_array('atm', explode(",", env('PAYMENT_METHOD', 'atm,onepayfee,vnpay,onepaytg,momo'))))
                     <li class="p-2"><input required type="radio" name="payment" value="atm" id="radio_atm">
-                        <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng')</strong></label>
-                    </li>
-                    @endif
-
-                    @if(in_array('cod', explode(",", env('PAYMENT_METHOD', 'cod,atm,onepayfee,vnpay,onepaytg,momo'))))
-                    <li class="p-2"><input required type="radio" name="payment" value="cod" id="radio_cod">
-                        <label for="radio_cod"><strong>@lang('Thanh toán tại trường')</strong></label>
+                        <label for="radio_atm"><strong>@lang('Chuyển khoản ngân hàng hoặc tại trường')</strong></label>
                     </li>
                     @endif
 
