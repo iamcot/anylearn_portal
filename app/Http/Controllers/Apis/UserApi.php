@@ -678,6 +678,8 @@ class UserApi extends Controller
 
     public function sentOtpResetPass(Request $request)
     {
+        Log::debug("OTP REQUEST COMMING...");
+        Log::debug($request);
         $phone = $request->get('phone');
         $service = env('OTP_SERVICE', OtpServices::SERVIVCE_ZALO);
         $otpService = new OtpServices($service);
